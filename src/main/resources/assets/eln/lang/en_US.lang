@@ -131,7 +131,6 @@ Gold_Plate.name=Gold Plate
 Gray_Brush.name=Gray Brush
 Green_Brush.name=Green Brush
 Ground_Cable.name=Ground Cable
-Grid_DC-DC_Converter.name=Grid Transformer
 High_Power_Receiver_Antenna.name=High Power Receiver Antenna
 High_Power_Transmitter_Antenna.name=High Power Transmitter Antenna
 High_Voltage_Cable.name=High Voltage Cable
@@ -267,7 +266,6 @@ Thermal_Probe.name=Thermal Probe
 Thermal_Probe_Chip.name=Thermal Probe Chip
 Thermistor.name=Thermistor
 Thermometer.name=Thermometer
-Transmission_Tower.name=T2 Transmission Tower
 Tree_Resin.name=Tree Resin
 Tree_Resin_Collector.name=Tree Resin Collector
 Tungsten_Cable.name=Tungsten Cable
@@ -275,8 +273,6 @@ Tungsten_Dust.name=Tungsten Dust
 Tungsten_Ingot.name=Tungsten Ingot
 Tungsten_Ore.name=Tungsten Ore
 Tutorial_Sign.name=Tutorial Sign
-Utility_Pole.name=T1 Utility Pole
-Utility_Pole_w/DC-DC_Converter.name=T1 Utility Pole with Transformer
 Very_High_Voltage_Cable.name=Very High Voltage Cable
 Very_High_Voltage_Relay.name=Very High Voltage Relay
 Very_High_Voltage_Switch.name=Very High Voltage Switch
@@ -344,7 +340,7 @@ Cable_loss_factor\:_%1$=Cable loss factor: %1$
 
 # ./src/main/java/mods/eln/item/FuelBurnerDescriptor.kt
 Burn_unit_for_the_gas_heat_furnace.=Burn unit for the gas heat furnace.
-Produced_heat_power\:_=Produced heat power:
+Produced_heat_power\:_=Produced heat power: 
 
 # ./src/main/java/mods/eln/item/HeatingCorpElement.java
 
@@ -517,7 +513,7 @@ Battery_powered_buzzer_\nactivated_in_presence_of_fire.=Battery powered buzzer \
 Output_voltage_increases\nif_a_fire_has_been_detected.=Output voltage increases\nif a fire has been detected.
 
 # ./src/main/java/mods/eln/sixnode/electricalfiredetector/ElectricalFireDetectorElement.java
-Fire_detected\:_=Fire detected:
+Fire_detected\:_=Fire detected: 
 Fire_present=Fire present
 
 # ./src/main/java/mods/eln/sixnode/electricalgatesource/ElectricalGateSourceDescriptor.java
@@ -770,7 +766,7 @@ Furnace_is_off=Furnace is off
 Furnace_is_on=Furnace is on
 Heat_Power\:_%1$=Heat Power: %1$
 Set_point\:_%1$=Set point: %1$
-__Max._temperature\:_=  Max. temperature:
+__Max._temperature\:_=  Max. temperature: 
 
 # ./src/main/java/mods/eln/transparentnode/LargeRheostat.kt
 Control_resistance_with_signal=Control resistance with signal
@@ -801,12 +797,12 @@ Overheating_protection=Overheating protection
 Overvoltage_protection=Overvoltage protection
 
 # ./src/main/java/mods/eln/transparentnode/battery/BatteryDescriptor.java
-Actual_charge\:_=Actual charge:
-Energy_capacity\:_=Energy capacity:
-Internal_resistance\:_=Internal resistance:
-Life_\:_=Life :
-Nominal_power\:_=Nominal power:
-Nominal_voltage\:_=Nominal voltage:
+Actual_charge\:_=Actual charge: 
+Energy_capacity\:_=Energy capacity: 
+Internal_resistance\:_=Internal resistance: 
+Life_\:_=Life : 
+Nominal_power\:_=Nominal power: 
+Nominal_voltage\:_=Nominal voltage: 
 _charged_at_=charged at
 
 # ./src/main/java/mods/eln/transparentnode/battery/BatteryElement.java
@@ -1106,4 +1102,10 @@ Voltage_drop=Voltage drop
 Voltages=Voltages
 Yes=Yes
 You_can't_place_this_block_at_this_side=You can't place this block at this side
-_O\:_= O:
+_O\:_= O: 
+
+# FIXME
+Grid_DC-DC_Converter.name=Grid Transformer
+Transmission_Tower.name=T2 Transmission Tower
+Utility_Pole.name=T1 Utility Pole
+Utility_Pole_w/DC-DC_Converter.name=T1 Utility Pole with Transformer
