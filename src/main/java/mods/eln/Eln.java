@@ -2902,7 +2902,7 @@ public class Eln {
 
             MotorDescriptor desc = new MotorDescriptor(
                 TR_NAME(Type.NONE, "Shaft Motor"),
-                obj.getObj("Generator"),
+                obj.getObj("Motor"),
                 veryHighVoltageCableDescriptor,
                 nominalRads,
                 nominalU,
