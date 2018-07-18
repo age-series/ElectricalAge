@@ -221,6 +221,7 @@ Sample_and_hold.name=Sample and hold
 Scanner.name=Scanner
 Schmitt_Trigger_Chip.name=Schmitt Trigger Chip
 Sconce_Lamp_Socket.name=Sconce Lamp Socket
+Shaft_Motor.name=Shaft Motor
 Signal_20H_inductor.name=Signal 20H inductor
 Signal_Antenna.name=Signal Antenna
 Signal_Button.name=Signal Button
@@ -341,8 +342,6 @@ Cable_loss_factor\:_%1$=Cable loss factor: %1$
 Burn_unit_for_the_gas_heat_furnace.=Burn unit for the gas heat furnace.
 Produced_heat_power\:_=Produced heat power: 
 
-# ./src/main/java/mods/eln/item/HeatingCorpElement.java
-
 # ./src/main/java/mods/eln/item/LampDescriptor.java
 Bad=Bad
 Condition\:=Condition:
@@ -371,7 +370,7 @@ Solar_panel_upgrade=Solar panel upgrade
 State\:=State:
 Stored_Energy\:_%1$J_(%2$%)=Stored Energy: %1$J (%2$%)
 
-# ./src/main/java/mods/eln/item/regulator/RegulatorSlot.java
+# ./src/main/java/mods/eln/item/electricalitem/ElectricalTool.java
 
 # ./src/main/java/mods/eln/mechanical/Tachometer.kt
 Rads_s_corresponding\nto_0%_output=Rads/s corresponding\nto 0% output
@@ -383,7 +382,7 @@ Hold_shift=Hold shift
 # ./src/main/java/mods/eln/misc/Version.java
 mod.name=Electrical Age
 
-# ./src/main/java/mods/eln/node/six/SixNodeDescriptor.java
+# ./src/main/java/mods/eln/node/transparent/TransparentNodeDescriptor.java
 
 # ./src/main/java/mods/eln/simplenode/energyconverter/EnergyConverterElnToOtherGui.java
 Input_power_is_limited_to_%1$W=Input power is limited to %1$W
@@ -463,8 +462,6 @@ Input_Voltage=Input Voltage
 Sound_is_muted=Sound is muted
 Sound_is_not_muted=Sound is not muted
 
-# ./src/main/java/mods/eln/sixnode/electricalbreaker/ElectricalBreakerContainer.java
-
 # ./src/main/java/mods/eln/sixnode/electricalbreaker/ElectricalBreakerDescriptor.java
 Protects_electrical_components\nOpens_contact_if\:\n__-_Voltage_exceeds_a_certain_level\n-_Current_exceeds_the_cable_limit=Protects electrical components\nOpens contact if:\n  - Voltage exceeds a certain level\n- Current exceeds the cable limit
 
@@ -492,8 +489,6 @@ Signal_Voltage=Signal Voltage
 It_can_store_up_to_256_points.=It can store up to 256 points.
 Measures_the_voltage_of_an\nelectrical_signal_and_plots\nthe_data_in_real_time.=Measures the voltage of an\nelectrical signal and plots\nthe data in real time.
 
-# ./src/main/java/mods/eln/sixnode/electricaldatalogger/ElectricalDataLoggerElement.java
-
 # ./src/main/java/mods/eln/sixnode/electricaldatalogger/ElectricalDataLoggerGui.java
 Back_to_display=Back to display
 Configuration=Configuration
@@ -515,8 +510,6 @@ Output_voltage_increases\nif_entities_are_moving_around.=Output voltage increase
 
 # ./src/main/java/mods/eln/sixnode/electricalentitysensor/ElectricalEntitySensorElement.java
 Entity_present=Entity present
-
-# ./src/main/java/mods/eln/sixnode/electricalfiredetector/ElectricalFireDetectorContainer.kt
 
 # ./src/main/java/mods/eln/sixnode/electricalfiredetector/ElectricalFireDetectorDescriptor.java
 Battery_powered_buzzer_\nactivated_in_presence_of_fire.=Battery powered buzzer \nactivated in presence of fire.
@@ -563,8 +556,6 @@ Waiting_for_completion...=Waiting for completion...
 # ./src/main/java/mods/eln/sixnode/electricalredstoneinput/ElectricalRedstoneInputDescriptor.java
 Converts_Redstone_signal\nto_an_electrical_voltage.=Converts Redstone signal\nto an electrical voltage.
 
-# ./src/main/java/mods/eln/sixnode/electricalredstoneinput/ElectricalRedstoneInputElement.java
-
 # ./src/main/java/mods/eln/sixnode/electricalredstoneoutput/ElectricalRedstoneOutputDescriptor.java
 Converts_electrical_voltage\ninto_a_Redstone_signal.=Converts electrical voltage\ninto a Redstone signal.
 
@@ -579,6 +570,8 @@ Default_position=Default position
 # ./src/main/java/mods/eln/sixnode/electricalrelay/ElectricalRelayGui.java
 Normally_closed=Normally closed
 Normally_open=Normally open
+
+# ./src/main/java/mods/eln/sixnode/electricalsensor/ElectricalSensorContainer.java
 
 # ./src/main/java/mods/eln/sixnode/electricalsensor/ElectricalSensorDescriptor.java
 Can_measure_Voltage_Power_Current=Can measure Voltage/Power/Current
@@ -601,6 +594,8 @@ Provides_an_ideal_voltage_source\nwithout_energy_or_power_limitation.=Provides a
 # ./src/main/java/mods/eln/sixnode/electricalswitch/ElectricalSwitchDescriptor.java
 Can_break_an_electrical_circuit\ninterrupting_the_current.=Can break an electrical circuit\ninterrupting the current.
 
+# ./src/main/java/mods/eln/sixnode/electricalswitch/ElectricalSwitchElement.java
+
 # ./src/main/java/mods/eln/sixnode/electricaltimeout/ElectricalTimeoutDescriptor.java
 Upon_application_of_a_high_signal,\nthe_timer_maintains_the_output_high_for\na_configurable_interval._Can_be_re-triggered.=Upon application of a high signal,\nthe timer maintains the output high for\na configurable interval. Can be re-triggered.
 
@@ -614,6 +609,12 @@ The_time_interval_the\noutput_is_kept_high.=The time interval the\noutput is kep
 
 # ./src/main/java/mods/eln/sixnode/electricalvumeter/ElectricalVuMeterDescriptor.java
 Displays_the_value_of_a_signal.=Displays the value of a signal.
+
+# ./src/main/java/mods/eln/sixnode/electricalvumeter/ElectricalVuMeterElement.java
+
+# ./src/main/java/mods/eln/sixnode/electricalwatch/ElectricalWatchContainer.java
+
+# ./src/main/java/mods/eln/sixnode/electricalwatch/ElectricalWatchElement.java
 
 # ./src/main/java/mods/eln/sixnode/electricalweathersensor/ElectricalWeatherSensorDescriptor.java
 Clear\:_%1$V=Clear: %1$V
@@ -724,6 +725,8 @@ Coal_dust_slot=Coal dust slot
 
 # ./src/main/java/mods/eln/sixnode/resistor/ResistorElement.java
 
+# ./src/main/java/mods/eln/sixnode/resistor/ResistorGui.java
+
 # ./src/main/java/mods/eln/sixnode/thermalcable/ThermalCableDescriptor.java
 High_parallel_resistance\n_\=>_Low_power_dissipation.=High parallel resistance\n => Low power dissipation.
 Low_serial_resistance\n_\=>_High_conductivity.=Low serial resistance\n => High conductivity.
@@ -757,6 +760,8 @@ No_text_associated_to_this_beacon=No text associated to this beacon
 Set_beacon_name=Set beacon name
 
 # ./src/main/java/mods/eln/sixnode/wirelesssignal/rx/WirelessSignalRxGui.java
+
+# ./src/main/java/mods/eln/sixnode/wirelesssignal/source/WirelessSignalSourceGui.java
 
 # ./src/main/java/mods/eln/transparentnode/FuelGenerator.kt
 Fuel_level=Fuel level
@@ -867,6 +872,8 @@ Power_provided=Power provided
 Combustion_chamber_slot=Combustion chamber slot
 Fuel_slot=Fuel slot
 
+# ./src/main/java/mods/eln/transparentnode/heatfurnace/HeatFurnaceDescriptor.java
+
 # ./src/main/java/mods/eln/transparentnode/heatfurnace/HeatFurnaceElement.java
 Set_temperature=Set temperature
 
@@ -962,14 +969,14 @@ Recharge_power\:=Recharge power:
 Generates_energy_using_water_stream.=Generates energy using water stream.
 No_place_for_water_turbine!=No place for water turbine!
 
-# ./src/main/java/mods/eln/transparentnode/waterturbine/WaterTurbineElement.java
-
 # ./src/main/java/mods/eln/transparentnode/windturbine/WindTurbineDescriptor.java
 Front\:_%1$=Front: %1$
 Generates_energy_from_wind.=Generates energy from wind.
 Left_Right\:_%1$=Left/Right: %1$
 Up_Down\:_%1$=Up/Down: %1$
 Wind_area\:=Wind area:
+
+# ./src/main/java/mods/eln/transparentnode/windturbine/WindTurbineElement.java
 
 # ./src/main/java/mods/eln/wiki/Data.java
 Light=Light
