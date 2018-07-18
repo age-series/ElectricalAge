@@ -198,6 +198,7 @@ class MotorElement(node: TransparentNode, desc_: TransparentNodeDescriptor) :
         thermal.setAsSlow()
         thermalLoadList.add(thermal)
         thermalWatchdog.set(thermal).set(WorldExplosion(this).machineExplosion())
+        slowProcessList.add(thermalWatchdog)
 
         heater = ElectricalLoadHeatThermalLoad(wireLoad, thermal)
         thermalFastProcessList.add(heater)
