@@ -121,12 +121,19 @@ class MotorRender(entity: TransparentNodeEntity, desc_: TransparentNodeDescripto
         override fun getVolume() = volumeSetting.position
     }
 
-    init {
+    override fun initSound(desc: SimpleShaftDescriptor) {
+        volumeSetting.target = 1f
+        volumeSetting.position = 0f
+        /* Field desc is not yet init'd at this point because this is called
+           from within SimpleShaft.<init>.
+         */
+        val desc = desc as MotorDescriptor
         addLoopedSound(MotorLoopedSound(desc.sound, coordonate()))
-        mask.set(LRDU.Down, true)
     }
 
     fun setPower(power: Double) {
+        volumeSetting.target = Math.abs(power / desc.nominalP).toFloat() / 10f
+
         if(power < 0) {
             for(i in 1..6) ledColors[i] = Color.black
             ledColors[0] = RED.adjustLuminanceClamped((-power / desc.nominalP * 400).toFloat(), 0f, 60f)
@@ -163,7 +170,6 @@ class MotorRender(entity: TransparentNodeEntity, desc_: TransparentNodeDescripto
         val power = stream.readDouble()
 
         setPower(power)
-        volumeSetting.target = Math.abs(power / desc.nominalP).toFloat() / 4f
     }
 }
 
@@ -212,17 +218,15 @@ class MotorElement(node: TransparentNode, desc_: TransparentNodeDescriptor) :
             // admonition: I don't actually know how this works.
             val th = wireLoad.subSystem.getTh(wireLoad, powerSource)
             var U: Double
-            if(th.U < noTorqueU) {
-                // Input U is insufficient to spin the shaft faster.
-                // Lower the voltage very slightly--this acts like a very
-                // inefficient generator.
-                U = th.U * 0.95 + noTorqueU * 0.05
+            if(noTorqueU < th.U) {
+                // Input is greater than our output, spin up the shaft
+                U = th.U * 0.999 + noTorqueU * 0.001
             } else if(th.isHighImpedance()) {
                 // No actual connection, let the system float
                 U = noTorqueU
             } else {
-                // Input voltage is high enough to spin up shaft.
-                // Solve a quadratic, I guess?
+                // Provide an output voltage by
+                // solving a quadratic, I guess?
                 val a = 1 / th.R
                 val b = desc.elecPPerDU - th.U / th.R
                 val c = -desc.elecPPerDU * noTorqueU
@@ -239,13 +243,12 @@ class MotorElement(node: TransparentNode, desc_: TransparentNodeDescriptor) :
     inner class MotorShaftProcess : IProcess {
         override fun process(time: Double) {
             val p = powerSource.p
-            val pFrac = (p / desc.nominalP).toFloat()
             var E = -p * time
-            if(E > 0) {
-                // Pushing power--this is very inefficient
-                E = E * 2.0
-            }
             maybePublishP(E / time)
+            if(E < 0) {
+                // Pushing power--this is very inefficient
+                E = E * 10.0
+            }
             E = E - defaultDrag * Math.max(shaft.rads, 10.0)
             shaft.energy += E * desc.efficiency
             thermal.movePowerTo(E * (1 - desc.efficiency))

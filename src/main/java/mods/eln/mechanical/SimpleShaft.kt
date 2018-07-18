@@ -80,7 +80,7 @@ open class ShaftRender(entity: TransparentNodeEntity, desc: TransparentNodeDescr
     open val cableRender: CableRenderDescriptor? = null
     var cableRefresh = true
     // Sound:
-    private val soundLooper: ShaftSoundLooper?
+    private var soundLooper: ShaftSoundLooper? = null
     val volumeSetting = SlewLimiter(0.5f)
 
     inner private class ShaftSoundLooper(sound: String, coord: Coordonate) : LoopedSound(sound, coord) {
@@ -88,10 +88,10 @@ open class ShaftRender(entity: TransparentNodeEntity, desc: TransparentNodeDescr
         override fun getVolume() = volumeSetting.position
     }
 
-    init {
+    open fun initSound(desc: SimpleShaftDescriptor) {
         volumeSetting.target = 1f
         volumeSetting.position = 0f
-        val sound = this.desc.sound
+        val sound = desc.sound
         if (sound != null) {
             soundLooper = ShaftSoundLooper(sound, coordonate())
             addLoopedSound(soundLooper)
@@ -101,6 +101,7 @@ open class ShaftRender(entity: TransparentNodeEntity, desc: TransparentNodeDescr
     }
 
     init {
+        initSound(this.desc)
         mask.set(LRDU.Down, true)
     }
 

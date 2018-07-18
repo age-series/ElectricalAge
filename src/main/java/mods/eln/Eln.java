@@ -2907,7 +2907,7 @@ public class Eln {
                 nominalRads,
                 nominalU,
                 nominalP,
-                25.0f * nominalP / nominalU,
+                0.1f * nominalP / nominalU,
                 25.0f * nominalP / nominalU,
                 sixNodeThermalLoadInitializer.copy()
             );
