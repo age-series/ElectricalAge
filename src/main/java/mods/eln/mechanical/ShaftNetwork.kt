@@ -5,6 +5,7 @@ import mods.eln.misc.Direction
 import mods.eln.misc.INBTTReady
 import mods.eln.node.NodeManager
 import mods.eln.sim.process.destruct.ShaftSpeedWatchdog
+import mods.eln.sim.process.destruct.WorldExplosion
 import net.minecraft.nbt.NBTTagCompound
 import java.util.*
 
@@ -13,6 +14,13 @@ import java.util.*
 val absoluteMaximumShaftSpeed = 1000.0
 // "Standard" drag, in J/t per rad.
 val defaultDrag = 0.02
+// Energy lost due to merging, proportional to *square* of delta speed ("friction")
+val energyLostPerDeltaRad = 0.05
+
+// Would merging these two networks cause an explosion?
+fun wouldExplode(a: ShaftNetwork, b: ShaftNetwork): Boolean {
+    return Math.abs(a.rads - b.rads) > (250.0 - 0.1 * Math.max(a.rads, b.rads))
+}
 
 
 /**
@@ -57,17 +65,25 @@ class ShaftNetwork() : INBTTReady {
      *
      * @param other The shaft network to merge into this one. Destroyed.
      */
-    fun mergeShafts(other: ShaftNetwork) {
-        // TODO: Some kind of explosion-effect for severely mismatched speeds?
-        // For now, let's be nice.
-        rads = Math.min(rads, other.rads)
-
+    fun mergeShafts(other: ShaftNetwork, invoker: ShaftElement?) {
         assert(other != this)
+
+        val deltaRads = Math.abs(rads - other.rads)
+
+        if(wouldExplode(this, other) && invoker != null) {
+            WorldExplosion(invoker.coordonate()).machineExplosion().destructImpl()
+            // Continue, however. The networks will unmerge when a component disappears, but assume they might not.
+        }
+
+        val newEnergy = energy + other.energy
+
         for (element in other.elements) {
             elements.add(element)
             element.shaft = this
         }
         other.elements.clear()
+
+        energy = newEnergy - energyLostPerDeltaRad * deltaRads * deltaRads
     }
 
     /**
@@ -79,7 +95,7 @@ class ShaftNetwork() : INBTTReady {
         val neighbours = getNeighbours(from)
         for (neighbour in neighbours) {
             if (neighbour.element.shaft != this) {
-                mergeShafts(neighbour.element.shaft)
+                mergeShafts(neighbour.element.shaft, from)
 
                 // Inform the neighbour and the element itself that its shaft connectivity has changed.
                 neighbour.element.connectedOnSide(neighbour.side.inverse)
