@@ -60,6 +60,8 @@ public class ElectricalSignalBusCableElement extends ElectricalCableElement {
 
         String[] arry = new String[coloredElectricalLoads.length / 4];
 
+        String[] arry = new String[coloredElectricalLoads.length / 4];
+
         String t = "";
 
         for (int i = 0; i < coloredElectricalLoads.length; i++) {
@@ -71,7 +73,7 @@ public class ElectricalSignalBusCableElement extends ElectricalCableElement {
         }
 
         for (int i = 0; i < arry.length; i++) {
-            info.put(String.format("%02d-%02d", 4*i, 4*i + 3), arry[i]);
+            info.put(I18N.tr("Channel") + " " + (i + 1), arry[i]);
         }
 
 
