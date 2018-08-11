@@ -5123,6 +5123,8 @@ public class Eln {
         }
 
         sharedItem.addElement(53 + (id << 6), new CaseItemDescriptor(TR_NAME(Type.NONE, "Casing")));
+
+        sharedItem.addElement(54 + (id << 6), new ClutchPlateItem("Clutch Plate"));
     }
 
     public DataLogsPrintDescriptor dataLogsPrintDescriptor;
@@ -5609,6 +5611,13 @@ public class Eln {
             'p', findItemStack("Copper Plate"),
             'c', findItemStack("Copper Cable"),
             'd', findItemStack("Dielectric"));
+
+        addRecipe(findItemStack("Clutch Plate"),
+            "ir",
+            "ir",
+            "ir",
+            'i', "ingotIron",
+            'r', "itemRubber");
 
         addRecipe(findItemStack("JK Flip Flop Chip"),
             " p ",

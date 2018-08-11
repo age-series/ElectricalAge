@@ -98,8 +98,8 @@ class ShaftNetwork() : INBTTReady {
                 mergeShafts(neighbour.element.shaft, from)
 
                 // Inform the neighbour and the element itself that its shaft connectivity has changed.
-                neighbour.element.connectedOnSide(neighbour.side.inverse)
-                from.connectedOnSide(neighbour.side)
+                neighbour.element.connectedOnSide(neighbour.side.inverse, this)
+                from.connectedOnSide(neighbour.side, this)
             }
         }
     }
@@ -119,8 +119,8 @@ class ShaftNetwork() : INBTTReady {
 
         // Inform all directly involved shafts about the change in connections.
         for (neighbour in getNeighbours(from)) {
-            neighbour.element.disconnectedOnSide(neighbour.side.inverse)
-            from.disconnectedOnSide(neighbour.side)
+            neighbour.element.disconnectedOnSide(neighbour.side.inverse, this)
+            from.disconnectedOnSide(neighbour.side, this)
         }
     }
 
@@ -159,6 +159,8 @@ class ShaftNetwork() : INBTTReady {
     private fun getNeighbours(from: ShaftElement): ArrayList<ShaftNeighbour> {
         val c = Coordonate()
         val ret = ArrayList<ShaftNeighbour>(6)
+        if(!from.isInternallyConnected())
+            return ret;  // Don't assume we can make any internal connections across this component
         for (dir in from.shaftConnectivity) {
             c.copyFrom(from.coordonate())
             c.move(dir)
@@ -191,15 +193,17 @@ interface ShaftElement {
     val shaftConnectivity: Array<Direction>
     fun coordonate(): Coordonate
 
+    fun isInternallyConnected(): Boolean = true
+
     fun initialize() {
         shaft.connectShaft(this)
     }
 
     fun needPublish()
 
-    fun connectedOnSide(direction: Direction) {}
+    fun connectedOnSide(direction: Direction, net: ShaftNetwork) {}
 
-    fun disconnectedOnSide(direction: Direction) {}
+    fun disconnectedOnSide(direction: Direction, net: ShaftNetwork) {}
 }
 
 fun createShaftWatchdog(shaftElement: ShaftElement): ShaftSpeedWatchdog {
