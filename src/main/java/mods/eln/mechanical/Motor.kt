@@ -239,7 +239,6 @@ class MotorElement(node: TransparentNode, desc_: TransparentNodeDescriptor) :
     inner class MotorShaftProcess : IProcess {
         override fun process(time: Double) {
             val p = powerSource.p
-            val pFrac = (p / desc.nominalP).toFloat()
             var E = -p * time
             if(E > 0) {
                 // Pushing power--this is very inefficient
