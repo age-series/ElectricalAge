@@ -1,5 +1,6 @@
 package mods.eln.sixnode.powersocket;
 
+import mods.eln.misc.Coordonate;
 import mods.eln.misc.Direction;
 import mods.eln.misc.LRDU;
 import mods.eln.misc.Utils;
@@ -16,6 +17,7 @@ import mods.eln.sim.nbt.NbtElectricalLoad;
 import mods.eln.sim.process.destruct.VoltageStateWatchDog;
 import mods.eln.sim.process.destruct.WorldExplosion;
 import mods.eln.sixnode.electricalcable.ElectricalCableDescriptor;
+import mods.eln.sixnode.lampsupply.LampSupplyElement;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.Container;
@@ -33,13 +35,11 @@ import java.util.List;
 //TODO Copy-pasted from LampSupply. PowerSocket behavior must be implemented.
 public class PowerSocketElement extends SixNodeElement {
 
-    public static final HashMap<String, ArrayList<PowerSocketElement>> channelMap = new HashMap<String, ArrayList<PowerSocketElement>>();
-
     //NodeElectricalGateInput inputGate = new NodeElectricalGateInput("inputGate");
     public PowerSocketDescriptor descriptor;
 
-    public NbtElectricalLoad powerLoad = new NbtElectricalLoad("powerLoad");
-    public Resistor loadResistor = new Resistor(powerLoad, null);
+    public NbtElectricalLoad outputLoad = new NbtElectricalLoad("outputLoad");
+    public Resistor loadResistor = new Resistor(null, null);  // Connected in process()
     public IProcess PowerSocketSlowProcess = new PowerSocketSlowProcess();
 
     SixNodeElementInventory inventory = new SixNodeElementInventory(1, 64, this);
@@ -49,8 +49,6 @@ public class PowerSocketElement extends SixNodeElement {
     VoltageStateWatchDog voltageWatchdog = new VoltageStateWatchDog();
 
     public static final byte setChannelId = 1;
-
-    double RpStack = 0;
 
     @Override
     public IInventory getInventory() {
@@ -64,7 +62,7 @@ public class PowerSocketElement extends SixNodeElement {
 
     public PowerSocketElement(SixNode sixNode, Direction side, SixNodeDescriptor descriptor) {
         super(sixNode, side, descriptor);
-        electricalLoadList.add(powerLoad);
+        electricalLoadList.add(outputLoad);
         electricalComponentList.add(loadResistor);
         slowProcessList.add(PowerSocketSlowProcess);
         loadResistor.highImpedance();
@@ -72,61 +70,61 @@ public class PowerSocketElement extends SixNodeElement {
 
         slowProcessList.add(voltageWatchdog);
         voltageWatchdog
-            .set(powerLoad)
+            .set(outputLoad)
             .set(new WorldExplosion(this).cableExplosion());
-
-        channelRegister(this);
     }
 
     class PowerSocketSlowProcess implements IProcess {
 
         @Override
         public void process(double time) {
-            loadResistor.setR(1 / RpStack);
-            RpStack = 0;
+            Coordonate local = sixNode.coordonate;
+            LampSupplyElement.PowerSupplyChannelHandle handle = null;
+            float bestDist = 1e9f;
+            List<LampSupplyElement.PowerSupplyChannelHandle> handles = LampSupplyElement.channelMap.get(channel);
+            if(handles != null) {
+                for(LampSupplyElement.PowerSupplyChannelHandle hdl : handles) {
+                    float dist = (float) hdl.element.sixNode.coordonate.trueDistanceTo(local);
+                    if(dist < bestDist && dist <= hdl.element.getRange()) {
+                        bestDist = dist;
+                        handle = hdl;
+                    }
+                }
+            }
+
+            loadResistor.breakConnection();
+            loadResistor.highImpedance();
+            if(handle != null && handle.element.getChannelState(handle.id)) {
+                ItemStack cable = inventory.getStackInSlot(PowerSocketContainer.cableSlotId);
+                if (cable != null) {
+                    ElectricalCableDescriptor desc = (ElectricalCableDescriptor) ElectricalCableDescriptor.getDescriptor(cable);
+                    loadResistor.connectTo(handle.element.powerLoad, outputLoad);
+                    desc.applyTo(loadResistor);
+                }
+            }
         }
-    }
-
-    static void channelRegister(PowerSocketElement tx) {
-        String channel = tx.channel;
-        ArrayList<PowerSocketElement> list = channelMap.get(channel);
-        if (list == null)
-            channelMap.put(channel, list = new ArrayList<PowerSocketElement>());
-        list.add(tx);
-    }
-
-    static void channelRemove(PowerSocketElement tx) {
-        String channel = tx.channel;
-        List<PowerSocketElement> list = channelMap.get(channel);
-        if (list == null) return;
-        list.remove(tx);
-        if (list.isEmpty())
-            channelMap.remove(channel);
     }
 
     @Override
     public ElectricalLoad getElectricalLoad(LRDU lrdu, int mask) {
         if (inventory.getStackInSlot(PowerSocketContainer.cableSlotId) == null) return null;
-        if (front == lrdu) return powerLoad;
-        return null;
+        return outputLoad;
     }
 
     @Override
     public ThermalLoad getThermalLoad(LRDU lrdu, int mask) {
-        if (inventory.getStackInSlot(PowerSocketContainer.cableSlotId) == null) return null;
         return null;
     }
 
     @Override
     public int getConnectionMask(LRDU lrdu) {
         if (inventory.getStackInSlot(PowerSocketContainer.cableSlotId) == null) return 0;
-        if (front == lrdu) return NodeBase.maskElectricalPower;
-        return 0;
+        return NodeBase.maskElectricalPower;
     }
 
     @Override
     public String multiMeterString() {
-        return Utils.plotUIP(powerLoad.getU(), powerLoad.getCurrent());
+        return Utils.plotUIP(outputLoad.getU(), outputLoad.getCurrent());
     }
 
     @Override
@@ -151,17 +149,6 @@ public class PowerSocketElement extends SixNodeElement {
     @Override
     public void destroy(EntityPlayerMP entityPlayer) {
         super.destroy(entityPlayer);
-        unregister();
-    }
-
-    @Override
-    public void unload() {
-        super.unload();
-        channelRemove(this);
-    }
-
-    void unregister() {
-        channelRemove(this);
     }
 
     @Override
@@ -172,23 +159,19 @@ public class PowerSocketElement extends SixNodeElement {
 
     @Override
     public void readFromNBT(NBTTagCompound nbt) {
-        channelRemove(this);
-
         super.readFromNBT(nbt);
         channel = nbt.getString("channel");
-
-        channelRegister(this);
     }
 
     void setupFromInventory() {
         ItemStack cableStack = inventory.getStackInSlot(PowerSocketContainer.cableSlotId);
         if (cableStack != null) {
             ElectricalCableDescriptor desc = (ElectricalCableDescriptor) ElectricalCableDescriptor.getDescriptor(cableStack);
-            desc.applyTo(powerLoad);
+            desc.applyTo(outputLoad);
             voltageWatchdog.setUNominal(desc.electricalNominalVoltage);
         } else {
             voltageWatchdog.setUNominal(10000);
-            powerLoad.highImpedance();
+            outputLoad.highImpedance();
         }
     }
 
@@ -199,10 +182,8 @@ public class PowerSocketElement extends SixNodeElement {
         try {
             switch (stream.readByte()) {
                 case setChannelId:
-                    channelRemove(this);
                     channel = stream.readUTF();
                     needPublish();
-                    channelRegister(this);
                     break;
             }
         } catch (IOException e) {
@@ -224,19 +205,5 @@ public class PowerSocketElement extends SixNodeElement {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    public void addToRp(double r) {
-        RpStack += 1 / r;
-    }
-
-    public int getRange() {
-        return getRange(descriptor, inventory);
-    }
-
-    private int getRange(PowerSocketDescriptor desc, SixNodeElementInventory inventory2) {
-        ItemStack stack = inventory.getStackInSlot(PowerSocketContainer.cableSlotId);
-        if (stack == null) return desc.range;
-        return desc.range + stack.stackSize;
     }
 }

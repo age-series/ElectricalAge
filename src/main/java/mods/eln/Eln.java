@@ -1044,7 +1044,6 @@ public class Eln {
 
         //tileEntityDestructor.clear();
         LampSupplyElement.channelMap.clear();
-        PowerSocketElement.channelMap.clear();
         WirelessSignalTxElement.channelMap.clear();
 
     }
@@ -1061,7 +1060,6 @@ public class Eln {
         LightBlockEntity.observers.clear();
         WirelessSignalTxElement.channelMap.clear();
         LampSupplyElement.channelMap.clear();
-        PowerSocketElement.channelMap.clear();
         playerManager.clear();
         clientLiveDataManager.start();
         simulator.init();
