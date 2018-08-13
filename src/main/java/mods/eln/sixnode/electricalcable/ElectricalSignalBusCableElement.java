@@ -17,6 +17,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class ElectricalSignalBusCableElement extends ElectricalCableElement {
@@ -55,14 +56,25 @@ public class ElectricalSignalBusCableElement extends ElectricalCableElement {
 
     @Override
     public Map<String, String> getWaila() {
-        Map<String, String> info = new HashMap<>();
+        Map<String, String> info = new LinkedHashMap<>();
+
+        String[] arry = new String[coloredElectricalLoads.length / 4];
 
         String t = "";
-        for(ElectricalLoad load : coloredElectricalLoads) {
-            t += Utils.plotVolt("", load.getU()).trim() + ",";
+
+        for (int i = 0; i < coloredElectricalLoads.length; i++) {
+            t += wool_to_chat[15-i] + Utils.plotVolt("",  coloredElectricalLoads[i].getU()).trim() + "\u00A7r, ";
+            if ((i+1)% 4 == 0) {
+                arry[(i-3) / 4 ] = t.substring(0, t.length() - 2);
+                t = "";
+            }
         }
 
-        info.put(I18N.tr("Signal Voltage"), t);
+        for (int i = 0; i < arry.length; i++) {
+            info.put(String.format("%02d-%02d", 4*i, 4*i + 3), arry[i]);
+        }
+
+
         return info;
     }
 
