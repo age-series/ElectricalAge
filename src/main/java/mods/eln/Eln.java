@@ -2907,7 +2907,7 @@ public class Eln {
                 nominalRads,
                 nominalU,
                 nominalP,
-                0.1f * nominalP / nominalU,
+                25.0f * nominalP / nominalU,
                 25.0f * nominalP / nominalU,
                 sixNodeThermalLoadInitializer.copy()
             );
@@ -5893,7 +5893,8 @@ public class Eln {
                 "WWW",
                 "IWI",
                 " W ",
-                'I', "ingotIron"
+                'I', "ingotIron",
+                'W', "logWood"
             );
         }
         addRecipe(findItemStack("Utility Pole w/DC-DC Converter"),

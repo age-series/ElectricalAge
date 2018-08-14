@@ -50,13 +50,14 @@ class MotorDescriptor(
     val nominalRads = nominalRads
     val nominalU = nominalU
     val nominalP = nominalP
+    val maxP = 32000f  // TODO (Grissess): Calculate?
     val elecPPerDU = elecPPerDU
     val shaftPPerDU = shaftPPerDU
     val thermalLoadInitializer = thermalLoadInitializer
 
     val radsToU = LinearFunction(0f, 0f, nominalRads, nominalU)
 
-    override val sound = "eln:shaft_motor"
+    val customSound = "eln:shaft_motor"
     val efficiency = 0.99
 
     override val obj = obj
@@ -121,24 +122,17 @@ class MotorRender(entity: TransparentNodeEntity, desc_: TransparentNodeDescripto
         override fun getVolume() = volumeSetting.position
     }
 
-    override fun initSound(desc: SimpleShaftDescriptor) {
-        volumeSetting.target = 1f
-        volumeSetting.position = 0f
-        /* Field desc is not yet init'd at this point because this is called
-           from within SimpleShaft.<init>.
-         */
-        val desc = desc as MotorDescriptor
-        addLoopedSound(MotorLoopedSound(desc.sound, coordonate()))
+    init {
+        addLoopedSound(MotorLoopedSound(desc.customSound, coordonate()))
+        mask.set(LRDU.Down, true)
     }
 
     fun setPower(power: Double) {
-        volumeSetting.target = Math.abs(power / desc.nominalP).toFloat() / 10f
-
         if(power < 0) {
             for(i in 1..6) ledColors[i] = Color.black
             ledColors[0] = RED.adjustLuminanceClamped((-power / desc.nominalP * 400).toFloat(), 0f, 60f)
         } else {
-            val slice = desc.nominalP / 5
+            val slice = desc.maxP / 5
             var current = power
             for(i in 0..6) {
                 ledColors[i] = ledColorBase[i].adjustLuminanceClamped((current / slice * 100).toFloat(), 0f, 65f)
@@ -170,6 +164,7 @@ class MotorRender(entity: TransparentNodeEntity, desc_: TransparentNodeDescripto
         val power = stream.readDouble()
 
         setPower(power)
+        volumeSetting.target = Math.min(1.0f, Math.abs(power / desc.maxP).toFloat()) / 4f
     }
 }
 
@@ -244,11 +239,11 @@ class MotorElement(node: TransparentNode, desc_: TransparentNodeDescriptor) :
         override fun process(time: Double) {
             val p = powerSource.p
             var E = -p * time
-            maybePublishP(E / time)
             if(E < 0) {
                 // Pushing power--this is very inefficient
                 E = E * 10.0
             }
+            maybePublishP(E / time)
             E = E - defaultDrag * Math.max(shaft.rads, 10.0)
             shaft.energy += E * desc.efficiency
             thermal.movePowerTo(E * (1 - desc.efficiency))
