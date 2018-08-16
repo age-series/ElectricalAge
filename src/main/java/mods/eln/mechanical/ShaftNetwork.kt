@@ -3,6 +3,7 @@ package mods.eln.mechanical
 import mods.eln.misc.Coordonate
 import mods.eln.misc.Direction
 import mods.eln.misc.INBTTReady
+import mods.eln.misc.Utils
 import mods.eln.node.NodeManager
 import mods.eln.sim.process.destruct.ShaftSpeedWatchdog
 import mods.eln.sim.process.destruct.WorldExplosion
@@ -27,10 +28,22 @@ fun wouldExplode(a: ShaftNetwork, b: ShaftNetwork): Boolean {
  * Represents the connection between all blocks that are part of the same shaft network.
  */
 class ShaftNetwork() : INBTTReady {
-    val elements = HashSet<ShaftElement>()
+    val parts = HashSet<ShaftPart>()
+    val elements: HashSet<ShaftElement>
+        get() {
+            var ret = HashSet<ShaftElement>()
+            parts.forEach { ret.add(it.element) }
+            return ret
+        }
 
-    constructor(first: ShaftElement) : this() {
-        elements.add(first)
+    constructor(first: ShaftElement, side: Direction) : this() {
+        parts.add(ShaftPart(first, side))
+    }
+
+    constructor(first: ShaftElement, sides: Iterator<Direction>) : this() {
+        sides.forEach {
+            parts.add(ShaftPart(first, it))
+        }
     }
 
     // Aggregate properties of the (current) shaft:
@@ -43,7 +56,13 @@ class ShaftNetwork() : INBTTReady {
             }
             return sum
         }
-    var rads = 0.0
+    var _rads = 0.0
+    var rads: Double
+        get() = _rads
+        set(v) {
+            _rads = v
+            afterSetRads()
+        }
     var radsLastPublished = rads
 
     val joulePerRad: Double
@@ -53,12 +72,15 @@ class ShaftNetwork() : INBTTReady {
         get() = joulePerRad * rads
         set(value) {
             rads = value / joulePerRad
-            if (rads < 0) rads = 0.0
-            if (radsLastPublished > rads * 1.05 || radsLastPublished < rads * 0.95) {
-                elements.forEach { it.needPublish() }
-                radsLastPublished = rads
-            }
         }
+
+    fun afterSetRads() {
+        if (_rads < 0) _rads = 0.0
+        if (radsLastPublished > _rads * 1.05 || radsLastPublished < _rads * 0.95) {
+            elements.forEach { it.needPublish() }
+            radsLastPublished = _rads
+        }
+    }
 
     /**
      * Merge two shaft networks.
@@ -77,11 +99,11 @@ class ShaftNetwork() : INBTTReady {
 
         val newEnergy = energy + other.energy
 
-        for (element in other.elements) {
-            elements.add(element)
-            element.shaft = this
+        for (part in other.parts) {
+            parts.add(part)
+            part.element.setShaft(part.side, this)
         }
-        other.elements.clear()
+        other.parts.clear()
 
         energy = newEnergy - energyLostPerDeltaRad * deltaRads * deltaRads
     }
@@ -90,16 +112,19 @@ class ShaftNetwork() : INBTTReady {
      * Connect a ShaftElement to a shaft network, merging any relevant adjacent networks.
      * @param from The ShaftElement that changed.
      */
-    fun connectShaft(from: ShaftElement) {
-        assert(from in elements)
+    fun connectShaft(from: ShaftElement, side: Direction) {
+        assert(ShaftPart(from, side) in parts)
         val neighbours = getNeighbours(from)
         for (neighbour in neighbours) {
-            if (neighbour.element.shaft != this) {
-                mergeShafts(neighbour.element.shaft, from)
+            if(neighbour.thisShaft != this) {
+                Utils.println("SN.cS: WARNING: Connecting part with this != getShaft(side)")
+                continue
+            }
+            if (neighbour.otherShaft != null && neighbour.otherShaft != this) {
+                mergeShafts(neighbour.otherShaft, from)
 
                 // Inform the neighbour and the element itself that its shaft connectivity has changed.
-                neighbour.element.connectedOnSide(neighbour.side.inverse, this)
-                from.connectedOnSide(neighbour.side, this)
+                neighbour.makeConnection(this)
             }
         }
     }
@@ -108,20 +133,20 @@ class ShaftNetwork() : INBTTReady {
      * Disconnect from a shaft network, because an element is dying.
      * @param from The IShaftElement that's going away.
      */
-    fun disconnectShaft(from: ShaftElement) {
-        elements.remove(from)
+    fun disconnectShaft(from: ShaftElement, side: Direction) {
+        // Inform all directly involved shafts about the change in connections.
+        for (neighbour in getNeighbours(from)) {
+            neighbour.breakConnection()
+        }
+
+        parts.remove(ShaftPart(from, side))
         // Going away momentarily, but...
-        from.shaft = ShaftNetwork(from)
+        from.setShaft(side, ShaftNetwork(from, side))
         // This may have split the network.
         // At the moment there's no better way to figure this out than by exhaustively walking it to check for
         // partitions. Basically fine, as they don't get very large, but a possible target for optimization later on.
         rebuildNetwork()
 
-        // Inform all directly involved shafts about the change in connections.
-        for (neighbour in getNeighbours(from)) {
-            neighbour.element.disconnectedOnSide(neighbour.side.inverse, this)
-            from.disconnectedOnSide(neighbour.side, this)
-        }
     }
 
     /**
@@ -129,38 +154,50 @@ class ShaftNetwork() : INBTTReady {
      * Yes, this makes breaking a shaft block O(n). Not a problem right now.
      */
     internal fun rebuildNetwork() {
-        val unseen = HashSet<ShaftElement>(elements)
-        val queue = HashSet<ShaftElement>()
+        val unseen = HashSet<ShaftPart>(parts)
+        val queue = HashMap<ShaftPart,ShaftNetwork>()
+        val seen = HashSet<ShaftPart>()
         var shaft = this;
+        Utils.println("SN.rN ----- START -----")
         while (unseen.size > 0) {
-            shaft.elements.clear();
+            shaft.parts.clear();
             // Do a breadth-first search from an arbitrary element.
             val start = unseen.iterator().next()
             unseen.remove(start);
-            queue.add(start);
+            if(!(start in seen)) queue.put(start, shaft)
             while (queue.size > 0) {
                 val next = queue.iterator().next()
-                queue.remove(next);
-                shaft.elements.add(next);
-                next.shaft = shaft
-                val neighbours = getNeighbours(next)
+                queue.remove(next.key);
+                seen.add(next.key)
+                shaft = next.value
+                shaft.parts.add(next.key);
+                next.key.element.setShaft(next.key.side, shaft)
+                Utils.println("SN.rN visit next = " + next + ", queue.size = " + queue.size)
+                for(side in next.key.element.shaftConnectivity) {
+                    val part = ShaftPart(next.key.element, side)
+                    if(!(part in seen))
+                        queue.put(part, next.key.element.getShaft(side) ?: shaft)
+                }
+                val neighbours = getNeighbours(next.key.element)
                 for (neighbour in neighbours) {
-                    if (unseen.contains(neighbour.element)) {
-                        unseen.remove(neighbour.element)
-                        queue.add(neighbour.element)
+                    unseen.remove(neighbour.otherPart)
+                    if(!(neighbour.otherPart in seen)) {
+                        queue.put(neighbour.otherPart, neighbour.thisShaft!!)
                     }
                 }
             }
+
+            Utils.println("SN.rN new shaft, unseen.size = " + unseen.size)
             // We ran out of network. Any elements remaining in unseen should thus form a new network.
             shaft = ShaftNetwork()
         }
+
+        Utils.println("SN.rN ----- FINISH -----")
     }
 
     private fun getNeighbours(from: ShaftElement): ArrayList<ShaftNeighbour> {
         val c = Coordonate()
         val ret = ArrayList<ShaftNeighbour>(6)
-        if(!from.isInternallyConnected())
-            return ret;  // Don't assume we can make any internal connections across this component
         for (dir in from.shaftConnectivity) {
             c.copyFrom(from.coordonate())
             c.move(dir)
@@ -168,7 +205,13 @@ class ShaftNetwork() : INBTTReady {
             if (to is ShaftElement) {
                 for (dir2 in to.shaftConnectivity) {
                     if (dir2.inverse == dir) {
-                        ret.add(ShaftNeighbour(dir, to))
+                        ret.add(ShaftNeighbour(
+                            ShaftPart(from, dir),
+                            from.getShaft(dir),
+                            dir,
+                            ShaftPart(to, dir2),
+                            to.getShaft(dir2)
+                        ))
                         break
                     }
                 }
@@ -188,29 +231,56 @@ class ShaftNetwork() : INBTTReady {
 }
 
 interface ShaftElement {
-    var shaft: ShaftNetwork
     val shaftMass: Double
     val shaftConnectivity: Array<Direction>
     fun coordonate(): Coordonate
-
-    fun isInternallyConnected(): Boolean = true
+    fun getShaft(dir: Direction): ShaftNetwork?
+    fun setShaft(dir: Direction, net: ShaftNetwork?)
+    fun isInternallyConnected(a: Direction, b: Direction): Boolean = true
 
     fun initialize() {
-        shaft.connectShaft(this)
+        shaftConnectivity.forEach {
+            val shaft = getShaft(it)
+            if(shaft != null) shaft.connectShaft(this, it)
+        }
     }
 
     fun needPublish()
 
     fun connectedOnSide(direction: Direction, net: ShaftNetwork) {}
 
-    fun disconnectedOnSide(direction: Direction, net: ShaftNetwork) {}
+    fun disconnectedOnSide(direction: Direction, net: ShaftNetwork?) {}
 }
 
 fun createShaftWatchdog(shaftElement: ShaftElement): ShaftSpeedWatchdog {
     return ShaftSpeedWatchdog(shaftElement, absoluteMaximumShaftSpeed)
 }
 
-data class ShaftNeighbour(
-    val side: Direction,
-    val element: ShaftElement
+data class ShaftPart(
+    val element: ShaftElement,
+    val side: Direction
 )
+
+data class ShaftNeighbour(
+    val thisPart: ShaftPart,
+    val thisShaft: ShaftNetwork?,
+    val side: Direction,
+    val otherPart: ShaftPart,
+    val otherShaft: ShaftNetwork?
+) {
+    fun makeConnection(shaft: ShaftNetwork) {
+        thisPart.element.setShaft(thisPart.side, shaft)
+        otherPart.element.setShaft(otherPart.side, shaft)
+        thisPart.element.connectedOnSide(thisPart.side, shaft)
+        otherPart.element.connectedOnSide(otherPart.side, shaft)
+    }
+
+    fun breakConnection() {
+        val thisNet = thisPart.element.getShaft(thisPart.side)
+        val otherNet = otherPart.element.getShaft(otherPart.side)
+        if(thisNet != otherNet) Utils.println("ShaftNeighbour.breakConnection: WARNING: Break already broken connection?")
+        thisPart.element.disconnectedOnSide(thisPart.side, thisNet)
+        otherPart.element.disconnectedOnSide(otherPart.side, otherNet)
+        // TODO: Unmerge networks here eventually?
+    }
+}

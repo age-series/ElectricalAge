@@ -84,7 +84,7 @@ class JointHubElement(node: TransparentNode, desc_: TransparentNodeDescriptor) :
         needPublish()
     }
 
-    override fun disconnectedOnSide(direction: Direction, _net: ShaftNetwork) {
+    override fun disconnectedOnSide(direction: Direction, _net: ShaftNetwork?) {
         connectedSides.remove(direction)
         needPublish()
     }

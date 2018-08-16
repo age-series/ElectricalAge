@@ -7,6 +7,7 @@ import mods.eln.misc.*
 import mods.eln.node.transparent.*
 import mods.eln.sim.process.destruct.WorldExplosion
 import mods.eln.sound.LoopedSound
+import net.minecraft.entity.EntityLivingBase
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraftforge.client.IItemRenderer
@@ -165,7 +166,11 @@ open class ShaftRender(entity: TransparentNodeEntity, desc: TransparentNodeDescr
 abstract class SimpleShaftElement(node: TransparentNode, desc_: TransparentNodeDescriptor) :
     TransparentNodeElement(node, desc_), ShaftElement {
     override val shaftMass = 5.0
-    override var shaft = ShaftNetwork(this)
+    var shaft: ShaftNetwork = ShaftNetwork()
+    override fun getShaft(dir: Direction): ShaftNetwork? = shaft
+    override fun setShaft(dir: Direction, net: ShaftNetwork?) {
+        if(net != null) shaft = net
+    }
 
     init {
         val exp = WorldExplosion(this).machineExplosion()
@@ -177,16 +182,21 @@ abstract class SimpleShaftElement(node: TransparentNode, desc_: TransparentNodeD
 
     override fun initialize() {
         reconnect()
-        shaft.connectShaft(this)
+        shaft = ShaftNetwork(this, shaftConnectivity.iterator())
+        shaftConnectivity.forEach {
+            shaft.connectShaft(this, it)
+        }
     }
 
     override fun onBreakElement() {
         super.onBreakElement()
-        shaft.disconnectShaft(this)
+        shaftConnectivity.forEach {
+            shaft.disconnectShaft(this, it)
+        }
     }
 
     override fun networkSerialize(stream: DataOutputStream) {
-        super.networkSerialize(stream);
+        super.networkSerialize(stream)
         stream.writeFloat(shaft.rads.toFloat())
         // For cables.
         node.lrduCubeMask.getTranslate(front.down()).serialize(stream)

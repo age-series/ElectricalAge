@@ -2914,6 +2914,24 @@ public class Eln {
 
             transparentNodeItem.addDescriptor(subId + (id << 6), desc);
         }
+
+        {
+            subId = 17;
+            ClutchDescriptor desc = new ClutchDescriptor(
+                TR_NAME(Type.NONE, "Clutch"),
+                obj.getObj("JointHub")
+            );
+            transparentNodeItem.addDescriptor(subId + (id << 6), desc);
+        }
+
+        {
+            subId = 18;
+            FixedShaftDescriptor desc = new FixedShaftDescriptor(
+                TR_NAME(Type.NONE, "Fixed Shaft"),
+                obj.getObj("FixedShaft")
+            );
+            transparentNodeItem.addDescriptor(subId + (id << 6), desc);
+        }
     }
 
     public ArrayList<ItemStack> furnaceList = new ArrayList<ItemStack>();
