@@ -145,9 +145,12 @@ class ClutchElement(node: TransparentNode, desc_: TransparentNodeDescriptor) : S
     }
 
     override fun onBreakElement() {
-        leftShaft.disconnectShaft(this, front.left())
-        rightShaft.disconnectShaft(this, front.right())
+        destructing = true
+        leftShaft.disconnectShaft(this)
+        rightShaft.disconnectShaft(this)
     }
+
+    override fun isDestructing() = destructing
 
     override fun getShaft(dir: Direction) = when(dir) {
         front.left() -> leftShaft

@@ -133,15 +133,20 @@ class ShaftNetwork() : INBTTReady {
      * Disconnect from a shaft network, because an element is dying.
      * @param from The IShaftElement that's going away.
      */
-    fun disconnectShaft(from: ShaftElement, side: Direction) {
+    fun disconnectShaft(from: ShaftElement) {
         // Inform all directly involved shafts about the change in connections.
         for (neighbour in getNeighbours(from)) {
-            neighbour.breakConnection()
+            if(neighbour.thisShaft == this) {
+                neighbour.breakConnection()
+                // Going away momentarily, but...
+                from.setShaft(neighbour.thisPart.side, ShaftNetwork(from, neighbour.thisPart.side))
+            }
         }
 
-        parts.remove(ShaftPart(from, side))
-        // Going away momentarily, but...
-        from.setShaft(side, ShaftNetwork(from, side))
+        parts.removeIf {
+            it.element == from
+        }
+
         // This may have split the network.
         // At the moment there's no better way to figure this out than by exhaustively walking it to check for
         // partitions. Basically fine, as they don't get very large, but a possible target for optimization later on.
@@ -170,6 +175,7 @@ class ShaftNetwork() : INBTTReady {
                 queue.remove(next.key);
                 seen.add(next.key)
                 shaft = next.value
+                if(next.key.element.isDestructing()) continue
                 shaft.parts.add(next.key);
                 next.key.element.setShaft(next.key.side, shaft)
                 Utils.println("SN.rN visit next = " + next + ", queue.size = " + queue.size)
@@ -237,6 +243,7 @@ interface ShaftElement {
     fun getShaft(dir: Direction): ShaftNetwork?
     fun setShaft(dir: Direction, net: ShaftNetwork?)
     fun isInternallyConnected(a: Direction, b: Direction): Boolean = true
+    fun isDestructing(): Boolean
 
     fun initialize() {
         shaftConnectivity.forEach {

@@ -171,6 +171,8 @@ abstract class SimpleShaftElement(node: TransparentNode, desc_: TransparentNodeD
     override fun setShaft(dir: Direction, net: ShaftNetwork?) {
         if(net != null) shaft = net
     }
+    var destructing = false
+    override fun isDestructing() = destructing
 
     init {
         val exp = WorldExplosion(this).machineExplosion()
@@ -190,8 +192,9 @@ abstract class SimpleShaftElement(node: TransparentNode, desc_: TransparentNodeD
 
     override fun onBreakElement() {
         super.onBreakElement()
+        destructing = true
         shaftConnectivity.forEach {
-            shaft.disconnectShaft(this, it)
+            shaft.disconnectShaft(this)
         }
     }
 
