@@ -17,6 +17,8 @@ import mods.eln.sim.ElectricalLoad
 import mods.eln.sim.IProcess
 import mods.eln.sim.ThermalLoad
 import mods.eln.sim.nbt.NbtElectricalGateInput
+import mods.eln.sound.LoopedSound
+import mods.eln.sound.SoundCommand
 import net.minecraft.client.gui.GuiScreen
 import net.minecraft.entity.EntityLivingBase
 import net.minecraft.entity.player.EntityPlayer
@@ -39,7 +41,7 @@ class ClutchPlateItem(name: String) : GenericItemUsingDamageDescriptor(name) {
     }
 
     fun getWear(stack: ItemStack): Double {
-        if (!stack.hasTagCompound()) return 0.0;
+        if (!stack.hasTagCompound()) return 0.0
         return stack.tagCompound.getDouble("wear")
     }
 
@@ -67,51 +69,32 @@ class ClutchDescriptor(name: String, override val obj: Obj3D) : SimpleShaftDescr
         val degToRad = 360.0 / (2 * Math.PI)
     }
 
+    val slipSound = "eln:clutch"
+    val slipStopSound = "eln:click"
+
     override val static: Array<out Obj3D.Obj3DPart> = arrayOf(
         obj.getPart("Stand"),
         obj.getPart("Cowl")
     )
     override val rotating: Array<out Obj3D.Obj3DPart> = emptyArray()
 
-    val staticAllSides = arrayOf(obj.getPart("Cap"))
-    val rotatingAllSides = arrayOf(obj.getPart("Shaft"))
+    val leftShaftPart = obj.getPart("ShaftXN")
+    val rightShaftPart = obj.getPart("ShaftXP")
 
     override fun draw(angle: Double) {
-        draw(angle, Direction.XP, DirectionSet())
+        draw(angle, angle)
     }
 
-    fun draw(angle: Double, front: Direction, connectedSides: DirectionSet) {
+    fun draw(leftAngle: Double, rightAngle: Double) {
         static.forEach { it.draw() }
 
-        val bb = rotatingAllSides[0].boundingBox()
-        val center = bb.centre()
-        var direction = front
         preserveMatrix {
-            direction.glRotateXnRef()
-
-            for (i in 0..3) {
-                if (connectedSides.contains(direction)) {
-                    val rotAngle = if (direction == Direction.XP || direction == Direction.ZN) {
-                        angle
-                    } else {
-                        -angle
-                    }
-                    preserveMatrix {
-                        direction.glRotateXnRef()
-                        GL11.glTranslated(center.xCoord, center.yCoord, center.zCoord)
-                        GL11.glRotated(degToRad * rotAngle, 1.0, 0.0, 0.0)
-                        GL11.glTranslated(-center.xCoord, -center.yCoord, -center.zCoord)
-                        rotatingAllSides.forEach { it.draw() }
-                    }
-                } else {
-                    preserveMatrix {
-                        direction.glRotateXnRef()
-                        staticAllSides.forEach { it.draw() }
-                    }
-                }
-
-                direction = direction.left()
-            }
+            GL11.glRotated(leftAngle * degToRad, 0.0, 0.0, 1.0)
+            leftShaftPart.draw()
+        }
+        preserveMatrix {
+            GL11.glRotated(rightAngle * degToRad, 0.0, 0.0, 1.0)
+            rightShaftPart.draw()
         }
     }
 }
@@ -134,14 +117,21 @@ class ClutchElement(node: TransparentNode, desc_: TransparentNodeDescriptor) : S
     var rightShaft = ShaftNetwork()
     override fun initialize() {
         reconnect()
+        // Carry over loaded rads, if any
+        val lRads = leftShaft.rads
+        val rRads = rightShaft.rads
         leftShaft = ShaftNetwork(this, front.left())
         rightShaft = ShaftNetwork(this, front.right())
+        leftShaft.rads = lRads
+        rightShaft.rads = rRads
+        // These calls can still change the speed via mergeShaft
         leftShaft.connectShaft(this, front.left())
         rightShaft.connectShaft(this, front.right())
         if(getShaft(front.left()) != leftShaft)
             Utils.println("CE.init ERROR: getShaft(left) != leftShaft")
         if(getShaft(front.right()) != rightShaft)
             Utils.println("CE.init ERROR: getShaft(right) != rightShaft")
+        // Utils.println(String.format("CE.i: new left %s r=%f, right %s r=%f", leftShaft, leftShaft.rads, rightShaft, rightShaft.rads))
     }
 
     override fun onBreakElement() {
@@ -175,6 +165,7 @@ class ClutchElement(node: TransparentNode, desc_: TransparentNodeDescriptor) : S
 
     val inputGate = NbtElectricalGateInput("clutchIn")
     var slipping = false
+    var lastSlipping = false
     override fun getElectricalLoad(side: Direction?, lrdu: LRDU?): ElectricalLoad? = inputGate
     override fun getConnectionMask(side: Direction?, lrdu: LRDU?): Int = NodeBase.maskElectricalInputGate
 
@@ -227,12 +218,23 @@ class ClutchElement(node: TransparentNode, desc_: TransparentNodeDescriptor) : S
                 val maxEXfer = clutching * dynamicMaxTransferF.getValue(wear)
                 val eqre = (rdiff + rcrit / 2.0) * Math.min(leftShaft.joulePerRad, rightShaft.joulePerRad)
                 val eXfer = Math.min(maxEXfer, eqre)
+                // If the sign would invert, lock the clutch instead
                 if(leftShaft.rads < rightShaft.rads) {
                     leftShaft.energy += eXfer
                     rightShaft.energy -= eXfer
+                    if(leftShaft.rads > rightShaft.rads) {
+                        val ravg = (leftShaft.rads + rightShaft.rads) / 2.0
+                        leftShaft.rads = ravg
+                        rightShaft.rads = ravg
+                    }
                 } else {
                     rightShaft.energy += eXfer
                     leftShaft.energy -= eXfer
+                    if(rightShaft.rads > leftShaft.rads) {
+                        val ravg = (leftShaft.rads + rightShaft.rads) / 2.0
+                        leftShaft.rads = ravg
+                        rightShaft.rads = ravg
+                    }
                 }
 
                 val addWear = clutching * slipWearF.getValue(rdiff)
@@ -243,6 +245,8 @@ class ClutchElement(node: TransparentNode, desc_: TransparentNodeDescriptor) : S
                 rightShaft.rads = ravg
             }
 
+            if(slipping != lastSlipping) needPublish()
+            lastSlipping = slipping
             // Utils.println("CP.p: processed")
         }
     }
@@ -270,6 +274,10 @@ class ClutchElement(node: TransparentNode, desc_: TransparentNodeDescriptor) : S
     override fun networkSerialize(stream: DataOutputStream) {
         super.networkSerialize(stream)
         connectedSides.serialize(stream)
+        stream.writeFloat(leftShaft.rads.toFloat())
+        stream.writeFloat(rightShaft.rads.toFloat())
+        stream.writeFloat(inputGate.normalized.toFloat())
+        stream.writeBoolean(slipping)
     }
 
     /*
@@ -304,15 +312,20 @@ class ClutchElement(node: TransparentNode, desc_: TransparentNodeDescriptor) : S
     override fun writeToNBT(nbt: NBTTagCompound) {
         super.writeToNBT(nbt)
         connectedSides.writeToNBT(nbt, "sides")
+        leftShaft.writeToNBT(nbt, "leftShaft")
+        rightShaft.writeToNBT(nbt, "rightShaft")
     }
 
     override fun readFromNBT(nbt: NBTTagCompound) {
         super.readFromNBT(nbt)
         connectedSides.readFromNBT(nbt, "sides")
+        leftShaft.readFromNBT(nbt, "leftShaft")
+        rightShaft.readFromNBT(nbt, "rightShaft")
+        // Utils.println(String.format("CE.rFN: left %s r=%f, right %s r=%f", leftShaft, leftShaft.rads, rightShaft, rightShaft.rads))
     }
 
     override fun getWaila(): MutableMap<String, String> {
-        var info = mutableMapOf<String, String>()
+        val info = mutableMapOf<String, String>()
         val entries = mapOf(Pair(front.left(), leftShaft), Pair(front.right(), rightShaft)).entries
         info.put("Speeds", entries.map {
             Utils.plotRads("", it.value.rads)
@@ -328,7 +341,7 @@ class ClutchElement(node: TransparentNode, desc_: TransparentNodeDescriptor) : S
         if(desc != null && stack != null)
             info.put("Wear", String.format("%.6f", desc.getWear(stack)))
         info.put("Clutching", Utils.plotVolt(inputGate.bornedU))
-        info.put("Slipping", if(slipping){ "YES" } else { "NO" })
+        info.put("Slipping", if(slipping) { "YES" } else { "NO" })
         return info
     }
 
@@ -337,20 +350,69 @@ class ClutchElement(node: TransparentNode, desc_: TransparentNodeDescriptor) : S
     override fun onBlockActivated(entityPlayer: EntityPlayer?, side: Direction?, vx: Float, vy: Float, vz: Float): Boolean = false
 }
 
-class ClutchRender(entity: TransparentNodeEntity, desc: TransparentNodeDescriptor) : ShaftRender(entity, desc) {
-    val desc = desc as ClutchDescriptor
+class ClutchRender(entity: TransparentNodeEntity, desc_: TransparentNodeDescriptor) : ShaftRender(entity, desc_) {
+    val desc = desc_ as ClutchDescriptor
     val connectedSides = DirectionSet()
     val inv = TransparentNodeElementInventory(1, 1, this)
     override fun getInventory() = inv
 
+    var lRads = 0.0
+    var rRads = 0.0
+    val lLogRads: Double
+        get() {
+            return Math.log(lRads + 1) / Math.log(1.2)
+        }
+    val rLogRads: Double
+        get() {
+            return Math.log(rRads + 1) / Math.log(1.2)
+        }
+    var lAngle = 0.0
+    var rAngle = 0.0
+
+    override fun refresh(deltaT: Float) {
+        super.refresh(deltaT)
+        lAngle += deltaT * lLogRads
+        rAngle += deltaT * rLogRads
+        volumeSetting.step(deltaT)
+    }
+
     override fun draw() {
         front.glRotateXnRef()
-        desc.draw(angle, front, connectedSides)
+        val angSign = when(front) {
+            Direction.XP, Direction.ZP -> 1.0
+            else -> -1.0
+        }
+        desc.draw(lAngle * angSign, rAngle * angSign)
     }
+
+    inner class ClutchLoopedSound(sound: String, coord: Coordonate) : LoopedSound(sound, coord) {
+        override fun getPitch() = Math.max(0.1, Math.min(1.5, Math.abs(lRads - rRads) / 200.0)).toFloat()
+        override fun getVolume() = volumeSetting.position
+    }
+
+    init {
+        addLoopedSound(ClutchLoopedSound(desc.slipSound, coordonate()))
+        mask.set(LRDU.Down, true)
+    }
+
+    var clutching = 0.0
+    var slipping = false
+    var lastSlipping = false
 
     override fun networkUnserialize(stream: DataInputStream) {
         super.networkUnserialize(stream)
         connectedSides.deserialize(stream)
+        lRads = stream.readFloat().toDouble()
+        rRads = stream.readFloat().toDouble()
+        clutching = stream.readFloat().toDouble()
+        slipping = stream.readBoolean()
+        if(slipping) {
+            volumeSetting.target = (Math.min(1.0, Math.abs(lRads - rRads) / 20.0) * clutching * 0.5).toFloat()
+        } else {
+            volumeSetting.position = 0f
+        }
+        if(lastSlipping && !slipping) play(SoundCommand(desc.slipStopSound))
+        lastSlipping = slipping
     }
 
     override fun newGuiDraw(side: Direction?, player: EntityPlayer?): GuiScreen? = ClutchGui(player, inv, this)

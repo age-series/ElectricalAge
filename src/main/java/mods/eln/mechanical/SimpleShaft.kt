@@ -184,8 +184,12 @@ abstract class SimpleShaftElement(node: TransparentNode, desc_: TransparentNodeD
 
     override fun initialize() {
         reconnect()
+        val rads = shaft.rads  // Carry over loaded rads, if any
         shaft = ShaftNetwork(this, shaftConnectivity.iterator())
+        shaft.rads = rads
+        // Utils.println(String.format("SS.i: new %s r=%f", shaft, shaft.rads))
         shaftConnectivity.forEach {
+            // These calls can still change the speed via mergeShaft
             shaft.connectShaft(this, it)
         }
     }
@@ -213,6 +217,7 @@ abstract class SimpleShaftElement(node: TransparentNode, desc_: TransparentNodeD
     override fun readFromNBT(nbt: NBTTagCompound) {
         super.readFromNBT(nbt)
         shaft.readFromNBT(nbt, "shaft")
+        // Utils.println(String.format("SS.rFN: %s r=%f", shaft, shaft.rads))
     }
 
     override fun multiMeterString(side: Direction?): String {

@@ -2919,7 +2919,7 @@ public class Eln {
             subId = 17;
             ClutchDescriptor desc = new ClutchDescriptor(
                 TR_NAME(Type.NONE, "Clutch"),
-                obj.getObj("JointHub")
+                obj.getObj("Clutch")
             );
             transparentNodeItem.addDescriptor(subId + (id << 6), desc);
         }

@@ -1,5 +1,7 @@
 package mods.eln.mechanical
 
+import cpw.mods.fml.common.Loader
+import cpw.mods.fml.common.LoaderState
 import mods.eln.misc.Coordonate
 import mods.eln.misc.Direction
 import mods.eln.misc.INBTTReady
@@ -8,6 +10,7 @@ import mods.eln.node.NodeManager
 import mods.eln.sim.process.destruct.ShaftSpeedWatchdog
 import mods.eln.sim.process.destruct.WorldExplosion
 import net.minecraft.nbt.NBTTagCompound
+import net.minecraft.server.MinecraftServer
 import java.util.*
 
 
@@ -90,14 +93,34 @@ class ShaftNetwork() : INBTTReady {
     fun mergeShafts(other: ShaftNetwork, invoker: ShaftElement?) {
         assert(other != this)
 
-        val deltaRads = Math.abs(rads - other.rads)
+        /* XXX (Grissess): While loading the map, shaft networks are repeatedly
+        merged and deserialized, causing them to lose energy just as if the
+        components were newly added. This can cause, in the worst case, saved
+        networks to explode on load. Although a bit of a hack, asking the FML
+        Loader about which state it's in seems to be the best workaround. At
+        some point, consider serializing network connectivity properly.
+         */
 
-        if(wouldExplode(this, other) && invoker != null) {
-            WorldExplosion(invoker.coordonate()).machineExplosion().destructImpl()
-            // Continue, however. The networks will unmerge when a component disappears, but assume they might not.
+        val loadMerge = Loader.instance().loaderState == LoaderState.SERVER_ABOUT_TO_START
+        // val loadMerge = false
+        // Utils.println("SN.mS: state " + Loader.instance().loaderState.name)
+
+        // Utils.println(String.format("SN.mS: Merging %s r=%f e=%f, %s r=%f e=%f, loading=%s", this, rads, energy, other, other.rads, other.energy, loadMerge))
+
+        var deltaRads = 0.0
+        var newEnergy = 0.0
+        if(!loadMerge) {
+            deltaRads = Math.abs(rads - other.rads)
+
+            if (wouldExplode(this, other) && invoker != null) {
+                Utils.println(String.format("SN.mS: Bad matching, %s will explode", invoker))
+                WorldExplosion(invoker.coordonate()).machineExplosion().destructImpl()
+                // Continue, however. The networks will unmerge when a component disappears, but assume they might not.
+            }
+
+            newEnergy = energy + other.energy
         }
 
-        val newEnergy = energy + other.energy
 
         for (part in other.parts) {
             parts.add(part)
@@ -105,7 +128,9 @@ class ShaftNetwork() : INBTTReady {
         }
         other.parts.clear()
 
-        energy = newEnergy - energyLostPerDeltaRad * deltaRads * deltaRads
+        if(!loadMerge) energy = newEnergy - energyLostPerDeltaRad * deltaRads * deltaRads
+
+        // Utils.println(String.format("SN.mS: Result %s r=%f e=%f", this, rads, energy))
     }
 
     /**
@@ -163,7 +188,7 @@ class ShaftNetwork() : INBTTReady {
         val queue = HashMap<ShaftPart,ShaftNetwork>()
         val seen = HashSet<ShaftPart>()
         var shaft = this;
-        Utils.println("SN.rN ----- START -----")
+        // Utils.println("SN.rN ----- START -----")
         while (unseen.size > 0) {
             shaft.parts.clear();
             // Do a breadth-first search from an arbitrary element.
@@ -178,7 +203,7 @@ class ShaftNetwork() : INBTTReady {
                 if(next.key.element.isDestructing()) continue
                 shaft.parts.add(next.key);
                 next.key.element.setShaft(next.key.side, shaft)
-                Utils.println("SN.rN visit next = " + next + ", queue.size = " + queue.size)
+                // Utils.println("SN.rN visit next = " + next + ", queue.size = " + queue.size)
                 for(side in next.key.element.shaftConnectivity) {
                     val part = ShaftPart(next.key.element, side)
                     if(!(part in seen))
@@ -193,12 +218,12 @@ class ShaftNetwork() : INBTTReady {
                 }
             }
 
-            Utils.println("SN.rN new shaft, unseen.size = " + unseen.size)
+            // Utils.println("SN.rN new shaft, unseen.size = " + unseen.size)
             // We ran out of network. Any elements remaining in unseen should thus form a new network.
             shaft = ShaftNetwork()
         }
 
-        Utils.println("SN.rN ----- FINISH -----")
+        // Utils.println("SN.rN ----- FINISH -----")
     }
 
     private fun getNeighbours(from: ShaftElement): ArrayList<ShaftNeighbour> {
@@ -228,10 +253,12 @@ class ShaftNetwork() : INBTTReady {
 
     override fun readFromNBT(nbt: NBTTagCompound, str: String?) {
         rads = nbt.getFloat(str + "rads").toDouble()
+        // Utils.println(String.format("SN.rFN: load %s r=%f", this, rads))
     }
 
     override fun writeToNBT(nbt: NBTTagCompound, str: String?) {
         nbt.setFloat(str + "rads", rads.toFloat())
+        // Utils.println(String.format("SN.wTN: save %s r=%f", this, rads))
     }
 
 }
