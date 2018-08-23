@@ -30,7 +30,7 @@ fun wouldExplode(a: ShaftNetwork, b: ShaftNetwork): Boolean {
 /**
  * Represents the connection between all blocks that are part of the same shaft network.
  */
-class ShaftNetwork() : INBTTReady {
+open class ShaftNetwork() : INBTTReady {
     val parts = HashSet<ShaftPart>()
     val elements: HashSet<ShaftElement>
         get() {
@@ -49,9 +49,19 @@ class ShaftNetwork() : INBTTReady {
         }
     }
 
+    constructor(other: ShaftNetwork) : this() {
+        takeAll(other)
+    }
+
+    fun takeAll(other: ShaftNetwork) {
+        other.parts.forEach { it.element.setShaft(it.side, this) }
+        parts.addAll(other.parts)
+        other.parts.clear()
+    }
+
     // Aggregate properties of the (current) shaft:
     val shapeFactor = 0.5
-    val mass: Double
+    open val mass: Double
         get() {
             var sum = 0.0
             for (e in elements) {
@@ -60,7 +70,7 @@ class ShaftNetwork() : INBTTReady {
             return sum
         }
     var _rads = 0.0
-    var rads: Double
+    open var rads: Double
         get() = _rads
         set(v) {
             _rads = v
@@ -85,13 +95,23 @@ class ShaftNetwork() : INBTTReady {
         }
     }
 
+    open fun hasMergePrecedenceOver(other: ShaftNetwork) = false
+
     /**
      * Merge two shaft networks.
      *
      * @param other The shaft network to merge into this one. Destroyed.
      */
-    fun mergeShafts(other: ShaftNetwork, invoker: ShaftElement?) {
+    fun mergeShafts(other: ShaftNetwork, invoker: ShaftElement?): ShaftNetwork {
         assert(other != this)
+
+        // If the other class wants to take this merge, let it.
+        // In particular, don't presume that:
+        // (1) setShaft won't be called on the invoker during the merge, and
+        // (2) that the invoker will have the same shaft afterward
+        if(other.hasMergePrecedenceOver(this)) {
+            return other.mergeShafts(this, invoker)
+        }
 
         /* XXX (Grissess): While loading the map, shaft networks are repeatedly
         merged and deserialized, causing them to lose energy just as if the
@@ -131,6 +151,9 @@ class ShaftNetwork() : INBTTReady {
         if(!loadMerge) energy = newEnergy - energyLostPerDeltaRad * deltaRads * deltaRads
 
         // Utils.println(String.format("SN.mS: Result %s r=%f e=%f", this, rads, energy))
+
+        // Return the survivor
+        return this
     }
 
     /**
@@ -149,7 +172,7 @@ class ShaftNetwork() : INBTTReady {
                 mergeShafts(neighbour.otherShaft, from)
 
                 // Inform the neighbour and the element itself that its shaft connectivity has changed.
-                neighbour.makeConnection(this)
+                neighbour.makeConnection()
             }
         }
     }
@@ -187,7 +210,7 @@ class ShaftNetwork() : INBTTReady {
         val unseen = HashSet<ShaftPart>(parts)
         val queue = HashMap<ShaftPart,ShaftNetwork>()
         val seen = HashSet<ShaftPart>()
-        var shaft = this;
+        var shaft = ShaftNetwork();
         // Utils.println("SN.rN ----- START -----")
         while (unseen.size > 0) {
             shaft.parts.clear();
@@ -263,6 +286,20 @@ class ShaftNetwork() : INBTTReady {
 
 }
 
+class StaticShaftNetwork : ShaftNetwork() {
+    var fixedRads = 0.0
+
+    override var rads
+        get() = fixedRads
+        set(s) {}
+
+    // XXX This shouldn't matter...
+    override val mass: Double
+        get() = 1000.0
+
+    override fun hasMergePrecedenceOver(other: ShaftNetwork) = other !is StaticShaftNetwork
+}
+
 interface ShaftElement {
     val shaftMass: Double
     val shaftConnectivity: Array<Direction>
@@ -302,11 +339,12 @@ data class ShaftNeighbour(
     val otherPart: ShaftPart,
     val otherShaft: ShaftNetwork?
 ) {
-    fun makeConnection(shaft: ShaftNetwork) {
-        thisPart.element.setShaft(thisPart.side, shaft)
-        otherPart.element.setShaft(otherPart.side, shaft)
-        thisPart.element.connectedOnSide(thisPart.side, shaft)
-        otherPart.element.connectedOnSide(otherPart.side, shaft)
+    fun makeConnection() {
+        val thisNet = thisPart.element.getShaft(thisPart.side)
+        val otherNet = otherPart.element.getShaft(otherPart.side)
+        if(thisNet != otherNet) Utils.println("ShaftNeighbour.makeConnection: WARNING: Not actually connected?")
+        thisPart.element.connectedOnSide(thisPart.side, thisNet!!)
+        otherPart.element.connectedOnSide(otherPart.side, otherNet!!)
     }
 
     fun breakConnection() {

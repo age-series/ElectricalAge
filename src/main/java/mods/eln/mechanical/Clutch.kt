@@ -106,7 +106,7 @@ class ClutchElement(node: TransparentNode, desc_: TransparentNodeDescriptor) : S
         // wear -> Joules
         val maxStaticEnergyF = LinearFunction(0f, 256000f, 1f, 0f)
         // wear -> Joules
-        val dynamicMaxTransferF = LinearFunction(0f, 12800f, 1f, 3200f)
+        val dynamicMaxTransferF = LinearFunction(0f, 25600f, 1f, 6400f)
         // rads -> wear
         val slipWearF = LinearFunction(0f, 0f, 1000f, 0.0001f)
     }
@@ -334,7 +334,7 @@ class ClutchElement(node: TransparentNode, desc_: TransparentNodeDescriptor) : S
             Utils.plotEnergy("", it.value.energy)
         }.joinToString(", "))
         info.put("Masses", entries.map {
-            Utils.plotValue(it.value.mass, "kg")
+            Utils.plotValue(it.value.mass * 1000, "g")
         }.joinToString(", "))
         val desc = clutchPlateDescriptor
         val stack = clutchPlateStack

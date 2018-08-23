@@ -26,16 +26,16 @@ class FixedShaftDescriptor(name: String, override val obj: Obj3D) : SimpleShaftD
 class FixedShaftElement(node: TransparentNode, desc_: TransparentNodeDescriptor) : SimpleShaftElement(node, desc_) {
     override val shaftMass = 10.0
 
-    inner class FixedShaftProcess : IProcess {
-        override fun process(time: Double) {
-            shaft.rads = 0.0
+    override var shaft: ShaftNetwork = StaticShaftNetwork()
+    override fun setShaft(dir: Direction, net: ShaftNetwork?) {
+        if(net == null) return
+        if(net !is StaticShaftNetwork) {
+            val staticNet = StaticShaftNetwork()
+            staticNet.takeAll(net)  // NB: This recurses back here, hopefully into the other branch
+            super.setShaft(dir, staticNet)
+        } else {
+            super.setShaft(dir, net)
         }
-    }
-
-    val process = FixedShaftProcess()
-
-    init {
-        slowProcessList.add(process)
     }
 
     override fun thermoMeterString(side: Direction?): String? = null

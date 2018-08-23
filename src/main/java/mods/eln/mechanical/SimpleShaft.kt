@@ -166,7 +166,7 @@ open class ShaftRender(entity: TransparentNodeEntity, desc: TransparentNodeDescr
 abstract class SimpleShaftElement(node: TransparentNode, desc_: TransparentNodeDescriptor) :
     TransparentNodeElement(node, desc_), ShaftElement {
     override val shaftMass = 5.0
-    var shaft: ShaftNetwork = ShaftNetwork()
+    open var shaft: ShaftNetwork = ShaftNetwork()
     override fun getShaft(dir: Direction): ShaftNetwork? = shaft
     override fun setShaft(dir: Direction, net: ShaftNetwork?) {
         if(net != null) shaft = net
