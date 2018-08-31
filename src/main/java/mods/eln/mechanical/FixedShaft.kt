@@ -38,6 +38,18 @@ class FixedShaftElement(node: TransparentNode, desc_: TransparentNodeDescriptor)
         }
     }
 
+    override fun initialize() {
+        reconnect()
+        val rads = shaft.rads  // Carry over loaded rads, if any
+        shaft = StaticShaftNetwork(this, shaftConnectivity.iterator())
+        shaft.rads = rads
+        // Utils.println(String.format("SS.i: new %s r=%f", shaft, shaft.rads))
+        shaftConnectivity.forEach {
+            // These calls can still change the speed via mergeShaft
+            shaft.connectShaft(this, it)
+        }
+    }
+
     override fun thermoMeterString(side: Direction?): String? = null
     override fun getThermalLoad(side: Direction?, lrdu: LRDU?): ThermalLoad? = null
     override fun getElectricalLoad(side: Direction?, lrdu: LRDU?): ElectricalLoad? = null

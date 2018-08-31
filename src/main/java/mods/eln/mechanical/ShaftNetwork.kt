@@ -104,12 +104,14 @@ open class ShaftNetwork() : INBTTReady {
      */
     fun mergeShafts(other: ShaftNetwork, invoker: ShaftElement?): ShaftNetwork {
         assert(other != this)
+        Utils.println(String.format("SN.ms(this=%s, %s, invoker=%s)", this, other, invoker))
 
         // If the other class wants to take this merge, let it.
         // In particular, don't presume that:
         // (1) setShaft won't be called on the invoker during the merge, and
         // (2) that the invoker will have the same shaft afterward
         if(other.hasMergePrecedenceOver(this)) {
+            Utils.println(String.format("SN.mS: merge prec %s over %s", other, this))
             return other.mergeShafts(this, invoker)
         }
 
@@ -286,7 +288,13 @@ open class ShaftNetwork() : INBTTReady {
 
 }
 
-class StaticShaftNetwork : ShaftNetwork() {
+class StaticShaftNetwork() : ShaftNetwork() {
+
+    constructor(elem: ShaftElement, dirs: Iterator<Direction>) : this() {
+        dirs.forEach {
+            parts.add(ShaftPart(elem, it))
+        }
+    }
     var fixedRads = 0.0
 
     override var rads

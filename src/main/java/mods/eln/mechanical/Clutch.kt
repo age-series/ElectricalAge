@@ -1,6 +1,7 @@
 package mods.eln.mechanical
 
 import mods.eln.Eln
+import mods.eln.cable.CableRender
 import mods.eln.cable.CableRenderDescriptor
 import mods.eln.generic.GenericItemUsingDamage
 import mods.eln.generic.GenericItemUsingDamageDescriptor
@@ -353,6 +354,7 @@ class ClutchElement(node: TransparentNode, desc_: TransparentNodeDescriptor) : S
 class ClutchRender(entity: TransparentNodeEntity, desc_: TransparentNodeDescriptor) : ShaftRender(entity, desc_) {
     val desc = desc_ as ClutchDescriptor
     val connectedSides = DirectionSet()
+    override val cableRender = Eln.instance.stdCableRenderSignal
     val inv = TransparentNodeElementInventory(1, 1, this)
     override fun getInventory() = inv
 
@@ -377,12 +379,31 @@ class ClutchRender(entity: TransparentNodeEntity, desc_: TransparentNodeDescript
     }
 
     override fun draw() {
-        front.glRotateXnRef()
-        val angSign = when(front) {
-            Direction.XP, Direction.ZP -> 1.0
-            else -> -1.0
+        preserveMatrix {
+            front.glRotateXnRef()
+            val angSign = when (front) {
+                Direction.XP, Direction.ZP -> 1.0
+                else -> -1.0
+            }
+            desc.draw(lAngle * angSign, rAngle * angSign)
         }
-        desc.draw(lAngle * angSign, rAngle * angSign)
+
+        preserveMatrix {
+            if (cableRefresh) {
+                cableRefresh = false;
+                connectionType = CableRender.connectionType(tileEntity, eConn, front.down())
+            }
+
+            glCableTransforme(front.down());
+            cableRender!!.bindCableTexture();
+
+            for (lrdu in LRDU.values()) {
+                Utils.setGlColorFromDye(connectionType!!.otherdry[lrdu.toInt()])
+                if (!eConn.get(lrdu)) continue
+                mask.set(1.shl(lrdu.ordinal))
+                CableRender.drawCable(cableRender, mask, connectionType)
+            }
+        }
     }
 
     inner class ClutchLoopedSound(sound: String, coord: Coordonate) : LoopedSound(sound, coord) {
@@ -392,7 +413,8 @@ class ClutchRender(entity: TransparentNodeEntity, desc_: TransparentNodeDescript
 
     init {
         addLoopedSound(ClutchLoopedSound(desc.slipSound, coordonate()))
-        mask.set(LRDU.Down, true)
+        LRDU.values().forEach { eConn.set(it, true); mask.set(it, true) }
+        volumeSetting.target = 0f
     }
 
     var clutching = 0.0
@@ -413,12 +435,10 @@ class ClutchRender(entity: TransparentNodeEntity, desc_: TransparentNodeDescript
         }
         if(lastSlipping && !slipping) play(SoundCommand(desc.slipStopSound))
         lastSlipping = slipping
+        Utils.println(String.format("CR.nU: l=%f,r=%f c=%f s=%s ls=%s", lRads, rRads, clutching, slipping, lastSlipping))
     }
 
     override fun newGuiDraw(side: Direction?, player: EntityPlayer?): GuiScreen? = ClutchGui(player, inv, this)
-
-    override val cableRender: CableRenderDescriptor?
-        get() = Eln.instance.stdCableRenderSignal
 }
 
 class ClutchContainer(player: EntityPlayer?, inv: IInventory) : BasicContainer(
