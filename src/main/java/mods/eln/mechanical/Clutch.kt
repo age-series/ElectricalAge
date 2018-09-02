@@ -103,11 +103,11 @@ class ClutchDescriptor(name: String, override val obj: Obj3D) : SimpleShaftDescr
 class ClutchElement(node: TransparentNode, desc_: TransparentNodeDescriptor) : SimpleShaftElement(node, desc_) {
     companion object {
         // rads -> rads
-        val staticMarginF = LinearFunction(0f, 3f, 1000f, 10f)
+        val staticMarginF = LinearFunction(0f, 1f, 1000f, 5f)
         // wear -> Joules
-        val maxStaticEnergyF = LinearFunction(0f, 256000f, 1f, 0f)
-        // wear -> Joules
-        val dynamicMaxTransferF = LinearFunction(0f, 25600f, 1f, 6400f)
+        val maxStaticEnergyF = LinearFunction(0f, 20480f, 1f, 0f)
+        // wear -> N*m
+        val dynamicMaxTransferF = LinearFunction(0f, 2560f, 1f, 640f)
         // rads -> wear
         val slipWearF = LinearFunction(0f, 0f, 1000f, 0.0001f)
     }
@@ -165,7 +165,7 @@ class ClutchElement(node: TransparentNode, desc_: TransparentNodeDescriptor) : S
     override fun hasGui() = true
 
     val inputGate = NbtElectricalGateInput("clutchIn")
-    var slipping = false
+    var slipping = true
     var lastSlipping = false
     override fun getElectricalLoad(side: Direction?, lrdu: LRDU?): ElectricalLoad? = inputGate
     override fun getConnectionMask(side: Direction?, lrdu: LRDU?): Int = NodeBase.maskElectricalInputGate
@@ -182,12 +182,31 @@ class ClutchElement(node: TransparentNode, desc_: TransparentNodeDescriptor) : S
             return (stack.item!! as GenericItemUsingDamage<GenericItemUsingDamageDescriptor>).getDescriptor(stack) as ClutchPlateItem
         }
 
-    inner class ClutchProcess : IProcess {
+    val LEFT = 0
+    val RIGHT = 1
+
+    var preRads = arrayOf(0.0, 0.0)
+    var preEnergy = arrayOf(0.0, 0.0)
+
+    inner class ClutchPreProcess : IProcess {
         override fun process(time: Double) {
-            slipping = true
+            preRads[LEFT] = leftShaft.rads
+            preRads[RIGHT] = rightShaft.rads
+            preEnergy[LEFT] = leftShaft.energy
+            preEnergy[RIGHT] = rightShaft.energy
+        }
+    }
+
+    init {
+        slowPreProcessList.add(ClutchPreProcess())
+    }
+
+    inner class ClutchPostProcess : IProcess {
+        override fun process(time: Double) {
             val clutching = inputGate.normalized
             if (clutching == 0.0) {
                 // Utils.println("CP.p: stop: no input")
+                slipping = true
                 return
             }
 
@@ -195,68 +214,166 @@ class ClutchElement(node: TransparentNode, desc_: TransparentNodeDescriptor) : S
             val stack = clutchPlateStack
             if(plateDescriptor == null || stack == null) {
                 // Utils.println("CP.p: stop: no inventory")
+                slipping = true
                 return
             }
             val wear = plateDescriptor.getWear(stack)
             if(wear >= 1.0) {
                 // Utils.println("CP.p: stop: wear too high")
+                slipping = true
                 return
             }
 
             if(leftShaft == rightShaft) Utils.println("WARN (ClutchProcess): Networks are the same!")
 
-            val rdiff = Math.abs(leftShaft.rads - rightShaft.rads)
-            val ediff = Math.abs(leftShaft.energy - rightShaft.energy)
-            val rcrit = clutching * staticMarginF.getValue(Math.max(leftShaft.rads, rightShaft.rads))
-            slipping = rdiff > rcrit
-
-            if(!slipping) {
-                val ecrit = clutching * maxStaticEnergyF.getValue(wear)
-                slipping = ediff > ecrit
+            val mass = leftShaft.mass + rightShaft.mass
+            val slower: ShaftNetwork
+            val faster: ShaftNetwork
+            val slowerIdx: Int
+            val fasterIdx: Int
+            if(preRads[LEFT] > preRads[RIGHT]) {
+                slower = rightShaft
+                faster = leftShaft
+                slowerIdx = RIGHT
+                fasterIdx = LEFT
+            } else {
+                slower = leftShaft
+                faster = rightShaft
+                slowerIdx = LEFT
+                fasterIdx = RIGHT
             }
 
             if(slipping) {
-                val maxEXfer = clutching * dynamicMaxTransferF.getValue(wear)
-                val eqre = (rdiff + rcrit / 2.0) * Math.min(leftShaft.joulePerRad, rightShaft.joulePerRad)
-                val eXfer = Math.min(maxEXfer, eqre)
-                // If the sign would invert, lock the clutch instead
-                if(leftShaft.rads < rightShaft.rads) {
-                    leftShaft.energy += eXfer
-                    rightShaft.energy -= eXfer
-                    if(leftShaft.rads > rightShaft.rads) {
-                        val ravg = (leftShaft.rads + rightShaft.rads) / 2.0
-                        leftShaft.rads = ravg
-                        rightShaft.rads = ravg
+                // Dynamic friction; transfer energy proportional to the max torque times delta v
+                val torque = clutching * dynamicMaxTransferF.getValue(wear)
+                val deltaR = faster.rads - slower.rads
+                val avgR = (faster.rads + slower.rads) / 2.0
+                val power = torque * deltaR
+                slower.energy += power
+                faster.energy -= power
+                // Add a small margin to account for numerical inaccuracies
+                val margin = staticMarginF.getValue(Math.max(faster.rads, slower.rads))
+                //if(slower.rads > faster.rads - margin) {
+                if (slower.rads > faster.rads - margin)
+                {
+                    // Sign change
+                    val flow = leftShaft.energy - rightShaft.energy - preEnergy[LEFT] + preEnergy[RIGHT]
+                    val maxE = clutching * maxStaticEnergyF.getValue(wear)
+                    if(Math.abs(flow) <= maxE) {
+                        slipping = false
+                        needPublish()
+                        Utils.println("CPP.p: stopped slipping")
+                        val dEFast = faster.energy - preEnergy[fasterIdx]
+                        val dESlow = slower.energy - preEnergy[slowerIdx]
+                        val tnumerator = (preRads[fasterIdx] - preRads[slowerIdx]) * faster.mass * slower.mass * preRads[fasterIdx] * preRads[slowerIdx]
+                        var tdenominator = dESlow * faster.mass * faster.rads - dEFast * slower.mass * slower.rads
+                        if (tdenominator == 0.0) {
+                            Utils.println("CPP.p: tdenom was 0")
+                            tdenominator = 1.0
+                        }
+                        val t = tnumerator / tdenominator
+                        if (t <= 1 && t >= 0) {
+                            val dWFast = faster.rads - preRads[fasterIdx]
+                            val finalW = preRads[fasterIdx] + t * dWFast
+                            faster.rads = finalW
+                            slower.rads = finalW
+                        }
                     }
                 } else {
-                    rightShaft.energy += eXfer
-                    leftShaft.energy -= eXfer
-                    if(rightShaft.rads > leftShaft.rads) {
-                        val ravg = (leftShaft.rads + rightShaft.rads) / 2.0
-                        leftShaft.rads = ravg
-                        rightShaft.rads = ravg
-                    }
+                    clutchPlateDescriptor!!.setWear(clutchPlateStack!!, wear + clutching * slipWearF.getValue(Math.abs(deltaR)))
                 }
-
-                val addWear = clutching * slipWearF.getValue(rdiff)
-                plateDescriptor.setWear(stack, wear + addWear)
-            } else {
-                val ravg = (leftShaft.rads + rightShaft.rads) / 2.0
-                leftShaft.rads = ravg
-                rightShaft.rads = ravg
             }
 
-            if(slipping != lastSlipping) needPublish()
-            lastSlipping = slipping
-            // Utils.println("CP.p: processed")
+            /*
+            if(!slipping) {
+                val maxE = maxStaticEnergyF.getValue(wear)
+                // Calculate the differences in energies using the delta over the tick
+                val deltaEL = leftShaft.energy - preEnergy[LEFT]
+                val deltaER = rightShaft.energy - preEnergy[RIGHT]
+                var deltaE = deltaEL + deltaER
+                // ...this calculation is done from the perspective of the left shaft--it can be done from the right wolog
+                // Clamp energy based on max transfer, slip if needed
+                if(deltaE < -maxE) {
+                    slipping = true
+                    deltaE = -maxE
+                }
+                if(deltaE > maxE) {
+                    slipping = true
+                    deltaE = maxE
+                }
+                val chgEL = (leftShaft.mass / mass) * deltaE
+                val chgER = (rightShaft.mass / mass) * deltaE
+                leftShaft.energy = preEnergy[LEFT] + chgEL
+                rightShaft.energy = preEnergy[RIGHT] + chgER
+            }
+            */
+            /*
+             if(!slipping) {
+                 val maxE = maxStaticEnergyF.getValue(wear)
+                 // Calculate the differences in energies using the delta over the tick
+                 val deltaEL = leftShaft.energy - preEnergy[LEFT]
+                 val deltaER = rightShaft.energy - preEnergy[RIGHT]
+                 val deltaET = deltaEL + deltaER
+                 val deltaELS = (leftShaft.mass / mass) * deltaET
+                 val deltaERS = (rightShaft.mass / mass) * deltaET
+                 val deltaED = deltaELS - deltaEL
+                 // ...this calculation is done from the perspective of the left shaft--it can be done from the right wolog
+                 // Clamp energy based on max transfer, slip if needed
+                 if (deltaED < -maxE) {
+                     Utils.println(String.format("CPP.p: returning to slipping (deltaED=%f)", deltaED))
+                     slipping = true
+                 }
+                 if (deltaED > maxE) {
+                     Utils.println(String.format("CPP.p: returning to slipping (deltaED=%f)", deltaED))
+                     slipping = true
+                 }
+                // val chgEL = (leftShaft.mass / mass) * deltaE
+                // val chgER = (rightShaft.mass / mass) * deltaE
+                 Utils.println(String.format("CPP.p: not slipping, deltaELS=%f, deltaERS=%f", deltaELS, deltaERS))
+                 leftShaft.energy += deltaELS
+                 rightShaft.energy += deltaERS
+             }
+             */
+            if(!slipping) {
+                val maxE = clutching * maxStaticEnergyF.getValue(wear)
+                val energy = leftShaft.energy + rightShaft.energy
+                val leftEnergy = energy
+                val rightEnergy = energy
+                val flow = leftShaft.energy - rightShaft.energy - preEnergy[LEFT] + preEnergy[RIGHT]
+                Utils.println(String.format("CPP.p: flow=%f", flow))
+                if(Math.abs(flow) > maxE) {
+                    leftShaft.energy -= Math.signum(flow) * maxE
+                    rightShaft.energy += Math.signum(flow) * maxE
+                    Utils.println(String.format("CPP.p: started slipping (maxE=%f)", maxE))
+                    slipping = true
+                    needPublish()
+                } else {
+                    leftShaft.rads = Math.sqrt(2 * leftEnergy / mass)
+                    rightShaft.rads = Math.sqrt(2 * rightEnergy / mass)
+                }
+            }
+            /*
+            if (!slipping) {
+                val totalEnergy = leftShaft.energy + rightShaft.energy
+                val preTotalEnergy = preEnergy[LEFT] + preEnergy[RIGHT]
+                val preEnergyDifferential = preEnergy[LEFT] - preEnergy[RIGHT]
+                var energyDifferential = leftShaft.energy - rightShaft.energy
+                val differentialDifferential = energyDifferential - preEnergyDifferential
+                val combinedSystemW = Math.sqrt(2 * totalEnergy / mass)
+                leftShaft.rads = combinedSystemW
+                rightShaft.rads = combinedSystemW
+                Utils.println(String.format("CPP.p: combinedSystemW=%f", combinedSystemW))
+                val thresholdEnergy =maxStaticEnergyF.getValue(wear)
+                if (Math.abs(thresholdEnergy) < Math.abs(differentialDifferential))
+                    slipping = true
+            }
+            */
         }
     }
 
-    val clutchProcess = ClutchProcess()
-
     init {
         electricalLoadList.add(inputGate)
-        slowProcessList.add(clutchProcess)
+        slowPostProcessList.add(ClutchPostProcess())
     }
 
     override val shaftConnectivity: Array<Direction>
@@ -315,6 +432,7 @@ class ClutchElement(node: TransparentNode, desc_: TransparentNodeDescriptor) : S
         connectedSides.writeToNBT(nbt, "sides")
         leftShaft.writeToNBT(nbt, "leftShaft")
         rightShaft.writeToNBT(nbt, "rightShaft")
+        nbt.setBoolean("slipping", slipping)
     }
 
     override fun readFromNBT(nbt: NBTTagCompound) {
@@ -322,6 +440,7 @@ class ClutchElement(node: TransparentNode, desc_: TransparentNodeDescriptor) : S
         connectedSides.readFromNBT(nbt, "sides")
         leftShaft.readFromNBT(nbt, "leftShaft")
         rightShaft.readFromNBT(nbt, "rightShaft")
+        slipping = nbt.getBoolean("slipping")
         // Utils.println(String.format("CE.rFN: left %s r=%f, right %s r=%f", leftShaft, leftShaft.rads, rightShaft, rightShaft.rads))
     }
 

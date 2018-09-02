@@ -11,6 +11,7 @@ import mods.eln.sim.process.destruct.ShaftSpeedWatchdog
 import mods.eln.sim.process.destruct.WorldExplosion
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.server.MinecraftServer
+import java.lang.Double.isNaN
 import java.util.*
 
 
@@ -60,7 +61,6 @@ open class ShaftNetwork() : INBTTReady {
     }
 
     // Aggregate properties of the (current) shaft:
-    val shapeFactor = 0.5
     open val mass: Double
         get() {
             var sum = 0.0
@@ -78,13 +78,13 @@ open class ShaftNetwork() : INBTTReady {
         }
     var radsLastPublished = rads
 
-    val joulePerRad: Double
-        get() = mass * mass * shapeFactor / 2
-
     var energy: Double
-        get() = joulePerRad * rads
+        get() = mass * rads * rads * 0.5
         set(value) {
-            rads = value / joulePerRad
+            if(value < 0)
+                rads = 0.0
+            else
+                rads = Math.sqrt(2 * value / mass)
         }
 
     fun afterSetRads() {
@@ -278,6 +278,7 @@ open class ShaftNetwork() : INBTTReady {
 
     override fun readFromNBT(nbt: NBTTagCompound, str: String?) {
         rads = nbt.getFloat(str + "rads").toDouble()
+        if(isNaN(rads)) rads = 0.0
         // Utils.println(String.format("SN.rFN: load %s r=%f", this, rads))
     }
 
