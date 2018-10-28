@@ -105,7 +105,7 @@ class ClutchElement(node: TransparentNode, desc_: TransparentNodeDescriptor) : S
         // rads -> rads
         val staticMarginF = LinearFunction(0f, 1f, 1000f, 5f)
         // wear -> Joules
-        val maxStaticEnergyF = LinearFunction(0f, 20480f, 1f, 0f)
+        val maxStaticEnergyF = LinearFunction(0f, 20480f, 1f, 1280f)
         // wear -> N*m
         val dynamicMaxTransferF = LinearFunction(0f, 2560f, 1f, 640f)
         // rads -> wear
@@ -243,37 +243,45 @@ class ClutchElement(node: TransparentNode, desc_: TransparentNodeDescriptor) : S
                 fasterIdx = RIGHT
             }
 
+            /*
+            HOW THIS WORKS
+
+            When the clutch is slipping, it exerts a constant force that tries to equalize the velocities of the two sides of the clutches.
+            The variable torque describes how much force is exerted on each side of the clutch.
+
+            */
             if(slipping) {
-                // Dynamic friction; transfer energy proportional to the max torque times delta v
+                // Dynamic friction; transfer momentum proportional to the max torque
                 val torque = clutching * dynamicMaxTransferF.getValue(wear)
                 val deltaR = faster.rads - slower.rads
-                val avgR = (faster.rads + slower.rads) / 2.0
-                val power = torque * deltaR
-                slower.energy += power
-                faster.energy -= power
+                // These don't lose energy properly
+                //val power = torque * deltaR
+                slower.rads += torque / slower.mass  // Exert a constant torque
+                faster.rads -= torque / faster.mass
                 // Add a small margin to account for numerical inaccuracies
-                val margin = staticMarginF.getValue(Math.max(faster.rads, slower.rads))
-                //if(slower.rads > faster.rads - margin) {
-                if (slower.rads > faster.rads - margin)
+                //val margin = staticMarginF.getValue(Math.max(faster.rads, slower.rads))
+                //if (slower.rads >= faster.rads - margin)
+                if (Math.signum(rightShaft.rads - leftShaft.rads) != Math.signum(preRads[RIGHT] - preRads[LEFT]))
                 {
                     // Sign change
+                    Utils.println("CPP.p: Sign change")
                     val flow = leftShaft.energy - rightShaft.energy - preEnergy[LEFT] + preEnergy[RIGHT]
-                    val maxE = clutching * maxStaticEnergyF.getValue(wear)
-                    if(Math.abs(flow) <= maxE) {
-                        slipping = false
-                        needPublish()
-                        Utils.println("CPP.p: stopped slipping")
-                        val dEFast = faster.energy - preEnergy[fasterIdx]
-                        val dESlow = slower.energy - preEnergy[slowerIdx]
-                        val tnumerator = (preRads[fasterIdx] - preRads[slowerIdx]) * faster.mass * slower.mass * preRads[fasterIdx] * preRads[slowerIdx]
-                        var tdenominator = dESlow * faster.mass * faster.rads - dEFast * slower.mass * slower.rads
-                        if (tdenominator == 0.0) {
+                    val maxdI = clutching * maxStaticEnergyF.getValue(wear)
+                    if(Math.abs(flow) <= maxdI) {  // Prevent the clutch from locking if the torque will immediately overpower it
+                        val dWFast = faster.rads - preRads[fasterIdx]
+                        val dwSlow = slower.rads - preRads[slowerIdx]
+                        val tnum = preRads[slowerIdx] - preRads[fasterIdx]
+                        var tdenom = dWFast - dwSlow
+                        if (tdenom == 0.0) {
                             Utils.println("CPP.p: tdenom was 0")
-                            tdenominator = 1.0
+                            tdenom = 1.0
                         }
-                        val t = tnumerator / tdenominator
+                        val t = tnum / tdenom
+                        Utils.println(String.format("CPP.p: potential intersection; t=%f", t))
                         if (t <= 1 && t >= 0) {
-                            val dWFast = faster.rads - preRads[fasterIdx]
+                            Utils.println("CPP.p: stopped slipping")
+                            slipping = false
+                            needPublish()
                             val finalW = preRads[fasterIdx] + t * dWFast
                             faster.rads = finalW
                             slower.rads = finalW
@@ -282,65 +290,13 @@ class ClutchElement(node: TransparentNode, desc_: TransparentNodeDescriptor) : S
                 } else {
                     clutchPlateDescriptor!!.setWear(clutchPlateStack!!, wear + clutching * slipWearF.getValue(Math.abs(deltaR)))
                 }
-            }
-
-            /*
-            if(!slipping) {
-                val maxE = maxStaticEnergyF.getValue(wear)
-                // Calculate the differences in energies using the delta over the tick
-                val deltaEL = leftShaft.energy - preEnergy[LEFT]
-                val deltaER = rightShaft.energy - preEnergy[RIGHT]
-                var deltaE = deltaEL + deltaER
-                // ...this calculation is done from the perspective of the left shaft--it can be done from the right wolog
-                // Clamp energy based on max transfer, slip if needed
-                if(deltaE < -maxE) {
-                    slipping = true
-                    deltaE = -maxE
-                }
-                if(deltaE > maxE) {
-                    slipping = true
-                    deltaE = maxE
-                }
-                val chgEL = (leftShaft.mass / mass) * deltaE
-                val chgER = (rightShaft.mass / mass) * deltaE
-                leftShaft.energy = preEnergy[LEFT] + chgEL
-                rightShaft.energy = preEnergy[RIGHT] + chgER
-            }
-            */
-            /*
-             if(!slipping) {
-                 val maxE = maxStaticEnergyF.getValue(wear)
-                 // Calculate the differences in energies using the delta over the tick
-                 val deltaEL = leftShaft.energy - preEnergy[LEFT]
-                 val deltaER = rightShaft.energy - preEnergy[RIGHT]
-                 val deltaET = deltaEL + deltaER
-                 val deltaELS = (leftShaft.mass / mass) * deltaET
-                 val deltaERS = (rightShaft.mass / mass) * deltaET
-                 val deltaED = deltaELS - deltaEL
-                 // ...this calculation is done from the perspective of the left shaft--it can be done from the right wolog
-                 // Clamp energy based on max transfer, slip if needed
-                 if (deltaED < -maxE) {
-                     Utils.println(String.format("CPP.p: returning to slipping (deltaED=%f)", deltaED))
-                     slipping = true
-                 }
-                 if (deltaED > maxE) {
-                     Utils.println(String.format("CPP.p: returning to slipping (deltaED=%f)", deltaED))
-                     slipping = true
-                 }
-                // val chgEL = (leftShaft.mass / mass) * deltaE
-                // val chgER = (rightShaft.mass / mass) * deltaE
-                 Utils.println(String.format("CPP.p: not slipping, deltaELS=%f, deltaERS=%f", deltaELS, deltaERS))
-                 leftShaft.energy += deltaELS
-                 rightShaft.energy += deltaERS
-             }
-             */
-            if(!slipping) {
+            } else {
                 val maxE = clutching * maxStaticEnergyF.getValue(wear)
                 val energy = leftShaft.energy + rightShaft.energy
                 val leftEnergy = energy
                 val rightEnergy = energy
                 val flow = leftShaft.energy - rightShaft.energy - preEnergy[LEFT] + preEnergy[RIGHT]
-                Utils.println(String.format("CPP.p: flow=%f", flow))
+                if (flow != 0.0) Utils.println(String.format("CPP.p: flow=%f", flow))
                 if(Math.abs(flow) > maxE) {
                     leftShaft.energy -= Math.signum(flow) * maxE
                     rightShaft.energy += Math.signum(flow) * maxE
@@ -352,22 +308,6 @@ class ClutchElement(node: TransparentNode, desc_: TransparentNodeDescriptor) : S
                     rightShaft.rads = Math.sqrt(2 * rightEnergy / mass)
                 }
             }
-            /*
-            if (!slipping) {
-                val totalEnergy = leftShaft.energy + rightShaft.energy
-                val preTotalEnergy = preEnergy[LEFT] + preEnergy[RIGHT]
-                val preEnergyDifferential = preEnergy[LEFT] - preEnergy[RIGHT]
-                var energyDifferential = leftShaft.energy - rightShaft.energy
-                val differentialDifferential = energyDifferential - preEnergyDifferential
-                val combinedSystemW = Math.sqrt(2 * totalEnergy / mass)
-                leftShaft.rads = combinedSystemW
-                rightShaft.rads = combinedSystemW
-                Utils.println(String.format("CPP.p: combinedSystemW=%f", combinedSystemW))
-                val thresholdEnergy =maxStaticEnergyF.getValue(wear)
-                if (Math.abs(thresholdEnergy) < Math.abs(differentialDifferential))
-                    slipping = true
-            }
-            */
         }
     }
 
