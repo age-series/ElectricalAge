@@ -75,6 +75,7 @@ import mods.eln.sixnode.electricalcable.ElectricalCableDescriptor;
 import mods.eln.sixnode.electricalcable.ElectricalSignalBusCableElement;
 import mods.eln.sixnode.electricaldatalogger.DataLogsPrintDescriptor;
 import mods.eln.sixnode.electricaldatalogger.ElectricalDataLoggerDescriptor;
+import mods.eln.sixnode.electricaldigitaldisplay.ElectricalDigitalDisplayDescriptor;
 import mods.eln.sixnode.electricalentitysensor.ElectricalEntitySensorDescriptor;
 import mods.eln.sixnode.electricalfiredetector.ElectricalFireDetectorDescriptor;
 import mods.eln.sixnode.electricalgatesource.ElectricalGateSourceDescriptor;
@@ -121,6 +122,7 @@ import mods.eln.sound.SoundCommand;
 import mods.eln.transparentnode.FuelGeneratorDescriptor;
 import mods.eln.transparentnode.FuelHeatFurnaceDescriptor;
 import mods.eln.transparentnode.LargeRheostatDescriptor;
+import mods.eln.transparentnode.NixieTubeDescriptor;
 import mods.eln.transparentnode.autominer.AutoMinerDescriptor;
 import mods.eln.transparentnode.battery.BatteryDescriptor;
 import mods.eln.transparentnode.computercraftio.PeripheralHandler;
@@ -2149,6 +2151,30 @@ public class Eln {
             );
 
             sixNodeItem.addDescriptor(subId + (id << 6), desc);
+        }
+
+        {
+            subId = 6;
+            name = TR_NAME(Type.NONE, "Digital Display");
+
+            ElectricalDigitalDisplayDescriptor desc = new ElectricalDigitalDisplayDescriptor(
+                name,
+                obj.getObj("DigitalDisplay")
+            );
+
+            sixNodeItem.addDescriptor(subId + (id << 6), desc);
+        }
+
+        {
+            subId = 7;
+            name = TR_NAME(Type.NONE, "Nixie Tube");
+
+            NixieTubeDescriptor desc = new NixieTubeDescriptor(
+                name,
+                obj.getObj("NixieTube")
+            );
+
+            transparentNodeItem.addDescriptor(subId + (id << 6), desc);
         }
 
         {
