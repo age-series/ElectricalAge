@@ -6262,6 +6262,18 @@ public class Eln {
         addRecipe(findItemStack("200V Tungsten Heating Corp"),
             "CC",
             'C', findItemStack("Small 200V Tungsten Heating Corp"));
+        addRecipe(findItemStack("Small 800V Tungsten Heating Corp"),
+            "CC",
+            'C', findItemStack("200V Tungsten Heating Corp"));
+        addRecipe(findItemStack("800V Tungsten Heating Corp"),
+            "CC",
+            'C', findItemStack("Small 800V Tungsten Heating Corp"));
+        addRecipe(findItemStack("Small 3.2kV Tungsten Heating Corp"),
+            "CC",
+            'C', findItemStack("800V Tungsten Heating Corp"));
+        addRecipe(findItemStack("3.2kV Tungsten Heating Corp"),
+            "CC",
+            'C', findItemStack("Small 3.2kV Tungsten Heating Corp"));
     }
 
     private void recipeRegulatorItem() {
