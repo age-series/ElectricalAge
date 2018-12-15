@@ -649,7 +649,7 @@ public class Eln {
         registerMiningPipe(17);
         registerTreeResinAndRubber(64);
         registerRawCable(65);
-		registerHaxorian(69);
+		registerArc(69);
         registerBrush(119);
         registerMiscItem(120);
         registerElectricalTool(121);
@@ -4866,7 +4866,7 @@ public class Eln {
         }
     }
 	
-	private void registerHaxorian(int id) {
+	private void registerArc(int id) {
         int subId, completId;
         String name;
 
