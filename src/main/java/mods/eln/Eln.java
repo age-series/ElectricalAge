@@ -7974,11 +7974,11 @@ public class Eln {
     }
 
     public static void applySmallRs(NbtElectricalLoad aLoad) {
-        instance.lowVoltageCableDescriptor.applyTo(aLoad);
+        instance.creativeCableDescriptor.applyTo(aLoad);
     }
 
     public static void applySmallRs(Resistor r) {
-        instance.lowVoltageCableDescriptor.applyTo(r);
+        instance.creativeCableDescriptor.applyTo(r);
     }
 
     static ItemStack findItemStack(String name, int stackSize) {
