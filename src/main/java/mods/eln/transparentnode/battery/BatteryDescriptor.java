@@ -72,13 +72,13 @@ public class BatteryDescriptor extends TransparentNodeDescriptor {
     }
 
     public BatteryDescriptor(String name, String modelName,
-                             ElectricalCableDescriptor cable,
-                             double startCharge, boolean isRechargable, boolean lifeEnable,
-                             FunctionTable UfCharge,
-                             double electricalU, double electricalPMax, double electricalDischargeRate,
-                             double electricalStdP, double electricalStdDischargeTime, double electricalStdEfficiency, double electricalStdHalfLife,
-                             double thermalHeatTime, double thermalWarmLimit, double thermalCoolLimit,
-                             String description) {
+     ElectricalCableDescriptor cable,
+     double startCharge, boolean isRechargable, boolean lifeEnable,
+     FunctionTable UfCharge,
+     double electricalU, double electricalPMax, double electricalDischargeRate, //Max current, max power, and how good it is at discharging vs its cable
+     double electricalStdP, double electricalStdDischargeTime, double electricalStdEfficiency, double electricalStdHalfLife, //battery stats
+     double thermalHeatTime, double thermalWarmLimit, double thermalCoolLimit, //heating code
+     String description) { //description IMO goes unused.
         super(name, BatteryElement.class, BatteryRender.class);
         this.electricalU = electricalU;
         this.electricalDischargeRate = electricalDischargeRate;
