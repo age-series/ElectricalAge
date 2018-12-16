@@ -261,6 +261,8 @@ public class Eln {
 	public GraphiteDescriptor GraphiteDescriptor;
 
 	public ElectricalCableDescriptor creativeCableDescriptor;
+	/*public ElectricalCableDescriptor T2TransmissionCableDescriptor;
+	public ElectricalCableDescriptor T1TransmissionCableDescriptor;*/
     public ElectricalCableDescriptor veryHighVoltageCableDescriptor;
     public ElectricalCableDescriptor highVoltageCableDescriptor;
     public ElectricalCableDescriptor signalCableDescriptor;
@@ -5045,6 +5047,26 @@ public class Eln {
             sharedItem.addElement(completId, descriptor);
             Data.addResource(descriptor.newItemStack());
         }
+        {
+            GenericItemUsingDamageDescriptor descriptor;
+            subId = 11;
+            completId = subId + (id << 6);
+            name = TR_NAME(Type.NONE, "T1 Transmission Cable");
+
+            descriptor = new GenericItemUsingDamageDescriptor(name);
+            sharedItem.addElement(completId, descriptor);
+            Data.addResource(descriptor.newItemStack());
+        }
+        {
+            GenericItemUsingDamageDescriptor descriptor;
+            subId = 12;
+            completId = subId + (id << 6);
+            name = TR_NAME(Type.NONE, "T2 Transmission Cable");
+
+            descriptor = new GenericItemUsingDamageDescriptor(name);
+            sharedItem.addElement(completId, descriptor);
+            Data.addResource(descriptor.newItemStack());
+        }
     }
 
     private void registerBrush(int id) {
@@ -6215,7 +6237,7 @@ public class Eln {
         );
 
         // I don't care what you think, if your modpack lacks steel then you don't *need* this much power.
-		//H: and this dickish comment is exactly the reason why steel is now obtainable via ELN. (because I hate other mods' blast furnaces)
+		// Or just use the new Arc furnace. Other mod's steel methods are slow and tedious and require huge multiblocks.
         // Feel free to add alternate non-iron recipes, though. Here, or by minetweaker.
         for (String type : new String[]{
             "Aluminum",
@@ -6880,6 +6902,12 @@ public class Eln {
         addRecipe(findItemStack("Tungsten Cable", 6),
             "III",
             'I', dictTungstenIngot);
+        addRecipe(findItemStack("T1 Transmission Cable", 6),
+            "III",
+            'I', findItemStack("Arc Metal Ingot")); //this should be oredict steel, but I can't figure that out. Plz to help??
+        addRecipe(findItemStack("T2 Transmission Cable", 6),
+            "III",
+            'I', findItemStack("Arc Clay Ingot")); //likewise, but with aluminium
 
     }
 	private void recipeGraphite() {
