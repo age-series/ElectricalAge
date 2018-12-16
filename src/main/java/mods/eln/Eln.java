@@ -4789,6 +4789,26 @@ public class Eln {
             );
             sharedItem.addElement(completId, descriptor);
         }
+        {
+            subId = 3;
+            completId = subId + (id << 6);
+            name = TR_NAME(Type.NONE, "Turbo Electrical Drill");
+
+            descriptor = new ElectricalDrillDescriptor(name,// iconId, name,
+                1, 10000 // double operationTime,double operationEnergy
+            );
+            sharedItem.addElement(completId, descriptor);
+        }
+        {
+            subId = 4;
+            completId = subId + (id << 6);
+            name = TR_NAME(Type.NONE, "Irresponsible Electrical Drill");
+
+            descriptor = new ElectricalDrillDescriptor(name,// iconId, name,
+                0.1, 20000 // double operationTime,double operationEnergy
+            );
+            sharedItem.addElement(completId, descriptor);
+        }
 
     }
 
@@ -6802,7 +6822,20 @@ public class Eln {
             'C', dictAdvancedChip,
             'M', findItemStack("Advanced Electrical Motor"),
             'P', new ItemStack(Items.diamond_pickaxe));
-
+		addRecipe(findItemStack("Turbo Electrical Drill"),
+            "RCR",
+            " F ",
+            " D ",
+            'F', findItemStack("Fast Electrical Drill"),
+            'C', dictAdvancedChip,
+            'R', findItemStack("Graphite Rod"),
+            'D', findItemStack("Synthetic Diamond"));
+		addRecipe(findItemStack("Irresponsible Electrical Drill"),
+            "DDD",
+            "DFD",
+            "DDD",
+            'F', findItemStack("Turbo Electrical Drill"),
+            'D', findItemStack("Synthetic Diamond"));
     }
 
     private void recipeOreScanner() {
