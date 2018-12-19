@@ -5067,6 +5067,26 @@ public class Eln {
             sharedItem.addElement(completId, descriptor);
             Data.addResource(descriptor.newItemStack());
         }
+        {
+            GenericItemUsingDamageDescriptor descriptor;
+            subId = 13;
+            completId = subId + (id << 6);
+            name = TR_NAME(Type.NONE, "Canister of Water");
+
+            descriptor = new GenericItemUsingDamageDescriptor(name);
+            sharedItem.addElement(completId, descriptor);
+            Data.addResource(descriptor.newItemStack());
+        }
+        {
+            GenericItemUsingDamageDescriptor descriptor;
+            subId = 14;
+            completId = subId + (id << 6);
+            name = TR_NAME(Type.NONE, "Canister of Arc Water");
+
+            descriptor = new GenericItemUsingDamageDescriptor(name);
+            sharedItem.addElement(completId, descriptor);
+            Data.addResource(descriptor.newItemStack());
+        }
     }
 
     private void registerBrush(int id) {
@@ -6294,6 +6314,10 @@ public class Eln {
             'C', findItemStack("Low Voltage Cable"),
             'F', new ItemStack(Blocks.furnace),
             'I', new ItemStack(Items.iron_ingot));
+        addShapelessRecipe(findItemStack("Canister of Water", 1),
+            findItemStack("Inert Canister"),
+            new ItemStack(Items.water_bucket));
+			
     }
 
     private void recipeSixNodeMisc() {
