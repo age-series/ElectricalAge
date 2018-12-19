@@ -40,11 +40,11 @@ public class ArcFurnaceDescriptor extends ElectricalMachineDescriptor {
 
     @Override
     public float volumeForRunningSound(float processState, float powerFactor) {
-        if (processState < 0.1)
+        /*if (processState < 0.1)
             return 0f;
         else if (processState < 0.3)
             return super.volumeForRunningSound(processState, powerFactor) * (processState - 0.1f) * 5f;
-        else
+        else*/
             return super.volumeForRunningSound(processState, powerFactor);
     }
 

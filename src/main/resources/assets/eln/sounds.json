@@ -17,6 +17,16 @@
             }
         ]
     },
+    "arc_furnace": {
+        "category": "block",
+        "sounds": [
+			{"name": "Zap1","stream": false},
+			{"name": "Zap2","stream": false},
+			{"name": "Zap3","stream": false},
+			{"name": "Zap4","stream": false},
+			{"name": "Zap5","stream": false}
+        ]
+    },
     "wind_turbine": {
         "category": "block",
         "sounds": [
