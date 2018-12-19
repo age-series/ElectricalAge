@@ -8111,11 +8111,11 @@ public class Eln {
     }
 
     public static void applySmallRs(NbtElectricalLoad aLoad) {
-        instance.creativeCableDescriptor.applyTo(aLoad);
+        instance.lowVoltageCableDescriptor.applyTo(aLoad);
     }
 
     public static void applySmallRs(Resistor r) {
-        instance.creativeCableDescriptor.applyTo(r);
+        instance.lowVoltageCableDescriptor.applyTo(r);
     }
 
     static ItemStack findItemStack(String name, int stackSize) {
