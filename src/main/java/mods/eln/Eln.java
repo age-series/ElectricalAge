@@ -5169,6 +5169,7 @@ public class Eln {
         sharedItem.addElement(53 + (id << 6), new CaseItemDescriptor(TR_NAME(Type.NONE, "Casing")));
 
         sharedItem.addElement(54 + (id << 6), new ClutchPlateItem("Clutch Plate"));
+        sharedItem.addElement(55 + (id << 6), new ClutchPinItem("Clutch Pin"));
     }
 
     public DataLogsPrintDescriptor dataLogsPrintDescriptor;
@@ -6795,6 +6796,19 @@ public class Eln {
             "p p",
             "ppp",
             'p', findItemStack("Iron Plate"));
+
+        addRecipe(findItemStack("Clutch Plate"),
+            "ir",
+            "ir",
+            "ir",
+            'i', new ItemStack(Items.iron_ingot),
+            'r', "itemRubber");
+
+        addRecipe(findItemStack("Clutch Pin"),
+            "  i",
+            "iii",
+            "  i",
+            'i', new ItemStack(Items.iron_ingot));
 
     }
 

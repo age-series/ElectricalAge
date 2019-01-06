@@ -5,6 +5,7 @@ import mods.eln.cable.CableRender
 import mods.eln.cable.CableRenderDescriptor
 import mods.eln.generic.GenericItemUsingDamage
 import mods.eln.generic.GenericItemUsingDamageDescriptor
+import mods.eln.generic.GenericItemUsingDamageDescriptorWithComment
 import mods.eln.generic.GenericItemUsingDamageSlot
 import mods.eln.gui.GuiContainerEln
 import mods.eln.gui.GuiHelperContainer
@@ -64,6 +65,8 @@ class ClutchPlateItem(name: String) : GenericItemUsingDamageDescriptor(name) {
         }
     }
 }
+
+class ClutchPinItem(name: String) : GenericItemUsingDamageDescriptorWithComment(name, tr("Prevents clutches from slipping\nagain after they stop.").split("\n").toTypedArray())
 
 class ClutchDescriptor(name: String, override val obj: Obj3D) : SimpleShaftDescriptor(name, ClutchElement::class, ClutchRender::class, EntityMetaTag.Basic) {
     companion object {
@@ -159,14 +162,13 @@ class ClutchElement(node: TransparentNode, desc_: TransparentNodeDescriptor) : S
 
     override fun isInternallyConnected(a: Direction, b: Direction) = false
 
-    val inv = TransparentNodeElementInventory(1, 1, this)
+    val inv = TransparentNodeElementInventory(2, 1, this)
     override fun getInventory() = inv
     override fun newContainer(side: Direction?, player: EntityPlayer?) = ClutchContainer(player, inv)
     override fun hasGui() = true
 
     val inputGate = NbtElectricalGateInput("clutchIn")
     var slipping = true
-    var lastSlipping = false
     override fun getElectricalLoad(side: Direction?, lrdu: LRDU?): ElectricalLoad? = inputGate
     override fun getConnectionMask(side: Direction?, lrdu: LRDU?): Int = NodeBase.maskElectricalInputGate
 
@@ -180,6 +182,10 @@ class ClutchElement(node: TransparentNode, desc_: TransparentNodeDescriptor) : S
             val stack = clutchPlateStack
             if(stack == null) return null
             return (stack.item!! as GenericItemUsingDamage<GenericItemUsingDamageDescriptor>).getDescriptor(stack) as ClutchPlateItem
+        }
+    val clutchPinStack: ItemStack?
+        get() {
+            return inv.getStackInSlot(1)
         }
 
     val LEFT = 0
@@ -223,6 +229,7 @@ class ClutchElement(node: TransparentNode, desc_: TransparentNodeDescriptor) : S
                 slipping = true
                 return
             }
+            val hasPin = (clutchPinStack != null)
 
             if(leftShaft == rightShaft) Utils.println("WARN (ClutchProcess): Networks are the same!")
 
@@ -251,6 +258,9 @@ class ClutchElement(node: TransparentNode, desc_: TransparentNodeDescriptor) : S
 
             */
             if(slipping) {
+                // Always publish while slipping so the volume controller
+                // can keep up
+                needPublish()
                 // Dynamic friction; transfer momentum proportional to the max torque
                 val torque = clutching * dynamicMaxTransferF.getValue(wear)
                 val deltaR = faster.rads - slower.rads
@@ -276,9 +286,8 @@ class ClutchElement(node: TransparentNode, desc_: TransparentNodeDescriptor) : S
                     val t = tnum / tdenom
                     Utils.println(String.format("CPP.p: potential intersection; t=%f", t))
                     if (t <= 1 && t >= 0) {
-                        Utils.println("CPP.p: stopped slipping")
+                        //Utils.println("CPP.p: stopped slipping")
                         slipping = false
-                        needPublish()
                         val finalW = preRads[fasterIdx] + t * dWFast
                         faster.rads = finalW
                         slower.rads = finalW
@@ -292,11 +301,11 @@ class ClutchElement(node: TransparentNode, desc_: TransparentNodeDescriptor) : S
                 val leftEnergy = energy
                 val rightEnergy = energy
                 val flow = leftShaft.energy - rightShaft.energy - preEnergy[LEFT] + preEnergy[RIGHT]
-                if (flow != 0.0) Utils.println(String.format("CPP.p: flow=%f", flow))
-                if(Math.abs(flow) > maxE) {
+                //if (flow != 0.0) Utils.println(String.format("CPP.p: flow=%f", flow))
+                if(Math.abs(flow) > maxE && !hasPin) {
                     leftShaft.energy -= Math.signum(flow) * maxE
                     rightShaft.energy += Math.signum(flow) * maxE
-                    Utils.println(String.format("CPP.p: started slipping (maxE=%f)", maxE))
+                    //Utils.println(String.format("CPP.p: started slipping (maxE=%f)", maxE))
                     slipping = true
                     needPublish()
                 } else {
@@ -332,6 +341,11 @@ class ClutchElement(node: TransparentNode, desc_: TransparentNodeDescriptor) : S
         stream.writeFloat(rightShaft.rads.toFloat())
         stream.writeFloat(inputGate.normalized.toFloat())
         stream.writeBoolean(slipping)
+        val stack = clutchPlateStack
+        val pDisc = clutchPlateDescriptor
+        val worn = (stack == null) || (pDisc!!.getWear(stack) >= 1.0)
+        stream.writeBoolean(worn)
+        stream.writeBoolean(clutchPinStack != null)
     }
 
     /*
@@ -410,7 +424,7 @@ class ClutchRender(entity: TransparentNodeEntity, desc_: TransparentNodeDescript
     val desc = desc_ as ClutchDescriptor
     val connectedSides = DirectionSet()
     override val cableRender = Eln.instance.stdCableRenderSignal
-    val inv = TransparentNodeElementInventory(1, 1, this)
+    val inv = TransparentNodeElementInventory(2, 1, this)
     override fun getInventory() = inv
 
     var lRads = 0.0
@@ -475,6 +489,8 @@ class ClutchRender(entity: TransparentNodeEntity, desc_: TransparentNodeDescript
     var clutching = 0.0
     var slipping = false
     var lastSlipping = false
+    var worn = false
+    var hasPin = false
 
     override fun networkUnserialize(stream: DataInputStream) {
         super.networkUnserialize(stream)
@@ -483,14 +499,16 @@ class ClutchRender(entity: TransparentNodeEntity, desc_: TransparentNodeDescript
         rRads = stream.readFloat().toDouble()
         clutching = stream.readFloat().toDouble()
         slipping = stream.readBoolean()
-        if(slipping) {
+        worn = stream.readBoolean()
+        hasPin = stream.readBoolean()
+        if(slipping && !worn) {
             volumeSetting.target = (Math.min(1.0, Math.abs(lRads - rRads) / 20.0) * clutching * 0.5).toFloat()
         } else {
             volumeSetting.position = 0f
         }
-        if(lastSlipping && !slipping) play(SoundCommand(desc.slipStopSound))
+        if(lastSlipping && !slipping && hasPin) play(SoundCommand(desc.slipStopSound))
         lastSlipping = slipping
-        Utils.println(String.format("CR.nU: l=%f,r=%f c=%f s=%s ls=%s", lRads, rRads, clutching, slipping, lastSlipping))
+        //Utils.println(String.format("CR.nU: l=%f,r=%f c=%f s=%s ls=%s", lRads, rRads, clutching, slipping, lastSlipping))
     }
 
     override fun newGuiDraw(side: Direction?, player: EntityPlayer?): GuiScreen? = ClutchGui(player, inv, this)
@@ -498,7 +516,8 @@ class ClutchRender(entity: TransparentNodeEntity, desc_: TransparentNodeDescript
 
 class ClutchContainer(player: EntityPlayer?, inv: IInventory) : BasicContainer(
     player, inv, arrayOf(
-        GenericItemUsingDamageSlot(inv, 0, 176 / 2 - 16 / 2 + 4, 42 - 16 / 2, 1, ClutchPlateItem::class.java, ISlotSkin.SlotSkin.medium, arrayOf(tr("Clutch Plate")))
+        GenericItemUsingDamageSlot(inv, 0, 176 / 2 - 16 / 2 - 17 + 4, 42 - 16 / 2, 1, ClutchPlateItem::class.java, ISlotSkin.SlotSkin.medium, arrayOf(tr("Clutch Plate"))),
+        GenericItemUsingDamageSlot(inv, 1, 176 / 2 - 16 / 2 + 17 + 4, 42 - 16 / 2, 1, ClutchPinItem::class.java, ISlotSkin.SlotSkin.medium, arrayOf(tr("Clutch Pin")))
     )
 )
 
