@@ -265,27 +265,23 @@ class ClutchElement(node: TransparentNode, desc_: TransparentNodeDescriptor) : S
                 {
                     // Sign change
                     Utils.println("CPP.p: Sign change")
-                    val flow = leftShaft.energy - rightShaft.energy - preEnergy[LEFT] + preEnergy[RIGHT]
-                    val maxdI = clutching * maxStaticEnergyF.getValue(wear)
-                    if(Math.abs(flow) <= maxdI) {  // Prevent the clutch from locking if the torque will immediately overpower it
-                        val dWFast = faster.rads - preRads[fasterIdx]
-                        val dwSlow = slower.rads - preRads[slowerIdx]
-                        val tnum = preRads[slowerIdx] - preRads[fasterIdx]
-                        var tdenom = dWFast - dwSlow
-                        if (tdenom == 0.0) {
-                            Utils.println("CPP.p: tdenom was 0")
-                            tdenom = 1.0
-                        }
-                        val t = tnum / tdenom
-                        Utils.println(String.format("CPP.p: potential intersection; t=%f", t))
-                        if (t <= 1 && t >= 0) {
-                            Utils.println("CPP.p: stopped slipping")
-                            slipping = false
-                            needPublish()
-                            val finalW = preRads[fasterIdx] + t * dWFast
-                            faster.rads = finalW
-                            slower.rads = finalW
-                        }
+                    val dWFast = faster.rads - preRads[fasterIdx]
+                    val dwSlow = slower.rads - preRads[slowerIdx]
+                    val tnum = preRads[slowerIdx] - preRads[fasterIdx]
+                    var tdenom = dWFast - dwSlow
+                    if (tdenom == 0.0) {
+                        Utils.println("CPP.p: tdenom was 0")
+                        tdenom = 1.0
+                    }
+                    val t = tnum / tdenom
+                    Utils.println(String.format("CPP.p: potential intersection; t=%f", t))
+                    if (t <= 1 && t >= 0) {
+                        Utils.println("CPP.p: stopped slipping")
+                        slipping = false
+                        needPublish()
+                        val finalW = preRads[fasterIdx] + t * dWFast
+                        faster.rads = finalW
+                        slower.rads = finalW
                     }
                 } else {
                     clutchPlateDescriptor!!.setWear(clutchPlateStack!!, wear + clutching * slipWearF.getValue(Math.abs(deltaR)))
