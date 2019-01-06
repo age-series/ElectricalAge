@@ -7,6 +7,7 @@ import mods.eln.misc.Direction
 import mods.eln.misc.INBTTReady
 import mods.eln.misc.Utils
 import mods.eln.node.NodeManager
+import mods.eln.sim.process.destruct.DelayedDestruction
 import mods.eln.sim.process.destruct.ShaftSpeedWatchdog
 import mods.eln.sim.process.destruct.WorldExplosion
 import net.minecraft.nbt.NBTTagCompound
@@ -136,7 +137,10 @@ open class ShaftNetwork() : INBTTReady {
 
             if (wouldExplode(this, other) && invoker != null) {
                 Utils.println(String.format("SN.mS: Bad matching, %s will explode", invoker))
-                WorldExplosion(invoker.coordonate()).machineExplosion().destructImpl()
+                DelayedDestruction(
+                    WorldExplosion(invoker.coordonate()).machineExplosion(),
+                    0.0  // Sooner than later, just not right now :)
+                )
                 // Continue, however. The networks will unmerge when a component disappears, but assume they might not.
             }
 

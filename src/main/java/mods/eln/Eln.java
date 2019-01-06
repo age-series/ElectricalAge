@@ -5657,13 +5657,6 @@ public class Eln {
             'c', findItemStack("Copper Cable"),
             'd', findItemStack("Dielectric"));
 
-        addRecipe(findItemStack("Clutch Plate"),
-            "ir",
-            "ir",
-            "ir",
-            'i', "ingotIron",
-            'r', "itemRubber");
-
         addRecipe(findItemStack("JK Flip Flop Chip"),
             " p ",
             "cCc",
