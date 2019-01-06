@@ -75,6 +75,7 @@ import mods.eln.sixnode.electricalcable.ElectricalCableDescriptor;
 import mods.eln.sixnode.electricalcable.ElectricalSignalBusCableElement;
 import mods.eln.sixnode.electricaldatalogger.DataLogsPrintDescriptor;
 import mods.eln.sixnode.electricaldatalogger.ElectricalDataLoggerDescriptor;
+import mods.eln.sixnode.electricaldigitaldisplay.ElectricalDigitalDisplayDescriptor;
 import mods.eln.sixnode.electricalentitysensor.ElectricalEntitySensorDescriptor;
 import mods.eln.sixnode.electricalfiredetector.ElectricalFireDetectorDescriptor;
 import mods.eln.sixnode.electricalgatesource.ElectricalGateSourceDescriptor;
@@ -121,6 +122,7 @@ import mods.eln.sound.SoundCommand;
 import mods.eln.transparentnode.FuelGeneratorDescriptor;
 import mods.eln.transparentnode.FuelHeatFurnaceDescriptor;
 import mods.eln.transparentnode.LargeRheostatDescriptor;
+import mods.eln.transparentnode.NixieTubeDescriptor;
 import mods.eln.transparentnode.autominer.AutoMinerDescriptor;
 import mods.eln.transparentnode.battery.BatteryDescriptor;
 import mods.eln.transparentnode.computercraftio.PeripheralHandler;
@@ -2150,6 +2152,30 @@ public class Eln {
         }
 
         {
+            subId = 6;
+            name = TR_NAME(Type.NONE, "Digital Display");
+
+            ElectricalDigitalDisplayDescriptor desc = new ElectricalDigitalDisplayDescriptor(
+                name,
+                obj.getObj("DigitalDisplay")
+            );
+
+            sixNodeItem.addDescriptor(subId + (id << 6), desc);
+        }
+
+        {
+            subId = 7;
+            name = TR_NAME(Type.NONE, "Nixie Tube");
+
+            NixieTubeDescriptor desc = new NixieTubeDescriptor(
+                name,
+                obj.getObj("NixieTube")
+            );
+
+            transparentNodeItem.addDescriptor(subId + (id << 6), desc);
+        }
+
+        {
             subId = 8;
             name = TR_NAME(Type.NONE, "Tutorial Sign");
 
@@ -4011,18 +4037,15 @@ public class Eln {
         t2 = "eln:textures/armor/ecoal_layer_2.png";
         double energyPerDamage = 500;
         int armor, armorMarge;
-        ArmorMaterial eCoalMaterial = net.minecraftforge.common.util.EnumHelper.addArmorMaterial("ECoal", 10, new int[]{2, 6, 5, 2}, 9);
+        ArmorMaterial eCoalMaterial = net.minecraftforge.common.util.EnumHelper.addArmorMaterial("ECoal", 10, new int[]{3, 8, 6, 3}, 9);
         {
             name = TR_NAME(Type.ITEM, "E-Coal Helmet");
-            armor = 2;
-            armorMarge = 1;
+            armor = 3;
+            armorMarge = 2; //getting rid of this. Safe to delete.
             helmetECoal = (ItemArmor) (new ElectricalArmor(eCoalMaterial, 2, ArmourType.Helmet, t1, t2,
-                (armor + armorMarge) * energyPerDamage, 250.0,// double
-                // energyStorage,double
-                // chargePower
-                armor / 20.0, armor * energyPerDamage,// double
-                // ratioMax,double
-                // ratioMaxEnergy,
+                //(armor + armorMarge) * energyPerDamage * 10
+				8000, 2000.0,// double energyStorage,double chargePower
+                armor / 20.0, armor * energyPerDamage,// double ratioMax,double ratioMaxEnergy,
                 energyPerDamage// double energyPerDamage
             )).setUnlocalizedName(name).setTextureName("eln:ecoal_helmet").setCreativeTab(creativeTab);
             GameRegistry.registerItem(helmetECoal, "Eln." + name);
@@ -4030,10 +4053,11 @@ public class Eln {
         }
         {
             name = TR_NAME(Type.ITEM, "E-Coal Chestplate");
-            armor = 6;
-            armorMarge = 2;
+            armor = 8;
+            armorMarge = 4;
             plateECoal = (ItemArmor) (new ElectricalArmor(eCoalMaterial, 2, ArmourType.Chestplate, t1, t2,
-                (armor + armorMarge) * energyPerDamage, 250.0,// double
+                //(armor + armorMarge) * energyPerDamage * 10
+				8000, 2000.0,// double
                 // energyStorage,double
                 // chargePower
                 armor / 20.0, armor * energyPerDamage,// double
@@ -4046,10 +4070,11 @@ public class Eln {
         }
         {
             name = TR_NAME(Type.ITEM, "E-Coal Leggings");
-            armor = 5;
-            armorMarge = 2;
+            armor = 6;
+            armorMarge = 3;
             legsECoal = (ItemArmor) (new ElectricalArmor(eCoalMaterial, 2, ArmourType.Leggings, t1, t2,
-                (armor + armorMarge) * energyPerDamage, 250.0,// double
+                //(armor + armorMarge) * energyPerDamage * 10
+				8000, 2000.0,// double
                 // energyStorage,double
                 // chargePower
                 armor / 20.0, armor * energyPerDamage,// double
@@ -4062,10 +4087,11 @@ public class Eln {
         }
         {
             name = TR_NAME(Type.ITEM, "E-Coal Boots");
-            armor = 2;
-            armorMarge = 1;
+            armor = 3;
+            armorMarge = 2;
             bootsECoal = (ItemArmor) (new ElectricalArmor(eCoalMaterial, 2, ArmourType.Boots, t1, t2,
-                (armor + armorMarge) * energyPerDamage, 250.0,// double
+                //(armor + armorMarge) * energyPerDamage * 10
+				8000, 2000.0,// double
                 // energyStorage,double
                 // chargePower
                 armor / 20.0, armor * energyPerDamage,// double
@@ -4791,7 +4817,8 @@ public class Eln {
 
             ElectricalLampItem desc = new ElectricalLampItem(
                 name,
-                10, 8, 20, 15, 5, 50,// int light,int range,
+				//10, 8, 20, 15, 5, 50, old
+                10, 8, 20, 15, 5, 50,// int light,int range
                 6000, 100// , energyStorage,discharg, charge
             );
             sharedItemStackOne.addElement(subId + (id << 6), desc);
@@ -4803,8 +4830,8 @@ public class Eln {
 
             ElectricalPickaxe desc = new ElectricalPickaxe(
                 name,
-                8, 3,// float strengthOn,float strengthOff,
-                40000, 200, 800// double energyStorage,double
+                22, 1,// float strengthOn,float strengthOff, - Haxorian note: buffed this from 8,3 putting it around eff 4
+                40000, 200, 2000// double energyStorage,double
                 // energyPerBlock,double chargePower
             );
             sharedItemStackOne.addElement(subId + (id << 6), desc);
@@ -4816,9 +4843,8 @@ public class Eln {
 
             ElectricalAxe desc = new ElectricalAxe(
                 name,
-                8, 3,// float strengthOn,float strengthOff,
-                40000, 200, 800// double energyStorage,double
-                // energyPerBlock,double chargePower
+                22, 1,// float strengthOn,float strengthOff, - Haxorian note: buffed this too
+                40000, 200, 2000// double energyStorage,double energyPerBlock,double chargePower
             );
             sharedItemStackOne.addElement(subId + (id << 6), desc);
         }
@@ -4834,7 +4860,7 @@ public class Eln {
 
             BatteryItem desc = new BatteryItem(
                 name,
-                20000, 500, 100,// double energyStorage,double
+                40000, 125, 250,// double energyStorage,double - Haxorian note: doubled storage halved throughput.
                 // chargePower,double dischargePower,
                 2// int priority
             );
@@ -4847,7 +4873,7 @@ public class Eln {
 
             BatteryItem desc = new BatteryItem(
                 name,
-                60000, 1500, 300,// double energyStorage,double
+                160000, 500, 1000,// double energyStorage,double - Haxorian note: Packs are in 4s now
                 // chargePower,double dischargePower,
                 2// int priority
             );
@@ -4860,7 +4886,7 @@ public class Eln {
 
             BatteryItem desc = new BatteryItem(
                 name,
-                5000, 2000, 500,// double energyStorage,double
+                4000, 2000, 2000,// double energyStorage,double - H: Slightly less power way more throughput
                 // chargePower,double dischargePower,
                 1// int priority
             );
@@ -4872,7 +4898,7 @@ public class Eln {
 
             BatteryItem desc = new BatteryItem(
                 name,
-                15000, 6000, 1500,// double energyStorage,double
+                16000, 8000, 8000,// double energyStorage,double
                 // chargePower,double dischargePower,
                 1// int priority
             );
@@ -4885,7 +4911,7 @@ public class Eln {
 
             PortableOreScannerItem desc = new PortableOreScannerItem(
                 name, obj.getObj("XRayScanner"),
-                10000, 400, 300,// double energyStorage,double
+                100000, 400, 300,// double energyStorage,double - That's right, more buffs!
                 // chargePower,double dischargePower,
                 xRayScannerRange, (float) (Math.PI / 2),// float
                 // viewRange,float
@@ -5785,11 +5811,10 @@ public class Eln {
         );
 
         addRecipe(findItemStack("Flywheel"),
-            "iIi",
-            "ImI",
-            "iIi",
-            'i', "ingotIron",
-            'I', "blockIron",
+            "PPP",
+            "PmP",
+            "PPP",
+            'P', "ingotLead",
             'm', findItemStack("Machine Block")
         );
 
@@ -6560,7 +6585,10 @@ public class Eln {
             'I', new ItemStack(Items.iron_ingot));
         addShapelessRecipe(
             findItemStack("Portable Battery Pack"),
-            findItemStack("Portable Battery"), findItemStack("Portable Battery"), findItemStack("Portable Battery"));
+            findItemStack("Portable Battery"),
+			findItemStack("Portable Battery"),
+			findItemStack("Portable Battery"),
+			findItemStack("Portable Battery"));
     }
 
     private void recipeElectricalTool() {
@@ -6608,42 +6636,49 @@ public class Eln {
             "PPP",
             "PCP",
             'P', "plateCoal",
-            'C', dictAdvancedChip);
+            'C', findItemStack("Portable Condensator"));
         addRecipe(findItemStack("E-Coal Boots"),
             " C ",
             "P P",
             "P P",
             'P', "plateCoal",
-            'C', dictAdvancedChip);
+            'C', findItemStack("Portable Condensator"));
 
         addRecipe(findItemStack("E-Coal Chestplate"),
             "P P",
             "PCP",
             "PPP",
             'P', "plateCoal",
-            'C', dictAdvancedChip);
+            'C', findItemStack("Portable Condensator"));
 
         addRecipe(findItemStack("E-Coal Leggings"),
             "PPP",
             "PCP",
             "P P",
             'P', "plateCoal",
-            'C', dictAdvancedChip);
+            'C', findItemStack("Portable Condensator"));
 
     }
 
     private void recipePortableCapacitor() {
         addRecipe(findItemStack("Portable Condensator"),
-            "RcR",
+            /*"RcR",
             "wCw",
             "RcR",
             'C', new ItemStack(Items.redstone),
             'R', "itemRubber",
             'w', findItemStack("Copper Cable"),
-            'c', "plateCopper");
+            'c', "plateCopper");*/
+			" r ",
+			"cDc",
+            " r ",
+            'r', new ItemStack(Items.redstone),
+            'c', findItemStack("Iron Cable"),
+            'D', findItemStack("Dielectric"));
 
         addShapelessRecipe(findItemStack("Portable Condensator Pack"),
             findItemStack("Portable Condensator"),
+			findItemStack("Portable Condensator"),
             findItemStack("Portable Condensator"),
             findItemStack("Portable Condensator"));
     }
@@ -6773,6 +6808,16 @@ public class Eln {
 
         maceratorRecipes.addRecipe(new Recipe(new ItemStack(Blocks.dirt),
             new ItemStack[]{new ItemStack(Blocks.sand)}, 1.0 * f));
+		//recycling recipes
+		maceratorRecipes.addRecipe(new Recipe(findItemStack("E-Coal Helmet"),
+            new ItemStack[]{findItemStack("Coal Dust", 16)}, 10.0 * f));
+		maceratorRecipes.addRecipe(new Recipe(findItemStack("E-Coal Boots"),
+            new ItemStack[]{findItemStack("Coal Dust", 12)}, 10.0 * f));
+		maceratorRecipes.addRecipe(new Recipe(findItemStack("E-Coal Chestplate"),
+            new ItemStack[]{findItemStack("Coal Dust", 24)}, 10.0 * f));
+		maceratorRecipes.addRecipe(new Recipe(findItemStack("E-Coal Leggings"),
+            new ItemStack[]{findItemStack("Coal Dust", 24)}, 10.0 * f));
+		//end recycling recipes
     }
 
     private void recipeMaceratorModOres() {
