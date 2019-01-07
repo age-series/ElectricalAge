@@ -274,17 +274,17 @@ class ClutchElement(node: TransparentNode, desc_: TransparentNodeDescriptor) : S
                 if (Math.signum(rightShaft.rads - leftShaft.rads) != Math.signum(preRads[RIGHT] - preRads[LEFT]))
                 {
                     // Sign change
-                    Utils.println("CPP.p: Sign change")
+                    //Utils.println("CPP.p: Sign change")
                     val dWFast = faster.rads - preRads[fasterIdx]
                     val dwSlow = slower.rads - preRads[slowerIdx]
                     val tnum = preRads[slowerIdx] - preRads[fasterIdx]
                     var tdenom = dWFast - dwSlow
                     if (tdenom == 0.0) {
-                        Utils.println("CPP.p: tdenom was 0")
+                        Utils.println("CPP.p: WARN: tdenom was 0?")
                         tdenom = 1.0
                     }
                     val t = tnum / tdenom
-                    Utils.println(String.format("CPP.p: potential intersection; t=%f", t))
+                    //Utils.println(String.format("CPP.p: potential intersection; t=%f", t))
                     if (t <= 1 && t >= 0) {
                         //Utils.println("CPP.p: stopped slipping")
                         slipping = false
