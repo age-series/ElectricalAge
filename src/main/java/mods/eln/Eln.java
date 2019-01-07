@@ -5850,6 +5850,20 @@ public class Eln {
             'p', findItemStack("Electrical Probe Chip"),
             'c', findItemStack("Signal Cable")
         );
+        addRecipe(findItemStack("Clutch"),
+            "iIi",
+            " c ",
+            'i', "ingotIron",
+            'I', "plateIron",
+            'c', findItemStack("Machine Block")
+        );
+        addRecipe(findItemStack("Fixed Shaft"),
+            "iBi",
+            " c ",
+            'i', "ingotIron",
+            'B', "blockIron",
+            'c', findItemStack("Machine Block")
+        );
     }
 
     private void recipeBattery() {
@@ -6791,17 +6805,18 @@ public class Eln {
             'p', findItemStack("Iron Plate"));
 
         addRecipe(findItemStack("Clutch Plate"),
-            "ir",
-            "ir",
-            "ir",
-            'i', new ItemStack(Items.iron_ingot),
-            'r', "itemRubber");
+            " t ",
+            "tIt",
+            " t ",
+            'I', "plateIron",
+            't', dictTungstenDust
+        );
 
-        addRecipe(findItemStack("Clutch Pin"),
-            "  i",
-            "iii",
-            "  i",
-            'i', new ItemStack(Items.iron_ingot));
+        addRecipe(findItemStack("Clutch Pin", 4),
+            "s",
+            "s",
+            's', firstExistingOre("ingotSteel", "ingotAlloy")
+        );
 
     }
 
