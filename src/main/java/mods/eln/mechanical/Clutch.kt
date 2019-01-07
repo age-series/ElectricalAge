@@ -403,15 +403,23 @@ class ClutchElement(node: TransparentNode, desc_: TransparentNodeDescriptor) : S
         info.put("Energies", entries.map {
             Utils.plotEnergy("", it.value.energy)
         }.joinToString(", "))
-        info.put("Masses", entries.map {
-            Utils.plotValue(it.value.mass * 1000, "g")
-        }.joinToString(", "))
-        val desc = clutchPlateDescriptor
-        val stack = clutchPlateStack
-        if(desc != null && stack != null)
-            info.put("Wear", String.format("%.6f", desc.getWear(stack)))
+        if(Eln.wailaEasyMode) {
+            info.put("Masses", entries.map {
+                Utils.plotValue(it.value.mass * 1000, "g")
+            }.joinToString(", "))
+            val desc = clutchPlateDescriptor
+            val stack = clutchPlateStack
+            if (desc != null && stack != null)
+                info.put("Wear", String.format("%.6f", desc.getWear(stack)))
+        }
         info.put("Clutching", Utils.plotVolt(inputGate.bornedU))
-        info.put("Slipping", if(slipping) { "YES" } else { "NO" })
+        if(Eln.wailaEasyMode) {
+            info.put("Slipping", if (slipping) {
+                "YES"
+            } else {
+                "NO"
+            })
+        }
         return info
     }
 
