@@ -504,6 +504,7 @@ class ClutchRender(entity: TransparentNodeEntity, desc_: TransparentNodeDescript
         if(slipping && !worn) {
             volumeSetting.target = (Math.min(1.0, Math.abs(lRads - rRads) / 20.0) * clutching * 0.5).toFloat()
         } else {
+            volumeSetting.target = 0f
             volumeSetting.position = 0f
         }
         if(lastSlipping && !slipping && hasPin) play(SoundCommand(desc.slipStopSound))
