@@ -1,15 +1,16 @@
 # Minecraft Mod - Codename : ELN
 
-[![Build Status](https://travis-ci.org/Electrical-Age/ElectricalAge.svg?branch=1.7.10-MNA)](https://travis-ci.org/Electrical-Age/ElectricalAge)
-[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2FElectrical-Age%2FElectricalAge.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2FElectrical-Age%2FElectricalAge?ref=badge_shield)
-
 Electrical Age (ELN) is a Minecraft Mod offering the ability to perform large-scale in-game electrical simulations.
 
-Look at the official project website [electrical-age.net](https://electrical-age.net/) and [the Wiki](http://wiki.electrical-age.net/) to get general information. [This official Minecraft forum post](http://www.minecraftforum.net/topic/2741783-172forge-electrical-age-mod-beta-146/) is updated frequently.
+Look at the official project website [electrical-age.net](https://electrical-age.net/) and [the Wiki](http://wiki.electrical-age.net/) to get general information.
+
+This is a fork of Electrical Age, maintaine by Jared Dunbar (jrddunbr) and Graham Nothup (Grissess), with the intent to add features and push for active development, which is funneled back into the main distribution.
 
 ## How to get started
 
 **ElectricalAge is Minecraft 1.7.10 compatible only. Forge is needed.**
+
+TO BE UPDATED
 
 1. Download the [last mod release](https://minecraft.curseforge.com/projects/electrical-age) (other versions are available through the same link). Copy the Jar file to the `.minecraft/mods/` directory (or related folder depending on your platform).
 2. Get started with the tutorial map or start playing on the offical demonstration map. The two official maps can be [downloaded from here](https://github.com/Electrical-Age/ElectricalAge/releases/download/BETA-1.10/ElectricalAge_tutorialMap_BETA-1.9_r41.zip). They must be copied to the `.minecraft/saves/` (or related) directory.
@@ -69,6 +70,8 @@ Use at your own risk and do map backup frequently.
 
 - **Dolu1990** (Code guru, concepts, some 3D models)
 - **Svein Ove Aas, aka. Baughn** (Code, some 3D models, concepts)
+- **jrddunbr** (concepts, ideas, code)
+- **Grissess** (code, models, textures, sounds, math, MNA)
 - **cm0x4D** (Sound engineer, code and 3D models/texturing, concepts)
 - **lambdaShade** (3D models/texturing/graphics maestro, concepts, some sounds and lines of code)
 - **metc** (Website/Wiki webmaster)
@@ -77,6 +80,8 @@ Use at your own risk and do map backup frequently.
 
 Code/models:
 
+- **OmegaHaxors** (major updates to balance, new features)
+- **lashtear** (to be entered)
 - **bloxgate** (some tweaks)
 - **DrummerMC** (bug fix)
 - **ltouroumov** (bug fix)
@@ -85,6 +90,8 @@ Code/models:
 - **DrummingFish** (GUI text parsing, cleaning/refactoring, some tweaks)
 
 Languages:
+
+TO BE UPDATED
 
 - **bomdia** (it_IT)
 - **Ahtsm** (zh_CN)
@@ -118,6 +125,3 @@ Some graphics are public domain. These are:
 - src/main/resources/assets/eln/textures/blocks/2x3rotatingsolarpanel.png
 
 ![logo](https://raw.githubusercontent.com/Electrical-Age/electrical-age.github.io/master/assets/favicon.ico)
-
-
-[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2FElectrical-Age%2FElectricalAge.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2FElectrical-Age%2FElectricalAge?ref=badge_large)
