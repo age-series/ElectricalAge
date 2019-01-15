@@ -316,7 +316,7 @@ public class Eln {
     public static boolean noSymbols = false;
     public static boolean noVoltageBackground = false;
 
-    public static double maxSoundDistance = 64;
+    public static double maxSoundDistance = 16;
 
     @EventHandler
     public void preInit(FMLPreInitializationEvent event) {
@@ -6874,6 +6874,8 @@ public class Eln {
 
     private void recipeMacerator() {
         float f = 4000;
+	maceratorRecipes.addRecipe(new Recipe(new ItemStack(Blocks.coal_ore, 1),
+	    new ItemStack(Items.coal, 3, 0), 1.0 * f));
         maceratorRecipes.addRecipe(new Recipe(findItemStack("Copper Ore"),
             new ItemStack[]{findItemStack("Copper Dust", 2)}, 1.0 * f));
         maceratorRecipes.addRecipe(new Recipe(new ItemStack(Blocks.iron_ore),
