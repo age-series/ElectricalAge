@@ -17,7 +17,7 @@ public class PowerSocketContainer extends BasicContainer {
 
     public PowerSocketContainer(EntityPlayer player, IInventory inventory) {
         super(player, inventory, new Slot[]{
-            new SixNodeItemSlot(inventory, cableSlotId, 150, 8, 1, new Class[]{ElectricalCableDescriptor.class}, ISlotSkin.SlotSkin.none, tr("Electrical cable slot\nMust be populated to connect.").split("\n"))
+            new SixNodeItemSlot(inventory, cableSlotId, 150, 8, 1, new Class[]{ElectricalCableDescriptor.class}, ISlotSkin.SlotSkin.medium, tr("Electrical cable slot\nMust be populated to connect.").split("\n"))
         });
     }
 }

@@ -1,9 +1,13 @@
 package mods.eln.sixnode.powersocket;
 
+import mods.eln.generic.GenericItemUsingDamage;
+import mods.eln.generic.GenericItemUsingDamageDescriptor;
+import mods.eln.item.BrushDescriptor;
 import mods.eln.misc.Coordonate;
 import mods.eln.misc.Direction;
 import mods.eln.misc.LRDU;
 import mods.eln.misc.Utils;
+import mods.eln.node.AutoAcceptInventoryProxy;
 import mods.eln.node.NodeBase;
 import mods.eln.node.six.SixNode;
 import mods.eln.node.six.SixNodeDescriptor;
@@ -42,9 +46,13 @@ public class PowerSocketElement extends SixNodeElement {
     public Resistor loadResistor = new Resistor(null, null);  // Connected in process()
     public IProcess PowerSocketSlowProcess = new PowerSocketSlowProcess();
 
-    SixNodeElementInventory inventory = new SixNodeElementInventory(1, 64, this);
+    private AutoAcceptInventoryProxy acceptingInventory = new AutoAcceptInventoryProxy(
+        new SixNodeElementInventory(1, 64, this)
+    ).acceptIfEmpty(0, ElectricalCableDescriptor.class);
 
     public String channel = "Default channel";
+
+    public int paintColor = 0;
 
     VoltageStateWatchDog voltageWatchdog = new VoltageStateWatchDog();
 
@@ -52,12 +60,12 @@ public class PowerSocketElement extends SixNodeElement {
 
     @Override
     public IInventory getInventory() {
-        return inventory;
+        return acceptingInventory.getInventory();
     }
 
     @Override
     public Container newContainer(Direction side, EntityPlayer player) {
-        return new PowerSocketContainer(player, inventory);
+        return new PowerSocketContainer(player, getInventory());
     }
 
     public PowerSocketElement(SixNode sixNode, Direction side, SixNodeDescriptor descriptor) {
@@ -95,7 +103,7 @@ public class PowerSocketElement extends SixNodeElement {
             loadResistor.breakConnection();
             loadResistor.highImpedance();
             if(handle != null && handle.element.getChannelState(handle.id)) {
-                ItemStack cable = inventory.getStackInSlot(PowerSocketContainer.cableSlotId);
+                ItemStack cable = getInventory().getStackInSlot(PowerSocketContainer.cableSlotId);
                 if (cable != null) {
                     ElectricalCableDescriptor desc = (ElectricalCableDescriptor) ElectricalCableDescriptor.getDescriptor(cable);
                     loadResistor.connectTo(handle.element.powerLoad, outputLoad);
@@ -107,7 +115,7 @@ public class PowerSocketElement extends SixNodeElement {
 
     @Override
     public ElectricalLoad getElectricalLoad(LRDU lrdu, int mask) {
-        if (inventory.getStackInSlot(PowerSocketContainer.cableSlotId) == null) return null;
+        if (getInventory().getStackInSlot(PowerSocketContainer.cableSlotId) == null) return null;
         return outputLoad;
     }
 
@@ -118,8 +126,8 @@ public class PowerSocketElement extends SixNodeElement {
 
     @Override
     public int getConnectionMask(LRDU lrdu) {
-        if (inventory.getStackInSlot(PowerSocketContainer.cableSlotId) == null) return 0;
-        return NodeBase.maskElectricalPower;
+        if (getInventory().getStackInSlot(PowerSocketContainer.cableSlotId) == null) return 0;
+        return NodeBase.maskElectricalPower + (1 << NodeBase.maskColorCareShift) + (paintColor << NodeBase.maskColorShift);
     }
 
     @Override
@@ -155,16 +163,18 @@ public class PowerSocketElement extends SixNodeElement {
     public void writeToNBT(NBTTagCompound nbt) {
         super.writeToNBT(nbt);
         nbt.setString("channel", channel);
+        nbt.setInteger("color", paintColor);
     }
 
     @Override
     public void readFromNBT(NBTTagCompound nbt) {
         super.readFromNBT(nbt);
         channel = nbt.getString("channel");
+        paintColor = nbt.getInteger("color");
     }
 
     void setupFromInventory() {
-        ItemStack cableStack = inventory.getStackInSlot(PowerSocketContainer.cableSlotId);
+        ItemStack cableStack = getInventory().getStackInSlot(PowerSocketContainer.cableSlotId);
         if (cableStack != null) {
             ElectricalCableDescriptor desc = (ElectricalCableDescriptor) ElectricalCableDescriptor.getDescriptor(cableStack);
             desc.applyTo(outputLoad);
@@ -201,9 +211,29 @@ public class PowerSocketElement extends SixNodeElement {
         super.networkSerialize(stream);
         try {
             stream.writeUTF(channel);
-            Utils.serialiseItemStack(stream, inventory.getStackInSlot(PowerSocketContainer.cableSlotId));
+            Utils.serialiseItemStack(stream, getInventory().getStackInSlot(PowerSocketContainer.cableSlotId));
+            stream.writeInt(paintColor);
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public boolean onBlockActivated(EntityPlayer entityPlayer, Direction side, float vx, float vy, float vz) {
+        ItemStack used = entityPlayer.getCurrentEquippedItem();
+        if(used != null) {
+            GenericItemUsingDamageDescriptor desc = GenericItemUsingDamageDescriptor.getDescriptor(used);
+            if(desc != null && desc instanceof BrushDescriptor) {
+                BrushDescriptor brush = (BrushDescriptor) desc;
+                int color = brush.getColor(used);
+                if(color != paintColor && brush.use(used, entityPlayer)) {
+                    paintColor = color;
+                    sixNode.reconnect();
+                }
+                return true;
+            }
+        }
+
+        return acceptingInventory.take(used, this, true, true);
     }
 }

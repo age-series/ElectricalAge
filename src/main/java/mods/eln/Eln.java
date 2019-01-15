@@ -305,6 +305,8 @@ public class Eln {
     public boolean killMonstersAroundLamps;
     public int killMonstersAroundLampsRange;
 
+    public int maxReplicators = 100;
+
     double stdBatteryHalfLife = 2 * Utils.minecraftDay;
     double batteryCapacityFactor = 1.;
 
@@ -413,6 +415,7 @@ public class Eln {
         replicatorRegistrationId = config.get("entity", "replicatorId", -1).getInt(-1);
         killMonstersAroundLamps = config.get("entity", "killMonstersAroundLamps", true).getBoolean(true);
         killMonstersAroundLampsRange = config.get("entity", "killMonstersAroundLampsRange", 9).getInt(9);
+        maxReplicators = config.get("entity", "maxReplicators", 100).getInt(100);
 
         forceOreRegen = config.get("mapGenerate", "forceOreRegen", false).getBoolean(false);
         genCopper = config.get("mapGenerate", "copper", true).getBoolean(true);
