@@ -2,6 +2,7 @@ package mods.eln.sixnode.lampsupply;
 
 import mods.eln.Eln;
 import mods.eln.i18n.I18N;
+import mods.eln.item.IConfigurable;
 import mods.eln.misc.Direction;
 import mods.eln.misc.LRDU;
 import mods.eln.misc.Utils;
@@ -38,7 +39,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.*;
 
-public class LampSupplyElement extends SixNodeElement {
+public class LampSupplyElement extends SixNodeElement implements IConfigurable {
 
     public static class PowerSupplyChannelHandle {
         PowerSupplyChannelHandle(LampSupplyElement element, int id) {
@@ -406,5 +407,27 @@ public class LampSupplyElement extends SixNodeElement {
         ItemStack stack = getInventory().getStackInSlot(LampSupplyContainer.cableSlotId);
         if (stack == null) return desc.range;
         return desc.range + stack.stackSize;
+    }
+
+    @Override
+    public void readConfigTool(NBTTagCompound compound) {
+        if(compound.hasKey("powerChannel")) {
+            channelRemove(this, 0, entries.get(0).powerChannel);
+            entries.get(0).powerChannel = compound.getString("powerChannel");
+            channelRegister(this, 0, entries.get(0).powerChannel);
+            needPublish();
+        }
+        if(compound.hasKey("wirelessChannel")) {
+            channelRemove(this, 0, entries.get(0).wirelessChannel);
+            entries.get(0).wirelessChannel = compound.getString("wirelessChannel");
+            channelRegister(this, 0, entries.get(0).wirelessChannel);
+            needPublish();
+        }
+    }
+
+    @Override
+    public void writeConfigTool(NBTTagCompound compound) {
+        compound.setString("powerChannel", entries.get(0).powerChannel);
+        compound.setString("wirelessChannel", entries.get(0).wirelessChannel);
     }
 }

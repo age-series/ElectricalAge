@@ -2,6 +2,7 @@ package mods.eln.sixnode.wirelesssignal.tx;
 
 import mods.eln.Eln;
 import mods.eln.i18n.I18N;
+import mods.eln.item.IConfigurable;
 import mods.eln.misc.Coordonate;
 import mods.eln.misc.Direction;
 import mods.eln.misc.LRDU;
@@ -26,7 +27,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class WirelessSignalTxElement extends SixNodeElement implements IWirelessSignalTx {
+public class WirelessSignalTxElement extends SixNodeElement implements IWirelessSignalTx, IConfigurable {
 
     public static final HashMap<String, ArrayList<IWirelessSignalTx>> channelMap = new HashMap<String, ArrayList<IWirelessSignalTx>>();
 
@@ -222,5 +223,20 @@ public class WirelessSignalTxElement extends SixNodeElement implements IWireless
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void readConfigTool(NBTTagCompound compound) {
+        if(compound.hasKey("wirelessChannel")) {
+            channelRemove(this);
+            channel = compound.getString("wirelessChannel");
+            channelRegister(this);
+            needPublish();
+        }
+    }
+
+    @Override
+    public void writeConfigTool(NBTTagCompound compound) {
+        compound.setString("wirelessChannel", channel);
     }
 }

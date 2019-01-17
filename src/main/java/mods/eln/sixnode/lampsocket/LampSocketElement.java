@@ -4,6 +4,7 @@ import mods.eln.Eln;
 import mods.eln.generic.GenericItemUsingDamageDescriptor;
 import mods.eln.i18n.I18N;
 import mods.eln.item.BrushDescriptor;
+import mods.eln.item.IConfigurable;
 import mods.eln.item.LampDescriptor;
 import mods.eln.misc.Direction;
 import mods.eln.misc.LRDU;
@@ -33,7 +34,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-public class LampSocketElement extends SixNodeElement {
+public class LampSocketElement extends SixNodeElement implements IConfigurable {
 
     LampSocketDescriptor socketDescriptor = null;
 
@@ -330,5 +331,18 @@ public class LampSocketElement extends SixNodeElement {
             isConnectedToLampSupply = value;
             needPublish();
         }
+    }
+
+    @Override
+    public void readConfigTool(NBTTagCompound compound) {
+        if(compound.hasKey("powerChannel")) {
+            channel = compound.getString("powerChannel");
+            needPublish();
+        }
+    }
+
+    @Override
+    public void writeConfigTool(NBTTagCompound compound) {
+        compound.setString("powerChannel", channel);
     }
 }

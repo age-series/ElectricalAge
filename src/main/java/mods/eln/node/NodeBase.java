@@ -207,19 +207,20 @@ public abstract class NodeBase {
 
     public boolean onBlockActivated(EntityPlayer entityPlayer, Direction side, float vx, float vy, float vz) {
         if (!entityPlayer.worldObj.isRemote && entityPlayer.getCurrentEquippedItem() != null) {
-            if (Eln.multiMeterElement.checkSameItemStack(entityPlayer.getCurrentEquippedItem())) {
+            ItemStack equipped = entityPlayer.getCurrentEquippedItem();
+            if (Eln.multiMeterElement.checkSameItemStack(equipped)) {
                 String str = multiMeterString(side);
                 if (str != null)
                     Utils.addChatMessage(entityPlayer, str);
                 return true;
             }
-            if (Eln.thermometerElement.checkSameItemStack(entityPlayer.getCurrentEquippedItem())) {
+            if (Eln.thermometerElement.checkSameItemStack(equipped)) {
                 String str = thermoMeterString(side);
                 if (str != null)
                     Utils.addChatMessage(entityPlayer, str);
                 return true;
             }
-            if (Eln.allMeterElement.checkSameItemStack(entityPlayer.getCurrentEquippedItem())) {
+            if (Eln.allMeterElement.checkSameItemStack(equipped)) {
                 String str1 = multiMeterString(side);
                 String str2 = thermoMeterString(side);
                 String str = "";
@@ -229,6 +230,21 @@ public abstract class NodeBase {
                     str += str2;
                 if (str.equals("") == false)
                     Utils.addChatMessage(entityPlayer, str);
+                return true;
+            }
+            if (Eln.configCopyToolElement.checkSameItemStack(equipped)) {
+                if(!equipped.hasTagCompound()) {
+                    equipped.setTagCompound(new NBTTagCompound());
+                }
+                String act;
+                if(entityPlayer.isSneaking() || Eln.playerManager.get(entityPlayer).getInteractEnable()) {
+                    writeConfigTool(side, equipped.getTagCompound());
+                    act = "write";
+                } else {
+                    readConfigTool(side, equipped.getTagCompound());
+                    act = "read";
+                }
+                Utils.println(String.format("NB.oBA: act %s data %s", act, equipped.getTagCompound().toString()));
                 return true;
             }
         }
@@ -443,6 +459,10 @@ public abstract class NodeBase {
     public String thermoMeterString(Direction side) {
         return "";
     }
+
+    public void readConfigTool(Direction side, NBTTagCompound tag) {}
+
+    public void writeConfigTool(Direction side, NBTTagCompound tag) {}
 
     public void setNeedPublish(boolean needPublish) {
         this.needPublish = needPublish;
