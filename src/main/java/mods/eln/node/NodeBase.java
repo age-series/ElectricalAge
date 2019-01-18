@@ -7,6 +7,7 @@ import mods.eln.ghost.GhostBlock;
 import mods.eln.misc.*;
 import mods.eln.node.six.SixNode;
 import mods.eln.sim.*;
+import mods.eln.sound.SoundCommand;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -205,6 +206,10 @@ public abstract class NodeBase {
         Utils.println("Node::onBreakBlock()");
     }
 
+    public static SoundCommand beepUploaded = new SoundCommand("eln:beep_accept_2").smallRange();
+    public static SoundCommand beepDownloaded = new SoundCommand("eln:beep_accept").smallRange();
+    public static SoundCommand beepError = new SoundCommand("eln:beep_error").smallRange();
+
     public boolean onBlockActivated(EntityPlayer entityPlayer, Direction side, float vx, float vy, float vz) {
         if (!entityPlayer.worldObj.isRemote && entityPlayer.getCurrentEquippedItem() != null) {
             ItemStack equipped = entityPlayer.getCurrentEquippedItem();
@@ -237,14 +242,23 @@ public abstract class NodeBase {
                     equipped.setTagCompound(new NBTTagCompound());
                 }
                 String act;
+                SoundCommand snd = beepError;
                 if(entityPlayer.isSneaking() || Eln.playerManager.get(entityPlayer).getInteractEnable()) {
-                    writeConfigTool(side, equipped.getTagCompound());
+                    if(writeConfigTool(side, equipped.getTagCompound()))
+                        snd = beepDownloaded;
                     act = "write";
                 } else {
-                    readConfigTool(side, equipped.getTagCompound());
+                    if(readConfigTool(side, equipped.getTagCompound()))
+                        snd = beepUploaded;
                     act = "read";
                 }
-                Utils.println(String.format("NB.oBA: act %s data %s", act, equipped.getTagCompound().toString()));
+                snd.set(
+                    entityPlayer.posX,
+                    entityPlayer.posY,
+                    entityPlayer.posZ,
+                    entityPlayer.worldObj
+                ).play();
+                // Utils.println(String.format("NB.oBA: act %s data %s", act, equipped.getTagCompound().toString()));
                 return true;
             }
         }
@@ -460,9 +474,9 @@ public abstract class NodeBase {
         return "";
     }
 
-    public void readConfigTool(Direction side, NBTTagCompound tag) {}
+    public boolean readConfigTool(Direction side, NBTTagCompound tag) { return false; }
 
-    public void writeConfigTool(Direction side, NBTTagCompound tag) {}
+    public boolean writeConfigTool(Direction side, NBTTagCompound tag) { return false; }
 
     public void setNeedPublish(boolean needPublish) {
         this.needPublish = needPublish;

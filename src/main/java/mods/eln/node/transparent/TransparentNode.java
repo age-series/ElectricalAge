@@ -112,17 +112,21 @@ public class TransparentNode extends Node {
     }
 
     @Override
-    public void readConfigTool(Direction side, NBTTagCompound tag) {
+    public boolean readConfigTool(Direction side, NBTTagCompound tag) {
         if(element instanceof IConfigurable) {
             ((IConfigurable) element).readConfigTool(tag);
+            return true;
         }
+        return false;
     }
 
     @Override
-    public void writeConfigTool(Direction side, NBTTagCompound tag) {
+    public boolean writeConfigTool(Direction side, NBTTagCompound tag) {
         if(element instanceof IConfigurable) {
             ((IConfigurable) element).writeConfigTool(tag);
+            return true;
         }
+        return false;
     }
 
     public IFluidHandler getFluidHandler() {

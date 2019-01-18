@@ -7,6 +7,7 @@ import mods.eln.node.NodeBase;
 import mods.eln.node.NodeBlock;
 import mods.eln.node.NodeBlockEntity;
 import mods.eln.node.NodeManager;
+import mods.eln.sound.SoundCommand;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
