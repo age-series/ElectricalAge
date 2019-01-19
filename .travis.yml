@@ -6,9 +6,7 @@ dist: trusty
 sudo: false
 
 install:
-  - echo "Preparing FORGE workspace"
   - gradle setupDecompWorkspace
-  - gradle build
 
 # Caching Gradle
 before_cache:
