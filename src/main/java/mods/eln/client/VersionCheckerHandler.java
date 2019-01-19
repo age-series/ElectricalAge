@@ -29,7 +29,7 @@ import java.net.URL;
 public class VersionCheckerHandler {
 
     // Current mod version file hosted on Github
-    private final static String URL = "http://electrical-age.net/modinfo/modinfo.json";
+    private final static String URL = "http://eln.ja13.org/modinfo.json";
 
     private static VersionCheckerHandler instance;
 
