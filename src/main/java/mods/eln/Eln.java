@@ -5083,7 +5083,7 @@ public class Eln {
             sharedItem.addElement(completId, descriptor);
             Data.addResource(descriptor.newItemStack());
         }
-        {
+        /*{
             GenericItemUsingDamageDescriptor descriptor;
             subId = 9;
             completId = subId + (id << 6);
@@ -5102,7 +5102,7 @@ public class Eln {
             descriptor = new GenericItemUsingDamageDescriptor(name);
             sharedItem.addElement(completId, descriptor);
             Data.addResource(descriptor.newItemStack());
-        }
+        }*/
         {
             GenericItemUsingDamageDescriptor descriptor;
             subId = 11;
