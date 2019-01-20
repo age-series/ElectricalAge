@@ -852,6 +852,7 @@ public class Eln {
         recipePlateMachine();
         recipeMagnetizer();
         recipeFuelBurnerItem();
+        recipeDisplays();
 
         recipeECoal();
 
@@ -7208,7 +7209,6 @@ public class Eln {
             'C', dictAdvancedChip,
             'c', findItemStack("Advanced Electrical Motor"),
             'I', "ingotAlloy");
-
     }
 
     private void recipeElectricalGate() {
@@ -7664,6 +7664,25 @@ public class Eln {
             'i', "ingotCopper",
             's', new ItemStack(Items.stick));
 
+    }
+
+    private void recipeDisplays() {
+        addRecipe(findItemStack("Digital Display", 1),
+            "   ",
+            "rrr",
+            "iii",
+            'r', new ItemStack(Items.redstone),
+            'i', findItemStack("Iron Cable")
+        );
+
+        addRecipe(findItemStack("Nixie Tube", 1),
+            " g ",
+            "grg",
+            "iii",
+            'g', new ItemStack(Blocks.glass_pane),
+            'r', new ItemStack(Items.redstone),
+            'i', findItemStack("Iron Cable")
+        );
     }
 
     private int replicatorRegistrationId = -1;
