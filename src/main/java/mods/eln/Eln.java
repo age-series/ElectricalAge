@@ -2896,9 +2896,9 @@ public class Eln {
         {
             subId = 13;
 
-            JointHubDescriptor desc = new JointHubDescriptor(
+            VerticalHubDescriptor desc = new VerticalHubDescriptor(
                 TR_NAME(Type.NONE, "Joint hub"),
-                obj.getObj("JointHub"));
+                obj.getObj("VerticalHub"));
             transparentNodeItem.addDescriptor(subId + (id << 6), desc);
         }
 
