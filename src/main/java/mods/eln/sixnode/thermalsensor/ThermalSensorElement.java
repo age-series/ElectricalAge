@@ -20,7 +20,6 @@ import mods.eln.sim.nbt.NbtThermalLoad;
 import mods.eln.sixnode.electricalcable.ElectricalCableDescriptor;
 import mods.eln.sixnode.electricaldatalogger.DataLogs;
 import mods.eln.sixnode.thermalcable.ThermalCableDescriptor;
-import mods.eln.wiki.Data;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
@@ -270,7 +269,7 @@ public class ThermalSensorElement extends SixNodeElement implements IConfigurabl
     }
 
     @Override
-    public void readConfigTool(NBTTagCompound compound) {
+    public void readConfigTool(NBTTagCompound compound, EntityPlayer invoker) {
         if(compound.hasKey("min"))
             lowValue = compound.getFloat("min");
         if(compound.hasKey("max"))
@@ -289,7 +288,7 @@ public class ThermalSensorElement extends SixNodeElement implements IConfigurabl
     }
 
     @Override
-    public void writeConfigTool(NBTTagCompound compound) {
+    public void writeConfigTool(NBTTagCompound compound, EntityPlayer invoker) {
         compound.setFloat("min", lowValue);
         compound.setFloat("max", highValue);
         switch(typeOfSensor) {

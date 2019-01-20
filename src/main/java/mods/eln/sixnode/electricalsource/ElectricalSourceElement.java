@@ -164,7 +164,7 @@ public class ElectricalSourceElement extends SixNodeElement implements IConfigur
     }
 
     @Override
-    public void readConfigTool(NBTTagCompound compound) {
+    public void readConfigTool(NBTTagCompound compound, EntityPlayer invoker) {
         if(compound.hasKey("voltage")) {
             voltageSource.setU(compound.getDouble("voltage"));
             needPublish();
@@ -172,7 +172,7 @@ public class ElectricalSourceElement extends SixNodeElement implements IConfigur
     }
 
     @Override
-    public void writeConfigTool(NBTTagCompound compound) {
+    public void writeConfigTool(NBTTagCompound compound, EntityPlayer invoker) {
         compound.setDouble("voltage", voltageSource.getU());
     }
 }

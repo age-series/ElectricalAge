@@ -1,6 +1,5 @@
 package mods.eln.sixnode.electricaldigitaldisplay;
 
-import mods.eln.generic.GenericItemUsingDamage;
 import mods.eln.generic.GenericItemUsingDamageDescriptor;
 import mods.eln.item.BrushDescriptor;
 import mods.eln.item.IConfigurable;
@@ -15,7 +14,6 @@ import mods.eln.sim.ElectricalLoad;
 import mods.eln.sim.ThermalLoad;
 import mods.eln.sim.nbt.NbtElectricalGateInput;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
@@ -173,7 +171,7 @@ public class ElectricalDigitalDisplayElement extends SixNodeElement implements I
     }
 
     @Override
-    public void readConfigTool(NBTTagCompound compound) {
+    public void readConfigTool(NBTTagCompound compound, EntityPlayer invoker) {
         if(compound.hasKey("min"))
             min = compound.getFloat("min");
         if(compound.hasKey("max"))
@@ -182,7 +180,7 @@ public class ElectricalDigitalDisplayElement extends SixNodeElement implements I
     }
 
     @Override
-    public void writeConfigTool(NBTTagCompound compound) {
+    public void writeConfigTool(NBTTagCompound compound, EntityPlayer invoker) {
         compound.setFloat("min", min);
         compound.setFloat("max", max);
     }

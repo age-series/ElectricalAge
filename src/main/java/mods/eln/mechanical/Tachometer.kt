@@ -118,7 +118,7 @@ open class TachometerElement(node: TransparentNode, desc_: TransparentNodeDescri
         return mapOf()
     }
 
-    override fun readConfigTool(compound: NBTTagCompound) {
+    override fun readConfigTool(compound: NBTTagCompound, invoker: EntityPlayer) {
         if(compound.hasKey("min"))
             minRads = compound.getFloat("min")
         if(compound.hasKey("max"))
@@ -126,7 +126,7 @@ open class TachometerElement(node: TransparentNode, desc_: TransparentNodeDescri
         needPublish()
     }
 
-    override fun writeConfigTool(compound: NBTTagCompound) {
+    override fun writeConfigTool(compound: NBTTagCompound, invoker: EntityPlayer) {
         compound.setFloat("min", minRads)
         compound.setFloat("max", maxRads)
         compound.setByte("unit", DataLogs.noType)

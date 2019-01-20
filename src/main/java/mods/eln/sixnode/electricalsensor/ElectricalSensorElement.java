@@ -272,11 +272,12 @@ public class ElectricalSensorElement extends SixNodeElement implements IConfigur
     }
 
     @Override
-    public void readConfigTool(NBTTagCompound compound) {
+    public void readConfigTool(NBTTagCompound compound, EntityPlayer invoker) {
         if(compound.hasKey("min"))
             lowValue = compound.getFloat("min");
         if(compound.hasKey("max"))
             highValue = compound.getFloat("max");
+        if (lowValue == highValue) highValue += 0.0001;
         if(compound.hasKey("unit")) {
             switch (compound.getByte("unit")) {
                 case DataLogs.powerType:
@@ -290,11 +291,13 @@ public class ElectricalSensorElement extends SixNodeElement implements IConfigur
                     break;
             }
         }
+        if(compound.hasKey("dir") && !descriptor.voltageOnly)
+            dirType = compound.getByte("dir");
         needPublish();
     }
 
     @Override
-    public void writeConfigTool(NBTTagCompound compound) {
+    public void writeConfigTool(NBTTagCompound compound, EntityPlayer invoker) {
         compound.setFloat("min", lowValue);
         compound.setFloat("max", highValue);
         switch(typeOfSensor) {
@@ -308,5 +311,6 @@ public class ElectricalSensorElement extends SixNodeElement implements IConfigur
                 compound.setByte("unit", DataLogs.voltageType);
                 break;
         }
+        compound.setByte("dir", dirType);
     }
 }

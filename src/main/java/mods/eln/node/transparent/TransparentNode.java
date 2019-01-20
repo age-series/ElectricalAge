@@ -112,18 +112,18 @@ public class TransparentNode extends Node {
     }
 
     @Override
-    public boolean readConfigTool(Direction side, NBTTagCompound tag) {
+    public boolean readConfigTool(Direction side, NBTTagCompound tag, EntityPlayer invoker) {
         if(element instanceof IConfigurable) {
-            ((IConfigurable) element).readConfigTool(tag);
+            ((IConfigurable) element).readConfigTool(tag, invoker);
             return true;
         }
         return false;
     }
 
     @Override
-    public boolean writeConfigTool(Direction side, NBTTagCompound tag) {
+    public boolean writeConfigTool(Direction side, NBTTagCompound tag, EntityPlayer invoker) {
         if(element instanceof IConfigurable) {
-            ((IConfigurable) element).writeConfigTool(tag);
+            ((IConfigurable) element).writeConfigTool(tag, invoker);
             return true;
         }
         return false;

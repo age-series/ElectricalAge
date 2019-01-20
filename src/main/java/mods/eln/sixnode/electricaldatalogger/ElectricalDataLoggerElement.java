@@ -274,7 +274,7 @@ public class ElectricalDataLoggerElement extends SixNodeElement implements IConf
         return false;
     }
 
-    public void readConfigTool(NBTTagCompound compound) {
+    public void readConfigTool(NBTTagCompound compound, EntityPlayer invoker) {
         if(compound.hasKey("min"))
             logs.minValue = compound.getFloat("min");
         if(compound.hasKey("max"))
@@ -305,7 +305,7 @@ public class ElectricalDataLoggerElement extends SixNodeElement implements IConf
     }
 
     @Override
-    public void writeConfigTool(NBTTagCompound compound) {
+    public void writeConfigTool(NBTTagCompound compound, EntityPlayer invoker) {
         compound.setFloat("min", logs.minValue);
         compound.setFloat("max", logs.maxValue);
         compound.setByte("unit", logs.unitType);

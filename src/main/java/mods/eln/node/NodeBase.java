@@ -244,11 +244,11 @@ public abstract class NodeBase {
                 String act;
                 SoundCommand snd = beepError;
                 if(entityPlayer.isSneaking() || Eln.playerManager.get(entityPlayer).getInteractEnable()) {
-                    if(writeConfigTool(side, equipped.getTagCompound()))
+                    if(writeConfigTool(side, equipped.getTagCompound(), entityPlayer))
                         snd = beepDownloaded;
                     act = "write";
                 } else {
-                    if(readConfigTool(side, equipped.getTagCompound()))
+                    if(readConfigTool(side, equipped.getTagCompound(), entityPlayer))
                         snd = beepUploaded;
                     act = "read";
                 }
@@ -258,7 +258,7 @@ public abstract class NodeBase {
                     entityPlayer.posZ,
                     entityPlayer.worldObj
                 ).play();
-                // Utils.println(String.format("NB.oBA: act %s data %s", act, equipped.getTagCompound().toString()));
+                Utils.println(String.format("NB.oBA: act %s data %s", act, equipped.getTagCompound().toString()));
                 return true;
             }
         }
@@ -474,9 +474,9 @@ public abstract class NodeBase {
         return "";
     }
 
-    public boolean readConfigTool(Direction side, NBTTagCompound tag) { return false; }
+    public boolean readConfigTool(Direction side, NBTTagCompound tag, EntityPlayer invoker) { return false; }
 
-    public boolean writeConfigTool(Direction side, NBTTagCompound tag) { return false; }
+    public boolean writeConfigTool(Direction side, NBTTagCompound tag, EntityPlayer invoker) { return false; }
 
     public void setNeedPublish(boolean needPublish) {
         this.needPublish = needPublish;

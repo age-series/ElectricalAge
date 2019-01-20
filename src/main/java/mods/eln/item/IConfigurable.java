@@ -1,10 +1,9 @@
 package mods.eln.item;
 
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 
-import java.util.Map;
-
 public interface IConfigurable {
-    void readConfigTool(NBTTagCompound compound);
-    void writeConfigTool(NBTTagCompound compound);
+    void readConfigTool(NBTTagCompound compound, EntityPlayer invoker);
+    void writeConfigTool(NBTTagCompound compound, EntityPlayer invoker);
 }

@@ -16,8 +16,11 @@ import mods.eln.sim.IProcess;
 import mods.eln.sim.ThermalLoad;
 import mods.eln.sim.nbt.NbtElectricalGateInput;
 import mods.eln.sixnode.wirelesssignal.IWirelessSignalTx;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
+import net.minecraft.nbt.NBTTagString;
 
 import javax.annotation.Nullable;
 import java.io.DataInputStream;
@@ -226,17 +229,22 @@ public class WirelessSignalTxElement extends SixNodeElement implements IWireless
     }
 
     @Override
-    public void readConfigTool(NBTTagCompound compound) {
-        if(compound.hasKey("wirelessChannel")) {
-            channelRemove(this);
-            channel = compound.getString("wirelessChannel");
-            channelRegister(this);
-            needPublish();
+    public void readConfigTool(NBTTagCompound compound, EntityPlayer invoker) {
+        if(compound.hasKey("wirelessChannels")) {
+            String newChannel = compound.getTagList("wirelessChannels", 8).getStringTagAt(0);
+            if(newChannel != null && newChannel != "") {
+                channelRemove(this);
+                channel = newChannel;
+                channelRegister(this);
+                needPublish();
+            }
         }
     }
 
     @Override
-    public void writeConfigTool(NBTTagCompound compound) {
-        compound.setString("wirelessChannel", channel);
+    public void writeConfigTool(NBTTagCompound compound, EntityPlayer invoker) {
+        NBTTagList list = new NBTTagList();
+        list.appendTag(new NBTTagString(channel));
+        compound.setTag("wirelessChannels", list);
     }
 }
