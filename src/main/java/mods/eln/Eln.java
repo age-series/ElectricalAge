@@ -10,6 +10,10 @@ import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import cpw.mods.fml.common.registry.EntityRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
+import mods.eln.block.ArcClayBlock;
+import mods.eln.block.ArcClayItemBlock;
+import mods.eln.block.ArcMetalBlock;
+import mods.eln.block.ArcMetalItemBlock;
 import mods.eln.cable.CableRenderDescriptor;
 import mods.eln.client.ClientKeyHandler;
 import mods.eln.client.SoundLoader;
@@ -241,6 +245,8 @@ public class Eln {
     public static OreBlock oreBlock;
     public static GhostBlock ghostBlock;
     public static LightBlock lightBlock;
+    public static ArcClayBlock arcClayBlock;
+    public static ArcMetalBlock arcMetalBlock;
 
     public static SixNodeItem sixNodeItem;
     public static TransparentNodeItem transparentNodeItem;
@@ -517,6 +523,9 @@ public class Eln {
 
         oreBlock = (OreBlock) new OreBlock().setCreativeTab(creativeTab).setBlockName("OreEln");
 
+        arcClayBlock = (ArcClayBlock) new ArcClayBlock();
+        arcMetalBlock = (ArcMetalBlock) new ArcMetalBlock();
+
         sharedItem = (SharedItem) new SharedItem()
             .setCreativeTab(creativeTab).setMaxStackSize(64)
             .setUnlocalizedName("sharedItem");
@@ -547,6 +556,8 @@ public class Eln {
         GameRegistry.registerBlock(sixNodeBlock, SixNodeItem.class, "Eln.SixNode");
         GameRegistry.registerBlock(transparentNodeBlock, TransparentNodeItem.class, "Eln.TransparentNode");
         GameRegistry.registerBlock(oreBlock, OreItem.class, "Eln.Ore");
+        GameRegistry.registerBlock(arcClayBlock, ArcClayItemBlock.class, "Eln.arc_clay_block");
+        GameRegistry.registerBlock(arcMetalBlock, ArcMetalItemBlock.class, "Eln.arc_metal_block");
         TileEntity.addMapping(TransparentNodeEntity.class, "TransparentNodeEntity");
         TileEntity.addMapping(TransparentNodeEntityWithFluid.class, "TransparentNodeEntityWF");
         // TileEntity.addMapping(TransparentNodeEntityWithSiededInv.class, "TransparentNodeEntityWSI");
@@ -660,6 +671,9 @@ public class Eln {
         registerElectricalTool(121);
         registerPortableItem(122);
         registerFuelBurnerItem(124);
+
+        OreDictionary.registerOre("blockAluminum", arcClayBlock);
+        OreDictionary.registerOre("blockSteel", arcMetalBlock);
 
         // Register WIP items only on development runs!
         if (isDevelopmentRun()) {
@@ -5052,18 +5066,6 @@ public class Eln {
             GenericItemUsingDamageDescriptor descriptor;
             subId = 7;
             completId = subId + (id << 6);
-            name = TR_NAME(Type.NONE, "Arc Clay Chunk");
-
-            descriptor = new GenericItemUsingDamageDescriptor(name);
-            sharedItem.addElement(completId, descriptor);
-            Data.addResource(descriptor.newItemStack());
-            OreDictionary.registerOre("blockAluminium", descriptor.newItemStack());
-            //OreDictionary.registerOre("blockAluminum", descriptor.newItemStack());
-        }
-        {
-            GenericItemUsingDamageDescriptor descriptor;
-            subId = 8;
-            completId = subId + (id << 6);
             name = TR_NAME(Type.NONE, "Arc Metal Ingot");
 
             descriptor = new GenericItemUsingDamageDescriptor(name);
@@ -5073,18 +5075,7 @@ public class Eln {
         }
         {
             GenericItemUsingDamageDescriptor descriptor;
-            subId = 9;
-            completId = subId + (id << 6);
-            name = TR_NAME(Type.NONE, "Arc Metal Chunk");
-
-            descriptor = new GenericItemUsingDamageDescriptor(name);
-            sharedItem.addElement(completId, descriptor);
-            Data.addResource(descriptor.newItemStack());
-			OreDictionary.registerOre("blockSteel", descriptor.newItemStack());
-        }
-        {
-            GenericItemUsingDamageDescriptor descriptor;
-            subId = 10;
+            subId = 8;
             completId = subId + (id << 6);
             name = TR_NAME(Type.NONE, "Inert Canister");
 
@@ -5094,7 +5085,7 @@ public class Eln {
         }
         {
             GenericItemUsingDamageDescriptor descriptor;
-            subId = 11;
+            subId = 9;
             completId = subId + (id << 6);
             name = TR_NAME(Type.NONE, "T1 Transmission Cable");
 
@@ -5104,7 +5095,7 @@ public class Eln {
         }
         {
             GenericItemUsingDamageDescriptor descriptor;
-            subId = 12;
+            subId = 10;
             completId = subId + (id << 6);
             name = TR_NAME(Type.NONE, "T2 Transmission Cable");
 
@@ -5114,7 +5105,7 @@ public class Eln {
         }
         {
             GenericItemUsingDamageDescriptor descriptor;
-            subId = 13;
+            subId = 11;
             completId = subId + (id << 6);
             name = TR_NAME(Type.NONE, "Canister of Water");
 
@@ -5124,7 +5115,7 @@ public class Eln {
         }
         {
             GenericItemUsingDamageDescriptor descriptor;
-            subId = 14;
+            subId = 12;
             completId = subId + (id << 6);
             name = TR_NAME(Type.NONE, "Canister of Arc Water");
 
@@ -7004,22 +6995,22 @@ public class Eln {
             "S",
             'S', findItemStack("unreleasedium"),
             'I', findItemStack("Synthetic Diamond"));
-        addRecipe(findItemStack("Arc Clay Chunk", 1),
+        addRecipe(new ItemStack(arcClayBlock),
             "III",
             "III",
             "III",
             'I', findItemStack("Arc Clay Ingot"));
         addRecipe(findItemStack("Arc Clay Ingot", 9),
             "I",
-            'I', findItemStack("Arc Clay Chunk"));
-        addRecipe(findItemStack("Arc Metal Chunk", 1),
+            'I', new ItemStack(arcClayBlock));
+        addRecipe(new ItemStack(arcMetalBlock),
             "III",
             "III",
             "III",
             'I', findItemStack("Arc Metal Ingot"));
         addRecipe(findItemStack("Arc Metal Ingot", 9),
             "I",
-            'I', findItemStack("Arc Metal Chunk"));
+            'I', new ItemStack(arcMetalBlock));
         addRecipe(findItemStack("Graphite Rod", 2),
             "I",
             'I', findItemStack("2x Graphite Rods"));
