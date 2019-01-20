@@ -184,12 +184,12 @@ import static mods.eln.i18n.I18N.*;
 public class Eln {
     // Mod information (override from 'mcmod.info' file)
     public final static String MODID = "Eln";
-    public final static String NAME = "Electrical Age";
-    public final static String MODDESC = "Electricity in your base !";
-    public final static String URL = "https://electrical-age.net";
-    public final static String UPDATE_URL = "https://github.com/Electrical-Age/ElectricalAge/releases";
-    public final static String SRC_URL = "https://github.com/Electrical-Age";
-    public final static String[] AUTHORS = {"Dolu1990", "lambdaShade", "cm0x4D", "metc", "Baughn"};
+    public final static String NAME = "Electrical Age - jrddunbr edition";
+    public final static String MODDESC = "Electricity in your base!";
+    public final static String URL = "https://eln.ja13.org";
+    public final static String UPDATE_URL = "https://github.com/jrddunbr/ElectricalAge/releases";
+    public final static String SRC_URL = "https://github.com/jrddunbr/ElectricalAge";
+    public final static String[] AUTHORS = {"Dolu1990", "lambdaShade", "cm0x4D", "metc", "Baughn", "jrddunbr", "Grissess", "OmegaHaxors"};
 
     public static final String channelName = "miaouMod";
     public static final double solarPanelBasePower = 65.0;
@@ -305,6 +305,8 @@ public class Eln {
     public boolean killMonstersAroundLamps;
     public int killMonstersAroundLampsRange;
 
+    public int maxReplicators = 100;
+
     double stdBatteryHalfLife = 2 * Utils.minecraftDay;
     double batteryCapacityFactor = 1.;
 
@@ -316,7 +318,7 @@ public class Eln {
     public static boolean noSymbols = false;
     public static boolean noVoltageBackground = false;
 
-    public static double maxSoundDistance = 64;
+    public static double maxSoundDistance = 16;
 
     @EventHandler
     public void preInit(FMLPreInitializationEvent event) {
@@ -413,6 +415,7 @@ public class Eln {
         replicatorRegistrationId = config.get("entity", "replicatorId", -1).getInt(-1);
         killMonstersAroundLamps = config.get("entity", "killMonstersAroundLamps", true).getBoolean(true);
         killMonstersAroundLampsRange = config.get("entity", "killMonstersAroundLampsRange", 9).getInt(9);
+        maxReplicators = config.get("entity", "maxReplicators", 100).getInt(100);
 
         forceOreRegen = config.get("mapGenerate", "forceOreRegen", false).getBoolean(false);
         genCopper = config.get("mapGenerate", "copper", true).getBoolean(true);
@@ -849,6 +852,7 @@ public class Eln {
         recipePlateMachine();
         recipeMagnetizer();
         recipeFuelBurnerItem();
+        recipeDisplays();
 
         recipeECoal();
 
@@ -1046,7 +1050,6 @@ public class Eln {
 
         //tileEntityDestructor.clear();
         LampSupplyElement.channelMap.clear();
-        PowerSocketElement.channelMap.clear();
         WirelessSignalTxElement.channelMap.clear();
 
     }
@@ -1063,7 +1066,6 @@ public class Eln {
         LightBlockEntity.observers.clear();
         WirelessSignalTxElement.channelMap.clear();
         LampSupplyElement.channelMap.clear();
-        PowerSocketElement.channelMap.clear();
         playerManager.clear();
         clientLiveDataManager.start();
         simulator.init();
@@ -3413,6 +3415,46 @@ public class Eln {
                 MVU, 1200,// electricalNominalU, electricalNominalP,
                 1500,// electricalMaximalP)
                 highVoltageCableDescriptor);
+            sharedItem.addElement(completId, element);
+        }
+        {
+            subId = 12;
+            completId = subId + (id << 6);
+            element = new HeatingCorpElement(TR_NAME(Type.NONE, "Small 800V Tungsten Heating Corp"),// iconId,
+                // name,
+                HVU, 3600,// electricalNominalU, electricalNominalP,
+                4800,// electricalMaximalP)
+                veryHighVoltageCableDescriptor);
+            sharedItem.addElement(completId, element);
+        }
+        {
+            subId = 13;
+            completId = subId + (id << 6);
+            element = new HeatingCorpElement(TR_NAME(Type.NONE, "800V Tungsten Heating Corp"),// iconId,
+                // name,
+                HVU, 4812,// electricalNominalU, electricalNominalP,
+                6015,// electricalMaximalP)
+                veryHighVoltageCableDescriptor);
+            sharedItem.addElement(completId, element);
+        }
+        {
+            subId = 14;
+            completId = subId + (id << 6);
+            element = new HeatingCorpElement(TR_NAME(Type.NONE, "Small 3.2kV Tungsten Heating Corp"),// iconId,
+                // name,
+                VVU, 4000,// electricalNominalU, electricalNominalP,
+                6000,// electricalMaximalP)
+                veryHighVoltageCableDescriptor);
+            sharedItem.addElement(completId, element);
+        }
+        {
+            subId = 15;
+            completId = subId + (id << 6);
+            element = new HeatingCorpElement(TR_NAME(Type.NONE, "3.2kV Tungsten Heating Corp"),// iconId,
+                // name,
+                VVU, 12000,// electricalNominalU, electricalNominalP,
+                15000,// electricalMaximalP)
+                veryHighVoltageCableDescriptor);
             sharedItem.addElement(completId, element);
         }
 
@@ -6257,6 +6299,18 @@ public class Eln {
         addRecipe(findItemStack("200V Tungsten Heating Corp"),
             "CC",
             'C', findItemStack("Small 200V Tungsten Heating Corp"));
+        addRecipe(findItemStack("Small 800V Tungsten Heating Corp"),
+            "CC",
+            'C', findItemStack("200V Tungsten Heating Corp"));
+        addRecipe(findItemStack("800V Tungsten Heating Corp"),
+            "CC",
+            'C', findItemStack("Small 800V Tungsten Heating Corp"));
+        addRecipe(findItemStack("Small 3.2kV Tungsten Heating Corp"),
+            "CC",
+            'C', findItemStack("800V Tungsten Heating Corp"));
+        addRecipe(findItemStack("3.2kV Tungsten Heating Corp"),
+            "CC",
+            'C', findItemStack("Small 3.2kV Tungsten Heating Corp"));
     }
 
     private void recipeRegulatorItem() {
@@ -6822,6 +6876,8 @@ public class Eln {
 
     private void recipeMacerator() {
         float f = 4000;
+	maceratorRecipes.addRecipe(new Recipe(new ItemStack(Blocks.coal_ore, 1),
+	    new ItemStack(Items.coal, 3, 0), 1.0 * f));
         maceratorRecipes.addRecipe(new Recipe(findItemStack("Copper Ore"),
             new ItemStack[]{findItemStack("Copper Dust", 2)}, 1.0 * f));
         maceratorRecipes.addRecipe(new Recipe(new ItemStack(Blocks.iron_ore),
@@ -7155,7 +7211,6 @@ public class Eln {
             'C', dictAdvancedChip,
             'c', findItemStack("Advanced Electrical Motor"),
             'I', "ingotAlloy");
-
     }
 
     private void recipeElectricalGate() {
@@ -7611,6 +7666,25 @@ public class Eln {
             'i', "ingotCopper",
             's', new ItemStack(Items.stick));
 
+    }
+
+    private void recipeDisplays() {
+        addRecipe(findItemStack("Digital Display", 1),
+            "   ",
+            "rrr",
+            "iii",
+            'r', new ItemStack(Items.redstone),
+            'i', findItemStack("Iron Cable")
+        );
+
+        addRecipe(findItemStack("Nixie Tube", 1),
+            " g ",
+            "grg",
+            "iii",
+            'g', new ItemStack(Blocks.glass_pane),
+            'r', new ItemStack(Items.redstone),
+            'i', findItemStack("Iron Cable")
+        );
     }
 
     private int replicatorRegistrationId = -1;
