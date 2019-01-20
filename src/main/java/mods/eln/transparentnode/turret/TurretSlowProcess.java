@@ -327,12 +327,12 @@ public class TurretSlowProcess extends StateMachine {
 
         @Override
         public void enter() {
-            if (target != null){
-            target.hurtResistantTime = 0;
-		    target.attackEntityFrom(new DamageSource("Unknown"), 5);
-			element.shoot();
-            element.play(new SoundCommand("eln:LaserGun"));
-		    }
+            if (target != null) {
+                target.hurtResistantTime = 0;
+                target.attackEntityFrom(new DamageSource("Unknown"), 5);
+                element.shoot();
+                element.play(new SoundCommand("eln:LaserGun"));
+            }
         }
 
         @Override

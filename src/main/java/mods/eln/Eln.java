@@ -185,12 +185,12 @@ import static mods.eln.i18n.I18N.*;
 public class Eln {
     // Mod information (override from 'mcmod.info' file)
     public final static String MODID = "Eln";
-    public final static String NAME = "Electrical Age";
-    public final static String MODDESC = "Electricity in your base !";
-    public final static String URL = "https://electrical-age.net";
-    public final static String UPDATE_URL = "https://github.com/Electrical-Age/ElectricalAge/releases";
-    public final static String SRC_URL = "https://github.com/Electrical-Age";
-    public final static String[] AUTHORS = {"Dolu1990", "lambdaShade", "cm0x4D", "metc", "Baughn"};
+    public final static String NAME = "Electrical Age - jrddunbr edition";
+    public final static String MODDESC = "Electricity in your base!";
+    public final static String URL = "https://eln.ja13.org";
+    public final static String UPDATE_URL = "https://github.com/jrddunbr/ElectricalAge/releases";
+    public final static String SRC_URL = "https://github.com/jrddunbr/ElectricalAge";
+    public final static String[] AUTHORS = {"Dolu1990", "lambdaShade", "cm0x4D", "metc", "Baughn", "jrddunbr", "Grissess", "OmegaHaxors"};
 
     public static final String channelName = "miaouMod";
     public static final double solarPanelBasePower = 65.0;
@@ -311,6 +311,8 @@ public class Eln {
     public boolean killMonstersAroundLamps;
     public int killMonstersAroundLampsRange;
 
+    public int maxReplicators = 100;
+
     double stdBatteryHalfLife = 2 * Utils.minecraftDay;
     double batteryCapacityFactor = 1.;
 
@@ -322,7 +324,7 @@ public class Eln {
     public static boolean noSymbols = false;
     public static boolean noVoltageBackground = false;
 
-    public static double maxSoundDistance = 64;
+    public static double maxSoundDistance = 16;
 
     @EventHandler
     public void preInit(FMLPreInitializationEvent event) {
@@ -419,6 +421,7 @@ public class Eln {
         replicatorRegistrationId = config.get("entity", "replicatorId", -1).getInt(-1);
         killMonstersAroundLamps = config.get("entity", "killMonstersAroundLamps", true).getBoolean(true);
         killMonstersAroundLampsRange = config.get("entity", "killMonstersAroundLampsRange", 9).getInt(9);
+        maxReplicators = config.get("entity", "maxReplicators", 100).getInt(100);
 
         forceOreRegen = config.get("mapGenerate", "forceOreRegen", false).getBoolean(false);
         genCopper = config.get("mapGenerate", "copper", true).getBoolean(true);
@@ -860,6 +863,7 @@ public class Eln {
         recipePlateMachine();
         recipeMagnetizer();
         recipeFuelBurnerItem();
+        recipeDisplays();
 
         recipeECoal();
 
@@ -1057,7 +1061,6 @@ public class Eln {
 
         //tileEntityDestructor.clear();
         LampSupplyElement.channelMap.clear();
-        PowerSocketElement.channelMap.clear();
         WirelessSignalTxElement.channelMap.clear();
 
     }
@@ -1074,7 +1077,6 @@ public class Eln {
         LightBlockEntity.observers.clear();
         WirelessSignalTxElement.channelMap.clear();
         LampSupplyElement.channelMap.clear();
-        PowerSocketElement.channelMap.clear();
         playerManager.clear();
         clientLiveDataManager.start();
         simulator.init();
@@ -2995,6 +2997,24 @@ public class Eln {
 
             transparentNodeItem.addDescriptor(subId + (id << 6), desc);
         }
+
+        {
+            subId = 17;
+            ClutchDescriptor desc = new ClutchDescriptor(
+                TR_NAME(Type.NONE, "Clutch"),
+                obj.getObj("Clutch")
+            );
+            transparentNodeItem.addDescriptor(subId + (id << 6), desc);
+        }
+
+        {
+            subId = 18;
+            FixedShaftDescriptor desc = new FixedShaftDescriptor(
+                TR_NAME(Type.NONE, "Fixed Shaft"),
+                obj.getObj("FixedShaft")
+            );
+            transparentNodeItem.addDescriptor(subId + (id << 6), desc);
+        }
     }
 
     public ArrayList<ItemStack> furnaceList = new ArrayList<ItemStack>();
@@ -4337,7 +4357,7 @@ public class Eln {
             desc.setGhostGroup(g);
             transparentNodeItem.addDescriptor(subId + (id << 6), desc);
         }
-		
+
         /*{ //TODO Work on the large wind turbine
             subId = 1;
             name = TR_NAME(Type.NONE, "Large Wind Turbine");
@@ -5503,6 +5523,9 @@ public class Eln {
         }
 
         sharedItem.addElement(53 + (id << 6), new CaseItemDescriptor(TR_NAME(Type.NONE, "Casing")));
+
+        sharedItem.addElement(54 + (id << 6), new ClutchPlateItem("Clutch Plate"));
+        sharedItem.addElement(55 + (id << 6), new ClutchPinItem("Clutch Pin"));
     }
 
     public DataLogsPrintDescriptor dataLogsPrintDescriptor;
@@ -6181,6 +6204,20 @@ public class Eln {
             'p', findItemStack("Electrical Probe Chip"),
             'c', findItemStack("Signal Cable")
         );
+        addRecipe(findItemStack("Clutch"),
+            "iIi",
+            " c ",
+            'i', "ingotIron",
+            'I', "plateIron",
+            'c', findItemStack("Machine Block")
+        );
+        addRecipe(findItemStack("Fixed Shaft"),
+            "iBi",
+            " c ",
+            'i', "ingotIron",
+            'B', "blockIron",
+            'c', findItemStack("Machine Block")
+        );
     }
 
     private void recipeBattery() {
@@ -6400,7 +6437,7 @@ public class Eln {
             'B', findItemStack("Machine Block"),
             'I', "plateIron",
             'M', findItemStack("Electrical Motor"));
-			
+
         /*addRecipe(findItemStack("Large Wind Turbine"), //todo add recipe to large wind turbine
             "TTT",
             "TCT",
@@ -7222,10 +7259,26 @@ public class Eln {
             "ppp",
             'p', findItemStack("Iron Cable"));
 
+        addRecipe(findItemStack("Clutch Plate"),
+            " t ",
+            "tIt",
+            " t ",
+            'I', "plateIron",
+            't', dictTungstenDust
+        );
+
+        addRecipe(findItemStack("Clutch Pin", 4),
+            "s",
+            "s",
+            's', firstExistingOre("ingotSteel", "ingotAlloy")
+        );
+
     }
 
     private void recipeMacerator() {
         float f = 4000;
+	maceratorRecipes.addRecipe(new Recipe(new ItemStack(Blocks.coal_ore, 1),
+	    new ItemStack(Items.coal, 3, 0), 1.0 * f));
         maceratorRecipes.addRecipe(new Recipe(findItemStack("Copper Ore"),
             new ItemStack[]{findItemStack("Copper Dust", 2)}, 1.0 * f));
         maceratorRecipes.addRecipe(new Recipe(new ItemStack(Blocks.iron_ore),
@@ -8089,6 +8142,25 @@ public class Eln {
             'i', "ingotCopper",
             's', new ItemStack(Items.stick));
 
+    }
+
+    private void recipeDisplays() {
+        addRecipe(findItemStack("Digital Display", 1),
+            "   ",
+            "rrr",
+            "iii",
+            'r', new ItemStack(Items.redstone),
+            'i', findItemStack("Iron Cable")
+        );
+
+        addRecipe(findItemStack("Nixie Tube", 1),
+            " g ",
+            "grg",
+            "iii",
+            'g', new ItemStack(Blocks.glass_pane),
+            'r', new ItemStack(Items.redstone),
+            'i', findItemStack("Iron Cable")
+        );
     }
 
     private int replicatorRegistrationId = -1;
