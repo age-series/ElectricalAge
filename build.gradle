@@ -64,6 +64,11 @@ minecraft {
     replace "@MAJORVERSION@", MAJORVERSION
     replace "@MINORVERSION@", MINORVERSION
     replace "@REVISION@", REVISION
+
+    replace "@BUILD_HOST@", BUILD_HOST
+    replace "@BUILD_DATE@", BUILD_DATE
+    replace "@JAVA_VERSION@", JAVA_VERSION
+    replace "@GIT_REVISION@", GIT_REVISION
 }
 
 configurations {
