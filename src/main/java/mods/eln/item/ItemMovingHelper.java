@@ -15,7 +15,7 @@ public abstract class ItemMovingHelper {
     public abstract ItemStack newStackOfSize(int items);
 
     public void move(InventoryPlayer src, IInventory dst, int dstSlot, int desired) {
-        if(false && Utils.isCreative((EntityPlayerMP) src.player)) {
+        if(Utils.isCreative((EntityPlayerMP) src.player)) {
             if(desired == 0) {
                 dst.setInventorySlotContents(dstSlot, null);
             } else {
