@@ -226,8 +226,10 @@ public class Utils {
 
     public static String plotValue(double value) {
         double valueAbs = Math.abs(value);
-        if (valueAbs < 0.001) {
+        if (valueAbs < 0.0001) {
             return "0";
+        } else if (valueAbs < 0.000999) {
+            return String.format("%1.2fµ",value * 10000);
         } else if (valueAbs < 0.00999) {
             return String.format("%1.2fm", value * 1000);
         } else if (valueAbs < 0.0999) {
@@ -428,58 +430,60 @@ public class Utils {
         setGlColorFromDye(damage, 1.0f);
     }
 
-    public static void setGlColorFromDye(int damage, float gain) {
+    public static void setGlColorFromDye(int damage, float gain) { setGlColorFromDye(damage, gain, 0f); }
+
+    public static void setGlColorFromDye(int damage, float gain, float bias) {
         switch (damage) {
             default:
-                GL11.glColor3f(0.05f * gain, 0.05f * gain, 0.05f * gain);
+                GL11.glColor3f(0.05f * gain + bias, 0.05f * gain + bias, 0.05f * gain + bias);
                 break;
             case 0:
-                GL11.glColor3f(0.2f * gain, 0.2f * gain, 0.2f * gain);
+                GL11.glColor3f(0.2f * gain + bias, 0.2f * gain + bias, 0.2f * gain + bias);
                 break; // black
             case 1:
-                GL11.glColor3f(1.0f * gain, 0.05f * gain, 0.05f * gain);
+                GL11.glColor3f(1.0f * gain + bias, 0.05f * gain + bias, 0.05f * gain + bias);
                 break; // red
             case 2:
-                GL11.glColor3f(0.2f * gain, 0.5f * gain, 0.1f * gain);
+                GL11.glColor3f(0.2f * gain + bias, 0.5f * gain + bias, 0.1f * gain + bias);
                 break; // green
             case 3:
-                GL11.glColor3f(0.3f * gain, 0.2f * gain, 0.1f * gain);
+                GL11.glColor3f(0.3f * gain + bias, 0.2f * gain + bias, 0.1f * gain + bias);
                 break; // brown
             case 4:
-                GL11.glColor3f(0.2f * gain, 0.2f * gain, 1.0f * gain);
+                GL11.glColor3f(0.2f * gain + bias, 0.2f * gain + bias, 1.0f * gain + bias);
                 break; // blue
             case 5:
-                GL11.glColor3f(0.7f * gain, 0.05f * gain, 1.0f * gain);
+                GL11.glColor3f(0.7f * gain + bias, 0.05f * gain + bias, 1.0f * gain + bias);
                 break; // purple
             case 6:
-                GL11.glColor3f(0.2f * gain, 0.7f * gain, 0.9f * gain);
+                GL11.glColor3f(0.2f * gain + bias, 0.7f * gain + bias, 0.9f * gain + bias);
                 break;
             case 7:
-                GL11.glColor3f(0.7f * gain, 0.7f * gain, 0.7f * gain);
+                GL11.glColor3f(0.7f * gain + bias, 0.7f * gain + bias, 0.7f * gain + bias);
                 break;
             case 8:
-                GL11.glColor3f(0.4f * gain, 0.4f * gain, 0.4f * gain);
+                GL11.glColor3f(0.4f * gain + bias, 0.4f * gain + bias, 0.4f * gain + bias);
                 break;
             case 9:
-                GL11.glColor3f(1.0f * gain, 0.5f * gain, 0.5f * gain);
+                GL11.glColor3f(1.0f * gain + bias, 0.5f * gain + bias, 0.5f * gain + bias);
                 break;
             case 10:
-                GL11.glColor3f(0.05f * gain, 1.0f * gain, 0.05f * gain);
+                GL11.glColor3f(0.05f * gain + bias, 1.0f * gain + bias, 0.05f * gain + bias);
                 break;
             case 11:
-                GL11.glColor3f(0.9f * gain, 0.8f * gain, 0.1f * gain);
+                GL11.glColor3f(0.9f * gain + bias, 0.8f * gain + bias, 0.1f * gain + bias);
                 break;
             case 12:
-                GL11.glColor3f(0.4f * gain, 0.5f * gain, 1.0f * gain);
+                GL11.glColor3f(0.4f * gain + bias, 0.5f * gain + bias, 1.0f * gain + bias);
                 break;
             case 13:
-                GL11.glColor3f(0.9f * gain, 0.3f * gain, 0.9f * gain);
+                GL11.glColor3f(0.9f * gain + bias, 0.3f * gain + bias, 0.9f * gain + bias);
                 break;
             case 14:
-                GL11.glColor3f(1.0f * gain, 0.6f * gain, 0.3f * gain);
+                GL11.glColor3f(1.0f * gain + bias, 0.6f * gain + bias, 0.3f * gain + bias);
                 break;
             case 15:
-                GL11.glColor3f(1.0f * gain, 1.0f * gain, 1.0f * gain);
+                GL11.glColor3f(1.0f * gain + bias, 1.0f * gain + bias, 1.0f * gain + bias);
                 break;
         }
         // GL11.glColor3f(((color >> 16) & 0xFF) / 255f, ((color >> 7) & 0xFF) / 255f, ((color >> 0) & 0xFF) / 255f);
@@ -598,34 +602,53 @@ public class Utils {
         dropItem(itemStack, coordonate.x, coordonate.y, coordonate.z, coordonate.world());
     }
 
-    public static boolean tryPutStackInInventory(ItemStack stack, IInventory inventory, int start, int count) {
+    public static boolean tryPutStackInInventory(ItemStack stack, IInventory inventory) {
         if (inventory == null) return false;
-        for (int idx = start; idx < start + count; idx++) {
-            ItemStack targetStack = inventory.getStackInSlot(idx);
-            if (targetStack == null) {
-                inventory.setInventorySlotContents(idx, stack.copy());
-                stack.stackSize = 0;
-                return true;
-            } else if (targetStack.isItemEqual(stack)) {
-                // inventory.decrStackSize(idx, -stack.stackSize);
-                int transferMax = inventory.getInventoryStackLimit() - targetStack.stackSize;
-                if (transferMax > 0) {
-                    int transfer = stack.stackSize;
-                    if (transfer > transferMax)
-                        transfer = transferMax;
-                    inventory.decrStackSize(idx, -transfer);
-                    stack.stackSize -= transfer;
-                }
+        int limit = inventory.getInventoryStackLimit();
 
-                if (stack.stackSize == 0) {
-                    return true;
-                }
+        // First, make a list of possible target slots.
+        ArrayList<Integer> slots = new ArrayList<>(4);
+        int need = stack.stackSize;
+        for (int i = 0; i < inventory.getSizeInventory() && need > 0; i++) {
+            ItemStack slot = inventory.getStackInSlot(i);
+            if (slot != null && slot.stackSize < limit && slot.isItemEqual(stack)) {
+                slots.add(i);
+                need -= limit - slot.stackSize;
+            }
+        }
+        for (int i = 0; i < inventory.getSizeInventory() && need > 0; i++) {
+            if (inventory.getStackInSlot(i) == null) {
+                slots.add(i);
+                need -= limit;
             }
         }
 
-        return false;
+        // Is there space enough?
+        if (need > 0) {
+            return false;
+        }
+
+        // Yes. Proceed.
+        int toPut = stack.stackSize;
+        for (Integer slot : slots) {
+            ItemStack target = inventory.getStackInSlot(slot);
+            if (target == null) {
+                int amount = Math.min(toPut, limit);
+                inventory.setInventorySlotContents(slot, new ItemStack(stack.getItem(), amount, stack.getItemDamage()));
+                toPut -= amount;
+            } else {
+               int space = limit - target.stackSize;
+               int amount = Math.min(toPut, space);
+               target.stackSize += amount;
+               toPut -= amount;
+            }
+            if (toPut <= 0) break;
+        }
+
+        return true;
     }
 
+    @Deprecated
     public static boolean canPutStackInInventory(ItemStack[] stackList, IInventory inventory, int[] slotsIdList) {
         int limit = inventory.getInventoryStackLimit();
         ItemStack[] outputStack = new ItemStack[slotsIdList.length];
@@ -674,6 +697,7 @@ public class Utils {
         return true;
     }
 
+    @Deprecated
     public static boolean tryPutStackInInventory(ItemStack[] stackList, IInventory inventory, int[] slotsIdList) {
         int limit = inventory.getInventoryStackLimit();
 
@@ -802,9 +826,11 @@ public class Utils {
     }
 
     public static boolean playerHasMeter(EntityPlayer entityPlayer) {
-        return Eln.multiMeterElement.checkSameItemStack(entityPlayer.getCurrentEquippedItem())
-            || Eln.thermometerElement.checkSameItemStack(entityPlayer.getCurrentEquippedItem())
-            || Eln.allMeterElement.checkSameItemStack(entityPlayer.getCurrentEquippedItem());
+        ItemStack cur = entityPlayer.getCurrentEquippedItem();
+        return Eln.multiMeterElement.checkSameItemStack(cur)
+            || Eln.thermometerElement.checkSameItemStack(cur)
+            || Eln.allMeterElement.checkSameItemStack(cur)
+            || Eln.configCopyToolElement.checkSameItemStack(cur);
     }
 
     public static int getRedstoneLevelAround(Coordonate coord, Direction side) {

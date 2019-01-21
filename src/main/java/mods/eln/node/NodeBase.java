@@ -7,6 +7,7 @@ import mods.eln.ghost.GhostBlock;
 import mods.eln.misc.*;
 import mods.eln.node.six.SixNode;
 import mods.eln.sim.*;
+import mods.eln.sound.SoundCommand;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -45,6 +46,8 @@ public abstract class NodeBase {
 
     public static final int maskSignal = (1 << 9);
     public static final int maskRs485 = (1 << 10);
+
+    public static final int maskSignalBus = (1 << 11);
 
     public static final int maskColorData = 0xF << 16;
     public static final int maskColorShift = 16;
@@ -203,21 +206,26 @@ public abstract class NodeBase {
         Utils.println("Node::onBreakBlock()");
     }
 
+    public static SoundCommand beepUploaded = new SoundCommand("eln:beep_accept_2").smallRange();
+    public static SoundCommand beepDownloaded = new SoundCommand("eln:beep_accept").smallRange();
+    public static SoundCommand beepError = new SoundCommand("eln:beep_error").smallRange();
+
     public boolean onBlockActivated(EntityPlayer entityPlayer, Direction side, float vx, float vy, float vz) {
         if (!entityPlayer.worldObj.isRemote && entityPlayer.getCurrentEquippedItem() != null) {
-            if (Eln.multiMeterElement.checkSameItemStack(entityPlayer.getCurrentEquippedItem())) {
+            ItemStack equipped = entityPlayer.getCurrentEquippedItem();
+            if (Eln.multiMeterElement.checkSameItemStack(equipped)) {
                 String str = multiMeterString(side);
                 if (str != null)
                     Utils.addChatMessage(entityPlayer, str);
                 return true;
             }
-            if (Eln.thermometerElement.checkSameItemStack(entityPlayer.getCurrentEquippedItem())) {
+            if (Eln.thermometerElement.checkSameItemStack(equipped)) {
                 String str = thermoMeterString(side);
                 if (str != null)
                     Utils.addChatMessage(entityPlayer, str);
                 return true;
             }
-            if (Eln.allMeterElement.checkSameItemStack(entityPlayer.getCurrentEquippedItem())) {
+            if (Eln.allMeterElement.checkSameItemStack(equipped)) {
                 String str1 = multiMeterString(side);
                 String str2 = thermoMeterString(side);
                 String str = "";
@@ -227,6 +235,30 @@ public abstract class NodeBase {
                     str += str2;
                 if (str.equals("") == false)
                     Utils.addChatMessage(entityPlayer, str);
+                return true;
+            }
+            if (Eln.configCopyToolElement.checkSameItemStack(equipped)) {
+                if(!equipped.hasTagCompound()) {
+                    equipped.setTagCompound(new NBTTagCompound());
+                }
+                String act;
+                SoundCommand snd = beepError;
+                if(entityPlayer.isSneaking() || Eln.playerManager.get(entityPlayer).getInteractEnable()) {
+                    if(writeConfigTool(side, equipped.getTagCompound(), entityPlayer))
+                        snd = beepDownloaded;
+                    act = "write";
+                } else {
+                    if(readConfigTool(side, equipped.getTagCompound(), entityPlayer))
+                        snd = beepUploaded;
+                    act = "read";
+                }
+                snd.set(
+                    entityPlayer.posX,
+                    entityPlayer.posY,
+                    entityPlayer.posZ,
+                    entityPlayer.worldObj
+                ).play();
+                Utils.println(String.format("NB.oBA: act %s data %s", act, equipped.getTagCompound().toString()));
                 return true;
             }
         }
@@ -244,52 +276,57 @@ public abstract class NodeBase {
     }
 
     public static void tryConnectTwoNode(NodeBase nodeA, Direction directionA, LRDU lrduA, NodeBase nodeB, Direction directionB, LRDU lrduB) {
-        if (compareConnectionMask(nodeA.getSideConnectionMask(directionA, lrduA), nodeB.getSideConnectionMask(directionB, lrduB))) {
+        int mskA = nodeA.getSideConnectionMask(directionA, lrduA);
+        int mskB = nodeB.getSideConnectionMask(directionB, lrduB);
+        if (compareConnectionMask(mskA, mskB)) {
             ElectricalConnection eCon = null;
             ThermalConnection tCon = null;
 
-            nodeA.lrduCubeMask.set(directionA, lrduA, true);
-            nodeB.lrduCubeMask.set(directionB, lrduB, true);
-
-            nodeA.newConnectionAt(directionA, lrduA);
-            nodeB.newConnectionAt(directionB, lrduB);
-
-            ElectricalLoad eLoad;
-            if ((eLoad = nodeA.getElectricalLoad(directionA, lrduA)) != null) {
-
-                ElectricalLoad otherELoad = nodeB.getElectricalLoad(directionB, lrduB);
-                if (otherELoad != null) {
-                    eCon = new ElectricalConnection(eLoad, otherELoad);
-
-                    Eln.simulator.addElectricalComponent(eCon);
-                }
-            }
-            ThermalLoad tLoad;
-            if ((tLoad = nodeA.getThermalLoad(directionA, lrduA)) != null) {
-
-                ThermalLoad otherTLoad = nodeB.getThermalLoad(directionB, lrduB);
-                if (otherTLoad != null) {
-                    tCon = new ThermalConnection(tLoad, otherTLoad);
-
-                    Eln.simulator.addThermalConnection(tCon);
-                }
-
-            }
-            NodeConnection nodeConnection = new NodeConnection(nodeA, directionA, lrduA, nodeB, directionB, lrduB, eCon, tCon);
+            NodeConnection nodeConnection = new NodeConnection(nodeA, directionA, lrduA, nodeB, directionB, lrduB);
 
             nodeA.nodeConnectionList.add(nodeConnection);
             nodeB.nodeConnectionList.add(nodeConnection);
 
             nodeA.setNeedPublish(true);
             nodeB.setNeedPublish(true);
+
+            nodeA.lrduCubeMask.set(directionA, lrduA, true);
+            nodeB.lrduCubeMask.set(directionB, lrduB, true);
+
+            nodeA.newConnectionAt(nodeConnection, true);
+            nodeB.newConnectionAt(nodeConnection, false);
+
+            ElectricalLoad eLoad;
+            if ((eLoad = nodeA.getElectricalLoad(directionA, lrduA, mskB)) != null) {
+
+                ElectricalLoad otherELoad = nodeB.getElectricalLoad(directionB, lrduB, mskA);
+                if (otherELoad != null) {
+                    eCon = new ElectricalConnection(eLoad, otherELoad);
+
+                    Eln.simulator.addElectricalComponent(eCon);
+                    nodeConnection.addConnection(eCon);
+                }
+            }
+            ThermalLoad tLoad;
+            if ((tLoad = nodeA.getThermalLoad(directionA, lrduA, mskB)) != null) {
+
+                ThermalLoad otherTLoad = nodeB.getThermalLoad(directionB, lrduB, mskA);
+                if (otherTLoad != null) {
+                    tCon = new ThermalConnection(tLoad, otherTLoad);
+
+                    Eln.simulator.addThermalConnection(tCon);
+                    nodeConnection.addConnection(tCon);
+                }
+
+            }
         }
     }
 
     public abstract int getSideConnectionMask(Direction directionA, LRDU lrduA);
 
-    public abstract ThermalLoad getThermalLoad(Direction directionA, LRDU lrduA);
+    public abstract ThermalLoad getThermalLoad(Direction directionA, LRDU lrduA, int mask);
 
-    public abstract ElectricalLoad getElectricalLoad(Direction directionB, LRDU lrduB);
+    public abstract ElectricalLoad getElectricalLoad(Direction directionB, LRDU lrduB, int mask);
 
     public void checkCanStay(boolean onCreate) {
 
@@ -346,7 +383,8 @@ public abstract class NodeBase {
                 c.N1.nodeConnectionList.remove(c);
                 c.N1.setNeedPublish(true);
                 c.N1.lrduCubeMask.set(c.dir1, c.lrdu1, false);
-            } else {
+            }
+            if(c.N2 != this) {
                 c.N2.nodeConnectionList.remove(c);
                 c.N2.setNeedPublish(true);
                 c.N2.lrduCubeMask.set(c.dir2, c.lrdu2, false);
@@ -369,7 +407,7 @@ public abstract class NodeBase {
     public void externalDisconnect(Direction side, LRDU lrdu) {
     }
 
-    public void newConnectionAt(Direction side, LRDU lrdu) {
+    public void newConnectionAt(NodeConnection connection, boolean isA) {
     }
 
     public void connectInit() {
@@ -435,6 +473,10 @@ public abstract class NodeBase {
     public String thermoMeterString(Direction side) {
         return "";
     }
+
+    public boolean readConfigTool(Direction side, NBTTagCompound tag, EntityPlayer invoker) { return false; }
+
+    public boolean writeConfigTool(Direction side, NBTTagCompound tag, EntityPlayer invoker) { return false; }
 
     public void setNeedPublish(boolean needPublish) {
         this.needPublish = needPublish;

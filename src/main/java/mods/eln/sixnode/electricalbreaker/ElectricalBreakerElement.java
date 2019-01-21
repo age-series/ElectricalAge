@@ -92,14 +92,14 @@ public class ElectricalBreakerElement extends SixNodeElement {
     }
 
     @Override
-    public ElectricalLoad getElectricalLoad(LRDU lrdu) {
+    public ElectricalLoad getElectricalLoad(LRDU lrdu, int mask) {
         if (front == lrdu) return aLoad;
         if (front.inverse() == lrdu) return bLoad;
         return null;
     }
 
     @Override
-    public ThermalLoad getThermalLoad(LRDU lrdu) {
+    public ThermalLoad getThermalLoad(LRDU lrdu, int mask) {
         return null;
     }
 
@@ -114,7 +114,7 @@ public class ElectricalBreakerElement extends SixNodeElement {
 
     @Override
     public String multiMeterString() {
-        return Utils.plotVolt("Ua:", aLoad.getU()) + Utils.plotVolt("Ub:", bLoad.getU()) + Utils.plotVolt("I:", aLoad.getCurrent());
+        return Utils.plotVolt("Ua:", aLoad.getU()) + Utils.plotVolt("Ub:", bLoad.getU()) + Utils.plotAmpere("I:", aLoad.getCurrent());
     }
 
     @Override

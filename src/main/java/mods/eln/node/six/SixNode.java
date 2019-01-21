@@ -1,12 +1,11 @@
 package mods.eln.node.six;
 
 import mods.eln.Eln;
-import mods.eln.misc.Direction;
-import mods.eln.misc.LRDU;
-import mods.eln.misc.LRDUCubeMask;
-import mods.eln.misc.Utils;
+import mods.eln.item.IConfigurable;
+import mods.eln.misc.*;
 import mods.eln.node.ISixNodeCache;
 import mods.eln.node.Node;
+import mods.eln.node.NodeConnection;
 import mods.eln.sim.ElectricalConnection;
 import mods.eln.sim.ElectricalLoad;
 import mods.eln.sim.ThermalConnection;
@@ -258,21 +257,21 @@ public class SixNode extends Node {
     }
 
     @Override
-    public ElectricalLoad getElectricalLoad(Direction side, LRDU lrdu) {
+    public ElectricalLoad getElectricalLoad(Direction side, LRDU lrdu, int mask) {
         Direction elementSide = side.applyLRDU(lrdu);
         SixNodeElement element = sideElementList[elementSide.getInt()];
         if (element == null)
             return null;
-        return element.getElectricalLoad(elementSide.getLRDUGoingTo(side));
+        return element.getElectricalLoad(elementSide.getLRDUGoingTo(side), mask);
     }
 
     @Override
-    public ThermalLoad getThermalLoad(Direction side, LRDU lrdu) {
+    public ThermalLoad getThermalLoad(Direction side, LRDU lrdu, int mask) {
         Direction elementSide = side.applyLRDU(lrdu);
         SixNodeElement element = sideElementList[elementSide.getInt()];
         if (element == null)
             return null;
-        return element.getThermalLoad(elementSide.getLRDUGoingTo(side));
+        return element.getThermalLoad(elementSide.getLRDUGoingTo(side), mask);
     }
 
     @Override
@@ -298,6 +297,26 @@ public class SixNode extends Node {
         if (element == null)
             return "";
         return element.thermoMeterString();
+    }
+
+    @Override
+    public boolean readConfigTool(Direction side, NBTTagCompound tag, EntityPlayer invoker) {
+        SixNodeElement element = sideElementList[side.getInt()];
+        if(element instanceof IConfigurable) {
+            ((IConfigurable) element).readConfigTool(tag, invoker);
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean writeConfigTool(Direction side, NBTTagCompound tag, EntityPlayer invoker) {
+        SixNodeElement element = sideElementList[side.getInt()];
+        if(element instanceof IConfigurable) {
+            ((IConfigurable) element).writeConfigTool(tag, invoker);
+            return true;
+        }
+        return false;
     }
 
     @Override
@@ -429,12 +448,20 @@ public class SixNode extends Node {
     }
 
     public void tryConnectTwoInternalElement(Direction side, SixNodeElement element, LRDU lrdu, Direction otherSide, SixNodeElement otherElement, LRDU otherLRDU) {
-        if (compareConnectionMask(element.getConnectionMask(lrdu), otherElement.getConnectionMask(otherLRDU))) {
+        Utils.println("SixNode.tCTIE:");
+        int mskThis = element.getConnectionMask(lrdu);
+        int mskOther = otherElement.getConnectionMask(otherLRDU);
+        if (compareConnectionMask(mskThis, mskOther)) {
+            Utils.println("\tConnection OK.");
             lrduElementMask.set(side, lrdu, true);
             lrduElementMask.set(otherSide, otherLRDU, true);
+            NodeConnection nodeConnection = new NodeConnection(this, side, lrdu, this, otherSide, otherLRDU);
+            nodeConnectionList.add(nodeConnection);
+            element.newConnectionAt(nodeConnection, false);
+            otherElement.newConnectionAt(nodeConnection, true);
             ElectricalLoad eLoad;
-            if ((eLoad = element.getElectricalLoad(lrdu)) != null) {
-                ElectricalLoad otherELoad = otherElement.getElectricalLoad(otherLRDU);
+            if ((eLoad = element.getElectricalLoad(lrdu, mskOther)) != null) {
+                ElectricalLoad otherELoad = otherElement.getElectricalLoad(otherLRDU, mskThis);
                 if (otherELoad != null) {
                     ElectricalConnection eCon;
                     eCon = new ElectricalConnection(eLoad, otherELoad);
@@ -442,12 +469,13 @@ public class SixNode extends Node {
                     Eln.simulator.addElectricalComponent(eCon);
 
                     internalElectricalConnectionList.add(eCon);
+                    nodeConnection.addConnection(eCon);
                 }
             }
             ThermalLoad tLoad;
-            if ((tLoad = this.getThermalLoad(side, lrdu)) != null) {
+            if ((tLoad = this.getThermalLoad(side, lrdu, mskOther)) != null) {
 
-                ThermalLoad otherTLoad = element.getThermalLoad(otherLRDU);
+                ThermalLoad otherTLoad = element.getThermalLoad(otherLRDU, mskThis);
                 if (otherTLoad != null) {
                     ThermalConnection tCon;
                     tCon = new ThermalConnection(tLoad, otherTLoad);
@@ -455,13 +483,16 @@ public class SixNode extends Node {
                     Eln.simulator.addThermalConnection(tCon);
 
                     internalThermalConnectionList.add(tCon);
+                    nodeConnection.addConnection(tCon);
                 }
 
             }
         }
     }
 
-    public void newConnectionAt(Direction side, LRDU lrdu) {
+    public void newConnectionAt(NodeConnection connection, boolean isA) {
+        Direction side = isA? connection.dir1 : connection.dir2;
+        LRDU lrdu = isA? connection.lrdu1 : connection.lrdu2;
         Direction elementSide = side.applyLRDU(lrdu);
         SixNodeElement element = sideElementList[elementSide.getInt()];
         if (element == null) {
@@ -470,6 +501,7 @@ public class SixNode extends Node {
                 ;
         }
         lrduElementMask.set(elementSide, elementSide.getLRDUGoingTo(side), true);
+        element.newConnectionAt(connection, isA);
 
     }
 

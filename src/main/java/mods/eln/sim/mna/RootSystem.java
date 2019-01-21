@@ -16,7 +16,7 @@ public class RootSystem {
     double dt;
     int interSystemOverSampling;
 
-    ArrayList<SubSystem> systems = new ArrayList<SubSystem>();
+    public ArrayList<SubSystem> systems = new ArrayList<SubSystem>();
 
     //public HashMap<Component, IDestructor> componentDestructor = new HashMap<Component, IDestructor>();
 
@@ -222,11 +222,14 @@ public class RootSystem {
         while (ic.hasNext()) {
             Component c = ic.next();
             if (!c.canBeReplacedByInterSystem()) {
-                System.out.println("ELN generateInterSystems ERROR");
+                Utils.println("ELN generateInterSystems ERROR");
             }
 
-            new InterSystemAbstraction(this, (Resistor) c);
+            Resistor r = (Resistor) c;
+            // If a pin is disconnected, we can't be intersystem
+            if(r.aPin == null || r.bPin == null) continue;
 
+            new InterSystemAbstraction(this, r);
             ic.remove();
         }
     }

@@ -1,6 +1,7 @@
 package mods.eln.node.transparent;
 
 import mods.eln.Eln;
+import mods.eln.item.IConfigurable;
 import mods.eln.misc.Direction;
 import mods.eln.misc.LRDU;
 import mods.eln.misc.Utils;
@@ -86,12 +87,12 @@ public class TransparentNode extends Node {
     }
 
     @Override
-    public ElectricalLoad getElectricalLoad(Direction side, LRDU lrdu) {
+    public ElectricalLoad getElectricalLoad(Direction side, LRDU lrdu, int mask) {
         return element.getElectricalLoad(side, lrdu);
     }
 
     @Override
-    public ThermalLoad getThermalLoad(Direction side, LRDU lrdu) {
+    public ThermalLoad getThermalLoad(Direction side, LRDU lrdu, int mask) {
         return element.getThermalLoad(side, lrdu);
     }
 
@@ -108,6 +109,24 @@ public class TransparentNode extends Node {
     @Override
     public String thermoMeterString(Direction side) {
         return element.thermoMeterString(side);
+    }
+
+    @Override
+    public boolean readConfigTool(Direction side, NBTTagCompound tag, EntityPlayer invoker) {
+        if(element instanceof IConfigurable) {
+            ((IConfigurable) element).readConfigTool(tag, invoker);
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean writeConfigTool(Direction side, NBTTagCompound tag, EntityPlayer invoker) {
+        if(element instanceof IConfigurable) {
+            ((IConfigurable) element).writeConfigTool(tag, invoker);
+            return true;
+        }
+        return false;
     }
 
     public IFluidHandler getFluidHandler() {
@@ -170,6 +189,8 @@ public class TransparentNode extends Node {
             e.printStackTrace();
         }
 
+        Utils.println("TN.iFT element = " + element + " elId = " + elementId);
+
     }
 
     @Override
@@ -200,6 +221,9 @@ public class TransparentNode extends Node {
 
     @Override
     public int getBlockMetadata() {
+        Utils.println("TN.gBM");
+        Utils.println(element);
+        Utils.println(element.transparentNodeDescriptor);
         return element.transparentNodeDescriptor.tileEntityMetaTag.meta;
     }
 

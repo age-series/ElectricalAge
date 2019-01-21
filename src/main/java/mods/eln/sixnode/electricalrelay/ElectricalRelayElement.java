@@ -2,6 +2,7 @@ package mods.eln.sixnode.electricalrelay;
 
 import mods.eln.Eln;
 import mods.eln.i18n.I18N;
+import mods.eln.item.IConfigurable;
 import mods.eln.misc.Direction;
 import mods.eln.misc.LRDU;
 import mods.eln.misc.Utils;
@@ -19,7 +20,6 @@ import mods.eln.sim.process.destruct.WorldExplosion;
 import mods.eln.sixnode.electricalcable.ElectricalCableDescriptor;
 import mods.eln.sound.SoundCommand;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
 import java.io.DataInputStream;
@@ -28,7 +28,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ElectricalRelayElement extends SixNodeElement {
+public class ElectricalRelayElement extends SixNodeElement implements IConfigurable {
 
     public ElectricalRelayDescriptor descriptor;
     public NbtElectricalLoad aLoad = new NbtElectricalLoad("aLoad");
@@ -94,7 +94,7 @@ public class ElectricalRelayElement extends SixNodeElement {
     }
 
     @Override
-    public ElectricalLoad getElectricalLoad(LRDU lrdu) {
+    public ElectricalLoad getElectricalLoad(LRDU lrdu, int mask) {
         if (front.left() == lrdu) return aLoad;
         if (front.right() == lrdu) return bLoad;
         if (front == lrdu) return gate;
@@ -102,7 +102,7 @@ public class ElectricalRelayElement extends SixNodeElement {
     }
 
     @Override
-    public ThermalLoad getThermalLoad(LRDU lrdu) {
+    public ThermalLoad getThermalLoad(LRDU lrdu, int mask) {
         return null;
     }
 
@@ -204,5 +204,17 @@ public class ElectricalRelayElement extends SixNodeElement {
     @Override
     public boolean hasGui() {
         return true;
+    }
+
+    @Override
+    public void readConfigTool(NBTTagCompound compound, EntityPlayer invoker) {
+        if(compound.hasKey("nc")) {
+            defaultOutput = compound.getBoolean("nc");
+        }
+    }
+
+    @Override
+    public void writeConfigTool(NBTTagCompound compound, EntityPlayer invoker) {
+        compound.setBoolean("nc", defaultOutput);
     }
 }

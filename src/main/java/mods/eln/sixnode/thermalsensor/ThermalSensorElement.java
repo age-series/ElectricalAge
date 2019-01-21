@@ -2,6 +2,7 @@ package mods.eln.sixnode.thermalsensor;
 
 import mods.eln.Eln;
 import mods.eln.i18n.I18N;
+import mods.eln.item.IConfigurable;
 import mods.eln.misc.Direction;
 import mods.eln.misc.LRDU;
 import mods.eln.misc.Utils;
@@ -17,6 +18,7 @@ import mods.eln.sim.nbt.NbtElectricalGateOutputProcess;
 import mods.eln.sim.nbt.NbtElectricalLoad;
 import mods.eln.sim.nbt.NbtThermalLoad;
 import mods.eln.sixnode.electricalcable.ElectricalCableDescriptor;
+import mods.eln.sixnode.electricaldatalogger.DataLogs;
 import mods.eln.sixnode.thermalcable.ThermalCableDescriptor;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
@@ -30,7 +32,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ThermalSensorElement extends SixNodeElement {
+public class ThermalSensorElement extends SixNodeElement implements IConfigurable {
 
     public ThermalSensorDescriptor descriptor;
     public NbtThermalLoad thermalLoad = new NbtThermalLoad("thermalLoad");
@@ -97,14 +99,14 @@ public class ThermalSensorElement extends SixNodeElement {
     }
 
     @Override
-    public ElectricalLoad getElectricalLoad(LRDU lrdu) {
+    public ElectricalLoad getElectricalLoad(LRDU lrdu, int mask) {
         if (front == lrdu) return outputGate;
 
         return null;
     }
 
     @Override
-    public ThermalLoad getThermalLoad(LRDU lrdu) {
+    public ThermalLoad getThermalLoad(LRDU lrdu, int mask) {
         if (!descriptor.temperatureOnly) {
             if (getInventory().getStackInSlot(ThermalSensorContainer.cableSlotId) != null) {
                 if (front.left() == lrdu) return thermalLoad;
@@ -264,5 +266,38 @@ public class ThermalSensorElement extends SixNodeElement {
     @Override
     public Container newContainer(Direction side, EntityPlayer player) {
         return new ThermalSensorContainer(player, inventory.getInventory(), descriptor.temperatureOnly);
+    }
+
+    @Override
+    public void readConfigTool(NBTTagCompound compound, EntityPlayer invoker) {
+        if(compound.hasKey("min"))
+            lowValue = compound.getFloat("min");
+        if(compound.hasKey("max"))
+            highValue = compound.getFloat("max");
+        if(compound.hasKey("unit")) {
+            switch(compound.getByte("unit")) {
+                case DataLogs.powerType:
+                    typeOfSensor = powerType;
+                    break;
+                case DataLogs.celsiusType:
+                    typeOfSensor = temperatureType;
+                    break;
+            }
+        }
+        needPublish();
+    }
+
+    @Override
+    public void writeConfigTool(NBTTagCompound compound, EntityPlayer invoker) {
+        compound.setFloat("min", lowValue);
+        compound.setFloat("max", highValue);
+        switch(typeOfSensor) {
+            case powerType:
+                compound.setByte("unit", DataLogs.powerType);
+                break;
+            case temperatureType:
+                compound.setByte("unit", DataLogs.celsiusType);
+                break;
+        }
     }
 }

@@ -17,6 +17,15 @@
             }
         ]
     },
+    "arc_furnace": {
+        "category": "block",
+        "sounds": [
+            {
+                "name": "arc_furnace",
+                "stream": false
+            }
+        ]
+    },
     "wind_turbine": {
         "category": "block",
         "sounds": [
@@ -206,6 +215,15 @@
             }
         ]
     },
+    "TurretKill": {
+        "category": "block",
+        "sounds": [
+            {
+                "name": "TurretKill",
+                "stream": false
+            }
+        ]
+    },
     "FuelGenerator": {
         "category": "block",
         "sounds": [
@@ -259,5 +277,59 @@
                 "stream": false
             }
         ]
-    }
+    },
+	"shaft_motor": {
+		"category": "block",
+		"sounds": [
+			{
+				"name": "shaft_motor",
+				"stream": false
+			}
+		]
+	},
+	"clutch": {
+		"category": "block",
+		"sounds": [
+			{
+				"name": "clutch",
+				"stream": false
+			}
+		]
+	},
+	"click": {
+		"category": "block",
+		"sounds": [
+			{
+				"name": "click",
+				"stream": false
+			}
+		]
+	},
+	"beep_accept": {
+		"category": "player",
+		"sounds": [
+			{
+				"name": "beep_accept",
+				"stream": false
+			}
+		]
+	},
+	"beep_accept_2": {
+		"category": "player",
+		"sounds": [
+			{
+				"name": "beep_accept_2",
+				"stream": false
+			}
+		]
+	},
+	"beep_error": {
+		"category": "player",
+		"sounds": [
+			{
+				"name": "beep_error",
+				"stream": false
+			}
+		]
+	}
 }

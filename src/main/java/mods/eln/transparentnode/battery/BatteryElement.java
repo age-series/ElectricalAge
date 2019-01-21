@@ -46,7 +46,7 @@ public class BatteryElement extends TransparentNodeElement {
     public ElectricalLoadHeatThermalLoad negativeETProcess = new ElectricalLoadHeatThermalLoad(negativeLoad, thermalLoad);
     public ThermalLoadWatchDog thermalWatchdog = new ThermalLoadWatchDog();
 
-    public NbtBatteryProcess batteryProcess = new NbtBatteryProcess(positiveLoad, negativeLoad, null, 0, voltageSource);
+    public NbtBatteryProcess batteryProcess = new NbtBatteryProcess(positiveLoad, negativeLoad, null, 0, voltageSource, thermalLoad);
 
     public Resistor dischargeResistor = new Resistor(positiveLoad, negativeLoad);
     public ResistorSwitch cutSwitch = new ResistorSwitch("cutSwitch", cutLoad, positiveLoad);
@@ -135,6 +135,8 @@ public class BatteryElement extends TransparentNodeElement {
         return null;
     }
 
+
+
     @Override
     public int getConnectionMask(Direction side, LRDU lrdu) {
         if (lrdu != LRDU.Down) return 0;
@@ -145,9 +147,13 @@ public class BatteryElement extends TransparentNodeElement {
 
     @Override
     public String multiMeterString(Direction side) {
-        //	if (side == front)return  Utils.plotVolt("U+", positiveLoad.Uc );
-        //	if (side == front.back() && ! grounded)return  Utils.plotVolt("U-", negativeLoad.Uc );
-        return Utils.plotVolt("Ubat:", batteryProcess.getU()) + Utils.plotAmpere("Current Output:", batteryProcess.getDischargeCurrent());
+        String str = "";
+        str += Utils.plotVolt("Ubat:", batteryProcess.getU());
+        str += Utils.plotAmpere("I:", batteryProcess.getDischargeCurrent());
+        str += Utils.plotPercent("Charge:", batteryProcess.getCharge());
+        // batteryProcess.life is a percentage from 1.0 to 0.0.
+        str += Utils.plotPercent("Life:", batteryProcess.life);
+        return str;
     }
 
     @Override
@@ -269,6 +275,7 @@ public class BatteryElement extends TransparentNodeElement {
         if (Eln.wailaEasyMode) {
             wailaList.put(I18N.tr("Voltage"), Utils.plotVolt("", batteryProcess.getU()));
             wailaList.put(I18N.tr("Current"), Utils.plotAmpere("", batteryProcess.getDischargeCurrent()));
+            wailaList.put(I18N.tr("Temperature"), Utils.plotCelsius("", thermalLoad.Tc));
         }
         return wailaList;
     }

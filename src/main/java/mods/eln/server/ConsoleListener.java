@@ -7,10 +7,15 @@ package mods.eln.server;
 import mods.eln.Eln;
 import mods.eln.misc.Color;
 import mods.eln.misc.Version;
+import mods.eln.sim.mna.SubSystem;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
+import net.minecraft.event.ClickEvent;
 import net.minecraft.util.ChatComponentText;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -24,6 +29,7 @@ public class ConsoleListener extends CommandBase {
     private final String cmdNameStr_man = "man";
     private final String cmdNameStr_about = "about";
     private final String cmdNameStr_aging = "aging";
+    private final String cmdNameStr_version = "version";
     private final String cmdNameStr_lampAging = "lampAging";
     private final String cmdNameStr_batteryAging = "batteryAging";
     private final String cmdNameStr_heatFurnaceFuel = "heatFurnaceFuel";
@@ -31,6 +37,8 @@ public class ConsoleListener extends CommandBase {
     private final String cmdNameStr_regenOre = "regenOre";
     private final String cmdNameStr_generateLangFileTemplate = "generateLangFileTemplate";
     private final String cmdNameStr_killMonstersAroundLamps = "killMonstersAroundLamps";
+    private final String cmdNameStr_matrix = "matrix";
+
 
     private final String strOffsetL0 = "  ";
     private final String strOffsetL1 = "    ";
@@ -44,6 +52,7 @@ public class ConsoleListener extends CommandBase {
         cmdVisibleList.add(cmdNameStr_man);
         cmdVisibleList.add(cmdNameStr_about);
         cmdVisibleList.add(cmdNameStr_aging);
+        cmdVisibleList.add(cmdNameStr_version);
         cmdVisibleList.add(cmdNameStr_lampAging);
         cmdVisibleList.add(cmdNameStr_batteryAging);
         cmdVisibleList.add(cmdNameStr_heatFurnaceFuel);
@@ -51,6 +60,7 @@ public class ConsoleListener extends CommandBase {
         cmdVisibleList.add(cmdNameStr_regenOre);
         cmdVisibleList.add(cmdNameStr_generateLangFileTemplate);
         cmdVisibleList.add(cmdNameStr_killMonstersAroundLamps);
+        cmdVisibleList.add(cmdNameStr_matrix);
         java.util.Collections.sort(cmdVisibleList);
     }
 
@@ -164,6 +174,22 @@ public class ConsoleListener extends CommandBase {
             SaveConfig.instance.infinitePortableBattery = (!arg0.value);
             cprint(ics, strOffsetL0 + "Batteries / Furnace Fuel / Lamp aging : " + Color.COLOR_DARK_GREEN + boolToStr(arg0.value));
             cprint(ics, strOffsetL0 + "Parameter saved in the map.");
+        } else if (cmd.equalsIgnoreCase(cmdNameStr_version)) {
+            cprint(ics, Color.COLOR_BRIGHT_YELLOW + "Electrical Age Version Info:");
+            cprint(ics, Color.COLOR_BRIGHT_YELLOW + "Version: " + Version.getVersionName());
+            if (!Version.BUILD_HOST.isEmpty()) {
+                cprint(ics, Color.COLOR_BRIGHT_YELLOW + "Build Host: " + Version.BUILD_HOST);
+            }
+            if (!Version.BUILD_DATE.isEmpty()) {
+                cprint(ics, Color.COLOR_BRIGHT_YELLOW + "Build Host: " + Version.BUILD_DATE);
+            }
+            if (!Version.JAVA_VERSION.isEmpty()) {
+                cprint(ics, Color.COLOR_BRIGHT_YELLOW + "Java Build Version: " + Version.JAVA_VERSION);
+            }
+            if (!Version.GIT_REVISION.isEmpty()) {
+                cprint(ics, Color.COLOR_BRIGHT_YELLOW + "Git Build Version: " + Version.GIT_REVISION);
+                cprint(ics, Color.COLOR_BRIGHT_YELLOW + "[GitHub Link to Git Version]", "https://github.com/jrddunbr/ElectricalAge/commit/" + Version.GIT_REVISION);
+            }
         } else if (cmd.equalsIgnoreCase(cmdNameStr_lampAging)) {
             cprint(ics, Color.COLOR_DARK_CYAN + "ELN > " + Color.COLOR_DARK_YELLOW + cmdNameStr_lampAging);
             if (!checkArgCount(ics, astring, 1))
@@ -224,6 +250,33 @@ public class ConsoleListener extends CommandBase {
             Eln.instance.killMonstersAroundLamps = arg0.value;
             cprint(ics, strOffsetL0 + "Avoid monsters spawning around lamps : " + Color.COLOR_DARK_GREEN + boolToStr(arg0.value));
             cprint(ics, strOffsetL0 + "Warning: Command effective to this game instance only.");
+        } else if(cmd.equalsIgnoreCase((cmdNameStr_matrix))) {
+            System.out.println("Dumping current matrix state");
+
+            String dumpSubSystems = "";
+            int ssc = Eln.simulator.mna.systems.size();
+            int ct = 0;
+            for (SubSystem s: Eln.simulator.mna.systems) {
+                ct += s.component.size();
+                dumpSubSystems += s.toString() + "\n";
+            }
+
+            File f = new File("elnDumpSubSystems.txt");
+            try {
+                BufferedWriter w = new BufferedWriter(new FileWriter(f));
+                w.write(dumpSubSystems);
+                w.flush();
+                w.close();
+            } catch (Exception e) {
+                System.out.println("Failed to write to " + f.getAbsolutePath() + " because " + e);
+            }
+
+            if (ssc == 1) {
+                cprint(ics, Color.COLOR_BRIGHT_YELLOW + "There is 1 subsystem.");
+            } else {
+                cprint(ics, Color.COLOR_BRIGHT_YELLOW + "There are " + ssc + " subsystems.");
+            }
+            cprint(ics,  Color.COLOR_BRIGHT_YELLOW + "Average subsystem size: " + (ct / ssc));
         } else {
             cprint(ics, Color.COLOR_DARK_CYAN + "ELN > " + Color.COLOR_DARK_RED + "Error: Unknown command.");
         }
@@ -360,6 +413,12 @@ public class ConsoleListener extends CommandBase {
 
     private void cprint(ICommandSender ics, String text) {
         ics.addChatMessage(new ChatComponentText(Color.COLOR_BRIGHT_GREY + text));
+    }
+
+    private void cprint(ICommandSender ics, String text, String url) {
+        ChatComponentText msg = new ChatComponentText(Color.COLOR_BRIGHT_GREY + text);
+        msg.getChatStyle().setChatClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, url));
+        ics.addChatMessage(msg);
     }
 }
 
