@@ -40,12 +40,16 @@ public class ConfigCopyToolDescriptor extends GenericItemUsingDamageDescriptor {
     }
 
     public static boolean readCableType(NBTTagCompound compound, IInventory inv, int slot, EntityPlayer invoker) {
-        if(compound.hasKey("cableType")) {
+        return readCableType(compound, "cable", inv, slot, invoker);
+    }
+
+    public static boolean readCableType(NBTTagCompound compound, String name, IInventory inv, int slot, EntityPlayer invoker) {
+        if(compound.hasKey(name + "Type")) {
             int amt = 1;
-            if(compound.hasKey("cableAmt")) {
-                amt = compound.getInteger("cableAmt");
+            if(compound.hasKey(name + "Amt")) {
+                amt = compound.getInteger(name + "Amt");
             }
-            int type = compound.getInteger("cableType");
+            int type = compound.getInteger(name + "Type");
             GenericItemBlockUsingDamageDescriptor thisCableDesc = GenericItemBlockUsingDamageDescriptor.getDescriptor(inv.getStackInSlot(slot), ElectricalCableDescriptor.class);
             if(thisCableDesc != null) {
                 (new ItemMovingHelper() {
@@ -80,12 +84,18 @@ public class ConfigCopyToolDescriptor extends GenericItemUsingDamageDescriptor {
     }
 
     public static void writeCableType(NBTTagCompound compound, ItemStack stack) {
+        writeCableType(compound, "cable", stack);
+    }
+
+    public static void writeCableType(NBTTagCompound compound, String name, ItemStack stack) {
         if(stack != null) {
-            compound.setInteger("cableAmt", stack.stackSize);
+            compound.setInteger(name + "Amt", stack.stackSize);
         }
         GenericItemBlockUsingDamageDescriptor desc = GenericItemBlockUsingDamageDescriptor.getDescriptor(stack);
         if(desc != null) {
-            compound.setInteger("cableType", desc.parentItemDamage);
+            compound.setInteger(name + "Type", desc.parentItemDamage);
+        } else {
+            compound.setInteger(name + "Type", -1);
         }
     }
 
