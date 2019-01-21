@@ -19,7 +19,7 @@ public class Achievements {
         TR_DESC(Type.ACHIEVEMENT, "open_guide");
 
         craft50VMacerator = new Achievement(TR("achievement.craft_50v_macerator"),
-            "craft_50v_macerator", 0, 2, Eln.findItemStack("50V Macerator", 0), openGuide).registerStat();
+            "craft_50v_macerator", 0, 2, Vars.findItemStack("50V Macerator", 0), openGuide).registerStat();
 
         TR_DESC(Type.ACHIEVEMENT, "craft_50v_macerator");
 

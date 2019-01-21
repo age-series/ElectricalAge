@@ -1,6 +1,7 @@
 package mods.eln.sixnode
 
 import mods.eln.Eln
+import mods.eln.Vars
 import mods.eln.generic.GenericItemUsingDamageDescriptor
 import mods.eln.i18n.I18N
 import mods.eln.item.ElectricalFuseDescriptor
@@ -197,8 +198,8 @@ class ElectricalFuseHolderElement(sixNode: SixNode, side: Direction, descriptor:
     }
 
     fun computeElectricalLoad() {
-        Eln.instance.veryHighVoltageCableDescriptor.applyTo(aLoad)
-        Eln.instance.veryHighVoltageCableDescriptor.applyTo(bLoad)
+        Vars.veryHighVoltageCableDescriptor.applyTo(aLoad)
+        Vars.veryHighVoltageCableDescriptor.applyTo(bLoad)
         refreshSwitchResistor()
     }
 

@@ -3,6 +3,7 @@ package mods.eln.misc;
 import cpw.mods.fml.common.network.internal.FMLProxyPacket;
 import mods.eln.Eln;
 import mods.eln.GuiHandler;
+import mods.eln.Vars;
 import mods.eln.misc.Obj3D.Obj3DPart;
 import mods.eln.node.six.SixNodeEntity;
 import mods.eln.node.transparent.TransparentNodeEntity;
@@ -544,8 +545,8 @@ public class UtilsClient {
     }
 
     public static void sendPacketToServer(ByteArrayOutputStream bos) {
-        C17PacketCustomPayload packet = new C17PacketCustomPayload(Eln.channelName, bos.toByteArray());
-        Eln.eventChannel.sendToServer(new FMLProxyPacket(packet));
+        C17PacketCustomPayload packet = new C17PacketCustomPayload(Vars.channelName, bos.toByteArray());
+        Vars.eventChannel.sendToServer(new FMLProxyPacket(packet));
         // Minecraft.getMinecraft().thePlayer.sendQueue.addToSendQueue(new FMLProxyPacket(packet));
     }
 

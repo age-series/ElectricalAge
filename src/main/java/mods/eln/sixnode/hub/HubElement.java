@@ -1,6 +1,7 @@
 package mods.eln.sixnode.hub;
 
 import mods.eln.Eln;
+import mods.eln.Vars;
 import mods.eln.misc.Direction;
 import mods.eln.misc.LRDU;
 import mods.eln.misc.Utils;
@@ -183,7 +184,7 @@ public class HubElement extends SixNodeElement {
         ElectricalCableDescriptor cableDescriptor;
         ItemStack cable;
         cable = inventory.getStackInSlot(HubContainer.cableSlotId + lrdu.toInt());
-        cableDescriptor = (ElectricalCableDescriptor) Eln.sixNodeItem.getDescriptor(cable);
+        cableDescriptor = (ElectricalCableDescriptor) Vars.sixNodeItem.getDescriptor(cable);
         return cableDescriptor;
     }
 

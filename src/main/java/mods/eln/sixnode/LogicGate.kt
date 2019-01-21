@@ -1,6 +1,7 @@
 package mods.eln.sixnode.logicgate
 
 import mods.eln.Eln
+import mods.eln.Vars
 import mods.eln.cable.CableRenderDescriptor
 import mods.eln.gui.GuiHelper
 import mods.eln.gui.GuiScreenEln
@@ -157,7 +158,7 @@ open class LogicGateElement(node: SixNode, side: Direction, sixNodeDescriptor: S
 
     override fun getWaila(): MutableMap<String, String> = function.getWaila(
         inputPins.map { if (it != null && it.connectedComponents.count() > 0) it.normalized else null }.toTypedArray(),
-        outputPin.u / Eln.SVU)
+        outputPin.u / Vars.SVU)
 
     override fun readFromNBT(nbt: NBTTagCompound?) {
         super.readFromNBT(nbt)
@@ -185,10 +186,10 @@ open class LogicGateRender(entity: SixNodeEntity, side: Direction, descriptor: S
     }
 
     override fun getCableRender(lrdu: LRDU?): CableRenderDescriptor? = when (lrdu) {
-        front -> Eln.instance.signalCableDescriptor.render
-        front.inverse() -> if (descriptor.function.inputCount >= 1) Eln.instance.signalCableDescriptor.render else null
-        front.left() -> if (descriptor.function.inputCount >= 2) Eln.instance.signalCableDescriptor.render else null
-        front.right() -> if (descriptor.function.inputCount >= 3) Eln.instance.signalCableDescriptor.render else null
+        front -> Vars.signalCableDescriptor.render
+        front.inverse() -> if (descriptor.function.inputCount >= 1) Vars.signalCableDescriptor.render else null
+        front.left() -> if (descriptor.function.inputCount >= 2) Vars.signalCableDescriptor.render else null
+        front.right() -> if (descriptor.function.inputCount >= 3) Vars.signalCableDescriptor.render else null
         else -> null
     }
 }

@@ -3,6 +3,7 @@ package mods.eln.block;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import mods.eln.Eln;
+import mods.eln.Vars;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
@@ -17,7 +18,7 @@ public class ArcClayBlock extends Block {
         super(Material.rock);
         setBlockName(name);
         setBlockTextureName("eln:" + name);
-        setCreativeTab(Eln.creativeTab);
+        setCreativeTab(Vars.creativeTab);
     }
 
     @Override

@@ -1,6 +1,7 @@
 package mods.eln.sim.process.destruct;
 
 import mods.eln.Eln;
+import mods.eln.Vars;
 import mods.eln.misc.Coordonate;
 import mods.eln.node.six.SixNodeElement;
 import mods.eln.node.transparent.TransparentNodeElement;
@@ -52,7 +53,7 @@ public class WorldExplosion implements IDestructable {
     public void destructImpl() {
         //NodeManager.instance.removeNode(NodeManager.instance.getNodeFromCoordonate(c));
 
-        if (Eln.instance.explosionEnable)
+        if (Vars.explosionEnable)
             c.world().createExplosion((Entity) null, c.x, c.y, c.z, strength, true);
         else
             c.world().setBlock(c.x, c.y, c.z, Blocks.air);

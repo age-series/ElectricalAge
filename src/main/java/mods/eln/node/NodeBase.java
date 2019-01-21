@@ -3,6 +3,7 @@ package mods.eln.node;
 import cpw.mods.fml.common.FMLCommonHandler;
 import mods.eln.Eln;
 import mods.eln.GuiHandler;
+import mods.eln.Vars;
 import mods.eln.ghost.GhostBlock;
 import mods.eln.misc.*;
 import mods.eln.node.six.SixNode;
@@ -140,7 +141,7 @@ public abstract class NodeBase {
     public static boolean isBlockWrappable(Block block, World w, int x, int y, int z) {
         if (block.isReplaceable(w, x, y, z)) return true;
         if (block == Blocks.air) return true;
-        if (block == Eln.sixNodeBlock) return true;
+        if (block == Vars.sixNodeBlock) return true;
         if (block instanceof GhostBlock) return true;
         if (block == Blocks.torch) return true;
         if (block == Blocks.redstone_torch) return true;
@@ -163,7 +164,7 @@ public abstract class NodeBase {
     public void physicalSelfDestruction(float explosionStrength) {
         if (destructed == true) return;
         destructed = true;
-        if (Eln.instance.explosionEnable == false) explosionStrength = 0;
+        if (Vars.explosionEnable == false) explosionStrength = 0;
         disconnect();
         coordonate.world().setBlockToAir(coordonate.x, coordonate.y, coordonate.z);
         NodeManager.instance.removeNode(this);
@@ -213,19 +214,19 @@ public abstract class NodeBase {
     public boolean onBlockActivated(EntityPlayer entityPlayer, Direction side, float vx, float vy, float vz) {
         if (!entityPlayer.worldObj.isRemote && entityPlayer.getCurrentEquippedItem() != null) {
             ItemStack equipped = entityPlayer.getCurrentEquippedItem();
-            if (Eln.multiMeterElement.checkSameItemStack(equipped)) {
+            if (Vars.multiMeterElement.checkSameItemStack(equipped)) {
                 String str = multiMeterString(side);
                 if (str != null)
                     Utils.addChatMessage(entityPlayer, str);
                 return true;
             }
-            if (Eln.thermometerElement.checkSameItemStack(equipped)) {
+            if (Vars.thermometerElement.checkSameItemStack(equipped)) {
                 String str = thermoMeterString(side);
                 if (str != null)
                     Utils.addChatMessage(entityPlayer, str);
                 return true;
             }
-            if (Eln.allMeterElement.checkSameItemStack(equipped)) {
+            if (Vars.allMeterElement.checkSameItemStack(equipped)) {
                 String str1 = multiMeterString(side);
                 String str2 = thermoMeterString(side);
                 String str = "";
@@ -237,13 +238,13 @@ public abstract class NodeBase {
                     Utils.addChatMessage(entityPlayer, str);
                 return true;
             }
-            if (Eln.configCopyToolElement.checkSameItemStack(equipped)) {
+            if (Vars.configCopyToolElement.checkSameItemStack(equipped)) {
                 if(!equipped.hasTagCompound()) {
                     equipped.setTagCompound(new NBTTagCompound());
                 }
                 String act;
                 SoundCommand snd = beepError;
-                if(entityPlayer.isSneaking() || Eln.playerManager.get(entityPlayer).getInteractEnable()) {
+                if(entityPlayer.isSneaking() || Vars.playerManager.get(entityPlayer).getInteractEnable()) {
                     if(writeConfigTool(side, equipped.getTagCompound(), entityPlayer))
                         snd = beepDownloaded;
                     act = "write";
@@ -303,7 +304,7 @@ public abstract class NodeBase {
                 if (otherELoad != null) {
                     eCon = new ElectricalConnection(eLoad, otherELoad);
 
-                    Eln.simulator.addElectricalComponent(eCon);
+                    Vars.simulator.addElectricalComponent(eCon);
                     nodeConnection.addConnection(eCon);
                 }
             }
@@ -314,7 +315,7 @@ public abstract class NodeBase {
                 if (otherTLoad != null) {
                     tCon = new ThermalConnection(tLoad, otherTLoad);
 
-                    Eln.simulator.addThermalConnection(tCon);
+                    Vars.simulator.addThermalConnection(tCon);
                     nodeConnection.addConnection(tCon);
                 }
 
@@ -501,7 +502,7 @@ public abstract class NodeBase {
 
     public void preparePacketForClient(DataOutputStream stream) {
         try {
-            stream.writeByte(Eln.packetForClientNode);
+            stream.writeByte(Vars.packetForClientNode);
 
             stream.writeInt(coordonate.x);
             stream.writeInt(coordonate.y);
@@ -552,7 +553,7 @@ public abstract class NodeBase {
 
         try {
 
-            stream.writeByte(Eln.packetNodeSingleSerialized);
+            stream.writeByte(Vars.packetNodeSingleSerialized);
 
             stream.writeInt(coordonate.x);
             stream.writeInt(coordonate.y);

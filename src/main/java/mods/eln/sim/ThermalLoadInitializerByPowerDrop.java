@@ -1,6 +1,7 @@
 package mods.eln.sim;
 
 import mods.eln.Eln;
+import mods.eln.Vars;
 
 public class ThermalLoadInitializerByPowerDrop {
 
@@ -22,7 +23,7 @@ public class ThermalLoadInitializerByPowerDrop {
         Rp = warmLimit / P;
         Rs = TConductivityDrop / P / 2;
 
-        Eln.simulator.checkThermalLoad(Rs, Rp, C);
+        Vars.simulator.checkThermalLoad(Rs, Rp, C);
     }
 
     public void applyTo(ThermalLoad load) {

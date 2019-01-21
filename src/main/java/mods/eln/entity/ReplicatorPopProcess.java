@@ -2,6 +2,7 @@ package mods.eln.entity;
 
 import cpw.mods.fml.common.FMLCommonHandler;
 import mods.eln.Eln;
+import mods.eln.Vars;
 import mods.eln.misc.Utils;
 import mods.eln.sim.IProcess;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -27,7 +28,7 @@ public class ReplicatorPopProcess implements IProcess {
         for (Object o : world.loadedEntityList) {
             if (o instanceof ReplicatorEntity) {
                 replicatorCount++;
-                if (replicatorCount > Eln.instance.maxReplicators) {
+                if (replicatorCount > Vars.maxReplicators) {
                     ReplicatorEntity r = (ReplicatorEntity) o;
                     r.setDead();
                 }

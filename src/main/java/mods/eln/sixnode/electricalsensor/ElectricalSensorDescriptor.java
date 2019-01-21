@@ -1,6 +1,7 @@
 package mods.eln.sixnode.electricalsensor;
 
 import mods.eln.Eln;
+import mods.eln.Vars;
 import mods.eln.misc.Direction;
 import mods.eln.misc.LRDU;
 import mods.eln.misc.Obj3D.Obj3DPart;
@@ -25,7 +26,7 @@ public class ElectricalSensorDescriptor extends SixNodeDescriptor {
         boolean voltageOnly) {
         super(name, ElectricalSensorElement.class, ElectricalSensorRender.class);
         this.voltageOnly = voltageOnly;
-        main = Eln.obj.getPart(modelName, "main");
+        main = Vars.obj.getPart(modelName, "main");
 
         voltageLevelColor = VoltageLevelColor.SignalVoltage;
     }

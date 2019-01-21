@@ -1,6 +1,7 @@
 package mods.eln.ghost;
 
 import mods.eln.Eln;
+import mods.eln.Vars;
 import mods.eln.misc.Coordonate;
 import mods.eln.misc.Utils;
 import mods.eln.node.NodeBase;
@@ -176,7 +177,7 @@ public class GhostManager extends WorldSavedData {
     }
 
     public void createGhost(Coordonate coordonate, Coordonate observerCoordonate, int UUID) {
-        createGhost(coordonate, observerCoordonate, UUID, Eln.ghostBlock, GhostBlock.tCube);
+        createGhost(coordonate, observerCoordonate, UUID, Vars.ghostBlock, GhostBlock.tCube);
     }
 
     public void createGhost(Coordonate coordonate, Coordonate observerCoordonate, int UUID, Block block, int meta) {

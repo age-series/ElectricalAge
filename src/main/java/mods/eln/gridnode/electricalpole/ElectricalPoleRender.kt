@@ -1,6 +1,7 @@
 package mods.eln.gridnode.electricalpole
 
 import mods.eln.Eln
+import mods.eln.Vars
 import mods.eln.cable.CableRenderType
 import mods.eln.gridnode.GridRender
 import mods.eln.misc.LRDUMask
@@ -38,7 +39,7 @@ class ElectricalPoleRender(entity: TransparentNodeEntity, descriptor: Transparen
 
     override fun draw() {
         super.draw()
-        cableRenderType = drawCable(front.down(), Eln.instance.stdCableRender3200V, eConn, cableRenderType)
+        cableRenderType = drawCable(front.down(), Vars.stdCableRender3200V, eConn, cableRenderType)
     }
 
     override fun networkUnserialize(stream: DataInputStream) {

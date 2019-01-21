@@ -1,6 +1,7 @@
 package mods.eln.transparentnode
 
 import mods.eln.Eln
+import mods.eln.Vars
 import mods.eln.cable.CableRender
 import mods.eln.cable.CableRenderDescriptor
 import mods.eln.cable.CableRenderType
@@ -222,6 +223,6 @@ class NixieTubeRender(entity: TransparentNodeEntity, _descriptor: TransparentNod
     }
 
     override fun getCableRender(side: Direction?, lrdu: LRDU?): CableRenderDescriptor? {
-        return if (connection.get(lrdu)) { Eln.instance.stdCableRenderSignal } else { null }
+        return if (connection.get(lrdu)) { Vars.stdCableRenderSignal } else { null }
     }
 }

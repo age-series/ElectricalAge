@@ -1,6 +1,7 @@
 package mods.eln.sixnode.thermalcable;
 
 import mods.eln.Eln;
+import mods.eln.Vars;
 import mods.eln.cable.CableRenderDescriptor;
 import mods.eln.misc.Utils;
 import mods.eln.misc.VoltageLevelColor;
@@ -56,8 +57,8 @@ public class ThermalCableDescriptor extends SixNodeDescriptor {
         thermalRs = thermalStdDrop / 2 / thermalStdPower;
         thermalRp = thermalStdT / thermalStdLost;
         //thermalC = thermalTao / (thermalRs * 2) ;
-        thermalC = Eln.simulator.getMinimalThermalC(thermalRs, thermalRp);
-        if (!Eln.simulator.checkThermalLoad(thermalRs, thermalRp, thermalC)) {
+        thermalC = Vars.simulator.getMinimalThermalC(thermalRs, thermalRp);
+        if (!Vars.simulator.checkThermalLoad(thermalRs, thermalRp, thermalC)) {
             Utils.println("Bad thermalCable setup");
             while (true) ;
         }

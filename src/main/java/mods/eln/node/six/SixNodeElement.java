@@ -1,6 +1,7 @@
 package mods.eln.node.six;
 
 import mods.eln.Eln;
+import mods.eln.Vars;
 import mods.eln.ghost.GhostObserver;
 import mods.eln.misc.*;
 import mods.eln.node.INodeElement;
@@ -101,23 +102,23 @@ public abstract class SixNodeElement implements GhostObserver, IPlayer, INodeEle
         // If we are about to destruct ourselves, do not add any elements to the simulation anymore.
         if (sixNode != null && sixNode.isDestructing()) return;
 
-        Eln.simulator.addAllElectricalComponent(electricalComponentList);
-        Eln.simulator.addAllThermalConnection(thermalConnectionList);
+        Vars.simulator.addAllElectricalComponent(electricalComponentList);
+        Vars.simulator.addAllThermalConnection(thermalConnectionList);
 
         for (NbtElectricalLoad load : electricalLoadList)
-            Eln.simulator.addElectricalLoad(load);
+            Vars.simulator.addElectricalLoad(load);
         for (NbtThermalLoad load : thermalLoadList)
-            Eln.simulator.addThermalLoad(load);
+            Vars.simulator.addThermalLoad(load);
 
 
         for (IProcess process : slowProcessList)
-            Eln.simulator.addSlowProcess(process);
+            Vars.simulator.addSlowProcess(process);
         for (IProcess process : electricalProcessList)
-            Eln.simulator.addElectricalProcess(process);
+            Vars.simulator.addElectricalProcess(process);
         for (IProcess process : thermalProcessList)
-            Eln.simulator.addThermalFastProcess(process);
+            Vars.simulator.addThermalFastProcess(process);
         for (IProcess process : thermalSlowProcessList)
-            Eln.simulator.addThermalSlowProcess(process);
+            Vars.simulator.addThermalSlowProcess(process);
 
     }
 
@@ -152,7 +153,7 @@ public abstract class SixNodeElement implements GhostObserver, IPlayer, INodeEle
         this.itemStackDamageId = sixNode.sideElementIdList[side.getInt()];
 
         if (descriptor.hasGhostGroup())
-            Eln.ghostManager.addObserver(this);
+            Vars.ghostManager.addObserver(this);
     }
 
     public void preparePacketForClient(DataOutputStream stream) {
@@ -199,7 +200,7 @@ public abstract class SixNodeElement implements GhostObserver, IPlayer, INodeEle
         DataOutputStream stream = new DataOutputStream(bos);
 
         try {
-            stream.writeByte(Eln.packetDestroyUuid);
+            stream.writeByte(Vars.packetDestroyUuid);
             stream.writeInt(uuid);
 
             sendPacketToAllClient(bos);
@@ -216,7 +217,7 @@ public abstract class SixNodeElement implements GhostObserver, IPlayer, INodeEle
         }
 
         if (sixNodeElementDescriptor.hasGhostGroup()) {
-            Eln.ghostManager.removeObserver(sixNode.coordonate);
+            Vars.ghostManager.removeObserver(sixNode.coordonate);
             sixNodeElementDescriptor.getGhostGroup(side, front).erase(sixNode.coordonate);
         }
 
@@ -248,7 +249,7 @@ public abstract class SixNodeElement implements GhostObserver, IPlayer, INodeEle
 	}*/
 
     public ItemStack getDropItemStack() {
-        return new ItemStack(Eln.sixNodeBlock, 1, itemStackDamageId); //sixNode.sideElementIdList[side.getInt()]
+        return new ItemStack(Vars.sixNodeBlock, 1, itemStackDamageId); //sixNode.sideElementIdList[side.getInt()]
     }
 
     public void readFromNBT(NBTTagCompound nbt) {
@@ -346,22 +347,22 @@ public abstract class SixNodeElement implements GhostObserver, IPlayer, INodeEle
     }
 
     public void disconnectJob() {
-        Eln.simulator.removeAllElectricalComponent(electricalComponentList);
-        Eln.simulator.removeAllThermalConnection(thermalConnectionList);
+        Vars.simulator.removeAllElectricalComponent(electricalComponentList);
+        Vars.simulator.removeAllThermalConnection(thermalConnectionList);
 
         for (NbtElectricalLoad load : electricalLoadList)
-            Eln.simulator.removeElectricalLoad(load);
+            Vars.simulator.removeElectricalLoad(load);
         for (NbtThermalLoad load : thermalLoadList)
-            Eln.simulator.removeThermalLoad(load);
+            Vars.simulator.removeThermalLoad(load);
 
         for (IProcess process : slowProcessList)
-            Eln.simulator.removeSlowProcess(process);
+            Vars.simulator.removeSlowProcess(process);
         for (IProcess process : electricalProcessList)
-            Eln.simulator.removeElectricalProcess(process);
+            Vars.simulator.removeElectricalProcess(process);
         for (IProcess process : thermalProcessList)
-            Eln.simulator.removeThermalFastProcess(process);
+            Vars.simulator.removeThermalFastProcess(process);
         for (IProcess process : thermalSlowProcessList)
-            Eln.simulator.removeThermalSlowProcess(process);
+            Vars.simulator.removeThermalSlowProcess(process);
 
     }
 

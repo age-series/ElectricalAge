@@ -1,6 +1,7 @@
 package mods.eln.item;
 
 import mods.eln.Eln;
+import mods.eln.Vars;
 import mods.eln.misc.IConfigSharing;
 import mods.eln.misc.Utils;
 import mods.eln.misc.VoltageLevelColor;
@@ -67,7 +68,7 @@ public class LampDescriptor extends GenericItemUsingDamageDescriptorUpgrade impl
                 break;
         }
 
-        Eln.instance.configShared.add(this);
+        Vars.configShared.add(this);
         voltageLevelColor = VoltageLevelColor.fromVoltage(nominalU);
     }
 

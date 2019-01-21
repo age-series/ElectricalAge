@@ -1,6 +1,7 @@
 package mods.eln.sixnode.TreeResinCollector;
 
 import mods.eln.Eln;
+import mods.eln.Vars;
 import mods.eln.misc.Direction;
 import mods.eln.misc.Utils;
 import net.minecraft.init.Blocks;
@@ -20,7 +21,7 @@ public class TreeResinCollectorTileEntity extends TileEntity {
     boolean onBlockActivated() {
         if (worldObj.isRemote) return true;
         while (occupancy >= 1f) {
-            Utils.dropItem(Eln.treeResin.newItemStack(1), xCoord, yCoord, zCoord, worldObj);
+            Utils.dropItem(Vars.treeResin.newItemStack(1), xCoord, yCoord, zCoord, worldObj);
             occupancy -= 1f;
         }
         return true;

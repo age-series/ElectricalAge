@@ -1,6 +1,7 @@
 package mods.eln.sixnode.electricalcable;
 
 import mods.eln.Eln;
+import mods.eln.Vars;
 import mods.eln.cable.CableRenderDescriptor;
 import mods.eln.generic.GenericItemBlockUsingDamageDescriptor;
 import mods.eln.misc.Utils;
@@ -79,7 +80,7 @@ public class ElectricalCableDescriptor extends SixNodeDescriptor {
         thermalRp = thermalWarmLimit / thermalMaximalPowerDissipated;
         thermalRs = thermalConductivityTao / thermalC / 2;
 
-        Eln.simulator.checkThermalLoad(thermalRs, thermalRp, thermalC);
+        Vars.simulator.checkThermalLoad(thermalRs, thermalRp, thermalC);
 
         electricalRsMin = electricalNominalRs;
         electricalRsPerCelcius = 0;
@@ -131,7 +132,7 @@ public class ElectricalCableDescriptor extends SixNodeDescriptor {
         super.addInformation(itemStack, entityPlayer, list, par4);
         if (signalWire) {
             Collections.addAll(list, tr("Cable is adapted to conduct\nelectrical signals.").split("\n"));
-            Collections.addAll(list, tr("A signal is electrical information\nwhich must be between 0V and %1$", Utils.plotVolt(Eln.SVU)).split("\n"));
+            Collections.addAll(list, tr("A signal is electrical information\nwhich must be between 0V and %1$", Utils.plotVolt(Vars.SVU)).split("\n"));
             list.add(tr("Not adapted to transport power."));
 
 			/*String lol = "";

@@ -1,6 +1,7 @@
 package mods.eln.transparentnode.electricalfurnace;
 
 import mods.eln.Eln;
+import mods.eln.Vars;
 import mods.eln.generic.GenericItemUsingDamage;
 import mods.eln.i18n.I18N;
 import mods.eln.item.HeatingCorpElement;
@@ -141,7 +142,7 @@ public class ElectricalFurnaceElement extends TransparentNodeElement {
         smeltResistor.highImpedance();
         slowRefreshProcess.process(0.05);
 
-        Eln.instance.lowVoltageCableDescriptor.applyTo(electricalLoad);
+        Vars.lowVoltageCableDescriptor.applyTo(electricalLoad);
         //electricalLoad.setRs(MnaConst.highImpedance);
 
 

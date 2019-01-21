@@ -1,6 +1,7 @@
 package mods.eln.node.transparent;
 
 import mods.eln.Eln;
+import mods.eln.Vars;
 import mods.eln.cable.CableRenderDescriptor;
 import mods.eln.misc.Coordonate;
 import mods.eln.misc.Direction;
@@ -48,7 +49,7 @@ public class TransparentNodeEntity extends NodeBlockEntity implements ISidedInve
             } else {
                 if (id != elementRenderId) {
                     elementRenderId = id;
-                    TransparentNodeDescriptor descriptor = Eln.transparentNodeItem.getDescriptor(id);
+                    TransparentNodeDescriptor descriptor = Vars.transparentNodeItem.getDescriptor(id);
                     elementRender = (TransparentNodeElementRender) descriptor.RenderClass.getConstructor(TransparentNodeEntity.class, TransparentNodeDescriptor.class).newInstance(this, descriptor);
                 }
                 elementRender.networkUnserialize(stream);
@@ -158,7 +159,7 @@ public class TransparentNodeEntity extends NodeBlockEntity implements ISidedInve
     @Override
     public String getNodeUuid() {
 
-        return Eln.transparentNodeBlock.getNodeUuid();
+        return Vars.transparentNodeBlock.getNodeUuid();
     }
 
     @Override

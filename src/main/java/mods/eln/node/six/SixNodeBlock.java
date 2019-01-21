@@ -3,6 +3,7 @@ package mods.eln.node.six;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import mods.eln.Eln;
+import mods.eln.Vars;
 import mods.eln.misc.Direction;
 import mods.eln.misc.Utils;
 import mods.eln.node.NodeBase;
@@ -102,7 +103,7 @@ public class SixNodeBlock extends NodeBlock {
         /*
 		 * for (Integer id : repertoriedItemStackId) { subItems.add(new ItemStack(this, 1, id)); }
 		 */
-        Eln.sixNodeItem.getSubItems(par1, tab, subItems);
+        Vars.sixNodeItem.getSubItems(par1, tab, subItems);
     }
 
     @Override

@@ -5,10 +5,10 @@ import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
 import li.cil.oc.api.network.SimpleComponent;
-import mods.eln.Other;
+import mods.eln.Vars;
 import mods.eln.node.simple.SimpleNodeEntity;
 
-@Optional.Interface(iface = "li.cil.oc.api.network.SimpleComponent", modid = Other.modIdOc)
+@Optional.Interface(iface = "li.cil.oc.api.network.SimpleComponent", modid = Vars.modIdOc)
 public class ComputerProbeEntity extends SimpleNodeEntity implements SimpleComponent {
 
     @Override
@@ -17,13 +17,13 @@ public class ComputerProbeEntity extends SimpleNodeEntity implements SimpleCompo
     }
 
   /*  @Callback
-    @Optional.Method(modid = Other.modIdOc)
+    @Optional.Method(modid = Vars.modIdOc)
     public Object[] greet(Context context, Arguments args) {
         return new Object[]{String.format("Hello, %s!", args.checkString(0))};
     }*/
 
     @Callback
-    @Optional.Method(modid = Other.modIdOc)
+    @Optional.Method(modid = Vars.modIdOc)
     public Object[] signalSetDir(Context context, Arguments args) {
         ComputerProbeNode n = getNode();
         if (n == null) return null;
@@ -31,7 +31,7 @@ public class ComputerProbeEntity extends SimpleNodeEntity implements SimpleCompo
     }
 
     @Callback
-    @Optional.Method(modid = Other.modIdOc)
+    @Optional.Method(modid = Vars.modIdOc)
     public Object[] signalGetDir(Context context, Arguments args) {
         ComputerProbeNode n = getNode();
         if (n == null) return null;
@@ -39,7 +39,7 @@ public class ComputerProbeEntity extends SimpleNodeEntity implements SimpleCompo
     }
 
     @Callback
-    @Optional.Method(modid = Other.modIdOc)
+    @Optional.Method(modid = Vars.modIdOc)
     public Object[] signalSetOut(Context context, Arguments args) {
         ComputerProbeNode n = getNode();
         if (n == null) return null;
@@ -47,7 +47,7 @@ public class ComputerProbeEntity extends SimpleNodeEntity implements SimpleCompo
     }
 
     @Callback
-    @Optional.Method(modid = Other.modIdOc)
+    @Optional.Method(modid = Vars.modIdOc)
     public Object[] signalGetOut(Context context, Arguments args) {
         ComputerProbeNode n = getNode();
         if (n == null) return null;
@@ -55,7 +55,7 @@ public class ComputerProbeEntity extends SimpleNodeEntity implements SimpleCompo
     }
 
     @Callback
-    @Optional.Method(modid = Other.modIdOc)
+    @Optional.Method(modid = Vars.modIdOc)
     public Object[] signalGetIn(Context context, Arguments args) {
         ComputerProbeNode n = getNode();
         if (n == null) return null;
@@ -63,7 +63,7 @@ public class ComputerProbeEntity extends SimpleNodeEntity implements SimpleCompo
     }
 
     @Callback
-    @Optional.Method(modid = Other.modIdOc)
+    @Optional.Method(modid = Vars.modIdOc)
     public Object[] wirelessSet(Context context, Arguments args) {
         ComputerProbeNode n = getNode();
         if (n == null) return null;
@@ -71,7 +71,7 @@ public class ComputerProbeEntity extends SimpleNodeEntity implements SimpleCompo
     }
 
     @Callback
-    @Optional.Method(modid = Other.modIdOc)
+    @Optional.Method(modid = Vars.modIdOc)
     public Object[] wirelessRemove(Context context, Arguments args) {
         ComputerProbeNode n = getNode();
         if (n == null) return null;
@@ -79,7 +79,7 @@ public class ComputerProbeEntity extends SimpleNodeEntity implements SimpleCompo
     }
 
     @Callback
-    @Optional.Method(modid = Other.modIdOc)
+    @Optional.Method(modid = Vars.modIdOc)
     public Object[] wirelessRemoveAll(Context context, Arguments args) {
         ComputerProbeNode n = getNode();
         if (n == null) return null;
@@ -87,7 +87,7 @@ public class ComputerProbeEntity extends SimpleNodeEntity implements SimpleCompo
     }
 
     @Callback
-    @Optional.Method(modid = Other.modIdOc)
+    @Optional.Method(modid = Vars.modIdOc)
     public Object[] wirelessGet(Context context, Arguments args) {
         ComputerProbeNode n = getNode();
         if (n == null) return null;

@@ -1,6 +1,7 @@
 package mods.eln.sixnode.modbusrtu;
 
 import mods.eln.Eln;
+import mods.eln.Vars;
 import mods.eln.cable.CableRenderDescriptor;
 import mods.eln.misc.*;
 import mods.eln.node.six.SixNodeDescriptor;
@@ -151,6 +152,6 @@ public class ModbusRtuRender extends SixNodeElementRender {
     }
 
     public CableRenderDescriptor getCableRender(LRDU lrdu) {
-        return Eln.instance.signalCableDescriptor.render;
+        return Vars.signalCableDescriptor.render;
     }
 }

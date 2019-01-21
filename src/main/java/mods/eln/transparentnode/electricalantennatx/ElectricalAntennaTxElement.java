@@ -1,6 +1,7 @@
 package mods.eln.transparentnode.electricalantennatx;
 
 import mods.eln.Eln;
+import mods.eln.Vars;
 import mods.eln.i18n.I18N;
 import mods.eln.misc.Coordonate;
 import mods.eln.misc.Direction;
@@ -200,7 +201,7 @@ public class ElectricalAntennaTxElement extends TransparentNodeElement {
         Map<String, String> info = new HashMap<String, String>();
         info.put(I18N.tr("Transmitting"), commandIn.getNormalized() > 0 ? "Yes" : "No");
         info.put(I18N.tr("Efficiency"), Utils.plotPercent("", powerEfficency));
-        if (Eln.wailaEasyMode) {
+        if (Vars.wailaEasyMode) {
             info.put(I18N.tr("Power"), Utils.plotPower("", powerIn.getI() * powerIn.getU()));
         }
         return info;

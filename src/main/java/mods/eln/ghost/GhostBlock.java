@@ -3,6 +3,7 @@ package mods.eln.ghost;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import mods.eln.Eln;
+import mods.eln.Vars;
 import mods.eln.misc.Coordonate;
 import mods.eln.misc.Direction;
 import mods.eln.node.transparent.TransparentNodeEntity;
@@ -169,7 +170,7 @@ public class GhostBlock extends Block {
     }
 
     GhostElement getElement(World world, int x, int y, int z) {
-        return Eln.ghostManager.getGhost(new Coordonate(x, y, z, world));
+        return Vars.ghostManager.getGhost(new Coordonate(x, y, z, world));
     }
 
     @Override

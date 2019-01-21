@@ -5,6 +5,7 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.Phase;
 import cpw.mods.fml.common.gameevent.TickEvent.ServerTickEvent;
 import mods.eln.Eln;
+import mods.eln.Vars;
 import mods.eln.misc.Coordonate;
 import mods.eln.misc.Utils;
 import mods.eln.node.NodeManager;
@@ -99,7 +100,7 @@ public class ServerEventListener {
         loadedWorlds.remove(e.world.provider.dimensionId);
         try {
             NodeManager.instance.unload(e.world.provider.dimensionId);
-            Eln.ghostManager.unload(e.world.provider.dimensionId);
+            Vars.ghostManager.unload(e.world.provider.dimensionId);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -149,7 +150,7 @@ public class ServerEventListener {
             e.printStackTrace();
         }
         try {
-            Eln.ghostManager.loadFromNBT(nbt.getCompoundTag("ghost"));
+            Vars.ghostManager.loadFromNBT(nbt.getCompoundTag("ghost"));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -162,7 +163,7 @@ public class ServerEventListener {
             e.printStackTrace();
         }
         try {
-            Eln.ghostManager.saveToNBT(Utils.newNbtTagCompund(nbt, "ghost"), dim);
+            Vars.ghostManager.saveToNBT(Utils.newNbtTagCompund(nbt, "ghost"), dim);
         } catch (Exception e) {
             e.printStackTrace();
         }

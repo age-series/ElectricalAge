@@ -1,6 +1,7 @@
 package mods.eln.sixnode.resistor;
 
 import mods.eln.Eln;
+import mods.eln.Vars;
 import mods.eln.misc.Direction;
 import mods.eln.misc.LRDU;
 import mods.eln.misc.Obj3D;
@@ -21,10 +22,10 @@ public class ResistorDescriptor extends SixNodeDescriptor {
 
     public final boolean isRheostat;
     public double thermalCoolLimit = -100;
-    public double thermalWarmLimit = Eln.cableWarmLimit;
+    public double thermalWarmLimit = Vars.cableWarmLimit;
     public double thermalMaximalPowerDissipated = 1000;
     public double thermalNominalHeatTime = 120;
-    public double thermalConductivityTao = Eln.cableThermalConductionTao;
+    public double thermalConductivityTao = Vars.cableThermalConductionTao;
     public double tempCoef;
     Obj3D.Obj3DPart ResistorBaseExtension, ResistorCore, ResistorTrack, ResistorWiper, Base, Cables;
     ISerie series;

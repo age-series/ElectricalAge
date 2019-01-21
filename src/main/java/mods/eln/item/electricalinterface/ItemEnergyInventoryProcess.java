@@ -2,6 +2,7 @@ package mods.eln.item.electricalinterface;
 
 import cpw.mods.fml.common.FMLCommonHandler;
 import mods.eln.Eln;
+import mods.eln.Vars;
 import mods.eln.misc.Utils;
 import mods.eln.sim.IProcess;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -122,7 +123,7 @@ public class ItemEnergyInventoryProcess implements IProcess {
                 e.i.electricalItemUpdate(e.stack, energyUpdatePeriod);
             }
 
-            if (Eln.saveConfig.infinitePortableBattery) {
+            if (Vars.saveConfig.infinitePortableBattery) {
                 for (Element e : list) {
                     double chargePower = e.i.getChargePower(e.stack);
                     double energy = Math.min(e.i.getEnergyMax(e.stack), e.i.getEnergy(e.stack) + e.i.getChargePower(e.stack) * time);

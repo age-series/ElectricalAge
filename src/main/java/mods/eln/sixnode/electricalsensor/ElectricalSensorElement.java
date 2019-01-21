@@ -1,6 +1,7 @@
 package mods.eln.sixnode.electricalsensor;
 
 import mods.eln.Eln;
+import mods.eln.Vars;
 import mods.eln.i18n.I18N;
 import mods.eln.item.IConfigurable;
 import mods.eln.misc.Direction;
@@ -161,7 +162,7 @@ public class ElectricalSensorElement extends SixNodeElement implements IConfigur
     public Map<String, String> getWaila() {
         Map<String, String> info = new HashMap<String, String>();
         info.put(I18N.tr("Output voltage"), Utils.plotVolt("", outputGate.getU()));
-        if (Eln.wailaEasyMode) {
+        if (Vars.wailaEasyMode) {
             switch (typeOfSensor) {
                 case voltageType:
                     info.put(I18N.tr("Measured voltage"), Utils.plotVolt("", aLoad.getU()));
@@ -200,7 +201,7 @@ public class ElectricalSensorElement extends SixNodeElement implements IConfigur
 
     @Override
     public void initialize() {
-        Eln.instance.signalCableDescriptor.applyTo(outputGate);
+        Vars.signalCableDescriptor.applyTo(outputGate);
         computeElectricalLoad();
         Eln.applySmallRs(aLoad);
         if (bLoad != null) Eln.applySmallRs(bLoad);
@@ -216,7 +217,7 @@ public class ElectricalSensorElement extends SixNodeElement implements IConfigur
         //if (!descriptor.voltageOnly)
         {
             ItemStack cable = getInventory().getStackInSlot(ElectricalSensorContainer.cableSlotId);
-            ElectricalCableDescriptor cableDescriptor = (ElectricalCableDescriptor) Eln.sixNodeItem.getDescriptor(cable);
+            ElectricalCableDescriptor cableDescriptor = (ElectricalCableDescriptor) Vars.sixNodeItem.getDescriptor(cable);
 
             if (cableDescriptor == null) {
                 if (resistor != null) resistor.highImpedance();

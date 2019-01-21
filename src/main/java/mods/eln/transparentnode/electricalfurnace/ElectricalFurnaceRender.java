@@ -1,6 +1,7 @@
 package mods.eln.transparentnode.electricalfurnace;
 
 import mods.eln.Eln;
+import mods.eln.Vars;
 import mods.eln.client.FrameTime;
 import mods.eln.misc.Direction;
 import mods.eln.misc.Utils;
@@ -50,7 +51,7 @@ public class ElectricalFurnaceRender extends TransparentNodeElementRender {
     public void draw() {
         front.glRotateXnRef();
 
-        Eln.obj.draw("ElectricFurnace", "furnace");
+        Vars.obj.draw("ElectricFurnace", "furnace");
         //ClientProxy.obj.draw("ELFURNACE");
 
         drawEntityItem(entityItemIn, -0.1, -0.20, 0, counter, 0.8f);

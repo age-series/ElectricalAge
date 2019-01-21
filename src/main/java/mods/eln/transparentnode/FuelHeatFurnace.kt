@@ -1,6 +1,7 @@
 package mods.eln.transparentnode
 
 import mods.eln.Eln
+import mods.eln.Vars
 import mods.eln.fluid.FuelRegistry
 import mods.eln.fluid.PreciseElementFluidHandler
 import mods.eln.generic.GenericItemUsingDamageSlot
@@ -124,7 +125,7 @@ class FuelHeatFurnaceElement(transparentNode: TransparentNode, descriptor: Trans
 
             when {
                 externalControlled -> {
-                    setCmd(controlLoad.u / Eln.SVU)
+                    setCmd(controlLoad.u / Vars.SVU)
                 }
                 else -> {
                     setCmd(manualControl)

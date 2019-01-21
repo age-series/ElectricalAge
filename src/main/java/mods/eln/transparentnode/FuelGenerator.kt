@@ -1,6 +1,7 @@
 package mods.eln.transparentnode
 
 import mods.eln.Eln
+import mods.eln.Vars
 import mods.eln.cable.CableRenderType
 import mods.eln.fluid.FuelRegistry
 import mods.eln.i18n.I18N
@@ -188,9 +189,9 @@ class FuelGeneratorElement(transparentNode: TransparentNode, descriptor_: Transp
                     }
                 }
             } else {
-                if (Eln.multiMeterElement.checkSameItemStack(player?.currentEquippedItem) ||
-                    Eln.thermometerElement.checkSameItemStack(player?.currentEquippedItem) ||
-                    Eln.allMeterElement.checkSameItemStack(player?.currentEquippedItem)) {
+                if (Vars.multiMeterElement.checkSameItemStack(player?.currentEquippedItem) ||
+                    Vars.thermometerElement.checkSameItemStack(player?.currentEquippedItem) ||
+                    Vars.allMeterElement.checkSameItemStack(player?.currentEquippedItem)) {
                     return false
                 }
 

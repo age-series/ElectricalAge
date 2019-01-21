@@ -5,6 +5,7 @@
 package mods.eln.server;
 
 import mods.eln.Eln;
+import mods.eln.Vars;
 import mods.eln.misc.Color;
 import mods.eln.misc.Version;
 import mods.eln.sim.mna.SubSystem;
@@ -233,7 +234,7 @@ public class ConsoleListener extends CommandBase {
             ConsoleArg<Boolean> arg0 = getArgBool(ics, astring[1]);
             if (!arg0.valid)
                 return;
-            Eln.instance.saveConfig.reGenOre = arg0.value;
+            Vars.saveConfig.reGenOre = arg0.value;
             cprint(ics, strOffsetL0 + "Regenerate ore at next map reload : " + Color.COLOR_DARK_GREEN + boolToStr(arg0.value));
             cprint(ics, strOffsetL0 + "Parameter saved in the map and effective once.");
         } else if (cmd.equalsIgnoreCase(cmdNameStr_generateLangFileTemplate)) {
@@ -247,16 +248,16 @@ public class ConsoleListener extends CommandBase {
             ConsoleArg<Boolean> arg0 = getArgBool(ics, astring[1]);
             if (!arg0.valid)
                 return;
-            Eln.instance.killMonstersAroundLamps = arg0.value;
+            Vars.killMonstersAroundLamps = arg0.value;
             cprint(ics, strOffsetL0 + "Avoid monsters spawning around lamps : " + Color.COLOR_DARK_GREEN + boolToStr(arg0.value));
             cprint(ics, strOffsetL0 + "Warning: Command effective to this game instance only.");
         } else if(cmd.equalsIgnoreCase((cmdNameStr_matrix))) {
             System.out.println("Dumping current matrix state");
 
             String dumpSubSystems = "";
-            int ssc = Eln.simulator.mna.systems.size();
+            int ssc = Vars.simulator.mna.systems.size();
             int ct = 0;
-            for (SubSystem s: Eln.simulator.mna.systems) {
+            for (SubSystem s: Vars.simulator.mna.systems) {
                 ct += s.component.size();
                 dumpSubSystems += s.toString() + "\n";
             }

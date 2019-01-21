@@ -1,6 +1,7 @@
 package mods.eln.transparentnode.solarpanel;
 
 import mods.eln.Eln;
+import mods.eln.Vars;
 import mods.eln.i18n.I18N;
 import mods.eln.item.SolarTrackerDescriptor;
 import mods.eln.misc.Direction;
@@ -79,14 +80,14 @@ public class SolarPanelElement extends TransparentNodeElement {
 
     @Override
     public void connectJob() {
-        Eln.simulator.mna.addProcess(powerSource);
+        Vars.simulator.mna.addProcess(powerSource);
         super.connectJob();
     }
 
     @Override
     public void disconnectJob() {
         super.disconnectJob();
-        Eln.simulator.mna.removeProcess(powerSource);
+        Vars.simulator.mna.removeProcess(powerSource);
     }
 
     @Override
@@ -233,7 +234,7 @@ public class SolarPanelElement extends TransparentNodeElement {
         info.put(I18N.tr("Sun angle"), Utils.plotValue(((slowProcess.getSolarAlpha()) * (180 / Math.PI)) - 90, "\u00B0"));
         info.put(I18N.tr("Panel angle"), Utils.plotValue((panelAlpha * (180 / Math.PI)) - 90, "\u00B0"));
         info.put(I18N.tr("Producing energy"), (slowProcess.getSolarLight() != 0 ? "Yes" : "No"));
-        if (Eln.wailaEasyMode) {
+        if (Vars.wailaEasyMode) {
             info.put(I18N.tr("Produced power"), Utils.plotPower("", powerSource.getP()));
         }
         return info;

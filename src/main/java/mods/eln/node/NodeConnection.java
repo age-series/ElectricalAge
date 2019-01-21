@@ -1,6 +1,7 @@
 package mods.eln.node;
 
 import mods.eln.Eln;
+import mods.eln.Vars;
 import mods.eln.misc.Direction;
 import mods.eln.misc.LRDU;
 import mods.eln.sim.ElectricalConnection;
@@ -28,8 +29,8 @@ public class NodeConnection {
     }
 
     public void destroy() {
-        for(ElectricalConnection ec : EC) Eln.simulator.removeElectricalComponent(ec);
-        for(ThermalConnection tc : TC) Eln.simulator.removeThermalConnection(tc);
+        for(ElectricalConnection ec : EC) Vars.simulator.removeElectricalComponent(ec);
+        for(ThermalConnection tc : TC) Vars.simulator.removeThermalConnection(tc);
 
         if (N1 != null) N1.externalDisconnect(dir1, lrdu1);
         if (N2 != null) N2.externalDisconnect(dir2, lrdu2);

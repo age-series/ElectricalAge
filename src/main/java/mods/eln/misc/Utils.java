@@ -3,6 +3,7 @@ package mods.eln.misc;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
 import mods.eln.Eln;
+import mods.eln.Vars;
 import mods.eln.generic.GenericItemBlockUsingDamage;
 import mods.eln.generic.GenericItemUsingDamage;
 import mods.eln.misc.Obj3D.Obj3DPart;
@@ -75,31 +76,31 @@ public class Utils {
     }
 
     public static void println(String str) {
-        if (!Eln.debugEnabled)
+        if (!Vars.debugEnabled)
             return;
         System.out.println(str);
     }
 
     public static void println(Object str) {
-        if (!Eln.debugEnabled)
+        if (!Vars.debugEnabled)
             return;
         System.out.println(str.toString());
     }
 
     public static void print(String str) {
-        if (!Eln.debugEnabled)
+        if (!Vars.debugEnabled)
             return;
         System.out.print(str);
     }
 
     public static void print(Object str) {
-        if (!Eln.debugEnabled)
+        if (!Vars.debugEnabled)
             return;
         System.out.print(str.toString());
     }
 
     public static void print(String format, Object... data) {
-        if (!Eln.debugEnabled) return;
+        if (!Vars.debugEnabled) return;
         print(String.format(format, data));
     }
 
@@ -407,7 +408,7 @@ public class Utils {
         // p.stop();
         // Utils.println(p);
 
-        S3FPacketCustomPayload packet = new S3FPacketCustomPayload(Eln.channelName, bos.toByteArray());
+        S3FPacketCustomPayload packet = new S3FPacketCustomPayload(Vars.channelName, bos.toByteArray());
         player.playerNetServerHandler.sendPacket(packet);
 
         // FMLCommonHandler.instance().getMinecraftServerInstance().getEln.eventChannel.sendTo(new FMLProxyPacket(packet),player);
@@ -827,10 +828,10 @@ public class Utils {
 
     public static boolean playerHasMeter(EntityPlayer entityPlayer) {
         ItemStack cur = entityPlayer.getCurrentEquippedItem();
-        return Eln.multiMeterElement.checkSameItemStack(cur)
-            || Eln.thermometerElement.checkSameItemStack(cur)
-            || Eln.allMeterElement.checkSameItemStack(cur)
-            || Eln.configCopyToolElement.checkSameItemStack(cur);
+        return Vars.multiMeterElement.checkSameItemStack(cur)
+            || Vars.thermometerElement.checkSameItemStack(cur)
+            || Vars.allMeterElement.checkSameItemStack(cur)
+            || Vars.configCopyToolElement.checkSameItemStack(cur);
     }
 
     public static int getRedstoneLevelAround(Coordonate coord, Direction side) {
@@ -1421,13 +1422,13 @@ public class Utils {
     }
 
     public static boolean isWrench(ItemStack stack) {
-        return areSame(stack, Eln.instance.wrenchItemStack) || stack.getDisplayName().toLowerCase().contains("wrench");
+        return areSame(stack, Vars.wrenchItemStack) || stack.getDisplayName().toLowerCase().contains("wrench");
     }
 
     // @SideOnly(Side.SERVER)
     public static boolean isPlayerUsingWrench(EntityPlayer player) {
         if (player == null) return false;
-        if (Eln.playerManager.get(player).getInteractEnable()) return true;
+        if (Vars.playerManager.get(player).getInteractEnable()) return true;
         ItemStack stack = player.inventory.getCurrentItem();
         if (stack == null) return false;
         return isWrench(stack);
@@ -1445,7 +1446,7 @@ public class Utils {
     }
 
     public static String plotSignal(double U, double I) {
-        return plotVolt("U", U) + plotAmpere("I", I) + plotPercent("Value", U / Eln.SVU);
+        return plotVolt("U", U) + plotAmpere("I", I) + plotPercent("Value", U / Vars.SVU);
     }
 
     public static float limit(float value, float min, float max) {

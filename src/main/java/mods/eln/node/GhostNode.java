@@ -1,6 +1,7 @@
 package mods.eln.node;
 
 import mods.eln.Eln;
+import mods.eln.Vars;
 
 public abstract class GhostNode extends NodeBase {
     @Override
@@ -10,6 +11,6 @@ public abstract class GhostNode extends NodeBase {
 
     @Override
     public String getNodeUuid() {
-        return Eln.ghostBlock.getNodeUuid();
+        return Vars.ghostBlock.getNodeUuid();
     }
 }

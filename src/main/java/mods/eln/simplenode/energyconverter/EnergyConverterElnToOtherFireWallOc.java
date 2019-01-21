@@ -4,7 +4,7 @@ import li.cil.oc.api.Network;
 import li.cil.oc.api.network.Connector;
 import li.cil.oc.api.network.Node;
 import li.cil.oc.api.network.Visibility;
-import mods.eln.Other;
+import mods.eln.Vars;
 import mods.eln.misc.Utils;
 import net.minecraft.nbt.NBTTagCompound;
 
@@ -34,10 +34,10 @@ public class EnergyConverterElnToOtherFireWallOc {
                 if (e.getNode() == null) return;
                 Connector c = ((Connector) node);
                 EnergyConverterElnToOtherNode node = (EnergyConverterElnToOtherNode) e.getNode();
-                double eMax = node.getOtherModEnergyBuffer(Other.getElnToOcConversionRatio());
+                double eMax = node.getOtherModEnergyBuffer(Vars.getElnToOcConversionRatio());
                 eMax = Math.min(Math.min(eMax, c.globalBufferSize() - c.globalBuffer()), node.descriptor.oc.outMax);
                 if (c.tryChangeBuffer(eMax)) {
-                    node.drawEnergy(eMax, Other.getElnToOcConversionRatio());
+                    node.drawEnergy(eMax, Vars.getElnToOcConversionRatio());
                 }
             }
         }

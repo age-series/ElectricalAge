@@ -1,6 +1,7 @@
 package mods.eln.server;
 
 import mods.eln.Eln;
+import mods.eln.Vars;
 import mods.eln.misc.Coordonate;
 import mods.eln.server.DelayedTaskManager.ITask;
 import net.minecraft.init.Blocks;
@@ -25,7 +26,7 @@ public class DelayedBlockRemove implements ITask {
     public static void add(Coordonate c) {
         if (blocks.contains(c)) return;
         blocks.add(c);
-        Eln.delayedTask.add(new DelayedBlockRemove(c));
+        Vars.delayedTask.add(new DelayedBlockRemove(c));
     }
 
     @Override

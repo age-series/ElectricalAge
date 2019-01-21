@@ -1,6 +1,7 @@
 package mods.eln.sixnode.thermalsensor;
 
 import mods.eln.Eln;
+import mods.eln.Vars;
 import mods.eln.i18n.I18N;
 import mods.eln.item.IConfigurable;
 import mods.eln.misc.Direction;
@@ -146,7 +147,7 @@ public class ThermalSensorElement extends SixNodeElement implements IConfigurabl
     public Map<String, String> getWaila() {
         Map<String, String> info = new HashMap<String, String>();
         info.put(I18N.tr("Output voltage"), Utils.plotVolt("", outputGate.getU()));
-        if (Eln.wailaEasyMode) {
+        if (Vars.wailaEasyMode) {
             switch (typeOfSensor) {
                 case temperatureType:
                     info.put(I18N.tr("Measured temperature"), Utils.plotCelsius("", thermalLoad.getT()));
@@ -180,7 +181,7 @@ public class ThermalSensorElement extends SixNodeElement implements IConfigurabl
 
     @Override
     public void initialize() {
-        Eln.instance.signalCableDescriptor.applyTo(outputGate);
+        Vars.signalCableDescriptor.applyTo(outputGate);
         computeElectricalLoad();
     }
 
@@ -194,14 +195,14 @@ public class ThermalSensorElement extends SixNodeElement implements IConfigurabl
     public void computeElectricalLoad() {
         ItemStack cable = getInventory().getStackInSlot(ThermalSensorContainer.cableSlotId);
 
-        SixNodeDescriptor descriptor = Eln.sixNodeItem.getDescriptor(cable);
+        SixNodeDescriptor descriptor = Vars.sixNodeItem.getDescriptor(cable);
         if (descriptor == null) return;
         if (descriptor.getClass() == ThermalCableDescriptor.class) {
-            ThermalCableDescriptor cableDescriptor = (ThermalCableDescriptor) Eln.sixNodeItem.getDescriptor(cable);
+            ThermalCableDescriptor cableDescriptor = (ThermalCableDescriptor) Vars.sixNodeItem.getDescriptor(cable);
             cableDescriptor.setThermalLoad(thermalLoad);
             thermalLoad.setAsFast();
         } else if (descriptor.getClass() == ElectricalCableDescriptor.class) {
-            ElectricalCableDescriptor cableDescriptor = (ElectricalCableDescriptor) Eln.sixNodeItem.getDescriptor(cable);
+            ElectricalCableDescriptor cableDescriptor = (ElectricalCableDescriptor) Vars.sixNodeItem.getDescriptor(cable);
             cableDescriptor.applyTo(thermalLoad);
             thermalLoad.Rp = 1000000000.0;
             thermalLoad.setAsSlow();
@@ -211,12 +212,12 @@ public class ThermalSensorElement extends SixNodeElement implements IConfigurabl
     }
 
     boolean isItemThermalCable() {
-        SixNodeDescriptor descriptor = Eln.sixNodeItem.getDescriptor(getInventory().getStackInSlot(ThermalSensorContainer.cableSlotId));
+        SixNodeDescriptor descriptor = Vars.sixNodeItem.getDescriptor(getInventory().getStackInSlot(ThermalSensorContainer.cableSlotId));
         return descriptor != null && descriptor.getClass() == ThermalCableDescriptor.class;
     }
 
     boolean isItemElectricalCable() {
-        SixNodeDescriptor descriptor = Eln.sixNodeItem.getDescriptor(getInventory().getStackInSlot(ThermalSensorContainer.cableSlotId));
+        SixNodeDescriptor descriptor = Vars.sixNodeItem.getDescriptor(getInventory().getStackInSlot(ThermalSensorContainer.cableSlotId));
         return descriptor != null && descriptor.getClass() == ElectricalCableDescriptor.class;
     }
 
@@ -225,13 +226,13 @@ public class ThermalSensorElement extends SixNodeElement implements IConfigurabl
         if (onBlockActivatedRotate(entityPlayer)) return true;
         ItemStack currentItemStack = entityPlayer.getCurrentEquippedItem();
 
-        if (Eln.multiMeterElement.checkSameItemStack(currentItemStack)) {
+        if (Vars.multiMeterElement.checkSameItemStack(currentItemStack)) {
             return false;
         }
-        if (Eln.thermometerElement.checkSameItemStack(currentItemStack)) {
+        if (Vars.thermometerElement.checkSameItemStack(currentItemStack)) {
             return false;
         }
-        if (Eln.allMeterElement.checkSameItemStack(currentItemStack)) {
+        if (Vars.allMeterElement.checkSameItemStack(currentItemStack)) {
             return false;
         }
         return inventory.take(currentItemStack, this, false, true);

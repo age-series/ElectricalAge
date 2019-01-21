@@ -1,6 +1,7 @@
 package mods.eln.mechanical
 
 import mods.eln.Eln
+import mods.eln.Vars
 import mods.eln.cable.CableRenderDescriptor
 import mods.eln.misc.*
 import mods.eln.node.NodeBase
@@ -94,7 +95,7 @@ class MotorDescriptor(
 class MotorRender(entity: TransparentNodeEntity, desc_: TransparentNodeDescriptor) : ShaftRender(entity, desc_) {
     val entity = entity
 
-    override val cableRender = Eln.instance.stdCableRender3200V
+    override val cableRender = Vars.stdCableRender3200V
     val desc = desc_ as MotorDescriptor
 
     val ledColors: Array<Color> = arrayOf(
@@ -155,7 +156,7 @@ class MotorRender(entity: TransparentNodeEntity, desc_: TransparentNodeDescripto
     }
 
     override fun getCableRender(side: Direction, lrdu: LRDU): CableRenderDescriptor? {
-        if(lrdu == LRDU.Down && side == front) return Eln.instance.stdCableRender3200V
+        if(lrdu == LRDU.Down && side == front) return Vars.stdCableRender3200V
         return null
     }
 
@@ -260,12 +261,12 @@ class MotorElement(node: TransparentNode, desc_: TransparentNodeDescriptor) :
 
     override fun connectJob() {
         super.connectJob()
-        Eln.simulator.mna.addProcess(electricalProcess)
+        Vars.simulator.mna.addProcess(electricalProcess)
     }
 
     override fun disconnectJob() {
         super.disconnectJob()
-        Eln.simulator.mna.removeProcess(electricalProcess)
+        Vars.simulator.mna.removeProcess(electricalProcess)
     }
 
     override fun getElectricalLoad(side: Direction, lrdu: LRDU): ElectricalLoad? {
@@ -302,7 +303,7 @@ class MotorElement(node: TransparentNode, desc_: TransparentNodeDescriptor) :
         var info = mutableMapOf<String, String>()
         info.put("Energy", Utils.plotEnergy("", shaft.energy))
         info.put("Speed", Utils.plotRads("", shaft.rads))
-        if(Eln.wailaEasyMode) {
+        if(Vars.wailaEasyMode) {
             info.put("Voltage", Utils.plotVolt("", powerSource.u))
             info.put("Current", Utils.plotAmpere("", powerSource.i))
             info.put("Temperature", Utils.plotCelsius("", thermal.t))

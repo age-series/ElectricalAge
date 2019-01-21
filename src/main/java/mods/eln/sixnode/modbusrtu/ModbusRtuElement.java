@@ -1,6 +1,7 @@
 package mods.eln.sixnode.modbusrtu;
 
 import mods.eln.Eln;
+import mods.eln.Vars;
 import mods.eln.i18n.I18N;
 import mods.eln.misc.Direction;
 import mods.eln.misc.LRDU;
@@ -141,8 +142,8 @@ public class ModbusRtuElement extends SixNodeElement implements IModbusSlave {
     @Override
     public Map<String, String> getWaila() {
         Map<String, String> info = new HashMap<String, String>();
-        if (Eln.modbusEnable) {
-            info.put(I18N.tr("Modbus TCP"), Eln.modbusServer.getHost() + ":" + Eln.modbusServer.getPort());
+        if (Vars.modbusEnable) {
+            info.put(I18N.tr("Modbus TCP"), Vars.modbusServer.getHost() + ":" + Vars.modbusServer.getPort());
             info.put(I18N.tr("Modbus Unit ID"), String.valueOf(station));
         } else {
             info.put("X_X", I18N.tr("Modbus is disabled, enable it in Eln.cfg"));
@@ -505,13 +506,13 @@ public class ModbusRtuElement extends SixNodeElement implements IModbusSlave {
 
     void addToServer() {
         if (station != -1) {
-            addedOnServer = Eln.modbusServer.add(this);
+            addedOnServer = Vars.modbusServer.add(this);
         }
     }
 
     void removeFromServer() {
         if (addedOnServer)
-            Eln.modbusServer.remove(this);
+            Vars.modbusServer.remove(this);
         addedOnServer = false;
     }
 

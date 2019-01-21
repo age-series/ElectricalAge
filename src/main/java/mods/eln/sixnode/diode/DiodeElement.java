@@ -1,6 +1,7 @@
 package mods.eln.sixnode.diode;
 
 import mods.eln.Eln;
+import mods.eln.Vars;
 import mods.eln.i18n.I18N;
 import mods.eln.misc.Direction;
 import mods.eln.misc.LRDU;
@@ -96,7 +97,7 @@ public class DiodeElement extends SixNodeElement {
     public Map<String, String> getWaila() {
         Map<String, String> info = new HashMap<String, String>();
         info.put(I18N.tr("Current"), Utils.plotAmpere("", anodeLoad.getCurrent()));
-        if (Eln.wailaEasyMode) {
+        if (Vars.wailaEasyMode) {
             info.put(I18N.tr("Forward Voltage"), Utils.plotVolt("", anodeLoad.getU() - catodeLoad.getU()));
             info.put(I18N.tr("Temperature"), Utils.plotCelsius("", thermalLoad.getT()));
         }

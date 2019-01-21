@@ -1,6 +1,7 @@
 package mods.eln.transparentnode.thermaldissipatorpassive;
 
 import mods.eln.Eln;
+import mods.eln.Vars;
 import mods.eln.misc.Obj3D;
 import mods.eln.misc.Obj3D.Obj3DPart;
 import mods.eln.misc.Utils;
@@ -35,7 +36,7 @@ public class ThermalDissipatorPassiveDescriptor extends TransparentNodeDescripto
         this.warmLimit = warmLimit;
         this.nominalP = nominalP;
         this.nominalT = nominalT;
-        Eln.simulator.checkThermalLoad(thermalRs, thermalRp, thermalC);
+        Vars.simulator.checkThermalLoad(thermalRs, thermalRp, thermalC);
         this.obj = obj;
         if (obj != null) main = obj.getPart("main");
 

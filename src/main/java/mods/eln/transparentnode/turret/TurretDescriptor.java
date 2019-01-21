@@ -1,6 +1,7 @@
 package mods.eln.transparentnode.turret;
 
 import mods.eln.Eln;
+import mods.eln.Vars;
 import mods.eln.misc.Obj3D;
 import mods.eln.misc.Obj3D.Obj3DPart;
 import mods.eln.misc.Utils;
@@ -66,7 +67,7 @@ public class TurretDescriptor extends TransparentNodeDescriptor {
     public TurretDescriptor(String name, String modelName) {
         super(name, TurretElement.class, TurretRender.class);
 
-        final Obj3D obj = Eln.obj.getObj(modelName);
+        final Obj3D obj = Vars.obj.getObj(modelName);
         turret = obj.getPart("Turret");
         holder = obj.getPart("Holder");
         joint = obj.getPart("Joint");

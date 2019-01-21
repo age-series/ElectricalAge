@@ -1,6 +1,7 @@
 package mods.eln.transparentnode.electricalmachine;
 
 import mods.eln.Eln;
+import mods.eln.Vars;
 import mods.eln.misc.*;
 import mods.eln.misc.Obj3D.Obj3DPart;
 import mods.eln.sim.ThermalLoadInitializer;
@@ -17,7 +18,7 @@ public class MaceratorDescriptor extends ElectricalMachineDescriptor {
     public MaceratorDescriptor(String name, String modelName, double nominalU, double nominalP, double maximalU,
                                ThermalLoadInitializer thermal, ElectricalCableDescriptor cable, RecipesList recipe) {
         super(name, nominalU, nominalP, maximalU, thermal, cable, recipe);
-        obj = Eln.obj.getObj(modelName);
+        obj = Vars.obj.getObj(modelName);
         if (obj != null) {
             rot1 = obj.getPart("rot1");
             rot2 = obj.getPart("rot2");

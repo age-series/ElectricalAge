@@ -8,7 +8,7 @@ import dan200.computercraft.api.peripheral.IPeripheral;
 import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Context;
 import mods.eln.Eln;
-import mods.eln.Other;
+import mods.eln.Vars;
 import mods.eln.misc.Coordonate;
 import mods.eln.misc.Direction;
 import mods.eln.misc.LRDU;
@@ -32,7 +32,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import java.util.HashMap;
 import java.util.HashSet;
 
-@Optional.Interface(iface = "dan200.computercraft.api.peripheral.IPeripheral", modid = Other.modIdCc)
+@Optional.Interface(iface = "dan200.computercraft.api.peripheral.IPeripheral", modid = Vars.modIdCc)
 public class ComputerProbeNode extends SimpleNode implements IPeripheral {
 
     public NbtElectricalGateInputOutput[] ioGate = new NbtElectricalGateInputOutput[6];
@@ -197,57 +197,57 @@ public class ComputerProbeNode extends SimpleNode implements IPeripheral {
 
     // ********************************** OC *************************
 
-    @Optional.Method(modid = Other.modIdOc)
+    @Optional.Method(modid = Vars.modIdOc)
     public Object[] signalSetDir(Context context, Arguments args) {
         Direction side = Direction.valueOf(args.checkString(0));
         boolean highImpedance = args.checkString(1).equals("in");
         return signalSetDir(side, highImpedance);
     }
 
-    @Optional.Method(modid = Other.modIdOc)
+    @Optional.Method(modid = Vars.modIdOc)
     public Object[] signalGetDir(Context context, Arguments args) {
         Direction side = Direction.valueOf(args.checkString(0));
         return signalGetDir(side);
     }
 
-    @Optional.Method(modid = Other.modIdOc)
+    @Optional.Method(modid = Vars.modIdOc)
     public Object[] signalSetOut(Context context, Arguments args) {
         Direction side = Direction.valueOf(args.checkString(0));
         double value = args.checkDouble(1);
         return signalSetOut(side, value);
     }
 
-    @Optional.Method(modid = Other.modIdOc)
+    @Optional.Method(modid = Vars.modIdOc)
     public Object[] signalGetOut(Context context, Arguments args) {
         Direction side = Direction.valueOf(args.checkString(0));
         return signalGetOut(side);
     }
 
-    @Optional.Method(modid = Other.modIdOc)
+    @Optional.Method(modid = Vars.modIdOc)
     public Object[] signalGetIn(Context context, Arguments args) {
         Direction side = Direction.valueOf(args.checkString(0));
         return signalGetIn(side);
     }
 
-    @Optional.Method(modid = Other.modIdOc)
+    @Optional.Method(modid = Vars.modIdOc)
     public Object[] wirelessSet(Context context, Arguments args) {
         String channel = args.checkString(0);
         double value = args.checkDouble(1);
         return wirelessSet(channel, value);
     }
 
-    @Optional.Method(modid = Other.modIdOc)
+    @Optional.Method(modid = Vars.modIdOc)
     public Object[] wirelessRemove(Context context, Arguments args) {
         String channel = args.checkString(0);
         return wirelessRemove(channel);
     }
 
-    @Optional.Method(modid = Other.modIdOc)
+    @Optional.Method(modid = Vars.modIdOc)
     public Object[] wirelessRemoveAll(Context context, Arguments args) {
         return wirelessRemoveAll();
     }
 
-    @Optional.Method(modid = Other.modIdOc)
+    @Optional.Method(modid = Vars.modIdOc)
     public Object[] wirelessGet(Context context, Arguments args) {
         String channel = args.checkString(0);
         String aggregation = "bigger";
@@ -258,7 +258,7 @@ public class ComputerProbeNode extends SimpleNode implements IPeripheral {
 
     // *************************** CC ********************
     @Override
-    @Optional.Method(modid = Other.modIdCc)
+    @Optional.Method(modid = Vars.modIdCc)
     public String getType() {
         return "ElnProbe";
     }
@@ -266,13 +266,13 @@ public class ComputerProbeNode extends SimpleNode implements IPeripheral {
     String[] functionNames = {"signalSetDir", "signalGetDir", "signalSetOut", "signalGetOut", "signalGetIn", "wirelessSet", "wirelessRemove", "wirelessRemoveAll", "wirelessGet"};
 
     @Override
-    @Optional.Method(modid = Other.modIdCc)
+    @Optional.Method(modid = Vars.modIdCc)
     public String[] getMethodNames() {
         return functionNames;
     }
 
     @Override
-    @Optional.Method(modid = Other.modIdCc)
+    @Optional.Method(modid = Vars.modIdCc)
     public Object[] callMethod(IComputerAccess computer, ILuaContext context, int method, Object[] args) throws LuaException, InterruptedException {
         try {
             if (method < 0 || method >= functionNames.length) return null;
@@ -306,19 +306,19 @@ public class ComputerProbeNode extends SimpleNode implements IPeripheral {
     }
 
     @Override
-    @Optional.Method(modid = Other.modIdCc)
+    @Optional.Method(modid = Vars.modIdCc)
     public void attach(IComputerAccess computer) {
         Utils.println("CC attache");
     }
 
     @Override
-    @Optional.Method(modid = Other.modIdCc)
+    @Optional.Method(modid = Vars.modIdCc)
     public void detach(IComputerAccess computer) {
         Utils.println("CC detach");
     }
 
     @Override
-    @Optional.Method(modid = Other.modIdCc)
+    @Optional.Method(modid = Vars.modIdCc)
     public boolean equals(IPeripheral other) {
         return this == other;
     }
@@ -358,7 +358,7 @@ public class ComputerProbeNode extends SimpleNode implements IPeripheral {
 
         @Override
         public int getRange() {
-            return Eln.wirelessTxRange;
+            return Vars.wirelessTxRange;
         }
 
         @Override

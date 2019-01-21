@@ -1,6 +1,7 @@
 package mods.eln.misc;
 
 import mods.eln.Eln;
+import mods.eln.Vars;
 import mods.eln.sixnode.electricalcable.ElectricalCableDescriptor;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.IItemRenderer;
@@ -23,7 +24,7 @@ public enum VoltageLevelColor {
     }
 
     public void drawIconBackground(IItemRenderer.ItemRenderType type) {
-        if (!Eln.noVoltageBackground && voltageLevel != null &&
+        if (!Vars.noVoltageBackground && voltageLevel != null &&
             type == IItemRenderer.ItemRenderType.INVENTORY || type == IItemRenderer.ItemRenderType.FIRST_PERSON_MAP) {
             UtilsClient.drawIcon(type, new ResourceLocation("eln", "textures/voltages/" + voltageLevel + ".png"));
         }
@@ -34,13 +35,13 @@ public enum VoltageLevelColor {
     public static VoltageLevelColor fromVoltage(double voltage) {
         if (voltage < 0) {
             return None;
-        } else if (voltage <= 2 * Eln.LVU) {
+        } else if (voltage <= 2 * Vars.LVU) {
             return LowVoltage;
-        } else if (voltage <= 2 * Eln.MVU) {
+        } else if (voltage <= 2 * Vars.MVU) {
             return MediumVoltage;
-        } else if (voltage <= 2 * Eln.HVU) {
+        } else if (voltage <= 2 * Vars.HVU) {
             return HighVoltage;
-        } else if (voltage <= 2 * Eln.VVU) {
+        } else if (voltage <= 2 * Vars.VVU) {
             return VeryHighVoltage;
         } else {
             return None;
@@ -50,13 +51,13 @@ public enum VoltageLevelColor {
     public static VoltageLevelColor fromMaxCurrent(double maxCurrent) {
         if (maxCurrent <= 0) {
             return None;
-        } else if (maxCurrent <= Eln.VVP / Eln.VVU) {
+        } else if (maxCurrent <= Vars.VVP / Vars.VVU) {
             return VeryHighVoltage;
-        } else if (maxCurrent <= Eln.HVP / Eln.HVU) {
+        } else if (maxCurrent <= Vars.HVP / Vars.HVU) {
             return HighVoltage;
-        } else if (maxCurrent <= Eln.MVP / Eln.MVU) {
+        } else if (maxCurrent <= Vars.MVP / Vars.MVU) {
             return MediumVoltage;
-        } else if (maxCurrent <= Eln.LVP / Eln.LVU) {
+        } else if (maxCurrent <= Vars.LVP / Vars.LVU) {
             return LowVoltage;
         } else {
             return None;

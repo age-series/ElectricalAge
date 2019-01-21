@@ -27,7 +27,7 @@ import java.io.*;
 public class PacketHandler {
 
     public PacketHandler() {
-        Eln.eventChannel.register(this);
+        Vars.eventChannel.register(this);
     }
 
 
@@ -45,31 +45,31 @@ public class PacketHandler {
     public void packetRx(DataInputStream stream, NetworkManager manager, EntityPlayer player) {
         try {
             switch (stream.readByte()) {
-                case Eln.packetPlayerKey:
+                case Vars.packetPlayerKey:
                     packetPlayerKey(stream, manager, player);
                     break;
-                case Eln.packetNodeSingleSerialized:
+                case Vars.packetNodeSingleSerialized:
                     packetNodeSingleSerialized(stream, manager, player);
                     break;
-                case Eln.packetPublishForNode:
+                case Vars.packetPublishForNode:
                     packetForNode(stream, manager, player);
                     break;
-                case Eln.packetForClientNode:
+                case Vars.packetForClientNode:
                     packetForClientNode(stream, manager, player);
                     break;
-                case Eln.packetOpenLocalGui:
+                case Vars.packetOpenLocalGui:
                     packetOpenLocalGui(stream, manager, player);
                     break;
-                case Eln.packetPlaySound:
+                case Vars.packetPlaySound:
                     packetPlaySound(stream, manager, player);
                     break;
-                case Eln.packetDestroyUuid:
+                case Vars.packetDestroyUuid:
                     packetDestroyUuid(stream, manager, player);
                     break;
-                case Eln.packetClientToServerConnection:
+                case Vars.packetClientToServerConnection:
                     packetNewClient(manager, player);
                     break;
-                case Eln.packetServerToClientInfo:
+                case Vars.packetServerToClientInfo:
                     packetServerInfo(stream, manager, player);
                     break;
             }
@@ -85,8 +85,8 @@ public class PacketHandler {
         DataOutputStream stream = new DataOutputStream(bos);
 
         try {
-            stream.writeByte(Eln.packetServerToClientInfo);
-            for (IConfigSharing c : Eln.instance.configShared) {
+            stream.writeByte(Vars.packetServerToClientInfo);
+            for (IConfigSharing c : Vars.configShared) {
                 c.serializeConfig(stream);
             }
         } catch (IOException e) {
@@ -97,7 +97,7 @@ public class PacketHandler {
     }
 
     private void packetServerInfo(DataInputStream stream, NetworkManager manager, EntityPlayer player) {
-        for (IConfigSharing c : Eln.instance.configShared) {
+        for (IConfigSharing c : Vars.configShared) {
             try {
                 c.deserialize(stream);
             } catch (IOException e) {
@@ -230,7 +230,7 @@ public class PacketHandler {
             boolean state = stream.readBoolean();
 
             if (id == ClientKeyHandler.wrenchId) {
-                PlayerManager.PlayerMetadata metadata = Eln.playerManager.get(playerMP);
+                PlayerManager.PlayerMetadata metadata = Vars.playerManager.get(playerMP);
                 metadata.setInteractEnable(state);
             }
         } catch (IOException e) {

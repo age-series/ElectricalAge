@@ -3,6 +3,7 @@ package mods.eln.node.simple;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import mods.eln.Eln;
+import mods.eln.Vars;
 import mods.eln.misc.Coordonate;
 import mods.eln.misc.DescriptorManager;
 import mods.eln.misc.Direction;
@@ -135,7 +136,7 @@ public abstract class SimpleNodeEntity extends TileEntity implements INodeEntity
             Utils.println("ASSERT NULL NODE public Packet getDescriptionPacket() nodeblock entity");
             return null;
         }
-        return new S3FPacketCustomPayload(Eln.channelName, node.getPublishPacket().toByteArray());
+        return new S3FPacketCustomPayload(Vars.channelName, node.getPublishPacket().toByteArray());
     }
 
 

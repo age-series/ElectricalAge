@@ -1,6 +1,7 @@
 package mods.eln.sim;
 
 import mods.eln.Eln;
+import mods.eln.Vars;
 import mods.eln.entity.ReplicatorEntity;
 import mods.eln.misc.Coordonate;
 import mods.eln.misc.Utils;
@@ -28,7 +29,7 @@ public class MonsterPopFreeProcess implements IProcess {
     @Override
     public void process(double time) {
         //Monster killing must be active before continuing :
-        if (!Eln.instance.killMonstersAroundLamps)
+        if (!Vars.killMonstersAroundLamps)
             return;
 
         timerCounter += time;

@@ -1,6 +1,7 @@
 package mods.eln.transparentnode.turbine;
 
 import mods.eln.Eln;
+import mods.eln.Vars;
 import mods.eln.cable.CableRenderDescriptor;
 import mods.eln.misc.FunctionTable;
 import mods.eln.misc.Obj3D;
@@ -42,7 +43,7 @@ public class TurbineDescriptor extends TransparentNodeDescriptor {
         this.powerOutPerDeltaU = powerOutPerDeltaU;
         this.eRender = eRender;
         this.soundFile = soundFile;
-        Obj3D obj = Eln.obj.getObj(modelName);
+        Obj3D obj = Vars.obj.getObj(modelName);
         if (obj != null) {
             main = obj.getPart("main");
         }

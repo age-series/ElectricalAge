@@ -1,6 +1,7 @@
 package mods.eln.solver;
 
 import mods.eln.Eln;
+import mods.eln.Vars;
 import mods.eln.misc.FunctionTable;
 import mods.eln.misc.INBTTReady;
 import mods.eln.sim.IProcess;
@@ -952,7 +953,7 @@ public class Equation implements IValue, INBTTReady {
 
     public static class BatteryCharge implements IOperator {
         public BatteryCharge() {
-            FunctionTable uFq = Eln.instance.batteryVoltageFunctionTable;
+            FunctionTable uFq = Vars.batteryVoltageFunctionTable;
             double q, dq = 0.01;
             eMax = 0;
             q = 0;
@@ -977,7 +978,7 @@ public class Equation implements IValue, INBTTReady {
 
         @Override
         public double getValue() {
-            FunctionTable uFq = Eln.instance.batteryVoltageFunctionTable;
+            FunctionTable uFq = Vars.batteryVoltageFunctionTable;
             double probeU = probe.getValue();
             if (probeU > 1.5) return 1;
             double q = 0, dq = 0.01;

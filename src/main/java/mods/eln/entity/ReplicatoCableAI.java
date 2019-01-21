@@ -1,6 +1,7 @@
 package mods.eln.entity;
 
 import mods.eln.Eln;
+import mods.eln.Vars;
 import mods.eln.misc.Coordonate;
 import mods.eln.node.NodeBase;
 import mods.eln.node.NodeManager;
@@ -39,7 +40,7 @@ public class ReplicatoCableAI extends EntityAIBase implements ITimeRemoverObserv
     public ReplicatoCableAI(ReplicatorEntity entity) {
         load.setAsPrivate();
         this.entity = entity;
-        Eln.instance.highVoltageCableDescriptor.applyTo(load);
+        Vars.highVoltageCableDescriptor.applyTo(load);
         load.setRs(load.getRs() * 10);
         this.setMutexBits(1);
     }
@@ -113,7 +114,7 @@ public class ReplicatoCableAI extends EntityAIBase implements ITimeRemoverObserv
         if (distance < 2) {
             //Utils.println("replicator on cable !");
             double u = cable.electricalLoad.getU();
-            double nextRp = Math.pow(u / Eln.LVU, -0.3) * u * u / (50);
+            double nextRp = Math.pow(u / Vars.LVU, -0.3) * u * u / (50);
             if (resistorLoad.getR() < 0.8 * nextRp) {
                 entity.attackEntityFrom(DamageSource.magic, 5);
             } else {
@@ -170,26 +171,26 @@ public class ReplicatoCableAI extends EntityAIBase implements ITimeRemoverObserv
 
     @Override
     public void timeRemoverRemove() {
-        Eln.simulator.removeElectricalLoad(load);
-        Eln.simulator.removeElectricalComponent(connection);
-        Eln.simulator.removeElectricalComponent(resistorLoad);
-        Eln.simulator.removeSlowPreProcess(preSimCheck);
+        Vars.simulator.removeElectricalLoad(load);
+        Vars.simulator.removeElectricalComponent(connection);
+        Vars.simulator.removeElectricalComponent(resistorLoad);
+        Vars.simulator.removeSlowPreProcess(preSimCheck);
         connection = null;
     }
 
     @Override
     public void timeRemoverAdd() {
-        Eln.simulator.addElectricalLoad(load);
-        Eln.simulator.addElectricalComponent(connection = new ElectricalConnection(load, cableLoad));
-        Eln.simulator.addElectricalComponent(resistorLoad);
-        Eln.simulator.addSlowPreProcess(preSimCheck = new PreSimCheck());
+        Vars.simulator.addElectricalLoad(load);
+        Vars.simulator.addElectricalComponent(connection = new ElectricalConnection(load, cableLoad));
+        Vars.simulator.addElectricalComponent(resistorLoad);
+        Vars.simulator.addSlowPreProcess(preSimCheck = new PreSimCheck());
     }
 
     class PreSimCheck implements IProcess {
         @Override
         public void process(double time) {
             if (timeRemover.isArmed() == false) return;
-            if (Eln.simulator.isRegistred(cableLoad) == false) {
+            if (Vars.simulator.isRegistred(cableLoad) == false) {
                 timeRemover.shot();
             }
         }

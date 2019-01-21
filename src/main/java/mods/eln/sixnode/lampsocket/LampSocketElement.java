@@ -1,6 +1,7 @@
 package mods.eln.sixnode.lampsocket;
 
 import mods.eln.Eln;
+import mods.eln.Vars;
 import mods.eln.generic.GenericItemBlockUsingDamageDescriptor;
 import mods.eln.generic.GenericItemUsingDamageDescriptor;
 import mods.eln.i18n.I18N;
@@ -43,7 +44,7 @@ public class LampSocketElement extends SixNodeElement implements IConfigurable {
 
     LampSocketDescriptor socketDescriptor = null;
 
-    public MonsterPopFreeProcess monsterPopFreeProcess = new MonsterPopFreeProcess(sixNode.coordonate, Eln.instance.killMonstersAroundLampsRange);
+    public MonsterPopFreeProcess monsterPopFreeProcess = new MonsterPopFreeProcess(sixNode.coordonate, Vars.killMonstersAroundLampsRange);
     public NbtElectricalLoad positiveLoad = new NbtElectricalLoad("positiveLoad");
 
     public LampSocketProcess lampProcess = new LampSocketProcess(this);
@@ -227,7 +228,7 @@ public class LampSocketElement extends SixNodeElement implements IConfigurable {
         } else {
             info.put(I18N.tr("Bulb"), I18N.tr("None"));
         }
-        if (Eln.wailaEasyMode) {
+        if (Vars.wailaEasyMode) {
             if (poweredByLampSupply) {
                 info.put(I18N.tr("Channel"), channel);
             }
@@ -273,7 +274,7 @@ public class LampSocketElement extends SixNodeElement implements IConfigurable {
         ItemStack lamp = acceptingInventory.getInventory().getStackInSlot(LampSocketContainer.lampSlotId);
         ItemStack cable = acceptingInventory.getInventory().getStackInSlot(LampSocketContainer.cableSlotId);
 
-        ElectricalCableDescriptor cableDescriptor = (ElectricalCableDescriptor) Eln.sixNodeItem.getDescriptor(cable);
+        ElectricalCableDescriptor cableDescriptor = (ElectricalCableDescriptor) Vars.sixNodeItem.getDescriptor(cable);
 
         if (cableDescriptor == null) {
             positiveLoad.highImpedance();
@@ -395,7 +396,7 @@ public class LampSocketElement extends SixNodeElement implements IConfigurable {
                 }).move(invoker.inventory, getInventory(), 1, 0);
             }
             if(type != -1) {
-                GenericItemBlockUsingDamageDescriptor cableDesc = Eln.sixNodeItem.getDescriptor(type);
+                GenericItemBlockUsingDamageDescriptor cableDesc = Vars.sixNodeItem.getDescriptor(type);
                 (new ItemMovingHelper() {
                     @Override
                     public boolean acceptsStack(ItemStack stack) {

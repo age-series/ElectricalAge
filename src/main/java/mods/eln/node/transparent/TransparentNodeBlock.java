@@ -1,6 +1,7 @@
 package mods.eln.node.transparent;
 
 import mods.eln.Eln;
+import mods.eln.Vars;
 import mods.eln.node.NodeBase;
 import mods.eln.node.NodeBlock;
 import mods.eln.node.NodeBlockEntity;
@@ -38,7 +39,7 @@ public class TransparentNodeBlock extends NodeBlock {
 
     //@SideOnly(Side.CLIENT)
     public void getSubBlocks(Item par1, CreativeTabs tab, List subItems) {
-        Eln.transparentNodeItem.getSubItems(par1, tab, subItems);
+        Vars.transparentNodeItem.getSubItems(par1, tab, subItems);
     }
 
     @Override

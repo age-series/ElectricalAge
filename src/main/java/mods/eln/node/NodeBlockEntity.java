@@ -4,6 +4,7 @@ package mods.eln.node;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import mods.eln.Eln;
+import mods.eln.Vars;
 import mods.eln.cable.CableRenderDescriptor;
 import mods.eln.misc.*;
 import mods.eln.server.DelayedBlockRemove;
@@ -275,14 +276,14 @@ public abstract class NodeBlockEntity extends TileEntity implements ITileEntityS
             Utils.println("ASSERT NULL NODE public Packet getDescriptionPacket() nodeblock entity");
             return null;
         }
-        return new S3FPacketCustomPayload(Eln.channelName, node.getPublishPacket().toByteArray());
+        return new S3FPacketCustomPayload(Vars.channelName, node.getPublishPacket().toByteArray());
         //return null;
     }
 
 
     public void preparePacketForServer(DataOutputStream stream) {
         try {
-            stream.writeByte(Eln.packetPublishForNode);
+            stream.writeByte(Vars.packetPublishForNode);
 
             stream.writeInt(xCoord);
             stream.writeInt(yCoord);

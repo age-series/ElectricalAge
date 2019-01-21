@@ -1,6 +1,7 @@
 package mods.eln.item.electricalitem;
 
 import mods.eln.Eln;
+import mods.eln.Vars;
 import mods.eln.generic.GenericItemUsingDamageDescriptor;
 import mods.eln.item.electricalinterface.IItemEnergyBattery;
 import mods.eln.misc.Obj3D;
@@ -87,7 +88,7 @@ public class PortableOreScannerItem extends GenericItemUsingDamageDescriptor imp
     public void onUpdate(ItemStack stack, World world, Entity entity, int par4, boolean par5) {
         if (world.isRemote) return;
         if (!(entity instanceof EntityPlayerMP)) return;
-        PlayerMetadata playerData = Eln.playerManager.get((EntityPlayerMP) entity);
+        PlayerMetadata playerData = Vars.playerManager.get((EntityPlayerMP) entity);
         double energy = getEnergy(stack);
         byte state = getState(stack);
         short counter = getCounter(stack);
@@ -323,9 +324,9 @@ public class PortableOreScannerItem extends GenericItemUsingDamageDescriptor imp
         if (drawRay) {
             GL11.glPushMatrix();
 
-            Object oRender = Eln.clientLiveDataManager.getData(item, 1);
+            Object oRender = Vars.clientLiveDataManager.getData(item, 1);
             if (oRender == null)
-                oRender = Eln.clientLiveDataManager.newData(item, new RenderStorage(viewRange, viewYAlpha, resWidth, resHeight), 1);
+                oRender = Vars.clientLiveDataManager.newData(item, new RenderStorage(viewRange, viewYAlpha, resWidth, resHeight), 1);
             RenderStorage render = (RenderStorage) oRender;
 
             render.generate(e.worldObj, e.posX, Utils.getHeadPosY(e), e.posZ, e.rotationYaw * (float) Math.PI / 180.0F, e.rotationPitch * (float) Math.PI / 180.0F);
@@ -463,7 +464,7 @@ public class PortableOreScannerItem extends GenericItemUsingDamageDescriptor imp
                 }
             }
 
-            for (OreScannerConfigElement c : Eln.instance.oreScannerConfig) {
+            for (OreScannerConfigElement c : Vars.oreScannerConfig) {
                 if (c.blockKey >= 0 && c.blockKey < blockKeyFactor.length)
                     blockKeyFactor[c.blockKey] = c.factor;
             }
@@ -597,7 +598,7 @@ public class PortableOreScannerItem extends GenericItemUsingDamageDescriptor imp
 
                         stackGreen += blockKeyFactor[blockKey] * dToStack;
                         Block b = Block.getBlockById(blockKey & 0xFFF);
-                        if (b != Blocks.air && b != Eln.lightBlock) {
+                        if (b != Blocks.air && b != Vars.lightBlock) {
                             if (b.isOpaqueCube())
                                 stackRed += 0.2f * dToStack;
                             else

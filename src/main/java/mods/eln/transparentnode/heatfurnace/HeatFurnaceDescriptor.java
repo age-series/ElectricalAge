@@ -1,6 +1,7 @@
 package mods.eln.transparentnode.heatfurnace;
 
 import mods.eln.Eln;
+import mods.eln.Vars;
 import mods.eln.misc.Obj3D;
 import mods.eln.misc.Obj3D.Obj3DPart;
 import mods.eln.misc.Utils;
@@ -45,7 +46,7 @@ public class HeatFurnaceDescriptor extends TransparentNodeDescriptor {
         this.combustionChamberMax = combustionChamberMax;
         this.combustionChamberPower = combustionChamberPower;
         this.nominalPower = nominalPower;
-        obj = Eln.obj.getObj(modelName);
+        obj = Vars.obj.getObj(modelName);
         if (obj != null) {
             tiroir = obj.getPart("tiroir");
             main = obj.getPart("main");

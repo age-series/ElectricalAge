@@ -1,6 +1,7 @@
 package mods.eln.ghost;
 
 import mods.eln.Eln;
+import mods.eln.Vars;
 import mods.eln.misc.Coordonate;
 import mods.eln.misc.Direction;
 import mods.eln.misc.LRDU;
@@ -32,7 +33,7 @@ public class GhostGroup {
     ArrayList<GhostGroupElement> elementList = new ArrayList<GhostGroupElement>();
 
     public void addElement(int x, int y, int z) {
-        elementList.add(new GhostGroupElement(x, y, z, Eln.ghostBlock, GhostBlock.tCube));
+        elementList.add(new GhostGroupElement(x, y, z, Vars.ghostBlock, GhostBlock.tCube));
     }
 
     public void addElement(int x, int y, int z, Block block, int meta) {
@@ -67,7 +68,7 @@ public class GhostGroup {
 
     public boolean canBePloted(World world, int x, int y, int z) {
         for (GhostGroupElement element : elementList) {
-            if (false == Eln.ghostManager.canCreateGhostAt(world, x + element.x, y + element.y, z + element.z))
+            if (false == Vars.ghostManager.canCreateGhostAt(world, x + element.x, y + element.y, z + element.z))
                 return false;
         }
         return true;
@@ -78,22 +79,22 @@ public class GhostGroup {
 
         for (GhostGroupElement element : elementList) {
             Coordonate offsetCoordonate = coordonate.newWithOffset(element.x, element.y, element.z);
-            Eln.ghostManager.createGhost(offsetCoordonate, observerCoordonate, UUID, element.block, element.meta);
+            Vars.ghostManager.createGhost(offsetCoordonate, observerCoordonate, UUID, element.block, element.meta);
         }
         return true;
     }
 
     public void erase(Coordonate observerCoordonate) {
-        Eln.ghostManager.removeGhostAndBlockWithObserver(observerCoordonate);
+        Vars.ghostManager.removeGhostAndBlockWithObserver(observerCoordonate);
     }
 
     public void erase(Coordonate observerCoordonate, int uuid) {
-        Eln.ghostManager.removeGhostAndBlockWithObserver(observerCoordonate, uuid);
+        Vars.ghostManager.removeGhostAndBlockWithObserver(observerCoordonate, uuid);
     }
 
     public void eraseGeo(Coordonate coordonate) {
         for (GhostGroupElement element : elementList) {
-            Eln.ghostManager.removeGhostAndBlock(coordonate.newWithOffset(element.x, element.y, element.z));
+            Vars.ghostManager.removeGhostAndBlock(coordonate.newWithOffset(element.x, element.y, element.z));
         }
     }
 

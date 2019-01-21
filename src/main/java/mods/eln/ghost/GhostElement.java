@@ -1,6 +1,7 @@
 package mods.eln.ghost;
 
 import mods.eln.Eln;
+import mods.eln.Vars;
 import mods.eln.misc.Coordonate;
 import mods.eln.misc.Direction;
 import mods.eln.misc.INBTTReady;
@@ -31,13 +32,13 @@ public class GhostElement implements INBTTReady {
     }
 
     public void breakBlock() {
-        Eln.ghostManager.removeGhost(elementCoordonate);
-        GhostObserver observer = Eln.ghostManager.getObserver(observatorCoordonate);
+        Vars.ghostManager.removeGhost(elementCoordonate);
+        GhostObserver observer = Vars.ghostManager.getObserver(observatorCoordonate);
         if (observer != null) observer.ghostDestroyed(UUID);
     }
 
     public boolean onBlockActivated(EntityPlayer entityPlayer, Direction side, float vx, float vy, float vz) {
-        GhostObserver observer = Eln.ghostManager.getObserver(observatorCoordonate);
+        GhostObserver observer = Vars.ghostManager.getObserver(observatorCoordonate);
         if (observer != null) return observer.ghostBlockActivated(UUID, entityPlayer, side, vx, vy, vz);
         return false;
     }

@@ -1,6 +1,7 @@
 package mods.eln.transparentnode.waterturbine;
 
 import mods.eln.Eln;
+import mods.eln.Vars;
 import mods.eln.i18n.I18N;
 import mods.eln.misc.Coordonate;
 import mods.eln.misc.Direction;
@@ -148,7 +149,7 @@ public class WaterTurbineElement extends TransparentNodeElement {
         Map<String, String> wailaList = new HashMap<String, String>();
         wailaList.put(I18N.tr("Generating"), slowProcess.getWaterFactor() > 0 ? I18N.tr("Yes") : I18N.tr("No"));
         wailaList.put(I18N.tr("Produced power"), Utils.plotPower("", powerSource.getEffectiveP()));
-        if (Eln.wailaEasyMode) {
+        if (Vars.wailaEasyMode) {
             wailaList.put("Voltage", Utils.plotVolt("", powerSource.getU()));
         }
         return wailaList;

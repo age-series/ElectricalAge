@@ -1,6 +1,7 @@
 package mods.eln.sixnode.electricaldatalogger;
 
 import mods.eln.Eln;
+import mods.eln.Vars;
 import mods.eln.misc.*;
 import mods.eln.misc.Obj3D.Obj3DPart;
 import mods.eln.node.six.SixNodeDescriptor;
@@ -39,7 +40,7 @@ public class ElectricalDataLoggerDescriptor extends SixNodeDescriptor {
         this.cg = cg;
         this.onFloor = onFloor;
         this.textColor = textColor;
-        obj = Eln.obj.getObj(objName);
+        obj = Vars.obj.getObj(objName);
         if (obj != null) {
             main = obj.getPart("main");
             reflection = obj.getPart("reflection");

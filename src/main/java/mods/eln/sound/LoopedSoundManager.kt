@@ -1,6 +1,7 @@
 package mods.eln.sound
 
 import mods.eln.Eln
+import mods.eln.Vars
 import net.minecraft.client.Minecraft
 
 class LoopedSoundManager(val updateInterval: Float = 0.5f) {
@@ -31,14 +32,14 @@ class LoopedSoundManager(val updateInterval: Float = 0.5f) {
                 val player = Minecraft.getMinecraft().thePlayer
                 val distDeltaSquared = sqDistDelta(cx, cy, cz, player.posX, player.posY, player.posZ)
                 // when comparing, compare distDeltaSquared to the square of the distance delta that you are trying to compare against.
-                if (it.volume > 0 && it.pitch > 0 && !soundHandler.isSoundPlaying(it) && distDeltaSquared < Eln.maxSoundDistance * Eln.maxSoundDistance) {
+                if (it.volume > 0 && it.pitch > 0 && !soundHandler.isSoundPlaying(it) && distDeltaSquared < Vars.maxSoundDistance * Vars.maxSoundDistance) {
                     try {
                         soundHandler.playSound(it)
                     } catch (e: IllegalArgumentException) {
                         System.out.println(e)
                     }
                 }
-                if (distDeltaSquared >= Eln.maxSoundDistance * Eln.maxSoundDistance || it.volume == 0f || it.pitch == 0f) {
+                if (distDeltaSquared >= Vars.maxSoundDistance * Vars.maxSoundDistance || it.volume == 0f || it.pitch == 0f) {
                     try {
                         soundHandler.stopSound(it)
                     }catch (e: Exception) {

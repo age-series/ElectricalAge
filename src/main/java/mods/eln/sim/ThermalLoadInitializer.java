@@ -1,6 +1,7 @@
 package mods.eln.sim;
 
 import mods.eln.Eln;
+import mods.eln.Vars;
 import mods.eln.sim.process.destruct.ThermalLoadWatchDog;
 
 public class ThermalLoadInitializer {
@@ -34,7 +35,7 @@ public class ThermalLoadInitializer {
         Rp = warmLimit / P;
         Rs = conductionTao / C / 2;
 
-        Eln.simulator.checkThermalLoad(Rs, Rp, C);
+        Vars.simulator.checkThermalLoad(Rs, Rp, C);
     }
 
     public void applyTo(ThermalLoad load) {

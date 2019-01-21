@@ -1,6 +1,7 @@
 package mods.eln.node;
 
 import mods.eln.Eln;
+import mods.eln.Vars;
 import mods.eln.misc.UtilsClient;
 import net.minecraft.tileentity.TileEntity;
 
@@ -20,7 +21,7 @@ public class NodeEntityClientSender {
 
     public void preparePacketForServer(DataOutputStream stream) {
         try {
-            stream.writeByte(Eln.packetPublishForNode);
+            stream.writeByte(Vars.packetPublishForNode);
 
             stream.writeInt(e.xCoord);
             stream.writeInt(e.yCoord);

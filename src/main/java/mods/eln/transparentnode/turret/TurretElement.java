@@ -1,6 +1,7 @@
 package mods.eln.transparentnode.turret;
 
 import mods.eln.Eln;
+import mods.eln.Vars;
 import mods.eln.generic.GenericItemUsingDamageDescriptor;
 import mods.eln.i18n.I18N;
 import mods.eln.item.EntitySensorFilterDescriptor;
@@ -61,7 +62,7 @@ public class TurretElement extends TransparentNodeElement {
         simulation = new TurretMechanicsSimulation((TurretDescriptor) descriptor);
         slowProcessList.add(simulation);
 
-        Eln.instance.highVoltageCableDescriptor.applyTo(load);
+        Vars.highVoltageCableDescriptor.applyTo(load);
         electricalLoadList.add(load);
         electricalComponentList.add(powerResistor);
 
@@ -265,7 +266,7 @@ public class TurretElement extends TransparentNodeElement {
             }
         }
 
-        if (Eln.wailaEasyMode) {
+        if (Vars.wailaEasyMode) {
             info.put(I18N.tr("Charge level"),
                 Utils.plotPercent("", energyBuffer / descriptor.getProperties().impulseEnergy));
         }

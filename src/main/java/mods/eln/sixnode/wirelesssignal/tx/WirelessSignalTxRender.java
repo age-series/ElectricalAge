@@ -1,6 +1,7 @@
 package mods.eln.sixnode.wirelesssignal.tx;
 
 import mods.eln.Eln;
+import mods.eln.Vars;
 import mods.eln.cable.CableRenderDescriptor;
 import mods.eln.misc.Direction;
 import mods.eln.misc.LRDU;
@@ -34,7 +35,7 @@ public class WirelessSignalTxRender extends SixNodeElementRender {
 
     @Override
     public CableRenderDescriptor getCableRender(LRDU lrdu) {
-        return Eln.instance.signalCableDescriptor.render;
+        return Vars.signalCableDescriptor.render;
     }
 
     @Override

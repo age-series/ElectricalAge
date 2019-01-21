@@ -1,6 +1,7 @@
 package mods.eln.misc;
 
 import mods.eln.Eln;
+import mods.eln.Vars;
 import mods.eln.transparentnode.electricalfurnace.ElectricalFurnaceProcess;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
@@ -78,7 +79,7 @@ public class RecipesList {
                     ItemStack li = (ItemStack) pairs.getKey();
                     if (Utils.areSame(output, stack)) {
                         list.add(recipe = new Recipe(li.copy(), output, ElectricalFurnaceProcess.energyNeededPerSmelt));
-                        recipe.setMachineList(Eln.instance.furnaceList);
+                        recipe.setMachineList(Vars.furnaceList);
                     }
                 } catch (Exception e) {
                     // TODO: handle exception
@@ -107,7 +108,7 @@ public class RecipesList {
                 ItemStack input1 = input.copy();
                 input1.stackSize = 1;
                 list.add(smeltRecipe = new Recipe(input1, smeltResult, ElectricalFurnaceProcess.energyNeededPerSmelt));
-                smeltRecipe.machineList.addAll(Eln.instance.furnaceList);
+                smeltRecipe.machineList.addAll(Vars.furnaceList);
             } catch (Exception e) {
                 // TODO: handle exception
             }

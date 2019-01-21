@@ -1,6 +1,7 @@
 package mods.eln.transparentnode.transformer;
 
 import mods.eln.Eln;
+import mods.eln.Vars;
 import mods.eln.i18n.I18N;
 import mods.eln.item.FerromagneticCoreDescriptor;
 import mods.eln.misc.Direction;
@@ -73,13 +74,13 @@ public class TransformerElement extends TransparentNodeElement {
     public void disconnectJob() {
         super.disconnectJob();
         if (isIsolator)
-            Eln.simulator.mna.removeProcess(interSystemProcess);
+            Vars.simulator.mna.removeProcess(interSystemProcess);
     }
 
     @Override
     public void connectJob() {
         if (isIsolator)
-            Eln.simulator.mna.addProcess(interSystemProcess);
+            Vars.simulator.mna.addProcess(interSystemProcess);
         super.connectJob();
     }
 
@@ -138,10 +139,10 @@ public class TransformerElement extends TransparentNodeElement {
         ElectricalCableDescriptor primaryCableDescriptor = null, secondaryCableDescriptor = null;
 
         if (primaryCable != null) {
-            primaryCableDescriptor = (ElectricalCableDescriptor) Eln.sixNodeItem.getDescriptor(primaryCable);
+            primaryCableDescriptor = (ElectricalCableDescriptor) Vars.sixNodeItem.getDescriptor(primaryCable);
         }
         if (secondaryCable != null) {
-            secondaryCableDescriptor = (ElectricalCableDescriptor) Eln.sixNodeItem.getDescriptor(secondaryCable);
+            secondaryCableDescriptor = (ElectricalCableDescriptor) Vars.sixNodeItem.getDescriptor(secondaryCable);
         }
 
         if (primaryCableDescriptor != null)
@@ -311,7 +312,7 @@ public class TransformerElement extends TransparentNodeElement {
         Map<String, String> info = new HashMap<String, String>();
         info.put(I18N.tr("Ratio"), Utils.plotValue(transformer.getRatio()));
         info.put(I18N.tr("Isolated"), isIsolator ? I18N.tr("Yes") : I18N.tr("No"));
-        if (Eln.wailaEasyMode) {
+        if (Vars.wailaEasyMode) {
             FerromagneticCoreDescriptor core =
                 (FerromagneticCoreDescriptor) FerromagneticCoreDescriptor.getDescriptor(
                     inventory.getStackInSlot(TransformerContainer.ferromagneticSlotId));

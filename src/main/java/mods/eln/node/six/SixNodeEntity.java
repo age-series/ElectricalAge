@@ -1,6 +1,7 @@
 package mods.eln.node.six;
 
 import mods.eln.Eln;
+import mods.eln.Vars;
 import mods.eln.cable.CableRenderDescriptor;
 import mods.eln.misc.Direction;
 import mods.eln.misc.LRDU;
@@ -67,7 +68,7 @@ public class SixNodeEntity extends NodeBlockEntity {
                 } else {
                     if (id != elementRenderIdList[idx]) {
                         elementRenderIdList[idx] = id;
-                        SixNodeDescriptor descriptor = Eln.sixNodeItem.getDescriptor(id);
+                        SixNodeDescriptor descriptor = Vars.sixNodeItem.getDescriptor(id);
                         elementRenderList[idx] = (SixNodeElementRender) descriptor.RenderClass.getConstructor(SixNodeEntity.class, Direction.class, SixNodeDescriptor.class).newInstance(this, Direction.fromInt(idx), descriptor);
                     }
                     elementRenderList[idx].publishUnserialize(stream);
@@ -215,7 +216,7 @@ public class SixNodeEntity extends NodeBlockEntity {
 
     @Override
     public String getNodeUuid() {
-        return Eln.sixNodeBlock.getNodeUuid();
+        return Vars.sixNodeBlock.getNodeUuid();
     }
 
     @Override

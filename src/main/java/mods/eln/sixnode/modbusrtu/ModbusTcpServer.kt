@@ -1,6 +1,7 @@
 package mods.eln.sixnode.modbusrtu
 
 import mods.eln.Eln
+import mods.eln.Vars
 import mods.eln.misc.Utils
 import java.io.OutputStream
 import java.net.*
@@ -18,7 +19,7 @@ class ModbusTcpServer(port: Int = 1502) {
     private val slaves = TreeMap<Int, IModbusSlave>()
 
     init {
-        if (Eln.modbusEnable) {
+        if (Vars.modbusEnable) {
             try {
                 server.bind(InetSocketAddress(port))
             } catch (e: BindException) {

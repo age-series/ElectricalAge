@@ -1,6 +1,7 @@
 package mods.eln.sixnode.electricalvumeter;
 
 import mods.eln.Eln;
+import mods.eln.Vars;
 import mods.eln.i18n.I18N;
 import mods.eln.misc.Direction;
 import mods.eln.misc.LRDU;
@@ -88,7 +89,7 @@ public class ElectricalVuMeterElement extends SixNodeElement {
         super.networkSerialize(stream);
         try {
             stream.writeByte(front.toInt() << 4);
-            stream.writeFloat((float) (inputGate.getU() / Eln.instance.SVU));
+            stream.writeFloat((float) (inputGate.getU() / Vars.SVU));
         } catch (IOException e) {
             e.printStackTrace();
         }

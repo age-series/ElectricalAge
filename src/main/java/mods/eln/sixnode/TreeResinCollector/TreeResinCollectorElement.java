@@ -1,6 +1,7 @@
 package mods.eln.sixnode.TreeResinCollector;
 
 import mods.eln.Eln;
+import mods.eln.Vars;
 import mods.eln.misc.Coordonate;
 import mods.eln.misc.Direction;
 import mods.eln.misc.LRDU;
@@ -139,7 +140,7 @@ public class TreeResinCollectorElement extends SixNodeElement {
         }
 
         for (int idx = 0; idx < productI; idx++) {
-            sixNode.dropItem(Eln.treeResin.newItemStack(1));
+            sixNode.dropItem(Vars.treeResin.newItemStack(1));
         }
 
         Utils.addChatMessage(entityPlayer, "Tree Resin in pot : " + String.format("%1.2f", productPerSeconde * timeFromLastActivated));

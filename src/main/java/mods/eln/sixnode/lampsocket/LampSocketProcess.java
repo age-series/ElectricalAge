@@ -1,6 +1,7 @@
 package mods.eln.sixnode.lampsocket;
 
 import mods.eln.Eln;
+import mods.eln.Vars;
 import mods.eln.generic.GenericItemUsingDamage;
 import mods.eln.generic.GenericItemUsingDamageDescriptor;
 import mods.eln.item.LampDescriptor;
@@ -227,7 +228,7 @@ public class LampSocketProcess implements IProcess, INBTTReady /*,LightBlockObse
 
             updateLifeTimeout += deltaT;
             if (updateLifeTimeout > updateLifeTimeoutMax &&
-                !(lampDescriptor.type == Type.LED && Eln.ledLampInfiniteLife)) {
+                !(lampDescriptor.type == Type.LED && Vars.ledLampInfiniteLife)) {
                 // Utils.println("aging");
                 updateLifeTimeout -= updateLifeTimeoutMax;
                 double lifeLost = overFactor * updateLifeTimeoutMax / lampDescriptor.nominalLife;
@@ -314,7 +315,7 @@ public class LampSocketProcess implements IProcess, INBTTReady /*,LightBlockObse
             int count = 0;
             while (!newCoord.equals(myCoord())) {
                 Block block = newCoord.getBlock();
-                if (block == Blocks.air || block == Eln.lightBlock) {
+                if (block == Blocks.air || block == Vars.lightBlock) {
                     count++;
                     if (count == 2)
                         break;

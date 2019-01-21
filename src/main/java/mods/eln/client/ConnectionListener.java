@@ -7,6 +7,7 @@ import cpw.mods.fml.common.gameevent.TickEvent.Type;
 import cpw.mods.fml.common.network.FMLNetworkEvent.ClientConnectedToServerEvent;
 import cpw.mods.fml.common.network.FMLNetworkEvent.ClientDisconnectionFromServerEvent;
 import mods.eln.Eln;
+import mods.eln.Vars;
 import mods.eln.misc.Utils;
 import mods.eln.misc.UtilsClient;
 
@@ -50,7 +51,7 @@ public class ConnectionListener {
             DataOutputStream stream = new DataOutputStream(bos);
 
             try {
-                stream.writeByte(Eln.packetClientToServerConnection);
+                stream.writeByte(Vars.packetClientToServerConnection);
             } catch (IOException e) {
 
                 e.printStackTrace();

@@ -6,6 +6,7 @@ import com.google.common.cache.LoadingCache;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import mods.eln.Eln;
+import mods.eln.Vars;
 import mods.eln.misc.Coordonate;
 import mods.eln.packets.GhostNodeWailaRequestPacket;
 import mods.eln.packets.SixNodeWailaRequestPacket;
@@ -25,7 +26,7 @@ public class WailaCache {
         .build(
             new CacheLoader<Coordonate, Map<String, String>>() {
                 public Map<String, String> load(Coordonate key) throws Exception {
-                    Eln.elnNetwork.sendToServer(new TransparentNodeRequestPacket(key));
+                    Vars.elnNetwork.sendToServer(new TransparentNodeRequestPacket(key));
                     return null;
                 }
 
@@ -44,7 +45,7 @@ public class WailaCache {
         .build(
             new CacheLoader<SixNodeCoordonate, SixNodeWailaData>() {
                 public SixNodeWailaData load(SixNodeCoordonate key) throws Exception {
-                    Eln.elnNetwork.sendToServer(new SixNodeWailaRequestPacket(key.getCoord(), key.getSide()));
+                    Vars.elnNetwork.sendToServer(new SixNodeWailaRequestPacket(key.getCoord(), key.getSide()));
                     return null;
                 }
 
@@ -63,7 +64,7 @@ public class WailaCache {
         .build(
             new CacheLoader<Coordonate, GhostNodeWailaData>() {
                 public GhostNodeWailaData load(Coordonate key) throws Exception {
-                    Eln.elnNetwork.sendToServer(new GhostNodeWailaRequestPacket(key));
+                    Vars.elnNetwork.sendToServer(new GhostNodeWailaRequestPacket(key));
                     return null;
                 }
 

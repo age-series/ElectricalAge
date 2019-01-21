@@ -1,6 +1,7 @@
 package mods.eln.sixnode.electricalentitysensor;
 
 import mods.eln.Eln;
+import mods.eln.Vars;
 import mods.eln.cable.CableRenderDescriptor;
 import mods.eln.item.EntitySensorFilterDescriptor;
 import mods.eln.misc.Direction;
@@ -53,7 +54,7 @@ public class ElectricalEntitySensorRender extends SixNodeElementRender {
 
     @Override
     public CableRenderDescriptor getCableRender(LRDU lrdu) {
-        return Eln.instance.signalCableDescriptor.render;
+        return Vars.signalCableDescriptor.render;
     }
 
     @Override

@@ -1,6 +1,7 @@
 package mods.eln.mechanical
 
 import mods.eln.Eln
+import mods.eln.Vars
 import mods.eln.cable.CableRender
 import mods.eln.cable.CableRenderDescriptor
 import mods.eln.generic.GenericItemUsingDamage
@@ -417,7 +418,7 @@ class ClutchElement(node: TransparentNode, desc_: TransparentNodeDescriptor) : S
         info.put("Energies", entries.map {
             Utils.plotEnergy("", it.value.energy)
         }.joinToString(", "))
-        if(Eln.wailaEasyMode) {
+        if(Vars.wailaEasyMode) {
             info.put("Masses", entries.map {
                 Utils.plotValue(it.value.mass * 1000, "g")
             }.joinToString(", "))
@@ -427,7 +428,7 @@ class ClutchElement(node: TransparentNode, desc_: TransparentNodeDescriptor) : S
                 info.put("Wear", String.format("%.6f", desc.getWear(stack)))
         }
         info.put("Clutching", Utils.plotVolt(inputGate.bornedU))
-        if(Eln.wailaEasyMode) {
+        if(Vars.wailaEasyMode) {
             info.put("Slipping", if (slipping) {
                 "YES"
             } else {
@@ -445,7 +446,7 @@ class ClutchElement(node: TransparentNode, desc_: TransparentNodeDescriptor) : S
 class ClutchRender(entity: TransparentNodeEntity, desc_: TransparentNodeDescriptor) : ShaftRender(entity, desc_) {
     val desc = desc_ as ClutchDescriptor
     val connectedSides = DirectionSet()
-    override val cableRender = Eln.instance.stdCableRenderSignal
+    override val cableRender = Vars.stdCableRenderSignal
     val inv = TransparentNodeElementInventory(2, 1, this)
     override fun getInventory() = inv
 

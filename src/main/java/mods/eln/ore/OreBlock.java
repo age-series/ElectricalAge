@@ -3,6 +3,7 @@ package mods.eln.ore;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import mods.eln.Eln;
+import mods.eln.Vars;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
@@ -35,13 +36,13 @@ public class OreBlock extends Block {
 
     @Override
     public void getSubBlocks(Item i, CreativeTabs tab, List l) { //Puts all sub blocks into the creative inventory
-        Eln.oreItem.getSubItems(i, tab, l);
+        Vars.oreItem.getSubItems(i, tab, l);
     }
 
     @Override
     @SideOnly(Side.CLIENT)
     public IIcon getIcon(int par1, int par2) {
-        OreDescriptor desc = Eln.oreItem.getDescriptor(par2);
+        OreDescriptor desc = Vars.oreItem.getDescriptor(par2);
         if (desc == null) return null;
         return desc.getBlockIconId(par1, par2);
     }
@@ -58,7 +59,7 @@ public class OreBlock extends Block {
 		}
 		
 		return list; //Returns the finished list :)*/
-        OreDescriptor desc = Eln.oreItem.getDescriptor(meta);
+        OreDescriptor desc = Vars.oreItem.getDescriptor(meta);
         if (desc == null) return new ArrayList<ItemStack>();
         return desc.getBlockDropped(fortune);
     }

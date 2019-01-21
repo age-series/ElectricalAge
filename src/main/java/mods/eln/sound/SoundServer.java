@@ -2,6 +2,7 @@ package mods.eln.sound;
 
 import cpw.mods.fml.common.FMLCommonHandler;
 import mods.eln.Eln;
+import mods.eln.Vars;
 import mods.eln.misc.Utils;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
@@ -28,7 +29,7 @@ public class SoundServer {
         DataOutputStream stream = new DataOutputStream(bos);
 
         try {
-            stream.writeByte(Eln.packetPlaySound);
+            stream.writeByte(Vars.packetPlaySound);
 
             stream.writeByte(p.world.provider.dimensionId);
 

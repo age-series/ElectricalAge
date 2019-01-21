@@ -1,6 +1,7 @@
 package mods.eln.sixnode.electricalredstoneoutput;
 
 import mods.eln.Eln;
+import mods.eln.Vars;
 import mods.eln.i18n.I18N;
 import mods.eln.misc.Direction;
 import mods.eln.misc.LRDU;
@@ -38,7 +39,7 @@ public class ElectricalRedstoneOutputElement extends SixNodeElement {
     }
 
     public boolean refreshRedstone() {
-        int newValue = (int) (inputGate.getU() * 15.0 / Eln.SVU + 0.5);
+        int newValue = (int) (inputGate.getU() * 15.0 / Vars.SVU + 0.5);
         if (newValue != redstoneValue) {
             redstoneValue = newValue;
             notifyNeighbor();

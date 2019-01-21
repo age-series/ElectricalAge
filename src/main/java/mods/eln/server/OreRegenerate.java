@@ -5,6 +5,7 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.Phase;
 import cpw.mods.fml.common.gameevent.TickEvent.ServerTickEvent;
 import mods.eln.Eln;
+import mods.eln.Vars;
 import mods.eln.misc.Utils;
 import mods.eln.ore.OreDescriptor;
 import net.minecraft.world.WorldServer;
@@ -59,7 +60,7 @@ public class OreRegenerate {
         for (int idx = 0; idx < 1; idx++) {
             if (!jobs.isEmpty()) {
                 ChunkRef j = jobs.pollLast();
-                if (!Eln.instance.saveConfig.reGenOre && !Eln.instance.forceOreRegen) return;
+                if (!Vars.saveConfig.reGenOre && !Vars.forceOreRegen) return;
 
                 WorldServer server = FMLCommonHandler.instance().getMinecraftServerInstance().worldServerForDimension(j.worldId);
                 Chunk chunk = server.getChunkFromChunkCoords(j.x, j.z);
@@ -67,7 +68,7 @@ public class OreRegenerate {
                 for (int y = 0; y < 60; y += 2) {
                     for (int z = y & 1; z < 16; z += 2) {
                         for (int x = y & 1; x < 16; x += 2) {
-                            if (chunk.getBlock(x, y, z) == Eln.oreBlock) {
+                            if (chunk.getBlock(x, y, z) == Vars.oreBlock) {
                                 //	Utils.println("NO Regenrate ore ! left " + jobs.size());
                                 return;
                             }
@@ -76,7 +77,7 @@ public class OreRegenerate {
                 }
 
                 Utils.println("Regenerated! " + jobs.size());
-                for (OreDescriptor d : Eln.oreItem.descriptors) {
+                for (OreDescriptor d : Vars.oreItem.descriptors) {
                     d.generate(server.rand, chunk.xPosition, chunk.zPosition, server, null, null);
                 }
                 //Utils.println("Regenrate ore! left " + jobs.size());
@@ -87,7 +88,7 @@ public class OreRegenerate {
     @SubscribeEvent
     public void chunkLoad(ChunkEvent.Load e) {
         //	if (e.world.isRemote == false) Utils.println("Chunk loaded!");
-        if (e.world.isRemote || (Eln.instance.saveConfig != null && !Eln.instance.saveConfig.reGenOre)) return;
+        if (e.world.isRemote || (Vars.saveConfig != null && !Vars.saveConfig.reGenOre)) return;
         Chunk c = e.getChunk();
         ChunkRef ref = new ChunkRef(c.xPosition, c.zPosition, c.worldObj.provider.dimensionId);
         if (alreadyLoadedChunks.contains(ref)) {

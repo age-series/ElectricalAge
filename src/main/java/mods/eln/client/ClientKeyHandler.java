@@ -6,6 +6,7 @@ import cpw.mods.fml.common.gameevent.InputEvent.KeyInputEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.ClientTickEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.Phase;
 import mods.eln.Eln;
+import mods.eln.Vars;
 import mods.eln.misc.UtilsClient;
 import mods.eln.wiki.Root;
 import net.minecraft.client.Minecraft;
@@ -76,7 +77,7 @@ public class ClientKeyHandler {
         DataOutputStream stream = new DataOutputStream(bos);
 
         try {
-            stream.writeByte(Eln.packetPlayerKey);
+            stream.writeByte(Vars.packetPlayerKey);
             stream.writeByte(id);
             stream.writeBoolean(state);
         } catch (IOException e) {

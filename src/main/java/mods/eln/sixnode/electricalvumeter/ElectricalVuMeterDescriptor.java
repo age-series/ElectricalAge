@@ -1,6 +1,7 @@
 package mods.eln.sixnode.electricalvumeter;
 
 import mods.eln.Eln;
+import mods.eln.Vars;
 import mods.eln.misc.*;
 import mods.eln.misc.Obj3D.Obj3DPart;
 import mods.eln.node.six.SixNodeDescriptor;
@@ -33,7 +34,7 @@ public class ElectricalVuMeterDescriptor extends SixNodeDescriptor {
     public ElectricalVuMeterDescriptor(String name, String objName, boolean onOffOnly) {
         super(name, ElectricalVuMeterElement.class, ElectricalVuMeterRender.class);
         this.onOffOnly = onOffOnly;
-        obj = Eln.instance.obj.getObj(objName);
+        obj = Vars.obj.getObj(objName);
 
         if (obj != null) {
             if (obj.getString("type").toLowerCase().equals("rot")) {

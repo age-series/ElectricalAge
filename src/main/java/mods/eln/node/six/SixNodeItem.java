@@ -1,6 +1,7 @@
 package mods.eln.node.six;
 
 import mods.eln.Eln;
+import mods.eln.Vars;
 import mods.eln.generic.GenericItemBlockUsingDamage;
 import mods.eln.ghost.GhostGroup;
 import mods.eln.misc.Coordonate;
@@ -90,7 +91,7 @@ public class SixNodeItem extends GenericItemBlockUsingDamage<SixNodeDescriptor> 
         if (descriptor.canBePlacedOnSide(par6EntityPlayer, new Coordonate(x, y, z, par1World), Direction.fromIntMinecraftSide(par5).getInverse()) == false) {
             return false;
         }
-        if (par1World.getBlock(vect[0], vect[1], vect[2]) == Eln.sixNodeBlock)
+        if (par1World.getBlock(vect[0], vect[1], vect[2]) == Vars.sixNodeBlock)
             return true;
         if (super.func_150936_a(par1World, x, y, z, par5, par6EntityPlayer, par7ItemStack))
             return true;

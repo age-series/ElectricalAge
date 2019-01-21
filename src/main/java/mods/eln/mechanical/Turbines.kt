@@ -1,6 +1,7 @@
 package mods.eln.mechanical
 
 import mods.eln.Eln
+import mods.eln.Vars
 import mods.eln.fluid.FuelRegistry
 import mods.eln.fluid.PreciseElementFluidHandler
 import mods.eln.misc.*
@@ -190,7 +191,7 @@ class TurbineElement(node: TransparentNode, desc_: TransparentNodeDescriptor) :
         var info = mutableMapOf<String, String>()
         info.put("Speed", Utils.plotRads("", shaft.rads))
         info.put("Energy", Utils.plotEnergy("", shaft.energy))
-        if (Eln.wailaEasyMode) {
+        if (Vars.wailaEasyMode) {
             info.put("Efficency", Utils.plotPercent("", efficiency.toDouble()))
             info.put("Fuel usage", Utils.plotBuckets("", fluidRate / 1000.0) + "/s")
         }
@@ -204,7 +205,7 @@ class TurbineElement(node: TransparentNode, desc_: TransparentNodeDescriptor) :
 }
 
 class TurbineRender(entity: TransparentNodeEntity, desc: TransparentNodeDescriptor) : ShaftRender(entity, desc) {
-    override val cableRender = Eln.instance.stdCableRenderSignal
+    override val cableRender = Vars.stdCableRenderSignal
 
     override fun networkUnserialize(stream: DataInputStream) {
         super.networkUnserialize(stream)

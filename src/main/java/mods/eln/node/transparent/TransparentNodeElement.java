@@ -1,6 +1,7 @@
 package mods.eln.node.transparent;
 
 import mods.eln.Eln;
+import mods.eln.Vars;
 import mods.eln.ghost.GhostObserver;
 import mods.eln.misc.*;
 import mods.eln.node.INodeElement;
@@ -63,31 +64,31 @@ public abstract class TransparentNodeElement implements GhostObserver, IPlayer, 
         // If we are about to destruct ourselves, do not add any elements to the simulation anymore.
         if (node != null && node.isDestructing()) return;
         
-        Eln.simulator.addAllSlowProcess(slowProcessList);
-        for(IProcess p : slowPreProcessList) Eln.simulator.addSlowPreProcess(p);
-        for(IProcess p : slowPostProcessList) Eln.simulator.addSlowPostProcess(p);
+        Vars.simulator.addAllSlowProcess(slowProcessList);
+        for(IProcess p : slowPreProcessList) Vars.simulator.addSlowPreProcess(p);
+        for(IProcess p : slowPostProcessList) Vars.simulator.addSlowPostProcess(p);
 
-        Eln.simulator.addAllElectricalComponent(electricalComponentList);
-        for (State load : electricalLoadList) Eln.simulator.addElectricalLoad(load);
-        Eln.simulator.addAllElectricalProcess(electricalProcessList);
+        Vars.simulator.addAllElectricalComponent(electricalComponentList);
+        for (State load : electricalLoadList) Vars.simulator.addElectricalLoad(load);
+        Vars.simulator.addAllElectricalProcess(electricalProcessList);
 
-        Eln.simulator.addAllThermalConnection(thermalConnectionList);
-        for (NbtThermalLoad load : thermalLoadList) Eln.simulator.addThermalLoad(load);
-        Eln.simulator.addAllThermalFastProcess(thermalFastProcessList);
+        Vars.simulator.addAllThermalConnection(thermalConnectionList);
+        for (NbtThermalLoad load : thermalLoadList) Vars.simulator.addThermalLoad(load);
+        Vars.simulator.addAllThermalFastProcess(thermalFastProcessList);
     }
 
     public void disconnectJob() {
-        Eln.simulator.removeAllSlowProcess(slowProcessList);
-        for(IProcess p : slowPreProcessList) Eln.simulator.removeSlowPreProcess(p);
-        for(IProcess p : slowPostProcessList) Eln.simulator.removeSlowPostProcess(p);
+        Vars.simulator.removeAllSlowProcess(slowProcessList);
+        for(IProcess p : slowPreProcessList) Vars.simulator.removeSlowPreProcess(p);
+        for(IProcess p : slowPostProcessList) Vars.simulator.removeSlowPostProcess(p);
 
-        Eln.simulator.removeAllElectricalComponent(electricalComponentList);
-        for (State load : electricalLoadList) Eln.simulator.removeElectricalLoad(load);
-        Eln.simulator.removeAllElectricalProcess(electricalProcessList);
+        Vars.simulator.removeAllElectricalComponent(electricalComponentList);
+        for (State load : electricalLoadList) Vars.simulator.removeElectricalLoad(load);
+        Vars.simulator.removeAllElectricalProcess(electricalProcessList);
 
-        Eln.simulator.removeAllThermalConnection(thermalConnectionList);
-        for (NbtThermalLoad load : thermalLoadList) Eln.simulator.removeThermalLoad(load);
-        Eln.simulator.removeAllThermalFastProcess(thermalFastProcessList);
+        Vars.simulator.removeAllThermalConnection(thermalConnectionList);
+        for (NbtThermalLoad load : thermalLoadList) Vars.simulator.removeThermalLoad(load);
+        Vars.simulator.removeAllThermalFastProcess(thermalFastProcessList);
     }
 
     public TransparentNode node;
@@ -183,7 +184,7 @@ public abstract class TransparentNodeElement implements GhostObserver, IPlayer, 
     public TransparentNodeElement(TransparentNode transparentNode, TransparentNodeDescriptor descriptor) {
         this.node = transparentNode;
         this.transparentNodeDescriptor = descriptor;
-        if (descriptor.hasGhostGroup()) Eln.ghostManager.addObserver(this);
+        if (descriptor.hasGhostGroup()) Vars.ghostManager.addObserver(this);
     }
 
     public IFluidHandler getFluidHandler() {
@@ -239,7 +240,7 @@ public abstract class TransparentNodeElement implements GhostObserver, IPlayer, 
         DataOutputStream stream = new DataOutputStream(bos);
 
         try {
-            stream.writeByte(Eln.packetDestroyUuid);
+            stream.writeByte(Vars.packetDestroyUuid);
             stream.writeInt(uuid);
 
             sendPacketToAllClient(bos);
@@ -254,8 +255,8 @@ public abstract class TransparentNodeElement implements GhostObserver, IPlayer, 
         if (useUuid()) stop(uuid);
 
         if (transparentNodeDescriptor.hasGhostGroup()) {
-            Eln.ghostManager.removeObserver(node.coordonate);
-            Eln.ghostManager.removeGhostAndBlockWithObserver(node.coordonate);
+            Vars.ghostManager.removeObserver(node.coordonate);
+            Vars.ghostManager.removeGhostAndBlockWithObserver(node.coordonate);
             //transparentNodeDescriptor.getGhostGroup(front).erase(node.coordonate);
         }
         node.dropInventory(getInventory());
@@ -264,7 +265,7 @@ public abstract class TransparentNodeElement implements GhostObserver, IPlayer, 
     }
 
     public ItemStack getDropItemStack() {
-        ItemStack itemStack = new ItemStack(Eln.transparentNodeBlock, 1, node.elementId);
+        ItemStack itemStack = new ItemStack(Vars.transparentNodeBlock, 1, node.elementId);
         itemStack.setTagCompound(getItemStackNBT());
         return itemStack;
     }

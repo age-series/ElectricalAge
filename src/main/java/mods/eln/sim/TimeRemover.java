@@ -1,6 +1,7 @@
 package mods.eln.sim;
 
 import mods.eln.Eln;
+import mods.eln.Vars;
 
 public class TimeRemover implements IProcess {
 
@@ -14,7 +15,7 @@ public class TimeRemover implements IProcess {
     public void setTimeout(double timeout) {
         if (this.timeout <= 0) {
             observer.timeRemoverAdd();
-            Eln.simulator.addSlowProcess(this);
+            Vars.simulator.addSlowProcess(this);
         }
         this.timeout = timeout;
     }
@@ -36,6 +37,6 @@ public class TimeRemover implements IProcess {
     public void shot() {
         timeout = 0;
         observer.timeRemoverRemove();
-        Eln.simulator.removeSlowProcess(this);
+        Vars.simulator.removeSlowProcess(this);
     }
 }

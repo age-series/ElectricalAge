@@ -5,6 +5,7 @@ import cpw.mods.fml.common.network.FMLNetworkEvent.ClientCustomPacketEvent;
 import cpw.mods.fml.common.network.internal.FMLProxyPacket;
 import io.netty.channel.ChannelHandler.Sharable;
 import mods.eln.Eln;
+import mods.eln.Vars;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.NetworkManager;
@@ -17,7 +18,7 @@ public class ClientPacketHandler {
 
     public ClientPacketHandler() {
         //FMLCommonHandler.instance().bus().register(this);
-        Eln.eventChannel.register(this);
+        Vars.eventChannel.register(this);
     }
 
     @SubscribeEvent
@@ -28,6 +29,6 @@ public class ClientPacketHandler {
         NetworkManager manager = event.manager;
         EntityPlayer player = Minecraft.getMinecraft().thePlayer; // EntityClientPlayerMP
 
-        Eln.packetHandler.packetRx(stream, manager, player);
+        Vars.packetHandler.packetRx(stream, manager, player);
     }
 }

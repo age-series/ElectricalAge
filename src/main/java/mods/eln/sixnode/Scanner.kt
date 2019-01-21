@@ -1,6 +1,7 @@
 package mods.eln.sixnode
 
 import mods.eln.Eln
+import mods.eln.Vars
 import mods.eln.cable.CableRenderDescriptor
 import mods.eln.i18n.I18N.tr
 import mods.eln.misc.*
@@ -200,5 +201,5 @@ class ScannerRender(entity: SixNodeEntity, side: Direction, descriptor: SixNodeD
         mode = ScanMode.fromByte(stream.readByte())!!
     }
 
-    override fun getCableRender(lrdu: LRDU?): CableRenderDescriptor = Eln.instance.signalCableDescriptor.render
+    override fun getCableRender(lrdu: LRDU?): CableRenderDescriptor = Vars.signalCableDescriptor.render
 }

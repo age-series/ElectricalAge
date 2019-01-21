@@ -1,6 +1,7 @@
 package mods.eln.mechanical
 
 import mods.eln.Eln
+import mods.eln.Vars
 import mods.eln.cable.CableRenderDescriptor
 import mods.eln.cable.CableRenderType
 import mods.eln.gui.GuiHelper
@@ -141,7 +142,7 @@ class TachometerRender(entity: TransparentNodeEntity, desc: TransparentNodeDescr
     internal var maxRads = TachometerElement.DefaultMaxRads
 
     override fun draw() {
-        renderPreProcess = drawCable(Direction.YN, Eln.instance.stdCableRenderSignal, connections, renderPreProcess)
+        renderPreProcess = drawCable(Direction.YN, Vars.stdCableRenderSignal, connections, renderPreProcess)
         super.draw()
     }
 

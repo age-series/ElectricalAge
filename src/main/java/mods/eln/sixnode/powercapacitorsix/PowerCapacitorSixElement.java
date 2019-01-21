@@ -1,6 +1,7 @@
 package mods.eln.sixnode.powercapacitorsix;
 
 import mods.eln.Eln;
+import mods.eln.Vars;
 import mods.eln.generic.GenericItemUsingDamageDescriptor;
 import mods.eln.i18n.I18N;
 import mods.eln.item.DielectricItem;
@@ -111,7 +112,7 @@ public class PowerCapacitorSixElement extends SixNodeElement implements IConfigu
         Map<String, String> info = new HashMap<String, String>();
         info.put(I18N.tr("Capacity"), Utils.plotValue(capacitor.getC(), "F"));
         info.put(I18N.tr("Charge"), Utils.plotEnergy("", capacitor.getE()));
-        if (Eln.wailaEasyMode) {
+        if (Vars.wailaEasyMode) {
             info.put(I18N.tr("Voltage drop"), Utils.plotVolt("", Math.abs(capacitor.getU())));
             info.put(I18N.tr("Current"), Utils.plotAmpere("", Math.abs(capacitor.getCurrent())));
 

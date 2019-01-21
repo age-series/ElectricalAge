@@ -1,6 +1,7 @@
 package mods.eln.transparentnode.electricalfurnace;
 
 import mods.eln.Eln;
+import mods.eln.Vars;
 import mods.eln.misc.IFunction;
 import mods.eln.misc.VoltageLevelColor;
 import mods.eln.node.transparent.TransparentNodeDescriptor;
@@ -62,7 +63,7 @@ public class ElectricalFurnaceDescriptor extends TransparentNodeDescriptor {
         if (type == ItemRenderType.INVENTORY) {
             super.renderItem(type, item, data);
         } else {
-            Eln.obj.draw("ElectricFurnace", "furnace");
+            Vars.obj.draw("ElectricFurnace", "furnace");
         }
     }
 

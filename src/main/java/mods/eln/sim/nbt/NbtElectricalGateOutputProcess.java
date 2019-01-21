@@ -1,6 +1,7 @@
 package mods.eln.sim.nbt;
 
 import mods.eln.Eln;
+import mods.eln.Vars;
 import mods.eln.misc.INBTTReady;
 import mods.eln.misc.Utils;
 import mods.eln.sim.ElectricalLoad;
@@ -23,7 +24,7 @@ public class NbtElectricalGateOutputProcess extends Capacitor implements INBTTRe
 
     public void setHighImpedance(boolean enable) {
         this.highImpedance = enable;
-        double baseC = Eln.instance.gateOutputCurrent / Eln.instance.electricalFrequency / Eln.SVU;
+        double baseC = Vars.gateOutputCurrent / Vars.electricalFrequency / Vars.SVU;
         if (enable) {
             setC(baseC / 1000);
         } else {
@@ -60,24 +61,24 @@ public class NbtElectricalGateOutputProcess extends Capacitor implements INBTTRe
 
     public void state(boolean value) {
         if (value)
-            U = Eln.SVU;
+            U = Vars.SVU;
         else
             U = 0.0;
     }
 
     public double getOutputNormalized() {
-        return U / Eln.SVU;
+        return U / Vars.SVU;
     }
 
     public boolean getOutputOnOff() {
-        return U >= Eln.SVU / 2;
+        return U >= Vars.SVU / 2;
     }
 
     public void setOutputNormalizedSafe(double value) {
         if (value > 1.0) value = 1.0;
         if (value < 0.0) value = 0.0;
         if (Double.isNaN(value)) value = 0.0;
-        U = value * Eln.SVU;
+        U = value * Vars.SVU;
     }
 
     public void setU(double U) {
@@ -85,7 +86,7 @@ public class NbtElectricalGateOutputProcess extends Capacitor implements INBTTRe
     }
 
     public void setUSafe(double value) {
-        value = Utils.limit(value, 0, Eln.SVU);
+        value = Utils.limit(value, 0, Vars.SVU);
         if (Double.isNaN(value)) value = 0.0;
         U = value;
     }

@@ -1,6 +1,7 @@
 package mods.eln.sixnode.electricalsource;
 
 import mods.eln.Eln;
+import mods.eln.Vars;
 import mods.eln.cable.CableRenderDescriptor;
 import mods.eln.misc.Direction;
 import mods.eln.misc.LRDU;
@@ -57,13 +58,13 @@ public class ElectricalSourceRender extends SixNodeElementRender {
 
     @Override
     public CableRenderDescriptor getCableRender(LRDU lrdu) {
-        if (descriptor.isSignalSource()) return Eln.instance.signalCableDescriptor.render;
-        if (voltage < Eln.instance.lowVoltageCableDescriptor.electricalMaximalVoltage)
-            return Eln.instance.lowVoltageCableDescriptor.render;
-        if (voltage < Eln.instance.meduimVoltageCableDescriptor.electricalMaximalVoltage)
-            return Eln.instance.meduimVoltageCableDescriptor.render;
-        if (voltage > Eln.instance.highVoltageCableDescriptor.electricalMaximalVoltage)
-            return Eln.instance.highVoltageCableDescriptor.render;
-        return Eln.instance.veryHighVoltageCableDescriptor.render;
+        if (descriptor.isSignalSource()) return Vars.signalCableDescriptor.render;
+        if (voltage < Vars.lowVoltageCableDescriptor.electricalMaximalVoltage)
+            return Vars.lowVoltageCableDescriptor.render;
+        if (voltage < Vars.meduimVoltageCableDescriptor.electricalMaximalVoltage)
+            return Vars.meduimVoltageCableDescriptor.render;
+        if (voltage > Vars.highVoltageCableDescriptor.electricalMaximalVoltage)
+            return Vars.highVoltageCableDescriptor.render;
+        return Vars.veryHighVoltageCableDescriptor.render;
     }
 }

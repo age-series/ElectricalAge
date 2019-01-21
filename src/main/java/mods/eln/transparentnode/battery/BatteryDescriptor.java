@@ -1,6 +1,7 @@
 package mods.eln.transparentnode.battery;
 
 import mods.eln.Eln;
+import mods.eln.Vars;
 import mods.eln.misc.FunctionTable;
 import mods.eln.misc.Obj3D;
 import mods.eln.misc.Obj3D.Obj3DPart;
@@ -119,7 +120,7 @@ public class BatteryDescriptor extends TransparentNodeDescriptor {
 
         IMax = electricalStdI * 3;
 
-        obj = Eln.obj.getObj(modelName);
+        obj = Vars.obj.getObj(modelName);
 
         if (obj != null) {
             if (obj.getString("type").equals("A"))

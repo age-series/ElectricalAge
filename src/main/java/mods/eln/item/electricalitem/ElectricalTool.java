@@ -1,6 +1,7 @@
 package mods.eln.item.electricalitem;
 
 import mods.eln.Eln;
+import mods.eln.Vars;
 import mods.eln.generic.GenericItemUsingDamageDescriptor;
 import mods.eln.item.electricalinterface.IItemEnergyBattery;
 import mods.eln.misc.Utils;
@@ -46,7 +47,7 @@ public class ElectricalTool extends GenericItemUsingDamageDescriptor implements 
     public boolean onEntitySwing(EntityLivingBase entityLiving, ItemStack stack) {
         if (entityLiving.worldObj.isRemote) return false;
 
-        Eln.itemEnergyInventoryProcess.addExclusion(this, 2);
+        Vars.itemEnergyInventoryProcess.addExclusion(this, 2);
         return super.onEntitySwing(entityLiving, stack);
     }
 

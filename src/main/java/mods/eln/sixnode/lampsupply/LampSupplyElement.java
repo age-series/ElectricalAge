@@ -1,6 +1,7 @@
 package mods.eln.sixnode.lampsupply;
 
 import mods.eln.Eln;
+import mods.eln.Vars;
 import mods.eln.i18n.I18N;
 import mods.eln.item.IConfigurable;
 import mods.eln.misc.Direction;
@@ -228,7 +229,7 @@ public class LampSupplyElement extends SixNodeElement implements IConfigurable {
             }
         }
         info.put(I18N.tr("Total power"), Utils.plotPower("", powerLoad.getU() * powerLoad.getI()));
-        if (Eln.wailaEasyMode) {
+        if (Vars.wailaEasyMode) {
             info.put(I18N.tr("Voltage"), Utils.plotVolt("", powerLoad.getU()));
         }
         return info;

@@ -1,6 +1,7 @@
 package mods.eln.server;
 
 import mods.eln.Eln;
+import mods.eln.Vars;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.WorldSavedData;
 
@@ -39,7 +40,7 @@ public class SaveConfig extends WorldSavedData {
         nbt.setBoolean("batteryAging", batteryAging);
         nbt.setBoolean("infinitPortableBattery", infinitePortableBattery);
         nbt.setBoolean("reGenOre", reGenOre);
-        nbt.setDouble("cableRsFactor_lastUsed", Eln.cableRsFactor);
+        nbt.setDouble("cableRsFactor_lastUsed", Vars.cableRsFactor);
 
         Eln.wind.writeToNBT(nbt, "wind");
     }

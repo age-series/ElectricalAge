@@ -1,6 +1,7 @@
 package mods.eln.sixnode.electricalswitch;
 
 import mods.eln.Eln;
+import mods.eln.Vars;
 import mods.eln.i18n.I18N;
 import mods.eln.misc.Direction;
 import mods.eln.misc.LRDU;
@@ -112,7 +113,7 @@ public class ElectricalSwitchElement extends SixNodeElement {
         Map<String, String> info = new HashMap<String, String>();
         info.put(I18N.tr("Position"), switchState ? I18N.tr("Closed") : I18N.tr("Open"));
         info.put(I18N.tr("Current"), Utils.plotAmpere("", aLoad.getCurrent()));
-        if (Eln.wailaEasyMode) {
+        if (Vars.wailaEasyMode) {
             info.put(I18N.tr("Voltages"), Utils.plotVolt("", aLoad.getU()) + Utils.plotVolt(" ", bLoad.getU()));
         }
         return info;
@@ -162,13 +163,13 @@ public class ElectricalSwitchElement extends SixNodeElement {
         if (onBlockActivatedRotate(entityPlayer)) return true;
         ItemStack currentItemStack = entityPlayer.getCurrentEquippedItem();
 
-        if (Eln.multiMeterElement.checkSameItemStack(entityPlayer.getCurrentEquippedItem())) {
+        if (Vars.multiMeterElement.checkSameItemStack(entityPlayer.getCurrentEquippedItem())) {
             return false;
         }
-        if (Eln.thermometerElement.checkSameItemStack(entityPlayer.getCurrentEquippedItem())) {
+        if (Vars.thermometerElement.checkSameItemStack(entityPlayer.getCurrentEquippedItem())) {
             return false;
         }
-        if (Eln.allMeterElement.checkSameItemStack(entityPlayer.getCurrentEquippedItem())) {
+        if (Vars.allMeterElement.checkSameItemStack(entityPlayer.getCurrentEquippedItem())) {
             return false;
         } else {
             setSwitchState(!switchState);

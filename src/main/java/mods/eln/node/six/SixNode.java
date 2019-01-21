@@ -1,6 +1,7 @@
 package mods.eln.node.six;
 
 import mods.eln.Eln;
+import mods.eln.Vars;
 import mods.eln.item.IConfigurable;
 import mods.eln.misc.*;
 import mods.eln.node.ISixNodeCache;
@@ -79,7 +80,7 @@ public class SixNode extends Node {
 
     public boolean createSubBlock(ItemStack itemStack, Direction direction, EntityPlayer player) {
 
-        SixNodeDescriptor descriptor = Eln.sixNodeItem.getDescriptor(itemStack);
+        SixNodeDescriptor descriptor = Vars.sixNodeItem.getDescriptor(itemStack);
         if (sideElementList[direction.getInt()] != null)
             return false;
         try {
@@ -194,7 +195,7 @@ public class SixNode extends Node {
                 sideElementIdList[idx] = 0;
             } else {
                 try {
-                    SixNodeDescriptor descriptor = Eln.sixNodeItem.getDescriptor(sideElementId);
+                    SixNodeDescriptor descriptor = Vars.sixNodeItem.getDescriptor(sideElementId);
                     sideElementIdList[idx] = sideElementId;
                     sideElementList[idx] = (SixNodeElement) descriptor.ElementClass.getConstructor(SixNode.class, Direction.class, SixNodeDescriptor.class).newInstance(this, Direction.fromInt(idx), descriptor);
                     sideElementList[idx].readFromNBT(nbt.getCompoundTag("ED" + idx));
@@ -443,8 +444,8 @@ public class SixNode extends Node {
             }
         }
 
-        Eln.simulator.removeAllElectricalConnection(internalElectricalConnectionList);
-        Eln.simulator.removeAllThermalConnection(internalThermalConnectionList);
+        Vars.simulator.removeAllElectricalConnection(internalElectricalConnectionList);
+        Vars.simulator.removeAllThermalConnection(internalThermalConnectionList);
     }
 
     public void tryConnectTwoInternalElement(Direction side, SixNodeElement element, LRDU lrdu, Direction otherSide, SixNodeElement otherElement, LRDU otherLRDU) {
@@ -466,7 +467,7 @@ public class SixNode extends Node {
                     ElectricalConnection eCon;
                     eCon = new ElectricalConnection(eLoad, otherELoad);
 
-                    Eln.simulator.addElectricalComponent(eCon);
+                    Vars.simulator.addElectricalComponent(eCon);
 
                     internalElectricalConnectionList.add(eCon);
                     nodeConnection.addConnection(eCon);
@@ -480,7 +481,7 @@ public class SixNode extends Node {
                     ThermalConnection tCon;
                     tCon = new ThermalConnection(tLoad, otherTLoad);
 
-                    Eln.simulator.addThermalConnection(tCon);
+                    Vars.simulator.addThermalConnection(tCon);
 
                     internalThermalConnectionList.add(tCon);
                     nodeConnection.addConnection(tCon);
@@ -529,7 +530,7 @@ public class SixNode extends Node {
 
             boolean accepted = false;
 
-            if (Eln.playerManager.get(entityPlayer).getInteractEnable() && stack != null) {
+            if (Vars.playerManager.get(entityPlayer).getInteractEnable() && stack != null) {
                 for (ISixNodeCache a : sixNodeCacheList) {
                     if (a.accept(stack)) {
                         accepted = true;
@@ -639,7 +640,7 @@ public class SixNode extends Node {
     @Override
     public String getNodeUuid() {
 
-        return Eln.sixNodeBlock.getNodeUuid();
+        return Vars.sixNodeBlock.getNodeUuid();
     }
 
     @Override

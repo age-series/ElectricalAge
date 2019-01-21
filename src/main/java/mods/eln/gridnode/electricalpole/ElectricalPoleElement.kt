@@ -1,6 +1,7 @@
 package mods.eln.gridnode.electricalpole
 
 import mods.eln.Eln
+import mods.eln.Vars
 import mods.eln.gridnode.GridDescriptor
 import mods.eln.gridnode.GridElement
 import mods.eln.misc.Direction
@@ -108,13 +109,13 @@ class ElectricalPoleElement(node: TransparentNode, descriptor: TransparentNodeDe
     override fun disconnectJob() {
         super.disconnectJob()
         trafo?.apply {
-            Eln.simulator.mna.removeProcess(interSystemProcess)
+            Vars.simulator.mna.removeProcess(interSystemProcess)
         }
     }
 
     override fun connectJob() {
         trafo?.apply {
-            Eln.simulator.mna.addProcess(interSystemProcess)
+            Vars.simulator.mna.addProcess(interSystemProcess)
         }
         super.connectJob()
     }
@@ -150,7 +151,7 @@ class ElectricalPoleElement(node: TransparentNode, descriptor: TransparentNodeDe
 
     override fun initialize() {
         trafo?.apply {
-            voltageSecondaryWatchdog.setUNominal(Eln.instance.veryHighVoltageCableDescriptor.electricalNominalVoltage)
+            voltageSecondaryWatchdog.setUNominal(Vars.veryHighVoltageCableDescriptor.electricalNominalVoltage)
             secondaryMaxCurrent = desc.cableDescriptor.electricalMaximalCurrent.toFloat()
             interSystemProcess.setRatio(0.25)
         }

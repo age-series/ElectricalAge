@@ -1,6 +1,7 @@
 package mods.eln.gridnode.transformer
 
 import mods.eln.Eln
+import mods.eln.Vars
 import mods.eln.gridnode.GridElement
 import mods.eln.misc.Direction
 import mods.eln.misc.LRDU
@@ -82,11 +83,11 @@ class GridTransformerElement(node: TransparentNode, descriptor: TransparentNodeD
 
     override fun disconnectJob() {
         super.disconnectJob()
-        Eln.simulator.mna.removeProcess(interSystemProcess)
+        Vars.simulator.mna.removeProcess(interSystemProcess)
     }
 
     override fun connectJob() {
-        Eln.simulator.mna.addProcess(interSystemProcess)
+        Vars.simulator.mna.addProcess(interSystemProcess)
         super.connectJob()
     }
 

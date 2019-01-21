@@ -1,6 +1,7 @@
 package mods.eln.gridnode
 
 import mods.eln.Eln
+import mods.eln.Vars
 import mods.eln.misc.Coordonate
 import mods.eln.misc.Direction
 import mods.eln.misc.INBTTReady
@@ -78,7 +79,7 @@ class GridLink : INBTTReady {
         }
         assert(ab == null)
         ab = ElectricalConnection(aLoad, bLoad)
-        Eln.simulator.addElectricalComponent(ab)
+        Vars.simulator.addElectricalComponent(ab)
         ab!!.r = rs
 
         // Add link to link lists.
@@ -112,7 +113,7 @@ class GridLink : INBTTReady {
         val a = getElementFromCoordinate(this.a)
         val b = getElementFromCoordinate(this.b)
 
-        Eln.simulator.removeElectricalComponent(ab)
+        Vars.simulator.removeElectricalComponent(ab)
         ab = null
 
         a?.let { updateElement(it) }

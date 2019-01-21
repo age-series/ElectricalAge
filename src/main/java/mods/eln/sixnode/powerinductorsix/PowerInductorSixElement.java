@@ -1,6 +1,7 @@
 package mods.eln.sixnode.powerinductorsix;
 
 import mods.eln.Eln;
+import mods.eln.Vars;
 import mods.eln.generic.GenericItemUsingDamageDescriptor;
 import mods.eln.i18n.I18N;
 import mods.eln.item.IConfigurable;
@@ -79,7 +80,7 @@ public class PowerInductorSixElement extends SixNodeElement implements IConfigur
         Map<String, String> info = new HashMap<String, String>();
         info.put(I18N.tr("Inductance"), Utils.plotValue(inductor.getL(), "H"));
         info.put(I18N.tr("Charge"), Utils.plotEnergy("", inductor.getE()));
-        if (Eln.wailaEasyMode) {
+        if (Vars.wailaEasyMode) {
             info.put(I18N.tr("Voltage drop"), Utils.plotVolt("", Math.abs(inductor.getU())));
             info.put(I18N.tr("Current"), Utils.plotAmpere("", Math.abs(inductor.getCurrent())));
         }
@@ -148,12 +149,12 @@ public class PowerInductorSixElement extends SixNodeElement implements IConfigur
             (new ItemMovingHelper() {
                 @Override
                 public boolean acceptsStack(ItemStack stack) {
-                    return Eln.instance.copperCableDescriptor.checkSameItemStack(stack);
+                    return Vars.copperCableDescriptor.checkSameItemStack(stack);
                 }
 
                 @Override
                 public ItemStack newStackOfSize(int items) {
-                    return Eln.instance.copperCableDescriptor.newItemStack(items);
+                    return Vars.copperCableDescriptor.newItemStack(items);
                 }
             }).move(invoker.inventory, inventory, PowerInductorSixContainer.cableId, desired);
         }

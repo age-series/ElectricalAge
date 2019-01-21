@@ -1,6 +1,7 @@
 package mods.eln.sixnode.energymeter;
 
 import mods.eln.Eln;
+import mods.eln.Vars;
 import mods.eln.i18n.I18N;
 import mods.eln.misc.Direction;
 import mods.eln.misc.LRDU;
@@ -46,7 +47,7 @@ public class EnergyMeterElement extends SixNodeElement {
 
     SixNodeElementInventory inventory = new SixNodeElementInventory(1, 64, this);
 
-    public float voltageMax = (float) Eln.SVU, voltageMin = 0;
+    public float voltageMax = (float) Vars.SVU, voltageMin = 0;
 
     int energyUnit = 1, timeUnit = 0;
 
@@ -188,7 +189,7 @@ public class EnergyMeterElement extends SixNodeElement {
     public void computeElectricalLoad() {
         ItemStack cable = inventory.getStackInSlot(EnergyMeterContainer.cableSlotId);
 
-        cableDescriptor = (ElectricalCableDescriptor) Eln.sixNodeItem.getDescriptor(cable);
+        cableDescriptor = (ElectricalCableDescriptor) Vars.sixNodeItem.getDescriptor(cable);
         if (cableDescriptor == null) {
             aLoad.highImpedance();
             bLoad.highImpedance();
