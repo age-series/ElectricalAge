@@ -489,12 +489,6 @@ public class Eln {
 
         config.save();
 
-
-        Object o;
-
-        //computerCraftReady = Utils.isClassLoaded("dan200.computercraft.ComputerCraft");
-
-
         eventChannel = NetworkRegistry.INSTANCE.newEventDrivenChannel(channelName);
 
         simulator = new Simulator(0.05, 1 / electricalFrequency, electricalInterSystemOverSampling, 1 / thermalFrequency);
@@ -503,7 +497,6 @@ public class Eln {
         delayedTask = new DelayedTaskManager();
 
         playerManager = new PlayerManager();
-        //tileEntityDestructor = new TileEntityDestructor();
 
         oreRegenerate = new OreRegenerate();
         nodeServer = new NodeServer();
@@ -523,8 +516,8 @@ public class Eln {
 
         oreBlock = (OreBlock) new OreBlock().setCreativeTab(creativeTab).setBlockName("OreEln");
 
-        arcClayBlock = (ArcClayBlock) new ArcClayBlock();
-        arcMetalBlock = (ArcMetalBlock) new ArcMetalBlock();
+        arcClayBlock = new ArcClayBlock();
+        arcMetalBlock = new ArcMetalBlock();
 
         sharedItem = (SharedItem) new SharedItem()
             .setCreativeTab(creativeTab).setMaxStackSize(64)
@@ -545,7 +538,7 @@ public class Eln {
             .setBlockTextureName("iron_block");
 
         ghostBlock = (GhostBlock) new GhostBlock().setBlockTextureName("iron_block");
-        lightBlock = (LightBlock) new LightBlock();
+        lightBlock = new LightBlock();
 
         obj.loadAllElnModels();
 
@@ -567,7 +560,6 @@ public class Eln {
         NodeManager.registerUuid(sixNodeBlock.getNodeUuid(), SixNode.class);
         NodeManager.registerUuid(transparentNodeBlock.getNodeUuid(), TransparentNode.class);
 
-        o = Item.getItemFromBlock(sixNodeBlock);
         sixNodeItem = (SixNodeItem) Item.getItemFromBlock(sixNodeBlock);
         transparentNodeItem = (TransparentNodeItem) Item.getItemFromBlock(transparentNodeBlock);
 
@@ -579,7 +571,6 @@ public class Eln {
 
         SixNode.sixNodeCacheList.add(new SixNodeCacheStd());
 
-        registerTestBlock();
         registerEnergyConverter();
         registerComputer();
 
@@ -684,7 +675,7 @@ public class Eln {
     private void registerGridDevices(int id) {
         int subId;
         {
-            subId = 2;
+//          subId = 2;
 //			DownlinkDescriptor descriptor =
 //					new DownlinkDescriptor("Downlink", obj.getObj("DownLink"), "textures/wire.png", highVoltageCableDescriptor);
 //			transparentNodeItem.addDescriptor(subId + (id << 6), descriptor);
@@ -790,9 +781,7 @@ public class Eln {
             Collections.addAll(oreNames, names);
         }
 
-        //
         registerReplicator();
-        //
 
         recipeEnergyConverter();
         recipeComputerProbe();
@@ -801,7 +790,6 @@ public class Eln {
         recipeTool();
 
         recipeGround();
-        recipeElectricalSource();
         recipeElectricalCable();
         recipeThermalCable();
         recipeLampSocket();
@@ -898,7 +886,7 @@ public class Eln {
 
         FMLInterModComms.sendMessage("Waila", "register", "mods.eln.integration.waila.WailaIntegration.callbackRegister");
 
-        Utils.println("Electrical age init done");
+        Utils.println("Electrical age " + Version.getVersionName() + " init done");
     }
 
     private EnergyConverterElnToOtherBlock elnToOtherBlockLvu;
@@ -966,16 +954,6 @@ public class Eln {
 
     }
 
-    TestBlock testBlock;
-
-    private void registerTestBlock() {
-        /*
-         * testBlock = new TestBlock(); testBlock.setCreativeTab(creativeTab).setBlockName("TestBlock"); GameRegistry.registerBlock(testBlock, "Eln.TestBlock"); TileEntity.addMapping(TestEntity.class, "Eln.TestEntity"); //LanguageRegistry.addName(testBlock,"Test Block"); NodeManager.instance.registerUuid(TestNode.getInfoStatic().getUuid(), TestNode.class);
-         *
-         * GameRegistry.registerCustomItemStack("Test Block", new ItemStack(testBlock));
-         */
-    }
-
     private void checkRecipe() {
         Utils.println("No recipe for ");
         for (SixNodeDescriptor d : sixNodeItem.subItemList.values()) {
@@ -1019,8 +997,6 @@ public class Eln {
         }
         return false;
     }
-
-    // ElnHttpServer elnHttpServer;
 
     public ServerEventListener serverEventListener;
 
@@ -1073,13 +1049,10 @@ public class Eln {
 
         simulator.stop();
 
-        //tileEntityDestructor.clear();
         LampSupplyElement.channelMap.clear();
         WirelessSignalTxElement.channelMap.clear();
 
     }
-
-    //public TileEntityDestructor tileEntityDestructor;
 
     public static WindProcess wind;
 
@@ -1181,10 +1154,8 @@ public class Eln {
     public static int wirelessTxRange = 32;
 
     private void registerElectricalCable(int id) {
-        int subId, completId;
+        int subId;
         String name;
-
-        CableRenderDescriptor render;
         ElectricalCableDescriptor desc;
         {
             subId = 0;
@@ -1403,7 +1374,7 @@ public class Eln {
     }
 
     private void registerThermalCable(int id) {
-        int subId, completId;
+        int subId;
         String name;
 
         {
@@ -1445,7 +1416,7 @@ public class Eln {
     public FunctionTable batteryVoltageFunctionTable;
 
     private void registerBattery(int id) {
-        int subId, completId;
+        int subId;
         String name;
         double heatTIme = 30;
         double[] voltageFunctionTable = {0.000, 0.9, 1.0, 1.025, 1.04, 1.05,
@@ -1654,7 +1625,7 @@ public class Eln {
     }
 
     private void registerGround(int id) {
-        int subId, completId;
+        int subId;
         String name;
 
         {
@@ -1674,7 +1645,7 @@ public class Eln {
     }
 
     private void registerElectricalSource(int id) {
-        int subId, completId;
+        int subId;
         String name;
 
         {
@@ -1697,7 +1668,7 @@ public class Eln {
     }
 
     private void registerLampSocket(int id) {
-        int subId, completId;
+        int subId;
         String name;
 
         {
@@ -1848,7 +1819,7 @@ public class Eln {
     }
 
     private void registerLampSupply(int id) {
-        int subId, completId;
+        int subId;
         String name;
 
         {
@@ -1893,7 +1864,7 @@ public class Eln {
     }
 
     private void registerPassiveComponent(int id) {
-        int subId, completId;
+        int subId;
         String name;
         IFunction function;
         FunctionTableYProtect baseFunction = new FunctionTableYProtect(
@@ -2051,7 +2022,7 @@ public class Eln {
     }
 
     private void registerPowerComponent(int id) {
-        int subId, completId;
+        int subId;
         String name;
 
         {
@@ -2080,9 +2051,8 @@ public class Eln {
     }
 
     private void registerSwitch(int id) {
-        int subId, completId;
+        int subId;
         String name;
-        IFunction function;
         ElectricalSwitchDescriptor desc;
 
 
@@ -2177,7 +2147,7 @@ public class Eln {
 
     private void registerSixNodeMisc(int id) {
 
-        int subId, completId;
+        int subId;
         String name;
         {
             subId = 0;
@@ -2259,7 +2229,7 @@ public class Eln {
     }
 
     private void registerElectricalManager(int id) {
-        int subId, completId;
+        int subId;
         String name;
 
         {
@@ -2341,7 +2311,7 @@ public class Eln {
     }
 
     private void registerElectricalSensor(int id) {
-        int subId, completId;
+        int subId;
         String name;
         ElectricalSensorDescriptor desc;
 
@@ -2368,7 +2338,7 @@ public class Eln {
     }
 
     private void registerThermalSensor(int id) {
-        int subId, completId;
+        int subId;
         String name;
         ThermalSensorDescriptor desc;
 
@@ -2396,7 +2366,7 @@ public class Eln {
     }
 
     private void registerElectricalVuMeter(int id) {
-        int subId, completId;
+        int subId;
         String name;
         ElectricalVuMeterDescriptor desc;
         {
@@ -2414,7 +2384,7 @@ public class Eln {
     }
 
     private void registerElectricalAlarm(int id) {
-        int subId, completId;
+        int subId;
         String name;
         ElectricalAlarmDescriptor desc;
         {
@@ -2435,7 +2405,7 @@ public class Eln {
     }
 
     private void registerElectricalEnvironmentalSensor(int id) {
-        int subId, completId;
+        int subId;
         String name;
         {
             ElectricalLightSensorDescriptor desc;
@@ -2509,7 +2479,7 @@ public class Eln {
     }
 
     private void registerElectricalRedstone(int id) {
-        int subId, completId;
+        int subId;
         String name;
         {
             ElectricalRedstoneInputDescriptor desc;
@@ -2530,7 +2500,7 @@ public class Eln {
     }
 
     private void registerElectricalGate(int id) {
-        int subId, completId;
+        int subId;
         String name;
         {
             ElectricalTimeoutDescriptor desc;
@@ -2557,7 +2527,7 @@ public class Eln {
     }
 
     private void registerWirelessSignal(int id) {
-        int subId, completId;
+        int subId;
         String name;
 
         {
@@ -2607,7 +2577,7 @@ public class Eln {
     }
 
     private void registerElectricalDataLogger(int id) {
-        int subId, completId;
+        int subId;
         String name;
         {
             ElectricalDataLoggerDescriptor desc;
@@ -2644,7 +2614,7 @@ public class Eln {
     }
 
     private void registerElectricalRelay(int id) {
-        int subId, completId;
+        int subId;
         String name;
         ElectricalRelayDescriptor desc;
 
@@ -2707,7 +2677,7 @@ public class Eln {
     }
 
     private void registerElectricalGateSource(int id) {
-        int subId, completId;
+        int subId;
         String name;
 
         ElectricalGateSourceRenderObj signalsourcepot = new ElectricalGateSourceRenderObj(obj.getObj("signalsourcepot"));
@@ -2884,7 +2854,7 @@ public class Eln {
     }
 
     private void registerTurbine(int id) {
-        int subId, completId;
+        int subId;
         String name;
 
         FunctionTable TtoU = new FunctionTable(new double[]{0, 0.1, 0.85,
@@ -3031,10 +3001,10 @@ public class Eln {
         }
     }
 
-    public ArrayList<ItemStack> furnaceList = new ArrayList<ItemStack>();
+    public ArrayList<ItemStack> furnaceList = new ArrayList<>();
 
     private void registerElectricalFurnace(int id) {
-        int subId, completId;
+        int subId;
         String name;
         furnaceList.add(new ItemStack(Blocks.furnace));
         {
@@ -3073,7 +3043,7 @@ public class Eln {
     public RecipesList maceratorRecipes = new RecipesList();
 
     private void registerMacerator(int id) {
-        int subId, completId;
+        int subId;
         String name;
         {
             subId = 0;
@@ -3113,7 +3083,7 @@ public class Eln {
 
     private void registerArcFurnace(int id) {
 
-        int subId, completId;
+        int subId;
         String name;
         {
             subId = 0;
@@ -3136,7 +3106,7 @@ public class Eln {
 
     private void registerPlateMachine(int id) {
 
-        int subId, completId;
+        int subId;
         String name;
         {
             subId = 0;
@@ -3178,7 +3148,7 @@ public class Eln {
 
     private void registerEggIncubator(int id) {
 
-        int subId, completId;
+        int subId;
         String name;
         {
             subId = 0;
@@ -3195,7 +3165,7 @@ public class Eln {
 
     private void registerCompressor(int id) {
 
-        int subId, completId;
+        int subId;
         String name;
         {
             subId = 0;
@@ -3240,7 +3210,7 @@ public class Eln {
 
     private void registerMagnetizer(int id) {
 
-        int subId, completId;
+        int subId;
         String name;
         {
             subId = 0;
@@ -3281,7 +3251,7 @@ public class Eln {
     }
 
     private void registerSolarPanel(int id) {
-        int subId, completId;
+        int subId;
         GhostGroup ghostGroup;
         String name;
 
@@ -3384,7 +3354,6 @@ public class Eln {
 
     private void registerHeatingCorp(int id) {
         int subId, completId;
-        String name;
 
         HeatingCorpElement element;
         {
@@ -3555,7 +3524,6 @@ public class Eln {
 
     private void registerRegulatorItem(int id) {
         int subId, completId;
-        String name;
         IRegulatorDescriptor element;
         {
             subId = 0;
@@ -3748,7 +3716,6 @@ public class Eln {
 
     private void registerProtection(int id) {
         int subId, completId;
-        String name;
 
         {
             OverHeatingProtectionDescriptor element;
@@ -4184,7 +4151,6 @@ public class Eln {
     }
 
     private void registerArmor() {
-        ItemStack stack;
         String name;
 
         {
@@ -4212,7 +4178,6 @@ public class Eln {
             GameRegistry.registerCustomItemStack(name, new ItemStack(bootsCopper));
         }
 
-        int armorPoint;
         String t1, t2;
         t1 = "eln:textures/armor/ecoal_layer_1.png";
         t2 = "eln:textures/armor/ecoal_layer_2.png";
@@ -4286,7 +4251,6 @@ public class Eln {
     }
 
     private void registerTool() {
-        ItemStack stack;
         String name;
         {
             name = TR_NAME(Type.ITEM, "Copper Sword");
@@ -4323,7 +4287,6 @@ public class Eln {
 
     private void registerSolarTracker(int id) {
         int subId, completId;
-        String name;
 
         SolarTrackerDescriptor element;
         {
@@ -4338,7 +4301,7 @@ public class Eln {
     }
 
     private void registerWindTurbine(int id) {
-        int subId, completId;
+        int subId;
         String name;
 
         FunctionTable PfW = new FunctionTable(
@@ -4446,7 +4409,7 @@ public class Eln {
     }
 
     private void registerThermalDissipatorPassiveAndActive(int id) {
-        int subId, completId;
+        int subId;
         String name;
         {
             subId = 0;
@@ -4508,7 +4471,7 @@ public class Eln {
     }
 
     private void registerTransparentNodeMisc(int id) {
-        int subId, completId;
+        int subId;
         String name;
         {
             subId = 0;
@@ -4581,7 +4544,7 @@ public class Eln {
     }
 
     private void registerElectricalAntenna(int id) {
-        int subId, completId;
+        int subId;
         String name;
         {
 
@@ -4921,7 +4884,7 @@ public class Eln {
     }
 
     private void registerAutoMiner(int id) {
-        int subId, completId;
+        int subId;
         String name;
         {
             subId = 0;
@@ -5135,7 +5098,7 @@ public class Eln {
 
     private void registerBrush(int id) {
 
-        int subId, completId;
+        int subId;
         BrushDescriptor whiteDesc = null;
         String name;
         String[] subNames = {
@@ -5183,8 +5146,7 @@ public class Eln {
     }
 
     private void registerElectricalTool(int id) {
-        int subId, completId;
-        ItemStack stack;
+        int subId;
         String name;
         {
             subId = 0;
@@ -5227,7 +5189,7 @@ public class Eln {
     }
 
     private void registerPortableItem(int id) {
-        int subId, completId;
+        int subId;
         String name;
         {
             subId = 0;
@@ -5307,7 +5269,7 @@ public class Eln {
     }
 
     private void registerMiscItem(int id) {
-        int subId, completId;
+        int subId;
         String name;
         {
             subId = 0;
@@ -5539,10 +5501,6 @@ public class Eln {
             " C ",
             "CCC",
             'C', findItemStack("Copper Cable"));
-    }
-
-    private void recipeElectricalSource() {
-        // Trololol
     }
 
     private void recipeElectricalCable() {
@@ -5800,12 +5758,6 @@ public class Eln {
     }
 
     private void recipeSwitch() {
-        /*
-         * addRecipe(findItemStack("Signal Switch"), "  I", " I ", "CAC", 'R', new ItemStack(Items.redstone), 'A', "itemRubber", 'I', findItemStack("Copper Cable"), 'C', findItemStack("Signal Cable"));
-         *
-         * addRecipe(findItemStack("Signal Switch with LED"), " RI", " I ", "CAC", 'R', new ItemStack(Items.redstone), 'A', "itemRubber", 'I', findItemStack("Copper Cable"), 'C', findItemStack("Signal Cable"));
-         */
-
         addRecipe(findItemStack("Low Voltage Switch"),
             "  I",
             " I ",
@@ -6847,9 +6799,6 @@ public class Eln {
             'I', new ItemStack(Items.iron_ingot),
             'R', new ItemStack(Items.redstone),
             'C', findItemStack("Medium Voltage Cable"));
-
-        // TODO
-
     }
 
     private void recipeSolarTracker() {
@@ -6999,13 +6948,6 @@ public class Eln {
         addRecipe(findItemStack("Tungsten Cable", 6),
             "III",
             'I', dictTungstenIngot);
-        /*addRecipe(findItemStack("T1 Transmission Cable", 6),
-            "III",
-            'I', firstExistingOre("ingotSteel", "Arc Metal Ingot"));
-        addRecipe(findItemStack("T2 Transmission Cable", 6),
-            "III",
-            'I', firstExistingOre("ingotAluminium", "ingotAluminum", "Arc Clay Ingot"));
-*/
     }
 
     private void recipeGraphite() {
@@ -7162,13 +7104,6 @@ public class Eln {
 
     private void recipePortableCapacitor() {
         addRecipe(findItemStack("Portable Condensator"),
-            /*"RcR",
-            "wCw",
-            "RcR",
-            'C', new ItemStack(Items.redstone),
-            'R', "itemRubber",
-            'w', findItemStack("Copper Cable"),
-            'c', "plateCopper");*/
             " r ",
             "cDc",
             " r ",
@@ -7489,9 +7424,6 @@ public class Eln {
     private void recipeCompressor() {
         compressorRecipes.addRecipe(new Recipe(findItemStack("4x Graphite Rods", 1),
             findItemStack("Synthetic Diamond"), 80000.0));
-        // extractorRecipes.addRecipe(new
-        // Recipe("dustCinnabar",new
-        // ItemStack[]{findItemStack("Purified Cinnabar Dust",1)}, 1000.0));
 
         compressorRecipes.addRecipe(new Recipe(findItemStack("Coal Dust", 4),
             findItemStack("Coal Plate"), 40000.0));
@@ -7565,9 +7497,6 @@ public class Eln {
         in = findItemStack("Tungsten Dust");
         Utils.addSmelting(in.getItem(), in.getItemDamage(),
             findItemStack("Tungsten Ingot"));
-        in = findItemStack("ingotAlloy");
-        // Utils.addSmelting(in.getItem().itemID, in.getItemDamage(),
-        // findItemStack("Ferrite Ingot"));
         in = findItemStack("dustIron");
         Utils.addSmelting(in.getItem(), in.getItemDamage(),
             new ItemStack(Items.iron_ingot));
