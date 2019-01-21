@@ -6331,16 +6331,16 @@ public class Eln {
                     "ii ",
                     "mi ",
                     " B ",
-                    Character.valueOf('i'), ingotType,
-                    Character.valueOf('B'), blockType,
-                    Character.valueOf('m'), findItemStack("Machine Block"));
+                    'i', ingotType,
+                    'B', blockType,
+                    'm', findItemStack("Machine Block"));
                 addRecipe(findItemStack("Grid DC-DC Converter"),
                     "i i",
                     "mtm",
                     "imi",
-                    Character.valueOf('i'), ingotType,
-                    Character.valueOf('t'), findItemStack("DC-DC Converter"),
-                    Character.valueOf('m'), findItemStack("Advanced Machine Block"));
+                    'i', ingotType,
+                    't', findItemStack("DC-DC Converter"),
+                    'm', findItemStack("Advanced Machine Block"));
             }
         }
 
