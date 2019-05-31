@@ -5,8 +5,6 @@ import mods.eln.misc.Obj3D.Obj3DPart;
 import mods.eln.misc.Utils;
 import mods.eln.misc.VoltageLevelColor;
 import mods.eln.node.six.SixNodeDescriptor;
-import mods.eln.wiki.Data;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import org.lwjgl.opengl.GL11;
 
@@ -42,12 +40,6 @@ public class EnergyMeterDescriptor extends SixNodeDescriptor {
         pinDistance = Utils.getSixNodePinDistance(base);
 
         voltageLevelColor = VoltageLevelColor.Neutral;
-    }
-
-    @Override
-    public void setParent(Item item, int damage) {
-        super.setParent(item, damage);
-        Data.addWiring(newItemStack());
     }
 
     @Override

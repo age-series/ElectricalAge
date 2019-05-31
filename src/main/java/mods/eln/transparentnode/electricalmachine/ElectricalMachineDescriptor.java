@@ -1,7 +1,6 @@
 package mods.eln.transparentnode.electricalmachine;
 
 import mods.eln.cable.CableRenderDescriptor;
-import mods.eln.gui.GuiLabel;
 import mods.eln.misc.*;
 import mods.eln.node.transparent.TransparentNodeDescriptor;
 import mods.eln.sim.ElectricalLoad;
@@ -11,10 +10,6 @@ import mods.eln.sim.ThermalLoadInitializer;
 import mods.eln.sim.mna.component.Resistor;
 import mods.eln.sixnode.electricalcable.ElectricalCableDescriptor;
 import mods.eln.sound.SoundCommand;
-import mods.eln.wiki.Data;
-import mods.eln.wiki.GuiItemStack;
-import mods.eln.wiki.GuiVerticalExtender;
-import mods.eln.wiki.ItemDefault.IPlugIn;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -24,7 +19,7 @@ import java.util.List;
 
 import static mods.eln.i18n.I18N.tr;
 
-public class ElectricalMachineDescriptor extends TransparentNodeDescriptor implements IPlugIn {
+public class ElectricalMachineDescriptor extends TransparentNodeDescriptor {
     public RecipesList recipe = new RecipesList();
 
     final double nominalU;
@@ -79,7 +74,6 @@ public class ElectricalMachineDescriptor extends TransparentNodeDescriptor imple
     public void setParent(Item item, int damage) {
         super.setParent(item, damage);
         recipe.addMachine(newItemStack(1));
-        Data.addMachine(newItemStack(1));
     }
 
     @Override
@@ -152,43 +146,5 @@ public class ElectricalMachineDescriptor extends TransparentNodeDescriptor imple
         if (defaultHandle == null)
             defaultHandle = newDrawHandle();
         return defaultHandle;
-    }
-
-    @Override
-    public int top(int y, GuiVerticalExtender extender, ItemStack stack) {
-        return y;
-    }
-
-    @Override
-    public int bottom(int y, GuiVerticalExtender extender, ItemStack stack) {
-        int counter = -1;
-
-        extender.add(new GuiLabel(6, y, tr("Can create:")));
-        y += 12;
-        for (Recipe r : recipe.getRecipes()) {
-            if (counter == 0)
-                y += (int) (18 * 1.3);
-            if (counter == -1)
-                counter = 0;
-            int x = 6 + counter * 60;
-
-            extender.add(new GuiItemStack(x, y, r.input, extender.helper));
-            x += 18 * 2;
-
-            for (ItemStack m : recipe.getMachines()) {
-                extender.add(new GuiItemStack(x, y, m, extender.helper));
-                x += 18;
-            }
-            x += 18;
-            extender.add(new GuiItemStack(x, y, r.getOutputCopy()[0], extender.helper));
-
-            x += 22;
-            extender.add(new GuiLabel(x, y + 4, Utils.plotEnergy(tr("Cost"), r.energy)));
-
-            counter = (counter + 1) % 1; // WTF ? (% 1 is afaik always 0...)
-        }
-        y += (int) (18 * 1.3);
-
-        return y;
     }
 }

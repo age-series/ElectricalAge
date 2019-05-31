@@ -6,9 +6,7 @@ import mods.eln.misc.*;
 import mods.eln.misc.Obj3D.Obj3DPart;
 import mods.eln.node.transparent.TransparentNodeDescriptor;
 import mods.eln.sixnode.electricalcable.ElectricalCableDescriptor;
-import mods.eln.wiki.Data;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.World;
@@ -101,16 +99,7 @@ public class TeleporterDescriptor extends TransparentNodeDescriptor {
         return temp;
     }
 
-
-    @Override
-    public void setParent(Item item, int damage) {
-
-        super.setParent(item, damage);
-        Data.addMachine(newItemStack());
-    }
-
     public ElectricalCableDescriptor cable;
-
 
     public void draw() {
         if (main != null) main.draw();

@@ -13,19 +13,10 @@ public class PowerInductorDescriptor extends TransparentNodeDescriptor {
 
     private Obj3D obj;
 
-    public PowerInductorDescriptor(
-        String name,
-        Obj3D obj,
-        ISerie serie
-
-    ) {
+    public PowerInductorDescriptor(String name, Obj3D obj, ISerie serie) {
         super(name, PowerInductorElement.class, PowerInductorRender.class);
         this.serie = serie;
         this.obj = obj;
-        if (obj != null) {
-
-        }
-
     }
 
     ISerie serie;
@@ -54,18 +45,10 @@ public class PowerInductorDescriptor extends TransparentNodeDescriptor {
         return Eln.instance.lowVoltageCableDescriptor.electricalRs * coreFactor;
     }
 
-    public void setParent(net.minecraft.item.Item item, int damage) {
-        super.setParent(item, damage);
-        //Data.addEnergy(newItemStack());
-    }
-
-    void draw() {
-
-    }
+    void draw() {}
 
     @Override
-    public boolean shouldUseRenderHelper(ItemRenderType type, ItemStack item,
-                                         ItemRendererHelper helper) {
+    public boolean shouldUseRenderHelper(ItemRenderType type, ItemStack item, ItemRendererHelper helper) {
         return true;
     }
 

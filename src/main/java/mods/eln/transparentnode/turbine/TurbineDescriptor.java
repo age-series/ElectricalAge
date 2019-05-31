@@ -11,9 +11,7 @@ import mods.eln.node.transparent.TransparentNodeDescriptor;
 import mods.eln.sim.ElectricalLoad;
 import mods.eln.sim.PhysicalConstant;
 import mods.eln.sim.ThermalLoad;
-import mods.eln.wiki.Data;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
 import java.util.List;
@@ -68,14 +66,6 @@ public class TurbineDescriptor extends TransparentNodeDescriptor {
         load.C = thermalC;
         load.Rp = thermalRp;
         load.Rs = thermalRs;
-    }
-
-    @Override
-    public void setParent(Item item, int damage) {
-
-        super.setParent(item, damage);
-        Data.addThermal(newItemStack());
-        Data.addEnergy(newItemStack());
     }
 
     public void applyTo(ElectricalLoad load) {

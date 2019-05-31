@@ -10,7 +10,6 @@ import mods.eln.misc.VoltageLevelColor;
 import mods.eln.misc.series.ISerie;
 import mods.eln.node.six.SixNodeDescriptor;
 import mods.eln.sim.mna.misc.MnaConst;
-import mods.eln.wiki.Data;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
@@ -63,14 +62,7 @@ public class PowerInductorSixDescriptor extends SixNodeDescriptor {
         return Eln.instance.lowVoltageCableDescriptor.electricalRs * coreFactor;
     }
 
-    public void setParent(net.minecraft.item.Item item, int damage) {
-        super.setParent(item, damage);
-        Data.addEnergy(newItemStack());
-    }
-
     void draw() {
-        //UtilsClient.disableCulling();
-        //UtilsClient.disableTexture();
         if (null != Base) Base.draw();
         if (null != InductorBaseExtention) InductorBaseExtention.draw();
         if (null != InductorCables) InductorCables.draw();

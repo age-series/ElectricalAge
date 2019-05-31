@@ -6,7 +6,6 @@ import mods.eln.misc.*;
 import mods.eln.misc.Obj3D.Obj3DPart;
 import mods.eln.node.transparent.TransparentNodeDescriptor;
 import mods.eln.sim.ElectricalLoad;
-import mods.eln.wiki.Data;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -62,12 +61,6 @@ public class SolarPanelDescriptor extends TransparentNodeDescriptor {
         canRotate = alphaMax != alphaMin;
 
         voltageLevelColor = VoltageLevelColor.fromVoltage(electricalUmax);
-    }
-
-
-    public void setParent(net.minecraft.item.Item item, int damage) {
-        super.setParent(item, damage);
-        Data.addEnergy(newItemStack());
     }
 
     CableRenderDescriptor cableRender;

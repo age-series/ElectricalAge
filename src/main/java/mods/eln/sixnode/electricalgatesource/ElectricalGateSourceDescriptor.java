@@ -4,9 +4,7 @@ import mods.eln.misc.Direction;
 import mods.eln.misc.LRDU;
 import mods.eln.misc.VoltageLevelColor;
 import mods.eln.node.six.SixNodeDescriptor;
-import mods.eln.wiki.Data;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import org.lwjgl.opengl.GL11;
@@ -61,12 +59,6 @@ public class ElectricalGateSourceDescriptor extends SixNodeDescriptor {
 
     void draw(float factor, float distance, TileEntity e) {
         render.draw(factor, distance, e);
-    }
-
-    @Override
-    public void setParent(Item item, int damage) {
-        super.setParent(item, damage);
-        Data.addSignal(newItemStack());
     }
 
     @Override

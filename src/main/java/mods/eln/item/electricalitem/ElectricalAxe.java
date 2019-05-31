@@ -2,7 +2,6 @@ package mods.eln.item.electricalitem;
 
 import mods.eln.Eln;
 import mods.eln.debug.DebugType;
-import mods.eln.wiki.Data;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.item.Item;
@@ -18,7 +17,6 @@ public class ElectricalAxe extends ElectricalTool {
     @Override
     public void setParent(Item item, int damage) {
         super.setParent(item, damage);
-        Data.addPortable(newItemStack());
     }
 
     @Override

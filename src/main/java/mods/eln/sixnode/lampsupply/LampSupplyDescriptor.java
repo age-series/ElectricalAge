@@ -3,10 +3,8 @@ package mods.eln.sixnode.lampsupply;
 import mods.eln.misc.*;
 import mods.eln.misc.Obj3D.Obj3DPart;
 import mods.eln.node.six.SixNodeDescriptor;
-import mods.eln.wiki.Data;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
 import java.util.Collections;
@@ -38,12 +36,6 @@ public class LampSupplyDescriptor extends SixNodeDescriptor {
         }
 
         voltageLevelColor = VoltageLevelColor.Neutral;
-    }
-
-    @Override
-    public void setParent(Item item, int damage) {
-        super.setParent(item, damage);
-        Data.addLight(newItemStack(1));
     }
 
     public void draw(float openFactor) {

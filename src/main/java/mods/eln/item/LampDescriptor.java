@@ -6,7 +6,6 @@ import mods.eln.misc.Utils;
 import mods.eln.misc.VoltageLevelColor;
 import mods.eln.sim.mna.component.Resistor;
 import mods.eln.sixnode.lampsocket.LampSocketType;
-import mods.eln.wiki.Data;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -74,7 +73,6 @@ public class LampDescriptor extends GenericItemUsingDamageDescriptorUpgrade impl
     @Override
     public void setParent(Item item, int damage) {
         super.setParent(item, damage);
-        Data.addLight(newItemStack());
     }
 
     public double getR() {

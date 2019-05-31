@@ -10,10 +10,8 @@ import mods.eln.node.transparent.TransparentNodeDescriptor;
 import mods.eln.sim.*;
 import mods.eln.sim.mna.component.Resistor;
 import mods.eln.sixnode.electricalcable.ElectricalCableDescriptor;
-import mods.eln.wiki.Data;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
@@ -136,12 +134,6 @@ public class BatteryDescriptor extends TransparentNodeDescriptor {
         }
 
         voltageLevelColor = VoltageLevelColor.fromVoltage(electricalU);
-    }
-
-    @Override
-    public void setParent(Item item, int damage) {
-        super.setParent(item, damage);
-        Data.addEnergy(newItemStack());
     }
 
     public void applyTo(Resistor resistor) {

@@ -4,7 +4,6 @@ import mods.eln.Eln;
 import mods.eln.debug.DebugType;
 import mods.eln.generic.genericArmorItem;
 import mods.eln.item.electricalinterface.IItemEnergyBattery;
-import mods.eln.wiki.Data;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -39,7 +38,6 @@ public class ElectricalArmor extends genericArmorItem implements IItemEnergyBatt
         this.ratioMax = ratioMax;
         this.ratioMaxEnergy = ratioMaxEnergy;
         this.energyPerDamage = energyPerDamage;
-        Data.addPortable(new ItemStack(this));
     }
 
     @Override

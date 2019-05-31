@@ -7,8 +7,6 @@ import cpw.mods.fml.common.gameevent.TickEvent.ClientTickEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.Phase;
 import mods.eln.Eln;
 import mods.eln.misc.UtilsClient;
-import mods.eln.wiki.Root;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.util.StatCollector;
 import org.lwjgl.input.Keyboard;
@@ -16,24 +14,18 @@ import org.lwjgl.input.Keyboard;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-//import mods.eln.wiki.Root;
 
 public class ClientKeyHandler {
 
-    static public final int openWikiId = 0;
-    static public final int wrenchId = 1;
-    static final String openWiki = "Open Wiki";
-    static final String wrench = "Wrench";
-    private static final int[] keyValues = {Keyboard.KEY_X, Keyboard.KEY_C};
-    private static final String[] desc = {openWiki, wrench};
-    public static final KeyBinding[] keys = new KeyBinding[desc.length];
+    public static final int wrenchId = 1;
+    private static final String wrench = "Wrench";
+    private static int[] keyValues = {Keyboard.KEY_C};
+    private static String[] desc = {wrench};
+    private static KeyBinding[] keys = new KeyBinding[desc.length];
 
     boolean[] states = new boolean[desc.length];
 
-    Minecraft mc;
-
     public ClientKeyHandler() {
-        mc = Minecraft.getMinecraft();
 
         for (int i = 0; i < desc.length; ++i) {
             if (i != 3)
@@ -47,7 +39,7 @@ public class ClientKeyHandler {
     public void onKeyInput(KeyInputEvent event) {
         for (int i = 0; i < desc.length; ++i) {
             boolean s = keys[i].getIsKeyPressed();
-            if (s == false) continue;
+            if (s) return;
             if (states[i])
                 setState(i, false);
             setState(i, true);
@@ -59,7 +51,7 @@ public class ClientKeyHandler {
         if (event.phase != Phase.START) return;
         for (int i = 0; i < desc.length; ++i) {
             boolean s = keys[i].getIsKeyPressed();
-            if (s == false && states[i] == true) {
+            if (!s && states[i]) {
                 setState(i, false);
             }
         }
@@ -68,15 +60,11 @@ public class ClientKeyHandler {
     void setState(int id, boolean state) {
         states[id] = state;
 
-        if (id == openWikiId) {
-            UtilsClient.clientOpenGui(new Root(null));
-        }
-
         ByteArrayOutputStream bos = new ByteArrayOutputStream(64);
         DataOutputStream stream = new DataOutputStream(bos);
 
         try {
-            stream.writeByte(Eln.packetPlayerKey);
+            stream.writeByte(Eln.PACKET_PLAYER_KEY);
             stream.writeByte(id);
             stream.writeBoolean(state);
         } catch (IOException e) {

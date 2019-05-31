@@ -4,7 +4,6 @@ import mods.eln.node.six.SixNodeDescriptor;
 import mods.eln.sim.ElectricalLoad;
 import mods.eln.sim.mna.component.Inductor;
 import mods.eln.sixnode.electricalcable.ElectricalCableDescriptor;
-import net.minecraft.item.Item;
 
 public class SignalInductorDescriptor extends SixNodeDescriptor {
 
@@ -16,12 +15,6 @@ public class SignalInductorDescriptor extends SixNodeDescriptor {
         super(name, SignalInductorElement.class, SignalInductorRender.class);
         this.henri = henri;
         this.cable = cable;
-    }
-
-    @Override
-    public void setParent(Item item, int damage) {
-        super.setParent(item, damage);
-        //Data.addEnergy(newItemStack());
     }
 
     public void applyTo(ElectricalLoad load) {

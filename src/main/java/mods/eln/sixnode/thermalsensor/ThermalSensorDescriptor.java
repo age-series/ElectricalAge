@@ -6,9 +6,7 @@ import mods.eln.misc.Obj3D;
 import mods.eln.misc.Obj3D.Obj3DPart;
 import mods.eln.misc.VoltageLevelColor;
 import mods.eln.node.six.SixNodeDescriptor;
-import mods.eln.wiki.Data;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
 import java.util.List;
@@ -49,13 +47,6 @@ public class ThermalSensorDescriptor extends SixNodeDescriptor {
             list.add(tr("  Temperature/Power conducted"));
             list.add(tr("Has a signal output."));
         }
-    }
-
-    @Override
-    public void setParent(Item item, int damage) {
-        super.setParent(item, damage);
-        Data.addThermal(newItemStack());
-        Data.addSignal(newItemStack());
     }
 
     void draw(boolean renderAdapter) {

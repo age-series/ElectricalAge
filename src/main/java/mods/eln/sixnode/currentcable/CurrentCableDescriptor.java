@@ -12,9 +12,7 @@ import mods.eln.sim.ElectricalLoad;
 import mods.eln.sim.ThermalLoad;
 import mods.eln.sim.mna.component.Resistor;
 import mods.eln.sixnode.genericcable.GenericCableDescriptor;
-import mods.eln.wiki.Data;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
@@ -62,12 +60,6 @@ public class CurrentCableDescriptor extends GenericCableDescriptor {
         Eln.simulator.checkThermalLoad(thermalRs, thermalRp, thermalC);
 
         voltageLevelColor = VoltageLevelColor.None;
-    }
-
-    @Override
-    public void setParent(Item item, int damage) {
-        super.setParent(item, damage);
-        Data.addWiring(newItemStack());
     }
 
     public void applyTo(ElectricalLoad electricalLoad, double rsFactor) {

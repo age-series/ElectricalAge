@@ -412,14 +412,14 @@ public class Utils {
     public static void sendPacketToClient(ByteArrayOutputStream bos, EntityPlayerMP player) {
         // Profiler p = new Profiler();
         // p.add("A");
-        // ElnServerPacket packet = new ElnServerPacket(Eln.channelName, bos.toByteArray());
+        // ElnServerPacket packet = new ElnServerPacket(Eln.NETWORK_CHANNEL_NAME, bos.toByteArray());
         // ByteBuf b = Unpooled.buffer().capacity(bos.size()).setBytes(0, bos.toByteArray());
         // p.add("B");
-        // Eln.eventChannel.sendTo(new FMLProxyPacket(b, Eln.channelName), player);
+        // Eln.eventChannel.sendTo(new FMLProxyPacket(b, Eln.NETWORK_CHANNEL_NAME), player);
         // p.stop();
         // Utils.println(p);
 
-        S3FPacketCustomPayload packet = new S3FPacketCustomPayload(Eln.channelName, bos.toByteArray());
+        S3FPacketCustomPayload packet = new S3FPacketCustomPayload(Eln.NETWORK_CHANNEL_NAME, bos.toByteArray());
         player.playerNetServerHandler.sendPacket(packet);
 
         // FMLCommonHandler.instance().getMinecraftServerInstance().getEln.eventChannel.sendTo(new FMLProxyPacket(packet),player);

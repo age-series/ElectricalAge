@@ -276,14 +276,14 @@ public abstract class NodeBlockEntity extends TileEntity implements ITileEntityS
             Eln.dp.println(DebugType.NODE, "ASSERT NULL NODE public Packet getDescriptionPacket() nodeblock entity");
             return null;
         }
-        return new S3FPacketCustomPayload(Eln.channelName, node.getPublishPacket().toByteArray());
+        return new S3FPacketCustomPayload(Eln.NETWORK_CHANNEL_NAME, node.getPublishPacket().toByteArray());
         //return null;
     }
 
 
     public void preparePacketForServer(DataOutputStream stream) {
         try {
-            stream.writeByte(Eln.packetPublishForNode);
+            stream.writeByte(Eln.PACKET_PUBLISH_FOR_NODE);
 
             stream.writeInt(xCoord);
             stream.writeInt(yCoord);

@@ -5,7 +5,6 @@ import mods.eln.misc.*;
 import mods.eln.misc.Obj3D.Obj3DPart;
 import mods.eln.node.transparent.TransparentNodeDescriptor;
 import mods.eln.sixnode.electricalcable.ElectricalCableDescriptor;
-import mods.eln.wiki.Data;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -71,11 +70,6 @@ public class WindTurbineDescriptor extends TransparentNodeDescriptor {
         }
 
         voltageLevelColor = VoltageLevelColor.LowVoltage;
-    }
-
-    public void setParent(net.minecraft.item.Item item, int damage) {
-        super.setParent(item, damage);
-        Data.addEnergy(newItemStack());
     }
 
     public void setGhostGroup(GhostGroup ghostGroup) {

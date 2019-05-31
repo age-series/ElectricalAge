@@ -20,7 +20,7 @@ public class NodeEntityClientSender {
 
     public void preparePacketForServer(DataOutputStream stream) {
         try {
-            stream.writeByte(Eln.packetPublishForNode);
+            stream.writeByte(Eln.PACKET_PUBLISH_FOR_NODE);
 
             stream.writeInt(e.xCoord);
             stream.writeInt(e.yCoord);
