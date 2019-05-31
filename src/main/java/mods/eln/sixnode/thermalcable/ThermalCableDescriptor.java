@@ -7,9 +7,7 @@ import mods.eln.misc.Utils;
 import mods.eln.misc.VoltageLevelColor;
 import mods.eln.node.six.SixNodeDescriptor;
 import mods.eln.sim.ThermalLoad;
-import mods.eln.wiki.Data;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
 import java.util.Collections;
@@ -69,31 +67,11 @@ public class ThermalCableDescriptor extends SixNodeDescriptor {
         this.addToDataEnabled = enable;
     }
 
-    @Override
-    public void setParent(Item item, int damage) {
-        super.setParent(item, damage);
-        if (addToDataEnabled) {
-            Data.addWiring(newItemStack());
-            Data.addThermal(newItemStack());
-        }
-    }
 
     public static ThermalCableDescriptor getDescriptorFrom(ItemStack itemStack) {
         return list[(itemStack.getItemDamage() >> 8) & 0xFF];
     }
 
-    /*
-    static void setThermalLoadFrom(ItemStack itemStack, ThermalLoad thermalLoad) {
-        if (itemStack == null || itemStack.itemID != Eln.sixNodeBlock.blockID || (itemStack.getItemDamage() & 0xFF) != Eln.electricalCableId) {
-            thermalLoad.setHighImpedance();
-        } else {
-            ThermalCableDescriptor cableDescriptor = ThermalCableDescriptor.list[(itemStack.getItemDamage() >> 8) & 0xFF];
-            thermalLoad.Rp = cableDescriptor.thermalRp;
-            thermalLoad.Rs = cableDescriptor.thermalRs;
-            thermalLoad.C = cableDescriptor.thermalC;
-        }
-    }
-    */
     public void setThermalLoad(ThermalLoad thermalLoad) {
         thermalLoad.Rp = thermalRp;
         thermalLoad.Rs = thermalRs;

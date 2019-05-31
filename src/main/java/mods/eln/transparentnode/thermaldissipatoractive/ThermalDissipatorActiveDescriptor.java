@@ -10,7 +10,6 @@ import mods.eln.sim.ElectricalLoad;
 import mods.eln.sim.ThermalLoad;
 import mods.eln.sim.mna.component.Resistor;
 import mods.eln.sixnode.electricalcable.ElectricalCableDescriptor;
-import mods.eln.wiki.Data;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 
@@ -65,11 +64,6 @@ public class ThermalDissipatorActiveDescriptor extends TransparentNodeDescriptor
 
     public void applyTo(ThermalLoad load) {
         load.set(thermalRs, thermalRp, thermalC);
-    }
-
-    public void setParent(net.minecraft.item.Item item, int damage) {
-        super.setParent(item, damage);
-        Data.addThermal(newItemStack());
     }
 
     public double thermalRs, thermalRp, thermalC;

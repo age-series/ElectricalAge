@@ -10,9 +10,7 @@ import mods.eln.sim.ThermalLoad;
 import mods.eln.sim.mna.component.Resistor;
 import mods.eln.sim.mna.misc.MnaConst;
 import mods.eln.sixnode.genericcable.GenericCableDescriptor;
-import mods.eln.wiki.Data;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
 import java.util.Collections;
@@ -91,16 +89,6 @@ public class ElectricalCableDescriptor extends GenericCableDescriptor {
         this.electricalMaximalCurrent = electricalMaximalPower / electricalNominalVoltage;
 
         voltageLevelColor = VoltageLevelColor.fromCable(this);
-    }
-
-    @Override
-    public void setParent(Item item, int damage) {
-        super.setParent(item, damage);
-        Data.addWiring(newItemStack());
-
-        if (signalWire) {
-            Data.addSignal(newItemStack());
-        }
     }
 
     public void applyTo(ElectricalLoad electricalLoad, double rsFactor) {

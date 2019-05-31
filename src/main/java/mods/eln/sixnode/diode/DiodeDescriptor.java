@@ -10,9 +10,7 @@ import mods.eln.sim.ThermalLoad;
 import mods.eln.sim.ThermalLoadInitializer;
 import mods.eln.sim.mna.component.ResistorSwitch;
 import mods.eln.sixnode.electricalcable.ElectricalCableDescriptor;
-import mods.eln.wiki.Data;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import org.lwjgl.opengl.GL11;
 
@@ -62,12 +60,6 @@ public class DiodeDescriptor extends SixNodeDescriptor {
         } else {
             voltageLevelColor = VoltageLevelColor.Neutral;
         }
-    }
-
-    @Override
-    public void setParent(Item item, int damage) {
-        super.setParent(item, damage);
-        Data.addEnergy(newItemStack());
     }
 
     @Override

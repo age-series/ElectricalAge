@@ -12,21 +12,11 @@ public class PowerCapacitorDescriptor extends TransparentNodeDescriptor {
 
     private Obj3D obj;
 
-    public PowerCapacitorDescriptor(
-        String name,
-        Obj3D obj,
-        ISerie serie,
-        double dischargeTao
-
-    ) {
+    public PowerCapacitorDescriptor(String name, Obj3D obj, ISerie serie, double dischargeTao) {
         super(name, PowerCapacitorElement.class, PowerCapacitorRender.class);
         this.serie = serie;
         this.dischargeTao = dischargeTao;
         this.obj = obj;
-        if (obj != null) {
-
-        }
-
     }
 
     ISerie serie;
@@ -58,18 +48,10 @@ public class PowerCapacitorDescriptor extends TransparentNodeDescriptor {
         }
     }
 
-    public void setParent(net.minecraft.item.Item item, int damage) {
-        super.setParent(item, damage);
-        //Data.addEnergy(newItemStack());
-    }
-
-    void draw() {
-
-    }
+    void draw() {}
 
     @Override
-    public boolean shouldUseRenderHelper(ItemRenderType type, ItemStack item,
-                                         ItemRendererHelper helper) {
+    public boolean shouldUseRenderHelper(ItemRenderType type, ItemStack item, ItemRendererHelper helper) {
         return true;
     }
 

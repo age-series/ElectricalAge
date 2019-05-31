@@ -5,9 +5,7 @@ import mods.eln.misc.Obj3D.Obj3DPart;
 import mods.eln.node.transparent.TransparentNodeDescriptor;
 import mods.eln.sim.ElectricalLoad;
 import mods.eln.sixnode.electricalcable.ElectricalCableDescriptor;
-import mods.eln.wiki.Data;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import org.lwjgl.opengl.GL11;
@@ -101,12 +99,6 @@ public class AutoMinerDescriptor extends TransparentNodeDescriptor {
 
     public void applyTo(ElectricalLoad load) {
         cable.applyTo(load);
-    }
-
-    @Override
-    public void setParent(Item item, int damage) {
-        super.setParent(item, damage);
-        Data.addMachine(newItemStack());
     }
 
     @Override

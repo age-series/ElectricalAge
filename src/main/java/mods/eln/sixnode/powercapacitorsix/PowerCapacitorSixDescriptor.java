@@ -9,7 +9,6 @@ import mods.eln.misc.Obj3D.Obj3DPart;
 import mods.eln.misc.VoltageLevelColor;
 import mods.eln.misc.series.ISerie;
 import mods.eln.node.six.SixNodeDescriptor;
-import mods.eln.wiki.Data;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
@@ -67,11 +66,6 @@ public class PowerCapacitorSixDescriptor extends SixNodeDescriptor {
             DielectricItem desc = (DielectricItem) DielectricItem.getDescriptor(diel);
             return desc.uNominal * diel.stackSize;
         }
-    }
-
-    public void setParent(net.minecraft.item.Item item, int damage) {
-        super.setParent(item, damage);
-        Data.addEnergy(newItemStack());
     }
 
     void draw() {

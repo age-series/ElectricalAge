@@ -136,7 +136,7 @@ public abstract class SimpleNodeEntity extends TileEntity implements INodeEntity
             Eln.dp.println(DebugType.NODE, "ASSERT NULL NODE public Packet getDescriptionPacket() nodeblock entity");
             return null;
         }
-        return new S3FPacketCustomPayload(Eln.channelName, node.getPublishPacket().toByteArray());
+        return new S3FPacketCustomPayload(Eln.NETWORK_CHANNEL_NAME, node.getPublishPacket().toByteArray());
     }
 
 

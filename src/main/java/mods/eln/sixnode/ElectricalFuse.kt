@@ -13,9 +13,7 @@ import mods.eln.sim.IProcess
 import mods.eln.sim.ThermalLoad
 import mods.eln.sim.mna.component.Resistor
 import mods.eln.sim.nbt.NbtElectricalLoad
-import mods.eln.wiki.Data
 import net.minecraft.entity.player.EntityPlayer
-import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraftforge.client.IItemRenderer
@@ -33,11 +31,6 @@ class ElectricalFuseHolderDescriptor(name: String, obj: Obj3D) :
 
     init {
         voltageLevelColor = VoltageLevelColor.Neutral
-    }
-
-    override fun setParent(item: Item?, damage: Int) {
-        super.setParent(item, damage)
-        Data.addWiring(newItemStack())
     }
 
     override fun handleRenderType(item: ItemStack?, type: IItemRenderer.ItemRenderType?) = true

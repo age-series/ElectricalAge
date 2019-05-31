@@ -481,7 +481,7 @@ public abstract class NodeBase {
 
     public void preparePacketForClient(DataOutputStream stream) {
         try {
-            stream.writeByte(Eln.packetForClientNode);
+            stream.writeByte(Eln.PACKET_FOR_CLIENT_NODE);
 
             stream.writeInt(coordonate.x);
             stream.writeInt(coordonate.y);
@@ -529,7 +529,7 @@ public abstract class NodeBase {
 
         try {
 
-            stream.writeByte(Eln.packetNodeSingleSerialized);
+            stream.writeByte(Eln.PACKET_NODE_SINGLE_SERIALIZED);
 
             stream.writeInt(coordonate.x);
             stream.writeInt(coordonate.y);

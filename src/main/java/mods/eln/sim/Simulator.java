@@ -466,7 +466,7 @@ public class Simulator /* ,IPacketHandler */ {
 				PlayerManager playerManager = worldServer.getPlayerManager();
 				Utils.sendPacketToClient(bos, player);
 			}
-			//S3FPacketCustomPayload packet = new S3FPacketCustomPayload(Eln.channelName, bos.toByteArray());
+			//S3FPacketCustomPayload packet = new S3FPacketCustomPayload(Eln.NETWORK_CHANNEL_NAME, bos.toByteArray());
 			//Eln.instance.eventChannel.sendToAll(new FMLProxyPacket(packet));
 		}
 		

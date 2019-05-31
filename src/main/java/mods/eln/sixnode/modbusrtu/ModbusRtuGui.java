@@ -2,7 +2,6 @@ package mods.eln.sixnode.modbusrtu;
 
 import mods.eln.gui.*;
 import mods.eln.gui.IGuiObject.IGuiObjectObserver;
-import mods.eln.wiki.GuiVerticalExtender;
 import net.minecraft.entity.player.EntityPlayer;
 
 import java.io.ByteArrayOutputStream;
@@ -19,7 +18,6 @@ public class ModbusRtuGui extends GuiScreenEln {
     ModbusRtuRender render;
 
     GuiTextFieldEln station, name;
-    GuiVerticalExtender extender;
 
     int extenderYStart;
     GuiButtonEln txAddButton;
@@ -46,18 +44,10 @@ public class ModbusRtuGui extends GuiScreenEln {
 
     int generateTxRd(int x, int y) {
         uuidToRxName.clear();
-        float extenderPosition = 0;
-        if (extender != null) {
-            extenderPosition = extender.getSliderPosition();
-            remove(extender);
-        }
 
         y = 0;
-        extender = new GuiVerticalExtender(6, 6, helper.xSize - 12, helper.ySize - 12, helper);
-        add(extender);
 
         GuiLabel title = new GuiLabel(2, y, tr("Modbus RTU"));
-        extender.add(title);
 
         y += 10;
 
@@ -66,14 +56,12 @@ public class ModbusRtuGui extends GuiScreenEln {
             station.setText(render.station);
         station.setObserver(this);
         station.setComment(0, tr("Station ID"));
-        extender.add(station);
 
         name = new GuiTextFieldEln(fontRendererObj, 2 + station.getWidth() + 12, y, 101, helper);
         y += name.getHeight();
         name.setText(render.name);
         name.setObserver(this);
         name.setComment(0, tr("Station name"));
-        extender.add(name);
 
         y += 5;
         //y = 0;
@@ -81,12 +69,10 @@ public class ModbusRtuGui extends GuiScreenEln {
         {
             x = 2;
             GuiLabel txLabel = new GuiLabel(x, y + 6, tr("Wireless TX"));
-            extender.add(txLabel);
 
             x += 65;
             txAddButton = new GuiButtonEln(x, y, 40, 20, tr("Add"));
             txAddButton.setObserver(this);
-            extender.add(txAddButton);
 
             y += 20;
         }
@@ -110,7 +96,6 @@ public class ModbusRtuGui extends GuiScreenEln {
             GuiTextFieldEln txName = new GuiTextFieldEln(fontRendererObj, x, y + 4, 90, helper);
             txName.setText(tx.name);
             txName.setComment(0, tr("Channel name"));
-            extender.add(txName);
 
             x += txName.getWidth() + 12;
 
@@ -120,13 +105,11 @@ public class ModbusRtuGui extends GuiScreenEln {
             else
                 txId.setText("");
             txId.setComment(0, tr("Modbus ID"));
-            extender.add(txId);
 
             x += txId.getWidth() + 12;
 
             GuiButtonEln txDelete = new GuiButtonEln(x, y, 20, 20, "X");
             txDelete.setObserver(new WirelessTxDeleteListener(render, tx.uuid));
-            extender.add(txDelete);
 
             WirelessTxStatusListener configListener = new WirelessTxStatusListener(render, tx.uuid, txName, txId);
 
@@ -137,10 +120,8 @@ public class ModbusRtuGui extends GuiScreenEln {
             x = 2;
             y += 6;
             GuiLabel rxLabel = new GuiLabel(x, y + 6, tr("Wireless RX"));
-            extender.add(rxLabel);
             rxAddButton = new GuiButtonEln(x + 65, y, 40, 20, tr("Add"));
             rxAddButton.setObserver(this);
-            extender.add(rxAddButton);
 
             y += 20;
         }
@@ -164,7 +145,6 @@ public class ModbusRtuGui extends GuiScreenEln {
             GuiTextFieldEln rxName = new GuiTextFieldEln(fontRendererObj, x, y + 4, 90, helper);
             rxName.setText(rx.name);
             rxName.setComment(0, tr("Channel name"));
-            extender.add(rxName);
 
             x += rxName.getWidth() + 12;
 
@@ -174,13 +154,11 @@ public class ModbusRtuGui extends GuiScreenEln {
             else
                 rxId.setText("");
             rxId.setComment(0, tr("Modbus ID"));
-            extender.add(rxId);
 
             x += rxId.getWidth() + 12;
 
             GuiButtonEln rxDelete = new GuiButtonEln(x, y, 20, 20, "X");
             rxDelete.setObserver(new WirelessRxDeleteListener(render, rx.uuid));
-            extender.add(rxDelete);
 
             WirelessRxStatusListener configListener = new WirelessRxStatusListener(render, rx.uuid, rxName, rxId);
 
@@ -189,7 +167,6 @@ public class ModbusRtuGui extends GuiScreenEln {
         }
 
         y += 6;
-        extender.setSliderPosition(extenderPosition);
         return y;
     }
 

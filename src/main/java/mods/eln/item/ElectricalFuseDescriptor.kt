@@ -4,8 +4,6 @@ import mods.eln.misc.Obj3D
 import mods.eln.misc.VoltageLevelColor
 import mods.eln.misc.preserveMatrix
 import mods.eln.sixnode.electricalcable.ElectricalCableDescriptor
-import mods.eln.wiki.Data
-import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
 import net.minecraftforge.client.IItemRenderer
 import org.lwjgl.opengl.GL11
@@ -54,10 +52,5 @@ class ElectricalFuseDescriptor(name: String, val cableDescriptor: ElectricalCabl
                 }
             }
         }
-    }
-
-    override fun setParent(item: Item?, damage: Int) {
-        super.setParent(item, damage)
-        Data.addWiring(newItemStack())
     }
 }

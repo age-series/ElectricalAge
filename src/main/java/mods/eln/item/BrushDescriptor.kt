@@ -4,10 +4,8 @@ import mods.eln.generic.GenericItemUsingDamageDescriptor
 import mods.eln.i18n.I18N.tr
 import mods.eln.misc.Utils
 import mods.eln.misc.UtilsClient
-import mods.eln.wiki.Data
 import net.minecraft.client.Minecraft
 import net.minecraft.entity.player.EntityPlayer
-import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.util.ResourceLocation
@@ -23,11 +21,6 @@ class BrushDescriptor(name: String): GenericItemUsingDamageDescriptor(name) {
         val color = getColor(stack)
         val life = getLife(stack)
         return if (!creative && color == 15 && life == 0) "Empty " + super.getName(stack) else super.getName(stack)
-    }
-
-    override fun setParent(item: Item, damage: Int) {
-        super.setParent(item, damage)
-        Data.addWiring(newItemStack())
     }
 
     fun getColor(stack: ItemStack) = stack.itemDamage and 0xF

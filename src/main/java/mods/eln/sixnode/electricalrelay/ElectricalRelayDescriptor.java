@@ -7,9 +7,7 @@ import mods.eln.sim.ElectricalLoad;
 import mods.eln.sim.mna.component.Resistor;
 import mods.eln.sixnode.electricalcable.ElectricalCableDescriptor;
 import mods.eln.sixnode.genericcable.GenericCableDescriptor;
-import mods.eln.wiki.Data;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import org.lwjgl.opengl.GL11;
 
@@ -66,12 +64,6 @@ public class ElectricalRelayDescriptor extends SixNodeDescriptor {
 
     void applyTo(Resistor load) {
         cable.applyTo(load);
-    }
-
-    @Override
-    public void setParent(Item item, int damage) {
-        super.setParent(item, damage);
-        Data.addWiring(newItemStack());
     }
 
     @Override

@@ -5,7 +5,6 @@ import mods.eln.misc.Obj3D.Obj3DPart;
 import mods.eln.node.six.SixNodeDescriptor;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import org.lwjgl.opengl.GL11;
 
@@ -105,12 +104,6 @@ public class ElectricalWatchDescriptor extends SixNodeDescriptor {
             //UtilsClient.disableBilinear(); //BUG: Not always disabled.
             UtilsClient.disableBlend();
         }
-    }
-
-    @Override
-    public void setParent(Item item, int damage) {
-        super.setParent(item, damage);
-        //Data.addSignal(newItemStack());
     }
 
     @Override

@@ -6,9 +6,7 @@ import mods.eln.misc.Obj3D;
 import mods.eln.misc.Obj3D.Obj3DPart;
 import mods.eln.misc.VoltageLevelColor;
 import mods.eln.node.six.SixNodeDescriptor;
-import mods.eln.wiki.Data;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import org.lwjgl.opengl.GL11;
 
@@ -46,28 +44,6 @@ public class HubDescriptor extends SixNodeDescriptor {
             if (connection[idx] != null) connection[idx].draw();
         }
         GL11.glColor3f(1, 1, 1);
-    }
-
-/*	@Override
-	public boolean shouldUseRenderHelper(ItemRenderType type, ItemStack item, ItemRendererHelper helper) {
-		return true;
-	}
-
-	@Override
-	public boolean handleRenderType(ItemStack item, ItemRenderType type) {
-		return true;
-	}*/
-
-	/*@Override
-	public void renderItem(ItemRenderType type, ItemStack item, Object... data) {
-		//GL11.glTranslatef(-0.3f, -0.1f, 0f);
-		draw(new boolean[]{true, true, true, true, true, true});
-	}*/
-
-    @Override
-    public void setParent(Item item, int damage) {
-        super.setParent(item, damage);
-        Data.addWiring(newItemStack());
     }
 
     @Override

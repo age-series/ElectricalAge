@@ -6,9 +6,7 @@ import mods.eln.misc.LRDU;
 import mods.eln.misc.Obj3D.Obj3DPart;
 import mods.eln.misc.VoltageLevelColor;
 import mods.eln.node.six.SixNodeDescriptor;
-import mods.eln.wiki.Data;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
 import java.util.List;
@@ -33,28 +31,6 @@ public class ElectricalSensorDescriptor extends SixNodeDescriptor {
     void draw() {
         if (main != null) main.draw();
     }
-
-    @Override
-    public void setParent(Item item, int damage) {
-        super.setParent(item, damage);
-        Data.addSignal(newItemStack());
-    }
-    /*
-	
-	@Override
-	public boolean handleRenderType(ItemStack item, ItemRenderType type) {
-		return true;
-	}
-	
-	@Override
-	public boolean shouldUseRenderHelper(ItemRenderType type, ItemStack item, ItemRendererHelper helper) {
-		return true;
-	}
-	
-	@Override
-	public void renderItem(ItemRenderType type, ItemStack item, Object... data) {
-		draw();
-	}*/
 
     @Override
     public void addInformation(ItemStack itemStack, EntityPlayer entityPlayer, List list, boolean par4) {

@@ -64,7 +64,7 @@ public class NodeClient {
 		    }
 
 		    Packet250CustomPayload packet = new Packet250CustomPayload();
-            packet.channel = Eln.channelName;
+            packet.channel = Eln.NETWORK_CHANNEL_NAME;
             packet.data = bos.toByteArray();
             packet.length = bos.size();
             	    	

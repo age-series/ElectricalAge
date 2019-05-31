@@ -8,13 +8,11 @@ import mods.eln.misc.Obj3D.Obj3DPart;
 import mods.eln.misc.Utils;
 import mods.eln.misc.UtilsClient;
 import mods.eln.server.PlayerManager.PlayerMetadata;
-import mods.eln.wiki.Data;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.MathHelper;
@@ -151,12 +149,6 @@ public class PortableOreScannerItem extends GenericItemUsingDamageDescriptor imp
                 break;
         }
         return s;
-    }
-
-    @Override
-    public void setParent(Item item, int damage) {
-        super.setParent(item, damage);
-        Data.addPortable(newItemStack());
     }
 
     @Override

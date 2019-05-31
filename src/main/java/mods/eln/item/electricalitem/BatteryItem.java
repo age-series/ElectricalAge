@@ -4,7 +4,6 @@ import mods.eln.generic.GenericItemUsingDamageDescriptor;
 import mods.eln.item.electricalinterface.IItemEnergyBattery;
 import mods.eln.misc.Utils;
 import mods.eln.misc.UtilsClient;
-import mods.eln.wiki.Data;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -36,7 +35,6 @@ public class BatteryItem extends GenericItemUsingDamageDescriptor implements IIt
     @Override
     public void setParent(Item item, int damage) {
         super.setParent(item, damage);
-        Data.addPortable(newItemStack());
     }
 
     @Override

@@ -21,11 +21,9 @@ import mods.eln.sim.nbt.NbtThermalLoad
 import mods.eln.sim.process.destruct.ThermalLoadWatchDog
 import mods.eln.sim.process.destruct.WorldExplosion
 import mods.eln.sound.LoopedSound
-import mods.eln.wiki.Data
 import net.minecraft.client.gui.GuiButton
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.inventory.IInventory
-import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraftforge.client.IItemRenderer
@@ -45,11 +43,6 @@ class FuelHeatFurnaceDescriptor(name: String, model: Obj3D, val thermal: Thermal
     init {
         thermal.setMaximalPower(2000.0)
         voltageLevelColor = VoltageLevelColor.Thermal
-    }
-
-    override fun setParent(item: Item, damage: Int) {
-        super.setParent(item, damage)
-        Data.addThermal(newItemStack())
     }
 
     fun draw(installedBurner: Int? = null, on: Boolean = false, heating: Boolean = false) {

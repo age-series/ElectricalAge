@@ -2,7 +2,6 @@ package mods.eln.sixnode.lampsocket;
 
 import mods.eln.misc.VoltageLevelColor;
 import mods.eln.node.six.SixNodeDescriptor;
-import mods.eln.wiki.Data;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import org.lwjgl.opengl.GL11;
@@ -60,11 +59,6 @@ public class LampSocketDescriptor extends SixNodeDescriptor {
 
     boolean noCameraOpt() {
         return cameraOpt;
-    }
-
-    public void setParent(net.minecraft.item.Item item, int damage) {
-        super.setParent(item, damage);
-        Data.addLight(newItemStack());
     }
 
     @Override
