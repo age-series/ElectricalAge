@@ -199,7 +199,7 @@ public class TransformerElement extends TransparentNodeElement implements IConfi
             primaryDescriptor.applyTo(primaryLoad, coreFactor);
             secondaryDescriptor.applyTo(secondaryLoad, coreFactor);
             primaryMaxCurrent = (float) primaryDescriptor.electricalMaximalCurrent;
-            secondaryMaxCurrent = (float) primaryDescriptor.electricalMaximalCurrent;
+            secondaryMaxCurrent = (float) secondaryDescriptor.electricalMaximalCurrent;
             transformer.setRatio(1.0 * secondaryCable.stackSize / primaryCable.stackSize);
             interSystemProcess.setRatio(1.0 * secondaryCable.stackSize / primaryCable.stackSize);
             populated = true;
