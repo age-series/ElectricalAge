@@ -2,14 +2,20 @@ package mods.eln.registry;
 
 import cpw.mods.fml.common.registry.GameRegistry;
 import mods.eln.Eln;
+import mods.eln.debug.DebugType;
+import mods.eln.generic.GenericItemUsingDamageDescriptor;
 import mods.eln.i18n.I18N;
 import mods.eln.item.BrushDescriptor;
 import mods.eln.misc.Recipe;
 import mods.eln.misc.Utils;
+import mods.eln.node.six.SixNodeDescriptor;
+import mods.eln.node.transparent.TransparentNodeDescriptor;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.CraftingManager;
+import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.launchwrapper.LogWrapper;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
@@ -18,16 +24,16 @@ import net.minecraftforge.oredict.ShapelessOreRecipe;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 
 import static mods.eln.i18n.I18N.TR_NAME;
 
-public class RecipeRegistry {
-    public RecipeRegistry() {}
+public class RegistryUtils {
 
     /**
      * register - registers ALL crafting recipes
      */
-    public void register() {
+    public static void register() {
         recipeEnergyConverter();
         recipeComputerProbe();
 
@@ -150,6 +156,63 @@ public class RecipeRegistry {
         return findItemStack(name, 1);
     }
 
+    public static void checkRecipe() {
+        for (SixNodeDescriptor d : Eln.sixNodeItem.subItemList.values()) {
+            ItemStack stack = d.newItemStack();
+            if (!recipeExists(stack)) {
+                Eln.dp.println(DebugType.SIX_NODE, "No recipe for " + d.name);
+            }
+        }
+        for (TransparentNodeDescriptor d : Eln.transparentNodeItem.subItemList.values()) {
+            ItemStack stack = d.newItemStack();
+            if (!recipeExists(stack)) {
+                Eln.dp.println(DebugType.TRANSPARENT_NODE, "No recipe for "+ d.name);
+            }
+        }
+        for (GenericItemUsingDamageDescriptor d : Eln.sharedItem.subItemList.values()) {
+            ItemStack stack = d.newItemStack();
+            if (!recipeExists(stack)) {
+                Eln.dp.println(DebugType.OTHER, "No recipe for " + d.name);
+            }
+        }
+        for (GenericItemUsingDamageDescriptor d : Eln.sharedItemStackOne.subItemList.values()) {
+            ItemStack stack = d.newItemStack();
+            if (!recipeExists(stack)) {
+                Eln.dp.println(DebugType.OTHER, "No recipe for " + d.name);
+            }
+        }
+    }
+
+    public static boolean recipeExists(ItemStack stack) {
+        if (stack == null)
+            return false;
+        List list = CraftingManager.getInstance().getRecipeList();
+        for (Object o : list) {
+            if (o instanceof IRecipe) {
+                IRecipe r = (IRecipe) o;
+                if (r.getRecipeOutput() == null)
+                    continue;
+                if (Utils.areSame(stack, r.getRecipeOutput()))
+                    return true;
+            }
+        }
+        return false;
+    }
+
+    public static void addToOre(String name, ItemStack ore) {
+        OreDictionary.registerOre(name, ore);
+        Eln.dictionnaryOreFromMod.put(name, ore);
+    }
+
+
+/*
+
+TODO: Here down stuff needs to get integrated into the registration classes in this package.
+
+Hopefully, we can make a relatively decent sort of them.
+
+ */
+
     public static void recipeMaceratorModOre(float f, String inputName, String outputName, int outputCount) {
         if (!OreDictionary.doesOreNameExist(inputName)) {
             LogWrapper.info("No entries for oredict: " + inputName);
@@ -176,7 +239,7 @@ public class RecipeRegistry {
         }
     }
 
-    private void recipeGround() {
+    private static void recipeGround() {
         addRecipe(findItemStack("Ground Cable"),
             " C ",
             " C ",
@@ -184,7 +247,7 @@ public class RecipeRegistry {
             'C', findItemStack("Copper Cable"));
     }
 
-    private void recipeElectricalCable() {
+    private static void recipeElectricalCable() {
         addRecipe(Eln.signalCableDescriptor.newItemStack(2),
             "R",
             "C",
@@ -232,7 +295,7 @@ public class RecipeRegistry {
             'R', "itemRubber");
     }
 
-    private void recipeThermalCable() {
+    private static void recipeThermalCable() {
         addRecipe(findItemStack("Copper Thermal Cable", 12),
             "SSS",
             "CCC",
@@ -246,7 +309,7 @@ public class RecipeRegistry {
             'C', findItemStack("Copper Cable"));
     }
 
-    private void recipeLampSocket() {
+    private static void recipeLampSocket() {
         addRecipe(findItemStack("Lamp Socket A", 3),
             "G ",
             "IG",
@@ -318,7 +381,7 @@ public class RecipeRegistry {
             'g', new ItemStack(Blocks.glass_pane));
     }
 
-    private void recipeLampSupply() {
+    private static void recipeLampSupply() {
         addRecipe(findItemStack("Lamp Supply", 1),
             " I ",
             "ICI",
@@ -327,7 +390,7 @@ public class RecipeRegistry {
             'I', new ItemStack(Items.iron_ingot));
     }
 
-    private void recipePowerSocket() {
+    private static void recipePowerSocket() {
         addRecipe(findItemStack("50V Power Socket", 16),
             "RUR",
             "ACA",
@@ -344,7 +407,7 @@ public class RecipeRegistry {
             'C', findItemStack("Medium Voltage Cable"));
     }
 
-    private void recipePassiveComponent() {
+    private static void recipePassiveComponent() {
         addRecipe(findItemStack("Signal Diode", 4),
             " RB",
             " IR",
@@ -408,7 +471,7 @@ public class RecipeRegistry {
         );
     }
 
-    private void recipeSwitch() {
+    private static void recipeSwitch() {
         addRecipe(findItemStack("Low Voltage Switch"),
             "  I",
             " I ",
@@ -443,7 +506,7 @@ public class RecipeRegistry {
             'C', findItemStack("Very High Voltage Cable"));
     }
 
-    private void recipeElectricalRelay() {
+    private static void recipeElectricalRelay() {
         addRecipe(findItemStack("Low Voltage Relay"),
             "GGG",
             "OIO",
@@ -496,7 +559,7 @@ public class RecipeRegistry {
             'C', findItemStack("Signal Cable"));
     }
 
-    private void recipeWirelessSignal() {
+    private static void recipeWirelessSignal() {
         addRecipe(findItemStack("Wireless Signal Transmitter"),
             " S ",
             " R ",
@@ -522,7 +585,7 @@ public class RecipeRegistry {
             'S', findItemStack("Signal Antenna"));
     }
 
-    private void recipeChips() {
+    private static void recipeChips() {
         addRecipe(findItemStack("NOT Chip"),
             "   ",
             "cCr",
@@ -664,7 +727,7 @@ public class RecipeRegistry {
             's', Eln.dictCheapChip);
     }
 
-    private void recipeTransformer() {
+    private static void recipeTransformer() {
         addRecipe(findItemStack("DC-DC Converter"),
             "C C",
             "III",
@@ -672,7 +735,7 @@ public class RecipeRegistry {
             'I', new ItemStack(Items.iron_ingot));
     }
 
-    private void recipeHeatFurnace() {
+    private static void recipeHeatFurnace() {
         addRecipe(findItemStack("Stone Heat Furnace"),
             "BBB",
             "BIB",
@@ -691,7 +754,7 @@ public class RecipeRegistry {
             'i', findItemStack("Copper Thermal Cable"));
     }
 
-    private void recipeTurbine() {
+    private static void recipeTurbine() {
         addRecipe(findItemStack("50V Turbine"),
             " m ",
             "HMH",
@@ -791,7 +854,7 @@ public class RecipeRegistry {
         );
     }
 
-    private void recipeBattery() {
+    private static void recipeBattery() {
         addRecipe(findItemStack("Cost Oriented Battery"),
             "C C",
             "PPP",
@@ -841,7 +904,7 @@ public class RecipeRegistry {
             'I', "ingotCopper");
     }
 
-    private void recipeGridDevices(HashSet<String> oreNames) {
+    private static void recipeGridDevices(HashSet<String> oreNames) {
         int poleRecipes = 0;
         for (String oreName : new String[]{
             "ingotAluminum",
@@ -908,7 +971,7 @@ public class RecipeRegistry {
         }
     }
 
-    private void recipeElectricalFurnace() {
+    private static void recipeElectricalFurnace() {
         addRecipe(findItemStack("Electrical Furnace"),
             "III",
             "IFI",
@@ -921,7 +984,7 @@ public class RecipeRegistry {
             new ItemStack(Items.water_bucket));
     }
 
-    private void recipeSixNodeMisc() {
+    private static void recipeSixNodeMisc() {
         addRecipe(findItemStack("Analog Watch"),
             "crc",
             "III",
@@ -956,7 +1019,7 @@ public class RecipeRegistry {
             'P', findItemStack("Iron Plate"));
     }
 
-    private void recipeAutoMiner() {
+    private static void recipeAutoMiner() {
         addRecipe(findItemStack("Auto Miner"),
             "MCM",
             "BOB",
@@ -968,7 +1031,7 @@ public class RecipeRegistry {
             'P', findItemStack("Mining Pipe"));
     }
 
-    private void recipeWindTurbine() {
+    private static void recipeWindTurbine() {
         addRecipe(findItemStack("Wind Turbine"),
             " I ",
             "IMI",
@@ -991,7 +1054,7 @@ public class RecipeRegistry {
             'M', findItemStack("Electrical Motor"));
     }
 
-    private void recipeFuelGenerator() {
+    private static void recipeFuelGenerator() {
         addRecipe(findItemStack("50V Fuel Generator"),
             "III",
             " BA",
@@ -1012,7 +1075,7 @@ public class RecipeRegistry {
             'M', findItemStack("Advanced Electrical Motor"));
     }
 
-    private void recipeSolarPanel() {
+    private static void recipeSolarPanel() {
         addRecipe(findItemStack("Small Solar Panel"),
             "LLL",
             "CSC",
@@ -1046,7 +1109,7 @@ public class RecipeRegistry {
             'I', new ItemStack(Items.iron_ingot));
     }
 
-    private void recipeThermalDissipatorPassiveAndActive() {
+    private static void recipeThermalDissipatorPassiveAndActive() {
         addRecipe(
             findItemStack("Small Passive Thermal Dissipator"),
             "I I",
@@ -1070,12 +1133,12 @@ public class RecipeRegistry {
             'R', "itemRubber");
     }
 
-    private void recipeGeneral() {
+    private static void recipeGeneral() {
         Utils.addSmelting(Eln.treeResin.parentItem,
             Eln.treeResin.parentItemDamage, findItemStack("Rubber", 1), 0f);
     }
 
-    private void recipeHeatingCorp() {
+    private static void recipeHeatingCorp() {
         addRecipe(findItemStack("Small 50V Copper Heating Corp"),
             "C C",
             "CCC",
@@ -1131,7 +1194,7 @@ public class RecipeRegistry {
             'C', findItemStack("Small 3.2kV Tungsten Heating Corp"));
     }
 
-    private void recipeRegulatorItem() {
+    private static void recipeRegulatorItem() {
         addRecipe(findItemStack("On/OFF Regulator 10 Percent", 1),
             "R R",
             " R ",
@@ -1152,7 +1215,7 @@ public class RecipeRegistry {
             'C', Eln.dictCheapChip);
     }
 
-    private void recipeLampItem() {
+    private static void recipeLampItem() {
         addRecipe(
             findItemStack("Small 50V Incandescent Light Bulb", 4),
             " G ",
@@ -1256,7 +1319,7 @@ public class RecipeRegistry {
             'C', findItemStack("Medium Voltage Cable"));
     }
 
-    private void recipeProtection() {
+    private static void recipeProtection() {
         addRecipe(findItemStack("Overvoltage Protection", 4),
             "SCD",
             'S', findItemStack("Electrical Probe Chip"),
@@ -1269,7 +1332,7 @@ public class RecipeRegistry {
             'D', new ItemStack(Items.redstone));
     }
 
-    private void recipeCombustionChamber() {
+    private static void recipeCombustionChamber() {
         addRecipe(findItemStack("Combustion Chamber"),
             " L ",
             "L L",
@@ -1277,7 +1340,7 @@ public class RecipeRegistry {
             'L', new ItemStack(Blocks.stone));
     }
 
-    private void recipeFerromagneticCore() {
+    private static void recipeFerromagneticCore() {
         addRecipe(findItemStack("Cheap Ferromagnetic Core"),
             "LLL",
             "L  ",
@@ -1295,7 +1358,7 @@ public class RecipeRegistry {
             'P', "plateIron");
     }
 
-    private void recipeDust() {
+    private static void recipeDust() {
         addShapelessRecipe(findItemStack("Alloy Dust", 6),
             "dustIron",
             "dustCoal",
@@ -1315,7 +1378,7 @@ public class RecipeRegistry {
             findItemStack("Lapis Dust"));
     }
 
-    private void recipeElectricalMotor() {
+    private static void recipeElectricalMotor() {
         addRecipe(findItemStack("Electrical Motor"),
             " C ",
             "III",
@@ -1332,7 +1395,7 @@ public class RecipeRegistry {
             'C', findItemStack("Medium Voltage Cable"));
     }
 
-    private void recipeSolarTracker() {
+    private static void recipeSolarTracker() {
         addRecipe(findItemStack("Solar Tracker", 4),
             "VVV",
             "RQR",
@@ -1344,7 +1407,7 @@ public class RecipeRegistry {
             'I', new ItemStack(Items.iron_ingot));
     }
 
-    private void recipeMeter() {
+    private static void recipeMeter() {
         addRecipe(findItemStack("MultiMeter"),
             "RGR",
             "RER",
@@ -1381,7 +1444,7 @@ public class RecipeRegistry {
         );
     }
 
-    private void recipeElectricalDrill() {
+    private static void recipeElectricalDrill() {
         addRecipe(findItemStack("Cheap Electrical Drill"),
             "CMC",
             " T ",
@@ -1422,7 +1485,7 @@ public class RecipeRegistry {
             'D', findItemStack("Synthetic Diamond"));
     }
 
-    private void recipeOreScanner() {
+    private static void recipeOreScanner() {
         addRecipe(findItemStack("Ore Scanner"),
             "IGI",
             "RCR",
@@ -1433,14 +1496,14 @@ public class RecipeRegistry {
             'G', new ItemStack(Items.gold_ingot));
     }
 
-    private void recipeMiningPipe() {
+    private static void recipeMiningPipe() {
         addRecipe(findItemStack("Mining Pipe", 12),
             "A",
             "A",
             'A', "ingotAlloy");
     }
 
-    private void recipeTreeResinAndRubber() {
+    private static void recipeTreeResinAndRubber() {
         addRecipe(findItemStack("Tree Resin Collector"),
             "W W",
             "WW ", 'W', "plankWood");
@@ -1449,7 +1512,7 @@ public class RecipeRegistry {
             " WW", 'W', "plankWood");
     }
 
-    private void recipeRawCable() {
+    private static void recipeRawCable() {
         addRecipe(findItemStack("Copper Cable", 12),
             "III",
             'I', "ingotCopper");
@@ -1462,7 +1525,7 @@ public class RecipeRegistry {
             'I', Eln.dictTungstenIngot);
     }
 
-    private void recipeGraphite() {
+    private static void recipeGraphite() {
         addRecipe(new ItemStack(Eln.arcClayBlock),
             "III",
             "III",
@@ -1525,7 +1588,7 @@ public class RecipeRegistry {
             findItemStack("Synthetic Diamond"));
     }
 
-    private void recipeBatteryItem() {
+    private static void recipeBatteryItem() {
         addRecipe(findItemStack("Portable Battery"),
             " I ",
             "IPI",
@@ -1540,7 +1603,7 @@ public class RecipeRegistry {
             findItemStack("Portable Battery"));
     }
 
-    private void recipeElectricalTool() {
+    private static void recipeElectricalTool() {
         addRecipe(findItemStack("Small Flashlight"),
             "GLG",
             "IBI",
@@ -1576,7 +1639,7 @@ public class RecipeRegistry {
         }
     }
 
-    private void recipeECoal() {
+    private static void recipeECoal() {
         addRecipe(findItemStack("E-Coal Helmet"),
             "PPP",
             "PCP",
@@ -1602,7 +1665,7 @@ public class RecipeRegistry {
             'C', findItemStack("Portable Condensator"));
     }
 
-    private void recipePortableCapacitor() {
+    private static void recipePortableCapacitor() {
         addRecipe(findItemStack("Portable Condensator"),
             " r ",
             "cDc",
@@ -1617,7 +1680,7 @@ public class RecipeRegistry {
             findItemStack("Portable Condensator"));
     }
 
-    private void recipeMiscItem() {
+    private static void recipeMiscItem() {
         addRecipe(findItemStack("Cheap Chip"),
             " R ",
             "RSR",
@@ -1734,7 +1797,7 @@ public class RecipeRegistry {
         );
     }
 
-    private void recipeMacerator() {
+    private static void recipeMacerator() {
         float f = 4000;
         Eln.maceratorRecipes.addRecipe(new Recipe(new ItemStack(Blocks.coal_ore, 1),
             new ItemStack(Items.coal, 3, 0), 1.0 * f));
@@ -1800,7 +1863,7 @@ public class RecipeRegistry {
         //end recycling recipes
     }
 
-    private void recipeArcFurnace() {
+    private static void recipeArcFurnace() {
         float f = 200000;
         float smeltf = 5000;
         //start smelting recipes
@@ -1837,7 +1900,7 @@ public class RecipeRegistry {
             new ItemStack[]{findItemStack("Canister of Arc Water", 1)}, 7000000)); //hardcoded 7MJ to prevent overunity
     }
 
-    private void recipePlateMachine() {
+    private static void recipePlateMachine() {
         float f = 10000;
         Eln.plateMachineRecipes.addRecipe(new Recipe(
             findItemStack("Copper Ingot", Eln.plateConversionRatio),
@@ -1855,7 +1918,7 @@ public class RecipeRegistry {
             0), findItemStack("Gold Plate"), 1.0 * f));
     }
 
-    private void recipeCompressor() {
+    private static void recipeCompressor() {
         Eln.compressorRecipes.addRecipe(new Recipe(findItemStack("4x Graphite Rods", 1),
             findItemStack("Synthetic Diamond"), 80000.0));
         Eln.compressorRecipes.addRecipe(new Recipe(findItemStack("Coal Dust", 4),
@@ -1868,7 +1931,7 @@ public class RecipeRegistry {
             findItemStack("Tree Resin"), 3000.0));
     }
 
-    private void recipeMagnetizer() {
+    private static void recipeMagnetizer() {
         Eln.magnetiserRecipes.addRecipe(new Recipe(new ItemStack(Items.iron_ingot, 2),
             new ItemStack[]{findItemStack("Basic Magnet")}, 5000.0));
         Eln.magnetiserRecipes.addRecipe(new Recipe(findItemStack("Alloy Ingot", 2),
@@ -1881,7 +1944,7 @@ public class RecipeRegistry {
             new ItemStack[]{new ItemStack(Items.ender_pearl)}, 150000.0));
     }
 
-    private void recipeFuelBurnerItem() {
+    private static void recipeFuelBurnerItem() {
         addRecipe(findItemStack("Small Fuel Burner"),
             "   ",
             " Cc",
@@ -1902,7 +1965,7 @@ public class RecipeRegistry {
             'c', findItemStack("Copper Thermal Cable"));
     }
 
-    private void recipeFurnace() {
+    private static void recipeFurnace() {
         ItemStack in;
         in = findItemStack("Copper Ore");
         Utils.addSmelting(in.getItem(), in.getItemDamage(),
@@ -1942,7 +2005,7 @@ public class RecipeRegistry {
             findItemStack("Mercury"));
     }
 
-    private void recipeElectricalSensor() {
+    private static void recipeElectricalSensor() {
         addRecipe(findItemStack("Voltage Probe", 1),
             "SC",
             'S', findItemStack("Electrical Probe Chip"),
@@ -1954,7 +2017,7 @@ public class RecipeRegistry {
             'C', findItemStack("Signal Cable"));
     }
 
-    private void recipeThermalSensor() {
+    private static void recipeThermalSensor() {
         addRecipe(findItemStack("Thermal Probe", 1),
             "SCS",
             'S', findItemStack("Thermal Probe Chip"),
@@ -1965,7 +2028,7 @@ public class RecipeRegistry {
             'C', findItemStack("Signal Cable"));
     }
 
-    private void recipeTransporter() {
+    private static void recipeTransporter() {
         addRecipe(findItemStack("Experimental Transporter", 1),
             "RMR",
             "RMR",
@@ -1975,7 +2038,7 @@ public class RecipeRegistry {
             'R', Eln.dictAdvancedChip);
     }
 
-    private void recipeTurret() {
+    private static void recipeTurret() {
         addRecipe(findItemStack("800V Defence Turret", 1),
             " R ",
             "CMC",
@@ -1986,7 +2049,7 @@ public class RecipeRegistry {
             'R', new ItemStack(Blocks.redstone_block));
     }
 
-    private void recipeMachine() {
+    private static void recipeMachine() {
         addRecipe(findItemStack("50V Macerator", 1),
             "IRI",
             "FMF",
@@ -2067,7 +2130,7 @@ public class RecipeRegistry {
             'I', "ingotAlloy");
     }
 
-    private void recipeElectricalGate() {
+    private static void recipeElectricalGate() {
         addShapelessRecipe(findItemStack("Electrical Timer"),
             new ItemStack(Items.repeater),
             Eln.dictCheapChip);
@@ -2080,7 +2143,7 @@ public class RecipeRegistry {
             'C', Eln.dictCheapChip);
     }
 
-    private void recipeElectricalRedstone() {
+    private static void recipeElectricalRedstone() {
         addRecipe(findItemStack("Redstone-to-Voltage Converter", 1),
             "TCS",
             'S', findItemStack("Signal Cable"),
@@ -2094,7 +2157,7 @@ public class RecipeRegistry {
             'T', new ItemStack(Blocks.redstone_torch));
     }
 
-    private void recipeElectricalEnvironmentalSensor() {
+    private static void recipeElectricalEnvironmentalSensor() {
         addShapelessRecipe(findItemStack("Electrical Daylight Sensor"),
             new ItemStack(Blocks.daylight_detector),
             findItemStack("Redstone-to-Voltage Converter"));
@@ -2140,7 +2203,7 @@ public class RecipeRegistry {
             Eln.dictAdvancedChip);
     }
 
-    private void recipeElectricalVuMeter() {
+    private static void recipeElectricalVuMeter() {
         for (int idx = 0; idx < 4; idx++) {
             addRecipe(findItemStack("Analog vuMeter", 1),
                 "WWW",
@@ -2163,7 +2226,7 @@ public class RecipeRegistry {
         }
     }
 
-    private void recipeElectricalBreaker() {
+    private static void recipeElectricalBreaker() {
         addRecipe(findItemStack("Electrical Breaker", 1),
             "crC",
             'c', findItemStack("Overvoltage Protection"),
@@ -2172,7 +2235,7 @@ public class RecipeRegistry {
 
     }
 
-    private void recipeFuses() {
+    private static void recipeFuses() {
         addRecipe(findItemStack("Electrical Fuse Holder", 1),
             "i",
             " ",
@@ -2196,7 +2259,7 @@ public class RecipeRegistry {
             'c', findItemStack("Very High Voltage Cable"));
     }
 
-    private void recipeElectricalGateSource() {
+    private static void recipeElectricalGateSource() {
         addRecipe(findItemStack("Signal Trimmer", 1),
             "RsR",
             "rRr",
@@ -2248,7 +2311,7 @@ public class RecipeRegistry {
             'R', new ItemStack(Items.redstone));
     }
 
-    private void recipeElectricalDataLogger() {
+    private static void recipeElectricalDataLogger() {
         addRecipe(findItemStack("Data Logger", 1),
             "RRR",
             "RGR",
@@ -2272,7 +2335,7 @@ public class RecipeRegistry {
             'G', new ItemStack(Blocks.glass_pane));
     }
 
-    private void recipeElectricalAlarm() {
+    private static void recipeElectricalAlarm() {
         addRecipe(findItemStack("Nuclear Alarm", 1),
             "ITI",
             "IMI",
@@ -2291,7 +2354,7 @@ public class RecipeRegistry {
             'M', new ItemStack(Blocks.noteblock));
     }
 
-    private void recipeElectricalAntenna() {
+    private static void recipeElectricalAntenna() {
         addRecipe(findItemStack("Low Power Transmitter Antenna", 1),
             "R i",
             "CI ",
@@ -2341,7 +2404,7 @@ public class RecipeRegistry {
             'D', new ItemStack(Items.diamond));
     }
 
-    private void recipeBatteryCharger() {
+    private static void recipeBatteryCharger() {
         addRecipe(findItemStack("Weak 50V Battery Charger", 1),
             "RIR",
             "III",
@@ -2368,7 +2431,7 @@ public class RecipeRegistry {
             'R', new ItemStack(Items.redstone));
     }
 
-    private void recipeEggIncubator() {
+    private static void recipeEggIncubator() {
         addRecipe(findItemStack("50V Egg Incubator", 1),
             "IGG",
             "E G",
@@ -2379,7 +2442,7 @@ public class RecipeRegistry {
             'G', new ItemStack(Blocks.glass_pane));
     }
 
-    private void recipeEnergyConverter() {
+    private static void recipeEnergyConverter() {
         if (Eln.ElnToOtherEnergyConverterEnable) {
             addRecipe(new ItemStack(Eln.elnToOtherBlockLvu),
                 "III",
@@ -2408,7 +2471,7 @@ public class RecipeRegistry {
         }
     }
 
-    private void recipeComputerProbe() {
+    private static void recipeComputerProbe() {
         if (Eln.ComputerProbeEnable) {
             addRecipe(new ItemStack(Eln.computerProbeBlock),
                 "cIw",
@@ -2422,7 +2485,7 @@ public class RecipeRegistry {
         }
     }
 
-    private void recipeArmor() {
+    private static void recipeArmor() {
         addRecipe(new ItemStack(Eln.helmetCopper),
             "CCC",
             "C C",
@@ -2443,7 +2506,7 @@ public class RecipeRegistry {
             'C', "ingotCopper");
     }
 
-    private void recipeTool() {
+    private static void recipeTool() {
         addRecipe(new ItemStack(Eln.shovelCopper),
             "i",
             "s",
@@ -2476,7 +2539,7 @@ public class RecipeRegistry {
             's', new ItemStack(Items.stick));
     }
 
-    private void recipeDisplays() {
+    private static void recipeDisplays() {
         addRecipe(findItemStack("Digital Display", 1),
             "   ",
             "rrr",
