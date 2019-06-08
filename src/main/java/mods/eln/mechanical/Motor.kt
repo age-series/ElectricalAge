@@ -93,7 +93,7 @@ class MotorDescriptor(
 class MotorRender(entity: TransparentNodeEntity, desc_: TransparentNodeDescriptor) : ShaftRender(entity, desc_) {
     val entity = entity
 
-    override val cableRender = Eln.instance.stdCableRender3200V
+    override val cableRender = Eln.stdCableRender3200V
     val desc = desc_ as MotorDescriptor
 
     val ledColors: Array<Color> = arrayOf(
@@ -154,7 +154,7 @@ class MotorRender(entity: TransparentNodeEntity, desc_: TransparentNodeDescripto
     }
 
     override fun getCableRender(side: Direction, lrdu: LRDU): CableRenderDescriptor? {
-        if(lrdu == LRDU.Down && side == front) return Eln.instance.stdCableRender3200V
+        if(lrdu == LRDU.Down && side == front) return Eln.stdCableRender3200V
         return null
     }
 

@@ -223,6 +223,6 @@ class NixieTubeRender(entity: TransparentNodeEntity, _descriptor: TransparentNod
     }
 
     override fun getCableRender(side: Direction?, lrdu: LRDU?): CableRenderDescriptor? {
-        return if (connection.get(lrdu)) { Eln.instance.stdCableRenderSignal } else { null }
+        return if (connection.get(lrdu)) { Eln.stdCableRenderSignal } else { null }
     }
 }

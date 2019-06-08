@@ -204,7 +204,7 @@ class TurbineElement(node: TransparentNode, desc_: TransparentNodeDescriptor) :
 }
 
 class TurbineRender(entity: TransparentNodeEntity, desc: TransparentNodeDescriptor) : ShaftRender(entity, desc) {
-    override val cableRender = Eln.instance.stdCableRenderSignal
+    override val cableRender = Eln.stdCableRenderSignal
 
     override fun networkUnserialize(stream: DataInputStream) {
         super.networkUnserialize(stream)
