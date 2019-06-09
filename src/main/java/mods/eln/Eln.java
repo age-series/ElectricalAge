@@ -135,7 +135,7 @@ public class Eln {
 
     public static String dictTungstenOre, dictTungstenDust, dictTungstenIngot;
     public static String dictCheapChip, dictAdvancedChip;
-    public static ArrayList<OreScannerConfigElement> oreScannerConfig = new ArrayList<OreScannerConfigElement>();
+    public static ArrayList<OreScannerConfigElement> oreScannerConfig = new ArrayList<>();
 
     public static Item swordCopper, hoeCopper, shovelCopper, pickaxeCopper, axeCopper;
 
@@ -229,25 +229,25 @@ public class Eln {
 
     /* Other */
 
-    public static ArrayList<IConfigSharing> configShared = new ArrayList<IConfigSharing>();
+    public static ArrayList<IConfigSharing> configShared = new ArrayList<>();
     public static SimpleNetworkWrapper elnNetwork;
     public static PacketHandler packetHandler;
-    static NodeServer nodeServer;
+    private static NodeServer nodeServer;
     public static LiveDataManager clientLiveDataManager;
     public static ClientKeyHandler clientKeyHandler;
     public static SaveConfig saveConfig;
     public static GhostManager ghostManager;
-    public static GhostManagerNbt ghostManagerNbt;
+    private static GhostManagerNbt ghostManagerNbt;
     private static NodeManager nodeManager;
     public static PlayerManager playerManager;
     public static ModbusTcpServer modbusServer;
-    public static NodeManagerNbt nodeManagerNbt;
+    private static NodeManagerNbt nodeManagerNbt;
     public static Simulator simulator = null;
     public static DelayedTaskManager delayedTask;
     public static ItemEnergyInventoryProcess itemEnergyInventoryProcess;
     public static CreativeTabs creativeTab;
     public static MaterialProperties mp;
-    public static OreRegenerate oreRegenerate;
+    private static OreRegenerate oreRegenerate;
     public static Obj3DFolder obj = new Obj3DFolder();
     public static ArrayList<DebugType> debugTypes = new ArrayList<>();
     public static DebugPrint dp;
@@ -267,7 +267,6 @@ public class Eln {
     public static CableRenderDescriptor stdCableRender200V;
     public static CableRenderDescriptor stdCableRender800V;
     public static CableRenderDescriptor stdCableRender3200V;
-    public static CableRenderDescriptor stdCableRenderCreative;
 
     public static CableRenderDescriptor stdCableRenderLowCurrent;
     public static CableRenderDescriptor stdCableRenderMediumCurrent;
@@ -328,161 +327,12 @@ public class Eln {
     public static ArrayList<ItemStack> furnaceList = new ArrayList<>();
 
     @EventHandler
+    @SuppressWarnings("unused")
     public void preInit(FMLPreInitializationEvent event) {
         logger = LogManager.getLogger(Eln.MODID);
 
-        // The absolute first thing to do is load the configuration file so that if anything goes wrong, the DebugPrint class has been prepared.
-        // All prints before that point are handled with logger.info()
-
-        Configuration config = new Configuration(
-            event.getSuggestedConfigurationFile());
-        config.load();
-
-        //Hacks for correct long date typing failures in config file
-        //WARNING/BUG: "renameProperty" changes the type to String! However read functions don't seem to care attention to it, so it's OK... for the moment.
-        if (config.hasKey("lamp", "incondescentLifeInHours"))
-            config.renameProperty("lamp", "incondescentLifeInHours", "incandescentLifeInHours");
-        if (config.hasKey("mapgenerate", "plumb"))
-            config.renameProperty("mapgenerate", "plumb", "lead");
-        if (config.hasKey("mapgenerate", "cooper"))
-            config.renameProperty("mapgenerate", "cooper", "copper");
-        if (config.hasKey("simulation", "electricalFrequancy"))
-            config.renameProperty("simulation", "electricalFrequancy", "electricalFrequency");
-        if (config.hasKey("simulation", "thermalFrequancy"))
-            config.renameProperty("simulation", "thermalFrequancy", "thermalFrequency");
-        if (config.hasKey("balancing", "cablePowerFactor"))
-            config.renameProperty("balancing", "cablePowerFactor", "cableFactor");
-
-
-        modbusEnable = config.get("modbus", "enable", false).getBoolean(false);
-        modbusPort = config.get("modbus", "port", 1502).getInt(1502);
-        debugEnabled = config.get("debug", "enable", false).getBoolean(false);
-
-        explosionEnable = config.get("gameplay", "explosion", true).getBoolean(true);
-
-        versionCheckEnabled = config.get("general", "versionCheckEnable", true).getBoolean(true);
-        analyticsEnabled = config.get("general", "analyticsEnable", true).getBoolean(true);
-
-        if (analyticsEnabled) {
-            final Property p = config.get("general", "playerUUID", "");
-            if (p.getString().length() == 0) {
-                playerUUID = UUID.randomUUID().toString();
-                p.set(playerUUID);
-            } else
-                playerUUID = p.getString();
-        }
-
-        heatTurbinePowerFactor = config.get("balancing", "heatTurbinePowerFactor", 1).getDouble(1);
-        solarPanelPowerFactor = config.get("balancing", "solarPanelPowerFactor", 1).getDouble(1);
-        windTurbinePowerFactor = config.get("balancing", "windTurbinePowerFactor", 1).getDouble(1);
-        waterTurbinePowerFactor = config.get("balancing", "waterTurbinePowerFactor", 1).getDouble(1);
-        fuelGeneratorPowerFactor = config.get("balancing", "fuelGeneratorPowerFactor", 1).getDouble(1);
-        fuelHeatFurnacePowerFactor = config.get("balancing", "fuelHeatFurnacePowerFactor", 1.0).getDouble();
-        autominerRange = config.get("balancing", "autominerRange", 10, "Maximum horizontal distance from autominer that will be mined").getInt(10);
-
-        Other.ElnToIc2ConversionRatio = config.get("balancing", "ElnToIndustrialCraftConversionRatio", 1.0 / 3.0).getDouble(1.0 / 3.0);
-        Other.ElnToOcConversionRatio = config.get("balancing", "ElnToOpenComputerConversionRatio", 1.0 / 3.0 / 2.5).getDouble(1.0 / 3.0 / 2.5);
-        Other.ElnToTeConversionRatio = config.get("balancing", "ElnToThermalExpansionConversionRatio", 1.0 / 3.0 * 4).getDouble(1.0 / 3.0 * 4);
-        //	Other.ElnToBuildcraftConversionRatio = config.get("balancing", "ElnToBuildcraftConversionRatio", 1.0 / 3.0 / 5 * 2).getDouble(1.0 / 3.0 / 5 * 2);
-        plateConversionRatio = config.get("balancing", "platesPerIngot", 1).getInt(1);
-        shaftEnergyFactor = config.get("balancing", "shaftEnergyFactor", 0.05).getDouble(0.05);
-
-        stdBatteryHalfLife = config.get("battery", "batteryHalfLife", 2, "How many days it takes for a battery to decay half way").getDouble(2) * Utils.minecraftDay;
-        batteryCapacityFactor = config.get("balancing", "batteryCapacityFactor", 1.).getDouble(1.);
-
-        ComputerProbeEnable = config.get("compatibility", "ComputerProbeEnable", true).getBoolean(true);
-        ElnToOtherEnergyConverterEnable = config.get("compatibility", "ElnToOtherEnergyConverterEnable", true).getBoolean(true);
-
-        replicatorPop = config.get("entity", "replicatorPop", true).getBoolean(true);
-        ReplicatorPopProcess.popPerSecondPerPlayer = config.get("entity", "replicatorPopWhenThunderPerSecond", 1.0 / 120).getDouble(1.0 / 120);
-        replicatorRegistrationId = config.get("entity", "replicatorId", -1).getInt(-1);
-        killMonstersAroundLamps = config.get("entity", "killMonstersAroundLamps", true).getBoolean(true);
-        killMonstersAroundLampsRange = config.get("entity", "killMonstersAroundLampsRange", 9).getInt(9);
-        maxReplicators = config.get("entity", "maxReplicators", 100).getInt(100);
-
-        forceOreRegen = config.get("mapGenerate", "forceOreRegen", false).getBoolean(false);
-        genCopper = config.get("mapGenerate", "copper", true).getBoolean(true);
-        genLead = config.get("mapGenerate", "lead", true).getBoolean(true);
-        genTungsten = config.get("mapGenerate", "tungsten", true).getBoolean(true);
-        genCinnabar = config.get("mapGenerate", "cinnabar", true).getBoolean(true);
-        genCinnabar = false;
-
-        oredictTungsten = config.get("dictionary", "tungsten", false).getBoolean(false);
-        if (oredictTungsten) {
-            dictTungstenOre = "oreTungsten";
-            dictTungstenDust = "dustTungsten";
-            dictTungstenIngot = "ingotTungsten";
-        } else {
-            dictTungstenOre = "oreElnTungsten";
-            dictTungstenDust = "dustElnTungsten";
-            dictTungstenIngot = "ingotElnTungsten";
-        }
-        oredictChips = config.get("dictionary", "chips", true).getBoolean(true);
-        if (oredictChips) {
-            dictCheapChip = "circuitBasic";
-            dictAdvancedChip = "circuitAdvanced";
-        } else {
-            dictCheapChip = "circuitElnBasic";
-            dictAdvancedChip = "circuitElnAdvanced";
-        }
-
-        incandescentLampLife = config.get("lamp", "incandescentLifeInHours", 16.0).getDouble(16.0) * 3600;
-        economicLampLife = config.get("lamp", "economicLifeInHours", 64.0).getDouble(64.0) * 3600;
-        carbonLampLife = config.get("lamp", "carbonLifeInHours", 6.0).getDouble(6.0) * 3600;
-        ledLampLife = config.get("lamp", "ledLifeInHours", 512.0).getDouble(512.0) * 3600;
-        ledLampInfiniteLife = config.get("lamp", "infiniteLedLife", false).getBoolean();
-
-        fuelGeneratorTankCapacity = config.get("fuelGenerator",
-            "tankCapacityInSecondsAtNominalPower", 20 * 60).getDouble(20 * 60);
-
-        addOtherModOreToXRay = config.get("xrayscannerconfig", "addOtherModOreToXRay", true).getBoolean(true);
-        xRayScannerRange = (float) config.get("xrayscannerconfig", "rangeInBloc", 5.0).getDouble(5.0);
-        xRayScannerRange = Math.max(Math.min(xRayScannerRange, 10), 4);
-        xRayScannerCanBeCrafted = config.get("xrayscannerconfig", "canBeCrafted", true).getBoolean(true);
-
-        electricalFrequency = config.get("simulation", "electricalFrequency", 20).getDouble(20);
-        electricalInterSystemOverSampling = config.get("simulation", "electricalInterSystemOverSampling", 50).getInt(50);
-        thermalFrequency = config.get("simulation", "thermalFrequency", 400).getDouble(400);
-
-        wirelessTxRange = config.get("wireless", "txRange", 32).getInt();
-
-        wailaEasyMode = config.get("balancing", "wailaEasyMode", false, "Display more detailed WAILA info on some machines").getBoolean(false);
-        cableFactor = config.get("balancing", "cableFactor", 1.0, "Multiplication factor for cable power capacity. We recommend 2.0 to 4.0 for larger modpacks, but 1.0 for Eln standalone, or if you like a challenge.", 0.5, 4.0).getDouble(1.0);
-
-        fuelHeatValueFactor = config.get("balancing", "fuelHeatValueFactor", 0.0000675,
-            "Factor to apply when converting real word heat values to Minecraft heat values (1mB = 1l).").getDouble();
-
-        Eln.noSymbols = config.get("general", "noSymbols", false).getBoolean();
-        Eln.noVoltageBackground = config.get("general", "noVoltageBackground", false).getBoolean();
-
-        Eln.maxSoundDistance = config.get("debug", "maxSoundDistance", 16.0).getDouble();
-
-        Eln.cableResistanceMultiplier = config.get("debug", "cableResistanceMultiplier", 1000.0).getDouble();
-
-        {
-            // typstr gets the most current list of values that you can use
-            String typstr = "";
-            for (DebugType dt: DebugType.values()) {
-                typstr += dt.name() + ", ";
-            }
-            typstr = typstr.substring(0, typstr.length() - 2);
-
-            // if not created, it will create the value with everything enabled, and also dynamically edit the comment to list all possible types you can use
-            String dst = config.get("debug", "enabledTypes", typstr, "One/multiple of: " + typstr).getString();
-
-            // this parses all of the ones the user has selected and adds them to the debugTypes list.
-            for (String str: dst.split(",")) {
-                str = str.trim();
-                //Eln.logger.info("Enabling debug prints for " + str);
-                try {
-                    Eln.debugTypes.add(DebugType.valueOf(str));
-                } catch (Exception e) {
-                    Eln.logger.error("Error loading config with DebugType: " + e);
-                }
-            }
-        }
-
-        config.save();
+        // The configuration handler will load all of the configuration variables and set them in Eln.java for you.
+        ConfigHandler.loadConfig(event);
 
         // load up the debug printer before anything else starts.
         dp = new DebugPrint(debugTypes);
@@ -610,6 +460,7 @@ public class Eln {
     }
 
     @EventHandler
+    @SuppressWarnings("unused")
     public void modsLoaded(FMLPostInitializationEvent event) {
         Other.check();
         if (Other.ccLoaded) {
@@ -619,6 +470,7 @@ public class Eln {
     }
 
     @EventHandler
+    @SuppressWarnings("unused")
     public void load(FMLInitializationEvent event) {
         RegistryUtils.register();
         proxy.registerRenderers();
@@ -632,12 +484,13 @@ public class Eln {
     }
 
     @EventHandler
+    @SuppressWarnings("unused")
     public void postInit(FMLPostInitializationEvent event) {
         serverEventListener = new ServerEventListener();
     }
 
     @EventHandler
-    /* Remember to use the right event! */
+    @SuppressWarnings("unused")
     public void onServerStopped(FMLServerStoppedEvent ev) {
         TutorialSignElement.resetBalise();
 
@@ -670,6 +523,7 @@ public class Eln {
     }
 
     @EventHandler
+    @SuppressWarnings("unused")
     public void onServerStart(FMLServerAboutToStartEvent ev) {
         modbusServer = new ModbusTcpServer(modbusPort);
         TeleporterElement.teleporterList.clear();
@@ -688,7 +542,7 @@ public class Eln {
     }
 
     @EventHandler
-    /* Remember to use the right event! */
+    @SuppressWarnings("unused")
     public void onServerStarting(FMLServerStartingEvent ev) {
 
         {
@@ -803,6 +657,7 @@ public class Eln {
         lowVoltageCableDescriptor.applyTo(r);
     }
 
+    @SuppressWarnings("unused")
     private boolean isDevelopmentRun() {
         return (Boolean) Launch.blackboard.get("fml.deobfuscatedEnvironment");
     }
