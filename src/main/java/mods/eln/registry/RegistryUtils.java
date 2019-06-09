@@ -4,8 +4,6 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import mods.eln.Eln;
 import mods.eln.debug.DebugType;
 import mods.eln.generic.GenericItemUsingDamageDescriptor;
-import mods.eln.i18n.I18N;
-import mods.eln.item.BrushDescriptor;
 import mods.eln.misc.Recipe;
 import mods.eln.misc.Utils;
 import mods.eln.node.six.SixNodeDescriptor;
@@ -25,8 +23,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
-
-import static mods.eln.i18n.I18N.TR_NAME;
 
 public class RegistryUtils {
 

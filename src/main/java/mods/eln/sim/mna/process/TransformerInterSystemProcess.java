@@ -1,7 +1,5 @@
 package mods.eln.sim.mna.process;
 
-import mods.eln.Eln;
-import mods.eln.debug.DebugType;
 import mods.eln.sim.mna.component.VoltageSource;
 import mods.eln.sim.mna.misc.IRootSystemPreStepProcess;
 import mods.eln.sim.mna.state.State;

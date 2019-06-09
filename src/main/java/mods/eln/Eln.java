@@ -1,8 +1,11 @@
 package mods.eln;
 
-import cpw.mods.fml.common.*;
+import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
+import cpw.mods.fml.common.ModMetadata;
+import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.*;
 import cpw.mods.fml.common.network.FMLEventChannel;
 import cpw.mods.fml.common.network.NetworkRegistry;
@@ -21,13 +24,19 @@ import mods.eln.debug.DebugType;
 import mods.eln.entity.ReplicatorPopProcess;
 import mods.eln.eventhandlers.ElnFMLEventsHandler;
 import mods.eln.eventhandlers.ElnForgeEventsHandler;
-import mods.eln.generic.*;
+import mods.eln.generic.GenericCreativeTab;
+import mods.eln.generic.GenericItemUsingDamageDescriptor;
+import mods.eln.generic.GenericItemUsingDamageDescriptorWithComment;
+import mods.eln.generic.SharedItem;
 import mods.eln.ghost.GhostBlock;
 import mods.eln.ghost.GhostManager;
 import mods.eln.ghost.GhostManagerNbt;
-import mods.eln.item.*;
+import mods.eln.item.CopperCableDescriptor;
+import mods.eln.item.GraphiteDescriptor;
+import mods.eln.item.MiningPipeDescriptor;
+import mods.eln.item.TreeResin;
 import mods.eln.item.electricalinterface.ItemEnergyInventoryProcess;
-import mods.eln.item.electricalitem.*;
+import mods.eln.item.electricalitem.PortableOreScannerItem;
 import mods.eln.item.electricalitem.PortableOreScannerItem.RenderStorage.OreScannerConfigElement;
 import mods.eln.misc.*;
 import mods.eln.misc.materials.MaterialProperties;
@@ -52,9 +61,9 @@ import mods.eln.simplenode.energyconverter.EnergyConverterElnToOtherBlock;
 import mods.eln.sixnode.currentcable.CurrentCableDescriptor;
 import mods.eln.sixnode.electricalcable.ElectricalCableDescriptor;
 import mods.eln.sixnode.electricaldatalogger.DataLogsPrintDescriptor;
-import mods.eln.sixnode.lampsocket.*;
+import mods.eln.sixnode.lampsocket.LightBlock;
+import mods.eln.sixnode.lampsocket.LightBlockEntity;
 import mods.eln.sixnode.lampsupply.LampSupplyElement;
-import mods.eln.sixnode.logicgate.*;
 import mods.eln.sixnode.modbusrtu.ModbusTcpServer;
 import mods.eln.sixnode.tutorialsign.TutorialSignElement;
 import mods.eln.sixnode.wirelesssignal.IWirelessSignalSpot;
@@ -68,7 +77,9 @@ import net.minecraft.command.ICommandManager;
 import net.minecraft.command.ServerCommandManager;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Blocks;
-import net.minecraft.item.*;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemArmor;
+import net.minecraft.item.ItemStack;
 import net.minecraft.launchwrapper.Launch;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
@@ -80,10 +91,13 @@ import net.minecraftforge.oredict.OreDictionary;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.UUID;
 
 import static java.util.Arrays.asList;
-import static mods.eln.i18n.I18N.*;
+import static mods.eln.i18n.I18N.TR;
+import static mods.eln.i18n.I18N.tr;
 
 @SuppressWarnings({"SameParameterValue", "PointlessArithmeticExpression"})
 @Mod(modid = Eln.MODID, name = Eln.NAME, version = "@VERSION@", acceptedMinecraftVersions = "@VERSION@", acceptableRemoteVersions = "@VERSION@", acceptableSaveVersions = "")
@@ -610,9 +624,7 @@ public class Eln {
         proxy.registerRenderers();
         TR("itemGroup.Eln");
         RegistryUtils.checkRecipe();
-        if (isDevelopmentRun()) {
-            Achievements.init();
-        }
+        Achievements.init();
         MinecraftForge.EVENT_BUS.register(new ElnForgeEventsHandler());
         FMLCommonHandler.instance().bus().register(new ElnFMLEventsHandler());
         FMLInterModComms.sendMessage("Waila", "register", "mods.eln.integration.waila.WailaIntegration.callbackRegister");

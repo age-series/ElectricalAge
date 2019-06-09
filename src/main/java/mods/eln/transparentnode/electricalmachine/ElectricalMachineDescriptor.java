@@ -1,7 +1,10 @@
 package mods.eln.transparentnode.electricalmachine;
 
 import mods.eln.cable.CableRenderDescriptor;
-import mods.eln.misc.*;
+import mods.eln.misc.Direction;
+import mods.eln.misc.RecipesList;
+import mods.eln.misc.Utils;
+import mods.eln.misc.VoltageLevelColor;
 import mods.eln.node.transparent.TransparentNodeDescriptor;
 import mods.eln.sim.ElectricalLoad;
 import mods.eln.sim.ElectricalStackMachineProcess;
