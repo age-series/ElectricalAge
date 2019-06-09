@@ -185,6 +185,8 @@ public class Eln {
     public static boolean debugEnabled = false;  // Read from configuration file. Default is `false`.
     public static boolean versionCheckEnabled = true; // Read from configuration file. Default is `true`.
     public static boolean analyticsEnabled = true; // Read from configuration file. Default is `true`.
+    public static String analyticsURL = "";
+    public static boolean analyticsPlayerUUIDOptIn = false;
     public static String playerUUID = null; // Read from configuration file. Default is `null`.
     public static double heatTurbinePowerFactor = 1;
     public static double solarPanelPowerFactor = 1;

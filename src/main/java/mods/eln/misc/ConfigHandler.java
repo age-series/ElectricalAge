@@ -41,8 +41,10 @@ public class ConfigHandler {
 
         Eln.explosionEnable = config.get("gameplay", "explosion", true).getBoolean(true);
 
-        Eln.versionCheckEnabled = config.get("general", "versionCheckEnable", true).getBoolean(true);
-        Eln.analyticsEnabled = config.get("general", "analyticsEnable", true).getBoolean(true);
+        Eln.versionCheckEnabled = config.get("general", "versionCheckEnable", true, "Enable version checker").getBoolean(true);
+        Eln.analyticsEnabled = config.get("general", "analyticsEnable", true, "Enable Analytics for Electrical Age").getBoolean(true);
+        Eln.analyticsURL = config.get("general", "analyticsURL", "http://eln.ja13.org/stat", "Set update checker URL").getString();
+        Eln.analyticsPlayerUUIDOptIn = config.get("general", "analyticsPlayerOptIn", false, "Opt into sending player UUID when sending analytics (default DISABLED)").getBoolean(false);
 
         if (Eln.analyticsEnabled) {
             final Property p = config.get("general", "playerUUID", "");

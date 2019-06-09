@@ -60,7 +60,7 @@ public class VersionCheckerHandler {
         // Print the current version when the client start a map
         if (Eln.versionCheckEnabled) {
             //m.thePlayer.addChatMessage(new ChatComponentText(Version.printColor()));
-            Eln.dp.println(DebugType.OTHER, Version.printColor());
+            Eln.dp.println(DebugType.OTHER, "Version Information: " + Version.print());
             String elnVers = "Electrical Age";
             m.thePlayer.addChatMessage(new ChatComponentText(elnVers));
             m.thePlayer.addChatMessage(new ChatComponentText(versionMsg));
