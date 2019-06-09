@@ -36,12 +36,32 @@ import mods.eln.transparentnode.turret.TurretDescriptor;
 import mods.eln.transparentnode.waterturbine.WaterTurbineDescriptor;
 import mods.eln.transparentnode.windturbine.WindTurbineDescriptor;
 import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.oredict.OreDictionary;
+
+import java.util.Collections;
+import java.util.HashSet;
 
 import static mods.eln.i18n.I18N.TR_NAME;
-import static mods.eln.i18n.I18N.tr;
 
 public class TransparentNodeRegistry {
+
+    private static void addRecipe(ItemStack output, Object... params) {
+        RegistryUtils.addRecipe(output, params);
+    }
+    private static void addShapelessRecipe(ItemStack output, Object... params) {
+        RegistryUtils.addShapelessRecipe(output, params);
+    }
+    private static ItemStack findItemStack(String name, int stackSize) {
+        return RegistryUtils.findItemStack(name, stackSize);
+    }
+    private static String firstExistingOre(String... oreNames) {
+        return RegistryUtils.firstExistingOre(oreNames);
+    }
+    private static ItemStack findItemStack(String name) {
+        return RegistryUtils.findItemStack(name);
+    }
 
     public static void thingRegistration() {
         //TRANSPARENT NODE REGISTRATION
@@ -70,6 +90,33 @@ public class TransparentNodeRegistry {
         registerGridDevices(123);
     }
 
+    public static void recipeRegistration() {
+
+        HashSet<String> oreNames = new HashSet<String>();
+        {
+            final String[] names = OreDictionary.getOreNames();
+            Collections.addAll(oreNames, names);
+        }
+
+        recipeTransformer();
+        recipeHeatFurnace();
+        recipeTurbine();
+        recipeElectricalFurnace();
+        recipeMachine();
+        recipeEggIncubator();
+        recipeSolarPanel();
+        recipeBattery();
+        recipeGridDevices(oreNames);
+        recipeWindTurbine();
+        recipeFuelGenerator();
+        recipeThermalDissipatorPassiveAndActive();
+        recipeTransporter();
+        recipeTurret();
+        recipeElectricalAntenna();
+        recipeAutoMiner();
+        recipeDisplays();
+    }
+
     private static void registerTransformer(int id) {
         int subId;
         String name;
@@ -80,6 +127,13 @@ public class TransparentNodeRegistry {
                 Eln.obj.getObj("feromagneticcorea"), Eln.obj.getObj("transformatorCase"), 0.5f);
             Eln.transparentNodeItem.addDescriptor(subId + (id << 6), desc);
         }
+    }
+    private static void recipeTransformer() {
+        addRecipe(findItemStack("DC-DC Converter"),
+            "C C",
+            "III",
+            'C', findItemStack("Copper Cable"),
+            'I', new ItemStack(Items.iron_ingot));
     }
 
     private static void registerHeatFurnace(int id) {
@@ -107,6 +161,24 @@ public class TransparentNodeRegistry {
             Eln.transparentNodeItem.addDescriptor(subId + (id << 6), desc);
         }
 
+    }
+    private static void recipeHeatFurnace() {
+        addRecipe(findItemStack("Stone Heat Furnace"),
+            "BBB",
+            "BIB",
+            "BiB",
+            'B', new ItemStack(Blocks.stone),
+            'i', findItemStack("Copper Thermal Cable"),
+            'I', findItemStack("Combustion Chamber"));
+        addRecipe(findItemStack("Fuel Heat Furnace"),
+            "IcI",
+            "mCI",
+            "IiI",
+            'c', findItemStack("Cheap Chip"),
+            'm', findItemStack("Electrical Motor"),
+            'C', new ItemStack(Items.cauldron),
+            'I', new ItemStack(Items.iron_ingot),
+            'i', findItemStack("Copper Thermal Cable"));
     }
 
     private static void registerTurbine(int id) {
@@ -243,6 +315,105 @@ public class TransparentNodeRegistry {
             Eln.transparentNodeItem.addDescriptor(subId + (id << 6), desc);
         }
     }
+    private static void recipeTurbine() {
+        addRecipe(findItemStack("50V Turbine"),
+            " m ",
+            "HMH",
+            " E ",
+            'M', findItemStack("Machine Block"),
+            'E', findItemStack("Low Voltage Cable"),
+            'H', findItemStack("Copper Thermal Cable"),
+            'm', findItemStack("Electrical Motor")
+        );
+        addRecipe(findItemStack("200V Turbine"),
+            "ImI",
+            "HMH",
+            "IEI",
+            'I', "itemRubber",
+            'M', findItemStack("Advanced Machine Block"),
+            'E', findItemStack("Medium Voltage Cable"),
+            'H', findItemStack("Copper Thermal Cable"),
+            'm', findItemStack("Advanced Electrical Motor"));
+        addRecipe(findItemStack("Generator"),
+            "mmm",
+            "ama",
+            " ME",
+            'm', findItemStack("Advanced Electrical Motor"),
+            'M', findItemStack("Advanced Machine Block"),
+            'a', firstExistingOre("ingotAluminum", "ingotIron"),
+            'E', findItemStack("High Voltage Cable")
+        );
+        addRecipe(findItemStack("Shaft Motor"),
+            "imi",
+            " ME",
+            'i', "ingotIron",
+            'M', findItemStack("Advanced Machine Block"),
+            'm', findItemStack("Advanced Electrical Motor"),
+            'E', findItemStack("Very High Voltage Cable")
+        );
+        addRecipe(findItemStack("Steam Turbine"),
+            " a ",
+            "aAa",
+            " M ",
+            'a', firstExistingOre("ingotAluminum", "ingotIron"),
+            'A', firstExistingOre("blockAluminum", "blockIron"),
+            'M', findItemStack("Advanced Machine Block")
+        );
+        addRecipe(findItemStack("Gas Turbine"),
+            "msH",
+            "sSs",
+            " M ",
+            'm', findItemStack("Advanced Electrical Motor"),
+            'H', findItemStack("Copper Thermal Cable"),
+            's', firstExistingOre("ingotSteel", "ingotIron"),
+            'S', firstExistingOre("blockSteel", "blockIron"),
+            'M', findItemStack("Advanced Machine Block")
+        );
+        addRecipe(findItemStack("Joint"),
+            "   ",
+            "iii",
+            " m ",
+            'i', "ingotIron",
+            'm', findItemStack("Machine Block")
+        );
+        addRecipe(findItemStack("Joint hub"),
+            " i ",
+            "iii",
+            " m ",
+            'i', "ingotIron",
+            'm', findItemStack("Machine Block")
+        );
+        addRecipe(findItemStack("Flywheel"),
+            "PPP",
+            "PmP",
+            "PPP",
+            'P', "ingotLead",
+            'm', findItemStack("Machine Block")
+        );
+        addRecipe(findItemStack("Tachometer"),
+            "p  ",
+            "iii",
+            "cm ",
+            'i', "ingotIron",
+            'm', findItemStack("Machine Block"),
+            'p', findItemStack("Electrical Probe Chip"),
+            'c', findItemStack("Signal Cable")
+        );
+        addRecipe(findItemStack("Clutch"),
+            "iIi",
+            " c ",
+            'i', "ingotIron",
+            'I', "plateIron",
+            'c', findItemStack("Machine Block")
+        );
+        addRecipe(findItemStack("Fixed Shaft"),
+            "iBi",
+            " c ",
+            'i', "ingotIron",
+            'B', "blockIron",
+            'c', findItemStack("Machine Block")
+        );
+    }
 
     private static void registerElectricalFurnace(int id) {
         int subId;
@@ -271,6 +442,18 @@ public class TransparentNodeRegistry {
             Eln.transparentNodeItem.addDescriptor(subId + (id << 6), desc);
             Eln.furnaceList.add(desc.newItemStack());
         }
+    }
+    private static void recipeElectricalFurnace() {
+        addRecipe(findItemStack("Electrical Furnace"),
+            "III",
+            "IFI",
+            "ICI",
+            'C', findItemStack("Low Voltage Cable"),
+            'F', new ItemStack(Blocks.furnace),
+            'I', new ItemStack(Items.iron_ingot));
+        addShapelessRecipe(findItemStack("Canister of Water", 1),
+            findItemStack("Inert Canister"),
+            new ItemStack(Items.water_bucket));
     }
 
     private static void registerMacerator(int id) {
@@ -301,74 +484,6 @@ public class TransparentNodeRegistry {
             desc.setRunningSound("eln:macerator");
         }
     }
-
-    private static void registerArcFurnace(int id) {
-        int subId;
-        String name;
-        {
-            subId = 0;
-            name = TR_NAME(I18N.Type.NONE, "800V Arc Furnace");
-            ArcFurnaceDescriptor desc = new ArcFurnaceDescriptor(
-                name,
-                Eln.obj.getObj("arcfurnace"),
-                Eln.HVU, 10000,
-                Eln.HVU * 1.25,
-                new ThermalLoadInitializer(80, -100, 10, 100000.0),
-                Eln.highVoltageCableDescriptor,
-                Eln.arcFurnaceRecipes);
-            Eln.transparentNodeItem.addDescriptor(subId + (id << 6), desc);
-            desc.setRunningSound("eln:arc_furnace");
-
-        }
-    }
-
-    private static void registerPlateMachine(int id) {
-        int subId;
-        String name;
-        {
-            subId = 0;
-            name = TR_NAME(I18N.Type.NONE, "50V Plate Machine");
-            PlateMachineDescriptor desc = new PlateMachineDescriptor(
-                name,
-                Eln.obj.getObj("platemachinea"),
-                Eln.LVU, 200,
-                Eln.LVU * 1.25,
-                new ThermalLoadInitializer(80, -100, 10, 100000.0),
-                Eln.lowVoltageCableDescriptor,
-                Eln.plateMachineRecipes);
-            Eln.transparentNodeItem.addDescriptor(subId + (id << 6), desc);
-            desc.setRunningSound("eln:plate_machine");
-        }
-        {
-            subId = 4;
-            name = TR_NAME(I18N.Type.NONE, "200V Plate Machine");
-            PlateMachineDescriptor desc = new PlateMachineDescriptor(
-                name,
-                Eln.obj.getObj("platemachineb"),
-                Eln.MVU, 400,
-                Eln.MVU * 1.25,
-                new ThermalLoadInitializer(80, -100, 10, 100000.0),
-                Eln.meduimVoltageCableDescriptor,
-                Eln.plateMachineRecipes);
-            Eln.transparentNodeItem.addDescriptor(subId + (id << 6), desc);
-            desc.setRunningSound("eln:plate_machine");
-        }
-    }
-
-    private static void registerEggIncubator(int id) {
-        int subId;
-        String name;
-        {
-            subId = 0;
-            name = TR_NAME(I18N.Type.NONE, "50V Egg Incubator");
-            EggIncubatorDescriptor desc = new EggIncubatorDescriptor(
-                name, Eln.obj.getObj("eggincubator"),
-                Eln.lowVoltageCableDescriptor,
-                Eln.LVU, 50);
-            Eln.transparentNodeItem.addDescriptor(subId + (id << 6), desc);
-        }
-    }
-
     private static void registerCompressor(int id) {
         int subId;
         String name;
@@ -403,7 +518,38 @@ public class TransparentNodeRegistry {
             desc.setEndSound(new SoundCommand("eln:compressor_end"));
         }
     }
-
+    private static void registerPlateMachine(int id) {
+        int subId;
+        String name;
+        {
+            subId = 0;
+            name = TR_NAME(I18N.Type.NONE, "50V Plate Machine");
+            PlateMachineDescriptor desc = new PlateMachineDescriptor(
+                name,
+                Eln.obj.getObj("platemachinea"),
+                Eln.LVU, 200,
+                Eln.LVU * 1.25,
+                new ThermalLoadInitializer(80, -100, 10, 100000.0),
+                Eln.lowVoltageCableDescriptor,
+                Eln.plateMachineRecipes);
+            Eln.transparentNodeItem.addDescriptor(subId + (id << 6), desc);
+            desc.setRunningSound("eln:plate_machine");
+        }
+        {
+            subId = 4;
+            name = TR_NAME(I18N.Type.NONE, "200V Plate Machine");
+            PlateMachineDescriptor desc = new PlateMachineDescriptor(
+                name,
+                Eln.obj.getObj("platemachineb"),
+                Eln.MVU, 400,
+                Eln.MVU * 1.25,
+                new ThermalLoadInitializer(80, -100, 10, 100000.0),
+                Eln.meduimVoltageCableDescriptor,
+                Eln.plateMachineRecipes);
+            Eln.transparentNodeItem.addDescriptor(subId + (id << 6), desc);
+            desc.setRunningSound("eln:plate_machine");
+        }
+    }
     private static void registerMagnetizer(int id) {
         int subId;
         String name;
@@ -435,6 +581,129 @@ public class TransparentNodeRegistry {
             Eln.transparentNodeItem.addDescriptor(subId + (id << 6), desc);
             desc.setRunningSound("eln:Motor");
         }
+    }
+    private static void registerArcFurnace(int id) {
+        int subId;
+        String name;
+        {
+            subId = 0;
+            name = TR_NAME(I18N.Type.NONE, "800V Arc Furnace");
+            ArcFurnaceDescriptor desc = new ArcFurnaceDescriptor(
+                name,
+                Eln.obj.getObj("arcfurnace"),
+                Eln.HVU, 10000,
+                Eln.HVU * 1.25,
+                new ThermalLoadInitializer(80, -100, 10, 100000.0),
+                Eln.highVoltageCableDescriptor,
+                Eln.arcFurnaceRecipes);
+            Eln.transparentNodeItem.addDescriptor(subId + (id << 6), desc);
+            desc.setRunningSound("eln:arc_furnace");
+
+        }
+    }
+    private static void recipeMachine() {
+        addRecipe(findItemStack("50V Macerator", 1),
+            "IRI",
+            "FMF",
+            "IcI",
+            'M', findItemStack("Machine Block"),
+            'c', findItemStack("Electrical Motor"),
+            'F', new ItemStack(Items.flint),
+            'I', findItemStack("Iron Cable"),
+            'R', new ItemStack(Items.redstone));
+        addRecipe(findItemStack("200V Macerator", 1),
+            "ICI",
+            "DMD",
+            "IcI",
+            'M', findItemStack("Advanced Machine Block"),
+            'C', Eln.dictAdvancedChip,
+            'c', findItemStack("Advanced Electrical Motor"),
+            'D', new ItemStack(Items.diamond),
+            'I', "ingotAlloy");
+        addRecipe(findItemStack("50V Compressor", 1),
+            "IRI",
+            "FMF",
+            "IcI",
+            'M', findItemStack("Machine Block"),
+            'c', findItemStack("Electrical Motor"),
+            'F', "plateIron",
+            'I', findItemStack("Iron Cable"),
+            'R', new ItemStack(Items.redstone));
+        addRecipe(findItemStack("200V Compressor", 1),
+            "ICI",
+            "DMD",
+            "IcI",
+            'M', findItemStack("Advanced Machine Block"),
+            'C', Eln.dictAdvancedChip,
+            'c', findItemStack("Advanced Electrical Motor"),
+            'D', "plateAlloy",
+            'I', "ingotAlloy");
+        addRecipe(findItemStack("50V Plate Machine", 1),
+            "IRI",
+            "IMI",
+            "IcI",
+            'M', findItemStack("Machine Block"),
+            'c', findItemStack("Electrical Motor"),
+            'I', findItemStack("Iron Cable"),
+            'R', new ItemStack(Items.redstone));
+        addRecipe(findItemStack("200V Plate Machine", 1),
+            "DCD",
+            "DMD",
+            "DcD",
+            'M', findItemStack("Advanced Machine Block"),
+            'C', Eln.dictAdvancedChip,
+            'c', findItemStack("Advanced Electrical Motor"),
+            'D', "plateAlloy",
+            'I', "ingotAlloy");
+        addRecipe(findItemStack("50V Magnetizer", 1),
+            "IRI",
+            "cMc",
+            "III",
+            'M', findItemStack("Machine Block"),
+            'c', findItemStack("Electrical Motor"),
+            'I', findItemStack("Iron Cable"),
+            'R', new ItemStack(Items.redstone));
+        addRecipe(findItemStack("200V Magnetizer", 1),
+            "ICI",
+            "cMc",
+            "III",
+            'M', findItemStack("Advanced Machine Block"),
+            'C', Eln.dictAdvancedChip,
+            'c', findItemStack("Advanced Electrical Motor"),
+            'I', "ingotAlloy");
+        addRecipe(findItemStack("800V Arc Furnace", 1),
+            "ICI",
+            "DMD",
+            "IcI",
+            'M', findItemStack("Advanced Machine Block"),
+            'C', findItemStack("3x Graphite Rods"),
+            'c', findItemStack("Synthetic Diamond"),
+            'D', "plateGold",
+            'I', "ingotAlloy");
+    }
+
+    private static void registerEggIncubator(int id) {
+        int subId;
+        String name;
+        {
+            subId = 0;
+            name = TR_NAME(I18N.Type.NONE, "50V Egg Incubator");
+            EggIncubatorDescriptor desc = new EggIncubatorDescriptor(
+                name, Eln.obj.getObj("eggincubator"),
+                Eln.lowVoltageCableDescriptor,
+                Eln.LVU, 50);
+            Eln.transparentNodeItem.addDescriptor(subId + (id << 6), desc);
+        }
+    }
+    private static void recipeEggIncubator() {
+        addRecipe(findItemStack("50V Egg Incubator", 1),
+            "IGG",
+            "E G",
+            "CII",
+            'C', Eln.dictCheapChip,
+            'E', findItemStack("Small 50V Tungsten Heating Corp"),
+            'I', new ItemStack(Items.iron_ingot),
+            'G', new ItemStack(Blocks.glass_pane));
     }
 
     private static void registerSolarPanel(int id) {
@@ -506,6 +775,39 @@ public class TransparentNodeRegistry {
             );
             Eln.transparentNodeItem.addDescriptor(subId + (id << 6), desc);
         }
+    }
+    private static void recipeSolarPanel() {
+        addRecipe(findItemStack("Small Solar Panel"),
+            "LLL",
+            "CSC",
+            "III",
+            'S', "plateSilicon",
+            'L', findItemStack("Lapis Dust"),
+            'I', new ItemStack(Items.iron_ingot),
+            'C', findItemStack("Low Voltage Cable"));
+        addRecipe(findItemStack("Small Rotating Solar Panel"),
+            "ISI",
+            "I I",
+            'S', findItemStack("Small Solar Panel"),
+            'M', findItemStack("Electrical Motor"),
+            'I', new ItemStack(Items.iron_ingot));
+        for (String metal : new String[]{"blockSteel", "blockAluminum", "blockAluminium", "casingMachineAdvanced"}) {
+            for (String panel : new String[]{"Small Solar Panel", "Small Rotating Solar Panel"}) {
+                addRecipe(findItemStack("2x3 Solar Panel"),
+                    "PPP",
+                    "PPP",
+                    "I I",
+                    'P', findItemStack(panel),
+                    'I', metal);
+            }
+        }
+        addRecipe(findItemStack("2x3 Rotating Solar Panel"),
+            "ISI",
+            "IMI",
+            "I I",
+            'S', findItemStack("2x3 Solar Panel"),
+            'M', findItemStack("Electrical Motor"),
+            'I', new ItemStack(Items.iron_ingot));
     }
 
     private static void registerBattery(int id) {
@@ -681,6 +983,55 @@ public class TransparentNodeRegistry {
             Eln.transparentNodeItem.addDescriptor(subId + (id << 6), desc);
         }
     }
+    private static void recipeBattery() {
+        addRecipe(findItemStack("Cost Oriented Battery"),
+            "C C",
+            "PPP",
+            "PPP",
+            'C', findItemStack("Low Voltage Cable"),
+            'P', "ingotLead",
+            'I', new ItemStack(Items.iron_ingot));
+        addRecipe(findItemStack("Capacity Oriented Battery"),
+            "PBP",
+            'B', findItemStack("Cost Oriented Battery"),
+            'P', "ingotLead");
+        addRecipe(findItemStack("Voltage Oriented Battery"),
+            "PBP",
+            'B', findItemStack("Cost Oriented Battery"),
+            'P', findItemStack("Iron Cable"));
+
+        addRecipe(findItemStack("Current Oriented Battery"),
+            "PBP",
+            'B', findItemStack("Cost Oriented Battery"),
+            'P', "ingotCopper");
+        addRecipe(findItemStack("Life Oriented Battery"),
+            "PBP",
+            'B', findItemStack("Cost Oriented Battery"),
+            'P', new ItemStack(Items.gold_ingot));
+        addRecipe(findItemStack("Experimental Battery"),
+            " S ",
+            "LDV",
+            " C ",
+            'S', findItemStack("Capacity Oriented Battery"),
+            'L', findItemStack("Life Oriented Battery"),
+            'V', findItemStack("Voltage Oriented Battery"),
+            'C', findItemStack("Current Oriented Battery"),
+            'D', new ItemStack(Items.diamond));
+        addRecipe(findItemStack("Single-use Battery"),
+            "ppp",
+            "III",
+            "ppp",
+            'C', findItemStack("Low Voltage Cable"),
+            'p', new ItemStack(Items.coal, 1, 0),
+            'I', "ingotCopper");
+        addRecipe(findItemStack("Single-use Battery"),
+            "ppp",
+            "III",
+            "ppp",
+            'C', findItemStack("Low Voltage Cable"),
+            'p', new ItemStack(Items.coal, 1, 1),
+            'I', "ingotCopper");
+    }
 
     private static void registerPowerComponent(int id) {
         int subId;
@@ -702,6 +1053,7 @@ public class TransparentNodeRegistry {
             Eln.transparentNodeItem.addWithoutRegistry(subId + (id << 6), desc);
         }
     }
+    // there are no crafting recipies as this is a removed item.
 
     private static void registerGridDevices(int id) {
         int subId;
@@ -778,6 +1130,72 @@ public class TransparentNodeRegistry {
         {
             // subId = 7;
             // Reserved for T2.5 poles.
+        }
+    }
+    private static void recipeGridDevices(HashSet<String> oreNames) {
+        int poleRecipes = 0;
+        for (String oreName : new String[]{
+            "ingotAluminum",
+            "ingotAluminium",
+            "ingotSteel",
+        }) {
+            if (oreNames.contains(oreName)) {
+                addRecipe(findItemStack("Utility Pole"),
+                    "WWW",
+                    "IWI",
+                    " W ",
+                    'W', "logWood",
+                    'I', oreName
+                );
+                poleRecipes++;
+            }
+        }
+        if (poleRecipes == 0) {
+            // Really?
+            addRecipe(findItemStack("Utility Pole"),
+                "WWW",
+                "IWI",
+                " W ",
+                'I', "ingotIron",
+                'W', "logWood"
+            );
+        }
+        addRecipe(findItemStack("Utility Pole w/DC-DC Converter"),
+            "HHH",
+            " TC",
+            " PH",
+            'P', findItemStack("Utility Pole"),
+            'H', findItemStack("High Voltage Cable"),
+            'C', findItemStack("Optimal Ferromagnetic Core"),
+            'T', findItemStack("DC-DC Converter")
+        );
+
+        // I don't care what you think, if your modpack lacks steel then you don't *need* this much power.
+        // Or just use the new Arc furnace. Other mod's steel methods are slow and tedious and require huge multiblocks.
+        // Feel free to add alternate non-iron recipes, though. Here, or by minetweaker.
+        for (String type : new String[]{
+            "Aluminum",
+            "Aluminium",
+            "Steel"
+        }) {
+            String blockType = "block" + type;
+            String ingotType = "ingot" + type;
+            if (oreNames.contains(blockType)) {
+                addRecipe(findItemStack("Transmission Tower"),
+                    "ii ",
+                    "mi ",
+                    " B ",
+                    'i', ingotType,
+                    'B', blockType,
+                    'm', findItemStack("Machine Block"));
+                addRecipe(findItemStack("Grid DC-DC Converter"),
+                    "i i",
+                    "mtm",
+                    "imi",
+                    'i', ingotType,
+                    't', findItemStack("DC-DC Converter"),
+                    'm', findItemStack("Advanced Machine Block"));
+            }
         }
     }
 
@@ -860,6 +1278,28 @@ public class TransparentNodeRegistry {
         }
 
     }
+    private static void recipeWindTurbine() {
+        addRecipe(findItemStack("Wind Turbine"),
+            " I ",
+            "IMI",
+            " B ",
+            'B', findItemStack("Machine Block"),
+            'I', "plateIron",
+            'M', findItemStack("Electrical Motor"));
+        /*addRecipe(findItemStack("Large Wind Turbine"), //todo add recipe to large wind turbine
+            "TTT",
+            "TCT",
+            "TTT",
+            'T', findItemStack("Wind Turbine"),
+            'C', findItemStack("Advanced Machine Block")); */
+        addRecipe(findItemStack("Water Turbine"),
+            "  I",
+            "BMI",
+            "  I",
+            'I', "plateIron",
+            'B', findItemStack("Machine Block"),
+            'M', findItemStack("Electrical Motor"));
+    }
 
     private static void registerFuelGenerator(int id) {
         int subId;
@@ -878,6 +1318,26 @@ public class TransparentNodeRegistry {
                     Eln.fuelGeneratorTankCapacity);
             Eln.transparentNodeItem.addDescriptor(subId + (id << 6), descriptor);
         }
+    }
+    private static void recipeFuelGenerator() {
+        addRecipe(findItemStack("50V Fuel Generator"),
+            "III",
+            " BA",
+            "CMC",
+            'I', "plateIron",
+            'B', findItemStack("Machine Block"),
+            'A', findItemStack("Analogic Regulator"),
+            'C', findItemStack("Low Voltage Cable"),
+            'M', findItemStack("Electrical Motor"));
+        addRecipe(findItemStack("200V Fuel Generator"),
+            "III",
+            " BA",
+            "CMC",
+            'I', "plateIron",
+            'B', findItemStack("Advanced Machine Block"),
+            'A', findItemStack("Analogic Regulator"),
+            'C', findItemStack("Medium Voltage Cable"),
+            'M', findItemStack("Advanced Electrical Motor"));
     }
 
     private static void registerThermalDissipatorPassiveAndActive(int id) {
@@ -927,6 +1387,29 @@ public class TransparentNodeRegistry {
             Eln.transparentNodeItem.addDescriptor(subId + (id << 6), desc);
         }
     }
+    private static void recipeThermalDissipatorPassiveAndActive() {
+        addRecipe(
+            findItemStack("Small Passive Thermal Dissipator"),
+            "I I",
+            "III",
+            "CIC",
+            'I', "ingotCopper",
+            'C', findItemStack("Copper Thermal Cable"));
+        addRecipe(
+            findItemStack("Small Active Thermal Dissipator"),
+            "RMR",
+            " D ",
+            'D', findItemStack("Small Passive Thermal Dissipator"),
+            'M', findItemStack("Electrical Motor"),
+            'R', "itemRubber");
+        addRecipe(
+            findItemStack("200V Active Thermal Dissipator"),
+            "RMR",
+            " D ",
+            'D', findItemStack("Small Passive Thermal Dissipator"),
+            'M', findItemStack("Advanced Electrical Motor"),
+            'R', "itemRubber");
+    }
 
     private static void registerTransparentNodeMisc(int id) {
         int subId;
@@ -962,6 +1445,15 @@ public class TransparentNodeRegistry {
             Eln.transparentNodeItem.addDescriptor(subId + (id << 6), desc);
         }
     }
+    private static void recipeTransporter() {
+        addRecipe(findItemStack("Experimental Transporter", 1),
+            "RMR",
+            "RMR",
+            " R ",
+            'M', findItemStack("Advanced Machine Block"),
+            'C', findItemStack("High Voltage Cable"),
+            'R', Eln.dictAdvancedChip);
+    }
 
     private static void registerTurret(int id) {
         {
@@ -970,6 +1462,16 @@ public class TransparentNodeRegistry {
             TurretDescriptor desc = new TurretDescriptor(name, "Turret");
             Eln.transparentNodeItem.addDescriptor(subId + (id << 6), desc);
         }
+    }
+    private static void recipeTurret() {
+        addRecipe(findItemStack("800V Defence Turret", 1),
+            " R ",
+            "CMC",
+            " c ",
+            'M', findItemStack("Advanced Machine Block"),
+            'C', Eln.dictAdvancedChip,
+            'c', Eln.highVoltageCableDescriptor.newItemStack(),
+            'R', new ItemStack(Blocks.redstone_block));
     }
 
     private static void registerElectricalAntenna(int id) {
@@ -1048,6 +1550,55 @@ public class TransparentNodeRegistry {
             Eln.transparentNodeItem.addDescriptor(subId + (id << 6), desc);
         }
     }
+    private static void recipeElectricalAntenna() {
+        addRecipe(findItemStack("Low Power Transmitter Antenna", 1),
+            "R i",
+            "CI ",
+            "R i",
+            'C', Eln.dictCheapChip,
+            'i', new ItemStack(Items.iron_ingot),
+            'I', "plateIron",
+            'R', new ItemStack(Items.redstone));
+        addRecipe(findItemStack("Low Power Receiver Antenna", 1),
+            "i  ",
+            " IC",
+            "i  ",
+            'C', Eln.dictCheapChip,
+            'I', "plateIron",
+            'i', new ItemStack(Items.iron_ingot),
+            'R', new ItemStack(Items.redstone));
+        addRecipe(findItemStack("Medium Power Transmitter Antenna", 1),
+            "c I",
+            "CI ",
+            "c I",
+            'C', Eln.dictAdvancedChip,
+            'c', Eln.dictCheapChip,
+            'I', "plateIron",
+            'R', new ItemStack(Items.redstone));
+        addRecipe(findItemStack("Medium Power Receiver Antenna", 1),
+            "I  ",
+            " IC",
+            "I  ",
+            'C', Eln.dictAdvancedChip,
+            'I', "plateIron",
+            'R', new ItemStack(Items.redstone));
+        addRecipe(findItemStack("High Power Transmitter Antenna", 1),
+            "C I",
+            "CI ",
+            "C I",
+            'C', Eln.dictAdvancedChip,
+            'c', Eln.dictCheapChip,
+            'I', "plateIron",
+            'R', new ItemStack(Items.redstone));
+        addRecipe(findItemStack("High Power Receiver Antenna", 1),
+            "I D",
+            " IC",
+            "I D",
+            'C', Eln.dictAdvancedChip,
+            'I', "plateIron",
+            'R', new ItemStack(Items.redstone),
+            'D', new ItemStack(Items.diamond));
+    }
 
     private static void registerAutoMiner(int id) {
         int subId;
@@ -1080,5 +1631,35 @@ public class TransparentNodeRegistry {
             desc.setGhostGroup(ghostGroup);
             Eln.transparentNodeItem.addDescriptor(subId + (id << 6), desc);
         }
+    }
+    private static void recipeAutoMiner() {
+        addRecipe(findItemStack("Auto Miner"),
+            "MCM",
+            "BOB",
+            " P ",
+            'C', Eln.dictAdvancedChip,
+            'O', findItemStack("Ore Scanner"),
+            'B', findItemStack("Advanced Machine Block"),
+            'M', findItemStack("Advanced Electrical Motor"),
+            'P', findItemStack("Mining Pipe"));
+    }
+
+    // TODO: split
+    private static void recipeDisplays() {
+        addRecipe(findItemStack("Digital Display", 1),
+            "   ",
+            "rrr",
+            "iii",
+            'r', new ItemStack(Items.redstone),
+            'i', findItemStack("Iron Cable")
+        );
+        addRecipe(findItemStack("Nixie Tube", 1),
+            " g ",
+            "grg",
+            "iii",
+            'g', new ItemStack(Blocks.glass_pane),
+            'r', new ItemStack(Items.redstone),
+            'i', findItemStack("Iron Cable")
+        );
     }
 }

@@ -5,10 +5,7 @@ import mods.eln.cable.CableRenderDescriptor;
 import mods.eln.ghost.GhostGroup;
 import mods.eln.i18n.I18N;
 import mods.eln.item.ElectricalFuseDescriptor;
-import mods.eln.misc.Direction;
-import mods.eln.misc.FunctionTableYProtect;
-import mods.eln.misc.IFunction;
-import mods.eln.misc.Obj3D;
+import mods.eln.misc.*;
 import mods.eln.misc.materials.MaterialType;
 import mods.eln.misc.series.SerieEE;
 import mods.eln.sixnode.*;
@@ -64,6 +61,9 @@ import mods.eln.sixnode.wirelesssignal.tx.WirelessSignalTxDescriptor;
 import mods.eln.transparentnode.LargeRheostatDescriptor;
 import mods.eln.transparentnode.NixieTubeDescriptor;
 import mods.eln.transparentnode.thermaldissipatorpassive.ThermalDissipatorPassiveDescriptor;
+import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
+import net.minecraft.item.ItemStack;
 
 import static mods.eln.i18n.I18N.TR_NAME;
 
@@ -73,6 +73,23 @@ import static mods.eln.i18n.I18N.TR_NAME;
  * Components such as resistors, wires, capacitors, and diodes can be found here.
  */
 public class SixNodeRegistry {
+
+    private static void addRecipe(ItemStack output, Object... params) {
+        RegistryUtils.addRecipe(output, params);
+    }
+    private static void addShapelessRecipe(ItemStack output, Object... params) {
+        RegistryUtils.addShapelessRecipe(output, params);
+    }
+    private static ItemStack findItemStack(String name, int stackSize) {
+        return RegistryUtils.findItemStack(name, stackSize);
+    }
+    private static String firstExistingOre(String... oreNames) {
+        return RegistryUtils.firstExistingOre(oreNames);
+    }
+    private static ItemStack findItemStack(String name) {
+        return RegistryUtils.findItemStack(name);
+    }
+
     public static void thingRegistration() {
         //SIX NODE REGISTRATION
         //Sub-UID must be unique in this section only.
@@ -103,6 +120,34 @@ public class SixNodeRegistry {
         registerSixNodeMisc(117);
         registerLogicalGates(118);
         registerAnalogChips(124);
+    }
+
+    public static void recipeRegistration() {
+        recipeElectricalCable();
+        recipeThermalCable();
+        recipeGround();
+        recipeLampSocket();
+        recipeLampSupply();
+        recipePowerSocket();
+        recipePassiveComponent();
+        recipeSwitch();
+        recipeElectricalBreaker();
+        recipeFuses();
+        recipeSixNodeMisc();
+        recipeElectricalSensor();
+        recipeThermalSensor();
+        recipeElectricalVuMeter();
+        recipeElectricalAlarm();
+        recipeElectricalEnvironmentalSensor();
+        recipeElectricalRedstone();
+        recipeElectricalGate();
+        recipeWirelessSignal();
+        recipeElectricalDataLogger();
+        recipeElectricalRelay();
+        recipeChips();
+        recipeTreeResinAndRubber();
+        recipeBatteryCharger();
+        recipeElectricalGateSource();
     }
 
     private static void registerElectricalCable(int id) {
@@ -301,6 +346,53 @@ public class SixNodeRegistry {
             Eln.sixNodeItem.addDescriptor(subId + (id << 6), Eln.veryHighCurrentCableDescriptor);
         }
     }
+    private static void recipeElectricalCable() {
+        addRecipe(Eln.signalCableDescriptor.newItemStack(2),
+            "R",
+            "C",
+            "C",
+            'C', findItemStack("Iron Cable"),
+            'R', "itemRubber");
+        addRecipe(Eln.lowVoltageCableDescriptor.newItemStack(2),
+            "R",
+            "C",
+            "C",
+            'C', findItemStack("Copper Cable"),
+            'R', "itemRubber");
+        addRecipe(Eln.meduimVoltageCableDescriptor.newItemStack(1),
+            "R",
+            "C",
+            'C', Eln.lowVoltageCableDescriptor.newItemStack(1),
+            'R', "itemRubber");
+        addRecipe(Eln.highVoltageCableDescriptor.newItemStack(1),
+            "R",
+            "C",
+            'C', Eln.meduimVoltageCableDescriptor.newItemStack(1),
+            'R', "itemRubber");
+        addRecipe(Eln.signalCableDescriptor.newItemStack(12),
+            "RRR",
+            "CCC",
+            "RRR",
+            'C', new ItemStack(Items.iron_ingot),
+            'R', "itemRubber");
+        addRecipe(Eln.signalBusCableDescriptor.newItemStack(1),
+            "R",
+            "C",
+            'C', Eln.signalCableDescriptor.newItemStack(1),
+            'R', "itemRubber");
+        addRecipe(Eln.lowVoltageCableDescriptor.newItemStack(12),
+            "RRR",
+            "CCC",
+            "RRR",
+            'C', "ingotCopper",
+            'R', "itemRubber");
+        addRecipe(Eln.veryHighVoltageCableDescriptor.newItemStack(12),
+            "RRR",
+            "CCC",
+            "RRR",
+            'C', "ingotAlloy",
+            'R', "itemRubber");
+    }
 
     private static void registerThermalCable(int id) {
         int subId;
@@ -325,6 +417,19 @@ public class SixNodeRegistry {
             Eln.sixNodeItem.addDescriptor(subId + (id << 6), desc);
         }
     }
+    private static void recipeThermalCable() {
+        addRecipe(findItemStack("Copper Thermal Cable", 12),
+            "SSS",
+            "CCC",
+            "SSS",
+            'S', new ItemStack(Blocks.cobblestone),
+            'C', "ingotCopper");
+        addRecipe(findItemStack("Copper Thermal Cable", 1),
+            "S",
+            "C",
+            'S', new ItemStack(Blocks.cobblestone),
+            'C', findItemStack("Copper Cable"));
+    }
 
     private static void registerGround(int id) {
         int subId;
@@ -341,6 +446,13 @@ public class SixNodeRegistry {
             HubDescriptor desc = new HubDescriptor(name, Eln.obj.getObj("hub"));
             Eln.sixNodeItem.addDescriptor(subId + (id << 6), desc);
         }
+    }
+    private static void recipeGround() {
+        addRecipe(findItemStack("Ground Cable"),
+            " C ",
+            " C ",
+            "CCC",
+            'C', findItemStack("Copper Cable"));
     }
 
     private static void registerElectricalSource(int id) {
@@ -362,6 +474,7 @@ public class SixNodeRegistry {
             Eln.sixNodeItem.addDescriptor(subId + (id << 6), desc);
         }
     }
+    // no crafting for you :P Creative items!
 
     private static void registerLampSocket(int id) {
         int subId;
@@ -484,6 +597,77 @@ public class SixNodeRegistry {
             new EmergencyLampDescriptor(TR_NAME(I18N.Type.NONE, "200V Emergency Lamp"),
                 Eln.meduimVoltageCableDescriptor, 10 * 60 * 20, 25, 10, 8, Eln.obj.getObj("EmergencyExitLighting")));
     }
+    private static void recipeLampSocket() {
+        addRecipe(findItemStack("Lamp Socket A", 3),
+            "G ",
+            "IG",
+            "G ",
+            'G', new ItemStack(Blocks.glass_pane),
+            'I', findItemStack("Iron Cable"));
+        addRecipe(findItemStack("Lamp Socket B Projector", 3),
+            " G",
+            "GI",
+            " G",
+            'G', new ItemStack(Blocks.glass_pane),
+            'I', new ItemStack(Items.iron_ingot));
+        addRecipe(findItemStack("Street Light", 1),
+            "G",
+            "I",
+            "I",
+            'G', new ItemStack(Blocks.glass_pane),
+            'I', new ItemStack(Items.iron_ingot));
+        addRecipe(findItemStack("Robust Lamp Socket", 3),
+            "GIG",
+            'G', new ItemStack(Blocks.glass_pane),
+            'I', new ItemStack(Items.iron_ingot));
+        addRecipe(findItemStack("Flat Lamp Socket", 3),
+            "IGI",
+            'G', new ItemStack(Blocks.glass_pane),
+            'I', findItemStack("Iron Cable"));
+        addRecipe(findItemStack("Simple Lamp Socket", 3),
+            " I ",
+            "GGG",
+            'G', new ItemStack(Blocks.glass_pane),
+            'I', new ItemStack(Items.iron_ingot));
+        addRecipe(findItemStack("Fluorescent Lamp Socket", 3),
+            " I ",
+            "G G",
+            'G', findItemStack("Iron Cable"),
+            'I', new ItemStack(Items.iron_ingot));
+        addRecipe(findItemStack("Suspended Lamp Socket", 2),
+            "I",
+            "G",
+            'G', findItemStack("Robust Lamp Socket"),
+            'I', findItemStack("Iron Cable"));
+        addRecipe(findItemStack("Long Suspended Lamp Socket", 2),
+            "I",
+            "I",
+            "G",
+            'G', findItemStack("Robust Lamp Socket"),
+            'I', findItemStack("Iron Cable"));
+        addRecipe(findItemStack("Sconce Lamp Socket", 2),
+            "GCG",
+            "GIG",
+            'G', new ItemStack(Blocks.glass_pane),
+            'C', "dustCoal",
+            'I', new ItemStack(Items.iron_ingot));
+        addRecipe(findItemStack("50V Emergency Lamp"),
+            "cbc",
+            " l ",
+            " g ",
+            'c', findItemStack("Low Voltage Cable"),
+            'b', findItemStack("Portable Battery Pack"),
+            'l', findItemStack("50V LED Bulb"),
+            'g', new ItemStack(Blocks.glass_pane));
+        addRecipe(findItemStack("200V Emergency Lamp"),
+            "cbc",
+            " l ",
+            " g ",
+            'c', findItemStack("Medium Voltage Cable"),
+            'b', findItemStack("Portable Battery Pack"),
+            'l', findItemStack("200V LED Bulb"),
+            'g', new ItemStack(Blocks.glass_pane));
+    }
 
     private static void registerLampSupply(int id) {
         int subId;
@@ -497,6 +681,14 @@ public class SixNodeRegistry {
             );
             Eln.sixNodeItem.addDescriptor(subId + (id << 6), desc);
         }
+    }
+    private static void recipeLampSupply() {
+        addRecipe(findItemStack("Lamp Supply", 1),
+            " I ",
+            "ICI",
+            " I ",
+            'C', "ingotCopper",
+            'I', new ItemStack(Items.iron_ingot));
     }
 
     private static void registerPowerSocket(int id) {
@@ -523,6 +715,22 @@ public class SixNodeRegistry {
             desc.setPlaceDirection(new Direction[]{Direction.XP, Direction.XN, Direction.ZP, Direction.ZN});
             Eln.sixNodeItem.addDescriptor(subId + (id << 6), desc);
         }
+    }
+    private static void recipePowerSocket() {
+        addRecipe(findItemStack("50V Power Socket", 16),
+            "RUR",
+            "ACA",
+            'R', "itemRubber",
+            'U', findItemStack("Copper Plate"),
+            'A', findItemStack("Alloy Plate"),
+            'C', findItemStack("Low Voltage Cable"));
+        addRecipe(findItemStack("200V Power Socket", 16),
+            "RUR",
+            "ACA",
+            'R', "itemRubber",
+            'U', findItemStack("Copper Plate"),
+            'A', findItemStack("Alloy Plate"),
+            'C', findItemStack("Medium Voltage Cable"));
     }
 
     private static void registerPassiveComponent(int id) {
@@ -642,6 +850,70 @@ public class SixNodeRegistry {
         }
 
     }
+    private static void recipePassiveComponent() {
+        addRecipe(findItemStack("Signal Diode", 4),
+            " RB",
+            " IR",
+            " RB",
+            'R', new ItemStack(Items.redstone),
+            'I', findItemStack("Iron Cable"),
+            'B', "itemRubber");
+        addRecipe(findItemStack("10A Diode", 3),
+            " RB",
+            "IIR",
+            " RB",
+            'R', new ItemStack(Items.redstone),
+            'I', findItemStack("Iron Cable"),
+            'B', "itemRubber");
+        addRecipe(findItemStack("25A Diode"),
+            "D",
+            "D",
+            "D",
+            'D', findItemStack("10A Diode"));
+        addRecipe(findItemStack("Power Capacitor"),
+            "cPc",
+            "III",
+            'I', new ItemStack(Items.iron_ingot),
+            'c', findItemStack("Iron Cable"),
+            'P', "plateIron");
+        addRecipe(findItemStack("Power Inductor"),
+            "   ",
+            "cIc",
+            "   ",
+            'I', new ItemStack(Items.iron_ingot),
+            'c', findItemStack("Copper Cable"));
+        addRecipe(findItemStack("Power Resistor"),
+            "   ",
+            "cCc",
+            "   ",
+            'c', findItemStack("Copper Cable"),
+            'C', findItemStack("Coal Dust"));
+        addRecipe(findItemStack("Rheostat"),
+            " R ",
+            " MS",
+            "cmc",
+            'R', findItemStack("Power Resistor"),
+            'c', findItemStack("Copper Cable"),
+            'm', findItemStack("Machine Block"),
+            'M', findItemStack("Electrical Motor"),
+            'S', findItemStack("Signal Cable")
+        );
+        addRecipe(findItemStack("Thermistor"),
+            "   ",
+            "csc",
+            "   ",
+            's', "dustSilicon",
+            'c', findItemStack("Copper Cable"));
+        // TODO: Move large rheostat to TransparentNodeRegistry
+        addRecipe(findItemStack("Large Rheostat"),
+            "   ",
+            " D ",
+            "CRC",
+            'R', findItemStack("Rheostat"),
+            'C', findItemStack("Copper Thermal Cable"),
+            'D', findItemStack("Small Passive Thermal Dissipator")
+        );
+    }
 
     private static void registerSwitch(int id) {
         int subId;
@@ -705,7 +977,42 @@ public class SixNodeRegistry {
             Eln.sixNodeItem.addWithoutRegistry(subId + (id << 6), desc);
         }
     }
+    private static void recipeSwitch() {
+        addRecipe(findItemStack("Low Voltage Switch"),
+            "  I",
+            " I ",
+            "CAC",
+            'R', new ItemStack(Items.redstone),
+            'A', "itemRubber",
+            'I', findItemStack("Copper Cable"),
+            'C', findItemStack("Low Voltage Cable"));
+        addRecipe(findItemStack("Medium Voltage Switch"),
+            "  I",
+            "AIA",
+            "CAC",
+            'R', new ItemStack(Items.redstone),
+            'A', "itemRubber",
+            'I', findItemStack("Copper Cable"),
+            'C', findItemStack("Medium Voltage Cable"));
+        addRecipe(findItemStack("High Voltage Switch"),
+            "AAI",
+            "AIA",
+            "CAC",
+            'R', new ItemStack(Items.redstone),
+            'A', "itemRubber",
+            'I', findItemStack("Copper Cable"),
+            'C', findItemStack("High Voltage Cable"));
+        addRecipe(findItemStack("Very High Voltage Switch"),
+            "AAI",
+            "AIA",
+            "CAC",
+            'R', new ItemStack(Items.redstone),
+            'A', "itemRubber",
+            'I', findItemStack("Copper Cable"),
+            'C', findItemStack("Very High Voltage Cable"));
+    }
 
+    // TODO: Organize this mess
     private static void registerSixNodeMisc(int id) {
         int subId;
         String name;
@@ -751,6 +1058,7 @@ public class SixNodeRegistry {
             );
             Eln.sixNodeItem.addDescriptor(subId + (id << 6), desc);
         }
+        // TODO: Move Nixie Tube to TransparentNodeRegistry
         {
             subId = 7;
             name = TR_NAME(I18N.Type.NONE, "Nixie Tube");
@@ -768,7 +1076,6 @@ public class SixNodeRegistry {
             Eln.sixNodeItem.addDescriptor(subId + (id << 6), desc);
         }
     }
-
     private static void registerElectricalManager(int id) {
         int subId;
         String name;
@@ -828,6 +1135,71 @@ public class SixNodeRegistry {
             Eln.sharedItem.addWithoutRegistry(subId + (id << 6), desc);
         }
     }
+    private static void recipeElectricalBreaker() {
+        addRecipe(findItemStack("Electrical Breaker", 1),
+            "crC",
+            'c', findItemStack("Overvoltage Protection"),
+            'C', findItemStack("Overheating Protection"),
+            'r', findItemStack("High Voltage Relay"));
+
+    }
+    private static void recipeFuses() {
+        addRecipe(findItemStack("Electrical Fuse Holder", 1),
+            "i",
+            " ",
+            "i",
+            'i', findItemStack("Iron Cable"));
+        addRecipe(findItemStack("Lead Fuse for low voltage cables", 4),
+            "rcr",
+            'r', findItemStack("itemRubber"),
+            'c', findItemStack("Low Voltage Cable"));
+        addRecipe(findItemStack("Lead Fuse for medium voltage cables", 4),
+            "rcr",
+            'r', findItemStack("itemRubber"),
+            'c', findItemStack("Medium Voltage Cable"));
+        addRecipe(findItemStack("Lead Fuse for high voltage cables", 4),
+            "rcr",
+            'r', findItemStack("itemRubber"),
+            'c', findItemStack("High Voltage Cable"));
+        addRecipe(findItemStack("Lead Fuse for very high voltage cables", 4),
+            "rcr",
+            'r', findItemStack("itemRubber"),
+            'c', findItemStack("Very High Voltage Cable"));
+    }
+    private static void recipeSixNodeMisc() {
+        addRecipe(findItemStack("Analog Watch"),
+            "crc",
+            "III",
+            'c', findItemStack("Iron Cable"),
+            'r', new ItemStack(Items.redstone),
+            'I', findItemStack("Iron Cable"));
+        addRecipe(findItemStack("Digital Watch"),
+            "rcr",
+            "III",
+            'c', findItemStack("Iron Cable"),
+            'r', new ItemStack(Items.redstone),
+            'I', findItemStack("Iron Cable"));
+        addRecipe(findItemStack("Hub"),
+            "I I",
+            " c ",
+            "I I",
+            'c', findItemStack("Copper Cable"),
+            'I', findItemStack("Iron Cable"));
+        addRecipe(findItemStack("Energy Meter"),
+            "IcI",
+            "IRI",
+            "IcI",
+            'c', findItemStack("Copper Cable"),
+            'R', Eln.dictCheapChip,
+            'I', findItemStack("Iron Cable"));
+        addRecipe(findItemStack("Advanced Energy Meter"),
+            " c ",
+            "PRP",
+            " c ",
+            'c', findItemStack("Copper Cable"),
+            'R', Eln.dictAdvancedChip,
+            'P', findItemStack("Iron Plate"));
+    }
 
     private static void registerElectricalSensor(int id) {
         int subId;
@@ -846,6 +1218,17 @@ public class SixNodeRegistry {
             desc = new ElectricalSensorDescriptor(name, "voltagesensor", true);
             Eln.sixNodeItem.addDescriptor(subId + (id << 6), desc);
         }
+    }
+    private static void recipeElectricalSensor() {
+        addRecipe(findItemStack("Voltage Probe", 1),
+            "SC",
+            'S', findItemStack("Electrical Probe Chip"),
+            'C', findItemStack("Signal Cable"));
+
+        addRecipe(findItemStack("Electrical Probe", 1),
+            "SCS",
+            'S', findItemStack("Electrical Probe Chip"),
+            'C', findItemStack("Signal Cable"));
     }
 
     private static void registerThermalSensor(int id) {
@@ -866,7 +1249,16 @@ public class SixNodeRegistry {
                 Eln.obj.getObj("temperaturesensor"), true);
             Eln.sixNodeItem.addDescriptor(subId + (id << 6), desc);
         }
-
+    }
+    private static void recipeThermalSensor() {
+        addRecipe(findItemStack("Thermal Probe", 1),
+            "SCS",
+            'S', findItemStack("Thermal Probe Chip"),
+            'C', findItemStack("Signal Cable"));
+        addRecipe(findItemStack("Temperature Probe", 1),
+            "SC",
+            'S', findItemStack("Thermal Probe Chip"),
+            'C', findItemStack("Signal Cable"));
     }
 
     private static void registerElectricalVuMeter(int id) {
@@ -884,6 +1276,28 @@ public class SixNodeRegistry {
             name = TR_NAME(I18N.Type.NONE, "LED vuMeter");
             desc = new ElectricalVuMeterDescriptor(name, "Led", true);
             Eln.sixNodeItem.addDescriptor(subId + (id << 6), desc);
+        }
+    }
+    private static void recipeElectricalVuMeter() {
+        for (int idx = 0; idx < 4; idx++) {
+            addRecipe(findItemStack("Analog vuMeter", 1),
+                "WWW",
+                "RIr",
+                "WSW",
+                'W', new ItemStack(Blocks.planks, 1, idx),
+                'R', new ItemStack(Items.redstone),
+                'I', findItemStack("Iron Cable"),
+                'r', new ItemStack(Items.dye, 1, 1),
+                'S', findItemStack("Signal Cable"));
+        }
+        for (int idx = 0; idx < 4; idx++) {
+            addRecipe(findItemStack("LED vuMeter", 1),
+                " W ",
+                "WTW",
+                " S ",
+                'W', new ItemStack(Blocks.planks, 1, idx),
+                'T', new ItemStack(Blocks.redstone_torch),
+                'S', findItemStack("Signal Cable"));
         }
     }
 
@@ -906,6 +1320,24 @@ public class SixNodeRegistry {
                 1.2, 2f);
             Eln.sixNodeItem.addDescriptor(subId + (id << 6), desc);
         }
+    }
+    private static void recipeElectricalAlarm() {
+        addRecipe(findItemStack("Nuclear Alarm", 1),
+            "ITI",
+            "IMI",
+            "IcI",
+            'c', findItemStack("Signal Cable"),
+            'T', new ItemStack(Blocks.redstone_torch),
+            'I', findItemStack("Iron Cable"),
+            'M', new ItemStack(Blocks.noteblock));
+        addRecipe(findItemStack("Standard Alarm", 1),
+            "MTM",
+            "IcI",
+            "III",
+            'c', findItemStack("Signal Cable"),
+            'T', new ItemStack(Blocks.redstone_torch),
+            'I', findItemStack("Iron Cable"),
+            'M', new ItemStack(Blocks.noteblock));
     }
 
     private static void registerElectricalEnvironmentalSensor(int id) {
@@ -981,6 +1413,51 @@ public class SixNodeRegistry {
             }
         }
     }
+    private static void recipeElectricalEnvironmentalSensor() {
+        addShapelessRecipe(findItemStack("Electrical Daylight Sensor"),
+            new ItemStack(Blocks.daylight_detector),
+            findItemStack("Redstone-to-Voltage Converter"));
+        addShapelessRecipe(findItemStack("Electrical Light Sensor"),
+            new ItemStack(Blocks.daylight_detector),
+            new ItemStack(Items.quartz),
+            findItemStack("Redstone-to-Voltage Converter"));
+        addRecipe(findItemStack("Electrical Weather Sensor"),
+            " r ",
+            "rRr",
+            " r ",
+            'R', new ItemStack(Items.redstone),
+            'r', "itemRubber");
+        addRecipe(findItemStack("Electrical Anemometer Sensor"),
+            " I ",
+            " R ",
+            "I I",
+            'R', new ItemStack(Items.redstone),
+            'I', findItemStack("Iron Cable"));
+        addRecipe(findItemStack("Electrical Entity Sensor"),
+            " G ",
+            "GRG",
+            " G ",
+            'G', new ItemStack(Blocks.glass_pane),
+            'R', new ItemStack(Items.redstone));
+        addRecipe(findItemStack("Electrical Fire Detector"),
+            "cbr",
+            "p p",
+            "r r",
+            'c', findItemStack("Signal Cable"),
+            'b', Eln.dictCheapChip,
+            'r', "itemRubber",
+            'p', "plateCopper");
+        addRecipe(findItemStack("Electrical Fire Buzzer"),
+            "rar",
+            "p p",
+            "r r",
+            'a', Eln.dictAdvancedChip,
+            'r', "itemRubber",
+            'p', "plateCopper");
+        addShapelessRecipe(findItemStack("Scanner"),
+            new ItemStack(Items.comparator),
+            Eln.dictAdvancedChip);
+    }
 
     private static void registerElectricalRedstone(int id) {
         int subId;
@@ -1000,6 +1477,19 @@ public class SixNodeRegistry {
                 Eln.obj.getObj("eletored"));
             Eln.sixNodeItem.addDescriptor(subId + (id << 6), desc);
         }
+    }
+    private static void recipeElectricalRedstone() {
+        addRecipe(findItemStack("Redstone-to-Voltage Converter", 1),
+            "TCS",
+            'S', findItemStack("Signal Cable"),
+            'C', Eln.dictCheapChip,
+            'T', new ItemStack(Blocks.redstone_torch));
+
+        addRecipe(findItemStack("Voltage-to-Redstone Converter", 1),
+            "CTR",
+            'R', new ItemStack(Items.redstone),
+            'C', Eln.dictCheapChip,
+            'T', new ItemStack(Blocks.redstone_torch));
     }
 
     private static void registerElectricalGate(int id) {
@@ -1022,6 +1512,18 @@ public class SixNodeRegistry {
                 Eln.obj.getObj("PLC"));
             Eln.sixNodeItem.addDescriptor(subId + (id << 6), desc);
         }
+    }
+    private static void recipeElectricalGate() {
+        addShapelessRecipe(findItemStack("Electrical Timer"),
+            new ItemStack(Items.repeater),
+            Eln.dictCheapChip);
+        addRecipe(findItemStack("Signal Processor", 1),
+            "IcI",
+            "cCc",
+            "IcI",
+            'I', new ItemStack(Items.iron_ingot),
+            'c', findItemStack("Signal Cable"),
+            'C', Eln.dictCheapChip);
     }
 
     private static void registerWirelessSignal(int id) {
@@ -1060,6 +1562,31 @@ public class SixNodeRegistry {
             Eln.sixNodeItem.addDescriptor(subId + (id << 6), desc);
         }
     }
+    private static void recipeWirelessSignal() {
+        addRecipe(findItemStack("Wireless Signal Transmitter"),
+            " S ",
+            " R ",
+            "ICI",
+            'R', new ItemStack(Items.redstone),
+            'I', findItemStack("Iron Cable"),
+            'C', Eln.dictCheapChip,
+            'S', findItemStack("Signal Antenna"));
+        addRecipe(findItemStack("Wireless Signal Repeater"),
+            "S S",
+            "R R",
+            "ICI",
+            'R', new ItemStack(Items.redstone),
+            'I', findItemStack("Iron Cable"),
+            'C', Eln.dictCheapChip,
+            'S', findItemStack("Signal Antenna"));
+        addRecipe(findItemStack("Wireless Signal Receiver"),
+            " S ",
+            "ICI",
+            'R', new ItemStack(Items.redstone),
+            'I', findItemStack("Iron Cable"),
+            'C', Eln.dictCheapChip,
+            'S', findItemStack("Signal Antenna"));
+    }
 
     private static void registerElectricalDataLogger(int id) {
         int subId;
@@ -1088,6 +1615,29 @@ public class SixNodeRegistry {
                 "IndustrialPanel", 0.25f, 0.5f, 1f, "\u00A7f");
             Eln.sixNodeItem.addDescriptor(subId + (id << 6), desc);
         }
+    }
+    private static void recipeElectricalDataLogger() {
+        addRecipe(findItemStack("Data Logger", 1),
+            "RRR",
+            "RGR",
+            "RCR",
+            'R', "itemRubber",
+            'C', Eln.dictCheapChip,
+            'G', new ItemStack(Blocks.glass_pane));
+        addRecipe(findItemStack("Modern Data Logger", 1),
+            "RRR",
+            "RGR",
+            "RCR",
+            'R', "itemRubber",
+            'C', Eln.dictAdvancedChip,
+            'G', new ItemStack(Blocks.glass_pane));
+        addRecipe(findItemStack("Industrial Data Logger", 1),
+            "RRR",
+            "GGG",
+            "RCR",
+            'R', "itemRubber",
+            'C', Eln.dictAdvancedChip,
+            'G', new ItemStack(Blocks.glass_pane));
     }
 
     private static void registerElectricalRelay(int id) {
@@ -1126,7 +1676,6 @@ public class SixNodeRegistry {
                 Eln.veryHighVoltageCableDescriptor);
             Eln.sixNodeItem.addDescriptor(subId + (id << 6), desc);
         }
-
         {
             subId = 4;
             name = TR_NAME(I18N.Type.NONE, "Signal Relay");
@@ -1135,34 +1684,82 @@ public class SixNodeRegistry {
                 Eln.signalCableDescriptor);
             Eln.sixNodeItem.addDescriptor(subId + (id << 6), desc);
         }
-
         {
             subId = 5;
             name = TR_NAME(I18N.Type.NONE, "Low Current Relay");
             desc = new ElectricalRelayDescriptor(name, Eln.obj.getObj("RelaySmall"), Eln.lowCurrentCableDescriptor);
             Eln.sixNodeItem.addDescriptor(subId  + (id << 6), desc);
         }
-
         {
             subId = 6;
             name = TR_NAME(I18N.Type.NONE, "Medium Current Relay");
             desc = new ElectricalRelayDescriptor(name, Eln.obj.getObj("RelaySmall"), Eln.mediumCurrentCableDescriptor);
             Eln.sixNodeItem.addDescriptor(subId + (id << 6), desc);
         }
-
         {
             subId = 7;
             name = TR_NAME(I18N.Type.NONE, "High Current Relay");
             desc = new ElectricalRelayDescriptor(name, Eln.obj.getObj("RelaySmall"), Eln.highCurrentCableDescriptor);
             Eln.sixNodeItem.addDescriptor(subId + (id << 6), desc);
         }
-
         {
             subId = 8;
             name = TR_NAME(I18N.Type.NONE, "Very High Current Relay");
             desc = new ElectricalRelayDescriptor(name, Eln.obj.getObj("relay800"), Eln.veryHighCurrentCableDescriptor);
             Eln.sixNodeItem.addDescriptor(subId + (id << 6), desc);
         }
+    }
+    private static void recipeElectricalRelay() {
+        addRecipe(findItemStack("Low Voltage Relay"),
+            "GGG",
+            "OIO",
+            "CRC",
+            'R', new ItemStack(Items.redstone),
+            'O', findItemStack("Iron Cable"),
+            'G', new ItemStack(Blocks.glass_pane),
+            'A', "itemRubber",
+            'I', findItemStack("Copper Cable"),
+            'C', findItemStack("Low Voltage Cable"));
+        addRecipe(findItemStack("Medium Voltage Relay"),
+            "GGG",
+            "OIO",
+            "CRC",
+            'R', new ItemStack(Items.redstone),
+            'O', findItemStack("Iron Cable"),
+            'G', new ItemStack(Blocks.glass_pane),
+            'A', "itemRubber",
+            'I', findItemStack("Copper Cable"),
+            'C', findItemStack("Medium Voltage Cable"));
+        addRecipe(findItemStack("High Voltage Relay"),
+            "GGG",
+            "OIO",
+            "CRC",
+            'R', new ItemStack(Items.redstone),
+            'O', findItemStack("Iron Cable"),
+            'G', new ItemStack(Blocks.glass_pane),
+            'A', "itemRubber",
+            'I', findItemStack("Copper Cable"),
+            'C', findItemStack("High Voltage Cable"));
+        addRecipe(findItemStack("Very High Voltage Relay"),
+            "GGG",
+            "OIO",
+            "CRC",
+            'R', new ItemStack(Items.redstone),
+            'O', findItemStack("Iron Cable"),
+            'G', new ItemStack(Blocks.glass_pane),
+            'A', "itemRubber",
+            'I', findItemStack("Copper Cable"),
+            'C', findItemStack("Very High Voltage Cable"));
+
+        addRecipe(findItemStack("Signal Relay"),
+            "GGG",
+            "OIO",
+            "CRC",
+            'R', new ItemStack(Items.redstone),
+            'O', findItemStack("Iron Cable"),
+            'G', new ItemStack(Blocks.glass_pane),
+            'I', findItemStack("Copper Cable"),
+            'C', findItemStack("Signal Cable"));
     }
 
     private static void registerElectricalGateSource(int id) {
@@ -1205,6 +1802,7 @@ public class SixNodeRegistry {
         }
     }
 
+    // TODO: Organize this mess.
     private static void registerLogicalGates(int id) {
         Obj3D model = Eln.obj.getObj("LogicGates");
         Eln.sixNodeItem.addDescriptor(0 + (id << 6),
@@ -1233,7 +1831,6 @@ public class SixNodeRegistry {
         Eln.sixNodeItem.addDescriptor(11 + (id << 6),
             new LogicGateDescriptor(TR_NAME(I18N.Type.NONE, "JK Flip Flop Chip"), model, "JKFF", JKFlipFlop.class));
     }
-
     private static void registerAnalogChips(int id) {
         id <<= 6;
         Obj3D model = Eln.obj.getObj("AnalogChips");
@@ -1263,6 +1860,147 @@ public class SixNodeRegistry {
             new AnalogChipDescriptor(TR_NAME(I18N.Type.NONE, "Lowpass filter"), model, "LPF",
                 Filter.class, FilterElement.class, FilterRender.class));
     }
+    private static void recipeChips() {
+        addRecipe(findItemStack("NOT Chip"),
+            "   ",
+            "cCr",
+            "   ",
+            'C', Eln.dictCheapChip,
+            'r', new ItemStack(Items.redstone),
+            'c', findItemStack("Copper Cable"));
+        addRecipe(findItemStack("AND Chip"),
+            " c ",
+            "cCc",
+            " c ",
+            'C', Eln.dictCheapChip,
+            'c', findItemStack("Copper Cable"));
+        addRecipe(findItemStack("NAND Chip"),
+            " c ",
+            "cCr",
+            " c ",
+            'C', Eln.dictCheapChip,
+            'r', new ItemStack(Items.redstone),
+            'c', findItemStack("Copper Cable"));
+        addRecipe(findItemStack("OR Chip"),
+            " r ",
+            "rCr",
+            " r ",
+            'C', Eln.dictCheapChip,
+            'r', new ItemStack(Items.redstone));
+        addRecipe(findItemStack("NOR Chip"),
+            " r ",
+            "rCc",
+            " r ",
+            'C', Eln.dictCheapChip,
+            'r', new ItemStack(Items.redstone),
+            'c', findItemStack("Copper Cable"));
+        addRecipe(findItemStack("XOR Chip"),
+            " rr",
+            "rCr",
+            " rr",
+            'C', Eln.dictCheapChip,
+            'r', new ItemStack(Items.redstone));
+        addRecipe(findItemStack("XNOR Chip"),
+            " rr",
+            "rCc",
+            " rr",
+            'C', Eln.dictCheapChip,
+            'r', new ItemStack(Items.redstone),
+            'c', findItemStack("Copper Cable"));
+        addRecipe(findItemStack("PAL Chip"),
+            "rcr",
+            "cCc",
+            "rcr",
+            'C', Eln.dictAdvancedChip,
+            'r', new ItemStack(Items.redstone),
+            'c', findItemStack("Copper Cable"));
+        addRecipe(findItemStack("Schmitt Trigger Chip"),
+            "   ",
+            "cCc",
+            "   ",
+            'C', Eln.dictAdvancedChip,
+            'c', findItemStack("Copper Cable"));
+        addRecipe(findItemStack("D Flip Flop Chip"),
+            "   ",
+            "cCc",
+            " p ",
+            'C', Eln.dictAdvancedChip,
+            'p', findItemStack("Copper Plate"),
+            'c', findItemStack("Copper Cable"));
+        addRecipe(findItemStack("Oscillator Chip"),
+            "pdp",
+            "cCc",
+            "   ",
+            'C', Eln.dictAdvancedChip,
+            'p', findItemStack("Copper Plate"),
+            'c', findItemStack("Copper Cable"),
+            'd', findItemStack("Dielectric"));
+        addRecipe(findItemStack("JK Flip Flop Chip"),
+            " p ",
+            "cCc",
+            " p ",
+            'C', Eln.dictAdvancedChip,
+            'p', findItemStack("Copper Plate"),
+            'c', findItemStack("Copper Cable"));
+        addRecipe(findItemStack("Amplifier"),
+            "  r",
+            "cCc",
+            "   ",
+            'r', new ItemStack(Items.redstone),
+            'c', findItemStack("Copper Cable"),
+            'C', Eln.dictAdvancedChip);
+        addRecipe(findItemStack("OpAmp"),
+            "  r",
+            "cCc",
+            " c ",
+            'r', new ItemStack(Items.redstone),
+            'c', findItemStack("Copper Cable"),
+            'C', Eln.dictAdvancedChip);
+        addRecipe(findItemStack("Configurable summing unit"),
+            " cr",
+            "cCc",
+            " c ",
+            'r', new ItemStack(Items.redstone),
+            'c', findItemStack("Copper Cable"),
+            'C', Eln.dictAdvancedChip);
+        addRecipe(findItemStack("Sample and hold"),
+            " rr",
+            "cCc",
+            " c ",
+            'r', new ItemStack(Items.redstone),
+            'c', findItemStack("Copper Cable"),
+            'C', Eln.dictAdvancedChip);
+        addRecipe(findItemStack("Voltage controlled sine oscillator"),
+            "rrr",
+            "cCc",
+            "   ",
+            'r', new ItemStack(Items.redstone),
+            'c', findItemStack("Copper Cable"),
+            'C', Eln.dictAdvancedChip);
+        addRecipe(findItemStack("Voltage controlled sawtooth oscillator"),
+            "   ",
+            "cCc",
+            "rrr",
+            'r', new ItemStack(Items.redstone),
+            'c', findItemStack("Copper Cable"),
+            'C', Eln.dictAdvancedChip);
+        addRecipe(findItemStack("PID Regulator"),
+            "rrr",
+            "cCc",
+            "rcr",
+            'r', new ItemStack(Items.redstone),
+            'c', findItemStack("Copper Cable"),
+            'C', Eln.dictAdvancedChip);
+        addRecipe(findItemStack("Lowpass filter"),
+            "CdC",
+            "cDc",
+            " s ",
+            'd', findItemStack("Dielectric"),
+            'c', findItemStack("Copper Cable"),
+            'C', findItemStack("Copper Plate"),
+            'D', findItemStack("Coal Dust"),
+            's', Eln.dictCheapChip);
+    }
 
     private static void registerTreeResinCollector(int id) {
         int subId;
@@ -1274,6 +2012,14 @@ public class SixNodeRegistry {
             descriptor = new TreeResinCollectorDescriptor(name, Eln.obj.getObj("treeresincolector"));
             Eln.sixNodeItem.addDescriptor(subId + (id << 6), descriptor);
         }
+    }
+    private static void recipeTreeResinAndRubber() {
+        addRecipe(findItemStack("Tree Resin Collector"),
+            "W W",
+            "WW ", 'W', "plankWood");
+        addRecipe(findItemStack("Tree Resin Collector"),
+            "W W",
+            " WW", 'W', "plankWood");
     }
 
     private static void registerBatteryCharger(int id) {
@@ -1310,6 +2056,84 @@ public class SixNodeRegistry {
             );
             Eln.sixNodeItem.addDescriptor(subId + (id << 6), descriptor);
         }
+    }
+    private static void recipeBatteryCharger() {
+        addRecipe(findItemStack("Weak 50V Battery Charger", 1),
+            "RIR",
+            "III",
+            "RcR",
+            'c', findItemStack("Low Voltage Cable"),
+            'I', findItemStack("Iron Cable"),
+            'R', new ItemStack(Items.redstone));
+        addRecipe(findItemStack("50V Battery Charger", 1),
+            "RIR",
+            "ICI",
+            "RcR",
+            'C', Eln.dictCheapChip,
+            'c', findItemStack("Low Voltage Cable"),
+            'I', findItemStack("Iron Cable"),
+            'R', new ItemStack(Items.redstone));
+
+        addRecipe(findItemStack("200V Battery Charger", 1),
+            "RIR",
+            "ICI",
+            "RcR",
+            'C', Eln.dictAdvancedChip,
+            'c', findItemStack("Medium Voltage Cable"),
+            'I', findItemStack("Iron Cable"),
+            'R', new ItemStack(Items.redstone));
+    }
+
+    private static void recipeElectricalGateSource() {
+        addRecipe(findItemStack("Signal Trimmer", 1),
+            "RsR",
+            "rRr",
+            " c ",
+            'M', findItemStack("Machine Block"),
+            'c', findItemStack("Signal Cable"),
+            'r', "itemRubber",
+            's', new ItemStack(Items.stick),
+            'R', new ItemStack(Items.redstone));
+        addRecipe(findItemStack("Signal Switch", 3),
+            " r ",
+            "rRr",
+            " c ",
+            'M', findItemStack("Machine Block"),
+            'c', findItemStack("Signal Cable"),
+            'r', "itemRubber",
+            'I', findItemStack("Iron Cable"),
+            'R', new ItemStack(Items.redstone));
+        addRecipe(findItemStack("Signal Button", 3),
+            " R ",
+            "rRr",
+            " c ",
+            'M', findItemStack("Machine Block"),
+            'c', findItemStack("Signal Cable"),
+            'r', "itemRubber",
+            'I', findItemStack("Iron Cable"),
+            'R', new ItemStack(Items.redstone));
+        addRecipe(findItemStack("Wireless Switch", 3),
+            " a ",
+            "rCr",
+            " r ",
+            'M', findItemStack("Machine Block"),
+            'c', findItemStack("Signal Cable"),
+            'C', Eln.dictCheapChip,
+            'a', findItemStack("Signal Antenna"),
+            'r', "itemRubber",
+            'I', findItemStack("Iron Cable"),
+            'R', new ItemStack(Items.redstone));
+        addRecipe(findItemStack("Wireless Button", 3),
+            " a ",
+            "rCr",
+            " R ",
+            'M', findItemStack("Machine Block"),
+            'c', findItemStack("Signal Cable"),
+            'C', Eln.dictCheapChip,
+            'a', findItemStack("Signal Antenna"),
+            'r', "itemRubber",
+            'I', findItemStack("Iron Cable"),
+            'R', new ItemStack(Items.redstone));
     }
 
 }

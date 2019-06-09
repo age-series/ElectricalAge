@@ -239,11 +239,9 @@ public class Eln {
     public static ClientKeyHandler clientKeyHandler;
     public static SaveConfig saveConfig;
     public static GhostManager ghostManager;
-    private static GhostManagerNbt ghostManagerNbt;
     private static NodeManager nodeManager;
     public static PlayerManager playerManager;
     public static ModbusTcpServer modbusServer;
-    private static NodeManagerNbt nodeManagerNbt;
     public static Simulator simulator = null;
     public static DelayedTaskManager delayedTask;
     public static ItemEnergyInventoryProcess itemEnergyInventoryProcess;
@@ -450,9 +448,7 @@ public class Eln {
 
         SixNode.sixNodeCacheList.add(new SixNodeCacheStd());
 
-        /*
-         * Register all the things (these are so that we can register the recipes against them later
-         */
+        // Register all items and blocks
         SixNodeRegistry.thingRegistration();
         TransparentNodeRegistry.thingRegistration();
         ItemRegistry.thingRegistration();
@@ -460,23 +456,6 @@ public class Eln {
 
         OreDictionary.registerOre("blockAluminum", arcClayBlock);
         OreDictionary.registerOre("blockSteel", arcMetalBlock);
-
-        /*
-
-        As far as I can tell, this is impossible without re-writing the registration classes for the mod, which would rewrite this part anyway.
-
-        // register creative tabs
-        cCableTab = new GenericCreativeTab("Cables", "highvoltagecable");
-        cTransmissionTab = new GenericCreativeTab("Power Transmission", "transmissiontower");
-        cPowerDevicesTab = new GenericCreativeTab("Power Components", "powerinductor");
-        cMachinesTab = new GenericCreativeTab("Machines", "50macerator");
-        cAdvancedMachinesTab = new GenericCreativeTab("Advanced Machines", "800arcfurnace");
-        cShaftTab = new GenericCreativeTab("Shaft System", "shaftmotor");
-        cThermalTab = new GenericCreativeTab("Thermal System", "200heatturbine");
-        cLogicTab = new GenericCreativeTab("Logic Components", "palchip");
-        cIngotsDustsTab = new GenericCreativeTab("Ingots and Dusts", "copperplate");
-        cMscTab = new GenericCreativeTab("Misc.", "brownbrush");
-         */
     }
 
     @EventHandler
@@ -492,7 +471,16 @@ public class Eln {
     @EventHandler
     @SuppressWarnings("unused")
     public void load(FMLInitializationEvent event) {
-        RegistryUtils.register();
+
+        // Register Recipes
+        SixNodeRegistry.recipeRegistration();
+        TransparentNodeRegistry.recipeRegistration();
+        ItemRegistry.recipeRegistration();
+        MscRegistry.recipeRegistration();
+
+        // Register Entities
+        MscRegistry.entityRegistration();
+
         proxy.registerRenderers();
         TR("itemGroup.Eln");
         RegistryUtils.checkRecipe();
@@ -565,42 +553,36 @@ public class Eln {
     @SuppressWarnings("unused")
     public void onServerStarting(FMLServerStartingEvent ev) {
 
-        {
-            MinecraftServer server = FMLCommonHandler.instance()
-                .getMinecraftServerInstance();
-            WorldServer worldServer = server.worldServers[0];
+        MinecraftServer server = FMLCommonHandler.instance()
+            .getMinecraftServerInstance();
+        WorldServer worldServer = server.worldServers[0];
 
 
-            ghostManagerNbt = (GhostManagerNbt) worldServer.mapStorage.loadData(
-                GhostManagerNbt.class, "GhostManager");
-            if (ghostManagerNbt == null) {
-                ghostManagerNbt = new GhostManagerNbt("GhostManager");
-                worldServer.mapStorage.setData("GhostManager", ghostManagerNbt);
-            }
-
-            saveConfig = (SaveConfig) worldServer.mapStorage.loadData(
-                SaveConfig.class, "SaveConfig");
-            if (saveConfig == null) {
-                saveConfig = new SaveConfig("SaveConfig");
-                worldServer.mapStorage.setData("SaveConfig", saveConfig);
-            }
-
-            nodeManagerNbt = (NodeManagerNbt) worldServer.mapStorage.loadData(
-                NodeManagerNbt.class, "NodeManager");
-            if (nodeManagerNbt == null) {
-                nodeManagerNbt = new NodeManagerNbt("NodeManager");
-                worldServer.mapStorage.setData("NodeManager", nodeManagerNbt);
-            }
-
-            nodeServer.init();
+        GhostManagerNbt ghostManagerNbt = (GhostManagerNbt) worldServer.mapStorage.loadData(
+            GhostManagerNbt.class, "GhostManager");
+        if (ghostManagerNbt == null) {
+            ghostManagerNbt = new GhostManagerNbt("GhostManager");
+            worldServer.mapStorage.setData("GhostManager", ghostManagerNbt);
         }
 
-        {
-            MinecraftServer s = MinecraftServer.getServer();
-            ICommandManager command = s.getCommandManager();
-            ServerCommandManager manager = (ServerCommandManager) command;
-            manager.registerCommand(new ConsoleListener());
+        saveConfig = (SaveConfig) worldServer.mapStorage.loadData(
+            SaveConfig.class, "SaveConfig");
+        if (saveConfig == null) {
+            saveConfig = new SaveConfig("SaveConfig");
+            worldServer.mapStorage.setData("SaveConfig", saveConfig);
         }
+
+        NodeManagerNbt nodeManagerNbt = (NodeManagerNbt) worldServer.mapStorage.loadData(
+            NodeManagerNbt.class, "NodeManager");
+        if (nodeManagerNbt == null) {
+            nodeManagerNbt = new NodeManagerNbt("NodeManager");
+            worldServer.mapStorage.setData("NodeManager", nodeManagerNbt);
+        }
+
+        nodeServer.init();
+
+        ServerCommandManager manager = (ServerCommandManager) MinecraftServer.getServer().getCommandManager();
+        manager.registerCommand(new ConsoleListener());
 
         regenOreScannerFactors();
     }
@@ -614,12 +596,6 @@ public class Eln {
         RegistryUtils.recipeMaceratorModOre(f * 1.5f, "crystalNetherQuartz", "dustNetherQuartz", 1);
         RegistryUtils.recipeMaceratorModOre(f * 1.5f, "crystalFluix", "dustFluix", 1);
     }
-
-
-
-
-
-
 
     public void regenOreScannerFactors() {
         PortableOreScannerItem.RenderStorage.blockKeyFactor = null;

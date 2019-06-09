@@ -26,10 +26,36 @@ import static mods.eln.registry.RegistryUtils.findItemStack;
 
 public class MscRegistry {
 
+    private static void addRecipe(ItemStack output, Object... params) {
+        RegistryUtils.addRecipe(output, params);
+    }
+    private static void addShapelessRecipe(ItemStack output, Object... params) {
+        RegistryUtils.addShapelessRecipe(output, params);
+    }
+    private static ItemStack findItemStack(String name, int stackSize) {
+        return RegistryUtils.findItemStack(name, stackSize);
+    }
+    private static String firstExistingOre(String... oreNames) {
+        return RegistryUtils.firstExistingOre(oreNames);
+    }
+    private static ItemStack findItemStack(String name) {
+        return RegistryUtils.findItemStack(name);
+    }
+
+
     public static void thingRegistration() {
         registerEnergyConverter();
         registerComputer();
         registerOre();
+    }
+
+    public static void recipeRegistration() {
+        recipeEnergyConverter();
+        recipeComputerProbe();
+    }
+
+    public static void entityRegistration() {
+        registerReplicator();
     }
 
     private static void registerOre() {
@@ -116,6 +142,34 @@ public class MscRegistry {
             }
         }
     }
+    private static void recipeEnergyConverter() {
+        if (Eln.ElnToOtherEnergyConverterEnable) {
+            addRecipe(new ItemStack(Eln.elnToOtherBlockLvu),
+                "III",
+                "cCR",
+                "III",
+                'C', Eln.dictCheapChip,
+                'c', findItemStack("Low Voltage Cable"),
+                'I', findItemStack("Iron Cable"),
+                'R', "ingotCopper");
+            addRecipe(new ItemStack(Eln.elnToOtherBlockMvu),
+                "III",
+                "cCR",
+                "III",
+                'C', Eln.dictCheapChip,
+                'c', findItemStack("Medium Voltage Cable"),
+                'I', findItemStack("Iron Cable"),
+                'R', Eln.dictTungstenIngot);
+            addRecipe(new ItemStack(Eln.elnToOtherBlockHvu),
+                "III",
+                "cCR",
+                "III",
+                'C', Eln.dictAdvancedChip,
+                'c', findItemStack("High Voltage Cable"),
+                'I', findItemStack("Iron Cable"),
+                'R', new ItemStack(Items.gold_ingot));
+        }
+    }
 
     private static void registerComputer() {
         if (Eln.ComputerProbeEnable) {
@@ -129,11 +183,22 @@ public class MscRegistry {
             Eln.computerProbeBlock.setCreativeTab(Eln.creativeTab).setBlockName(entityName);
             GameRegistry.registerBlock(Eln.computerProbeBlock, SimpleNodeItem.class, entityName);
         }
-
+    }
+    private static void recipeComputerProbe() {
+        if (Eln.ComputerProbeEnable) {
+            addRecipe(new ItemStack(Eln.computerProbeBlock),
+                "cIw",
+                "ICI",
+                "WIc",
+                'C', Eln.dictAdvancedChip,
+                'c', findItemStack("Signal Cable"),
+                'I', findItemStack("Iron Cable"),
+                'w', findItemStack("Wireless Signal Receiver"),
+                'W', findItemStack("Wireless Signal Transmitter"));
+        }
     }
 
-    // TODO: This may need to be moved to load(), since it was originally there. Not sure if it's important that it's there or not. :/
-    private void registerReplicator() {
+    private static void registerReplicator() {
         int redColor = (255 << 16);
         int orangeColor = (255 << 16) + (200 << 8);
         if (Eln.replicatorRegistrationId == -1)
