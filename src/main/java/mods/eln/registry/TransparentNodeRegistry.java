@@ -39,6 +39,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 
 import static mods.eln.i18n.I18N.TR_NAME;
+import static mods.eln.i18n.I18N.tr;
 
 public class TransparentNodeRegistry {
 

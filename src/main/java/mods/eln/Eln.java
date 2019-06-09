@@ -31,6 +31,7 @@ import mods.eln.generic.SharedItem;
 import mods.eln.ghost.GhostBlock;
 import mods.eln.ghost.GhostManager;
 import mods.eln.ghost.GhostManagerNbt;
+import mods.eln.i18n.I18N;
 import mods.eln.item.CopperCableDescriptor;
 import mods.eln.item.GraphiteDescriptor;
 import mods.eln.item.MiningPipeDescriptor;
@@ -96,8 +97,7 @@ import java.util.HashMap;
 import java.util.UUID;
 
 import static java.util.Arrays.asList;
-import static mods.eln.i18n.I18N.TR;
-import static mods.eln.i18n.I18N.tr;
+import static mods.eln.i18n.I18N.*;
 
 @SuppressWarnings({"SameParameterValue", "PointlessArithmeticExpression"})
 @Mod(modid = Eln.MODID, name = Eln.NAME, version = "@VERSION@", acceptedMinecraftVersions = "@VERSION@", acceptableRemoteVersions = "@VERSION@", acceptableSaveVersions = "")
@@ -246,6 +246,7 @@ public class Eln {
     public static DelayedTaskManager delayedTask;
     public static ItemEnergyInventoryProcess itemEnergyInventoryProcess;
     public static CreativeTabs creativeTab;
+
     public static MaterialProperties mp;
     private static OreRegenerate oreRegenerate;
     public static Obj3DFolder obj = new Obj3DFolder();
@@ -457,6 +458,23 @@ public class Eln {
 
         OreDictionary.registerOre("blockAluminum", arcClayBlock);
         OreDictionary.registerOre("blockSteel", arcMetalBlock);
+
+        /*
+
+        As far as I can tell, this is impossible without re-writing the registration classes for the mod, which would rewrite this part anyway.
+
+        // register creative tabs
+        cCableTab = new GenericCreativeTab("Cables", "highvoltagecable");
+        cTransmissionTab = new GenericCreativeTab("Power Transmission", "transmissiontower");
+        cPowerDevicesTab = new GenericCreativeTab("Power Components", "powerinductor");
+        cMachinesTab = new GenericCreativeTab("Machines", "50macerator");
+        cAdvancedMachinesTab = new GenericCreativeTab("Advanced Machines", "800arcfurnace");
+        cShaftTab = new GenericCreativeTab("Shaft System", "shaftmotor");
+        cThermalTab = new GenericCreativeTab("Thermal System", "200heatturbine");
+        cLogicTab = new GenericCreativeTab("Logic Components", "palchip");
+        cIngotsDustsTab = new GenericCreativeTab("Ingots and Dusts", "copperplate");
+        cMscTab = new GenericCreativeTab("Misc.", "brownbrush");
+         */
     }
 
     @EventHandler
@@ -584,11 +602,6 @@ public class Eln {
 
         regenOreScannerFactors();
     }
-
-
-
-
-
 
     private void recipeMaceratorModOres() {
         float f = 4000;
