@@ -1,5 +1,6 @@
 package mods.eln.registry;
 
+import cpw.mods.fml.common.registry.GameRegistry;
 import mods.eln.Eln;
 import mods.eln.cable.CableRenderDescriptor;
 import mods.eln.ghost.GhostGroup;
@@ -64,6 +65,7 @@ import mods.eln.transparentnode.thermaldissipatorpassive.ThermalDissipatorPassiv
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.oredict.ShapedOreRecipe;
 
 import static mods.eln.i18n.I18N.TR_NAME;
 
@@ -391,6 +393,24 @@ public class SixNodeRegistry {
             "CCC",
             "RRR",
             'C', "ingotAlloy",
+            'R', "itemRubber");
+        addRecipe(Eln.lowCurrentCableDescriptor.newItemStack(16),
+            "CRC",
+            "C C",
+            'C', findItemStack("Copper Cable", 16),
+            'R', "itemRubber");
+        addRecipe(Eln.mediumCurrentCableDescriptor.newItemStack(4),
+            "C C",
+            "CRC",
+            'C', findItemStack("Copper Cable", 4),
+            'R', "itemRubber");
+        addRecipe(Eln.highCurrentCableDescriptor.newItemStack(1),
+            "CR",
+            'C', findItemStack("Copper Ingot"),
+            'R', "itemRubber");
+        addRecipe(Eln.veryHighCurrentCableDescriptor.newItemStack(1),
+            "CCR",
+            'C', findItemStack("Copper Ingot"),
             'R', "itemRubber");
     }
 
@@ -1760,6 +1780,48 @@ public class SixNodeRegistry {
             'G', new ItemStack(Blocks.glass_pane),
             'I', findItemStack("Copper Cable"),
             'C', findItemStack("Signal Cable"));
+
+        addRecipe(findItemStack("Low Current Relay"),
+            "GGG",
+            "OIO",
+            "CRC",
+            'R', new ItemStack(Items.redstone),
+            'O', findItemStack("Iron Cable"),
+            'G', new ItemStack(Blocks.glass_pane),
+            'A', "itemRubber",
+            'I', findItemStack("Copper Cable"),
+            'C', findItemStack("Low Current Cable"));
+        addRecipe(findItemStack("Medium Current Relay"),
+            "GGG",
+            "OIO",
+            "CRC",
+            'R', new ItemStack(Items.redstone),
+            'O', findItemStack("Iron Cable"),
+            'G', new ItemStack(Blocks.glass_pane),
+            'A', "itemRubber",
+            'I', findItemStack("Copper Cable"),
+            'C', findItemStack("Medium Current Cable"));
+        addRecipe(findItemStack("High Current Relay"),
+            "GGG",
+            "OIO",
+            "CRC",
+            'R', new ItemStack(Items.redstone),
+            'O', findItemStack("Iron Cable"),
+            'G', new ItemStack(Blocks.glass_pane),
+            'A', "itemRubber",
+            'I', findItemStack("Copper Cable"),
+            'C', findItemStack("High Current Cable"));
+        addRecipe(findItemStack("Very High Current Relay"),
+            "GGG",
+            "OIO",
+            "CRC",
+            'R', new ItemStack(Items.redstone),
+            'O', findItemStack("Iron Cable"),
+            'G', new ItemStack(Blocks.glass_pane),
+            'A', "itemRubber",
+            'I', findItemStack("Copper Cable"),
+            'C', findItemStack("Very High Current Cable"));
+
     }
 
     private static void registerElectricalGateSource(int id) {
