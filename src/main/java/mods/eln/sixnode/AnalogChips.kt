@@ -176,10 +176,10 @@ open class AnalogChipRender(entity: SixNodeEntity, side: Direction, descriptor: 
     }
 
     override fun getCableRender(lrdu: LRDU?): CableRenderDescriptor? = when (lrdu) {
-        front -> Eln.instance.signalCableDescriptor.render
-        front.inverse() -> if (descriptor.function.inputCount >= 1) Eln.instance.signalCableDescriptor.render else null
-        front.left() -> if (descriptor.function.inputCount >= 2) Eln.instance.signalCableDescriptor.render else null
-        front.right() -> if (descriptor.function.inputCount >= 3) Eln.instance.signalCableDescriptor.render else null
+        front -> Eln.signalCableDescriptor.render
+        front.inverse() -> if (descriptor.function.inputCount >= 1) Eln.signalCableDescriptor.render else null
+        front.left() -> if (descriptor.function.inputCount >= 2) Eln.signalCableDescriptor.render else null
+        front.right() -> if (descriptor.function.inputCount >= 3) Eln.signalCableDescriptor.render else null
         else -> null
     }
 }
@@ -763,7 +763,7 @@ class FilterElement(node: SixNode, side: Direction, sixNodeDescriptor: SixNodeDe
         CUTOFF_FREQUENCY_CHANGED(1)
     }
 
-    private var cutOffFrequency = Eln.instance.electricalFrequency / 4.0
+    private var cutOffFrequency = Eln.electricalFrequency / 4.0
         get() = (function as Filter).feedback / (2.0 * Math.PI)
         set(value) {
             field = value
@@ -808,7 +808,7 @@ class FilterElement(node: SixNode, side: Direction, sixNodeDescriptor: SixNodeDe
 
 class FilterRender(entity: SixNodeEntity, side: Direction, descriptor: SixNodeDescriptor) :
     AnalogChipRender(entity, side, descriptor) {
-    internal var cutOffFrequency = Synchronizable(Eln.instance.electricalFrequency.toFloat() / 4f)
+    internal var cutOffFrequency = Synchronizable(Eln.electricalFrequency.toFloat() / 4f)
 
     override fun newGuiDraw(side: Direction?, player: EntityPlayer?): GuiScreen? = FilterGui(this)
 
@@ -848,7 +848,7 @@ class FilterGui(private var render: FilterRender) : GuiScreenEln() {
             freq?.value = render.cutOffFrequency.value
         }
         freq?.setComment(0, I18N.tr("Cut-off frequency %1$ Hz",
-            String.format("%1.3f", freq?.value ?: Eln.instance.electricalFrequency / 4f)))
+            String.format("%1.3f", freq?.value ?: Eln.electricalFrequency / 4f)))
     }
 
     override fun newHelper(): GuiHelper {

@@ -85,7 +85,7 @@ class GeneratorDescriptor(
 class GeneratorRender(entity: TransparentNodeEntity, desc_: TransparentNodeDescriptor) : ShaftRender(entity, desc_) {
     val entity = entity
 
-    override val cableRender = Eln.instance.stdCableRender3200V
+    override val cableRender = Eln.stdCableRender3200V
     val desc = desc_ as GeneratorDescriptor
 
     val ledColors: Array<Color> = arrayOf(
@@ -137,7 +137,7 @@ class GeneratorRender(entity: TransparentNodeEntity, desc_: TransparentNodeDescr
     }
 
     override fun getCableRender(side: Direction, lrdu: LRDU): CableRenderDescriptor? {
-        if (lrdu == LRDU.Down && side == front) return Eln.instance.stdCableRender3200V
+        if (lrdu == LRDU.Down && side == front) return Eln.stdCableRender3200V
         return null
     }
 

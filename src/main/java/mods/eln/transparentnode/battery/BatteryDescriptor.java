@@ -69,13 +69,28 @@ public class BatteryDescriptor extends TransparentNodeDescriptor {
         }
     }
 
+    /**
+     * Battery Descriptor Constructor
+     *
+     * @param name Name of the Battery
+     * @param modelName Model to use
+     * @param cable
+     * @param lifeEnable can life be depleted from the battery?
+     * @param UfCharge battery function table (what voltages correspond with what percent capacity)
+     * @param electricalU battery nominal voltage
+     * @param electricalPMax how much power it can handle at max
+     * @param electricalDischargeRate precentage of its total output to self-discharge. Should probably be 0
+     * @param electricalStdP
+     * @param electricalStdDischargeTime
+     * @param electricalStdEfficiency
+     * @param electricalStdHalfLife
+     * @param description Currently Unused
+     */
     public BatteryDescriptor(String name, String modelName,
-                             ElectricalCableDescriptor cable,
-                             double startCharge, boolean isRechargable, boolean lifeEnable,
+                             ElectricalCableDescriptor cable, boolean lifeEnable,
                              FunctionTable UfCharge,
                              double electricalU, double electricalPMax, double electricalDischargeRate,
                              double electricalStdP, double electricalStdDischargeTime, double electricalStdEfficiency, double electricalStdHalfLife,
-                             double thermalHeatTime, double thermalWarmLimit, double thermalCoolLimit,
                              String description) {
         super(name, BatteryElement.class, BatteryRender.class);
         this.electricalU = electricalU;
@@ -84,14 +99,14 @@ public class BatteryDescriptor extends TransparentNodeDescriptor {
         this.electricalStdP = electricalStdP;
         this.electricalStdHalfLife = electricalStdHalfLife;
         this.electricalStdDischargeTime = electricalStdDischargeTime;
-        this.startCharge = startCharge;
-        this.isRechargable = isRechargable;
+        this.startCharge = 0.5;
+        this.isRechargable = true;
         this.lifeEnable = lifeEnable;
         this.cable = cable;
 
-        this.thermalHeatTime = thermalHeatTime;
-        this.thermalWarmLimit = thermalWarmLimit;
-        this.thermalCoolLimit = thermalCoolLimit;
+        this.thermalHeatTime = 30;
+        this.thermalWarmLimit = 60;
+        this.thermalCoolLimit = -100;
         this.electricalPMax = electricalPMax;
 
         this.UfCharge = UfCharge;
@@ -105,7 +120,6 @@ public class BatteryDescriptor extends TransparentNodeDescriptor {
         double energy = getEnergy(1.0, 1.0);
         electricalQ *= electricalStdEnergy / energy;
         electricalRs = electricalStdP * (1 - electricalStdEfficiency) / electricalStdI / electricalStdI / 2;
-        //electricalRs = cable.electricalRs;
         electricalRp = Math.min(electricalU * electricalU / electricalStdP / electricalDischargeRate, 1000000000.0);
 
         lifeNominalCurrent = electricalStdP / electricalU;
@@ -134,6 +148,22 @@ public class BatteryDescriptor extends TransparentNodeDescriptor {
         }
 
         voltageLevelColor = VoltageLevelColor.fromVoltage(electricalU);
+    }
+
+    /**
+     *
+     * @param startCharge Set the starting charge (between 0 and 1 of the battery
+     */
+    public void setStartCharge(double startCharge) {
+        this.startCharge = startCharge;
+    }
+
+    /**
+     *
+     * @param isRechargable true if you can charge the batery
+     */
+    public void setRechargable(boolean isRechargable) {
+        this.isRechargable = isRechargable;
     }
 
     public void applyTo(Resistor resistor) {

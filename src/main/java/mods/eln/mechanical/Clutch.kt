@@ -443,7 +443,7 @@ class ClutchElement(node: TransparentNode, desc_: TransparentNodeDescriptor) : S
 class ClutchRender(entity: TransparentNodeEntity, desc_: TransparentNodeDescriptor) : ShaftRender(entity, desc_) {
     val desc = desc_ as ClutchDescriptor
     val connectedSides = DirectionSet()
-    override val cableRender = Eln.instance.stdCableRenderSignal
+    override val cableRender = Eln.stdCableRenderSignal
     val inv = TransparentNodeElementInventory(2, 1, this)
     override fun getInventory() = inv
 

@@ -38,7 +38,7 @@ class ElectricalPoleRender(entity: TransparentNodeEntity, descriptor: Transparen
 
     override fun draw() {
         super.draw()
-        cableRenderType = drawCable(front.down(), Eln.instance.stdCableRender3200V, eConn, cableRenderType)
+        cableRenderType = drawCable(front.down(), Eln.stdCableRender3200V, eConn, cableRenderType)
     }
 
     override fun networkUnserialize(stream: DataInputStream) {

@@ -1465,11 +1465,11 @@ public class Utils {
     }
 
     public static void printFunction(FunctionTable func, double start, double end, double step) {
-        Eln.dp.println(DebugType.OTHER, "********");
+        Eln.dp.println(DebugType.OTHER, "****Function Table Begin****");
         double x;
         for (int idx = 0; (x = start + step * idx) < end + 0.00001; idx++) {
             Eln.dp.println(DebugType.OTHER, Double.toString(func.getValue(x)));
         }
-        Eln.dp.println(DebugType.OTHER, "********");
+        Eln.dp.println(DebugType.OTHER, "****Function Table Ends****");
     }
 }
