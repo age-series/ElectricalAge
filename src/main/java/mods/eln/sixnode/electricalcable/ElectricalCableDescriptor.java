@@ -23,10 +23,8 @@ public class ElectricalCableDescriptor extends GenericCableDescriptor {
     public double electricalNominalPowerDropFactor;
     public boolean signalWire;
 
-    public double electricalMaximalVoltage, electricalMaximalCurrent;
     public double electricalRp = Double.POSITIVE_INFINITY;
 
-    public double thermalWarmLimit = 100, thermalCoolLimit = -100;
     public double electricalRsPerCelcius = 0;
 
     public double dielectricBreakOhmPerVolt = 0;
@@ -44,6 +42,8 @@ public class ElectricalCableDescriptor extends GenericCableDescriptor {
         this.description = description;
         this.render = render;
         this.signalWire = signalWire;
+        this.thermalWarmLimit = 100;
+        this.thermalCoolLimit = -100;
 
     }
 
