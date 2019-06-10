@@ -20,16 +20,13 @@ import static mods.eln.i18n.I18N.tr;
 
 public class ElectricalCableDescriptor extends GenericCableDescriptor {
 
-    double electricalNominalRs;
-    public double electricalNominalVoltage, electricalNominalPower, electricalNominalPowerDropFactor;
+    public double electricalNominalPowerDropFactor;
     public boolean signalWire;
 
     public double electricalMaximalVoltage, electricalMaximalCurrent;
-    public double electricalRp = Double.POSITIVE_INFINITY, electricalC = 1;
+    public double electricalRp = Double.POSITIVE_INFINITY;
 
     public double thermalWarmLimit = 100, thermalCoolLimit = -100;
-    double electricalMaximalI;
-    public double electricalRsMin = 0;
     public double electricalRsPerCelcius = 0;
 
     public double dielectricBreakOhmPerVolt = 0;
@@ -66,19 +63,17 @@ public class ElectricalCableDescriptor extends GenericCableDescriptor {
 
         electricalRp = MnaConst.highImpedance;
         double electricalNorminalI = electricalNominalPower / electricalNominalVoltage;
-        electricalNominalRs = (electricalNominalPower * electricalNominalPowerDropFactor) / electricalNorminalI / electricalNorminalI / 2;
-        electricalRs = electricalNominalRs;
+        electricalRs = (electricalNominalPower * electricalNominalPowerDropFactor) / electricalNorminalI / electricalNorminalI / 2;
         //electricalC = Eln.simulator.getMinimalElectricalC(electricalNominalRs, electricalRp);
 
-        electricalMaximalI = electricalMaximalPower / electricalNominalVoltage;
-        double thermalMaximalPowerDissipated = electricalMaximalI * electricalMaximalI * electricalRs * 2;
+        electricalNominalPower = electricalMaximalPower / electricalNominalVoltage;
+        double thermalMaximalPowerDissipated = electricalNominalPower * electricalNominalPower * electricalRs * 2;
         thermalC = thermalMaximalPowerDissipated * thermalNominalHeatTime / (thermalWarmLimit);
         thermalRp = thermalWarmLimit / thermalMaximalPowerDissipated;
         thermalRs = thermalConductivityTao / thermalC / 2;
 
         Eln.simulator.checkThermalLoad(thermalRs, thermalRp, thermalC);
 
-        electricalRsMin = electricalNominalRs;
         electricalRsPerCelcius = 0;
 
         dielectricBreakOhmPerVolt = 0.95;
@@ -136,7 +131,7 @@ public class ElectricalCableDescriptor extends GenericCableDescriptor {
             list.add("  " + tr("Voltage: %1$V", Utils.plotValue(electricalNominalVoltage)));
             list.add("  " + tr("Current: %1$A", Utils.plotValue(electricalNominalPower / electricalNominalVoltage)));
             list.add("  " + tr("Power: %1$W", Utils.plotValue(electricalNominalPower)));
-            list.add("  " + tr("Serial resistance: %1$\u2126", Utils.plotValue(electricalNominalRs * 2)));
+            list.add("  " + tr("Serial resistance: %1$\u2126", Utils.plotValue(electricalRs * 2)));
         }
     }
 
