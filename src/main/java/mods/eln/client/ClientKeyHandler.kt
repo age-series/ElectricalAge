@@ -64,12 +64,11 @@ class ClientKeyHandler {
     @Suppress("unused") // this does actually fire, despite what IDEA thinks
     fun onKeyInput(event: KeyInputEvent) {
         // for each key, see if the state has changed. If it has, send it to the server
-        for (key in keyList) {
-            val s = key.keyBinding.isKeyPressed
-            if (s != key.lastState) {
-                setState(key, s)
-                key.lastState = s
-            }
+        keyList
+            .filter{it.keyBinding.isKeyPressed != it.lastState}
+            .forEach {
+                setState(it, it.keyBinding.isKeyPressed)
+                it.lastState = it.keyBinding.isKeyPressed
         }
     }
 
