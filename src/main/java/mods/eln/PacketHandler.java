@@ -223,14 +223,19 @@ public class PacketHandler {
         }
     }
 
+    /**
+     * packetPlayerKey - handles key interactions
+     * @param stream Network Stream
+     * @param manager Network Manager
+     * @param player Player reference (the one whose client sent the packet)
+     */
     void packetPlayerKey(DataInputStream stream, NetworkManager manager, EntityPlayer player) {
         EntityPlayerMP playerMP = (EntityPlayerMP) player;
-        byte id;
         try {
-            id = stream.readByte();
+            byte id = stream.readByte();
             boolean state = stream.readBoolean();
 
-            if (id == ClientKeyHandler.wrenchId) {
+            if (id == Eln.clientKeyHandler.getKeyID("Wrench")) {
                 PlayerManager.PlayerMetadata metadata = Eln.playerManager.get(playerMP);
                 metadata.setInteractEnable(state);
             }
