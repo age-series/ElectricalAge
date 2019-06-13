@@ -1,13 +1,10 @@
 package mods.eln.client
 
-import cpw.mods.fml.client.registry.ClientRegistry
 import cpw.mods.fml.common.eventhandler.SubscribeEvent
 import cpw.mods.fml.common.gameevent.InputEvent.KeyInputEvent
 import mods.eln.Eln
 import mods.eln.misc.UtilsClient
-import net.minecraft.client.settings.KeyBinding
-import net.minecraft.util.StatCollector
-import org.lwjgl.input.Keyboard
+import mods.eln.misc.Key
 
 import java.io.ByteArrayOutputStream
 import java.io.DataOutputStream
@@ -18,57 +15,18 @@ import java.io.IOException
  */
 class ClientKeyHandler {
 
-    private var usedIds = 0
-    private val keyList = mutableListOf<Key>()
-
-    /**
-     * init: register all of the keys we plan to use
-      */
-    init {
-        // Order of registration is IMPORTANT, it must match between client and server.
-        registerKey("Wrench", Keyboard.KEY_C)
-    }
-
-    /**
-     * registerKey
-     * @param name: name of the key
-     * @param key: the Keyboard.KEY_ that you want to trigger on
-     */
-    private fun registerKey(name: String, key: Int) {
-        val keyBinding = KeyBinding(name, key, StatCollector.translateToLocal("ElectricalAge"))
-        val nkey = Key(usedIds, name, key, false, keyBinding)
-        keyList.add(nkey.id, nkey)
-        usedIds++
-        ClientRegistry.registerKeyBinding(nkey.keyBinding)
-    }
-
-    /**
-     * getKeyID: Get the key ID used in network packets for a named keyboard key
-     * @param name the key name ("Wrench" for example)
-     * @return the key ID in network packets
-     */
-    fun getKeyID(name: String): Int {
-        for (key in keyList) {
-            if (key.name == name) {
-                return key.id
-            }
-        }
-        return -1
-    }
-
     /**
      * onKeyInput - fires if the key is pressed. We check to see (for all keys we have) if one was pressed, and if the
      * state changed, we send the new state to the server.
      */
     @SubscribeEvent
-    @Suppress("unused") // this does actually fire, despite what IDEA thinks
     fun onKeyInput(event: KeyInputEvent) {
         // for each key, see if the state has changed. If it has, send it to the server
-        keyList
-            .filter{it.keyBinding.isKeyPressed != it.lastState}
+        Eln.keyList
+            .filter{it.value.keyBinding.isKeyPressed != it.value.lastState}
             .forEach {
-                setState(it, it.keyBinding.isKeyPressed)
-                it.lastState = it.keyBinding.isKeyPressed
+                setState(it.value, it.value.keyBinding.isKeyPressed)
+                it.value.lastState = it.value.keyBinding.isKeyPressed
         }
     }
 
@@ -93,14 +51,4 @@ class ClientKeyHandler {
 
         UtilsClient.sendPacketToServer(bos)
     }
-
-    /**
-     * Key:
-     * @param id: The ID to use to communicate with the server network
-     * @param name: The name of the key (shown in the UI?
-     * @param key: The Keyboard.KEY_ value (for example, Keyboard.KEY_C)
-     * @param lastState: The last state of the key (used for edge detection, set false at beginning
-     * @param keyBinding: The keyBinding instance (used to get the keyPressed later)
-     */
-    data class Key (val id: Int, val name: String, val key: Int, var lastState: Boolean, val keyBinding: KeyBinding)
 }

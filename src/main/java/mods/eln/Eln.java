@@ -91,6 +91,7 @@ import net.minecraftforge.common.config.Property;
 import net.minecraftforge.oredict.OreDictionary;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.lwjgl.input.Keyboard;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -254,6 +255,7 @@ public class Eln {
     public static DebugPrint dp;
     public static Logger logger;
 
+    public static HashMap<String, Key> keyList;
 
     public static RecipesList magnetiserRecipes = new RecipesList();
     public static RecipesList compressorRecipes = new RecipesList();
@@ -337,6 +339,10 @@ public class Eln {
 
         // load up the debug printer before anything else starts.
         dp = new DebugPrint(debugTypes);
+
+        // register keys on the client and the server. The order of the registration is important.
+        Eln.keyList = new HashMap<>();
+        KeyRegistry.registerKey("Wrench", Keyboard.KEY_C);
 
         elnNetwork = NetworkRegistry.INSTANCE.newSimpleChannel("electrical-age");
         elnNetwork.registerMessage(AchievePacketHandler.class, AchievePacket.class, 0, Side.SERVER);

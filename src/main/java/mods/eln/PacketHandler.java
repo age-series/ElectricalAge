@@ -9,6 +9,7 @@ import mods.eln.client.ClientProxy;
 import mods.eln.debug.DebugType;
 import mods.eln.misc.Coordonate;
 import mods.eln.misc.IConfigSharing;
+import mods.eln.misc.KeyRegistry;
 import mods.eln.misc.Utils;
 import mods.eln.node.INodeEntity;
 import mods.eln.node.NodeBase;
@@ -235,7 +236,7 @@ public class PacketHandler {
             byte id = stream.readByte();
             boolean state = stream.readBoolean();
 
-            if (id == Eln.clientKeyHandler.getKeyID("Wrench")) {
+            if (id == KeyRegistry.getKeyID("Wrench")) {
                 PlayerManager.PlayerMetadata metadata = Eln.playerManager.get(playerMP);
                 metadata.setInteractEnable(state);
             }
