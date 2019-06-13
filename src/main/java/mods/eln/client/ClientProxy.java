@@ -7,6 +7,7 @@ import mods.eln.CommonProxy;
 import mods.eln.Eln;
 import mods.eln.entity.ReplicatorEntity;
 import mods.eln.entity.ReplicatorRender;
+import mods.eln.misc.KeyRegistry;
 import mods.eln.node.six.SixNodeEntity;
 import mods.eln.node.six.SixNodeRender;
 import mods.eln.node.transparent.TransparentNodeEntity;
@@ -49,5 +50,10 @@ public class ClientProxy extends CommonProxy {
 
         new FrameTime();
         new ConnectionListener();
+    }
+
+    @Override
+    public void registerKey(String name, int key) {
+        KeyRegistry.registerKeyClient(name, key);
     }
 }

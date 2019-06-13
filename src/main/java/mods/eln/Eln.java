@@ -342,7 +342,7 @@ public class Eln {
 
         // register keys on the client and the server. The order of the registration is important.
         Eln.keyList = new HashMap<>();
-        KeyRegistry.registerKey("Wrench", Keyboard.KEY_C);
+        proxy.registerKey("Wrench", Keyboard.KEY_C);
 
         elnNetwork = NetworkRegistry.INSTANCE.newSimpleChannel("electrical-age");
         elnNetwork.registerMessage(AchievePacketHandler.class, AchievePacket.class, 0, Side.SERVER);

@@ -23,10 +23,13 @@ class ClientKeyHandler {
     fun onKeyInput(event: KeyInputEvent) {
         // for each key, see if the state has changed. If it has, send it to the server
         Eln.keyList
-            .filter{it.value.keyBinding.isKeyPressed != it.value.lastState}
+            .filter{it.value.keyBinding?.isKeyPressed != it.value.lastState}
             .forEach {
-                setState(it.value, it.value.keyBinding.isKeyPressed)
-                it.value.lastState = it.value.keyBinding.isKeyPressed
+                val kbnd = it.value.keyBinding
+                if (kbnd != null) {
+                    setState(it.value, kbnd.isKeyPressed)
+                    it.value.lastState = kbnd.isKeyPressed
+                }
         }
     }
 
