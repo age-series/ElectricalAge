@@ -9,6 +9,7 @@ import mods.eln.client.ClientProxy;
 import mods.eln.debug.DebugType;
 import mods.eln.misc.Coordonate;
 import mods.eln.misc.IConfigSharing;
+import mods.eln.misc.KeyRegistry;
 import mods.eln.misc.Utils;
 import mods.eln.node.INodeEntity;
 import mods.eln.node.NodeBase;
@@ -223,14 +224,19 @@ public class PacketHandler {
         }
     }
 
+    /**
+     * packetPlayerKey - handles key interactions
+     * @param stream Network Stream
+     * @param manager Network Manager
+     * @param player Player reference (the one whose client sent the packet)
+     */
     void packetPlayerKey(DataInputStream stream, NetworkManager manager, EntityPlayer player) {
         EntityPlayerMP playerMP = (EntityPlayerMP) player;
-        byte id;
         try {
-            id = stream.readByte();
+            byte id = stream.readByte();
             boolean state = stream.readBoolean();
 
-            if (id == ClientKeyHandler.wrenchId) {
+            if (id == KeyRegistry.getKeyID("Wrench")) {
                 PlayerManager.PlayerMetadata metadata = Eln.playerManager.get(playerMP);
                 metadata.setInteractEnable(state);
             }
