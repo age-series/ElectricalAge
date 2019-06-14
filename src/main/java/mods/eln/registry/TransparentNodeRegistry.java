@@ -18,6 +18,7 @@ import mods.eln.transparentnode.FuelGeneratorDescriptor;
 import mods.eln.transparentnode.FuelHeatFurnaceDescriptor;
 import mods.eln.transparentnode.autominer.AutoMinerDescriptor;
 import mods.eln.transparentnode.battery.BatteryDescriptor;
+import mods.eln.transparentnode.distributionpole.DistributionPoleDescriptor;
 import mods.eln.transparentnode.eggincubator.EggIncubatorDescriptor;
 import mods.eln.transparentnode.electricalantennarx.ElectricalAntennaRxDescriptor;
 import mods.eln.transparentnode.electricalantennatx.ElectricalAntennaTxDescriptor;
@@ -88,6 +89,7 @@ public class TransparentNodeRegistry {
         registerTurret(66);
         registerFuelGenerator(67);
         registerGridDevices(123);
+        registerDistributionPoles(124);
     }
 
     public static void recipeRegistration() {
@@ -116,6 +118,23 @@ public class TransparentNodeRegistry {
         recipeAutoMiner();
         recipeDisplays();
     }
+
+    private static void registerDistributionPoles(int id) {
+        int subId;
+        String name;
+        GhostGroup ghostGroup;
+        {
+            subId = 0;
+            name = TR_NAME(I18N.Type.NONE, "Distribution Pole");
+            ghostGroup = new GhostGroup();
+            ghostGroup.addRectangle(0, 0, 0, 7, 0, 0);
+            // don't ask, but if you don't remove the root of the ghostGroup, it *will* crash the game in inexplicable ways
+            ghostGroup.removeElement(0,0,0);
+            DistributionPoleDescriptor desc = new DistributionPoleDescriptor(name, Eln.obj.getObj("DistributionPole"), ghostGroup);
+            Eln.transparentNodeItem.addDescriptor(subId + (id << 6), desc);
+        }
+    }
+    // no recipe yet
 
     private static void registerTransformer(int id) {
         int subId;
