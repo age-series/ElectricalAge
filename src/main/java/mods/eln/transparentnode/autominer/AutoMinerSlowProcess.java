@@ -206,13 +206,11 @@ public class AutoMinerSlowProcess implements IProcess, INBTTReady {
 
     private IInventory getDropInventory() {
         IInventory chestEntity = null;
-        for (int x = 2; x >= 1; x--) {
-            Coordonate c = new Coordonate(x, -1, 0, miner.world());
-            c.applyTransformation(miner.front, miner.coordonate());
-            if (c.getTileEntity() instanceof IInventory) {
-                chestEntity = (IInventory) c.getTileEntity();
-            }
-        }
+		Coordonate outputLocation = new Coordonate(1, -1, 0, miner.world());	
+		outputLocation.applyTransformation(miner.front, miner.coordonate());
+		if (outputLocation.getTileEntity() instanceof IInventory) {
+			chestEntity = (IInventory) outputLocation.getTileEntity();	
+		}
         return chestEntity;
     }
 
