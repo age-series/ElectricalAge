@@ -11,6 +11,7 @@ import mods.eln.ore.OreBlock;
 import mods.eln.sim.IProcess;
 import mods.eln.sixnode.lampsocket.LightBlockEntity;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockChest;
 import net.minecraft.block.BlockOre;
 import net.minecraft.block.BlockRedstoneOre;
 import net.minecraft.init.Blocks;
