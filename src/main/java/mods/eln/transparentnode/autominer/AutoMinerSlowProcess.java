@@ -203,15 +203,21 @@ public class AutoMinerSlowProcess implements IProcess, INBTTReady {
         oneJobDone = false;
         oldJob = job;
     }
-
     private IInventory getDropInventory() {
-        IInventory chestEntity = null;
-		Coordonate outputLocation = new Coordonate(1, -1, 0, miner.world());	
-		outputLocation.applyTransformation(miner.front, miner.coordonate());
-		if (outputLocation.getTileEntity() instanceof IInventory) {
-			chestEntity = (IInventory) outputLocation.getTileEntity();	
-		}
-        return chestEntity;
+        IInventory inventoryEntity = null;
+	    Coordonate outputLocation = new Coordonate(1, -1, 0, miner.world());	
+	    outputLocation.applyTransformation(miner.front, miner.coordonate());
+	    if (outputLocation.getTileEntity() instanceof IInventory) {
+		    inventoryEntity = (IInventory) outputLocation.getTileEntity();	
+		    Block inventoryBlock = miner.world().getBlock(outputLocation.x, outputLocation.y, outputLocation.z);
+		    if(inventoryBlock instanceof BlockChest) {
+			    IInventory possibleDoubleInventoryEntity = ((BlockChest)inventoryBlock).func_149951_m(miner.world(),outputLocation.x, outputLocation.y, outputLocation.z);
+			    if (possibleDoubleInventoryEntity != null) {
+				    inventoryEntity = possibleDoubleInventoryEntity;
+			    }
+		    }
+	    }
+        return inventoryEntity;
     }
 
     private boolean drop(ItemStack stack) {
