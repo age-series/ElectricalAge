@@ -11,6 +11,7 @@ import mods.eln.ore.OreBlock;
 import mods.eln.sim.IProcess;
 import mods.eln.sixnode.lampsocket.LightBlockEntity;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockChest;
 import net.minecraft.block.BlockOre;
 import net.minecraft.block.BlockRedstoneOre;
 import net.minecraft.init.Blocks;
@@ -203,17 +204,21 @@ public class AutoMinerSlowProcess implements IProcess, INBTTReady {
         oneJobDone = false;
         oldJob = job;
     }
-
     private IInventory getDropInventory() {
-        IInventory chestEntity = null;
-        for (int x = 2; x >= 1; x--) {
-            Coordonate c = new Coordonate(x, -1, 0, miner.world());
-            c.applyTransformation(miner.front, miner.coordonate());
-            if (c.getTileEntity() instanceof IInventory) {
-                chestEntity = (IInventory) c.getTileEntity();
-            }
-        }
-        return chestEntity;
+        IInventory inventoryEntity = null;
+	    Coordonate outputLocation = new Coordonate(1, -1, 0, miner.world());	
+	    outputLocation.applyTransformation(miner.front, miner.coordonate());
+	    if (outputLocation.getTileEntity() instanceof IInventory) {
+		    inventoryEntity = (IInventory) outputLocation.getTileEntity();	
+		    Block inventoryBlock = miner.world().getBlock(outputLocation.x, outputLocation.y, outputLocation.z);
+		    if(inventoryBlock instanceof BlockChest) {
+			    IInventory possibleDoubleInventoryEntity = ((BlockChest)inventoryBlock).func_149951_m(miner.world(),outputLocation.x, outputLocation.y, outputLocation.z);
+			    if (possibleDoubleInventoryEntity != null) {
+				    inventoryEntity = possibleDoubleInventoryEntity;
+			    }
+		    }
+	    }
+        return inventoryEntity;
     }
 
     private boolean drop(ItemStack stack) {
