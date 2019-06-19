@@ -113,7 +113,7 @@ public class ThermalDissipatorActiveElement extends TransparentNodeElement {
 
         super.networkSerialize(stream);
         try {
-            stream.writeFloat(lastPowerFactor = (float) (powerResistor.getP() / descriptor.electricalNominalP));
+            stream.writeFloat(lastPowerFactor = (float) (powerResistor.getPower() / descriptor.electricalNominalP));
         } catch (IOException e) {
 
             e.printStackTrace();

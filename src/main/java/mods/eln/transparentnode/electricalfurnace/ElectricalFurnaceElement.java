@@ -43,7 +43,7 @@ public class ElectricalFurnaceElement extends TransparentNodeElement {
     public static final int thermalRegulatorSlotId = 4;
 
     NbtElectricalLoad electricalLoad = new NbtElectricalLoad("electricalLoad");
-    ResistorSwitch heatingCorpResistor = new ResistorSwitch("heatResistor", electricalLoad, ElectricalLoad.groundLoad);
+    ResistorSwitch heatingCorpResistor = new ResistorSwitch("heatResistor", electricalLoad, ElectricalLoad.Companion.getGroundLoad());
 
     NbtThermalLoad thermalLoad = new NbtThermalLoad("thermalLoad");
     ThermalResistor smeltResistor = new ThermalResistor(thermalLoad, ThermalLoad.externalLoad);
@@ -164,7 +164,7 @@ public class ElectricalFurnaceElement extends TransparentNodeElement {
         heatingCorpResistor.setState(powerOn);
         itemStack = inventory.getStackInSlot(heatingCorpSlotId);
         if (itemStack == null) {
-            thermalRegulator.setRmin(MnaConst.highImpedance);
+            thermalRegulator.setRmin(MnaConst.INSTANCE.getHighImpedance());
             voltageWatchdog.setUNominal(100000);
         } else {
             HeatingCorpElement element = ((GenericItemUsingDamage<HeatingCorpElement>) itemStack.getItem()).getDescriptor(itemStack);
@@ -189,7 +189,7 @@ public class ElectricalFurnaceElement extends TransparentNodeElement {
     public void networkSerialize(java.io.DataOutputStream stream) {
         super.networkSerialize(stream);
         try {
-            stream.writeByte((powerOn ? 1 : 0) + (heatingCorpResistor.getP() > 5 ? 2 : 0));
+            stream.writeByte((powerOn ? 1 : 0) + (heatingCorpResistor.getPower() > 5 ? 2 : 0));
 
             stream.writeShort((int) thermalRegulator.getTarget());
             stream.writeShort((int) thermalLoad.Tc);
@@ -203,7 +203,7 @@ public class ElectricalFurnaceElement extends TransparentNodeElement {
                 stream.writeShort(stack.getItemDamage());
             }
 
-            stream.writeShort((int) heatingCorpResistor.getP());
+            stream.writeShort((int) heatingCorpResistor.getPower());
             stream.writeFloat((float) electricalLoad.getU());
             stream.writeFloat((float) slowRefreshProcess.processState());
             stream.writeFloat((float) slowRefreshProcess.processStatePerSecond());

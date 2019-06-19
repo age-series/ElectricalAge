@@ -210,12 +210,12 @@ class MotorElement(node: TransparentNode, desc_: TransparentNodeDescriptor) :
 
             // Most of this was copied from Generator.kt, and bears the same
             // admonition: I don't actually know how this works.
-            val th = wireLoad.subSystem.getTh(wireLoad, powerSource)
+            val th = wireLoad.subSystem!!.getTh(wireLoad, powerSource)
             var U: Double
             if(noTorqueU < th.U) {
                 // Input is greater than our output, spin up the shaft
                 U = th.U * 0.997 + noTorqueU * 0.003
-            } else if(th.isHighImpedance()) {
+            } else if(th.isHighImpedance) {
                 // No actual connection, let the system float
                 U = noTorqueU
             } else {
@@ -226,7 +226,7 @@ class MotorElement(node: TransparentNode, desc_: TransparentNodeDescriptor) :
                 val c = -desc.elecPPerDU * noTorqueU
                 U = (-b + Math.sqrt(b * b - 4 * a * c)) / (2 * a)
             }
-            powerSource.setU(U)
+            powerSource.u = U
         }
 
         override fun rootSystemPreStepProcess() {
@@ -285,7 +285,7 @@ class MotorElement(node: TransparentNode, desc_: TransparentNodeDescriptor) :
 
     override fun multiMeterString(side: Direction?) =
         Utils.plotER(shaft.energy, shaft.rads) +
-            Utils.plotUIP(powerSource.u, powerSource.i)
+            Utils.plotUIP(powerSource.u, powerSource.getCurrent())
 
     override fun thermoMeterString(side: Direction?) = Utils.plotCelsius("T", thermal.t)
 
@@ -303,7 +303,7 @@ class MotorElement(node: TransparentNode, desc_: TransparentNodeDescriptor) :
         info.put("Speed", Utils.plotRads("", shaft.rads))
         if(Eln.wailaEasyMode) {
             info.put("Voltage", Utils.plotVolt("", powerSource.u))
-            info.put("Current", Utils.plotAmpere("", powerSource.i))
+            info.put("Current", Utils.plotAmpere("", powerSource.getCurrent()))
             info.put("Temperature", Utils.plotCelsius("", thermal.t))
         }
         return info

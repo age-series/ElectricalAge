@@ -83,7 +83,7 @@ public class ElectricalStackMachineProcess implements IProcess {
     }
 
     public double getPower() {
-        return electricalResistor.getP() * efficiency;
+        return electricalResistor.getPower() * efficiency;
     }
 
     public void smeltInit() {

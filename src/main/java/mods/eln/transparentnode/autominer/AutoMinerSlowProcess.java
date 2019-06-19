@@ -82,7 +82,7 @@ public class AutoMinerSlowProcess implements IProcess, INBTTReady {
             }
         }
 
-        energyCounter += miner.powerResistor.getP() * time;
+        energyCounter += miner.powerResistor.getPower() * time;
 
         if (job != jobType.none && job != jobType.full && job != jobType.chestFull && job != jobType.done) {
             if (energyCounter >= energyTarget || (job == jobType.ore && !isReadyToDrill()) || !miner.powerOk) {

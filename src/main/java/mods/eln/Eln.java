@@ -31,7 +31,6 @@ import mods.eln.generic.SharedItem;
 import mods.eln.ghost.GhostBlock;
 import mods.eln.ghost.GhostManager;
 import mods.eln.ghost.GhostManagerNbt;
-import mods.eln.i18n.I18N;
 import mods.eln.item.CopperCableDescriptor;
 import mods.eln.item.GraphiteDescriptor;
 import mods.eln.item.MiningPipeDescriptor;
@@ -40,7 +39,7 @@ import mods.eln.item.electricalinterface.ItemEnergyInventoryProcess;
 import mods.eln.item.electricalitem.PortableOreScannerItem;
 import mods.eln.item.electricalitem.PortableOreScannerItem.RenderStorage.OreScannerConfigElement;
 import mods.eln.misc.*;
-import mods.eln.misc.materials.MaterialProperties;
+import mods.eln.misc.MaterialProperties;
 import mods.eln.node.NodeBlockEntity;
 import mods.eln.node.NodeManager;
 import mods.eln.node.NodeManagerNbt;
@@ -74,7 +73,6 @@ import mods.eln.transparentnode.electricalfurnace.ElectricalFurnaceDescriptor;
 import mods.eln.transparentnode.teleporter.TeleporterElement;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
-import net.minecraft.command.ICommandManager;
 import net.minecraft.command.ServerCommandManager;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Blocks;
@@ -86,8 +84,6 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.config.Configuration;
-import net.minecraftforge.common.config.Property;
 import net.minecraftforge.oredict.OreDictionary;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -95,7 +91,6 @@ import org.lwjgl.input.Keyboard;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.UUID;
 
 import static java.util.Arrays.asList;
 import static mods.eln.i18n.I18N.*;
@@ -248,7 +243,6 @@ public class Eln {
     public static ItemEnergyInventoryProcess itemEnergyInventoryProcess;
     public static CreativeTabs creativeTab;
 
-    public static MaterialProperties mp;
     private static OreRegenerate oreRegenerate;
     public static Obj3DFolder obj = new Obj3DFolder();
     public static ArrayList<DebugType> debugTypes = new ArrayList<>();
@@ -450,8 +444,6 @@ public class Eln {
         transparentNodeItem = (TransparentNodeItem) Item.getItemFromBlock(transparentNodeBlock);
 
         oreItem = (OreItem) Item.getItemFromBlock(oreBlock);
-
-        mp = new MaterialProperties();
 
         SixNode.sixNodeCacheList.add(new SixNodeCacheStd());
 

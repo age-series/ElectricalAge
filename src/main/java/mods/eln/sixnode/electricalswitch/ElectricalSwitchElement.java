@@ -46,8 +46,12 @@ public class ElectricalSwitchElement extends SixNodeElement {
         electricalLoadList.add(aLoad);
         electricalLoadList.add(bLoad);
         electricalComponentList.add(switchResistor);
-        electricalComponentList.add(new Resistor(bLoad, null).pullDown());
-        electricalComponentList.add(new Resistor(aLoad, null).pullDown());
+        Resistor r1 = new Resistor(bLoad, null);
+        r1.pullDown();
+        electricalComponentList.add(r1);
+        Resistor r2 = new Resistor(aLoad, null);
+        r2.pullDown();
+        electricalComponentList.add(r2);
 
         this.descriptor = (ElectricalSwitchDescriptor) descriptor;
 

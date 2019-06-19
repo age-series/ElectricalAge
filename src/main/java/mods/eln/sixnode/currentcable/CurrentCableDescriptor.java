@@ -3,10 +3,7 @@ package mods.eln.sixnode.currentcable;
 import mods.eln.Eln;
 import mods.eln.cable.CableRenderDescriptor;
 import mods.eln.debug.DebugType;
-import mods.eln.misc.Utils;
-import mods.eln.misc.UtilsClient;
-import mods.eln.misc.VoltageLevelColor;
-import mods.eln.misc.materials.MaterialType;
+import mods.eln.misc.*;
 import mods.eln.node.NodeBase;
 import mods.eln.sim.ElectricalLoad;
 import mods.eln.sim.ThermalLoad;
@@ -44,14 +41,14 @@ public class CurrentCableDescriptor extends GenericCableDescriptor {
 
         this.electricalMaximalCurrent = 0.355 * conductorArea; // roughly (mm^2 / I) that is suggested by https://www.powerstream.com/Wire_Size.htm for power transmission lines
 
-        electricalRs = Eln.mp.getElectricalResistivity(type) * (conductorArea / 1000000 / 1.0) * Eln.cableResistanceMultiplier; // resistivity (ohms/meter)* (cross sectional area (m) / length (m))
+        electricalRs = MaterialProperties.getElectricalResistivity(type) * (conductorArea / 1000000 / 1.0) * Eln.cableResistanceMultiplier; // resistivity (ohms/meter)* (cross sectional area (m) / length (m))
         Eln.dp.println(DebugType.SIX_NODE, "(" + this.name + ") Current Cable Resistance: " + electricalRs);
 
         // begin odd thermal system code
         double thermalMaximalPowerDissipated = electricalMaximalCurrent * electricalMaximalCurrent * electricalRs * 2;
         thermalC = (thermalMaximalPowerDissipated * thermalNominalHeatTime) / thermalWarmLimit;
         thermalRp = thermalWarmLimit / thermalMaximalPowerDissipated;
-        thermalRs = (Eln.mp.getThermalConductivity(type) / 385.0) / thermalC / 2;
+        thermalRs = (MaterialProperties.getThermalConductivity(type) / 385.0) / thermalC / 2;
         // TODO: FIX WHEN REDOING THERMAL SYSTEM
         // I replaced thermalConductivityTao with (material.getThermalConductivity() / 385.0)
         // Since thermalConductivityTao is typically 1, I'm going to use Copper's thermal conductivity constant as a baseline.

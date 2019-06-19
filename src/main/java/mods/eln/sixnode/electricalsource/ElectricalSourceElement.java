@@ -88,7 +88,7 @@ public class ElectricalSourceElement extends SixNodeElement implements IConfigur
 
     @Override
     public String multiMeterString() {
-        return Utils.plotUIP(electricalLoad.getU(), voltageSource.getI());
+        return Utils.plotUIP(electricalLoad.getU(), voltageSource.getCurrent());
     }
 
     @Override

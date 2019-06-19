@@ -61,7 +61,7 @@ public class ElectricalCableDescriptor extends GenericCableDescriptor {
         this.thermalCoolLimit = thermalCoolLimit;
         this.electricalMaximalVoltage = electricalMaximalVoltage;
 
-        electricalRp = MnaConst.highImpedance;
+        electricalRp = MnaConst.INSTANCE.getHighImpedance();
         double electricalNorminalI = electricalNominalPower / electricalNominalVoltage;
         electricalRs = (electricalNominalPower * electricalNominalPowerDropFactor) / electricalNorminalI / electricalNorminalI / 2;
         //electricalC = Eln.simulator.getMinimalElectricalC(electricalNominalRs, electricalRp);

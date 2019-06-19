@@ -81,7 +81,7 @@ class LargeRheostatElement(node: TransparentNode, desc_: TransparentNodeDescript
 
     val aLoad = NbtElectricalLoad("aLoad")
     val bLoad = NbtElectricalLoad("bLoad")
-    val resistor = Resistor(aLoad, bLoad).apply { setR(nominalRs) }
+    val resistor = Resistor(aLoad, bLoad).apply { r = nominalRs }
 
     val control = NbtElectricalGateInput("control")
     val controlProcess = ControlProcess()
@@ -164,7 +164,7 @@ class LargeRheostatElement(node: TransparentNode, desc_: TransparentNodeDescript
 
     override fun multiMeterString(side: Direction): String {
         val u = -Math.abs(aLoad.u - bLoad.u)
-        val i = Math.abs(resistor.i)
+        val i = Math.abs(resistor.getCurrent())
         return Utils.plotOhm(Utils.plotUIP(u, i), resistor.r) + Utils.plotPercent("C", control.normalized)
     }
 
@@ -193,7 +193,7 @@ class LargeRheostatElement(node: TransparentNode, desc_: TransparentNodeDescript
     override fun getWaila(): Map<String, String> = mutableMapOf(
         Pair(I18N.tr("Resistance"), Utils.plotOhm("", resistor.r)),
         Pair(I18N.tr("Temperature"), Utils.plotCelsius("", thermalLoad.t)),
-        Pair(I18N.tr("Power loss"), Utils.plotPower("", resistor.p))
+        Pair(I18N.tr("Power loss"), Utils.plotPower("", resistor.getPower()))
     )
 }
 

@@ -33,7 +33,7 @@ public class ThermalResistor implements IProcess {
         return R;
     }
     /*
-	public double getU() {
+	public double getVoltage() {
 		return P * R;
 	}*/
 

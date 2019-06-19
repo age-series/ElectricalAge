@@ -129,6 +129,6 @@ public class BatteryProcess implements IProcess {
     }
 
     public double getDischargeCurrent() {
-        return voltageSource.getI();
+        return voltageSource.getCurrent();
     }
 }

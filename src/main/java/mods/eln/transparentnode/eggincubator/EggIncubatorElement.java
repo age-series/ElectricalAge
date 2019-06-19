@@ -69,7 +69,7 @@ public class EggIncubatorElement extends TransparentNodeElement {
 
         @Override
         public void process(double time) {
-            energy -= powerResistor.getP() * time;
+            energy -= powerResistor.getPower() * time;
             if (inventory.getStackInSlot(EggIncubatorContainer.EggSlotId) != null) {
                 descriptor.setState(powerResistor, true);
                 if (energy <= 0) {
@@ -191,7 +191,7 @@ public class EggIncubatorElement extends TransparentNodeElement {
         info.put(I18N.tr("Has egg"), inventory.getStackInSlot(EggIncubatorContainer.EggSlotId) != null ?
             I18N.tr("Yes") : I18N.tr("No"));
         if (Eln.wailaEasyMode) {
-            info.put(I18N.tr("Power consumption"), Utils.plotPower("", powerResistor.getP()));
+            info.put(I18N.tr("Power consumption"), Utils.plotPower("", powerResistor.getPower()));
         }
         return info;
     }

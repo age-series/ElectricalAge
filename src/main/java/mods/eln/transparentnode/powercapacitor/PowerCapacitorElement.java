@@ -61,7 +61,7 @@ public class PowerCapacitorElement extends TransparentNodeElement {
                 eLeft = 0;
                 dischargeResistor.setR(stdDischargeResistor);
             } else {
-                eLeft -= dischargeResistor.getP() * time;
+                eLeft -= dischargeResistor.getPower() * time;
                 dischargeResistor.setR(eLegaliseResistor);
             }
         }

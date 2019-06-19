@@ -1,13 +1,12 @@
 package mods.eln.registry;
 
-import cpw.mods.fml.common.registry.GameRegistry;
 import mods.eln.Eln;
 import mods.eln.cable.CableRenderDescriptor;
 import mods.eln.ghost.GhostGroup;
 import mods.eln.i18n.I18N;
 import mods.eln.item.ElectricalFuseDescriptor;
 import mods.eln.misc.*;
-import mods.eln.misc.materials.MaterialType;
+import mods.eln.misc.MaterialType;
 import mods.eln.misc.series.SerieEE;
 import mods.eln.sixnode.*;
 import mods.eln.sixnode.TreeResinCollector.TreeResinCollectorDescriptor;
@@ -65,7 +64,6 @@ import mods.eln.transparentnode.thermaldissipatorpassive.ThermalDissipatorPassiv
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.oredict.ShapedOreRecipe;
 
 import static mods.eln.i18n.I18N.TR_NAME;
 

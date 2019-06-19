@@ -149,8 +149,8 @@ class FuelGeneratorElement(transparentNode: TransparentNode, descriptor_: Transp
 
     override fun initialize() {
         descriptor.cable.applyTo(positiveLoad)
-        powerSource.setUmax(descriptor.maxVoltage)
-        powerSource.setImax(descriptor.nominalPower * 5 / descriptor.maxVoltage)
+        powerSource.Umax = descriptor.maxVoltage
+        powerSource.Imax = descriptor.nominalPower * 5 / descriptor.maxVoltage
         connect()
     }
 
@@ -218,7 +218,7 @@ class FuelGeneratorElement(transparentNode: TransparentNode, descriptor_: Transp
     override fun getWaila(): Map<String, String> = mutableMapOf(
         Pair(I18N.tr("State"), if (on) I18N.tr("ON") else I18N.tr("OFF")),
         Pair(I18N.tr("Fuel level"), Utils.plotPercent("", tankLevel)),
-        Pair(I18N.tr("Generated power"), Utils.plotPower("", powerSource.effectiveP)),
+        Pair(I18N.tr("Generated power"), Utils.plotPower("", powerSource.getEffectiveP())),
         Pair(I18N.tr("Voltage"), Utils.plotVolt("", powerSource.u))
     )
 }
@@ -269,7 +269,7 @@ class FuelGeneratorRender(tileEntity: TransparentNodeEntity, descriptor: Transpa
 class FuelGeneratorSlowProcess(internal val generator: FuelGeneratorElement) : IProcess {
     override fun process(time: Double) {
         if (generator.on) {
-            val power = Math.max(generator.powerSource.effectiveP,
+            val power = Math.max(generator.powerSource.getEffectiveP(),
                 generator.descriptor.nominalPower * FuelGeneratorDescriptor.MinimalLoadFractionOfNominalPower)
             generator.tankLevel = Math.max(0.0, generator.tankLevel - time *
                 FuelGeneratorDescriptor.EfficiencyFactorVsLoadFactor(power / generator.descriptor.nominalPower) *

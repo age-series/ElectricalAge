@@ -79,10 +79,10 @@ public class LampSocketProcess implements IProcess, INBTTReady /*,LightBlockObse
                     LampDescriptor lampDescriptor = (LampDescriptor) ((GenericItemUsingDamage<GenericItemUsingDamageDescriptor>) lampStack.getItem()).getDescriptor(lampStack);
                     best.element.addToRp(lampDescriptor.getR());
                 }
-                lamp.positiveLoad.state = best.element.powerLoad.state;
+                lamp.positiveLoad.setState(best.element.powerLoad.getState());
                 oldLampSupply = best.element;
             } else {
-                lamp.positiveLoad.state = 0;
+                lamp.positiveLoad.setState(0);
                 oldLampSupply = null;
             }
 
@@ -167,12 +167,12 @@ public class LampSocketProcess implements IProcess, INBTTReady /*,LightBlockObse
             switch (lampDescriptor.type) {
                 case Incandescent:
                 case LED:
-                    lightDouble = lampDescriptor.nominalLight * (Math.abs(lamp.lampResistor.getU()) - lampDescriptor.minimalU) / (lampDescriptor.nominalU - lampDescriptor.minimalU);
+                    lightDouble = lampDescriptor.nominalLight * (Math.abs(lamp.lampResistor.getVoltage()) - lampDescriptor.minimalU) / (lampDescriptor.nominalU - lampDescriptor.minimalU);
                     lightDouble = (lightDouble * 16);
                     break;
 
                 case eco:
-                    double U = Math.abs(lamp.lampResistor.getU());
+                    double U = Math.abs(lamp.lampResistor.getVoltage());
                     if (U < lampDescriptor.minimalU) {
                         stableProb = 0;
                         lightDouble = 0;
@@ -211,7 +211,7 @@ public class LampSocketProcess implements IProcess, INBTTReady /*,LightBlockObse
 			/*
              * double overFactor = (lamp.electricalLoad.Uc-lampDescriptor.minimalU) /(lampDescriptor.nominalU-lampDescriptor.minimalU);
 			 */
-            double overFactor = (lamp.lampResistor.getP()) / (lampDescriptor.nominalP);
+            double overFactor = (lamp.lampResistor.getPower()) / (lampDescriptor.nominalP);
             if (overFactor < 0)
                 overFactor = 0;
 

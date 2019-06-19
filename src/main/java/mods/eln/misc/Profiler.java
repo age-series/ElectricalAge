@@ -12,6 +12,11 @@ public class Profiler {
             this.name = name;
             this.nano = nano;
         }
+
+        @Override
+        public String toString() {
+            return this.name + ": " + this.nano;
+        }
     }
 
     LinkedList<ProfilerData> list = new LinkedList<Profiler.ProfilerData>();
@@ -39,5 +44,16 @@ public class Profiler {
         }
 
         return str;
+    }
+
+    public long getTime() {
+        ProfilerData last = null;
+        for (ProfilerData p : list) {
+            if (last != null) {
+                return (p.nano - last.nano) / 1000;
+            }
+            last = p;
+        }
+        return 0;
     }
 }

@@ -14,7 +14,7 @@ public class DiodeFastProcess implements IRootSystemPreStepProcess {
     @Override
     public void rootSystemPreStepProcess() {
         double u1 = 0, u2 = 0;
-        if (source.aPin != null) {
+        if (source.getAPin() != null) {
             //source.getSubSystem().getTh(source.aPin, voltageSource)
         }
     }

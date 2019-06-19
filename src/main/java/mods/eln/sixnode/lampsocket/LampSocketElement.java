@@ -154,7 +154,7 @@ public class LampSocketElement extends SixNodeElement implements IConfigurable {
 
         electricalLoadList.remove(positiveLoad);
         electricalComponentList.remove(lampResistor);
-        positiveLoad.state = 0;
+        positiveLoad.setState(0);
     }
 
     @Override
@@ -220,7 +220,7 @@ public class LampSocketElement extends SixNodeElement implements IConfigurable {
     @Override
     public Map<String, String> getWaila() {
         Map<String, String> info = new HashMap<String, String>();
-        info.put(I18N.tr("Power consumption"), Utils.plotPower("", lampResistor.getI() * lampResistor.getU()));
+        info.put(I18N.tr("Power consumption"), Utils.plotPower("", lampResistor.getCurrent() * lampResistor.getVoltage()));
         if (lampDescriptor != null) {
             info.put(I18N.tr("Bulb"), lampDescriptor.name);
         } else {

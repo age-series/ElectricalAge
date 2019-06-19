@@ -110,8 +110,12 @@ class ElectricalFuseHolderElement(sixNode: SixNode, side: Direction, descriptor:
         electricalLoadList.add(aLoad)
         electricalLoadList.add(bLoad)
         electricalComponentList.add(fuseResistor)
-        electricalComponentList.add(Resistor(bLoad, null).pullDown())
-        electricalComponentList.add(Resistor(aLoad, null).pullDown())
+        val r1 = Resistor(bLoad, null)
+        r1.pullDown()
+        electricalComponentList.add(r1)
+        val r2 = Resistor(aLoad, null)
+        r2.pullDown()
+        electricalComponentList.add(r2)
         electricalProcessList.add(fuseProcess)
     }
 

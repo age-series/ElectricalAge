@@ -349,7 +349,7 @@ public class TurretSlowProcess extends StateMachine {
     @Override
     public void process(double time) {
         double MaximalEnergy = element.getDescriptor().getProperties().impulseEnergy;
-        element.energyBuffer += element.powerResistor.getP() * time;
+        element.energyBuffer += element.powerResistor.getPower() * time;
         boolean full = element.energyBuffer > MaximalEnergy;
 
         if (full) {

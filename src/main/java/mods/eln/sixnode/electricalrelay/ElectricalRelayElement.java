@@ -58,8 +58,12 @@ public class ElectricalRelayElement extends SixNodeElement implements IConfigura
         electricalProcessList.add(gateProcess);
         electricalLoadList.add(gate);
 
-        electricalComponentList.add(new Resistor(bLoad, null).pullDown());
-        electricalComponentList.add(new Resistor(aLoad, null).pullDown());
+        Resistor r1 = new Resistor(bLoad, null);
+        r1.pullDown();
+        electricalComponentList.add(r1);
+        Resistor r2 = new Resistor(aLoad, null);
+        r2.pullDown();
+        electricalComponentList.add(r2);
 
         //slowProcessList.add(currentWatchDog);
         slowProcessList.add(voltageWatchDogA);

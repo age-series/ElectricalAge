@@ -461,7 +461,7 @@ public class TeleporterElement extends TransparentNodeElement implements ITelepo
                         //
                         // energyTarget *= 1.0 + Math.pow(distance / 250.0, 0.5);
 
-                        energyHit += powerResistor.getP() * time;
+                        energyHit += powerResistor.getPower() * time;
                         processRatio = (float) (energyHit / energyTarget);
 
                         if (energyHit >= energyTarget) {

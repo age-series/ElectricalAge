@@ -34,7 +34,7 @@ public class NbtElectricalGateOutputProcess extends Capacitor implements INBTTRe
     @Override
     public void simProcessI(SubSystem s) {
         if (!highImpedance)
-            aPin.state = U;
+            getAPin().setState(U);
         super.simProcessI(s);
     }
 

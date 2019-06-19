@@ -122,7 +122,7 @@ public class ElectricalAntennaTxElement extends TransparentNodeElement {
     void calculatePowerInRp() {
         double cmd = commandIn.getNormalized();
         if (cmd == 0.0)
-            powerResistor.setR(MnaConst.highImpedance);
+            powerResistor.setR(MnaConst.INSTANCE.getHighImpedance());
         else
             powerResistor.setR(descriptor.electricalNominalInputR / cmd);
     }

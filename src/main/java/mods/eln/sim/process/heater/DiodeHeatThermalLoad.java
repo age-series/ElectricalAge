@@ -19,7 +19,7 @@ public class DiodeHeatThermalLoad implements IProcess {
     @Override
     public void process(double time) {
         if (r.getR() == lastR) {
-            load.movePowerTo(r.getP());
+            load.movePowerTo(r.getPower());
         } else {
             lastR = r.getR();
         }

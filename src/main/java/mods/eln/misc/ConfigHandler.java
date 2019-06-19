@@ -140,7 +140,7 @@ public class ConfigHandler {
 
         Eln.maxSoundDistance = config.get("debug", "maxSoundDistance", 16.0).getDouble();
 
-        Eln.cableResistanceMultiplier = config.get("debug", "cableResistanceMultiplier", 1000.0).getDouble();
+        Eln.cableResistanceMultiplier = config.get("debug", "cableResistanceMultiplier", 1000000000).getDouble();
 
         Eln.energyMeterWebhookFrequency = config.get("network", "meterWebhookFrequency", 0, "Frequency (in seconds) to send webhooks with energy usage. Default of 0 disables webhooks. You are encouraged to set this to either 60 or 500.").getInt();
 

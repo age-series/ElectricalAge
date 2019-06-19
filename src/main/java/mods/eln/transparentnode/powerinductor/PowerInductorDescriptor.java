@@ -37,7 +37,7 @@ public class PowerInductorDescriptor extends TransparentNodeDescriptor {
     public double getRsValue(IInventory inventory) {
         ItemStack core = inventory.getStackInSlot(PowerInductorContainer.coreId);
 
-        if (core == null) return MnaConst.highImpedance;
+        if (core == null) return MnaConst.INSTANCE.getHighImpedance();
         FerromagneticCoreDescriptor coreDescriptor = (FerromagneticCoreDescriptor) FerromagneticCoreDescriptor.getDescriptor(core);
 
         double coreFactor = coreDescriptor.cableMultiplier;

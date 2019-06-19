@@ -135,11 +135,11 @@ class EmergencyLampElement(sixNode: SixNode, side: Direction, descriptor: SixNod
             }
         }
 
-        if (chargingResistor.u > 0.5 * desc.cable.electricalNominalVoltage) {
+        if (chargingResistor.getVoltage() > 0.5 * desc.cable.electricalNominalVoltage) {
             on = false
             if (charge < desc.batteryCapacity) {
                 chargingResistor.state = true
-                charge = Math.min(charge + chargingResistor.p * deltaT, desc.batteryCapacity)
+                charge = Math.min(charge + chargingResistor.getPower() * deltaT, desc.batteryCapacity)
             } else {
                 chargingResistor .state = false
             }

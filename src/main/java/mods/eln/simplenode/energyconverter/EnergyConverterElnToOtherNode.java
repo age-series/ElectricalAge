@@ -83,7 +83,7 @@ public class EnergyConverterElnToOtherNode extends SimpleNode {
 
         @Override
         public void process(double time) {
-            energyBuffer += powerInResistor.getP() * time;
+            energyBuffer += powerInResistor.getPower() * time;
             timeout -= time;
             if (timeout < 0) {
                 timeout = 0.05;

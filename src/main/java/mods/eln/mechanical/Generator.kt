@@ -195,11 +195,11 @@ class GeneratorElement(node: TransparentNode, desc_: TransparentNodeDescriptor) 
 
             // Most things below were copied from TurbineElectricalProcess.
             // Some comments on what math is going on would be great.
-            val th = positiveLoad.getSubSystem().getTh(positiveLoad, electricalPowerSource)
+            val th = positiveLoad.subSystem!!.getTh(positiveLoad, electricalPowerSource)
             var Ut: Double
             if (targetU < th.U) {
                 Ut = th.U * 0.999 + targetU * 0.001
-            } else if (th.isHighImpedance()) {
+            } else if (th.isHighImpedance) {
                 Ut = targetU
             } else {
                 val a = 1 / th.R
@@ -207,7 +207,7 @@ class GeneratorElement(node: TransparentNode, desc_: TransparentNodeDescriptor) 
                 val c = -desc.powerOutPerDeltaU * targetU
                 Ut = (-b + Math.sqrt(b * b - 4 * a * c)) / (2 * a)
             }
-            electricalPowerSource.setU(Ut)
+            electricalPowerSource.u = Ut
         }
 
         override fun rootSystemPreStepProcess() {
@@ -268,7 +268,7 @@ class GeneratorElement(node: TransparentNode, desc_: TransparentNodeDescriptor) 
     }
 
     override fun multiMeterString(side: Direction?) =
-        Utils.plotER(shaft.energy, shaft.rads) + Utils.plotUIP(electricalPowerSource.getU(), electricalPowerSource.getI())
+        Utils.plotER(shaft.energy, shaft.rads) + Utils.plotUIP(electricalPowerSource.u, electricalPowerSource.getCurrent())
 
     override fun thermoMeterString(side: Direction?) = Utils.plotCelsius("T", thermal.getT())
 
@@ -286,8 +286,8 @@ class GeneratorElement(node: TransparentNode, desc_: TransparentNodeDescriptor) 
         info.put("Energy", Utils.plotEnergy("", shaft.energy))
         info.put("Speed", Utils.plotRads("", shaft.rads))
         if (Eln.wailaEasyMode) {
-            info.put("Voltage", Utils.plotVolt("", electricalPowerSource.getU()))
-            info.put("Current", Utils.plotAmpere("", electricalPowerSource.getI()))
+            info.put("Voltage", Utils.plotVolt("", electricalPowerSource.u))
+            info.put("Current", Utils.plotAmpere("", electricalPowerSource.getCurrent()))
             info.put("Temperature", Utils.plotCelsius("", thermal.t))
         }
         return info

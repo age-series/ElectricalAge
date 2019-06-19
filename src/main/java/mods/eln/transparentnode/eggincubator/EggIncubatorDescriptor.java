@@ -98,7 +98,7 @@ public class EggIncubatorDescriptor extends TransparentNodeDescriptor {
         if (enable)
             powerLoad.setR(Rp);
         else
-            powerLoad.setR(MnaConst.highImpedance);
+            powerLoad.setR(MnaConst.INSTANCE.getHighImpedance());
     }
 
     @Override

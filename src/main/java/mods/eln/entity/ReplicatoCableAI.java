@@ -117,7 +117,7 @@ public class ReplicatoCableAI extends EntityAIBase implements ITimeRemoverObserv
             if (resistorLoad.getR() < 0.8 * nextRp) {
                 entity.attackEntityFrom(DamageSource.magic, 5);
             } else {
-                entity.eatElectricity(resistorLoad.getP() * 0.05);
+                entity.eatElectricity(resistorLoad.getPower() * 0.05);
             }
 
             resistorLoad.setR(nextRp);

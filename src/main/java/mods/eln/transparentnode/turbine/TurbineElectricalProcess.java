@@ -20,25 +20,25 @@ public class TurbineElectricalProcess implements IProcess, IRootSystemPreStepPro
 
         Th th = turbine.positiveLoad.getSubSystem().getTh(turbine.positiveLoad, turbine.electricalPowerSourceProcess);
         double Ut;
-        if (targetU < th.U) {
-            Ut = th.U;
+        if (targetU < th.getU()) {
+            Ut = th.getU();
         } else if (th.isHighImpedance()) {
             Ut = targetU;
         } else {
-            double a = 1 / th.R;
-            double b = descriptor.powerOutPerDeltaU - th.U / th.R;
+            double a = 1 / th.getR();
+            double b = descriptor.powerOutPerDeltaU - th.getU() / th.getR();
             double c = -descriptor.powerOutPerDeltaU * targetU;
             Ut = (-b + Math.sqrt(b * b - 4 * a * c)) / (2 * a);
         }
 
-        double i = (Ut - th.U) / th.R;
+        double i = (Ut - th.getU()) / th.getR();
         double p = i * Ut;
         double pMax = descriptor.nominalP * 1.5;
         if (p > pMax) {
-            Ut = (Math.sqrt(th.U * th.U + 4 * pMax * th.R) + th.U) / 2;
+            Ut = (Math.sqrt(th.getU() * th.getU() + 4 * pMax * th.getR()) + th.getU()) / 2;
             Ut = Math.min(Ut, targetU);
             if (Double.isNaN(Ut)) Ut = 0;
-            if (Ut < th.U) Ut = th.U;
+            if (Ut < th.getU()) Ut = th.getU();
         }
 
         turbine.electricalPowerSourceProcess.setU(Ut);

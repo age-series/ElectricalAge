@@ -74,7 +74,7 @@ public class PowerCapacitorSixElement extends SixNodeElement implements IConfigu
                 eLeft = 0;
                 dischargeResistor.setR(stdDischargeResistor);
             } else {
-                eLeft -= dischargeResistor.getP() * time;
+                eLeft -= dischargeResistor.getPower() * time;
                 dischargeResistor.setR(eLegaliseResistor);
             }
         }
@@ -101,7 +101,7 @@ public class PowerCapacitorSixElement extends SixNodeElement implements IConfigu
 
     @Override
     public String multiMeterString() {
-        return Utils.plotVolt("U", Math.abs(capacitor.getU())) + Utils.plotAmpere("I", capacitor.getCurrent());
+        return Utils.plotVolt("U", Math.abs(capacitor.getVoltage())) + Utils.plotAmpere("I", capacitor.getCurrent());
     }
 
     @Nullable
@@ -111,7 +111,7 @@ public class PowerCapacitorSixElement extends SixNodeElement implements IConfigu
         info.put(I18N.tr("Capacity"), Utils.plotValue(capacitor.getC(), "F"));
         info.put(I18N.tr("Charge"), Utils.plotEnergy("", capacitor.getE()));
         if (Eln.wailaEasyMode) {
-            info.put(I18N.tr("Voltage drop"), Utils.plotVolt("", Math.abs(capacitor.getU())));
+            info.put(I18N.tr("Voltage drop"), Utils.plotVolt("", Math.abs(capacitor.getVoltage())));
             info.put(I18N.tr("Current"), Utils.plotAmpere("", Math.abs(capacitor.getCurrent())));
 
         }

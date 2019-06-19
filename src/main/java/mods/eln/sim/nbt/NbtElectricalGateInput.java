@@ -11,7 +11,7 @@ public class NbtElectricalGateInput extends NbtElectricalLoad {
     }
 
     public String plot(String str) {
-        return Utils.plotSignal(getU(), getI()); // str  + " "+ Utils.plotVolt("", getU()) + Utils.plotAmpere("", getCurrent());
+        return Utils.plotSignal(getU(), getI()); // str  + " "+ Utils.plotVolt("", getVoltage()) + Utils.plotAmpere("", getCurrent());
     }
 
     public boolean stateHigh() {
