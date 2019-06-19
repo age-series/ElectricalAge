@@ -8,7 +8,7 @@ import org.lwjgl.opengl.GL11;
 
 public class DistributionPoleDescriptor extends TransparentNodeDescriptor {
 
-    Obj3D.Obj3DPart pole, cross, fuse, fuseHolder, insulator, transformer;
+    private Obj3D.Obj3DPart pole, cross, fuse, fuseHolder, insulator, transformer;
 
     public DistributionPoleDescriptor(String name, Obj3D obj, GhostGroup ghostGroup) {
         super(name, DistributionPoleElement.class, DistributionPoleRender.class);
@@ -25,8 +25,6 @@ public class DistributionPoleDescriptor extends TransparentNodeDescriptor {
 
     void draw(Direction front, boolean hasCrossbar, boolean hasTransformer, boolean hasFuseHolder, boolean hasFuse, float fuseEngaged) {
         front.glRotateZnRef();
-        // temporary, to ground the cables.
-        GL11.glTranslatef(0f, -0.5f, 0f);
         if (pole != null) pole.draw();
 
         if (hasCrossbar) {

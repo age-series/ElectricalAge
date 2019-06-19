@@ -2,6 +2,7 @@ package mods.eln.registry;
 
 import cpw.mods.fml.common.registry.GameRegistry;
 import mods.eln.Eln;
+import mods.eln.cable.CableRender;
 import mods.eln.cable.CableRenderDescriptor;
 import mods.eln.ghost.GhostGroup;
 import mods.eln.i18n.I18N;
@@ -38,6 +39,7 @@ import mods.eln.sixnode.electricalwatch.ElectricalWatchDescriptor;
 import mods.eln.sixnode.electricalweathersensor.ElectricalWeatherSensorDescriptor;
 import mods.eln.sixnode.electricalwindsensor.ElectricalWindSensorDescriptor;
 import mods.eln.sixnode.energymeter.EnergyMeterDescriptor;
+import mods.eln.sixnode.fibercable.FiberCableDescriptor;
 import mods.eln.sixnode.groundcable.GroundCableDescriptor;
 import mods.eln.sixnode.hub.HubDescriptor;
 import mods.eln.sixnode.lampsocket.LampSocketDescriptor;
@@ -99,6 +101,7 @@ public class SixNodeRegistry {
         registerGround(2);
         registerElectricalSource(3);
         registerElectricalCable(32);
+        registerFiberCable(33);
         registerThermalCable(48);
         registerLampSocket(64);
         registerLampSupply(65);
@@ -150,6 +153,18 @@ public class SixNodeRegistry {
         recipeTreeResinAndRubber();
         recipeBatteryCharger();
         recipeElectricalGateSource();
+    }
+
+    private static void registerFiberCable(int id) {
+        int subId;
+        String name;
+        {
+            subId = 0;
+            name = TR_NAME(I18N.Type.NONE, "Fiber Opic Cable");
+            Eln.stdCableRenderFiber = new CableRenderDescriptor("eln", "sprites/cable.png", 0.49f, 0.49f);
+            FiberCableDescriptor descriptor = new FiberCableDescriptor(name, Eln.stdCableRenderFiber);
+            Eln.sixNodeItem.addDescriptor(subId + (id << 6), descriptor);
+        }
     }
 
     private static void registerElectricalCable(int id) {

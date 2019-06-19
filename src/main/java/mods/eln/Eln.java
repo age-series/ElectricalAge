@@ -235,6 +235,7 @@ public class Eln {
     public static ArrayList<IConfigSharing> configShared = new ArrayList<>();
     public static SimpleNetworkWrapper elnNetwork;
     public static PacketHandler packetHandler;
+    public static CableRenderDescriptor stdCableRenderFiber;
     private static NodeServer nodeServer;
     public static LiveDataManager clientLiveDataManager;
     public static ClientKeyHandler clientKeyHandler;

@@ -28,6 +28,7 @@ import mods.eln.transparentnode.heatfurnace.HeatFurnaceDescriptor;
 import mods.eln.transparentnode.powercapacitor.PowerCapacitorDescriptor;
 import mods.eln.transparentnode.powerinductor.PowerInductorDescriptor;
 import mods.eln.transparentnode.solarpanel.SolarPanelDescriptor;
+import mods.eln.transparentnode.telecompole.TelecomPoleDescriptor;
 import mods.eln.transparentnode.teleporter.TeleporterDescriptor;
 import mods.eln.transparentnode.thermaldissipatoractive.ThermalDissipatorActiveDescriptor;
 import mods.eln.transparentnode.thermaldissipatorpassive.ThermalDissipatorPassiveDescriptor;
@@ -131,6 +132,16 @@ public class TransparentNodeRegistry {
             // don't ask, but if you don't remove the root of the ghostGroup, it *will* crash the game in inexplicable ways
             ghostGroup.removeElement(0,0,0);
             DistributionPoleDescriptor desc = new DistributionPoleDescriptor(name, Eln.obj.getObj("DistributionPole"), ghostGroup);
+            Eln.transparentNodeItem.addDescriptor(subId + (id << 6), desc);
+        }
+        {
+            subId = 1;
+            name = TR_NAME(I18N.Type.NONE, "Telecom Pole");
+            ghostGroup = new GhostGroup();
+            ghostGroup.addRectangle(0, 0, 0, 4, 0, 0);
+            // don't ask, but if you don't remove the root of the ghostGroup, it *will* crash the game in inexplicable ways
+            ghostGroup.removeElement(0,0,0);
+            TelecomPoleDescriptor desc = new TelecomPoleDescriptor(name, Eln.obj.getObj("TelComPole"), ghostGroup);
             Eln.transparentNodeItem.addDescriptor(subId + (id << 6), desc);
         }
     }

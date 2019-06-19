@@ -49,6 +49,7 @@ public abstract class NodeBase {
     public static final int MASK_RS_485 = (1 << 10);
 
     public static final int MASK_SIGNAL_BUS = (1 << 11);
+    public static final int MASK_FIBER = (1 << 12);
 
     public static final int MASK_COLOR_DATA = 0xF << 16;
     public static final int MASK_COLOR_SHIFT = 16;
