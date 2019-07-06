@@ -53,8 +53,8 @@ abstract class Bipole : Component {
     }
 
     override fun breakConnection() {
-        if (aPin != null) aPin!!.remove(this)
-        if (bPin != null) bPin!!.remove(this)
+        aPin?.remove(this)
+        bPin?.remove(this)
     }
 
     override fun toString(): String {

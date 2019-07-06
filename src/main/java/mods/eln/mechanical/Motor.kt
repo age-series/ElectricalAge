@@ -2,6 +2,7 @@ package mods.eln.mechanical
 
 import mods.eln.Eln
 import mods.eln.cable.CableRenderDescriptor
+import mods.eln.debug.DebugType
 import mods.eln.misc.*
 import mods.eln.node.NodeBase
 import mods.eln.node.transparent.EntityMetaTag
@@ -236,7 +237,7 @@ class MotorElement(node: TransparentNode, desc_: TransparentNodeDescriptor) :
 
     inner class MotorShaftProcess : IProcess {
         override fun process(time: Double) {
-            val p = powerSource.p
+            val p = powerSource.getPower()
             var E = -p * time
             if(E < 0) {
                 // Pushing power--this is very inefficient
@@ -245,7 +246,8 @@ class MotorElement(node: TransparentNode, desc_: TransparentNodeDescriptor) :
             maybePublishP(E / time)
             E = E - defaultDrag * Math.max(shaft.rads, 10.0)
             shaft.energy += E * desc.efficiency
-            thermal.movePowerTo(E * (1 - desc.efficiency))
+            val tPower = E * (1 - desc.efficiency)
+            thermal.movePowerTo(tPower)
         }
     }
 

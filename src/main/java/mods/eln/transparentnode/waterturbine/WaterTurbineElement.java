@@ -128,7 +128,7 @@ public class WaterTurbineElement extends TransparentNodeElement {
 
         super.networkSerialize(stream);
         try {
-            stream.writeFloat((float) (powerSource.getP() / descriptor.nominalPower));
+            stream.writeFloat((float) (powerSource.getPower() / descriptor.nominalPower));
         } catch (IOException e) {
 
             e.printStackTrace();

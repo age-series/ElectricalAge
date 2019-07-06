@@ -1,9 +1,8 @@
 package mods.eln.sim.mna.component
 
-import mods.eln.Eln
-import mods.eln.debug.DebugType
 import mods.eln.sim.mna.RootSystem
 import mods.eln.sim.mna.SubSystem
+import mods.eln.sim.mna.misc.IAbstractor
 import mods.eln.sim.mna.state.State
 
 abstract class Component {

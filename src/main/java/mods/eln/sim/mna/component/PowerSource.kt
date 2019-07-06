@@ -8,11 +8,15 @@ import net.minecraft.nbt.NBTTagCompound
 
 class PowerSource(name: String, aPin: State) : VoltageSource(name, aPin, null), IRootSystemPreStepProcess, INBTTReady {
 
-    override var p: Double = 0.0
+    var p: Double = 0.0
     var Umax: Double = 0.0
     var Imax: Double = 0.0
 
     fun getEffectiveP() = getBipoleU() * getCurrent()
+
+    override fun getPower(): Double {
+        return p
+    }
 
     override fun quitSubSystem() {
         getSubSystem()!!.root?.removeProcess(this)

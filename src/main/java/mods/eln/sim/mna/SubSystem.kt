@@ -10,11 +10,13 @@ import mods.eln.sim.mna.component.VoltageSource
 import mods.eln.sim.mna.misc.IDestructor
 import mods.eln.sim.mna.misc.ISubSystemProcessFlush
 import mods.eln.sim.mna.misc.ISubSystemProcessI
+import mods.eln.sim.mna.misc.MnaConst
 import mods.eln.sim.mna.state.State
 import mods.eln.sim.mna.state.VoltageState
 import org.apache.commons.math3.linear.MatrixUtils
 import org.apache.commons.math3.linear.QRDecomposition
 import org.apache.commons.math3.linear.RealMatrix
+import org.apache.commons.math3.linear.SingularValueDecomposition
 
 import java.util.ArrayList
 import java.util.LinkedList
@@ -121,6 +123,7 @@ class SubSystem(root: RootSystem?, dt: Double) {
         p.add("Inversse with $stateCount state : ")
 
         A = MatrixUtils.createRealMatrix(stateCount, stateCount)
+
         //Adata = ((Array2DRowRealMatrix) A).getDataRef();
         // X = MatrixUtils.createRealMatrix(stateCount, 1); Xdata =
         // ((Array2DRowRealMatrix)X).getDataRef();
@@ -140,6 +143,21 @@ class SubSystem(root: RootSystem?, dt: Double) {
         }
 
         //	org.apache.commons.math3.linear.
+
+        val svd = SingularValueDecomposition(A)
+        // Broken or large numbers are bad. Inverses are typically pretty ill-conditioned, but we're looking for egregious ones.
+        // For every order of magnitude from 10^n, we get n more digits of error (apparently).
+        // Some people say 10e8 or 10e12 may be more realistic? Not sure I want that much error. I set 10e4 for now.
+        // Doubles have (roughly?) 15 decimal digits of precision. I can see 4 of them go away without too much trouble.
+        if(svd.conditionNumber.isNaN() or (svd.conditionNumber > 10e4)) {
+            System.out.println("Condition of Matrix: " + svd.conditionNumber)
+            for (row in A!!.data) {
+                for (i in row) {
+                    System.out.print("" + i + ", ")
+                }
+                System.out.println()
+            }
+        }
 
         try {
             //FieldLUDecomposition QRDecomposition  LUDecomposition RRQRDecomposition
@@ -338,27 +356,35 @@ class SubSystem(root: RootSystem?, dt: Double) {
         val th = Th()
         val originalU = d.state
 
-        val aU = 10.0
+        if (originalU.isNaN()) {
+            System.out.println("originalU NaN!")
+        }
+
+        val aU = originalU
         voltageSource.u = aU
         val aI = solve(voltageSource.currentState)
 
-        val bU = 5.0
+        val bU = originalU * 0.95
         voltageSource.u = bU
         val bI = solve(voltageSource.currentState)
 
         var Rth = (aU - bU) / (bI - aI)
+        if (Rth.isNaN()) Rth = MnaConst.noImpedance
+        //System.out.println("au ai bu bi r" + aU + " " + aI + " " + bU + " " + bI + " " + Rth)
+
         val Uth: Double
         //if(Double.isInfinite(d.Rth)) d.Rth = Double.MAX_VALUE;
         if (Rth > 10000000000000000000.0 || Rth < 0) {
             Uth = 0.0
             Rth = 10000000000000000000.0
         } else {
-            Uth = aU + Rth * aI
+            Uth = originalU + Rth * aI
         }
-        voltageSource.u = originalU
+        voltageSource.u = Uth // originanlU
 
         th.R = Rth
         th.U = Uth
+        //System.out.println("" + th.R + " " + th.U)
         return th
     }
 

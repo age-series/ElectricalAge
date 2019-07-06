@@ -10,8 +10,6 @@ open class Capacitor : Bipole, ISubSystemProcessI {
 
     var c = 0.0
         set(c) {
-            if (c == java.lang.Double.NaN)
-                Eln.dp.println(DebugType.MNA, "component.Capacitor setC(double c) - c was NaN!")
             field = c
             dirty()
         }
@@ -29,12 +27,12 @@ open class Capacitor : Bipole, ISubSystemProcessI {
         this.name = name
     }
 
-    constructor(aPin: State, bPin: State) {
+    constructor(aPin: State?, bPin: State?) {
         this.name = "Capacitor"
         connectTo(aPin, bPin)
     }
 
-    constructor(name: String, aPin: State, bPin: State) {
+    constructor(name: String, aPin: State?, bPin: State?) {
         this.name = name
         connectTo(aPin, bPin)
     }

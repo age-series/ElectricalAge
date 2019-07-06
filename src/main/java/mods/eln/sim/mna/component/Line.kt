@@ -2,6 +2,7 @@ package mods.eln.sim.mna.component
 
 import mods.eln.sim.mna.RootSystem
 import mods.eln.sim.mna.SubSystem
+import mods.eln.sim.mna.misc.IAbstractor
 import mods.eln.sim.mna.misc.ISubSystemProcessFlush
 import mods.eln.sim.mna.state.State
 import java.util.LinkedList

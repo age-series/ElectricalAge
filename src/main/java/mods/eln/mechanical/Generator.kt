@@ -219,7 +219,7 @@ class GeneratorElement(node: TransparentNode, desc_: TransparentNodeDescriptor) 
         private var powerFraction = 0.0f
 
         override fun process(time: Double) {
-            val p = electricalPowerSource.p
+            val p = electricalPowerSource.getPower()
             powerFraction = (p / desc.nominalP).toFloat()
             var E = p * time
             if (E < 0)

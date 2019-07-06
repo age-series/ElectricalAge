@@ -42,9 +42,7 @@ public abstract class ValueWatchdog implements IProcess {
             timeout = timeoutReset;
         }
         if (timeout < 0) {
-            Eln.dp.println(DebugType.MNA, "%s destroying %s",
-                getClass().getName(),
-                destructable.describe());
+            Eln.dp.println(DebugType.MNA, getClass().getName() + " destroying " + destructable.describe() + " for being at value " + value + " when max is " + max);
             destructable.destructImpl();
         }
     }

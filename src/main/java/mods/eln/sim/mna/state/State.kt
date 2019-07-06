@@ -5,7 +5,7 @@ import mods.eln.debug.DebugType
 import mods.eln.sim.mna.RootSystem
 import mods.eln.sim.mna.SubSystem
 import mods.eln.sim.mna.component.Component
-import mods.eln.sim.mna.component.IAbstractor
+import mods.eln.sim.mna.misc.IAbstractor
 
 import java.util.ArrayList
 
@@ -61,9 +61,7 @@ open class State {
         connectedComponents.add(c)
     }
 
-    fun remove(c: Component?) {
-        if (c == null)
-            Eln.dp.println(DebugType.MNA, "state.State: remove(Component c) - Component was null!")
+    fun remove(c: Component) {
         connectedComponents.remove(c)
     }
 
@@ -91,5 +89,38 @@ open class State {
 
     override fun toString(): String {
         return "(" + this.id + "," + this.javaClass.simpleName + "_" + name + ")"
+    }
+}
+
+open class VoltageState : State {
+
+    constructor() : super()
+    constructor(name: String) : super(name)
+
+    var u: Double
+        get() = state
+        set(state) {
+            if (state.isNaN())
+                Eln.dp.println(DebugType.MNA, "state.VoltageState setU(double state) - state was NaN!")
+            this.state = state
+        }
+}
+
+class CurrentState : State()
+
+open class VoltageStateLineReady : VoltageState() {
+
+    init {
+        name = "VoltageStateLineReady"
+    }
+
+    internal var canBeSimplifiedByLine = false
+
+    fun setCanBeSimplifiedByLine(v: Boolean) {
+        this.canBeSimplifiedByLine = v
+    }
+
+    override fun canBeSimplifiedByLine(): Boolean {
+        return canBeSimplifiedByLine
     }
 }

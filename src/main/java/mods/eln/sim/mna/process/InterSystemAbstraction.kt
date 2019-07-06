@@ -1,7 +1,11 @@
-package mods.eln.sim.mna.component
+package mods.eln.sim.mna.process
 
 import mods.eln.sim.mna.RootSystem
 import mods.eln.sim.mna.SubSystem
+import mods.eln.sim.mna.component.Component
+import mods.eln.sim.mna.component.DelayInterSystem2
+import mods.eln.sim.mna.component.Resistor
+import mods.eln.sim.mna.misc.IAbstractor
 import mods.eln.sim.mna.misc.IDestructor
 import mods.eln.sim.mna.state.State
 import mods.eln.sim.mna.state.VoltageState

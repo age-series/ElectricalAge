@@ -5,6 +5,7 @@ import mods.eln.sim.ElectricalLoad
 import mods.eln.sim.mna.component.*
 import mods.eln.sim.mna.misc.IRootSystemPreStepProcess
 import mods.eln.sim.mna.misc.ISubSystemProcessFlush
+import mods.eln.sim.mna.process.InterSystemAbstraction
 import mods.eln.sim.mna.state.State
 import mods.eln.sim.mna.state.VoltageState
 

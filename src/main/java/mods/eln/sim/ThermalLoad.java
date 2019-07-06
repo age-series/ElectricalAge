@@ -1,5 +1,8 @@
 package mods.eln.sim;
 
+import mods.eln.Eln;
+import mods.eln.debug.DebugType;
+
 public class ThermalLoad {
 
     public double Tc, Rp, Rs, C, PcTemp, Pc, Prs, Psp, PrsTemp = 0, PspTemp = 0;
@@ -36,10 +39,14 @@ public class ThermalLoad {
     public static final ThermalLoad externalLoad = new ThermalLoad(0, 0, 0, 0);
 
     public void setRp(double Rp) {
+        if(Double.isNaN(Rp)) {
+            Eln.dp.println(DebugType.OTHER, "TL.j sRp NaN!");
+        }
         this.Rp = Rp;
     }
 
     public double getPower() {
+        if (Double.isNaN(Prs) || Double.isNaN(Pc) || Double.isNaN(Tc) || Double.isNaN(Rp) || Double.isNaN(Psp)) return 0.0;
         return (Prs + Math.abs(Pc) + Tc / Rp + Psp) / 2;
     }
 
@@ -67,12 +74,17 @@ public class ThermalLoad {
     }
 
     public void movePowerTo(double power) {
+        if (Double.isNaN(power)) {
+            Eln.dp.println(DebugType.OTHER, "TL.j mpt NaN!");
+            return;
+        }
         double absI = Math.abs(power);
         PcTemp += power;
         PspTemp += absI;
     }
 
     public double getT() {
+        if (Double.isNaN(Tc)) return 0.0;
         return Tc;
     }
 

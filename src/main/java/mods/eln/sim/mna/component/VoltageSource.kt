@@ -18,8 +18,9 @@ open class VoltageSource : Bipole, ISubSystemProcessI, INBTTReady {
         return -currentState.state
     }
 
-    open val p: Double
-        get() = getVoltage() * getCurrent()
+    open fun getPower(): Double {
+        return getVoltage() * getCurrent()
+    }
 
     constructor(name: String) {
         this.name = name
@@ -53,16 +54,12 @@ open class VoltageSource : Bipole, ISubSystemProcessI, INBTTReady {
     }
 
     override fun readFromNBT(nbt: NBTTagCompound, str: String) {
-        var strl = str
-        strl += name
-        u = (nbt.getDouble(strl + "U"))
-        currentState.state = nbt.getDouble(strl + "Istate")
+        u = (nbt.getDouble(str + name + "U"))
+        currentState.state = nbt.getDouble(str + name + "Istate")
     }
 
     override fun writeToNBT(nbt: NBTTagCompound, str: String) {
-        var strl = str
-        strl += name
-        nbt.setDouble(strl + "U", getVoltage())
-        nbt.setDouble(strl + "Istate", currentState.state)
+        nbt.setDouble(str + name + "U", getVoltage())
+        nbt.setDouble(str + name + "Istate", currentState.state)
     }
 }

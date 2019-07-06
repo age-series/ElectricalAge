@@ -1,6 +1,7 @@
-package mods.eln.sim.mna.component
+package mods.eln.sim.mna.misc
 
 import mods.eln.sim.mna.SubSystem
+import mods.eln.sim.mna.component.Component
 
 interface IAbstractor {
 

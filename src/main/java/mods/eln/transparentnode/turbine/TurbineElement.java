@@ -168,7 +168,7 @@ public class TurbineElement extends TransparentNodeElement {
         Map<String, String> info = new HashMap<String, String>();
         info.put(I18N.tr("Nominal") + " \u0394T",
             (warmLoad.Tc - coolLoad.Tc == descriptor.nominalDeltaT ? I18N.tr("Yes") : I18N.tr("No")));
-        info.put(I18N.tr("Generated power"), Utils.plotPower("", electricalPowerSourceProcess.getP()));
+        info.put(I18N.tr("Generated power"), Utils.plotPower("", electricalPowerSourceProcess.getPower()));
         if (Eln.wailaEasyMode) {
             info.put("\u0394T", Utils.plotCelsius("", warmLoad.Tc - coolLoad.Tc));
             info.put(I18N.tr("Voltage"), Utils.plotVolt("", electricalPowerSourceProcess.getU()));

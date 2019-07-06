@@ -96,7 +96,7 @@ public class WindTurbineElement extends TransparentNodeElement {
         super.networkSerialize(stream);
         try {
             stream.writeFloat((float) slowProcess.getWind());
-            stream.writeFloat((float) (powerSource.getP() / descriptor.nominalPower));
+            stream.writeFloat((float) (powerSource.getPower() / descriptor.nominalPower));
             node.lrduCubeMask.getTranslate(Direction.YN).serialize(stream);
         } catch (IOException e) {
 
