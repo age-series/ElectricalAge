@@ -36,8 +36,8 @@ public abstract class GuiContainerEln extends GuiContainer implements IGuiObject
         ySize = helper.ySize;
         super.initGui();
 
-        if (helper instanceof GuiHelperContainer) {
-            apply((GuiHelperContainer) helper);
+        if (helper != null) {
+            apply(helper);
         }
     }
 

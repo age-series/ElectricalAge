@@ -142,6 +142,8 @@ public class ConfigHandler {
 
         Eln.cableResistanceMultiplier = config.get("debug", "cableResistanceMultiplier", 1000.0).getDouble();
 
+        Eln.energyMeterWebhookFrequency = config.get("network", "meterWebhookFrequency", 0, "Frequency (in seconds) to send webhooks with energy usage. Default of 0 disables webhooks. You are encouraged to set this to either 60 or 500.").getInt();
+
         {
             // typstr gets the most current list of values that you can use
             String typstr = "";
