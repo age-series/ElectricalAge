@@ -491,6 +491,12 @@ class EnergyMeterElement(sixNode: SixNode, side: Direction, descriptor: SixNodeD
         var lastWebhookPublish = Math.random() * 20 * Eln.energyMeterWebhookFrequency
         var oldEnergyPublish: Double = 0.toDouble()
 
+        /**
+         * sendEnergy(energy, name, webhook) - Send the energy data to the server, and also change state if codes request it
+         * @param energy the current energy reading from the meter
+         * @param name the name of the meter
+         * @param webhook the server the meter wants to contact
+         */
         private fun sendEnergy(energy: Double, name: String, webhook: String) {
             try {
                 val url = webhook + "?name=" + name.replace(" ", "_").replace("&", "") + "&energy=" + java.lang.Double.toString(energy)
@@ -514,6 +520,12 @@ class EnergyMeterElement(sixNode: SixNode, side: Direction, descriptor: SixNodeD
             }
         }
 
+        /**
+         * sendTime(time, name, webhook) - Sends the time of the meter to a server.
+         * @param time The time the meter has been on
+         * @param name The name of the meter
+         * @param webhook The webhook the meter wants things sent to
+         */
         private fun sendTime(time: Double, name: String, webhook: String) {
             try {
                 val url = webhook + "?name=" + name.replace(" ", "_").replace("&", "") + "&time=" + java.lang.Double.toString(time)
@@ -537,6 +549,9 @@ class EnergyMeterElement(sixNode: SixNode, side: Direction, descriptor: SixNodeD
             }
         }
 
+        /**
+         * process() This effectively happens once per tick in an MNA step. Take as little time here as possible.
+         */
         override fun process(time: Double) {
             timeCounter += time * 72.0
             lastWebhookPublish += 0.05
@@ -620,6 +635,8 @@ class EnergyMeterElement(sixNode: SixNode, side: Direction, descriptor: SixNodeD
 
     companion object {
         const val publishTimeoutReset = 1.0
+
+        // These variables are for the client/server communication over the network.
 
         const val clientEnergyStackId: Byte = 1
         const val clientModId: Byte = 2
@@ -752,6 +769,7 @@ class EnergyMeterRender(tileEntity: SixNodeEntity, side: Direction, descriptor: 
 
 class EnergyMeterGui(player: EntityPlayer, inventory: IInventory, internal var render: EnergyMeterRender) : GuiContainerEln(EnergyMeterContainer(player, inventory)) {
 
+    // I would love to set these to not be null, but the initialization step has to happen in initGui() after super.initGui()
     internal var stateBt: GuiButtonEln? = null
     internal var passwordBt: GuiButtonEln? = null
     internal var modeBt: GuiButtonEln? = null
@@ -766,6 +784,9 @@ class EnergyMeterGui(player: EntityPlayer, inventory: IInventory, internal var r
 
     internal var isLogged: Boolean = false
 
+    /**
+     * initGui() - prepares the GUI fields placement, sets initial values, comments, etc.
+     */
     override fun initGui() {
         super.initGui()
 
@@ -804,6 +825,9 @@ class EnergyMeterGui(player: EntityPlayer, inventory: IInventory, internal var r
         webhookField!!.text = render.meterWebhook
     }
 
+    /**
+     * guiObjectEvent() - every time an action (click, press enter, etc) happens on the GUI, this function triggers.
+     */
     override fun guiObjectEvent(`object`: IGuiObject) {
         super.guiObjectEvent(`object`)
 
@@ -857,6 +881,10 @@ class EnergyMeterGui(player: EntityPlayer, inventory: IInventory, internal var r
         }
     }
 
+    /**
+     * preDraw() - this prepares the state of the buttons if they unlocked the passowrd, changes state if on/off,
+     *  reflects changes in mode, etc.
+     */
     override fun preDraw(f: Float, x: Int, y: Int) {
         super.preDraw(f, x, y)
         if (!render.switchState)
@@ -917,6 +945,9 @@ class EnergyMeterGui(player: EntityPlayer, inventory: IInventory, internal var r
         webhookField!!.enabled = isLogged
     }
 
+    /**
+     * postDraw - draws the lines in the GUI and adds the one or two counters at the bottom (depending on type)
+     */
     override fun postDraw(f: Float, x: Int, y: Int) {
         super.postDraw(f, x, y)
         helper.drawRect(6, 21, helper.xSize - 6, 22, -0xbfbfc0)
@@ -932,7 +963,7 @@ class EnergyMeterGui(player: EntityPlayer, inventory: IInventory, internal var r
     }
 
     override fun newHelper(): GuiHelperContainer {
-        return GuiHelperContainer(this, 192, 42 + 166, 16, 126)
+        return GuiHelperContainer(this, 192, 208, 16, 126)
     }
 }
 
