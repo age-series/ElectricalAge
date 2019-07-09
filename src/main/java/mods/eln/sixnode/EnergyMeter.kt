@@ -313,9 +313,9 @@ class EnergyMeterElement(sixNode: SixNode, side: Direction, descriptor: SixNodeD
             Mod.ModCounter -> {
                 info[I18N.tr("Mode")] = I18N.tr("Counter")
                 info[I18N.tr("Energy")] = Utils.plotEnergy("", energyStack)
-                if (descriptor.timeNumberWheel!!.size > 0) {
-                    var time = 0.0
-                    var unit = ""
+                if (descriptor.timeNumberWheel!!.isNotEmpty()) {
+                    var time: Double
+                    var unit: String
                     if (timeUnit == 0) {
                         time = timeCounter / 360
                         unit = "Hours"
@@ -468,14 +468,8 @@ class EnergyMeterElement(sixNode: SixNode, side: Direction, descriptor: SixNodeD
         slowProcess.oldEnergyPublish = energyStack
         energyUnit = nbt.getByte("energyUnit").toInt()
         timeUnit = nbt.getByte("timeUnit").toInt()
-        // I added a new webhook feature in 1.16.x, this is in case the world is older.
-        try {
-            meterName = nbt.getString("meterName")
-            meterWebhook = nbt.getString("webhook")
-        } catch (E: Exception) {
-            meterName = ""
-            meterWebhook = ""
-        }
+        meterName = nbt.getString("meterName")
+        meterWebhook = nbt.getString("webhook")
     }
 
     override fun writeToNBT(nbt: NBTTagCompound) {
@@ -603,9 +597,6 @@ class EnergyMeterElement(sixNode: SixNode, side: Direction, descriptor: SixNodeD
             }
 
             // sends the energy usage at a specific rate. Disabled if frequency is 60 (or less), or if the name or webhook isn't specified..
-
-
-
             if (Eln.energyMeterWebhookFrequency >= 15 && lastWebhookPublish > Eln.energyMeterWebhookFrequency && meterWebhook.isNotEmpty() && meterName.isNotEmpty()) {
                 lastWebhookPublish = 0.0
                 val webhookThread = Thread(Runnable {
@@ -620,25 +611,28 @@ class EnergyMeterElement(sixNode: SixNode, side: Direction, descriptor: SixNodeD
                     }
                 })
                 webhookThread.start()
+                // new thread spawns to handle the TCP connection, and later changes the variables for the time and stuff
+                // I don't think it would cause a critical race condition, worst comes worst the thing is not reset
+                // properly or the switch is in a weird state that can be fixed manually.
             }
         }
     }
 
     companion object {
-        val publishTimeoutReset = 1.0
+        const val publishTimeoutReset = 1.0
 
-        val clientEnergyStackId: Byte = 1
-        val clientModId: Byte = 2
-        val clientPasswordId: Byte = 3
-        val clientToggleStateId: Byte = 4
-        val clientTimeCounterId: Byte = 5
-        val clientEnergyUnitId: Byte = 6
-        val clientTimeUnitId: Byte = 7
-        val clientNameId: Byte = 8
-        val clientWebhookId: Byte = 9
+        const val clientEnergyStackId: Byte = 1
+        const val clientModId: Byte = 2
+        const val clientPasswordId: Byte = 3
+        const val clientToggleStateId: Byte = 4
+        const val clientTimeCounterId: Byte = 5
+        const val clientEnergyUnitId: Byte = 6
+        const val clientTimeUnitId: Byte = 7
+        const val clientNameId: Byte = 8
+        const val clientWebhookId: Byte = 9
 
-        val serverPowerId: Byte = 1
-        val serverHoursId: Byte = 2
+        const val serverPowerId: Byte = 1
+        const val serverHoursId: Byte = 2
     }
 }
 
@@ -647,7 +641,7 @@ class EnergyMeterRender(tileEntity: SixNodeEntity, side: Direction, descriptor: 
     internal var inventory = SixNodeElementInventory(1, 64, this)
     internal var descriptor: EnergyMeterDescriptor
 
-    internal var timerCouter: Double = 0.toDouble()
+    internal var timerCounter: Double = 0.toDouble()
     internal var energyStack: Double = 0.toDouble()
     internal var switchState: Boolean = false
     internal var password: String = ""
@@ -679,7 +673,7 @@ class EnergyMeterRender(tileEntity: SixNodeEntity, side: Direction, descriptor: 
             front.left().glRotateOnX()
         }
 
-        descriptor.draw(energyStack / Math.pow(10.0, (energyUnit * 3 - 1).toDouble()), timerCouter / if (timeUnit == 0) 360 else 8640,
+        descriptor.draw(energyStack / Math.pow(10.0, (energyUnit * 3 - 1).toDouble()), timerCounter / if (timeUnit == 0) 360 else 8640,
             energyUnit, timeUnit,
             UtilsClient.distanceFromClientPlayer(tileEntity) < 20)
 
@@ -696,7 +690,7 @@ class EnergyMeterRender(tileEntity: SixNodeEntity, side: Direction, descriptor: 
         val errorComp = error * 1.0 * deltaT.toDouble()
         energyStack += power * deltaT + errorComp
         error -= errorComp
-        timerCouter += (deltaT * 72).toDouble()
+        timerCounter += (deltaT * 72).toDouble()
         serverPowerIdTimer += deltaT.toDouble()
     }
 
@@ -711,7 +705,7 @@ class EnergyMeterRender(tileEntity: SixNodeEntity, side: Direction, descriptor: 
             switchState = stream.readBoolean()
             password = stream.readUTF()
             mod = EnergyMeterElement.Mod.valueOf(stream.readUTF())
-            // timerCouter = stream.readDouble()
+            // timerCounter = stream.readDouble()
             // energyStack = stream.readDouble();
             val rdesc = GenericCableDescriptor.getDescriptor(Utils.unserialiseItemStack(stream), GenericCableDescriptor::class.java)
             if (rdesc != null) {
@@ -748,7 +742,7 @@ class EnergyMeterRender(tileEntity: SixNodeEntity, side: Direction, descriptor: 
                 serverPowerIdTimer = 0.0
             }
             EnergyMeterElement.serverHoursId -> {
-                timerCouter = stream.readDouble()
+                timerCounter = stream.readDouble()
             }
             else -> {
             }
@@ -760,7 +754,7 @@ class EnergyMeterGui(player: EntityPlayer, inventory: IInventory, internal var r
 
     internal var stateBt: GuiButtonEln? = null
     internal var passwordBt: GuiButtonEln? = null
-    internal var modBt: GuiButtonEln? = null
+    internal var modeBt: GuiButtonEln? = null
     internal var setEnergyBt: GuiButtonEln? = null
     internal var resetTimeBt: GuiButtonEln? = null
     internal var energyUnitBt: GuiButtonEln? = null
@@ -775,17 +769,23 @@ class EnergyMeterGui(player: EntityPlayer, inventory: IInventory, internal var r
     override fun initGui() {
         super.initGui()
 
-        stateBt = newGuiButton(6, 6 + 28, 70, "")
-        passwordBt = newGuiButton(6 + 74, 6, 106, "")
-        modBt = newGuiButton(6 + 74, 6 + 28, 106, "")
-        setEnergyBt = newGuiButton(6 + 74, 6 + 28 + 22, 106, I18N.tr("Set energy counter"))
-        resetTimeBt = newGuiButton(6 + 34 + 2 + 34 + 4, 6 + 28 + 22 + 22, 106, I18N.tr("Reset time counter"))
-        energyUnitBt = newGuiButton(6, 6 + 28 + 22 + 22, 34, "")
-        timeUnitBt = newGuiButton(6 + 34 + 2, 6 + 28 + 22 + 22, 34, "")
-        passwordField = newGuiTextField(6, 10, 70)
-        energyField = newGuiTextField(6, 6 + 28 + 22 + 4, 70)
-        nameField = newGuiTextField(-60, 6, 60)
-        webhookField = newGuiTextField(-60, 6 + 28, 60)
+        // Left side of GUI
+        passwordField = newGuiTextField(6, 7, 70)
+        stateBt = newGuiButton(6, 25, 70, 14, "")
+        energyField = newGuiTextField(6, 40, 70)
+        energyUnitBt = newGuiButton(6, 53, 34, 14,"")
+        timeUnitBt = newGuiButton(42, 53, 34, 14,"")
+
+        // Right side of GUI
+        passwordBt = newGuiButton(80, 6, 106, 14, "")
+        modeBt = newGuiButton(80, 25, 106, 14, "")
+        setEnergyBt = newGuiButton(80, 39, 106, 14, I18N.tr("Set energy counter"))
+        resetTimeBt = newGuiButton(80, 53, 106, 14, I18N.tr("Reset time counter"))
+
+        // Bottom segment of GUI
+        nameField = newGuiTextField(6, 70, 176)
+        webhookField = newGuiTextField(6, 84, 176)
+
 
         isLogged = render.password == ""
         passwordField!!.setComment(0, I18N.tr("Enter password"))
@@ -820,7 +820,7 @@ class EnergyMeterGui(player: EntityPlayer, inventory: IInventory, internal var r
             }
         }
 
-        if (`object` === modBt) {
+        if (`object` === modeBt) {
             when (render.mod) {
                 EnergyMeterElement.Mod.ModCounter -> render.clientSetString(EnergyMeterElement.clientModId, EnergyMeterElement.Mod.ModPrepay.name)
                 EnergyMeterElement.Mod.ModPrepay -> render.clientSetString(EnergyMeterElement.clientModId, EnergyMeterElement.Mod.ModCounter.name)
@@ -871,23 +871,23 @@ class EnergyMeterGui(player: EntityPlayer, inventory: IInventory, internal var r
 
         when (render.mod) {
             EnergyMeterElement.Mod.ModCounter -> {
-                modBt!!.displayString = I18N.tr("Counter Mode")
+                modeBt!!.displayString = I18N.tr("Counter Mode")
 
-                modBt!!.clearComment()
+                modeBt!!.clearComment()
                 var lineNumber = 0
                 for (line in I18N.tr("Counts the energy conducted from\n\u00a74red\u00a7f to \u00a71blue\u00a7f.")!!.split("\n".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray())
-                    modBt!!.setComment(lineNumber++, line)
+                    modeBt!!.setComment(lineNumber++, line)
             }
             EnergyMeterElement.Mod.ModPrepay -> {
-                modBt!!.displayString = I18N.tr("Prepay Mode")
+                modeBt!!.displayString = I18N.tr("Prepay Mode")
 
-                modBt!!.clearComment()
+                modeBt!!.clearComment()
                 var lineNumber = 0
                 for (line in I18N.tr("Counts the energy conducted from\n\u00a74red\u00a7f to \u00a71blue\u00a7f.")!!.split("\n".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray())
-                    modBt!!.setComment(lineNumber++, line)
-                modBt!!.setComment(lineNumber++, "")
+                    modeBt!!.setComment(lineNumber++, line)
+                modeBt!!.setComment(lineNumber++, "")
                 for (line in I18N.tr("You can set an initial\namount of available energy.\nWhen the counter arrives at 0\nthe contact will be opened.")!!.split("\n".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray())
-                    modBt!!.setComment(lineNumber++, line)
+                    modeBt!!.setComment(lineNumber++, line)
             }
         }
 
@@ -907,7 +907,7 @@ class EnergyMeterGui(player: EntityPlayer, inventory: IInventory, internal var r
                 else -> timeUnitBt!!.displayString = "??"
             }
 
-        modBt!!.enabled = isLogged
+        modeBt!!.enabled = isLogged
         stateBt!!.enabled = isLogged
         resetTimeBt!!.enabled = isLogged
         setEnergyBt!!.enabled = isLogged
@@ -919,20 +919,20 @@ class EnergyMeterGui(player: EntityPlayer, inventory: IInventory, internal var r
 
     override fun postDraw(f: Float, x: Int, y: Int) {
         super.postDraw(f, x, y)
-        helper.drawRect(6, 29, helper.xSize - 6, 29 + 1, -0xbfbfc0)
-        helper.drawRect(6, 101, helper.xSize - 6, 101 + 1, -0xbfbfc0)
+        helper.drawRect(6, 21, helper.xSize - 6, 22, -0xbfbfc0)
+        helper.drawRect(6, 99, helper.xSize - 6, 100, -0xbfbfc0)
         helper.drawString(6 + 16 / 2, 103, -0x1000000, I18N.tr("Energy counter: %1\$J", render.energyStack.toInt()))
         if (render.descriptor.timeNumberWheel!!.size > 0) {
             if (render.timeUnit == 0) {
-                helper.drawString(6 + 16 / 2, 113, -0x1000000, I18N.tr("Time counter: %1\$ Hours", String.format("%.1f", render.timerCouter / 360)))
+                helper.drawString(6 + 16 / 2, 113, -0x1000000, I18N.tr("Time counter: %1\$ Hours", String.format("%.1f", render.timerCounter / 360)))
             } else {
-                helper.drawString(6 + 16 / 2, 113, -0x1000000, I18N.tr("Time counter: %1\$ Days", String.format("%.2f", render.timerCouter / 8640)))
+                helper.drawString(6 + 16 / 2, 113, -0x1000000, I18N.tr("Time counter: %1\$ Days", String.format("%.2f", render.timerCounter / 8640)))
             }
         }
     }
 
     override fun newHelper(): GuiHelperContainer {
-        return GuiHelperContainer(this, 176 + 16, 42 + 166, 8 + 16 / 2, 42 + 84)
+        return GuiHelperContainer(this, 192, 42 + 166, 16, 126)
     }
 }
 

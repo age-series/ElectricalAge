@@ -54,6 +54,14 @@ public class GuiHelper {
         return o;
     }
 
+    GuiButtonEln newGuiButton(int x, int y, int width, int height, String name) {
+        GuiButtonEln o;
+        o = new GuiButtonEln(screen.width / 2 - xSize / 2 + x, screen.height / 2 - ySize / 2 + y, width, height, name);
+        o.setHelper(this);
+        objectList.add(o);
+        return o;
+    }
+
     GuiVerticalTrackBar newGuiVerticalTrackBar(int x, int y, int width, int height) {
         GuiVerticalTrackBar o;
         o = new GuiVerticalTrackBar(screen.width / 2 - xSize / 2 + x, screen.height / 2 - ySize / 2 + y, width, height, this);
