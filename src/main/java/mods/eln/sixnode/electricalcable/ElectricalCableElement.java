@@ -125,6 +125,23 @@ public class ElectricalCableElement extends SixNodeElement {
             }
         }
 
+        try {
+            int subSystemSize = electricalLoad.getSubSystem().component.size();
+            String textColor = "";
+            if (subSystemSize <= 8) {
+                textColor = "§a";
+            } else if (subSystemSize <= 15) {
+                textColor = "§6";
+            } else {
+                textColor = "§c";
+            }
+            info.put(I18N.tr("Subsystem Matrix Size: "), textColor + subSystemSize);
+
+
+        } catch (Exception e) {
+            info.put(I18N.tr("Subsystem Matrix Size: "), "§cNot part of a subsystem!?");
+        }
+
         return info;
     }
 

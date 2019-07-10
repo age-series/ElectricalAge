@@ -352,6 +352,48 @@ public class TransformerElement extends TransparentNodeElement implements IConfi
             info.put("Voltages", "\u00A7a" + Utils.plotVolt("", primaryLoad.getU()) + " " +
                 "\u00A7e" + Utils.plotVolt("", secondaryLoad.getU()));
         }
+
+        try {
+            if (isIsolator) {
+                int leftSubSystemSize = primaryLoad.getSubSystem().component.size();
+                int rightSubSystemSize = secondaryLoad.getSubSystem().component.size();
+                String textColorLeft = "", textColorRight = "";
+                if (leftSubSystemSize <= 8) {
+                    textColorLeft = "§a";
+                } else if (leftSubSystemSize <= 15) {
+                    textColorLeft = "§6";
+                } else {
+                    textColorLeft = "§c";
+                }
+                if (rightSubSystemSize <= 8) {
+                    textColorRight = "§a";
+                } else if (rightSubSystemSize <= 15) {
+                    textColorRight = "§6";
+                } else {
+                    textColorRight = "§c";
+                }
+                info.put(I18N.tr("Subsystem Matrix Size: "), textColorLeft + leftSubSystemSize + " §r| " + textColorRight + rightSubSystemSize + "");
+            } else {
+                int subSystemSize = transformer.getSubSystem().component.size();
+                String textColor = "";
+                if (subSystemSize <= 8) {
+                    textColor = "§a";
+                } else if (subSystemSize <= 15) {
+                    textColor = "§6";
+                } else {
+                    textColor = "§c";
+                }
+                info.put(I18N.tr("Subsystem Matrix Size: "), textColor + subSystemSize);
+            }
+
+        } catch (Exception e) {
+            if (populated) {
+                info.put(I18N.tr("Subsystem Matrix Size: "), "§cNot part of a subsystem!?");
+            } else {
+                info.put(I18N.tr("Subsystem Matrix Size: "), "Not part of a subsystem");
+            }
+        }
+
         return info;
     }
 
