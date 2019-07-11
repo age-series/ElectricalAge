@@ -291,9 +291,10 @@ class EnergyMeterElement(sixNode: SixNode, side: Direction, descriptor: SixNodeD
 
         class WebhookThreadClass: Runnable {
             override fun run() {
-                Eln.dp.println(DebugType.NETWORK,"Started webhook thread")
-                // wait a random amount of time into the tick to cause less CPU overhead.
-                Thread.sleep(Math.round(Math.random() * 50.0))
+                // wait a random amount of time into the frequency to start (prevent lag)
+                val delay = Math.round(Math.random() * 1000 * Eln.energyMeterWebhookFrequency)
+                Eln.dp.println(DebugType.NETWORK,"Started webhook thread, waiting " + delay + "ms")
+                Thread.sleep(delay)
                 while(Eln.simulator.isRunning) {
                     try {
                         // sends the energy usage at a specific rate. Disabled if name or webhook isn't specified..
