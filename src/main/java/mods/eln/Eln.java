@@ -328,6 +328,7 @@ public class Eln {
     public static OreDescriptor oreTin, oreCopper, oreSilver;
     public static HashMap<String, ItemStack> dictionnaryOreFromMod = new HashMap<String, ItemStack>();
     public static ArrayList<ItemStack> furnaceList = new ArrayList<>();
+    public static int energyMeterWebhookFrequency;
 
     @EventHandler
     @SuppressWarnings("unused")

@@ -37,7 +37,7 @@ import mods.eln.sixnode.electricalvumeter.ElectricalVuMeterDescriptor;
 import mods.eln.sixnode.electricalwatch.ElectricalWatchDescriptor;
 import mods.eln.sixnode.electricalweathersensor.ElectricalWeatherSensorDescriptor;
 import mods.eln.sixnode.electricalwindsensor.ElectricalWindSensorDescriptor;
-import mods.eln.sixnode.energymeter.EnergyMeterDescriptor;
+import mods.eln.sixnode.EnergyMeterDescriptor;
 import mods.eln.sixnode.groundcable.GroundCableDescriptor;
 import mods.eln.sixnode.hub.HubDescriptor;
 import mods.eln.sixnode.lampsocket.LampSocketDescriptor;

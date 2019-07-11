@@ -36,8 +36,8 @@ public abstract class GuiContainerEln extends GuiContainer implements IGuiObject
         ySize = helper.ySize;
         super.initGui();
 
-        if (helper instanceof GuiHelperContainer) {
-            apply((GuiHelperContainer) helper);
+        if (helper != null) {
+            apply(helper);
         }
     }
 
@@ -57,6 +57,12 @@ public abstract class GuiContainerEln extends GuiContainer implements IGuiObject
 
     public GuiButtonEln newGuiButton(int x, int y, int width, String name) {
         GuiButtonEln o = helper.newGuiButton(x, y, width, name);
+        o.setObserver(this);
+        return o;
+    }
+
+    public GuiButtonEln newGuiButton(int x, int y, int width, int height, String name) {
+        GuiButtonEln o = helper.newGuiButton(x, y, width, height, name);
         o.setObserver(this);
         return o;
     }

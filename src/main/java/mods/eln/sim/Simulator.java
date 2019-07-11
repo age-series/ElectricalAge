@@ -121,6 +121,10 @@ public class Simulator /* ,IPacketHandler */ {
         run = true;
     }
 
+    public boolean isRunning() {
+        return run;
+    }
+
     public void stop() {
         nodeCount = 0;
 
