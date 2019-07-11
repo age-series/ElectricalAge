@@ -36,9 +36,11 @@ import java.io.ByteArrayOutputStream
 import java.io.DataInputStream
 import java.io.DataOutputStream
 import java.io.IOException
+import java.lang.IllegalStateException
 import java.text.NumberFormat
 import java.text.ParseException
 import java.util.HashMap
+import java.util.concurrent.ConcurrentLinkedQueue
 
 class EnergyMeterDescriptor(name: String, private val obj: Obj3D?, energyWheelCount: Int, timeWheelCount: Int) : SixNodeDescriptor(name, EnergyMeterElement::class.java, EnergyMeterRender::class.java) {
     var base: Obj3DPart? = null
@@ -228,11 +230,15 @@ class EnergyMeterDescriptor(name: String, private val obj: Obj3D?, energyWheelCo
     }
 }
 
+data class Webhook (val value: Double, val name: String, val webhook: String, val type: String)
+
 class EnergyMeterElement(sixNode: SixNode, side: Direction, descriptor: SixNodeDescriptor) : SixNodeElement(sixNode, side, descriptor) {
 
     internal var voltageWatchDogA = VoltageStateWatchDog()
     internal var voltageWatchDogB = VoltageStateWatchDog()
     // ResistorCurrentWatchdog currentWatchDog = new ResistorCurrentWatchdog();
+
+    internal val switchStateQueue = ConcurrentLinkedQueue<Boolean>()
 
     internal var slowProcess = SlowProcess()
     var descriptor: EnergyMeterDescriptor
@@ -259,6 +265,8 @@ class EnergyMeterElement(sixNode: SixNode, side: Direction, descriptor: SixNodeD
         ModCounter, ModPrepay
     }
 
+    internal val webhookThread: Thread
+
     init {
         shunt.mustUseUltraImpedance()
 
@@ -280,6 +288,98 @@ class EnergyMeterElement(sixNode: SixNode, side: Direction, descriptor: SixNodeD
         voltageWatchDogA.set(aLoad).set(exp)
         voltageWatchDogB.set(bLoad).set(exp)
         this.descriptor = descriptor as EnergyMeterDescriptor
+
+        class WebhookThreadClass: Runnable {
+            override fun run() {
+                Eln.dp.println(DebugType.NETWORK,"Started webhook thread")
+                // wait a random amount of time into the tick to cause less CPU overhead.
+                Thread.sleep(Math.round(Math.random() * 50.0))
+                while(Eln.simulator.isRunning) {
+                    try {
+                        // sends the energy usage at a specific rate. Disabled if name or webhook isn't specified..
+                        if (meterWebhook.isNotEmpty() && meterName.isNotEmpty()) {
+                            Eln.dp.println(DebugType.NETWORK, "Sending webhook from Energy Meter to " + meterWebhook)
+                            sendEnergy(timeCounter, meterName, meterWebhook)
+                            if (descriptor.timeNumberWheel!!.isNotEmpty()) {
+                                sendTime(energyStack, meterName, meterWebhook)
+                            }
+                        }
+                        Thread.sleep(Integer.toUnsignedLong(Eln.energyMeterWebhookFrequency * 1000))
+                    } catch (ie: InterruptedException) {}
+                }
+                Eln.dp.println(DebugType.NETWORK, "Stopping webhook thread")
+            }
+        }
+
+        // new thread spawns to handle the TCP connection
+        // Should be thread-safe.
+        webhookThread = Thread(WebhookThreadClass())
+
+        if (Eln.energyMeterWebhookFrequency >= 15)
+            Eln.dp.println(DebugType.NETWORK, "Enabling Energy Meter Webhook Service")
+            webhookThread.start()
+    }
+
+    /**
+     * sendEnergy(energy, name, webhook) - Send the energy data to the server, and also change state if codes request it
+     * @param energy the current energy reading from the meter
+     * @param name the name of the meter
+     * @param webhook the server the meter wants to contact
+     */
+    private fun sendEnergy(energy: Double, name: String, webhook: String) {
+        try {
+            val url = webhook + "?name=" + name.replace(" ", "_").replace("&", "") + "&energy=" + java.lang.Double.toString(energy)
+            // probe the server with the most recent energy information.
+            val client = HttpClientBuilder.create().build()
+            val resp = client.execute(HttpGet(url))
+            val code = resp.statusLine.statusCode
+            if (code == 202) {
+                switchStateQueue.offer(true)
+            } else if (code == 402) {
+                switchStateQueue.offer(false)
+            } else if (code == 205) {
+                energyStack = 0.0
+                timeCounter = 0.0
+                needPublish()
+            }
+            resp.close()
+            client.close()
+        } catch (ise: IllegalStateException) {
+            Eln.dp.println(DebugType.NETWORK,"Webhook URL is invalid!")
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    /**
+     * sendTime(time, name, webhook) - Sends the time of the meter to a server.
+     * @param time The time the meter has been on
+     * @param name The name of the meter
+     * @param webhook The webhook the meter wants things sent to
+     */
+    private fun sendTime(time: Double, name: String, webhook: String) {
+        try {
+            val url = webhook + "?name=" + name.replace(" ", "_").replace("&", "") + "&time=" + java.lang.Double.toString(time)
+            // probe the server with the most recent time information.
+            val client = HttpClientBuilder.create().build()
+            val resp = client.execute(HttpGet(url))
+            val code = resp.statusLine.statusCode
+            if (code == 202) {
+                switchStateQueue.offer(true)
+            }else if(code == 402) {
+                switchStateQueue.offer(false)
+            }else if(code == 205) {
+                energyStack = 0.0
+                timeCounter = 0.0
+                needPublish()
+            }
+            resp.close()
+            client.close()
+        } catch (ise: IllegalStateException) {
+            Eln.dp.println(DebugType.NETWORK,"Webhook URL is invalid!")
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 
     override fun getInventory(): SixNodeElementInventory? {
@@ -487,74 +587,19 @@ class EnergyMeterElement(sixNode: SixNode, side: Direction, descriptor: SixNodeD
 
     internal inner class SlowProcess : IProcess {
         var publishTimeout = Math.random() * publishTimeoutReset
-        // make it so that the webhooks don't all trigger in the same tick. That would be bad.
-        var lastWebhookPublish = Math.random() * 20 * Eln.energyMeterWebhookFrequency
         var oldEnergyPublish: Double = 0.toDouble()
-
-        /**
-         * sendEnergy(energy, name, webhook) - Send the energy data to the server, and also change state if codes request it
-         * @param energy the current energy reading from the meter
-         * @param name the name of the meter
-         * @param webhook the server the meter wants to contact
-         */
-        private fun sendEnergy(energy: Double, name: String, webhook: String) {
-            try {
-                val url = webhook + "?name=" + name.replace(" ", "_").replace("&", "") + "&energy=" + java.lang.Double.toString(energy)
-                // probe the server with the most recent energy information.
-                val client = HttpClientBuilder.create().build()
-                val resp = client.execute(HttpGet(url))
-                val code = resp.statusLine.statusCode
-                if (code == 202) {
-                    setSwitchState(true)
-                }else if(code == 402) {
-                    setSwitchState(false)
-                }else if(code == 205) {
-                    energyStack = 0.0
-                    timeCounter = 0.0
-                    needPublish()
-                }
-                resp.close()
-                client.close()
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-        }
-
-        /**
-         * sendTime(time, name, webhook) - Sends the time of the meter to a server.
-         * @param time The time the meter has been on
-         * @param name The name of the meter
-         * @param webhook The webhook the meter wants things sent to
-         */
-        private fun sendTime(time: Double, name: String, webhook: String) {
-            try {
-                val url = webhook + "?name=" + name.replace(" ", "_").replace("&", "") + "&time=" + java.lang.Double.toString(time)
-                // probe the server with the most recent time information.
-                val client = HttpClientBuilder.create().build()
-                val resp = client.execute(HttpGet(url))
-                val code = resp.statusLine.statusCode
-                if (code == 202) {
-                    setSwitchState(true)
-                }else if(code == 402) {
-                    setSwitchState(false)
-                }else if(code == 205) {
-                    energyStack = 0.0
-                    timeCounter = 0.0
-                    needPublish()
-                }
-                resp.close()
-                client.close()
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-        }
 
         /**
          * process() This effectively happens once per tick in an MNA step. Take as little time here as possible.
          */
         override fun process(time: Double) {
+            while (!switchStateQueue.isEmpty()) {
+                val state = switchStateQueue.poll()
+                if (state != null) {
+                    setSwitchState(state)
+                }
+            }
             timeCounter += time * 72.0
-            lastWebhookPublish += 0.05
             val p = aLoad.current * aLoad.u * if (aLoad.u > bLoad.u) 1.0 else -1.0
             var highImp = false
             when (mod) {
@@ -609,26 +654,6 @@ class EnergyMeterElement(sixNode: SixNode, side: Direction, descriptor: SixNodeD
                 }
 
                 oldEnergyPublish = energyStack
-            }
-
-            // sends the energy usage at a specific rate. Disabled if frequency is 60 (or less), or if the name or webhook isn't specified..
-            if (Eln.energyMeterWebhookFrequency >= 15 && lastWebhookPublish > Eln.energyMeterWebhookFrequency && meterWebhook.isNotEmpty() && meterName.isNotEmpty()) {
-                lastWebhookPublish = 0.0
-                val webhookThread = Thread(Runnable {
-                    @Override
-                    @Suppress("unused")
-                    fun run() {
-                        Eln.dp.println(DebugType.NETWORK, "Sending webhook from Energy Meter to " + meterWebhook)
-                        sendEnergy(energyStack, meterName, meterWebhook)
-                        if (descriptor.timeNumberWheel!!.isNotEmpty()) {
-                            sendTime(timeCounter, meterName, meterWebhook)
-                        }
-                    }
-                })
-                webhookThread.start()
-                // new thread spawns to handle the TCP connection, and later changes the variables for the time and stuff
-                // I don't think it would cause a critical race condition, worst comes worst the thing is not reset
-                // properly or the switch is in a weird state that can be fixed manually.
             }
         }
     }
