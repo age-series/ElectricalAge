@@ -397,7 +397,7 @@ class SubSystem(root: RootSystem?, dt: Double) {
         return str
     }
 
-    fun componentSize(): Int {
+    fun matrixSize(): Int {
         return component.size
     }
 

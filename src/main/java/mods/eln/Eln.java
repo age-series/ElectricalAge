@@ -57,6 +57,7 @@ import mods.eln.sim.mna.component.Resistor;
 import mods.eln.sim.nbt.NbtElectricalLoad;
 import mods.eln.simplenode.computerprobe.ComputerProbeBlock;
 import mods.eln.simplenode.energyconverter.EnergyConverterElnToOtherBlock;
+import mods.eln.sixnode.PortableNaNDescriptor;
 import mods.eln.sixnode.currentcable.CurrentCableDescriptor;
 import mods.eln.sixnode.electricalcable.ElectricalCableDescriptor;
 import mods.eln.sixnode.electricaldatalogger.DataLogsPrintDescriptor;
@@ -174,6 +175,7 @@ public class Eln {
     public static CurrentCableDescriptor mediumCurrentCableDescriptor;
     public static CurrentCableDescriptor highCurrentCableDescriptor;
     public static CurrentCableDescriptor veryHighCurrentCableDescriptor;
+    public static PortableNaNDescriptor portableNaNDescriptor;
 
     /* Configuration Options */
 
@@ -268,6 +270,8 @@ public class Eln {
     public static CableRenderDescriptor stdCableRenderMediumCurrent;
     public static CableRenderDescriptor stdCableRenderHighCurrent;
     public static CableRenderDescriptor stdCableRenderVeryHighCurrent;
+
+    public static CableRenderDescriptor stdPortableNaN;
 
     public static double gateOutputCurrent = 0.100;
     public static double SVU = 50, SVII = gateOutputCurrent / 50, SVUinv = 1.0 / SVU;
@@ -451,6 +455,10 @@ public class Eln {
         TransparentNodeRegistry.thingRegistration();
         ItemRegistry.thingRegistration();
         MscRegistry.thingRegistration();
+
+        if (isDevelopmentRun()) {
+            SixNodeRegistry.registerPortableNaN();
+        }
 
         OreDictionary.registerOre("blockAluminum", arcClayBlock);
         OreDictionary.registerOre("blockSteel", arcMetalBlock);

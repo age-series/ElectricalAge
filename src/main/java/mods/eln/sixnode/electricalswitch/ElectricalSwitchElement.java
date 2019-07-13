@@ -121,7 +121,7 @@ public class ElectricalSwitchElement extends SixNodeElement {
         }
 
         try {
-            int subSystemSize = switchResistor.getSubSystem().component.size();
+            int subSystemSize = switchResistor.getSubSystem().matrixSize();
             String textColor = "";
             if (subSystemSize <= 8) {
                 textColor = "§a";

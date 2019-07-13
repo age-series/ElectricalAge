@@ -15,6 +15,7 @@ import mods.eln.sim.ThermalLoadInitializer
 import mods.eln.sim.mna.component.Resistor
 import mods.eln.sim.mna.component.VoltageSource
 import mods.eln.sim.mna.misc.IRootSystemPreStepProcess
+import mods.eln.sim.mna.misc.MnaConst
 import mods.eln.sim.nbt.NbtElectricalLoad
 import mods.eln.sim.nbt.NbtThermalLoad
 import mods.eln.sim.process.destruct.ThermalLoadWatchDog
@@ -212,6 +213,10 @@ class MotorElement(node: TransparentNode, desc_: TransparentNodeDescriptor) :
             // Most of this was copied from Generator.kt, and bears the same
             // admonition: I don't actually know how this works.
             val th = wireLoad.subSystem!!.getTh(wireLoad, powerSource)
+            if (th.U.isNaN()) {
+                th.U = noTorqueU
+                th.R = MnaConst.highImpedance
+            }
             var U: Double
             if(noTorqueU < th.U) {
                 // Input is greater than our output, spin up the shaft
@@ -239,6 +244,9 @@ class MotorElement(node: TransparentNode, desc_: TransparentNodeDescriptor) :
         override fun process(time: Double) {
             val p = powerSource.getPower()
             var E = -p * time
+            if (E.isNaN()) {
+                E = 0.0
+            }
             if(E < 0) {
                 // Pushing power--this is very inefficient
                 E = E * 10.0

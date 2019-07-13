@@ -355,8 +355,8 @@ public class TransformerElement extends TransparentNodeElement implements IConfi
 
         try {
             if (isIsolator) {
-                int leftSubSystemSize = primaryLoad.getSubSystem().component.size();
-                int rightSubSystemSize = secondaryLoad.getSubSystem().component.size();
+                int leftSubSystemSize = primaryLoad.getSubSystem().matrixSize();
+                int rightSubSystemSize = secondaryLoad.getSubSystem().matrixSize();
                 String textColorLeft = "", textColorRight = "";
                 if (leftSubSystemSize <= 8) {
                     textColorLeft = "§a";
@@ -374,7 +374,7 @@ public class TransformerElement extends TransparentNodeElement implements IConfi
                 }
                 info.put(I18N.tr("Subsystem Matrix Size: "), textColorLeft + leftSubSystemSize + " §r| " + textColorRight + rightSubSystemSize + "");
             } else {
-                int subSystemSize = transformer.getSubSystem().component.size();
+                int subSystemSize = transformer.getSubSystem().matrixSize();
                 String textColor = "";
                 if (subSystemSize <= 8) {
                     textColor = "§a";

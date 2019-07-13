@@ -4,6 +4,7 @@ import mods.eln.misc.INBTTReady
 import mods.eln.sim.mna.SubSystem
 import mods.eln.sim.mna.component.VoltageSource
 import mods.eln.sim.mna.misc.IRootSystemPreStepProcess
+import mods.eln.sim.mna.misc.MnaConst
 import mods.eln.sim.mna.state.State
 import net.minecraft.nbt.NBTTagCompound
 
@@ -29,6 +30,15 @@ class PowerSourceBipole(private val aPin: State, private val bPin: State, privat
     override fun rootSystemPreStepProcess() {
         val a = aPin.subSystem!!.getTh(aPin, aSrc)
         val b = bPin.subSystem!!.getTh(bPin, bSrc)
+
+        if (a.U.isNaN()) {
+            a.U = 0.0
+            a.R = MnaConst.highImpedance
+        }
+        if (b.U.isNaN()) {
+            b.U = 0.0
+            b.R = MnaConst.highImpedance
+        }
 
         val Uth = a.U - b.U
         val Rth = a.R + b.R

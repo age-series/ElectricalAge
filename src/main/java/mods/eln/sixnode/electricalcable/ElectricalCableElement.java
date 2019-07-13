@@ -126,7 +126,7 @@ public class ElectricalCableElement extends SixNodeElement {
         }
 
         try {
-            int subSystemSize = electricalLoad.getSubSystem().component.size();
+            int subSystemSize = electricalLoad.getSubSystem().matrixSize();
             String textColor = "";
             if (subSystemSize <= 8) {
                 textColor = "§a";

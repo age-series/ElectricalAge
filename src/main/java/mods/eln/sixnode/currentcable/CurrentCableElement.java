@@ -112,7 +112,7 @@ public class CurrentCableElement extends SixNodeElement {
             info.put(I18N.tr("Voltage"), Utils.plotVolt("", electricalLoad.getU()));
         }
         try {
-            int subSystemSize = electricalLoad.getSubSystem().component.size();
+            int subSystemSize = electricalLoad.getSubSystem().matrixSize();
             String textColor = "";
             if (subSystemSize <= 8) {
                 textColor = "§a";

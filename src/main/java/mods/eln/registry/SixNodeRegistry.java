@@ -120,6 +120,7 @@ public class SixNodeRegistry {
         registerSixNodeMisc(117);
         registerLogicalGates(118);
         registerAnalogChips(124);
+        //registerPortableNaN(125);
     }
 
     public static void recipeRegistration() {
@@ -346,6 +347,20 @@ public class SixNodeRegistry {
             Eln.sixNodeItem.addDescriptor(subId + (id << 6), Eln.veryHighCurrentCableDescriptor);
         }
     }
+
+    public static void registerPortableNaN() {
+        int id, subId;
+        String name;
+        id = 125;
+        {
+            subId = 0;
+            name = TR_NAME(I18N.Type.NONE, "Portable NaN");
+            Eln.stdPortableNaN = new CableRenderDescriptor("eln", "sprites/nan.png", 3.95f, 0.95f);
+            Eln.portableNaNDescriptor = new PortableNaNDescriptor(name, Eln.stdPortableNaN);
+            Eln.sixNodeItem.addDescriptor(subId + (id << 6), Eln.portableNaNDescriptor);
+        }
+    }
+
     private static void recipeElectricalCable() {
         addRecipe(Eln.signalCableDescriptor.newItemStack(2),
             "R",

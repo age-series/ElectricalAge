@@ -273,8 +273,12 @@ class EnergyMeterElement(sixNode: SixNode, side: Direction, descriptor: SixNodeD
         electricalLoadList.add(aLoad)
         electricalLoadList.add(bLoad)
         electricalComponentList.add(shunt)
-        electricalComponentList.add(Resistor(bLoad, null).pullDown())
-        electricalComponentList.add(Resistor(aLoad, null).pullDown())
+        val ra = Resistor(aLoad, null)
+        ra.pullDown()
+        val rb = Resistor(bLoad, null)
+        rb.pullDown()
+        electricalComponentList.add(ra)
+        electricalComponentList.add(rb)
 
         slowProcessList.add(slowProcess)
 
