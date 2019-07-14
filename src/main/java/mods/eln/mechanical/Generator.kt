@@ -20,6 +20,7 @@ import mods.eln.sim.process.destruct.ThermalLoadWatchDog
 import mods.eln.sim.process.destruct.WorldExplosion
 import mods.eln.sim.process.heater.ElectricalLoadHeatThermalLoad
 import mods.eln.sixnode.electricalcable.ElectricalCableDescriptor
+import mods.eln.sixnode.genericcable.GenericCableDescriptor
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.ItemStack
 import org.lwjgl.opengl.GL11
@@ -31,7 +32,7 @@ import java.io.DataOutputStream
 class GeneratorDescriptor(
     name: String,
     obj: Obj3D,
-    cable: ElectricalCableDescriptor,
+    cable: GenericCableDescriptor,
     nominalRads: Float,
     nominalU: Float,
     powerOutPerDeltaU: Float,

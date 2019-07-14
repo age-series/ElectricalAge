@@ -16,6 +16,7 @@ import mods.eln.sim.ThermalLoadInitializerByPowerDrop;
 import mods.eln.sound.SoundCommand;
 import mods.eln.transparentnode.FuelGeneratorDescriptor;
 import mods.eln.transparentnode.FuelHeatFurnaceDescriptor;
+import mods.eln.transparentnode.ResistorSinkDescriptor;
 import mods.eln.transparentnode.autominer.AutoMinerDescriptor;
 import mods.eln.transparentnode.battery.BatteryDescriptor;
 import mods.eln.transparentnode.eggincubator.EggIncubatorDescriptor;
@@ -223,21 +224,6 @@ public class TransparentNodeRegistry {
             Eln.transparentNodeItem.addDescriptor(subId + (id << 6), desc);
         }
         {
-            subId = 10;
-            float nominalRads = 800, nominalU = 3200;
-            float nominalP = 4000;
-            GeneratorDescriptor desc = new GeneratorDescriptor(
-                TR_NAME(I18N.Type.NONE, "Generator"),
-                Eln.obj.getObj("Generator"),
-                Eln.highVoltageCableDescriptor,
-                nominalRads, nominalU,
-                nominalP / (nominalU / 25),
-                nominalP,
-                Eln.sixNodeThermalLoadInitializer.copy()
-            );
-            Eln.transparentNodeItem.addDescriptor(subId + (id << 6), desc);
-        }
-        {
             subId = 11;
             GasTurbineDescriptor desc = new GasTurbineDescriptor(
                 TR_NAME(I18N.Type.NONE, "Gas Turbine"),
@@ -278,6 +264,56 @@ public class TransparentNodeRegistry {
                 Eln.obj.getObj("Tachometer"));
             Eln.transparentNodeItem.addDescriptor(subId + (id << 6), desc);
         }
+
+        {
+            subId = 10;
+
+            GenMotorDescriptor desc = new GenMotorDescriptor(
+                TR_NAME(I18N.Type.NONE, "Generator"),
+                GMType.GENERATOR,
+                Eln.obj.getObj("Generator"),
+                Eln.veryHighCurrentCableDescriptor,
+                250.0,
+                3200.0,
+                16000.0,
+                0.95,
+                Eln.sixNodeThermalLoadInitializer.copy()
+            );
+            Eln.transparentNodeItem.addDescriptor(subId + (id << 6), desc);
+        }
+        {
+            subId = 16;
+
+            GenMotorDescriptor desc = new GenMotorDescriptor(
+                TR_NAME(I18N.Type.NONE, "Shaft Motor"),
+                GMType.MOTOR,
+                Eln.obj.getObj("Motor"),
+                Eln.veryHighCurrentCableDescriptor,
+                250.0,
+                3200.0,
+                16000.0,
+                0.99,
+                Eln.sixNodeThermalLoadInitializer.copy()
+            );
+            Eln.transparentNodeItem.addDescriptor(subId + (id << 6), desc);
+        }
+
+        /*
+        {
+            subId = 10;
+            float nominalRads = 800, nominalU = 3200;
+            float nominalP = 4000;
+            GeneratorDescriptor desc = new GeneratorDescriptor(
+                TR_NAME(I18N.Type.NONE, "Generator"),
+                Eln.obj.getObj("Generator"),
+                Eln.veryHighCurrentCableDescriptor,
+                nominalRads, nominalU,
+                nominalP / (nominalU / 25),
+                nominalP,
+                Eln.sixNodeThermalLoadInitializer.copy()
+            );
+            Eln.transparentNodeItem.addDescriptor(subId + (id << 6), desc);
+        }
         {
             subId = 16;
 
@@ -287,7 +323,7 @@ public class TransparentNodeRegistry {
             MotorDescriptor desc = new MotorDescriptor(
                 TR_NAME(I18N.Type.NONE, "Shaft Motor"),
                 Eln.obj.getObj("Motor"),
-                Eln.veryHighVoltageCableDescriptor,
+                Eln.veryHighCurrentCableDescriptor,
                 nominalRads,
                 nominalU,
                 nominalP,
@@ -297,7 +333,7 @@ public class TransparentNodeRegistry {
             );
 
             Eln.transparentNodeItem.addDescriptor(subId + (id << 6), desc);
-        }
+        }*/
         {
             subId = 17;
             ClutchDescriptor desc = new ClutchDescriptor(
@@ -1383,6 +1419,16 @@ public class TransparentNodeRegistry {
                 130, -100,
                 200, 30,
                 10, 1
+            );
+            Eln.transparentNodeItem.addDescriptor(subId + (id << 6), desc);
+        }
+        {
+            subId = 35;
+            name = TR_NAME(I18N.Type.NONE, "Creative Dissipator");
+            ResistorSinkDescriptor desc = new ResistorSinkDescriptor(
+                name,
+                Eln.veryHighCurrentCableDescriptor,
+                Eln.obj.getObj("passivethermaldissipatora")
             );
             Eln.transparentNodeItem.addDescriptor(subId + (id << 6), desc);
         }

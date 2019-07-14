@@ -172,8 +172,12 @@ public abstract class TransparentNodeElement implements GhostObserver, IPlayer, 
     }
 
 
-    private void sendPacketToAllClient(ByteArrayOutputStream bos) {
+    public void sendPacketToAllClient(ByteArrayOutputStream bos) {
         node.sendPacketToAllClient(bos);
+    }
+
+    public void sendPacketToAllClient(ByteArrayOutputStream bos, double range) {
+        node.sendPacketToAllClient(bos, range);
     }
 
     public Container newContainer(Direction side, EntityPlayer player) {

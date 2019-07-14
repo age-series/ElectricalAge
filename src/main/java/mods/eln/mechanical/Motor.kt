@@ -12,6 +12,7 @@ import mods.eln.node.transparent.TransparentNodeEntity
 import mods.eln.sim.ElectricalLoad
 import mods.eln.sim.IProcess
 import mods.eln.sim.ThermalLoadInitializer
+import mods.eln.sim.mna.component.PowerSource
 import mods.eln.sim.mna.component.Resistor
 import mods.eln.sim.mna.component.VoltageSource
 import mods.eln.sim.mna.misc.IRootSystemPreStepProcess
@@ -22,6 +23,7 @@ import mods.eln.sim.process.destruct.ThermalLoadWatchDog
 import mods.eln.sim.process.destruct.WorldExplosion
 import mods.eln.sim.process.heater.ElectricalLoadHeatThermalLoad
 import mods.eln.sixnode.electricalcable.ElectricalCableDescriptor
+import mods.eln.sixnode.genericcable.GenericCableDescriptor
 import mods.eln.sound.LoopedSound
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.ItemStack
@@ -33,7 +35,7 @@ import java.io.DataOutputStream
 class MotorDescriptor(
     val name: String,
     obj: Obj3D,
-    cable: ElectricalCableDescriptor,
+    cable: GenericCableDescriptor,
     nominalRads: Float,
     nominalU: Float,
     nominalP: Float,
@@ -200,13 +202,16 @@ class MotorElement(node: TransparentNode, desc_: TransparentNodeDescriptor) :
         thermal.setAsSlow()
         thermalLoadList.add(thermal)
         thermalWatchdog.set(thermal).set(WorldExplosion(this).machineExplosion())
-        slowProcessList.add(thermalWatchdog)
+        //slowProcessList.add(thermalWatchdog)
 
         heater = ElectricalLoadHeatThermalLoad(wireLoad, thermal)
         thermalFastProcessList.add(heater)
     }
 
     inner class MotorElectricalProcess : IProcess, IRootSystemPreStepProcess {
+
+        var last = -1;
+
         override fun process(time: Double) {
             val noTorqueU = desc.radsToU.getValue(shaft.rads)
 
@@ -219,20 +224,33 @@ class MotorElement(node: TransparentNode, desc_: TransparentNodeDescriptor) :
             }
             var U: Double
             if(noTorqueU < th.U) {
+                if (last != 0)
+                    Eln.dp.println(DebugType.MECHANICAL, "ntU < thU")
                 // Input is greater than our output, spin up the shaft
-                U = th.U * 0.997 + noTorqueU * 0.003
+                U = th.U * 0.9999 + noTorqueU * 0.0001
+                last = 0
             } else if(th.isHighImpedance) {
+                if (last != 1)
+                    Eln.dp.println(DebugType.MECHANICAL, "thR high imp")
                 // No actual connection, let the system float
                 U = noTorqueU
+                last = 1
             } else {
+                if (last != 2)
+                    Eln.dp.println(DebugType.MECHANICAL, "ntU > thU")
                 // Provide an output voltage by
                 // solving a quadratic, I guess?
                 val a = 1 / th.R
                 val b = desc.elecPPerDU - th.U / th.R
                 val c = -desc.elecPPerDU * noTorqueU
                 U = (-b + Math.sqrt(b * b - 4 * a * c)) / (2 * a)
+                last = 2
             }
+            Eln.dp.println(DebugType.MECHANICAL, "Voltage: " + U)
             powerSource.u = U
+            Eln.dp.println(DebugType.MECHANICAL, "Ohms: " + th.R)
+            Eln.dp.println(DebugType.MECHANICAL, "Current: " + powerSource.currentState.state)
+
         }
 
         override fun rootSystemPreStepProcess() {
@@ -255,7 +273,8 @@ class MotorElement(node: TransparentNode, desc_: TransparentNodeDescriptor) :
             E = E - defaultDrag * Math.max(shaft.rads, 10.0)
             shaft.energy += E * desc.efficiency
             val tPower = E * (1 - desc.efficiency)
-            thermal.movePowerTo(tPower)
+            //Eln.dp.println(DebugType.MECHANICAL, "thermal power: " + tPower)
+            //thermal.movePowerTo(tPower)
         }
     }
 

@@ -327,6 +327,7 @@ class RootSystem(internal var dt: Double, internal var interSystemOverSampling: 
     }
 
     fun addProcess(p: IRootSystemPreStepProcess) {
+        System.out.println(p)
         processPre.add(p)
     }
 
