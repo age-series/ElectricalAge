@@ -65,7 +65,10 @@ public class TurbineElement extends TransparentNodeElement {
             .setTMax(this.descriptor.nominalDeltaT * 2)
             .set(exp);
 
-        slowProcessList.add(voltageWatchdog.set(positiveLoad).setUNominal(this.descriptor.nominalU).set(exp));
+        voltageWatchdog.set(positiveLoad);
+        voltageWatchdog.setUNominal(this.descriptor.nominalU);
+        voltageWatchdog.set(exp);
+        slowProcessList.add(voltageWatchdog);
         slowProcessList.add(new NodePeriodicPublishProcess(node, 1., .5));
     }
 
@@ -76,14 +79,14 @@ public class TurbineElement extends TransparentNodeElement {
     public void connectJob() {
 
         super.connectJob();
-        Eln.simulator.mna.addProcess(turbineElectricalProcess);
+        Eln.simulator.getMna().addProcess(turbineElectricalProcess);
     }
 
     @Override
     public void disconnectJob() {
 
         super.disconnectJob();
-        Eln.simulator.mna.removeProcess(turbineElectricalProcess);
+        Eln.simulator.getMna().removeProcess(turbineElectricalProcess);
     }
 
     @Override

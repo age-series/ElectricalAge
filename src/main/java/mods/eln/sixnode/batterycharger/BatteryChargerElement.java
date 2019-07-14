@@ -18,7 +18,6 @@ import mods.eln.sim.IProcess;
 import mods.eln.sim.ThermalLoad;
 import mods.eln.sim.mna.component.Resistor;
 import mods.eln.sim.nbt.NbtElectricalLoad;
-import mods.eln.sim.process.destruct.ResistorPowerWatchdog;
 import mods.eln.sim.process.destruct.VoltageStateWatchDog;
 import mods.eln.sim.process.destruct.WorldExplosion;
 import net.minecraft.entity.player.EntityPlayer;
@@ -49,7 +48,6 @@ public class BatteryChargerElement extends SixNodeElement {
         .acceptIfIncrement(4, 5, MachineBoosterDescriptor.class);
 
     VoltageStateWatchDog voltageWatchDog = new VoltageStateWatchDog();
-    ResistorPowerWatchdog powerWatchDog = new ResistorPowerWatchdog();
 
     public String channel = "Default channel";
 
@@ -83,7 +81,10 @@ public class BatteryChargerElement extends SixNodeElement {
         slowProcessList.add(slowProcess);
 
         WorldExplosion exp = new WorldExplosion(this).machineExplosion();
-        slowProcessList.add(voltageWatchDog.set(powerLoad).setUNominal(this.descriptor.nominalVoltage).set(exp));
+        voltageWatchDog.set(powerLoad);
+        voltageWatchDog.setUNominal(this.descriptor.nominalVoltage);
+        voltageWatchDog.set(exp);
+        slowProcessList.add(voltageWatchDog);
         //slowProcessList.add(powerWatchDog.set(powerResistor).setPmax(this.descriptor.nominalPower * 3).set(exp));
     }
 

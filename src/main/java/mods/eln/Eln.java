@@ -51,6 +51,7 @@ import mods.eln.ore.OreItem;
 import mods.eln.packets.*;
 import mods.eln.registry.*;
 import mods.eln.server.*;
+import mods.eln.sim.ProcessType;
 import mods.eln.sim.Simulator;
 import mods.eln.sim.ThermalLoadInitializer;
 import mods.eln.sim.mna.component.Resistor;
@@ -548,11 +549,11 @@ public class Eln {
         playerManager.clear();
         clientLiveDataManager.start();
         simulator.init();
-        simulator.addSlowProcess(wind = new WindProcess());
+        simulator.addProcess(ProcessType.SlowProcess, wind = new WindProcess());
 
         if (replicatorPop)
-            simulator.addSlowProcess(new ReplicatorPopProcess());
-        simulator.addSlowProcess(itemEnergyInventoryProcess = new ItemEnergyInventoryProcess());
+            simulator.addProcess(ProcessType.SlowProcess, new ReplicatorPopProcess());
+        simulator.addProcess(ProcessType.SlowProcess, itemEnergyInventoryProcess = new ItemEnergyInventoryProcess());
     }
 
     @EventHandler

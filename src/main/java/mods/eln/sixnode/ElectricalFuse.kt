@@ -91,18 +91,20 @@ class ElectricalFuseHolderElement(sixNode: SixNode, side: Direction, descriptor:
 
     private var T = 0.0
 
-    private val fuseProcess = IProcess { time ->
-        val I = aLoad.current
-        val cable = installedFuse?.cableDescriptor
-        if (cable == null) {
-            T = 0.0
-        } else {
-            val P = I * I * cable.electricalRs * 2.0 - T / cable.thermalRp * 0.9
+    private val fuseProcess = object: IProcess {
+        override fun process(time: Double) {
+            val I = aLoad.current
+            val cable = installedFuse?.cableDescriptor
+            if (cable == null) {
+                T = 0.0
+            } else {
+                val P = I * I * cable.electricalRs * 2.0 - T / cable.thermalRp * 0.9
 
-            T += P / cable.thermalC * time
-        }
-        if (T > cable?.thermalWarmLimit ?: 0.0 * 0.8) {
-            installedFuse = ElectricalFuseDescriptor.BlownFuse
+                T += P / cable.thermalC * time
+            }
+            if (T > cable?.thermalWarmLimit ?: 0.0 * 0.8) {
+                installedFuse = ElectricalFuseDescriptor.BlownFuse
+            }
         }
     }
 

@@ -234,7 +234,7 @@ class GenMotorElenemt(node: TransparentNode, desc_: TransparentNodeDescriptor): 
             if (E.isNaN()) {
                 E = 0.0
             }
-            Eln.dp.println(DebugType.MECHANICAL, "T: " + desc.type + "\tE: " + E)
+            //Eln.dp.println(DebugType.MECHANICAL, "T: " + desc.type + "\tE: " + E)
 
             if (E < 0 && desc.type == GMType.MOTOR) {
                 // terrible pushing electrical power

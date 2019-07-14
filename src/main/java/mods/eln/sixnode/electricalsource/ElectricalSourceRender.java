@@ -15,10 +15,10 @@ import java.io.IOException;
 
 public class ElectricalSourceRender extends SixNodeElementRender {
 
-    ElectricalSourceDescriptor descriptor;
+    private ElectricalSourceDescriptor descriptor;
 
-    double voltage = 0, current = 0;
-    int color = 0;
+    double voltage = 0;
+    private int color = 0;
 
     public ElectricalSourceRender(SixNodeEntity tileEntity, Direction side, SixNodeDescriptor descriptor) {
         super(tileEntity, side, descriptor);
@@ -57,13 +57,13 @@ public class ElectricalSourceRender extends SixNodeElementRender {
 
     @Override
     public CableRenderDescriptor getCableRender(LRDU lrdu) {
-        if (descriptor.isSignalSource()) return Eln.instance.signalCableDescriptor.render;
-        if (voltage < Eln.instance.lowVoltageCableDescriptor.electricalMaximalVoltage)
-            return Eln.instance.lowVoltageCableDescriptor.render;
-        if (voltage < Eln.instance.meduimVoltageCableDescriptor.electricalMaximalVoltage)
-            return Eln.instance.meduimVoltageCableDescriptor.render;
-        if (voltage < Eln.instance.highVoltageCableDescriptor.electricalMaximalVoltage)
-            return Eln.instance.highVoltageCableDescriptor.render;
-        return Eln.instance.veryHighVoltageCableDescriptor.render;
+        if (descriptor.isSignalSource()) return Eln.signalCableDescriptor.render;
+        if (voltage < Eln.lowVoltageCableDescriptor.electricalMaximalVoltage)
+            return Eln.lowVoltageCableDescriptor.render;
+        if (voltage < Eln.meduimVoltageCableDescriptor.electricalMaximalVoltage)
+            return Eln.meduimVoltageCableDescriptor.render;
+        if (voltage < Eln.highVoltageCableDescriptor.electricalMaximalVoltage)
+            return Eln.highVoltageCableDescriptor.render;
+        return Eln.veryHighVoltageCableDescriptor.render;
     }
 }

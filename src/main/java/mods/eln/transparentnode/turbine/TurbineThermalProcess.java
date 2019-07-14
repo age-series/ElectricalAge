@@ -25,7 +25,7 @@ public class TurbineThermalProcess implements IProcess {
 
         VoltageSource src = turbine.electricalPowerSourceProcess;
 
-        efficiency = Math.abs(1 - (turbine.coolLoad.Tc + PhysicalConstant.Tref) / (turbine.warmLoad.Tc + PhysicalConstant.Tref));
+        efficiency = Math.abs(1 - (turbine.coolLoad.Tc + PhysicalConstant.INSTANCE.getTref()) / (turbine.warmLoad.Tc + PhysicalConstant.INSTANCE.getTref()));
         if (efficiency < 0.05) efficiency = 0.05;
 
         double E = src.getPower() * time / Eln.instance.heatTurbinePowerFactor;

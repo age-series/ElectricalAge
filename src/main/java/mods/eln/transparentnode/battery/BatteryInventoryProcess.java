@@ -15,7 +15,7 @@ public class BatteryInventoryProcess implements IProcess {
     @Override
     public void process(double time) {
         if (!battery.descriptor.lifeEnable)
-            battery.batteryProcess.life = 1.0;
+            battery.batteryProcess.setLife(1.0);
 
         boolean cut = false;
         if (battery.hasOverHeatingProtection()) {
@@ -32,12 +32,12 @@ public class BatteryInventoryProcess implements IProcess {
         if (thermalCut) cut = true;
 
         if (battery.hasOverVoltageProtection()) {
-            if (battery.batteryProcess.getU() * 1.1 > battery.batterySlowProcess.getUMax()) {
+            if (battery.batteryProcess.getU() * 1.1 > battery.batteryProcess.uMax()) {
                 if (battery.batteryProcess.getU() < battery.cutLoad.getU() - battery.negativeLoad.getU()) {
                     cut = true;
                 }
             }
-            if (battery.batteryProcess.getU() < battery.batteryProcess.uNominal * 0.001) {
+            if (battery.batteryProcess.getU() < battery.batteryProcess.getUNominal() * 0.001) {
                 if (battery.batteryProcess.getU() > battery.cutLoad.getU() - battery.negativeLoad.getU()) {
                     cut = true;
                 }

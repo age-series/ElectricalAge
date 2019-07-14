@@ -175,7 +175,9 @@ abstract class SimpleShaftElement(node: TransparentNode, desc_: TransparentNodeD
 
     init {
         val exp = WorldExplosion(this).machineExplosion()
-        slowProcessList.add(createShaftWatchdog(this).set(exp));
+        val swd = createShaftWatchdog(this)
+        swd.set(exp)
+        slowProcessList.add(swd);
     }
 
     override val shaftConnectivity: Array<Direction>

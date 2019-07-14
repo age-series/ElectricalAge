@@ -31,21 +31,21 @@ public class HeatFurnaceInventoryProcess implements IProcess, INBTTReady {
             ThermalIsolatorElement iso = (ThermalIsolatorElement) ((GenericItemUsingDamage) isolatorChamberStack.getItem()).getDescriptor(isolatorChamberStack);
             isolationFactor = iso.conductionFactor;
         }
-        furnace.thermalLoad.setRp(furnace.descriptor.thermal.Rp / isolationFactor);
+        furnace.thermalLoad.setRp(furnace.descriptor.thermal.getRp() / isolationFactor);
 
         int combustionChamberNbr = 0;
         if (combustionChamberStack != null) {
             combustionChamberNbr = combustionChamberStack.stackSize;
         }
-        furnace.furnaceProcess.nominalPower = furnace.descriptor.nominalPower + furnace.descriptor.combustionChamberPower * combustionChamberNbr;
+        furnace.furnaceProcess.setNominalPower(furnace.descriptor.nominalPower + furnace.descriptor.combustionChamberPower * combustionChamberNbr);
 
         if (furnace.getTakeFuel() && SaveConfig.instance != null) {
             if (!SaveConfig.instance.heatFurnaceFuel) {
-                combustibleBuffer = furnace.furnaceProcess.nominalCombustibleEnergy;
+                combustibleBuffer = furnace.furnaceProcess.getNominalCombustibleEnergy();
             } else if (combustibleStack != null) {
                 double itemEnergy = Utils.getItemEnergie(combustibleStack);
                 if (itemEnergy != 0) {
-                    if (furnace.furnaceProcess.combustibleEnergy + combustibleBuffer < furnace.furnaceProcess.nominalCombustibleEnergy) {
+                    if (furnace.furnaceProcess.getCombustibleEnergy() + combustibleBuffer < furnace.furnaceProcess.getNominalCombustibleEnergy()) {
                         //	furnace.furnaceProcess.combustibleEnergy += itemEnergy;
                         combustibleBuffer += itemEnergy;
                         furnace.inventory.decrStackSize(HeatFurnaceContainer.combustibleId, 1);
@@ -57,12 +57,12 @@ public class HeatFurnaceInventoryProcess implements IProcess, INBTTReady {
             }
         }
 
-        if (furnace.furnaceProcess.combustibleEnergy + combustibleBuffer < furnace.furnaceProcess.nominalCombustibleEnergy) {
-            furnace.furnaceProcess.combustibleEnergy += combustibleBuffer;
+        if (furnace.furnaceProcess.getCombustibleEnergy() + combustibleBuffer < furnace.furnaceProcess.getNominalCombustibleEnergy()) {
+            furnace.furnaceProcess.setCombustibleEnergy(furnace.furnaceProcess.getCombustibleEnergy() + combustibleBuffer);
             combustibleBuffer = 0;
         } else {
-            double delta = furnace.furnaceProcess.nominalCombustibleEnergy - furnace.furnaceProcess.combustibleEnergy;
-            furnace.furnaceProcess.combustibleEnergy += delta;
+            double delta = furnace.furnaceProcess.getNominalCombustibleEnergy() - furnace.furnaceProcess.getCombustibleEnergy();
+            furnace.furnaceProcess.setCombustibleEnergy(furnace.furnaceProcess.getCombustibleEnergy() + delta);
             combustibleBuffer -= delta;
         }
     }

@@ -288,7 +288,7 @@ public class Utils {
     }
 
     public static String plotCelsius(String header, double value) {
-        value += PhysicalConstant.Tref - PhysicalConstant.TCelsius;
+        value += PhysicalConstant.INSTANCE.getTref() - PhysicalConstant.INSTANCE.getTCelsius();
         if (!header.equals(""))
             header += " ";
         return header + plotValue(value, "\u00B0C ");

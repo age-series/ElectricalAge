@@ -171,16 +171,16 @@ public class BatteryDescriptor extends TransparentNodeDescriptor {
     }
 
     public void applyTo(BatteryProcess battery) {
-        battery.uNominal = electricalU;
-        battery.QNominal = electricalQ;
-        battery.voltageFunction = UfCharge;
-        battery.isRechargeable = isRechargable;
+        battery.setUNominal(electricalU);
+        battery.setQNominal(electricalQ);
+        battery.setVoltageFunction(UfCharge);
+        battery.setRechargable(isRechargable);
         //battery.efficiency = electricalStdEfficiency;
 
         // Convert old battery absolute charge in Coulomb to to fraction of battery capacity if the capacity is
         // very small and the output voltage is more than a quarter of the nominal voltage.
-        if (battery.Q > 1.5 && battery.getU() > (battery.uNominal / 4)) {
-            battery.Q /= electricalQ;
+        if (battery.getQ() > 1.5 && battery.getU() > (battery.getUNominal() / 4)) {
+            battery.setQ(battery.getQ() / electricalQ);
         }
     }
 
@@ -195,8 +195,8 @@ public class BatteryDescriptor extends TransparentNodeDescriptor {
     }
 
     public void applyTo(BatterySlowProcess process) {
-        process.lifeNominalCurrent = lifeNominalCurrent;
-        process.lifeNominalLost = lifeNominalLost;
+        process.setLifeNominalCurrent(lifeNominalCurrent);
+        process.setLifeNominalLost(lifeNominalLost);
     }
 
     public static BatteryDescriptor getDescriptorFrom(ItemStack itemStack) {

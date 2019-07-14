@@ -105,17 +105,19 @@ open class LogicGateElement(node: SixNode, side: Direction, sixNodeDescriptor: S
         }
 
         electricalComponentList.add(outputProcess)
-        electricalProcessList.add(IProcess {
-            val inputs = arrayOfNulls<Double?>(3)
-            for (i in 0..2) {
-                val inputPin = inputPins[i]
-                if (inputPin != null && inputPin.connectedComponents.count() > 0) {
-                    inputs[i] = inputPin.normalized
+        electricalProcessList.add(object: IProcess {
+            override fun process(time: Double) {
+                val inputs = arrayOfNulls<Double?>(3)
+                for (i in 0..2) {
+                    val inputPin = inputPins[i]
+                    if (inputPin != null && inputPin.connectedComponents.count() > 0) {
+                        inputs[i] = inputPin.normalized
+                    }
                 }
-            }
 
-            val output = function.process(inputs)
-            outputProcess.setOutputNormalizedSafe(if (output) 1.0 else 0.0)
+                val output = function.process(inputs)
+                outputProcess.setOutputNormalizedSafe(if (output) 1.0 else 0.0)
+            }
         })
     }
 

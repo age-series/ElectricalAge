@@ -5,10 +5,7 @@ import mods.eln.ghost.GhostObserver;
 import mods.eln.misc.*;
 import mods.eln.node.INodeElement;
 import mods.eln.node.NodeConnection;
-import mods.eln.sim.ElectricalLoad;
-import mods.eln.sim.IProcess;
-import mods.eln.sim.ThermalConnection;
-import mods.eln.sim.ThermalLoad;
+import mods.eln.sim.*;
 import mods.eln.sim.mna.component.Component;
 import mods.eln.sim.nbt.NbtElectricalLoad;
 import mods.eln.sim.nbt.NbtThermalLoad;
@@ -109,16 +106,10 @@ public abstract class SixNodeElement implements GhostObserver, IPlayer, INodeEle
         for (NbtThermalLoad load : thermalLoadList)
             Eln.simulator.addThermalLoad(load);
 
-
-        for (IProcess process : slowProcessList)
-            Eln.simulator.addSlowProcess(process);
-        for (IProcess process : electricalProcessList)
-            Eln.simulator.addElectricalProcess(process);
-        for (IProcess process : thermalProcessList)
-            Eln.simulator.addThermalFastProcess(process);
-        for (IProcess process : thermalSlowProcessList)
-            Eln.simulator.addThermalSlowProcess(process);
-
+        Eln.simulator.addAllProcess(ProcessType.SlowProcess, slowProcessList);
+        Eln.simulator.addAllProcess(ProcessType.ElectricalProcess, electricalProcessList);
+        Eln.simulator.addAllProcess(ProcessType.ThermalFastProcess, thermalProcessList);
+        Eln.simulator.addAllProcess(ProcessType.ThermalSlowProcess, thermalSlowProcessList);
     }
 
     public void networkUnserialize(DataInputStream stream) {
@@ -354,15 +345,10 @@ public abstract class SixNodeElement implements GhostObserver, IPlayer, INodeEle
         for (NbtThermalLoad load : thermalLoadList)
             Eln.simulator.removeThermalLoad(load);
 
-        for (IProcess process : slowProcessList)
-            Eln.simulator.removeSlowProcess(process);
-        for (IProcess process : electricalProcessList)
-            Eln.simulator.removeElectricalProcess(process);
-        for (IProcess process : thermalProcessList)
-            Eln.simulator.removeThermalFastProcess(process);
-        for (IProcess process : thermalSlowProcessList)
-            Eln.simulator.removeThermalSlowProcess(process);
-
+        Eln.simulator.removeAllProcess(ProcessType.SlowProcess, slowProcessList);
+        Eln.simulator.removeAllProcess(ProcessType.ElectricalProcess, electricalProcessList);
+        Eln.simulator.removeAllProcess(ProcessType.ThermalFastProcess, thermalProcessList);
+        Eln.simulator.removeAllProcess(ProcessType.ThermalSlowProcess, thermalSlowProcessList);
     }
 
     public boolean canConnectRedstone() {

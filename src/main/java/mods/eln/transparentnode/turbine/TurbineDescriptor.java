@@ -27,7 +27,7 @@ public class TurbineDescriptor extends TransparentNodeDescriptor {
                              double thermalC, double DeltaTForInput,
                              double powerOutPerDeltaU, String soundFile) {
         super(name, TurbineElement.class, TurbineRender.class);
-        double nominalEff = Math.abs(1 - (0 + PhysicalConstant.Tref) / (nominalDeltaT + PhysicalConstant.Tref));
+        double nominalEff = Math.abs(1 - (0 + PhysicalConstant.INSTANCE.getTref()) / (nominalDeltaT + PhysicalConstant.INSTANCE.getTref()));
         this.TtoU = TtoU;
         this.PoutToPin = PoutToPin;
         this.nominalDeltaT = nominalDeltaT;

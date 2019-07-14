@@ -255,9 +255,9 @@ public class ConsoleListener extends CommandBase {
             Eln.dp.println(DebugType.CONSOLE, "Dumping current matrix state");
 
             String dumpSubSystems = "";
-            int ssc = Eln.simulator.mna.getSystems().size();
+            int ssc = Eln.simulator.getMna().getSystems().size();
             int ct = 0;
-            for (SubSystem s: Eln.simulator.mna.getSystems()) {
+            for (SubSystem s: Eln.simulator.getMna().getSystems()) {
                 ct += s.getComponent().size();
                 dumpSubSystems += s.toString() + "\n";
             }

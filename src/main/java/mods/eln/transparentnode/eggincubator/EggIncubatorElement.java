@@ -52,7 +52,10 @@ public class EggIncubatorElement extends TransparentNodeElement {
         this.descriptor = (EggIncubatorDescriptor) descriptor;
 
         WorldExplosion exp = new WorldExplosion(this).machineExplosion();
-        slowProcessList.add(voltageWatchdog.set(powerLoad).setUNominal(this.descriptor.nominalVoltage).set(exp));
+        voltageWatchdog.set(powerLoad);
+        voltageWatchdog.setUNominal(this.descriptor.nominalVoltage);
+        voltageWatchdog.set(exp);
+        slowProcessList.add(voltageWatchdog);
     }
 
     class EggIncubatorProcess implements IProcess, INBTTReady {

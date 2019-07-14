@@ -64,7 +64,7 @@ public class ThermalSensorGui extends GuiContainerEln {
             try {
                 lowVoltage = NumberFormat.getInstance().parse(lowValue.getText()).floatValue();
                 highVoltage = NumberFormat.getInstance().parse(highValue.getText()).floatValue();
-                render.clientSetFloat(ElectricalSensorElement.setValueId, lowVoltage - (float) PhysicalConstant.Tamb, highVoltage - (float) PhysicalConstant.Tamb);
+                render.clientSetFloat(ElectricalSensorElement.setValueId, lowVoltage - (float) PhysicalConstant.INSTANCE.getTamb(), highVoltage - (float) PhysicalConstant.INSTANCE.getTamb());
             } catch (ParseException e) {
             }
         } else if (object == temperatureType) {

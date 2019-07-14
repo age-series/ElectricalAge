@@ -6,10 +6,12 @@ import mods.eln.misc.Direction;
 import mods.eln.misc.INBTTReady;
 import mods.eln.node.NodeBase;
 import mods.eln.sim.IProcess;
+import mods.eln.sim.ProcessType;
 import mods.eln.sim.ThermalConnection;
 import mods.eln.sim.mna.component.Component;
 import mods.eln.sim.mna.state.State;
 import mods.eln.sim.nbt.NbtThermalLoad;
+import mods.eln.sixnode.electricalmath.ElectricalMathGui;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
@@ -89,36 +91,39 @@ public abstract class SimpleNode extends NodeBase {
     public void connectJob() {
         super.connectJob();
 
-        Eln.simulator.addAllSlowProcess(slowProcessList);
+
+        Eln.simulator.addAllProcess(ProcessType.SlowProcess, slowProcessList);
 
         Eln.simulator.addAllElectricalComponent(electricalComponentList);
         for (State load : electricalLoadList)
             Eln.simulator.addElectricalLoad(load);
-        Eln.simulator.addAllElectricalProcess(electricalProcessList);
+
+        Eln.simulator.addAllProcess(ProcessType.ElectricalProcess, electricalProcessList);
 
         Eln.simulator.addAllThermalConnection(thermalConnectionList);
         for (NbtThermalLoad load : thermalLoadList)
             Eln.simulator.addThermalLoad(load);
-        Eln.simulator.addAllThermalFastProcess(thermalFastProcessList);
-        Eln.simulator.addAllThermalSlowProcess(thermalSlowProcessList);
+
+        Eln.simulator.addAllProcess(ProcessType.ThermalFastProcess, thermalFastProcessList);
+        Eln.simulator.addAllProcess(ProcessType.ThermalSlowProcess, thermalSlowProcessList);
     }
 
     @Override
     public void disconnectJob() {
         super.disconnectJob();
 
-        Eln.simulator.removeAllSlowProcess(slowProcessList);
+        Eln.simulator.removeAllProcess(ProcessType.SlowProcess, slowProcessList);
 
         Eln.simulator.removeAllElectricalComponent(electricalComponentList);
         for (State load : electricalLoadList)
             Eln.simulator.removeElectricalLoad(load);
-        Eln.simulator.removeAllElectricalProcess(electricalProcessList);
+        Eln.simulator.removeAllProcess(ProcessType.ElectricalProcess, electricalProcessList);
 
         Eln.simulator.removeAllThermalConnection(thermalConnectionList);
         for (NbtThermalLoad load : thermalLoadList)
             Eln.simulator.removeThermalLoad(load);
-        Eln.simulator.removeAllThermalFastProcess(thermalFastProcessList);
-        Eln.simulator.removeAllThermalSlowProcess(thermalSlowProcessList);
+        Eln.simulator.removeAllProcess(ProcessType.ThermalFastProcess, thermalFastProcessList);
+        Eln.simulator.removeAllProcess(ProcessType.ThermalSlowProcess, thermalSlowProcessList);
     }
 
     public void readFromNBT(NBTTagCompound nbt) {

@@ -62,8 +62,12 @@ public class TransformerElement extends TransparentNodeElement implements IConfi
         electricalLoadList.add(primaryLoad);
         electricalLoadList.add(secondaryLoad);
         WorldExplosion exp = new WorldExplosion(this).machineExplosion();
-        slowProcessList.add(voltagePrimaryWatchdog.set(primaryLoad).set(exp));
-        slowProcessList.add(voltageSecondaryWatchdog.set(secondaryLoad).set(exp));
+        voltagePrimaryWatchdog.set(primaryLoad);
+        voltagePrimaryWatchdog.set(exp);
+        slowProcessList.add(voltagePrimaryWatchdog);
+        voltageSecondaryWatchdog.set(secondaryLoad);
+        voltageSecondaryWatchdog.set(exp);
+        slowProcessList.add(voltageSecondaryWatchdog);
 
         transformerDescriptor = (TransformerDescriptor) descriptor;
 
@@ -77,13 +81,13 @@ public class TransformerElement extends TransparentNodeElement implements IConfi
     public void disconnectJob() {
         super.disconnectJob();
         if (isIsolator)
-            Eln.simulator.mna.removeProcess(interSystemProcess);
+            Eln.simulator.getMna().removeProcess(interSystemProcess);
     }
 
     @Override
     public void connectJob() {
         if (isIsolator)
-            Eln.simulator.mna.addProcess(interSystemProcess);
+            Eln.simulator.getMna().addProcess(interSystemProcess);
         super.connectJob();
     }
 

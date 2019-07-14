@@ -96,7 +96,8 @@ class ElectricalPoleElement(node: TransparentNode, descriptor: TransparentNodeDe
             electricalLoadList.add(secondaryLoad)
             electricalComponentList.add(primaryVoltageSource)
             electricalComponentList.add(secondaryVoltageSource)
-            slowProcessList.add(voltageSecondaryWatchdog.set(secondaryLoad).set(exp))
+            voltageSecondaryWatchdog.set(secondaryLoad).set(exp)
+            slowProcessList.add(voltageSecondaryWatchdog)
 
             // Publish load from time to time.
             slowProcessList.add(NodePeriodicPublishProcess(node, 1.0, 0.5))

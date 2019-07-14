@@ -7,11 +7,11 @@ public class NbtElectricalGateInput extends NbtElectricalLoad {
 
     public NbtElectricalGateInput(String name) {
         super(name);
-        Eln.instance.signalCableDescriptor.applyTo(this);
+        Eln.signalCableDescriptor.applyTo(this);
     }
 
     public String plot(String str) {
-        return Utils.plotSignal(getU(), getI()); // str  + " "+ Utils.plotVolt("", getVoltage()) + Utils.plotAmpere("", getCurrent());
+        return Utils.plotSignal(getU(), getI());
     }
 
     public boolean stateHigh() {

@@ -83,7 +83,9 @@ public class ElectricalFurnaceElement extends TransparentNodeElement {
         slowProcessList.add(slowRefreshProcess);
 
         WorldExplosion exp = new WorldExplosion(this).machineExplosion();
-        slowProcessList.add(voltageWatchdog.set(electricalLoad).set(exp));
+        voltageWatchdog.set(electricalLoad);
+        voltageWatchdog.set(exp);
+        slowProcessList.add(voltageWatchdog);
     }
 
     @Override

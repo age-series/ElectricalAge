@@ -47,7 +47,10 @@ public class DiodeElement extends SixNodeElement {
         thermalLoadList.add(thermalLoad);
         electricalComponentList.add(resistorSwitch);
         electricalProcessList.add(diodeProcess);
-        slowProcessList.add(thermalWatchdog.set(thermalLoad).set(this.descriptor.thermal).set(new WorldExplosion(this).cableExplosion()));
+        thermalWatchdog.set(thermalLoad);
+        thermalWatchdog.set(this.descriptor.thermal);
+        thermalWatchdog.set(new WorldExplosion(this).cableExplosion());
+        slowProcessList.add(thermalWatchdog);
         thermalSlowProcessList.add(heater);
     }
 

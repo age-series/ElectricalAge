@@ -60,7 +60,10 @@ public class TeleporterElement extends TransparentNodeElement implements ITelepo
         teleporterList.add(this);
 
         WorldExplosion exp = new WorldExplosion(this).machineExplosion();
-        slowProcessList.add(voltageWatchdog.set(powerLoad).setUNominal(this.descriptor.cable.electricalNominalVoltage).set(exp));
+        voltageWatchdog.set(powerLoad);
+        voltageWatchdog.setUNominal(this.descriptor.cable.electricalNominalVoltage);
+        voltageWatchdog.set(exp);
+        slowProcessList.add(voltageWatchdog);
 
     }
 

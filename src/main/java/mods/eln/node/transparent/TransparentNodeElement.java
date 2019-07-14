@@ -4,10 +4,7 @@ import mods.eln.Eln;
 import mods.eln.ghost.GhostObserver;
 import mods.eln.misc.*;
 import mods.eln.node.INodeElement;
-import mods.eln.sim.ElectricalLoad;
-import mods.eln.sim.IProcess;
-import mods.eln.sim.ThermalConnection;
-import mods.eln.sim.ThermalLoad;
+import mods.eln.sim.*;
 import mods.eln.sim.mna.component.Component;
 import mods.eln.sim.mna.state.State;
 import mods.eln.sim.nbt.NbtThermalLoad;
@@ -62,32 +59,32 @@ public abstract class TransparentNodeElement implements GhostObserver, IPlayer, 
     public void connectJob() {
         // If we are about to destruct ourselves, do not add any elements to the simulation anymore.
         if (node != null && node.isDestructing()) return;
-        
-        Eln.simulator.addAllSlowProcess(slowProcessList);
-        for(IProcess p : slowPreProcessList) Eln.simulator.addSlowPreProcess(p);
-        for(IProcess p : slowPostProcessList) Eln.simulator.addSlowPostProcess(p);
+
+        Eln.simulator.addAllProcess(ProcessType.SlowProcess, slowProcessList);
+        Eln.simulator.addAllProcess(ProcessType.SlowPreProcess, slowPreProcessList);
+        Eln.simulator.addAllProcess(ProcessType.SlowPostProcess, slowPostProcessList);
 
         Eln.simulator.addAllElectricalComponent(electricalComponentList);
         for (State load : electricalLoadList) Eln.simulator.addElectricalLoad(load);
-        Eln.simulator.addAllElectricalProcess(electricalProcessList);
+        Eln.simulator.addAllProcess(ProcessType.ElectricalProcess, electricalProcessList);
 
         Eln.simulator.addAllThermalConnection(thermalConnectionList);
         for (NbtThermalLoad load : thermalLoadList) Eln.simulator.addThermalLoad(load);
-        Eln.simulator.addAllThermalFastProcess(thermalFastProcessList);
+        Eln.simulator.addAllProcess(ProcessType.ThermalFastProcess, thermalFastProcessList);
     }
 
     public void disconnectJob() {
-        Eln.simulator.removeAllSlowProcess(slowProcessList);
-        for(IProcess p : slowPreProcessList) Eln.simulator.removeSlowPreProcess(p);
-        for(IProcess p : slowPostProcessList) Eln.simulator.removeSlowPostProcess(p);
+        Eln.simulator.removeAllProcess(ProcessType.SlowProcess, slowProcessList);
+        Eln.simulator.removeAllProcess(ProcessType.SlowPreProcess, slowPreProcessList);
+        Eln.simulator.removeAllProcess(ProcessType.SlowPostProcess, slowPostProcessList);
 
         Eln.simulator.removeAllElectricalComponent(electricalComponentList);
         for (State load : electricalLoadList) Eln.simulator.removeElectricalLoad(load);
-        Eln.simulator.removeAllElectricalProcess(electricalProcessList);
+        Eln.simulator.removeAllProcess(ProcessType.ElectricalProcess, electricalProcessList);
 
         Eln.simulator.removeAllThermalConnection(thermalConnectionList);
         for (NbtThermalLoad load : thermalLoadList) Eln.simulator.removeThermalLoad(load);
-        Eln.simulator.removeAllThermalFastProcess(thermalFastProcessList);
+        Eln.simulator.removeAllProcess(ProcessType.ThermalFastProcess, thermalFastProcessList);
     }
 
     public TransparentNode node;

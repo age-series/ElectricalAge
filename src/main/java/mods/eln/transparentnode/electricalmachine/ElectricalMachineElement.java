@@ -72,7 +72,10 @@ public class ElectricalMachineElement extends TransparentNodeElement implements 
         slowProcessList.add(new NodePeriodicPublishProcess(transparentNode, 2, 1));
 
         WorldExplosion exp = new WorldExplosion(this).machineExplosion();
-        slowProcessList.add(voltageWatchdog.set(electricalLoad).setUNominal(this.descriptor.nominalU).set(exp));
+        voltageWatchdog.set(electricalLoad);
+        voltageWatchdog.setUNominal(this.descriptor.nominalU);
+        voltageWatchdog.set(exp);
+        slowProcessList.add(voltageWatchdog);
     }
 
     @Override

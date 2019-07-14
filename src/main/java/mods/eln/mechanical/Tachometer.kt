@@ -55,8 +55,10 @@ open class TachometerElement(node: TransparentNode, desc_: TransparentNodeDescri
     private val outputGateProcess = NbtElectricalGateOutputProcess("rpmOutputProcess", outputGate)
     private var minRads = DefaultMinRads
     private var maxRads = DefaultMaxRads
-    private val outputGateSlowProcess = IProcess {
-        outputGateProcess.setOutputNormalizedSafe((this.shaft.rads - minRads) / (maxRads - minRads))
+    private val outputGateSlowProcess = object: IProcess {
+        override fun process(time: Double) {
+            outputGateProcess.setOutputNormalizedSafe((shaft.rads - minRads) / (maxRads - minRads))
+        }
     }
 
     init {

@@ -41,7 +41,7 @@ public class PowerCapacitorSixElement extends SixNodeElement implements IConfigu
     Capacitor capacitor = new Capacitor(positiveLoad, negativeLoad);
     Resistor dischargeResistor = new Resistor(positiveLoad, negativeLoad);
     PunkProcess punkProcess = new PunkProcess();
-    BipoleVoltageWatchdog watchdog = new BipoleVoltageWatchdog().set(capacitor);
+    BipoleVoltageWatchdog watchdog = new BipoleVoltageWatchdog(capacitor);
 
     double stdDischargeResistor;
 

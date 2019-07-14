@@ -55,7 +55,7 @@ public class BatteryElement extends TransparentNodeElement {
 
     double syncronizedPositiveUc, syncronizedNegativeUc, syncronizedCurrent, syncronizedTc;
 
-    NbtBatterySlowProcess batterySlowProcess = new NbtBatterySlowProcess(node, batteryProcess, thermalLoad);
+    NbtBatterySlowProcess batterySlowProcess = new NbtBatterySlowProcess(node, batteryProcess);
 
     AutoAcceptInventoryProxy inventory =
         (new AutoAcceptInventoryProxy(new TransparentNodeElementInventory(2, 64, this)))
@@ -152,7 +152,7 @@ public class BatteryElement extends TransparentNodeElement {
         str += Utils.plotAmpere("I:", batteryProcess.getDischargeCurrent());
         str += Utils.plotPercent("Charge:", batteryProcess.getCharge());
         // batteryProcess.life is a percentage from 1.0 to 0.0.
-        str += Utils.plotPercent("Life:", batteryProcess.life);
+        str += Utils.plotPercent("Life:", batteryProcess.getLife());
         return str;
     }
 
@@ -168,7 +168,7 @@ public class BatteryElement extends TransparentNodeElement {
             double U = batteryProcess.getU();//(positiveLoad.Uc - negativeLoad.Uc);
             stream.writeFloat((float) (U * batteryProcess.getDischargeCurrent()));
             stream.writeFloat((float) batteryProcess.getEnergy());
-            stream.writeShort((short) (batteryProcess.life * 1000));
+            stream.writeShort((short) (batteryProcess.getLife() * 1000));
 
             node.lrduCubeMask.getTranslate(Direction.YN).serialize(stream);
         } catch (IOException e) {
@@ -191,7 +191,7 @@ public class BatteryElement extends TransparentNodeElement {
         cutLoad.setRs(descriptor.electricalRs / 2);
         negativeLoad.setRs(descriptor.electricalRs);
         if (fromItemStack) {
-            batteryProcess.life = fromItemStack_life;
+            batteryProcess.setLife(fromItemStack_life);
             batteryProcess.setCharge(fromItemStack_charge);
             fromItemStack = false;
         }
@@ -254,7 +254,7 @@ public class BatteryElement extends TransparentNodeElement {
     public NBTTagCompound getItemStackNBT() {
         NBTTagCompound nbt = new NBTTagCompound();
         nbt.setDouble("charge", batteryProcess.getCharge());
-        nbt.setDouble("life", batteryProcess.life);
+        nbt.setDouble("life", batteryProcess.getLife());
         return nbt;
     }
 
@@ -271,7 +271,7 @@ public class BatteryElement extends TransparentNodeElement {
         Map<String, String> wailaList = new HashMap<String, String>();
         wailaList.put(I18N.tr("Charge"), Utils.plotPercent("", batteryProcess.getCharge()));
         wailaList.put(I18N.tr("Energy"), Utils.plotEnergy("", batteryProcess.getEnergy()));
-        wailaList.put(I18N.tr("Life"), Utils.plotPercent("", batteryProcess.life));
+        wailaList.put(I18N.tr("Life"), Utils.plotPercent("", batteryProcess.getLife()));
         if (Eln.wailaEasyMode) {
             wailaList.put(I18N.tr("Voltage"), Utils.plotVolt("", batteryProcess.getU()));
             wailaList.put(I18N.tr("Current"), Utils.plotAmpere("", batteryProcess.getDischargeCurrent()));

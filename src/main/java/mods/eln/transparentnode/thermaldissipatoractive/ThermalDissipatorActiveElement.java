@@ -52,7 +52,10 @@ public class ThermalDissipatorActiveElement extends TransparentNodeElement {
             .set(new WorldExplosion(this).machineExplosion());
 
         WorldExplosion exp = new WorldExplosion(this).machineExplosion();
-        slowProcessList.add(voltageWatchdog.set(positiveLoad).setUNominal(this.descriptor.nominalElectricalU).set(exp));
+        voltageWatchdog.set(positiveLoad);
+        voltageWatchdog.setUNominal(this.descriptor.nominalElectricalU);
+        voltageWatchdog.set(exp);
+        slowProcessList.add(voltageWatchdog);
 
     }
 

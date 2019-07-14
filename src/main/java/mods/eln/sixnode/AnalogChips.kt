@@ -104,16 +104,18 @@ open class AnalogChipElement(node: SixNode, side: Direction, sixNodeDescriptor: 
         }
 
         electricalComponentList.add(outputProcess)
-        electricalProcessList.add(IProcess { time: Double ->
-            val inputs = arrayOfNulls<Double?>(3)
-            for (i in 0..2) {
-                val inputPin = inputPins[i]
-                if (inputPin != null && inputPin.connectedComponents.count() > 0) {
-                    inputs[i] = inputPin.u
+        electricalProcessList.add(object: IProcess {
+            override fun process(time: Double) {
+                val inputs = arrayOfNulls<Double?>(3)
+                for (i in 0..2) {
+                    val inputPin = inputPins[i]
+                    if (inputPin != null && inputPin.connectedComponents.count() > 0) {
+                        inputs[i] = inputPin.u
+                    }
                 }
-            }
 
-            outputProcess.setUSafe(function.process(inputs, time))
+                outputProcess.setUSafe(function.process(inputs, time))
+            }
         })
     }
 

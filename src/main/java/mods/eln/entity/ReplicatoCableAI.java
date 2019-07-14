@@ -173,7 +173,7 @@ public class ReplicatoCableAI extends EntityAIBase implements ITimeRemoverObserv
         Eln.simulator.removeElectricalLoad(load);
         Eln.simulator.removeElectricalComponent(connection);
         Eln.simulator.removeElectricalComponent(resistorLoad);
-        Eln.simulator.removeSlowPreProcess(preSimCheck);
+        Eln.simulator.removeProcess(ProcessType.SlowPreProcess, preSimCheck);
         connection = null;
     }
 
@@ -182,14 +182,14 @@ public class ReplicatoCableAI extends EntityAIBase implements ITimeRemoverObserv
         Eln.simulator.addElectricalLoad(load);
         Eln.simulator.addElectricalComponent(connection = new ElectricalConnection(load, cableLoad));
         Eln.simulator.addElectricalComponent(resistorLoad);
-        Eln.simulator.addSlowPreProcess(preSimCheck = new PreSimCheck());
+        Eln.simulator.addProcess(ProcessType.SlowPreProcess, preSimCheck = new PreSimCheck());
     }
 
     class PreSimCheck implements IProcess {
         @Override
         public void process(double time) {
-            if (timeRemover.isArmed() == false) return;
-            if (Eln.simulator.isRegistred(cableLoad) == false) {
+            if (!timeRemover.getIsArmed()) return;
+            if (!Eln.simulator.isRegistred(cableLoad)) {
                 timeRemover.shot();
             }
         }

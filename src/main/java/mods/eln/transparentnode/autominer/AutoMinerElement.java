@@ -64,7 +64,10 @@ public class AutoMinerElement extends TransparentNodeElement {
         slowProcessList.add(slowProcess);
 
         WorldExplosion exp = new WorldExplosion(this).machineExplosion();
-        slowProcessList.add(voltageWatchdog.set(inPowerLoad).setUNominal(this.descriptor.nominalVoltage).set(exp));
+        voltageWatchdog.set(inPowerLoad);
+        voltageWatchdog.setUNominal(this.descriptor.nominalVoltage);
+        voltageWatchdog.set(exp);
+        slowProcessList.add(voltageWatchdog);
     }
 
     @Override

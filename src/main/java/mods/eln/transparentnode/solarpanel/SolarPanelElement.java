@@ -79,14 +79,14 @@ public class SolarPanelElement extends TransparentNodeElement {
 
     @Override
     public void connectJob() {
-        Eln.simulator.mna.addProcess(powerSource);
+        Eln.simulator.getMna().addProcess(powerSource);
         super.connectJob();
     }
 
     @Override
     public void disconnectJob() {
         super.disconnectJob();
-        Eln.simulator.mna.removeProcess(powerSource);
+        Eln.simulator.getMna().removeProcess(powerSource);
     }
 
     @Override

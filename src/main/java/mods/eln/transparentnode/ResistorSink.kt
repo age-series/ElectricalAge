@@ -8,9 +8,12 @@ import mods.eln.misc.*
 import mods.eln.node.NodeBase
 import mods.eln.node.transparent.*
 import mods.eln.sim.ElectricalLoad
+import mods.eln.sim.IProcess
+import mods.eln.sim.ProcessType
 import mods.eln.sim.ThermalLoad
 import mods.eln.sim.mna.component.Resistor
 import mods.eln.sim.mna.component.VoltageSource
+import mods.eln.sim.mna.misc.IRootSystemPreStepProcess
 import mods.eln.sim.mna.misc.MnaConst
 import mods.eln.sim.nbt.NbtElectricalLoad
 import mods.eln.sixnode.genericcable.GenericCableDescriptor
@@ -24,7 +27,6 @@ import java.io.ByteArrayOutputStream
 import java.io.DataInputStream
 import java.io.DataOutputStream
 import java.io.IOException
-import java.lang.Exception
 
 class ResistorSinkDescriptor(name: String, val cable: GenericCableDescriptor, val obj: Obj3D): TransparentNodeDescriptor(name, ResistorSinkElement::class.java, ResistorSinkRender::class.java) {
     init {
@@ -52,37 +54,34 @@ class ResistorSinkDescriptor(name: String, val cable: GenericCableDescriptor, va
         const val CLIENT_MODE: Byte = 1
         const val CLIENT_RESISTANCE: Byte = 2
         const val CLIENT_POWER: Byte = 3
-
-        const val SERVER_MODE: Byte = 1
-        const val SERVER_RESISTANCE: Byte = 2
-        const val SERVER_POWER: Byte = 3
     }
 }
 
 class ResistorSinkElement(node: TransparentNode, desc_: TransparentNodeDescriptor): TransparentNodeElement(node, desc_) {
-    val desc: ResistorSinkDescriptor
+    val desc: ResistorSinkDescriptor = desc_ as ResistorSinkDescriptor
 
-    var inLoad: NbtElectricalLoad
-    var groundLoad: NbtElectricalLoad
-    val resistor: Resistor
-    val ground: VoltageSource
+    private var inLoad: NbtElectricalLoad = NbtElectricalLoad("inLoad")
+    private var groundLoad: NbtElectricalLoad = NbtElectricalLoad("groundLoad")
+    private val resistor: Resistor
+    private val ground: VoltageSource
+
+    private val powerCalc = ResistorSinkPowerCalculator()
+    private val powerCalcBand = 0.01
 
     var mode: String
-    var power: Double
+    var powerSetpoint: Double
 
     init {
-        desc = desc_ as ResistorSinkDescriptor
-        inLoad = NbtElectricalLoad("inLoad")
-        groundLoad = NbtElectricalLoad("groundLoad")
         resistor = Resistor(inLoad, groundLoad)
         ground = VoltageSource("ground", groundLoad, null)
+        ground.u = 0.0
         resistor.r = 1.0
         electricalLoadList.add(inLoad)
         electricalLoadList.add(groundLoad)
         electricalComponentList.add(resistor)
         electricalComponentList.add(ground)
         mode = "R"
-        power = 0.0
+        powerSetpoint = 0.0
     }
 
     override fun getElectricalLoad(side: Direction, lrdu: LRDU): ElectricalLoad? {
@@ -124,7 +123,7 @@ class ResistorSinkElement(node: TransparentNode, desc_: TransparentNodeDescripto
         info["Power"] = Utils.plotPower(resistor.getPower())
         info["Mode"] = if (mode == "R") "Resistance" else "Power"
         if (mode != "R") {
-            info["Power Setpoint"] = power.toString()
+            info["Power Setpoint"] = Utils.plotPower(powerSetpoint)
         }
         return info
     }
@@ -137,11 +136,11 @@ class ResistorSinkElement(node: TransparentNode, desc_: TransparentNodeDescripto
 
     override fun hasGui() = true
 
-    fun setResistance(resistance: Double) {
-        if(resistance < 0.1) {
-            resistor.r = 0.1
-        } else {
-            resistor.r = resistance
+    private fun setResistance(resistance: Double) {
+        when {
+            resistance < 0.1 -> resistor.r = 0.1
+            resistance > MnaConst.highImpedance -> resistor.r = MnaConst.highImpedance
+            else -> resistor.r = resistance
         }
     }
 
@@ -149,14 +148,14 @@ class ResistorSinkElement(node: TransparentNode, desc_: TransparentNodeDescripto
         super.readFromNBT(nbt)
         mode = nbt.getString("mode")
         resistor.r = nbt.getDouble("resistance")
-        power = nbt.getDouble("power")
+        powerSetpoint = nbt.getDouble("power")
     }
 
     override fun writeToNBT(nbt: NBTTagCompound) {
         super.writeToNBT(nbt)
         nbt.setString("mode", mode)
         nbt.setDouble("resistance", resistor.r)
-        nbt.setDouble("power", power)
+        nbt.setDouble("power", powerSetpoint)
     }
 
     override fun networkSerialize(stream: DataOutputStream) {
@@ -165,97 +164,72 @@ class ResistorSinkElement(node: TransparentNode, desc_: TransparentNodeDescripto
             Eln.dp.println(DebugType.TRANSPARENT_NODE, mode)
             stream.writeUTF(mode)
             stream.writeDouble(resistor.r)
-            stream.writeDouble(power)
+            stream.writeDouble(powerSetpoint)
         } catch (e: IOException) {
             e.printStackTrace()
         }
     }
 
     override fun networkUnserialize(stream: DataInputStream): Byte {
-        try {
-            when (stream.readByte()) {
-                ResistorSinkDescriptor.CLIENT_MODE -> {
-                    val str = stream.readUTF()
-                    mode = str
-                    Eln.dp.println(DebugType.TRANSPARENT_NODE, str)
-                }
-                ResistorSinkDescriptor.CLIENT_RESISTANCE -> {
-                    setResistance(stream.readUTF().toDouble())
-                }
-                ResistorSinkDescriptor.CLIENT_POWER -> {
-                    power = stream.readUTF().toDouble()
-                }
-            }
-        }catch (e: Exception) {}
-        return unserializeNulldId
+        when (stream.readByte()) {
+            ResistorSinkDescriptor.CLIENT_MODE ->
+                mode = stream.readUTF()
+            ResistorSinkDescriptor.CLIENT_RESISTANCE ->
+                setResistance(stream.readDouble())
+            ResistorSinkDescriptor.CLIENT_POWER ->
+                powerSetpoint = stream.readDouble()
+        }
+        return 0
     }
 
-    fun sendItBack() {
-        val bos = ByteArrayOutputStream(64)
-        val bos2 = ByteArrayOutputStream(64)
-        val bos3 = ByteArrayOutputStream(64)
-        val mod = DataOutputStream(bos)
-        val res = DataOutputStream(bos2)
-        val pwr = DataOutputStream(bos3)
+    override fun connectJob() {
+        super.connectJob()
+        Eln.simulator.addProcess(ProcessType.SlowProcess, powerCalc)
+    }
 
-        preparePacketForClient(mod)
-        preparePacketForClient(res)
-        preparePacketForClient(pwr)
+    override fun disconnectJob() {
+        super.disconnectJob()
+        Eln.simulator.removeProcess(ProcessType.SlowProcess, powerCalc)
+    }
 
-        try {
-            mod.writeByte(ResistorSinkDescriptor.SERVER_MODE.toInt())
-            mod.writeUTF(mode)
-            res.writeByte(ResistorSinkDescriptor.SERVER_RESISTANCE.toInt())
-            res.writeDouble(resistor.r)
-            pwr.writeByte(ResistorSinkDescriptor.SERVER_POWER.toInt())
-            pwr.writeDouble(power)
-            sendPacketToAllClient(bos, 10.0)
-            sendPacketToAllClient(bos2, 10.0)
-            sendPacketToAllClient(bos3, 10.0)
-        } catch (e: IOException) {
-            e.printStackTrace()
+    inner class ResistorSinkPowerCalculator: IProcess {
+        override fun process(time: Double) {
+            if(ground.subSystem != null) {
+                val i = ground.getSubSystem()!!.solve(ground.currentState)
+                val predictedPower = i * i * resistor.r
+                val new = resistor.r * (predictedPower / powerSetpoint)
+                val diff = new / resistor.r
+                when {
+                    diff > 1 + powerCalcBand ->
+                        setResistance(new)
+                    diff < 1 - powerCalcBand ->
+                        setResistance(new)
+                }
+            }
         }
     }
 }
 
 class ResistorSinkRender(entity: TransparentNodeEntity, desc_: TransparentNodeDescriptor): TransparentNodeElementRender(entity, desc_) {
-    val desc: ResistorSinkDescriptor
+    val desc: ResistorSinkDescriptor = desc_ as ResistorSinkDescriptor
 
     var mode: String
     var r: Double
     var p: Double
-    var updated = false
 
     init {
-        desc = desc_ as ResistorSinkDescriptor
         mode = "R"
         r = 1.0
         p = 1.0
     }
 
     override fun draw() {
-        GL11.glColor3f(5f, 1f, 1f)
+        GL11.glColor3f(5f, 0.5f, 0.2f)
         desc.draw()
     }
 
     override fun newGuiDraw(side: Direction, player: EntityPlayer): GuiScreen {
-        return ResistorSinkGui(player, this)
-    }
-
-    override fun serverPacketUnserialize(stream: DataInputStream) {
-        super.serverPacketUnserialize(stream)
-        when (stream.readByte()) {
-            ResistorSinkDescriptor.SERVER_RESISTANCE -> {
-                r = stream.readDouble()
-                Eln.dp.println(DebugType.TRANSPARENT_NODE, "Got update! r: " + r)
-                updated = true
-            }
-            ResistorSinkDescriptor.SERVER_POWER -> {
-                p = stream.readDouble()
-                Eln.dp.println(DebugType.TRANSPARENT_NODE, "Got update! p: " + p)
-                updated = true
-            }
-        }
+        return ResistorSinkGui(this)
     }
 
     override fun networkUnserialize(stream: DataInputStream) {
@@ -264,15 +238,14 @@ class ResistorSinkRender(entity: TransparentNodeEntity, desc_: TransparentNodeDe
             mode = stream.readUTF()
             r = stream.readDouble()
             p = stream.readDouble()
-            updated = true
-            Eln.dp.println(DebugType.TRANSPARENT_NODE, "Recieved packet! mode: " + mode.toString() + " r: " + r + " p: " + p)
+            Eln.dp.println(DebugType.TRANSPARENT_NODE, "Recieved packet! mode: $mode r: $r p: $p")
         }catch (e: IOException) {
             e.printStackTrace()
         }
     }
 }
 
-class ResistorSinkGui(player: EntityPlayer, internal val render: ResistorSinkRender): GuiScreenEln() {
+class ResistorSinkGui(internal val render: ResistorSinkRender): GuiScreenEln() {
     private var stateBt: GuiButtonEln? = null
     private var resistanceField: GuiTextFieldEln? = null
     private var powerField: GuiTextFieldEln? = null
@@ -280,9 +253,14 @@ class ResistorSinkGui(player: EntityPlayer, internal val render: ResistorSinkRen
     override fun initGui() {
         super.initGui()
 
-        stateBt = newGuiButton(6, 6, 70, "RESISTANCE")
-        resistanceField = newGuiTextField(16, 30, 50)
-        powerField = newGuiTextField(16, 44, 50)
+        stateBt = newGuiButton(26, 6, 70, "")
+        if (render.mode == "R") {
+            stateBt!!.displayString = "RESISTANCE"
+        } else {
+            stateBt!!.displayString = "POWER"
+        }
+        resistanceField = newGuiTextField(6, 30, 90)
+        powerField = newGuiTextField(6, 44, 90)
 
         resistanceField!!.setComment(0, "Set the resistance")
         powerField!!.setComment(0, "Set the power")
@@ -303,27 +281,64 @@ class ResistorSinkGui(player: EntityPlayer, internal val render: ResistorSinkRen
                 stateBt!!.displayString = "RESISTANCE"
             }
 
-            render.clientSendString(ResistorSinkDescriptor.CLIENT_MODE, render.mode)
+            try {
+                val bos = ByteArrayOutputStream()
+                val stream = DataOutputStream(bos)
+
+                render.preparePacketForServer(stream)
+
+                stream.writeByte(ResistorSinkDescriptor.CLIENT_MODE.toInt())
+                stream.writeUTF(render.mode)
+
+                render.sendPacketToServer(bos)
+            } catch (e: IOException) {
+                e.printStackTrace()
+            }
         }
         if (`object` === resistanceField) {
-            render.clientSendString(ResistorSinkDescriptor.CLIENT_RESISTANCE, resistanceField!!.text)
+            render.r = resistanceField!!.text.toDouble()
+
+            try {
+                val bos = ByteArrayOutputStream()
+                val stream = DataOutputStream(bos)
+
+                render.preparePacketForServer(stream)
+
+                stream.writeByte(ResistorSinkDescriptor.CLIENT_RESISTANCE.toInt())
+                stream.writeDouble(render.r)
+
+                render.sendPacketToServer(bos)
+            } catch (e: IOException) {
+                e.printStackTrace()
+            }
         }
         if (`object` === powerField) {
-            render.clientSendString(ResistorSinkDescriptor.CLIENT_POWER, powerField!!.text)
-        }
-    }
+            render.p = powerField!!.text.toDouble()
 
-    override fun preDraw(f: Float, x: Int, y: Int) {
-        super.preDraw(f, x, y)
-        if (render.updated) {
-            Eln.dp.println(DebugType.RENDER, "Updated RS!")
-            resistanceField!!.text = render.r.toString()
-            powerField!!.text = render.p.toString()
-            render.updated = false
+            try {
+                val bos = ByteArrayOutputStream()
+                val stream = DataOutputStream(bos)
+
+                render.preparePacketForServer(stream)
+
+                stream.writeByte(ResistorSinkDescriptor.CLIENT_POWER.toInt())
+                stream.writeDouble(render.p)
+
+                render.sendPacketToServer(bos)
+            } catch (e: IOException) {
+                e.printStackTrace()
+            }
         }
     }
 
     override fun newHelper(): GuiHelper {
-        return GuiHelper(this, 82, 64)
+        return GuiHelper(this, 102, 64)
+    }
+
+    override fun keyTyped(key: Char, code: Int) {
+        if (key == 'e') {
+            mc.thePlayer.closeScreen()
+        }
+        super.keyTyped(key, code)
     }
 }

@@ -72,8 +72,7 @@ class EmergencyLampDescriptor(name: String, val cable: ElectricalCableDescriptor
         }
     }
 
-    override fun getFrontFromPlace(side: Direction?, player: EntityPlayer?)
-        = super.getFrontFromPlace(side, player).inverse()
+    override fun getFrontFromPlace(side: Direction?, player: EntityPlayer?) = super.getFrontFromPlace(side, player).inverse()
 
     override fun addInformation(itemStack: ItemStack?, entityPlayer: EntityPlayer?, list: MutableList<String>,
                                 par4: Boolean) {
@@ -108,48 +107,50 @@ class EmergencyLampElement(sixNode: SixNode, side: Direction, descriptor: SixNod
     var channel by published("Default channel")
     var isConnectedToLampSupply by published(false)
 
-    val process = IProcess { deltaT ->
-        if (!poweredByCable) {
-            var closestPowerSupply: LampSupplyElement.PowerSupplyChannelHandle? = null
-            var closestDistance = 10000f
+    val process = object : IProcess {
+        override fun process(deltaT: Double) {
+            if (!poweredByCable) {
+                var closestPowerSupply: LampSupplyElement.PowerSupplyChannelHandle? = null
+                var closestDistance = 10000f
 
-            LampSupplyElement.channelMap[channel]?.forEach {
-                val distance = it.element.sixNode.coordonate.trueDistanceTo(sixNode.coordonate).toFloat()
-                if (distance < closestDistance && distance <= it.element.range) {
-                    closestDistance = distance
-                    closestPowerSupply = it
+                LampSupplyElement.channelMap[channel]?.forEach {
+                    val distance = it.element.sixNode.coordonate.trueDistanceTo(sixNode.coordonate).toFloat()
+                    if (distance < closestDistance && distance <= it.element.range) {
+                        closestDistance = distance
+                        closestPowerSupply = it
+                    }
                 }
-            }
 
-            if (closestPowerSupply != null) {
-                isConnectedToLampSupply = true
-                if (closestPowerSupply!!.element.getChannelState(closestPowerSupply!!.id)) {
-                    closestPowerSupply!!.element.addToRp(chargingResistor.r)
-                    load.state = closestPowerSupply!!.element.powerLoad.state
+                if (closestPowerSupply != null) {
+                    isConnectedToLampSupply = true
+                    if (closestPowerSupply!!.element.getChannelState(closestPowerSupply!!.id)) {
+                        closestPowerSupply!!.element.addToRp(chargingResistor.r)
+                        load.state = closestPowerSupply!!.element.powerLoad.state
+                    } else {
+                        load.state = 0.0
+                    }
                 } else {
+                    isConnectedToLampSupply = false
                     load.state = 0.0
                 }
-            } else {
-                isConnectedToLampSupply = false
-                load.state = 0.0
             }
-        }
 
-        if (chargingResistor.getVoltage() > 0.5 * desc.cable.electricalNominalVoltage) {
-            on = false
-            if (charge < desc.batteryCapacity) {
-                chargingResistor.state = true
-                charge = Math.min(charge + chargingResistor.getPower() * deltaT, desc.batteryCapacity)
-            } else {
-                chargingResistor .state = false
-            }
-        } else {
-            chargingResistor.state = false
-            if (charge > 0) {
-                on = true
-                charge = Math.max(charge - desc.consumption * deltaT, 0.0)
-            } else {
+            if (chargingResistor.getVoltage() > 0.5 * desc.cable.electricalNominalVoltage) {
                 on = false
+                if (charge < desc.batteryCapacity) {
+                    chargingResistor.state = true
+                    charge = Math.min(charge + chargingResistor.getPower() * deltaT, desc.batteryCapacity)
+                } else {
+                    chargingResistor.state = false
+                }
+            } else {
+                chargingResistor.state = false
+                if (charge > 0) {
+                    on = true
+                    charge = Math.max(charge - desc.consumption * deltaT, 0.0)
+                } else {
+                    on = false
+                }
             }
         }
     }
@@ -163,8 +164,12 @@ class EmergencyLampElement(sixNode: SixNode, side: Direction, descriptor: SixNod
         electricalComponentList.add(chargingResistor)
         slowProcessList.add(process)
         slowProcessList.add(NodePeriodicPublishProcess(sixNode, 2.0, 0.5))
-        slowProcessList.add(VoltageStateWatchDog().set(load).setUNominal(desc.cable.electricalNominalVoltage)
-            .set(WorldExplosion(this).cableExplosion()))
+        val vwd = VoltageStateWatchDog()
+        vwd.set(load)
+        vwd.setUNominal(desc.cable.electricalNominalVoltage)
+        vwd.set(WorldExplosion(this).cableExplosion())
+        slowProcessList.add(vwd)
+
     }
 
     override fun getConnectionMask(lrdu: LRDU) = when {
@@ -180,6 +185,7 @@ class EmergencyLampElement(sixNode: SixNode, side: Direction, descriptor: SixNod
         append(Utils.plotAmpere("I:", load.i))
         append(Utils.plotPercent("Charge:", charge / (sixNodeElementDescriptor as EmergencyLampDescriptor).batteryCapacity))
     }
+
     override fun thermoMeterString() = ""
     override fun getWaila() = mapOf(
         "State" to when {
