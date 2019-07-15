@@ -39,7 +39,7 @@ class ClientKeyHandler {
      * @param state the state of the key
      */
     private fun setState(key: Key, state: Boolean) {
-        //Eln.dp.println(DebugType.OTHER, "setState called on key " + key.name + " with state " + state)
+        //Eln.dp.println(DPType.OTHER, "setState called on key " + key.name + " with state " + state)
 
         val bos = ByteArrayOutputStream(64)
         val stream = DataOutputStream(bos)

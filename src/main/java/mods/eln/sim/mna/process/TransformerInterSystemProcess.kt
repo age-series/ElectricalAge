@@ -80,7 +80,7 @@ class TransformerInterSystemProcess(private val aState: State, private val bStat
         was looking for. Namely, it caused a few things to asplode that were fine otherwise.
          */
 
-        // Eln.dp.println(DebugType.MNA, "TISP Resistance: " + th.R);
+        // Eln.dp.println(DPType.MNA, "TISP Resistance: " + th.R);
         return th
     }
 

@@ -1,7 +1,8 @@
 package mods.eln.sim
 
 import mods.eln.Eln
-import mods.eln.debug.DebugType
+import mods.eln.debug.DP
+import mods.eln.debug.DPType
 import mods.eln.entity.ReplicatorEntity
 import mods.eln.misc.Coordonate
 import mods.eln.misc.Utils
@@ -34,7 +35,7 @@ class MonsterPopFreeProcess(private val coordonate: Coordonate, private val rang
                         //Utils.println("MonsterPopFreeProcess : Must die");
                         if (o !is ReplicatorEntity && o !is EntityWither && o !is EntityEnderman) {
                             mob.setDead()
-                            Eln.dp.println(DebugType.MNA, "MonsterPopFreeProcess : Dead")
+                            DP.println(DPType.MNA, "MonsterPopFreeProcess : Dead")
                         }
                     }
                 }

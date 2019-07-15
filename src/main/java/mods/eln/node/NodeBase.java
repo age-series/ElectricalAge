@@ -3,7 +3,8 @@ package mods.eln.node;
 import cpw.mods.fml.common.FMLCommonHandler;
 import mods.eln.Eln;
 import mods.eln.GuiHandler;
-import mods.eln.debug.DebugType;
+import mods.eln.debug.DP;
+import mods.eln.debug.DPType;
 import mods.eln.ghost.GhostBlock;
 import mods.eln.misc.*;
 import mods.eln.node.six.SixNode;
@@ -174,7 +175,7 @@ public abstract class NodeBase {
         initializeFromThat(front, entityLiving, itemStack);
 
         if (itemStack != null)
-            Eln.dp.println(DebugType.NODE, "Node::constructor( meta = " + itemStack.getItemDamage() + ")");
+            DP.println(DPType.NODE, "Node::constructor( meta = " + itemStack.getItemDamage() + ")");
     }
 
     abstract public void initializeFromThat(Direction front, EntityLivingBase entityLiving, ItemStack itemStack);
@@ -194,7 +195,7 @@ public abstract class NodeBase {
         destructed = true;
         disconnect();
         NodeManager.instance.removeNode(this);
-        Eln.dp.println(DebugType.NODE, "Node::onBreakBlock()");
+        DP.println(DPType.NODE, "Node::onBreakBlock()");
     }
 
     public static SoundCommand beepUploaded = new SoundCommand("eln:beep_accept_2").smallRange();
@@ -249,7 +250,7 @@ public abstract class NodeBase {
                     entityPlayer.posZ,
                     entityPlayer.worldObj
                 ).play();
-                Eln.dp.println(DebugType.NODE, String.format("NB.oBA: act %s data %s", act, equipped.getTagCompound().toString()));
+                DP.println(DPType.NODE, String.format("NB.oBA: act %s data %s", act, equipped.getTagCompound().toString()));
                 return true;
             }
         }
@@ -423,7 +424,7 @@ public abstract class NodeBase {
 
     public void disconnect() {
         if (!isAdded) {
-            Eln.dp.println(DebugType.NODE, "Node destroy error already destroy");
+            DP.println(DPType.NODE, "Node destroy error already destroy");
             return;
         }
 

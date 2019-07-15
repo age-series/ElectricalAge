@@ -1,7 +1,8 @@
 package mods.eln.node.transparent;
 
 import mods.eln.Eln;
-import mods.eln.debug.DebugType;
+import mods.eln.debug.DP;
+import mods.eln.debug.DPType;
 import mods.eln.item.IConfigurable;
 import mods.eln.misc.Direction;
 import mods.eln.misc.LRDU;
@@ -190,7 +191,7 @@ public class TransparentNode extends Node {
             e.printStackTrace();
         }
 
-        Eln.dp.println(DebugType.TRANSPARENT_NODE, "TN.iFT element = " + element + " elId = " + elementId);
+        DP.println(DPType.TRANSPARENT_NODE, "TN.iFT element = " + element + " elId = " + elementId);
 
     }
 
@@ -222,9 +223,9 @@ public class TransparentNode extends Node {
 
     @Override
     public int getBlockMetadata() {
-        Eln.dp.println(DebugType.TRANSPARENT_NODE, "TN.gBM");
-        Eln.dp.println(DebugType.TRANSPARENT_NODE, element.toString());
-        Eln.dp.println(DebugType.TRANSPARENT_NODE, element.transparentNodeDescriptor.toString());
+        DP.println(DPType.TRANSPARENT_NODE, "TN.gBM");
+        DP.println(DPType.TRANSPARENT_NODE, element.toString());
+        DP.println(DPType.TRANSPARENT_NODE, element.transparentNodeDescriptor.toString());
         return element.transparentNodeDescriptor.tileEntityMetaTag.meta;
     }
 
@@ -237,7 +238,7 @@ public class TransparentNode extends Node {
             if (elementId == stream.readShort()) {
                 element.networkUnserialize(stream, player);
             } else {
-                Eln.dp.println(DebugType.TRANSPARENT_NODE, "Transparent node unserialize miss");
+                DP.println(DPType.TRANSPARENT_NODE, "Transparent node unserialize miss");
             }
         } catch (IOException e) {
 

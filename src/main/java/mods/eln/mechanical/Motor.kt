@@ -2,7 +2,8 @@ package mods.eln.mechanical
 
 import mods.eln.Eln
 import mods.eln.cable.CableRenderDescriptor
-import mods.eln.debug.DebugType
+import mods.eln.debug.DP
+import mods.eln.debug.DPType
 import mods.eln.misc.*
 import mods.eln.node.NodeBase
 import mods.eln.node.transparent.EntityMetaTag
@@ -12,7 +13,6 @@ import mods.eln.node.transparent.TransparentNodeEntity
 import mods.eln.sim.ElectricalLoad
 import mods.eln.sim.IProcess
 import mods.eln.sim.ThermalLoadInitializer
-import mods.eln.sim.mna.component.PowerSource
 import mods.eln.sim.mna.component.Resistor
 import mods.eln.sim.mna.component.VoltageSource
 import mods.eln.sim.mna.misc.IRootSystemPreStepProcess
@@ -22,7 +22,6 @@ import mods.eln.sim.nbt.NbtThermalLoad
 import mods.eln.sim.process.destruct.ThermalLoadWatchDog
 import mods.eln.sim.process.destruct.WorldExplosion
 import mods.eln.sim.process.heater.ElectricalLoadHeatThermalLoad
-import mods.eln.sixnode.electricalcable.ElectricalCableDescriptor
 import mods.eln.sixnode.genericcable.GenericCableDescriptor
 import mods.eln.sound.LoopedSound
 import net.minecraft.entity.player.EntityPlayer
@@ -225,19 +224,19 @@ class MotorElement(node: TransparentNode, desc_: TransparentNodeDescriptor) :
             var U: Double
             if(noTorqueU < th.U) {
                 if (last != 0)
-                    Eln.dp.println(DebugType.MECHANICAL, "ntU < thU")
+                    DP.println(DPType.MECHANICAL, "ntU < thU")
                 // Input is greater than our output, spin up the shaft
                 U = th.U * 0.9999 + noTorqueU * 0.0001
                 last = 0
             } else if(th.isHighImpedance) {
                 if (last != 1)
-                    Eln.dp.println(DebugType.MECHANICAL, "thR high imp")
+                    DP.println(DPType.MECHANICAL, "thR high imp")
                 // No actual connection, let the system float
                 U = noTorqueU
                 last = 1
             } else {
                 if (last != 2)
-                    Eln.dp.println(DebugType.MECHANICAL, "ntU > thU")
+                    DP.println(DPType.MECHANICAL, "ntU > thU")
                 // Provide an output voltage by
                 // solving a quadratic, I guess?
                 val a = 1 / th.R
@@ -246,10 +245,10 @@ class MotorElement(node: TransparentNode, desc_: TransparentNodeDescriptor) :
                 U = (-b + Math.sqrt(b * b - 4 * a * c)) / (2 * a)
                 last = 2
             }
-            Eln.dp.println(DebugType.MECHANICAL, "Voltage: " + U)
+            //DP.println(DPType.MECHANICAL, "Voltage: " + U)
             powerSource.u = U
-            Eln.dp.println(DebugType.MECHANICAL, "Ohms: " + th.R)
-            Eln.dp.println(DebugType.MECHANICAL, "Current: " + powerSource.currentState.state)
+            //DP.println(DPType.MECHANICAL, "Ohms: " + th.R)
+            //DP.println(DPType.MECHANICAL, "Current: " + powerSource.currentState.state)
 
         }
 
@@ -273,7 +272,7 @@ class MotorElement(node: TransparentNode, desc_: TransparentNodeDescriptor) :
             E = E - defaultDrag * Math.max(shaft.rads, 10.0)
             shaft.energy += E * desc.efficiency
             val tPower = E * (1 - desc.efficiency)
-            //Eln.dp.println(DebugType.MECHANICAL, "thermal power: " + tPower)
+            //DP.println(DPType.MECHANICAL, "thermal power: " + tPower)
             //thermal.movePowerTo(tPower)
         }
     }

@@ -2,7 +2,8 @@ package mods.eln.mechanical
 
 import mods.eln.Eln
 import mods.eln.cable.CableRender
-import mods.eln.debug.DebugType
+import mods.eln.debug.DP
+import mods.eln.debug.DPType
 import mods.eln.generic.GenericItemUsingDamage
 import mods.eln.generic.GenericItemUsingDamageDescriptor
 import mods.eln.generic.GenericItemUsingDamageDescriptorWithComment
@@ -132,10 +133,10 @@ class ClutchElement(node: TransparentNode, desc_: TransparentNodeDescriptor) : S
         leftShaft.connectShaft(this, front.left())
         rightShaft.connectShaft(this, front.right())
         if(getShaft(front.left()) != leftShaft)
-            Eln.dp.println(DebugType.MECHANICAL,"CE.init ERROR: getShaft(left) != leftShaft")
+            DP.println(DPType.MECHANICAL,"CE.init ERROR: getShaft(left) != leftShaft")
         if(getShaft(front.right()) != rightShaft)
-            Eln.dp.println(DebugType.MECHANICAL,"CE.init ERROR: getShaft(right) != rightShaft")
-        // Eln.dp.println(DebugType.MECHANICAL, String.format("CE.i: new left %s r=%f, right %s r=%f", leftShaft, leftShaft.rads, rightShaft, rightShaft.rads))
+            DP.println(DPType.MECHANICAL,"CE.init ERROR: getShaft(right) != rightShaft")
+        // Eln.dp.println(DPType.MECHANICAL, String.format("CE.i: new left %s r=%f, right %s r=%f", leftShaft, leftShaft.rads, rightShaft, rightShaft.rads))
     }
 
     override fun onBreakElement() {
@@ -219,7 +220,7 @@ class ClutchElement(node: TransparentNode, desc_: TransparentNodeDescriptor) : S
             val plateDescriptor = clutchPlateDescriptor
             val stack = clutchPlateStack
             if(plateDescriptor == null || stack == null) {
-                // Eln.dp.println(DebugType.MECHANICAL, "CP.p: stop: no inventory")
+                // Eln.dp.println(DPType.MECHANICAL, "CP.p: stop: no inventory")
                 slipping = true
                 return
             }
@@ -228,13 +229,13 @@ class ClutchElement(node: TransparentNode, desc_: TransparentNodeDescriptor) : S
             val dynamicMaxTransferF = plateDescriptor.dynamicMaxTransferF(stack)
             val slipWearF = plateDescriptor.slipWearF(stack)
             if(wear >= 1.0) {
-                // Eln.dp.println(DebugType.MECHANICAL, "CP.p: stop: wear too high")
+                // Eln.dp.println(DPType.MECHANICAL, "CP.p: stop: wear too high")
                 slipping = true
                 return
             }
             val hasPin = (clutchPinStack != null)
 
-            if(leftShaft == rightShaft) Eln.dp.println(DebugType.MECHANICAL, "WARN (ClutchProcess): Networks are the same!")
+            if(leftShaft == rightShaft) DP.println(DPType.MECHANICAL, "WARN (ClutchProcess): Networks are the same!")
 
             val mass = leftShaft.mass + rightShaft.mass
             val slower: ShaftNetwork
@@ -276,10 +277,10 @@ class ClutchElement(node: TransparentNode, desc_: TransparentNodeDescriptor) : S
                 val deltaR = faster.rads - slower.rads
                 // These don't lose energy properly
                 //val power = torque * deltaR
-                //Eln.dp.println(DebugType.MECHANICAL, String.format("CPP.p: transfer torque %f from %s %f to %s %f", torque, faster, faster.rads, slower, slower.rads))
+                //Eln.dp.println(DPType.MECHANICAL, String.format("CPP.p: transfer torque %f from %s %f to %s %f", torque, faster, faster.rads, slower, slower.rads))
                 slower.rads += torque / slower.mass  // Exert a constant torque
                 faster.rads -= torque / faster.mass
-                //Eln.dp.println(DebugType.MECHANICAL, String.format("CPP.p: faster %s now %f, slower %s now %f",faster, faster.rads, slower, slower.rads))
+                //Eln.dp.println(DPType.MECHANICAL, String.format("CPP.p: faster %s now %f, slower %s now %f",faster, faster.rads, slower, slower.rads))
                 // Add a small margin to account for numerical inaccuracies
                 //val margin = staticMarginF.getValue(Math.max(faster.rads, slower.rads))
                 //if (slower.rads >= faster.rads - margin)
@@ -292,13 +293,13 @@ class ClutchElement(node: TransparentNode, desc_: TransparentNodeDescriptor) : S
                     val tnum = preRads[slowerIdx] - preRads[fasterIdx]
                     var tdenom = dWFast - dwSlow
                     if (tdenom == 0.0) {
-                        Eln.dp.println(DebugType.MECHANICAL, "CPP.p: WARN: tdenom was 0?")
+                        DP.println(DPType.MECHANICAL, "CPP.p: WARN: tdenom was 0?")
                         tdenom = 1.0
                     }
                     val t = tnum / tdenom
-                    //Eln.dp.println(DebugType.MECHANICAL, String.format("CPP.p: potential intersection; t=%f", t))
+                    //Eln.dp.println(DPType.MECHANICAL, String.format("CPP.p: potential intersection; t=%f", t))
                     if (t <= 1 && t >= 0) {
-                        //Eln.dp.println(DebugType.MECHANICAL, "CPP.p: stopped slipping")
+                        //Eln.dp.println(DPType.MECHANICAL, "CPP.p: stopped slipping")
                         slipping = false
                         val finalW = preRads[fasterIdx] + t * dWFast
                         faster.rads = finalW
@@ -313,11 +314,11 @@ class ClutchElement(node: TransparentNode, desc_: TransparentNodeDescriptor) : S
                 val leftEnergy = energy
                 val rightEnergy = energy
                 val flow = leftShaft.energy - rightShaft.energy - preEnergy[LEFT] + preEnergy[RIGHT]
-                //if (flow != 0.0) Eln.dp.println(DebugType.MECHANICAL, String.format("CPP.p: flow=%f", flow))
+                //if (flow != 0.0) Eln.dp.println(DPType.MECHANICAL, String.format("CPP.p: flow=%f", flow))
                 if(Math.abs(flow) > maxE && !hasPin) {
                     leftShaft.energy -= Math.signum(flow) * maxE
                     rightShaft.energy += Math.signum(flow) * maxE
-                    //Eln.dp.println(DebugType.MECHANICAL, String.format("CPP.p: started slipping (maxE=%f)", maxE))
+                    //Eln.dp.println(DPType.MECHANICAL, String.format("CPP.p: started slipping (maxE=%f)", maxE))
                     slipping = true
                     needPublish()
                 } else {
@@ -403,7 +404,7 @@ class ClutchElement(node: TransparentNode, desc_: TransparentNodeDescriptor) : S
         leftShaft.readFromNBT(nbt, "leftShaft")
         rightShaft.readFromNBT(nbt, "rightShaft")
         slipping = nbt.getBoolean("slipping")
-        // Eln.dp.println(DebugType.MECHANICAL, String.format("CE.rFN: left %s r=%f, right %s r=%f", leftShaft, leftShaft.rads, rightShaft, rightShaft.rads))
+        // Eln.dp.println(DPType.MECHANICAL, String.format("CE.rFN: left %s r=%f, right %s r=%f", leftShaft, leftShaft.rads, rightShaft, rightShaft.rads))
     }
 
     override fun getWaila(): MutableMap<String, String> {
@@ -529,7 +530,7 @@ class ClutchRender(entity: TransparentNodeEntity, desc_: TransparentNodeDescript
         }
         if(lastSlipping && !slipping && hasPin) play(SoundCommand(desc.slipStopSound))
         lastSlipping = slipping
-        //Eln.dp.println(DebugType.MECHANICAL, String.format("CR.nU: l=%f,r=%f c=%f s=%s ls=%s", lRads, rRads, clutching, slipping, lastSlipping))
+        //Eln.dp.println(DPType.MECHANICAL, String.format("CR.nU: l=%f,r=%f c=%f s=%s ls=%s", lRads, rRads, clutching, slipping, lastSlipping))
     }
 
     override fun newGuiDraw(side: Direction?, player: EntityPlayer?): GuiScreen? = ClutchGui(player, inv, this)

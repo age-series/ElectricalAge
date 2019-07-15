@@ -9,7 +9,8 @@ import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Context;
 import mods.eln.Eln;
 import mods.eln.Other;
-import mods.eln.debug.DebugType;
+import mods.eln.debug.DP;
+import mods.eln.debug.DPType;
 import mods.eln.misc.Coordonate;
 import mods.eln.misc.Direction;
 import mods.eln.misc.LRDU;
@@ -141,7 +142,7 @@ public class ComputerProbeNode extends SimpleNode implements IPeripheral {
 
     public Object[] signalSetDir(Direction side, boolean highImpedance) {
         ioGateProcess[side.getInt()].setHighImpedance(highImpedance);
-        Eln.dp.println(DebugType.SIMPLE_NODE, Boolean.toString(ioGateProcess[side.getInt()].isHighImpedance()));
+        DP.println(DPType.SIMPLE_NODE, Boolean.toString(ioGateProcess[side.getInt()].isHighImpedance()));
         return null;
     }
 
@@ -309,13 +310,13 @@ public class ComputerProbeNode extends SimpleNode implements IPeripheral {
     @Override
     @Optional.Method(modid = Other.modIdCc)
     public void attach(IComputerAccess computer) {
-        Eln.dp.println(DebugType.SIMPLE_NODE, "CC attached");
+        DP.println(DPType.SIMPLE_NODE, "CC attached");
     }
 
     @Override
     @Optional.Method(modid = Other.modIdCc)
     public void detach(IComputerAccess computer) {
-        Eln.dp.println(DebugType.SIMPLE_NODE, "CC detach");
+        DP.println(DPType.SIMPLE_NODE, "CC detach");
     }
 
     @Override

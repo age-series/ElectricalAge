@@ -1,8 +1,8 @@
 package mods.eln.misc;
 
 import cpw.mods.fml.common.FMLLog;
-import mods.eln.Eln;
-import mods.eln.debug.DebugType;
+import mods.eln.debug.DP;
+import mods.eln.debug.DPType;
 import net.minecraft.util.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.opengl.GL11;
@@ -421,7 +421,7 @@ public class Obj3D {
             {
                 BufferedReader bufferedReader = getResourceAsStream("model/" + filePath, reload);
                 if (bufferedReader == null) {
-                    Eln.dp.println(DebugType.RENDER, (String.format(" - failed to load obj '%s'", filePath)));
+                    DP.println(DPType.RENDER, (String.format(" - failed to load obj '%s'", filePath)));
                     return false;
                 }
 
@@ -471,7 +471,7 @@ public class Obj3D {
                             }
                             fg.face.add(new Face(verticeId, uvId, new Normal(verticeId[0], verticeId[1], verticeId[2])));
                         } else {
-                            Eln.dp.println(DebugType.RENDER, "obj assert vertexNbr != 3");
+                            DP.println(DPType.RENDER, "obj assert vertexNbr != 3");
                         }
                     } else if (words[0].equals("mtllib")) {
                         mtlName = words[1];
@@ -486,7 +486,7 @@ public class Obj3D {
             {
                 BufferedReader bufferedReader = getResourceAsStream("model/" + dirPath + "/" + mtlName, reload);
                 if (bufferedReader == null) {
-                    Eln.dp.println(DebugType.RENDER, String.format(" - failed to load mtl '%s'", mtlName));
+                    DP.println(DPType.RENDER, String.format(" - failed to load mtl '%s'", mtlName));
                     return false;
                 }
 
@@ -519,7 +519,7 @@ public class Obj3D {
             final String txtPath = filePath.replace(".obj", ".txt").replace(".OBJ", ".txt");
             BufferedReader bufferedReader = getResourceAsStream("model/" + txtPath, reload);
             if (bufferedReader == null) {
-                Eln.dp.println(DebugType.RENDER, String.format(" - failed to load txt '%s'", txtPath));
+                DP.println(DPType.RENDER, String.format(" - failed to load txt '%s'", txtPath));
             } else {
                 String line;
                 int lineNumber = 0;
@@ -557,7 +557,7 @@ public class Obj3D {
                             updateTimer.scheduleAtFixedRate(new TimerTask() {
                                 @Override
                                 public void run() {
-                                    Eln.dp.println(DebugType.RENDER, "Reloading model data from " + filePath);
+                                    DP.println(DPType.RENDER, "Reloading model data from " + filePath);
                                     loadFile(filePath, true);
                                 }
                             }, refresh, refresh);

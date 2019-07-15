@@ -2,8 +2,6 @@ package mods.eln.mechanical
 
 import mods.eln.Eln
 import mods.eln.cable.CableRenderDescriptor
-import mods.eln.debug.DebugPrint
-import mods.eln.debug.DebugType
 import mods.eln.misc.*
 import mods.eln.node.NodeBase
 import mods.eln.node.transparent.EntityMetaTag
@@ -234,7 +232,7 @@ class GenMotorElenemt(node: TransparentNode, desc_: TransparentNodeDescriptor): 
             if (E.isNaN()) {
                 E = 0.0
             }
-            //Eln.dp.println(DebugType.MECHANICAL, "T: " + desc.type + "\tE: " + E)
+            //DP.println(DPType.MECHANICAL, "T: " + desc.type + "\tE: " + E)
 
             if (E < 0 && desc.type == GMType.MOTOR) {
                 // terrible pushing electrical power

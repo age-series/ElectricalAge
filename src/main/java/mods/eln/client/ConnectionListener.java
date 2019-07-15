@@ -7,7 +7,8 @@ import cpw.mods.fml.common.gameevent.TickEvent.Type;
 import cpw.mods.fml.common.network.FMLNetworkEvent.ClientConnectedToServerEvent;
 import cpw.mods.fml.common.network.FMLNetworkEvent.ClientDisconnectionFromServerEvent;
 import mods.eln.Eln;
-import mods.eln.debug.DebugType;
+import mods.eln.debug.DP;
+import mods.eln.debug.DPType;
 import mods.eln.misc.UtilsClient;
 
 import java.io.ByteArrayOutputStream;
@@ -25,7 +26,7 @@ public class ConnectionListener {
 
     @SubscribeEvent
     public void onConnectedToServerEvent(ClientConnectedToServerEvent event) {
-        Eln.dp.println(DebugType.NETWORK, "Connected to server " + FMLCommonHandler.instance().getEffectiveSide());
+        DP.println(DPType.NETWORK, "Connected to server " + FMLCommonHandler.instance().getEffectiveSide());
         Eln.instance.regenOreScannerFactors();
 
         timer = 20;
@@ -34,7 +35,7 @@ public class ConnectionListener {
 
     @SubscribeEvent
     public void onDisconnectedFromServerEvent(ClientDisconnectionFromServerEvent event) {
-        Eln.dp.println(DebugType.NETWORK, "Disconnected from server " + FMLCommonHandler.instance().getEffectiveSide());
+        DP.println(DPType.NETWORK, "Disconnected from server " + FMLCommonHandler.instance().getEffectiveSide());
         UtilsClient.glDeleteListsAllSafe();
     }
 

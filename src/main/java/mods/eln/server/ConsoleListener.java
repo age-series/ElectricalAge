@@ -5,7 +5,8 @@
 package mods.eln.server;
 
 import mods.eln.Eln;
-import mods.eln.debug.DebugType;
+import mods.eln.debug.DP;
+import mods.eln.debug.DPType;
 import mods.eln.misc.Color;
 import mods.eln.misc.Version;
 import mods.eln.sim.mna.SubSystem;
@@ -73,7 +74,7 @@ public class ConsoleListener extends CommandBase {
     @Override
     public String getCommandUsage(ICommandSender icommandsender) {
         //TODO Rewrite
-        String str = Color.COLOR_DARK_CYAN + "ELN mod console." + Color.COLOR_BRIGHT_GREY + " Type \"\\eln \" + TAB";
+        String str = Color.COLOR_DARK_CYAN + "ELN mod console." + Color.COLOR_BRIGHT_GREY + " DPType \"\\eln \" + TAB";
         return str;
     }
 
@@ -252,7 +253,7 @@ public class ConsoleListener extends CommandBase {
             cprint(ics, strOffsetL0 + "Avoid monsters spawning around lamps : " + Color.COLOR_DARK_GREEN + boolToStr(arg0.value));
             cprint(ics, strOffsetL0 + "Warning: Command effective to this game instance only.");
         } else if(cmd.equalsIgnoreCase((cmdNameStr_matrix))) {
-            Eln.dp.println(DebugType.CONSOLE, "Dumping current matrix state");
+            DP.println(DPType.CONSOLE, "Dumping current matrix state");
 
             String dumpSubSystems = "";
             int ssc = Eln.simulator.getMna().getSystems().size();
@@ -269,7 +270,7 @@ public class ConsoleListener extends CommandBase {
                 w.flush();
                 w.close();
             } catch (Exception e) {
-                Eln.dp.println(DebugType.FILE, "Failed to write to " + f.getAbsolutePath() + " because " + e);
+                DP.println(DPType.FILE, "Failed to write to " + f.getAbsolutePath() + " because " + e);
             }
 
             if (ssc == 1) {

@@ -1,7 +1,7 @@
 package mods.eln.transparentnode.teleporter;
 
-import mods.eln.Eln;
-import mods.eln.debug.DebugType;
+import mods.eln.debug.DP;
+import mods.eln.debug.DPType;
 import mods.eln.i18n.I18N;
 import mods.eln.misc.Coordonate;
 import mods.eln.misc.Direction;
@@ -256,7 +256,7 @@ public class TeleporterElement extends TransparentNodeElement implements ITelepo
                     break;
             }
 
-            Eln.dp.println(DebugType.TRANSPARENT_NODE, "Teleporter state=" + state);
+            DP.println(DPType.TRANSPARENT_NODE, "Teleporter state=" + state);
             needPublish();
 
         }

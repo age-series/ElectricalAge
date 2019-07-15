@@ -1,7 +1,8 @@
 package mods.eln.transparentnode.windturbine;
 
 import mods.eln.Eln;
-import mods.eln.debug.DebugType;
+import mods.eln.debug.DP;
+import mods.eln.debug.DPType;
 import mods.eln.i18n.I18N;
 import mods.eln.misc.Direction;
 import mods.eln.misc.LRDU;
@@ -108,14 +109,14 @@ public class WindTurbineElement extends TransparentNodeElement {
     public void writeToNBT(NBTTagCompound nbt) {
         super.writeToNBT(nbt);
         cableFront.writeToNBT(nbt, "cableFront");
-        Eln.dp.println(DebugType.TRANSPARENT_NODE, cableFront.toString());
+        DP.println(DPType.TRANSPARENT_NODE, cableFront.toString());
     }
 
     @Override
     public void readFromNBT(NBTTagCompound nbt) {
         super.readFromNBT(nbt);
         cableFront = Direction.readFromNBT(nbt, "cableFront");
-        Eln.dp.println(DebugType.TRANSPARENT_NODE, cableFront.toString());
+        DP.println(DPType.TRANSPARENT_NODE, cableFront.toString());
     }
 
     @Override

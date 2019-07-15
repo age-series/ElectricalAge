@@ -7,7 +7,8 @@ import cpw.mods.fml.common.gameevent.TickEvent.ClientTickEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.Phase;
 import cpw.mods.fml.relauncher.Side;
 import mods.eln.Eln;
-import mods.eln.debug.DebugType;
+import mods.eln.debug.DP;
+import mods.eln.debug.DPType;
 import mods.eln.i18n.I18N;
 import mods.eln.misc.Version;
 import net.minecraft.client.Minecraft;
@@ -74,7 +75,7 @@ public class AnalyticsHandler {
 
                 } catch (Exception e) {
                     String error = "Unable to send analytics data: " + e.getMessage() + ".";
-                    Eln.dp.println(DebugType.NETWORK, error);
+                    DP.println(DPType.NETWORK, error);
                 }
                 AnalyticsHandler.getInstance().ready = true;
             }
@@ -110,7 +111,7 @@ public class AnalyticsHandler {
                     if (Eln.analyticsPlayerUUIDOptIn && FMLCommonHandler.instance().getEffectiveSide()== Side.CLIENT) {
                         // PLAYER HAS OPTED INTO SENDING THEIR UUID (and is not a server)
                         String formatUrl = "%s?version=%s&lang=%s&uuid=%s&name=%s&cableFactor=%s&cableResistanceMultiplier=%s&explosions=%s&repOn=%s";
-                        //Eln.dp.println(DebugType.NETWORK, Minecraft.getMinecraft().getSession().func_148256_e().getId().toString());
+                        //Eln.dp.println(DPType.NETWORK, Minecraft.getMinecraft().getSession().func_148256_e().getId().toString());
                         url = String.format(formatUrl, Eln.analyticsURL, version, lang, Minecraft.getMinecraft().getSession().func_148256_e().getId().toString(), Minecraft.getMinecraft().getSession().getPlayerID(), Eln.cableFactor, Eln.cableResistanceMultiplier, Eln.explosionEnable, Eln.replicatorPop);
                     } else {
                         // PLAYER HAS NOT OPTED INTO SENDING THEIR UUID
@@ -131,7 +132,7 @@ public class AnalyticsHandler {
                     client.close();
                } catch (Exception e) {
                     String error = "Unable to send analytics data to " + Eln.analyticsURL + ": " + e.getMessage() + ".";
-                    Eln.dp.println(DebugType.NETWORK, error);
+                    DP.println(DPType.NETWORK, error);
                }
            }
         });

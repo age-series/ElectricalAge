@@ -3,7 +3,8 @@ package mods.eln.misc;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
 import mods.eln.Eln;
-import mods.eln.debug.DebugType;
+import mods.eln.debug.DP;
+import mods.eln.debug.DPType;
 import mods.eln.generic.GenericItemBlockUsingDamage;
 import mods.eln.generic.GenericItemUsingDamage;
 import mods.eln.misc.Obj3D.Obj3DPart;
@@ -78,31 +79,31 @@ public class Utils {
     @Deprecated
     public static void println(String str) {
         if (Eln.debugEnabled) {
-            Eln.dp.println(DebugType.LEGACY, str);
+            DP.println(DPType.LEGACY, str);
         }
     }
 
     @Deprecated
     public static void println(Object str) {
         if (Eln.debugEnabled) {
-            Eln.dp.println(DebugType.LEGACY, str.toString());
+            DP.println(DPType.LEGACY, str.toString());
         }
     }
 
     public static void print(String str) {
         if (Eln.debugEnabled) {
-            Eln.dp.print(DebugType.LEGACY, str);
+            DP.print(DPType.LEGACY, str);
         }
     }
 
     @Deprecated
     public static void print(Object str) {
-        Eln.dp.print(DebugType.LEGACY, str.toString());
+        DP.print(DPType.LEGACY, str.toString());
     }
 
     @Deprecated
     public static void print(String format, Object... data) {
-        Eln.dp.println(DebugType.LEGACY, String.format(format, data));
+        DP.println(DPType.LEGACY, String.format(format, data));
     }
 
     static String floatToStr(double f, int high, int low) {
@@ -1465,11 +1466,11 @@ public class Utils {
     }
 
     public static void printFunction(FunctionTable func, double start, double end, double step) {
-        Eln.dp.println(DebugType.OTHER, "****Function Table Begin****");
+        DP.println(DPType.OTHER, "****Function Table Begin****");
         double x;
         for (int idx = 0; (x = start + step * idx) < end + 0.00001; idx++) {
-            Eln.dp.println(DebugType.OTHER, Double.toString(func.getValue(x)));
+            DP.println(DPType.OTHER, Double.toString(func.getValue(x)));
         }
-        Eln.dp.println(DebugType.OTHER, "****Function Table Ends****");
+        DP.println(DPType.OTHER, "****Function Table Ends****");
     }
 }

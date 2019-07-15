@@ -1,7 +1,8 @@
 package mods.eln.item.electricalitem;
 
 import mods.eln.Eln;
-import mods.eln.debug.DebugType;
+import mods.eln.debug.DP;
+import mods.eln.debug.DPType;
 import mods.eln.generic.GenericItemUsingDamageDescriptor;
 import mods.eln.item.electricalinterface.IItemEnergyBattery;
 import mods.eln.misc.Utils;
@@ -58,7 +59,7 @@ public class ElectricalTool extends GenericItemUsingDamageDescriptor implements 
             if (e < 0) e = 0;
             setEnergy(stack, e);
         }
-        Eln.dp.println(DebugType.OTHER, "destroy");
+        DP.println(DPType.OTHER, "destroy");
         return true;
     }
 

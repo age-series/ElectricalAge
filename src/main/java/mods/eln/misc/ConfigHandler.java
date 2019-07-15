@@ -3,7 +3,7 @@ package mods.eln.misc;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import mods.eln.Eln;
 import mods.eln.Other;
-import mods.eln.debug.DebugType;
+import mods.eln.debug.DPType;
 import mods.eln.entity.ReplicatorPopProcess;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
@@ -12,7 +12,7 @@ import java.util.UUID;
 
 public class ConfigHandler {
     public static void loadConfig(FMLPreInitializationEvent event) {
-        // The absolute first thing to do is load the configuration file so that if anything goes wrong, the DebugPrint class has been prepared.
+        // The absolute first thing to do is load the configuration file so that if anything goes wrong, the DP class has been prepared.
         // All prints before that point are handled with logger.info()
 
         Configuration config = new Configuration(
@@ -147,7 +147,7 @@ public class ConfigHandler {
         {
             // typstr gets the most current list of values that you can use
             String typstr = "";
-            for (DebugType dt: DebugType.values()) {
+            for (DPType dt: DPType.values()) {
                 typstr += dt.name() + ", ";
             }
             typstr = typstr.substring(0, typstr.length() - 2);
@@ -160,9 +160,9 @@ public class ConfigHandler {
                 str = str.trim();
                 //Eln.logger.info("Enabling debug prints for " + str);
                 try {
-                    Eln.debugTypes.add(DebugType.valueOf(str));
+                    Eln.debugTypes.add(DPType.valueOf(str));
                 } catch (Exception e) {
-                    Eln.logger.error("Error loading config with DebugType: " + e);
+                    Eln.logger.error("Error loading config with Debug Type: " + e);
                 }
             }
         }

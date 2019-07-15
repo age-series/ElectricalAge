@@ -94,7 +94,7 @@ public class LampSocketDescriptor extends SixNodeDescriptor {
     @Override
     public void addInformation(ItemStack itemStack, EntityPlayer entityPlayer, List list, boolean par4) {
         super.addInformation(itemStack, entityPlayer, list, par4);
-        //list.add("Socket Type : " + socketType.toString());
+        //list.add("Socket DPType : " + socketType.toString());
 
         if (range != 0 || alphaZMin != alphaZMax) {
             //list.add("Projector");

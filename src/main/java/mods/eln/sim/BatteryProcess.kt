@@ -1,7 +1,7 @@
 package mods.eln.sim
 
-import mods.eln.Eln
-import mods.eln.debug.DebugType
+import mods.eln.debug.DP
+import mods.eln.debug.DPType
 import mods.eln.misc.FunctionTable
 import mods.eln.server.SaveConfig
 import mods.eln.sim.mna.component.VoltageSource
@@ -77,7 +77,7 @@ open class BatteryProcess(
         var wasteQ = 0.0
         Q = Math.max(Q - voltageSource.getCurrent() * time / QNominal, 0.0)
         if (Q > lastQ && !isRechargable) {
-            Eln.dp.println(DebugType.MNA, "Battery is recharging when it shouldn't!")
+            DP.println(DPType.MNA, "Battery is recharging when it shouldn't!")
             wasteQ = Q - lastQ
             Q = lastQ
         }

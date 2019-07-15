@@ -1,7 +1,8 @@
 package mods.eln.transparentnode
 
 import mods.eln.Eln
-import mods.eln.debug.DebugType
+import mods.eln.debug.DP
+import mods.eln.debug.DPType
 import mods.eln.gui.*
 import mods.eln.i18n.I18N.tr
 import mods.eln.misc.*
@@ -13,7 +14,6 @@ import mods.eln.sim.ProcessType
 import mods.eln.sim.ThermalLoad
 import mods.eln.sim.mna.component.Resistor
 import mods.eln.sim.mna.component.VoltageSource
-import mods.eln.sim.mna.misc.IRootSystemPreStepProcess
 import mods.eln.sim.mna.misc.MnaConst
 import mods.eln.sim.nbt.NbtElectricalLoad
 import mods.eln.sixnode.genericcable.GenericCableDescriptor
@@ -161,7 +161,7 @@ class ResistorSinkElement(node: TransparentNode, desc_: TransparentNodeDescripto
     override fun networkSerialize(stream: DataOutputStream) {
         super.networkSerialize(stream)
         try {
-            Eln.dp.println(DebugType.TRANSPARENT_NODE, mode)
+            DP.println(DPType.TRANSPARENT_NODE, mode)
             stream.writeUTF(mode)
             stream.writeDouble(resistor.r)
             stream.writeDouble(powerSetpoint)
@@ -238,7 +238,7 @@ class ResistorSinkRender(entity: TransparentNodeEntity, desc_: TransparentNodeDe
             mode = stream.readUTF()
             r = stream.readDouble()
             p = stream.readDouble()
-            Eln.dp.println(DebugType.TRANSPARENT_NODE, "Recieved packet! mode: $mode r: $r p: $p")
+            DP.println(DPType.TRANSPARENT_NODE, "Recieved packet! mode: $mode r: $r p: $p")
         }catch (e: IOException) {
             e.printStackTrace()
         }
@@ -253,7 +253,7 @@ class ResistorSinkGui(internal val render: ResistorSinkRender): GuiScreenEln() {
     override fun initGui() {
         super.initGui()
 
-        stateBt = newGuiButton(26, 6, 70, "")
+        stateBt = newGuiButton(16, 6, 70, "")
         if (render.mode == "R") {
             stateBt!!.displayString = "RESISTANCE"
         } else {
@@ -265,8 +265,8 @@ class ResistorSinkGui(internal val render: ResistorSinkRender): GuiScreenEln() {
         resistanceField!!.setComment(0, "Set the resistance")
         powerField!!.setComment(0, "Set the power")
 
-        resistanceField!!.text = render.r.toString()
-        powerField!!.text = render.p.toString()
+        resistanceField!!.text = "%.3f".format(render.r)
+        powerField!!.text = "%.3f".format(render.p)
     }
 
     override fun guiObjectEvent(`object`: IGuiObject?) {

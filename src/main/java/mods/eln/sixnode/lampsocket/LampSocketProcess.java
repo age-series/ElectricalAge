@@ -1,7 +1,6 @@
 package mods.eln.sixnode.lampsocket;
 
 import mods.eln.Eln;
-import mods.eln.debug.DebugType;
 import mods.eln.generic.GenericItemUsingDamage;
 import mods.eln.generic.GenericItemUsingDamageDescriptor;
 import mods.eln.item.LampDescriptor;
@@ -337,10 +336,6 @@ public class LampSocketProcess implements IProcess, INBTTReady /*,LightBlockObse
         if (block == Blocks.farmland)
             isNotOpaque = false;
         return !isNotOpaque;
-    }
-
-    public void publish() {
-        Eln.dp.println(DebugType.SIX_NODE, "Light published");
     }
 
     public void setLightAt(Coordonate coord, int value) {

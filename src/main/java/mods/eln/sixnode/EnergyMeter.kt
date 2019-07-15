@@ -2,7 +2,8 @@ package mods.eln.sixnode
 
 import mods.eln.Eln
 import mods.eln.cable.CableRenderDescriptor
-import mods.eln.debug.DebugType
+import mods.eln.debug.DP
+import mods.eln.debug.DPType
 import mods.eln.gui.*
 import mods.eln.i18n.I18N
 import mods.eln.misc.*
@@ -297,13 +298,13 @@ class EnergyMeterElement(sixNode: SixNode, side: Direction, descriptor: SixNodeD
             override fun run() {
                 // wait a random amount of time into the frequency to start (prevent lag)
                 val delay = Math.round(Math.random() * 1000 * Eln.energyMeterWebhookFrequency)
-                Eln.dp.println(DebugType.NETWORK,"Started webhook thread, waiting " + delay + "ms")
+                DP.println(DPType.NETWORK,"Started webhook thread, waiting " + delay + "ms")
                 Thread.sleep(delay)
                 while(Eln.simulator.isRunning) {
                     try {
                         // sends the energy usage at a specific rate. Disabled if name or webhook isn't specified..
                         if (meterWebhook.isNotEmpty() && meterName.isNotEmpty()) {
-                            Eln.dp.println(DebugType.NETWORK, "Sending webhook from Energy Meter to " + meterWebhook)
+                            DP.println(DPType.NETWORK, "Sending webhook from Energy Meter to " + meterWebhook)
                             sendEnergy(timeCounter, meterName, meterWebhook)
                             if (descriptor.timeNumberWheel!!.isNotEmpty()) {
                                 sendTime(energyStack, meterName, meterWebhook)
@@ -312,7 +313,7 @@ class EnergyMeterElement(sixNode: SixNode, side: Direction, descriptor: SixNodeD
                         Thread.sleep(Integer.toUnsignedLong(Eln.energyMeterWebhookFrequency * 1000))
                     } catch (ie: InterruptedException) {}
                 }
-                Eln.dp.println(DebugType.NETWORK, "Stopping webhook thread")
+                DP.println(DPType.NETWORK, "Stopping webhook thread")
             }
         }
 
@@ -321,7 +322,7 @@ class EnergyMeterElement(sixNode: SixNode, side: Direction, descriptor: SixNodeD
         webhookThread = Thread(WebhookThreadClass())
 
         if (Eln.energyMeterWebhookFrequency >= 15)
-            Eln.dp.println(DebugType.NETWORK, "Enabling Energy Meter Webhook Service")
+            DP.println(DPType.NETWORK, "Enabling Energy Meter Webhook Service")
             webhookThread.start()
     }
 
@@ -350,7 +351,7 @@ class EnergyMeterElement(sixNode: SixNode, side: Direction, descriptor: SixNodeD
             resp.close()
             client.close()
         } catch (ise: IllegalStateException) {
-            Eln.dp.println(DebugType.NETWORK,"Webhook URL is invalid!")
+            DP.println(DPType.NETWORK,"Webhook URL is invalid!")
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -381,7 +382,7 @@ class EnergyMeterElement(sixNode: SixNode, side: Direction, descriptor: SixNodeD
             resp.close()
             client.close()
         } catch (ise: IllegalStateException) {
-            Eln.dp.println(DebugType.NETWORK,"Webhook URL is invalid!")
+            DP.println(DPType.NETWORK,"Webhook URL is invalid!")
         } catch (e: Exception) {
             e.printStackTrace()
         }

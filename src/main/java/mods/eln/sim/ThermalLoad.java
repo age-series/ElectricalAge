@@ -1,7 +1,7 @@
 package mods.eln.sim;
 
-import mods.eln.Eln;
-import mods.eln.debug.DebugType;
+import mods.eln.debug.DP;
+import mods.eln.debug.DPType;
 
 public class ThermalLoad {
 
@@ -40,7 +40,7 @@ public class ThermalLoad {
 
     public void setRp(double Rp) {
         if(Double.isNaN(Rp)) {
-            Eln.dp.println(DebugType.OTHER, "TL.j sRp NaN!");
+            DP.println(DPType.OTHER, "TL.j sRp NaN!");
         }
         this.Rp = Rp;
     }
@@ -75,7 +75,7 @@ public class ThermalLoad {
 
     public void movePowerTo(double power) {
         if (Double.isNaN(power)) {
-            Eln.dp.println(DebugType.OTHER, "TL.j mpt NaN!");
+            DP.println(DPType.OTHER, "TL.j mpt NaN!");
             return;
         }
         double absI = Math.abs(power);

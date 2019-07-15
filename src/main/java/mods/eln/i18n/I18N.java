@@ -170,7 +170,7 @@ public class I18N {
     /**
      * Used to register a name to translate. The forge mechanisms are used in order to translate the name.
      *
-     * @param type Type the translatable name is related to.
+     * @param type DPType the translatable name is related to.
      * @param text String LITERAL to register for translation.
      * @return Returns the same text literal, forge will translate the name magically.
      */
@@ -185,7 +185,7 @@ public class I18N {
     /**
      * Used to register a description to translate. The forge mechanisms are used in order to translate the description.
      *
-     * @param type Type the translatable description is related to.
+     * @param type DPType the translatable description is related to.
      * @param text String LITERAL to register for translation.
      * @return Returns the same text literal, forge will translate the description magically.
      */

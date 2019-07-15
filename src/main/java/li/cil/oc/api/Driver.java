@@ -63,7 +63,7 @@ public final class Driver {
     /**
      * Registers a new type converter.
      * <p/>
-     * Type converters are used to automatically convert values returned from
+     * DPType converters are used to automatically convert values returned from
      * callbacks to a "simple" format that can be pushed to any architecture.
      * <p/>
      * This must be called in the init phase, <em>not</em> the pre- or post-init

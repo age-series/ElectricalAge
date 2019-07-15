@@ -265,6 +265,7 @@ public class TransparentNodeRegistry {
             Eln.transparentNodeItem.addDescriptor(subId + (id << 6), desc);
         }
 
+        /* New Shaft motor and motor code
         {
             subId = 10;
 
@@ -298,7 +299,9 @@ public class TransparentNodeRegistry {
             Eln.transparentNodeItem.addDescriptor(subId + (id << 6), desc);
         }
 
-        /*
+        */
+
+
         {
             subId = 10;
             float nominalRads = 800, nominalU = 3200;
@@ -333,7 +336,7 @@ public class TransparentNodeRegistry {
             );
 
             Eln.transparentNodeItem.addDescriptor(subId + (id << 6), desc);
-        }*/
+        }
         {
             subId = 17;
             ClutchDescriptor desc = new ClutchDescriptor(
@@ -1269,7 +1272,7 @@ public class TransparentNodeRegistry {
 
         /*{ //TODO Work on the large wind turbine
             subId = 1;
-            name = TR_NAME(Type.NONE, "Large Wind Turbine");
+            name = TR_NAME(DPType.NONE, "Large Wind Turbine");
 
             WindTurbineDescriptor desc = new WindTurbineDescriptor(
                 name, obj.getObj("WindTurbineMini"), // name,Obj3D obj,

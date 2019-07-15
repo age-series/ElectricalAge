@@ -4,8 +4,8 @@ import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.Phase;
 import cpw.mods.fml.common.gameevent.TickEvent.ServerTickEvent;
-import mods.eln.Eln;
-import mods.eln.debug.DebugType;
+import mods.eln.debug.DP;
+import mods.eln.debug.DPType;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 
@@ -49,12 +49,12 @@ public class PlayerManager {
         public void setInteractEnable(boolean interactEnable) {
             if (!this.interactEnable && interactEnable) {
                 interactRiseBuffer = true;
-                Eln.dp.println(DebugType.OTHER,"interactRiseBuffer");
+                DP.println(DPType.OTHER,"interactRiseBuffer");
             }
             this.interactEnable = interactEnable;
 
             timeoutReset();
-            Eln.dp.println(DebugType.OTHER,"interactEnable : " + interactEnable);
+            DP.println(DPType.OTHER,"interactEnable : " + interactEnable);
         }
 
         public boolean getInteractEnable() {

@@ -5,7 +5,8 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.Phase;
 import cpw.mods.fml.common.gameevent.TickEvent.ServerTickEvent;
 import mods.eln.Eln;
-import mods.eln.debug.DebugType;
+import mods.eln.debug.DP;
+import mods.eln.debug.DPType;
 import mods.eln.ore.OreDescriptor;
 import net.minecraft.world.WorldServer;
 import net.minecraft.world.chunk.Chunk;
@@ -75,7 +76,7 @@ public class OreRegenerate {
                     }
                 }
 
-                Eln.dp.println(DebugType.OTHER, "Regenerated! " + jobs.size());
+                DP.println(DPType.OTHER, "Regenerated! " + jobs.size());
                 for (OreDescriptor d : Eln.oreItem.descriptors) {
                     d.generate(server.rand, chunk.xPosition, chunk.zPosition, server, null, null);
                 }
@@ -91,7 +92,7 @@ public class OreRegenerate {
         Chunk c = e.getChunk();
         ChunkRef ref = new ChunkRef(c.xPosition, c.zPosition, c.worldObj.provider.dimensionId);
         if (alreadyLoadedChunks.contains(ref)) {
-            Eln.dp.println(DebugType.OTHER, "Already regenerated!");
+            DP.println(DPType.OTHER, "Already regenerated!");
             return;
         }
         alreadyLoadedChunks.add(ref);

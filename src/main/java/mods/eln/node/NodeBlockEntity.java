@@ -5,7 +5,8 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import mods.eln.Eln;
 import mods.eln.cable.CableRenderDescriptor;
-import mods.eln.debug.DebugType;
+import mods.eln.debug.DP;
+import mods.eln.debug.DPType;
 import mods.eln.misc.*;
 import mods.eln.server.DelayedBlockRemove;
 import net.minecraft.client.Minecraft;
@@ -19,13 +20,11 @@ import net.minecraft.network.play.server.S3FPacketCustomPayload;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.EnumSkyBlock;
-
 import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.LinkedList;
-
 
 public abstract class NodeBlockEntity extends TileEntity implements ITileEntitySpawnClient, INodeEntity {
 
@@ -244,13 +243,12 @@ public abstract class NodeBlockEntity extends TileEntity implements ITileEntityS
             Utils.fatal();
             return null;
         }
-        if (this.worldObj == null) return null;
         if (node == null) {
             NodeBase nodeFromCoordonate = NodeManager.instance.getNodeFromCoordonate(new Coordonate(xCoord, yCoord, zCoord, worldObj));
             if (nodeFromCoordonate instanceof Node) {
                 node = (Node) nodeFromCoordonate;
             } else {
-                Eln.dp.println(DebugType.NODE, "ASSERT WRONG TYPE public Node getNode " + new Coordonate(xCoord, yCoord, zCoord, worldObj));
+                DP.println(DPType.NODE, "ASSERT WRONG TYPE public Node getNode " + new Coordonate(xCoord, yCoord, zCoord, worldObj));
             }
             if (node == null) DelayedBlockRemove.add(new Coordonate(xCoord, yCoord, zCoord, this.worldObj));
         }
@@ -273,7 +271,7 @@ public abstract class NodeBlockEntity extends TileEntity implements ITileEntityS
     public Packet getDescriptionPacket() {
         Node node = getNode(); //TO DO NULL POINTER
         if (node == null) {
-            Eln.dp.println(DebugType.NODE, "ASSERT NULL NODE public Packet getDescriptionPacket() nodeblock entity");
+            DP.println(DPType.NODE, "ASSERT NULL NODE public Packet getDescriptionPacket() nodeblock entity");
             return null;
         }
         return new S3FPacketCustomPayload(Eln.NETWORK_CHANNEL_NAME, node.getPublishPacket().toByteArray());

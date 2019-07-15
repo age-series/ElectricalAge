@@ -1,7 +1,8 @@
 package mods.eln.transparentnode.electricalantennatx;
 
 import mods.eln.Eln;
-import mods.eln.debug.DebugType;
+import mods.eln.debug.DP;
+import mods.eln.debug.DPType;
 import mods.eln.i18n.I18N;
 import mods.eln.misc.Coordonate;
 import mods.eln.misc.Direction;
@@ -78,7 +79,7 @@ public class ElectricalAntennaTxElement extends TransparentNodeElement {
                 rxElement = (ElectricalAntennaRxElement) ((TransparentNode) node).element;
             else {
                 rxCoord = null;
-                Eln.dp.println(DebugType.TRANSPARENT_NODE, "ASSERT ElectricalAntennaRxElement getRxElement()");
+                DP.println(DPType.TRANSPARENT_NODE, "ASSERT ElectricalAntennaRxElement getRxElement()");
             }
         }
         return rxElement;

@@ -1,7 +1,8 @@
 package mods.eln.sixnode.lampsocket;
 
 import mods.eln.Eln;
-import mods.eln.debug.DebugType;
+import mods.eln.debug.DP;
+import mods.eln.debug.DPType;
 import mods.eln.misc.Coordonate;
 import mods.eln.misc.INBTTReady;
 import net.minecraft.block.Block;
@@ -118,7 +119,7 @@ public class LightBlockEntity extends TileEntity {
             worldObj.setBlockToAir(xCoord, yCoord, zCoord);
             //worldObj.updateLightByType(EnumSkyBlock.Block, xCoord, yCoord, zCoord);
             //Eln.instance.tileEntityDestructor.add(this);
-            Eln.dp.println(DebugType.SIX_NODE, "Destroy light at " + xCoord + " " + yCoord + " " + zCoord + " ");
+            DP.println(DPType.SIX_NODE, "Destroy light at " + xCoord + " " + yCoord + " " + zCoord + " ");
             return;
         }
 
@@ -153,7 +154,7 @@ public class LightBlockEntity extends TileEntity {
         if (t != null && t instanceof LightBlockEntity)
             ((LightBlockEntity) t).addLight(light, timeout);
         else
-            Eln.dp.println(DebugType.SIX_NODE, "ASSERT if(t != null && t instanceof LightBlockEntity)");
+            DP.println(DPType.SIX_NODE, "ASSERT if(t != null && t instanceof LightBlockEntity)");
     }
 
     public static void addLight(Coordonate coord, int light, int timeout) {

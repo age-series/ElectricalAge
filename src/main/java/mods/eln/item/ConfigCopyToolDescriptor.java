@@ -41,12 +41,12 @@ public class ConfigCopyToolDescriptor extends GenericItemUsingDamageDescriptor {
     }
 
     public static boolean readCableType(NBTTagCompound compound, String name, IInventory inv, int slot, EntityPlayer invoker) {
-        if(compound.hasKey(name + "Type")) {
+        if(compound.hasKey(name + "DPType")) {
             int amt = 1;
             if(compound.hasKey(name + "Amt")) {
                 amt = compound.getInteger(name + "Amt");
             }
-            int type = compound.getInteger(name + "Type");
+            int type = compound.getInteger(name + "DPType");
             GenericItemBlockUsingDamageDescriptor thisCableDesc = GenericItemBlockUsingDamageDescriptor.getDescriptor(inv.getStackInSlot(slot), ElectricalCableDescriptor.class);
             if(thisCableDesc != null) {
                 (new ItemMovingHelper() {
@@ -90,9 +90,9 @@ public class ConfigCopyToolDescriptor extends GenericItemUsingDamageDescriptor {
         }
         GenericItemBlockUsingDamageDescriptor desc = GenericItemBlockUsingDamageDescriptor.getDescriptor(stack);
         if(desc != null) {
-            compound.setInteger(name + "Type", desc.parentItemDamage);
+            compound.setInteger(name + "DPType", desc.parentItemDamage);
         } else {
-            compound.setInteger(name + "Type", -1);
+            compound.setInteger(name + "DPType", -1);
         }
     }
 

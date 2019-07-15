@@ -1,7 +1,7 @@
 package mods.eln.item;
 
-import mods.eln.Eln;
-import mods.eln.debug.DebugType;
+import mods.eln.debug.DP;
+import mods.eln.debug.DPType;
 import mods.eln.misc.Utils;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -29,7 +29,7 @@ public abstract class ItemMovingHelper {
         if(stack != null) {
             now = stack.stackSize;
         }
-        Eln.dp.println(DebugType.OTHER, String.format("IMH.m: now %d, desired %d", now, desired));
+        DP.println(DPType.OTHER, String.format("IMH.m: now %d, desired %d", now, desired));
         if(now < desired) {
             int diff = desired - now;
             for(int idx = 0; idx < src.getSizeInventory(); idx++) {
@@ -48,13 +48,13 @@ public abstract class ItemMovingHelper {
                 if(diff <= 0) break;
             }
             int moved = (desired - now) - diff;
-            Eln.dp.println(DebugType.OTHER, String.format("IMH.m: moved %d into node", moved));
+            DP.println(DPType.OTHER, String.format("IMH.m: moved %d into node", moved));
             if(moved > 0) {
                 dst.setInventorySlotContents(dstSlot, newStackOfSize(now + moved));
             }
         } else {
             int diff = now - desired;
-            Eln.dp.println(DebugType.OTHER, String.format("IMH.m: moving %d items", diff));
+            DP.println(DPType.OTHER, String.format("IMH.m: moving %d items", diff));
             if(diff > 0) {
                 if (src.addItemStackToInventory(newStackOfSize(diff))) {
                     if(desired == 0) {
@@ -62,9 +62,9 @@ public abstract class ItemMovingHelper {
                     } else {
                         dst.setInventorySlotContents(dstSlot, newStackOfSize(desired));
                     }
-                    Eln.dp.println(DebugType.OTHER, "IMH.m: move succeeded");
+                    DP.println(DPType.OTHER, "IMH.m: move succeeded");
                 } else {
-                    Eln.dp.println(DebugType.OTHER, "IMH.m: move failed!");
+                    DP.println(DPType.OTHER, "IMH.m: move failed!");
                 }
             }
             // Grissess: Since we can't tell how the inventory might have been changed

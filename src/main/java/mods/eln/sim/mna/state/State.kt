@@ -1,7 +1,7 @@
 package mods.eln.sim.mna.state
 
-import mods.eln.Eln
-import mods.eln.debug.DebugType
+import mods.eln.debug.DP
+import mods.eln.debug.DPType
 import mods.eln.sim.mna.RootSystem
 import mods.eln.sim.mna.SubSystem
 import mods.eln.sim.mna.component.Component
@@ -101,7 +101,7 @@ open class VoltageState : State {
         get() = state
         set(state) {
             if (state.isNaN())
-                Eln.dp.println(DebugType.MNA, "state.VoltageState setU(double state) - state was NaN!")
+                DP.println(DPType.MNA, "state.VoltageState setU(double state) - state was NaN!")
             this.state = state
         }
 }

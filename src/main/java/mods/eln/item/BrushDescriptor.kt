@@ -13,7 +13,6 @@ import net.minecraftforge.client.IItemRenderer
 import org.lwjgl.opengl.GL11
 
 class BrushDescriptor(name: String): GenericItemUsingDamageDescriptor(name) {
-
     private val icon = ResourceLocation("eln", "textures/items/" + name.toLowerCase().replace(" ", "") + ".png")
 
     override fun getName(stack: ItemStack): String {

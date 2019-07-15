@@ -2,14 +2,13 @@ package mods.eln.registry;
 
 import cpw.mods.fml.common.registry.GameRegistry;
 import mods.eln.Eln;
-import mods.eln.debug.DebugType;
+import mods.eln.debug.DP;
+import mods.eln.debug.DPType;
 import mods.eln.generic.GenericItemUsingDamageDescriptor;
 import mods.eln.misc.Recipe;
 import mods.eln.misc.Utils;
 import mods.eln.node.six.SixNodeDescriptor;
 import mods.eln.node.transparent.TransparentNodeDescriptor;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
@@ -20,8 +19,6 @@ import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 
 public class RegistryUtils {
@@ -60,25 +57,25 @@ public class RegistryUtils {
         for (SixNodeDescriptor d : Eln.sixNodeItem.subItemList.values()) {
             ItemStack stack = d.newItemStack();
             if (!recipeExists(stack)) {
-                Eln.dp.println(DebugType.SIX_NODE, "No recipe for " + d.name);
+                DP.println(DPType.SIX_NODE, "No recipe for " + d.name);
             }
         }
         for (TransparentNodeDescriptor d : Eln.transparentNodeItem.subItemList.values()) {
             ItemStack stack = d.newItemStack();
             if (!recipeExists(stack)) {
-                Eln.dp.println(DebugType.TRANSPARENT_NODE, "No recipe for "+ d.name);
+                DP.println(DPType.TRANSPARENT_NODE, "No recipe for "+ d.name);
             }
         }
         for (GenericItemUsingDamageDescriptor d : Eln.sharedItem.subItemList.values()) {
             ItemStack stack = d.newItemStack();
             if (!recipeExists(stack)) {
-                Eln.dp.println(DebugType.OTHER, "No recipe for " + d.name);
+                DP.println(DPType.OTHER, "No recipe for " + d.name);
             }
         }
         for (GenericItemUsingDamageDescriptor d : Eln.sharedItemStackOne.subItemList.values()) {
             ItemStack stack = d.newItemStack();
             if (!recipeExists(stack)) {
-                Eln.dp.println(DebugType.OTHER, "No recipe for " + d.name);
+                DP.println(DPType.OTHER, "No recipe for " + d.name);
             }
         }
     }

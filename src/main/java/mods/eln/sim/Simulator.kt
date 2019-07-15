@@ -4,8 +4,8 @@ import cpw.mods.fml.common.FMLCommonHandler
 import cpw.mods.fml.common.eventhandler.SubscribeEvent
 import cpw.mods.fml.common.gameevent.TickEvent.Phase
 import cpw.mods.fml.common.gameevent.TickEvent.ServerTickEvent
-import mods.eln.Eln
-import mods.eln.debug.DebugType
+import mods.eln.debug.DP
+import mods.eln.debug.DPType
 import mods.eln.sim.mna.RootSystem
 import mods.eln.sim.mna.component.Component
 import mods.eln.sim.mna.state.State
@@ -58,7 +58,7 @@ class Simulator /* ,IPacketHandler */(var callPeriod: Double, var electricalPeri
 
     fun checkThermalLoad(thermalRs: Double, thermalRp: Double, thermalC: Double): Boolean {
         if (thermalC < getMinimalThermalC(thermalRs, thermalRp)) {
-            Eln.dp.println(DebugType.MNA, "checkThermalLoad ERROR")
+            DP.println(DPType.MNA, "checkThermalLoad ERROR")
             Minecraft.getMinecraft().shutdown()
         }
         return true
@@ -153,7 +153,7 @@ class Simulator /* ,IPacketHandler */(var callPeriod: Double, var electricalPeri
                     thermalFastConnectionList.add(connection)
 
             } else {
-                Eln.dp.println(DebugType.MNA, "***** addThermalConnection ERROR ****")
+                DP.println(DPType.MNA, "***** addThermalConnection ERROR ****")
             }
         }
     }
@@ -195,53 +195,53 @@ class Simulator /* ,IPacketHandler */(var callPeriod: Double, var electricalPeri
 
     fun addProcess(type: ProcessType, process: IProcess?) {
         if (process == null) return
-        when {
-            type == ProcessType.SlowPreProcess -> slowPreProcessList.add(process)
-            type == ProcessType.SlowProcess -> slowProcessList.add(process)
-            type == ProcessType.SlowPostProcess -> slowPostProcessList.add(process)
-            type == ProcessType.ThermalSlowProcess -> thermalSlowProcessList.add(process)
-            type == ProcessType.ThermalFastProcess -> thermalFastProcessList.add(process)
-            type == ProcessType.ElectricalProcess -> electricalProcessList.add(process)
-            else -> Eln.dp.println(DebugType.MNA, "Sim AP: Error: " + process)
+        when (type) {
+            ProcessType.SlowPreProcess -> slowPreProcessList.add(process)
+            ProcessType.SlowProcess -> slowProcessList.add(process)
+            ProcessType.SlowPostProcess -> slowPostProcessList.add(process)
+            ProcessType.ThermalSlowProcess -> thermalSlowProcessList.add(process)
+            ProcessType.ThermalFastProcess -> thermalFastProcessList.add(process)
+            ProcessType.ElectricalProcess -> electricalProcessList.add(process)
+            else -> DP.println(DPType.MNA, "Sim AP: Error: " + process)
         }
     }
 
     fun removeProcess(type: ProcessType, process: IProcess?) {
         if (process == null) return
-        when {
-            type == ProcessType.SlowPreProcess -> slowPreProcessList.remove(process)
-            type == ProcessType.SlowProcess -> slowProcessList.remove(process)
-            type == ProcessType.SlowPostProcess -> slowPostProcessList.remove(process)
-            type == ProcessType.ThermalSlowProcess -> thermalSlowProcessList.remove(process)
-            type == ProcessType.ThermalFastProcess -> thermalFastProcessList.remove(process)
-            type == ProcessType.ElectricalProcess -> electricalProcessList.remove(process)
-            else -> Eln.dp.println(DebugType.MNA, "Sim RP: Error: " + process)
+        when (type) {
+            ProcessType.SlowPreProcess -> slowPreProcessList.remove(process)
+            ProcessType.SlowProcess -> slowProcessList.remove(process)
+            ProcessType.SlowPostProcess -> slowPostProcessList.remove(process)
+            ProcessType.ThermalSlowProcess -> thermalSlowProcessList.remove(process)
+            ProcessType.ThermalFastProcess -> thermalFastProcessList.remove(process)
+            ProcessType.ElectricalProcess -> electricalProcessList.remove(process)
+            else -> DP.println(DPType.MNA, "Sim RP: Error: " + process)
         }
     }
 
     fun addAllProcess(type: ProcessType, processList: ArrayList<IProcess>?) {
         if (processList == null) return
-        when {
-            type == ProcessType.SlowPreProcess -> slowPreProcessList.addAll(processList)
-            type == ProcessType.SlowProcess -> slowProcessList.addAll(processList)
-            type == ProcessType.SlowPostProcess -> slowPostProcessList.addAll(processList)
-            type == ProcessType.ThermalSlowProcess -> thermalSlowProcessList.addAll(processList)
-            type == ProcessType.ThermalFastProcess -> thermalFastProcessList.addAll(processList)
-            type == ProcessType.ElectricalProcess -> electricalProcessList.addAll(processList)
-            else -> Eln.dp.println(DebugType.MNA, "Sim AP: Error: " + processList)
+        when (type) {
+            ProcessType.SlowPreProcess -> slowPreProcessList.addAll(processList)
+            ProcessType.SlowProcess -> slowProcessList.addAll(processList)
+            ProcessType.SlowPostProcess -> slowPostProcessList.addAll(processList)
+            ProcessType.ThermalSlowProcess -> thermalSlowProcessList.addAll(processList)
+            ProcessType.ThermalFastProcess -> thermalFastProcessList.addAll(processList)
+            ProcessType.ElectricalProcess -> electricalProcessList.addAll(processList)
+            else -> DP.println(DPType.MNA, "Sim AP: Error: " + processList)
         }
     }
 
     fun removeAllProcess(type: ProcessType, processList: ArrayList<IProcess>?) {
         if (processList == null) return
-        when {
-            type == ProcessType.SlowPreProcess -> slowPreProcessList.removeAll(processList)
-            type == ProcessType.SlowProcess -> slowProcessList.removeAll(processList)
-            type == ProcessType.SlowPostProcess -> slowPostProcessList.removeAll(processList)
-            type == ProcessType.ThermalSlowProcess -> thermalSlowProcessList.removeAll(processList)
-            type == ProcessType.ThermalFastProcess -> thermalFastProcessList.removeAll(processList)
-            type == ProcessType.ElectricalProcess -> electricalProcessList.removeAll(processList)
-            else -> Eln.dp.println(DebugType.MNA, "Sim RP: Error: " + processList)
+        when (type) {
+            ProcessType.SlowPreProcess -> slowPreProcessList.removeAll(processList)
+            ProcessType.SlowProcess -> slowProcessList.removeAll(processList)
+            ProcessType.SlowPostProcess -> slowPostProcessList.removeAll(processList)
+            ProcessType.ThermalSlowProcess -> thermalSlowProcessList.removeAll(processList)
+            ProcessType.ThermalFastProcess -> thermalFastProcessList.removeAll(processList)
+            ProcessType.ElectricalProcess -> electricalProcessList.removeAll(processList)
+            else -> DP.println(DPType.MNA, "Sim RP: Error: " + processList)
         }
     }
 
@@ -404,7 +404,7 @@ class Simulator /* ,IPacketHandler */(var callPeriod: Double, var electricalPeri
             thermalSlowNsStack /= 20
             slowNsStack /= 20
 
-            Eln.dp.print(DebugType.MNA, "ticks " + DecimalFormat("#").format(avgTickTime.toInt().toLong()) + " us" + "  E " + electricalNsStack / 1000 + "  TF " + thermalFastNsStack / 1000 + "  TS " + thermalSlowNsStack / 1000 + "  S " + slowNsStack / 1000
+            DP.print(DPType.CONSOLE, "ticks " + DecimalFormat("#").format(avgTickTime.toInt().toLong()) + " us" + "  E " + electricalNsStack / 1000 + "  TF " + thermalFastNsStack / 1000 + "  TS " + thermalSlowNsStack / 1000 + "  S " + slowNsStack / 1000
 
                     + "    " + mna.subSystemCount + " SS"
                     + "    " + electricalProcessList.size + " EP"

@@ -1,7 +1,7 @@
 package mods.eln.sim.process.destruct
 
-import mods.eln.Eln
-import mods.eln.debug.DebugType
+import mods.eln.debug.DP
+import mods.eln.debug.DPType
 import mods.eln.misc.Utils
 import mods.eln.sim.IProcess
 
@@ -43,7 +43,7 @@ abstract class ValueWatchdog : IProcess {
             timeout = timeoutReset
         }
         if (timeout < 0) {
-            Eln.dp.println(DebugType.MNA, javaClass.name + " destroying " + destructable?.describe() + " for being at value " + value + " when max is " + max)
+            DP.println(DPType.MNA, javaClass.name + " destroying " + destructable?.describe() + " for being at value " + value + " when max is " + max)
             destructable?.destructImpl()
         }
     }

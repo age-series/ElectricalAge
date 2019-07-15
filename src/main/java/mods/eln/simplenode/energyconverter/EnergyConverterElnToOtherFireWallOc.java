@@ -4,9 +4,9 @@ import li.cil.oc.api.Network;
 import li.cil.oc.api.network.Connector;
 import li.cil.oc.api.network.Node;
 import li.cil.oc.api.network.Visibility;
-import mods.eln.Eln;
 import mods.eln.Other;
-import mods.eln.debug.DebugType;
+import mods.eln.debug.DP;
+import mods.eln.debug.DPType;
 import mods.eln.misc.Utils;
 import net.minecraft.nbt.NBTTagCompound;
 
@@ -85,6 +85,6 @@ public class EnergyConverterElnToOtherFireWallOc {
 
     public void constructor() {
         node = li.cil.oc.api.Network.newNode(e, Visibility.None).withConnector().create();
-        Eln.dp.println(DebugType.SIMPLE_NODE, "******** C " + node);
+        DP.println(DPType.SIMPLE_NODE, "******** C " + node);
     }
 }

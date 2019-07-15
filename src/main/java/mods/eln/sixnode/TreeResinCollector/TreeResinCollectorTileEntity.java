@@ -1,7 +1,8 @@
 package mods.eln.sixnode.TreeResinCollector;
 
 import mods.eln.Eln;
-import mods.eln.debug.DebugType;
+import mods.eln.debug.DP;
+import mods.eln.debug.DPType;
 import mods.eln.misc.Direction;
 import mods.eln.misc.Utils;
 import net.minecraft.init.Blocks;
@@ -75,7 +76,7 @@ public class TreeResinCollectorTileEntity extends TileEntity {
 
             if (occupancy > occupancyMax) occupancy = occupancyMax;
 
-            Eln.dp.println(DebugType.SIX_NODE, "Occupancy : " + occupancy);
+            DP.println(DPType.SIX_NODE, "Occupancy : " + occupancy);
             timeTarget = (float) (Math.random() * timeRandom);
         }
     }

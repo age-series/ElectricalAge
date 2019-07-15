@@ -1,7 +1,8 @@
 package mods.eln.gui;
 
 import mods.eln.Eln;
-import mods.eln.debug.DebugType;
+import mods.eln.debug.DP;
+import mods.eln.debug.DPType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 
@@ -93,7 +94,7 @@ public class GuiVerticalTrackBar extends Gui implements IGuiObject {
         if (enable && visible && drag && which == 0) {
             mouseMove(x, y);
             if (observer != null) observer.guiObjectEvent(this);
-            Eln.dp.println(DebugType.GUI, "New Value : " + getValue());
+            DP.println(DPType.GUI, "New Value : " + getValue());
             drag = false;
             return true;
         }

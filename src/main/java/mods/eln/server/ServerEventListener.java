@@ -5,7 +5,8 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.Phase;
 import cpw.mods.fml.common.gameevent.TickEvent.ServerTickEvent;
 import mods.eln.Eln;
-import mods.eln.debug.DebugType;
+import mods.eln.debug.DP;
+import mods.eln.debug.DPType;
 import mods.eln.misc.Coordonate;
 import mods.eln.misc.Utils;
 import mods.eln.node.NodeManager;
@@ -80,11 +81,11 @@ public class ServerEventListener {
         } catch (Exception ex) {
             try {
                 ex.printStackTrace();
-                Eln.dp.println(DebugType.FILE, "Using BACKUP Electrical Age save: " + fileNames.backupSave);
+                DP.println(DPType.FILE, "Using BACKUP Electrical Age save: " + fileNames.backupSave);
                 readSave(fileNames.backupSave);
             } catch (Exception ex2) {
                 ex2.printStackTrace();
-                Eln.dp.println(DebugType.FILE, "Failed to read backup save!");
+                DP.println(DPType.FILE, "Failed to read backup save!");
                 ElnWorldStorage storage = ElnWorldStorage.forWorld(e.world);
             }
         }

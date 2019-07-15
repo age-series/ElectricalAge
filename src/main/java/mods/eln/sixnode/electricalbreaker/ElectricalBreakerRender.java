@@ -1,8 +1,8 @@
 package mods.eln.sixnode.electricalbreaker;
 
-import mods.eln.Eln;
 import mods.eln.cable.CableRenderDescriptor;
-import mods.eln.debug.DebugType;
+import mods.eln.debug.DP;
+import mods.eln.debug.DPType;
 import mods.eln.misc.*;
 import mods.eln.node.six.SixNodeDescriptor;
 import mods.eln.node.six.SixNodeElementInventory;
@@ -62,7 +62,7 @@ public class ElectricalBreakerRender extends SixNodeElementRender {
     @Override
     public void publishUnserialize(DataInputStream stream) {
         super.publishUnserialize(stream);
-        Eln.dp.println(DebugType.SIX_NODE, "Front : " + front);
+        DP.println(DPType.SIX_NODE, "Front : " + front);
         try {
             switchState = stream.readBoolean();
             uMax = stream.readFloat();

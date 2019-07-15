@@ -2,7 +2,8 @@ package mods.eln.sixnode.thermalcable;
 
 import mods.eln.Eln;
 import mods.eln.cable.CableRenderDescriptor;
-import mods.eln.debug.DebugType;
+import mods.eln.debug.DP;
+import mods.eln.debug.DPType;
 import mods.eln.misc.Utils;
 import mods.eln.misc.VoltageLevelColor;
 import mods.eln.node.six.SixNodeDescriptor;
@@ -57,7 +58,7 @@ public class ThermalCableDescriptor extends SixNodeDescriptor {
         //thermalC = thermalTao / (thermalRs * 2) ;
         thermalC = Eln.simulator.getMinimalThermalC(thermalRs, thermalRp);
         if (!Eln.simulator.checkThermalLoad(thermalRs, thermalRp, thermalC)) {
-            Eln.dp.println(DebugType.SIX_NODE, "Bad thermalCable setup");
+            DP.println(DPType.SIX_NODE, "Bad thermalCable setup");
             // removed infinite loop
         }
         voltageLevelColor = VoltageLevelColor.Thermal;

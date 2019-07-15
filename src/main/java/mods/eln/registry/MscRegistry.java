@@ -4,7 +4,8 @@ import cpw.mods.fml.common.registry.EntityRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 import mods.eln.Eln;
 import mods.eln.Other;
-import mods.eln.debug.DebugType;
+import mods.eln.debug.DP;
+import mods.eln.debug.DPType;
 import mods.eln.entity.ReplicatorEntity;
 import mods.eln.i18n.I18N;
 import mods.eln.node.NodeManager;
@@ -203,7 +204,7 @@ public class MscRegistry {
         int orangeColor = (255 << 16) + (200 << 8);
         if (Eln.replicatorRegistrationId == -1)
             Eln.replicatorRegistrationId = EntityRegistry.findGlobalUniqueEntityId();
-        Eln.dp.println(DebugType.OTHER, "Replicator registred at" + Eln.replicatorRegistrationId);
+        DP.println(DPType.OTHER, "Replicator registred at" + Eln.replicatorRegistrationId);
         // Register mob
         EntityRegistry.registerGlobalEntityID(ReplicatorEntity.class, TR_NAME(I18N.Type.ENTITY, "EAReplicator"), Eln.replicatorRegistrationId, redColor, orangeColor);
         ReplicatorEntity.dropList.add(findItemStack("Iron Dust", 1));
