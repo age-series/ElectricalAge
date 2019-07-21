@@ -3,6 +3,7 @@ package mods.eln.sim.mna.component
 import mods.eln.misc.INBTTReady
 import mods.eln.sim.mna.SubSystem
 import mods.eln.sim.mna.misc.IRootSystemPreStepProcess
+import mods.eln.sim.mna.misc.Th
 import mods.eln.sim.mna.state.State
 import net.minecraft.nbt.NBTTagCompound
 
@@ -30,7 +31,7 @@ class PowerSource(name: String, aPin: State) : VoltageSource(name, aPin, null), 
     }
 
     override fun rootSystemPreStepProcess() {
-        val t = aPin!!.subSystem!!.getTh(aPin!!, this)
+        val t = Th.getTh(aPin!!, this)
 
         var U = (Math.sqrt(t.U * t.U + 4.0 * p * t.R) + t.U) / 2
         U = Math.min(Math.min(U, Umax), t.U + t.R * Imax)
@@ -40,6 +41,7 @@ class PowerSource(name: String, aPin: State) : VoltageSource(name, aPin, null), 
         u = U
     }
 
+    // TODO: Move to a PowerSourceNbt abstraction class
     override fun readFromNBT(nbt: NBTTagCompound, str: String) {
         var strl = str
         super.readFromNBT(nbt, strl)

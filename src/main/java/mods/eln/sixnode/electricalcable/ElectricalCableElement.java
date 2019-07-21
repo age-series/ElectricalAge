@@ -65,7 +65,7 @@ public class ElectricalCableElement extends SixNodeElement {
         slowProcessList.add(voltageWatchdog);
         voltageWatchdog
             .set(electricalLoad)
-            .setUMaxMin(this.descriptor.electricalNominalVoltage)
+            .setUNominal(this.descriptor.electricalNominalVoltage)
             .set(new WorldExplosion(this).cableExplosion());
 
 

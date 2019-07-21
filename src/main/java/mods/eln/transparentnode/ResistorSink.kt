@@ -175,7 +175,8 @@ class ResistorSinkElement(node: TransparentNode, desc_: TransparentNodeDescripto
             ResistorSinkDescriptor.CLIENT_MODE ->
                 mode = stream.readUTF()
             ResistorSinkDescriptor.CLIENT_RESISTANCE ->
-                setResistance(stream.readDouble())
+                if (mode == "R")
+                    setResistance(stream.readDouble())
             ResistorSinkDescriptor.CLIENT_POWER ->
                 powerSetpoint = stream.readDouble()
         }
@@ -195,15 +196,17 @@ class ResistorSinkElement(node: TransparentNode, desc_: TransparentNodeDescripto
     inner class ResistorSinkPowerCalculator: IProcess {
         override fun process(time: Double) {
             if(ground.subSystem != null) {
-                val i = ground.getSubSystem()!!.solve(ground.currentState)
+                val i = Math.abs(ground.getSubSystem()!!.solve(ground.currentState))
                 val predictedPower = i * i * resistor.r
                 val new = resistor.r * (predictedPower / powerSetpoint)
                 val diff = new / resistor.r
                 when {
                     diff > 1 + powerCalcBand ->
-                        setResistance(new)
+                        if (mode == "P")
+                            setResistance(new)
                     diff < 1 - powerCalcBand ->
-                        setResistance(new)
+                        if (mode == "P")
+                            setResistance(new)
                 }
             }
         }

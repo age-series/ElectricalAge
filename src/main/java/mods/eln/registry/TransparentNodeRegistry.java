@@ -265,7 +265,7 @@ public class TransparentNodeRegistry {
             Eln.transparentNodeItem.addDescriptor(subId + (id << 6), desc);
         }
 
-        /* New Shaft motor and motor code
+        // New Shaft motor and motor code
         {
             subId = 10;
 
@@ -299,9 +299,8 @@ public class TransparentNodeRegistry {
             Eln.transparentNodeItem.addDescriptor(subId + (id << 6), desc);
         }
 
-        */
 
-
+        /* old shaft and motor code
         {
             subId = 10;
             float nominalRads = 800, nominalU = 3200;
@@ -337,6 +336,7 @@ public class TransparentNodeRegistry {
 
             Eln.transparentNodeItem.addDescriptor(subId + (id << 6), desc);
         }
+         */
         {
             subId = 17;
             ClutchDescriptor desc = new ClutchDescriptor(

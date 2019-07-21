@@ -29,6 +29,7 @@ abstract class ValueWatchdog : IProcess {
         }
         val value = getValue() ?: 0.0
         var overflow = Math.max(value - max, min - value)
+        var rawOverflow = overflow
         if (overflow > 0) {
             if (joker) {
                 joker = false
@@ -43,7 +44,7 @@ abstract class ValueWatchdog : IProcess {
             timeout = timeoutReset
         }
         if (timeout < 0) {
-            DP.println(DPType.MNA, javaClass.name + " destroying " + destructable?.describe() + " for being at value " + value + " when max is " + max)
+            DP.println(DPType.SIM, "${javaClass.name} destroying ${destructable?.describe()} for being at value $value when max, min is $max, $min. Also, timeout: $timeout and overflow $rawOverflow")
             destructable?.destructImpl()
         }
     }

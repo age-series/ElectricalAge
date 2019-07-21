@@ -8,6 +8,7 @@ import mods.eln.debug.DP
 import mods.eln.debug.DPType
 import mods.eln.sim.mna.RootSystem
 import mods.eln.sim.mna.component.Component
+import mods.eln.sim.mna.misc.MnaConst
 import mods.eln.sim.mna.state.State
 import mods.eln.sim.process.destruct.IDestructable
 import net.minecraft.client.Minecraft
@@ -107,6 +108,8 @@ class Simulator /* ,IPacketHandler */(var callPeriod: Double, var electricalPeri
         destructableSet.clear()
 
         isRunning = true
+
+        DP.println(DPType.MNA, "${MnaConst.noImpedance}")
     }
 
     fun stop() {

@@ -1,6 +1,8 @@
 package mods.eln.sim.mna
 
-import mods.eln.misc.Profiler
+import mods.eln.debug.DP
+import mods.eln.debug.DPType
+import mods.eln.debug.Profiler
 import mods.eln.sim.ElectricalLoad
 import mods.eln.sim.mna.component.*
 import mods.eln.sim.mna.misc.IRootSystemPreStepProcess
@@ -11,16 +13,16 @@ import mods.eln.sim.mna.state.VoltageState
 
 import java.util.*
 
-class RootSystem(internal var dt: Double, internal var interSystemOverSampling: Int) {
+class RootSystem(internal var dt: Double, private var interSystemOverSampling: Int) {
 
     var systems = ArrayList<SubSystem>()
 
     var addComponents: MutableSet<Component> = HashSet()
     var addStates = HashSet<State>()
 
-    internal var processF = ArrayList<ISubSystemProcessFlush>()
+    private var processF = ArrayList<ISubSystemProcessFlush>()
 
-    internal var processPre = ArrayList<IRootSystemPreStepProcess>()
+    private var processPre = ArrayList<IRootSystemPreStepProcess>()
 
     val subSystemCount: Int
         get() = systems.size
@@ -48,9 +50,11 @@ class RootSystem(internal var dt: Double, internal var interSystemOverSampling: 
     }
 
     fun addState(s: State) {
-        for (c in s.getConnectedComponentsNotAbstracted().clone() as ArrayList<Component>) {
-            if (c.getSubSystem() != null)
-                breakSystems(c.getSubSystem()!!)
+        for (c in s.getConnectedComponentsNotAbstracted().clone() as ArrayList<*>) {
+            if (c is Component) {
+                if (c.getSubSystem() != null)
+                    breakSystems(c.getSubSystem()!!)
+            }
         }
         addStates.add(s)
     }
@@ -64,7 +68,7 @@ class RootSystem(internal var dt: Double, internal var interSystemOverSampling: 
     }
 
     fun generate() {
-        if (!addComponents.isEmpty() || !addStates.isEmpty()) {
+        if (addComponents.isNotEmpty() || addStates.isNotEmpty()) {
             val p = Profiler()
             p.add("*** Generate ***")
             generateLine()
@@ -79,7 +83,7 @@ class RootSystem(internal var dt: Double, internal var interSystemOverSampling: 
                 componentCnt += s.component.size
             }
             p.stop()
-            System.out.println("Ran generate in " + p.time + " μs. States: $stateCnt Components: $componentCnt")
+            DP.println(DPType.MNA,"Ran generate in " + p.time + " μs. States: $stateCnt Components: $componentCnt")
         }
     }
 
@@ -88,9 +92,7 @@ class RootSystem(internal var dt: Double, internal var interSystemOverSampling: 
         val sc = s.getConnectedComponentsNotAbstracted()
         if (sc.size != 2) return false
         for (c in sc) {
-            if (false == c is Resistor) {
-                return false
-            }
+            if (c !is Resistor) return false
         }
 
         return true
@@ -104,7 +106,7 @@ class RootSystem(internal var dt: Double, internal var interSystemOverSampling: 
             }
         }
 
-        while (!stateScope.isEmpty()) {
+        while (stateScope.isNotEmpty()) {
             val sRoot = stateScope.iterator().next()
 
             var sPtr = sRoot
@@ -122,7 +124,7 @@ class RootSystem(internal var dt: Double, internal var interSystemOverSampling: 
                     sNext = rPtr.aPin
                 else if (sPtr !== rPtr.bPin) sNext = rPtr.bPin
 
-                if (sNext == null || sNext === sRoot || stateScope.contains(sNext) == false) break
+                if (sNext == null || sNext === sRoot || !stateScope.contains(sNext)) break
 
                 sPtr = sNext
             }
@@ -148,7 +150,7 @@ class RootSystem(internal var dt: Double, internal var interSystemOverSampling: 
                     sNext = rPtr.aPin
                 else if (sPtr !== rPtr.bPin) sNext = rPtr.bPin
 
-                if (sNext == null || stateScope.contains(sNext) == false) break
+                if (sNext == null || !stateScope.contains(sNext)) break
 
                 sPtr = sNext
             }
@@ -176,21 +178,21 @@ class RootSystem(internal var dt: Double, internal var interSystemOverSampling: 
             }
         }
 
-        while (!addStates.isEmpty()) {
+        while (addStates.isNotEmpty()) {
             val root = addStates.iterator().next()
             buildSubSystem(root)
         }
     }
 
-    fun generateInterSystems() {
+    private fun generateInterSystems() {
         val ic = addComponents.iterator()
         while (ic.hasNext()) {
             val c = ic.next()
 
             if (!c.canBeReplacedByInterSystem()) {
-                System.out.println("" + c + ": " + "\tInterSystemError!")
+                DP.println(DPType.MNA,"$c: \tInterSystemError!")
             } else {
-                System.out.println(c)
+                DP.println(DPType.MNA, "$c")
             }
 
             if (c is Delay) {
@@ -258,8 +260,8 @@ class RootSystem(internal var dt: Double, internal var interSystemOverSampling: 
         addStates.removeAll(stateSet)
 
         val subSystem = SubSystem(this, dt)
-        System.out.println(stateSet)
-        System.out.println(componentSet)
+        DP.println(DPType.MNA, stateSet.toString())
+        DP.println(DPType.MNA, componentSet.toString())
         subSystem.addState(stateSet)
         subSystem.addComponent(componentSet)
 
@@ -271,7 +273,9 @@ class RootSystem(internal var dt: Double, internal var interSystemOverSampling: 
 
         while (!roots.isEmpty()) {
             val sExplored = roots.pollFirst()
-            stateSet.add(sExplored)
+            if (sExplored != null) {
+                stateSet.add(sExplored)
+            }
 
             for (c in sExplored!!.getConnectedComponentsNotAbstracted()) {
                 if (privateSystem && roots.size + stateSet.size > maxSubSystemSize && c.canBeReplacedByInterSystem()) {
@@ -302,15 +306,7 @@ class RootSystem(internal var dt: Double, internal var interSystemOverSampling: 
         }
     }
 
-    private fun findSubSystemWith(state: State): SubSystem? {
-        for (s in systems) {
-            if (s.containe(state)) return s
-        }
-
-        return null
-    }
-
-    fun breakSystems(sub: SubSystem) {
+    private fun breakSystems(sub: SubSystem) {
         if (sub.breakSystem()) {
             for (s in sub.interSystemConnectivity) {
                 breakSystems(s)
@@ -327,7 +323,6 @@ class RootSystem(internal var dt: Double, internal var interSystemOverSampling: 
     }
 
     fun addProcess(p: IRootSystemPreStepProcess) {
-        System.out.println(p)
         processPre.add(p)
     }
 
@@ -341,7 +336,7 @@ class RootSystem(internal var dt: Double, internal var interSystemOverSampling: 
 
     companion object {
 
-        internal val maxSubSystemSize = 100
+        private const val maxSubSystemSize = 100
 
         @JvmStatic
         fun main(args: Array<String>) {
@@ -410,11 +405,11 @@ class RootSystem(internal var dt: Double, internal var interSystemOverSampling: 
             s.step()
 
             for (d in s.systems) {
-                System.out.println("system: " + d)
+                DP.println(DPType.CONSOLE,"system: $d")
             }
         }
     }
 }
 
 //TODO: garbadge collector
-//TODO: ghost suprresion
+//TODO: ghost suppression

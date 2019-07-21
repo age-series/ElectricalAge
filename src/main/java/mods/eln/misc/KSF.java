@@ -26,4 +26,14 @@ public class KSF {
     public static int shiftRight(byte a, int b) {
         return a >> b;
     }
+
+    /**
+     *  returns -1 if less than 0, 0 if 0, and 1 if greater than 1
+     *
+     * @param a A number you want the sign of
+     * @return The sign represented by -1, 0, or 1
+     */
+    public static double getSign(Double a) {
+        return Math.signum(a);
+    }
 }

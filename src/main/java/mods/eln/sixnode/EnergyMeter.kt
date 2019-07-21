@@ -499,8 +499,8 @@ class EnergyMeterElement(sixNode: SixNode, side: Direction, descriptor: SixNodeD
             cableDescriptor!!.applyTo(aLoad)
             cableDescriptor!!.applyTo(bLoad)
 
-            voltageWatchDogA.setUNominalMirror(cableDescriptor!!.electricalNominalVoltage)
-            voltageWatchDogB.setUNominalMirror(cableDescriptor!!.electricalNominalVoltage)
+            voltageWatchDogA.setUNominal(cableDescriptor!!.electricalNominalVoltage)
+            voltageWatchDogB.setUNominal(cableDescriptor!!.electricalNominalVoltage)
             // currentWatchDog.setIAbsMax(cableDescriptor.electricalMaximalCurrent);
         }
     }

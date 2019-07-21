@@ -48,7 +48,7 @@ class DownlinkElement(node: TransparentNode, descriptor: TransparentNodeDescript
         slowProcessList.add(voltageWatchdog)
         voltageWatchdog
                 .set(electricalLoad)
-                .setUMaxMin(desc.cableDescriptor.electricalNominalVoltage * 16)
+                .setUNominal(desc.cableDescriptor.electricalNominalVoltage * 16)
                 .set(WorldExplosion(this).cableExplosion())
 
     }

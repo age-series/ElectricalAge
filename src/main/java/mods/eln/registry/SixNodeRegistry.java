@@ -292,6 +292,7 @@ public class SixNodeRegistry {
                 25,
                 MaterialType.COPPER,
                 0,
+                MaterialType.RUBBER,
                 Eln.cableWarmLimit,
                 -100,
                 Eln.cableHeatingTime
@@ -308,6 +309,7 @@ public class SixNodeRegistry {
                 75,
                 MaterialType.COPPER,
                 0,
+                MaterialType.RUBBER,
                 Eln.cableWarmLimit,
                 -100,
                 Eln.cableHeatingTime
@@ -324,6 +326,7 @@ public class SixNodeRegistry {
                 150,
                 MaterialType.COPPER,
                 0,
+                MaterialType.RUBBER,
                 Eln.cableWarmLimit,
                 -100,
                 Eln.cableHeatingTime
@@ -340,6 +343,7 @@ public class SixNodeRegistry {
                 600,
                 MaterialType.COPPER,
                 0,
+                MaterialType.RUBBER,
                 Eln.cableWarmLimit,
                 -100,
                 Eln.cableHeatingTime

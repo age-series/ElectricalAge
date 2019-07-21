@@ -2,6 +2,8 @@ package mods.eln.mechanical
 
 import mods.eln.Eln
 import mods.eln.cable.CableRenderDescriptor
+import mods.eln.debug.DP
+import mods.eln.debug.DPType
 import mods.eln.misc.*
 import mods.eln.node.NodeBase
 import mods.eln.node.transparent.EntityMetaTag
@@ -15,6 +17,7 @@ import mods.eln.sim.mna.component.Resistor
 import mods.eln.sim.mna.component.VoltageSource
 import mods.eln.sim.mna.misc.IRootSystemPreStepProcess
 import mods.eln.sim.mna.misc.MnaConst
+import mods.eln.sim.mna.misc.Th
 import mods.eln.sim.nbt.NbtElectricalLoad
 import mods.eln.sim.nbt.NbtThermalLoad
 import mods.eln.sim.process.destruct.ThermalLoadWatchDog
@@ -71,7 +74,7 @@ class GenMotorDescriptor(
             obj.getPart("LED_5"),
             obj.getPart("LED_6")
         ).requireNoNulls()
-        radsToU = LinearFunction(0f, 0f, nominalRads.toFloat(), nominalU.toFloat())
+        radsToU = LinearFunction(-nominalRads.toFloat(), -nominalU.toFloat(), nominalRads.toFloat(), nominalU.toFloat())
         if (this.type == GMType.GENERATOR) {
             customSound = "eln:shaft_motor"
         }else{
@@ -117,6 +120,7 @@ class GenMotorElenemt(node: TransparentNode, desc_: TransparentNodeDescriptor): 
         desc.cable.applyTo(shaftLoad)
         wireShaftResistor = Resistor(wireLoad, shaftLoad)
         desc.cable.applyTo(wireShaftResistor)
+        wireShaftResistor.r = 1.0
         powerSource = VoltageSource("powerSource", shaftLoad, null)
         electicalProcess = GenMotorElectricalProcess()
         shaftProcess = GenMotorShaftProcess()
@@ -127,7 +131,7 @@ class GenMotorElenemt(node: TransparentNode, desc_: TransparentNodeDescriptor): 
         thermalWatchdog = ThermalLoadWatchDog()
         thermalWatchdog.set(thermal).set(WorldExplosion(this).machineExplosion())
         desc.thermalLoadInitializer.applyTo(thermalWatchdog)
-        slowProcessList.add(thermalWatchdog)
+        //slowProcessList.add(thermalWatchdog)
         electricalLoadList.addAll(arrayOf(wireLoad, shaftLoad))
         electricalComponentList.addAll(arrayOf(wireShaftResistor, powerSource))
         electricalProcessList.add(shaftProcess)
@@ -197,7 +201,7 @@ class GenMotorElenemt(node: TransparentNode, desc_: TransparentNodeDescriptor): 
     inner class GenMotorElectricalProcess: IProcess, IRootSystemPreStepProcess {
         override fun process(time: Double) {
             val noTorqueU = desc.radsToU.getValue(shaft.rads)
-            val th = wireLoad.subSystem!!.getTh(wireLoad, powerSource)
+            val th = Th.getTh(wireLoad, powerSource)
             if (th.U.isNaN()) {
                 th.U = noTorqueU
                 th.R = MnaConst.highImpedance
@@ -206,7 +210,8 @@ class GenMotorElenemt(node: TransparentNode, desc_: TransparentNodeDescriptor): 
             if(th.isHighImpedance) {
                 U = noTorqueU
             } else if (noTorqueU < th.U) {
-                U = th.U * 0.9999 + noTorqueU * 0.0001
+                U = (th.U * 0.9999 + (if(th.U > 0.0) noTorqueU else -noTorqueU) * 0.0001)
+                //DP.println(DPType.MECHANICAL, "${th.R} $U ${shaft.rads}")
             } else {
                 val a = 1 / th.R
                 val b = 25 - th.U / th.R
@@ -214,6 +219,7 @@ class GenMotorElenemt(node: TransparentNode, desc_: TransparentNodeDescriptor): 
                 U = (-b + Math.sqrt(b * b -4 * a * c)) / (2 * a)
             }
             powerSource.u = U
+            wireShaftResistor.r = Math.max(MnaConst.noImpedance, shaft.rads * -2 + 1.0)
         }
 
         override fun rootSystemPreStepProcess() {
@@ -234,17 +240,28 @@ class GenMotorElenemt(node: TransparentNode, desc_: TransparentNodeDescriptor): 
             }
             //DP.println(DPType.MECHANICAL, "T: " + desc.type + "\tE: " + E)
 
-            if (E < 0 && desc.type == GMType.MOTOR) {
+            /*
+            if (E < -5 && desc.type == GMType.MOTOR) {
                 // terrible pushing electrical power
                 E *= 10.0
             }
-            if (E < 0 && desc.type == GMType.GENERATOR) {
+            if (E < -5 && desc.type == GMType.GENERATOR) {
                 // terrible pushing shaft power
                 E *= 0.1
             }
+            */
             maybePublishP(E / time)
-            E = E - defaultDrag * Math.max(shaft.rads, 10.0)
+
+            if (shaft.rads > 0.0) {
+                E = E - defaultDrag
+                if (E < 0) E = 0.0
+            } else if (shaft.rads < 0.0){
+                E = E + defaultDrag
+                if (E > 0) E = 0.0
+            }
+
             shaft.energy += E * desc.efficiency
+            DP.println(DPType.MECHANICAL, "shaft energy: ${shaft.energy}")
             val tPower = E * (1 - desc.efficiency)
             thermal.movePowerTo(tPower)
         }

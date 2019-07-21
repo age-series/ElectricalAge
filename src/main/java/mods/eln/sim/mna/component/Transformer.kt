@@ -1,7 +1,6 @@
 package mods.eln.sim.mna.component
 
 import mods.eln.sim.mna.SubSystem
-import mods.eln.sim.mna.misc.MnaConst
 import mods.eln.sim.mna.state.CurrentState
 import mods.eln.sim.mna.state.State
 

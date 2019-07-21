@@ -73,7 +73,7 @@ class ElectricalPoleElement(node: TransparentNode, descriptor: TransparentNodeDe
         }
         voltageWatchdog
                 .set(electricalLoad)
-                .setUMaxMin(desc.voltageLimit)
+                .setUNominal(desc.voltageLimit)
                 .set(exp)
 
         if (desc.includeTransformer) {

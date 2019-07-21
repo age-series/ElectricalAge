@@ -53,6 +53,7 @@ open class VoltageSource : Bipole, ISubSystemProcessI, INBTTReady {
         s.addToI(currentState, u)
     }
 
+    // TODO: Move to a VoltageSourceNbt abstraction class
     override fun readFromNBT(nbt: NBTTagCompound, str: String) {
         u = (nbt.getDouble(str + name + "U"))
         currentState.state = nbt.getDouble(str + name + "Istate")

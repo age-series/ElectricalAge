@@ -5,7 +5,7 @@ import mods.eln.sim.mna.component.Resistor
 import mods.eln.sim.mna.state.State
 import net.minecraft.nbt.NBTTagCompound
 
-class NbtResistor(name: String, aPin: State, bPin: State) : Resistor(aPin, bPin), INBTTReady {
+class NbtResistor(name: String, aPin: State?, bPin: State?) : Resistor(aPin, bPin), INBTTReady {
 
     init {
         this.name = name

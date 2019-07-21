@@ -1,6 +1,8 @@
 package mods.eln.transparentnode.transformer;
 
 import mods.eln.Eln;
+import mods.eln.debug.DP;
+import mods.eln.debug.DPType;
 import mods.eln.i18n.I18N;
 import mods.eln.item.ConfigCopyToolDescriptor;
 import mods.eln.item.FerromagneticCoreDescriptor;
@@ -172,6 +174,7 @@ public class TransformerElement extends TransparentNodeElement implements IConfi
             if (o instanceof GenericCableDescriptor) {
                 primaryDescriptor = (GenericCableDescriptor) o;
                 voltagePrimaryWatchdog.setUNominal(primaryDescriptor.electricalNominalVoltage);
+                DP.println(DPType.TRANSPARENT_NODE, "" + primaryDescriptor.electricalNominalVoltage);
             }else{
                 voltagePrimaryWatchdog.setUNominal(1000000000);
             }
@@ -191,6 +194,9 @@ public class TransformerElement extends TransparentNodeElement implements IConfi
         } else {
             voltageSecondaryWatchdog.setUNominal(1000000000);
         }
+
+        DP.println(DPType.TRANSPARENT_NODE, "voltagePrimary: " + voltagePrimaryWatchdog.getMax());
+        DP.println(DPType.TRANSPARENT_NODE, "voltageSecondary: " + voltageSecondaryWatchdog.getMax());
 
         double coreFactor = 1;
         if (core != null) {
@@ -397,7 +403,6 @@ public class TransformerElement extends TransparentNodeElement implements IConfi
                 info.put(I18N.tr("Subsystem Matrix Size: "), "Not part of a subsystem");
             }
         }
-
         return info;
     }
 

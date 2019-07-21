@@ -8,6 +8,7 @@ import mods.eln.debug.DPType
 import mods.eln.misc.Coordonate
 import mods.eln.misc.Direction
 import mods.eln.misc.INBTTReady
+import mods.eln.misc.KSF
 import mods.eln.node.NodeManager
 import mods.eln.sim.process.destruct.DelayedDestruction
 import mods.eln.sim.process.destruct.ShaftSpeedWatchdog
@@ -81,17 +82,22 @@ open class ShaftNetwork() : INBTTReady {
     var radsLastPublished = rads
 
     var energy: Double
-        get() = mass * rads * rads * 0.5 * Eln.shaftEnergyFactor
+        get() {
+            val ret = mass * rads * (if (rads < 0) -rads else rads) * 0.5 * Eln.shaftEnergyFactor
+            if (KSF.getSign(ret) != KSF.getSign(rads)) DP.println(DPType.MECHANICAL, "ASSERT $ret not same sign as $rads")
+            return ret
+        }
         set(value) {
             if(value < 0)
-                rads = 0.0
+                rads = -Math.sqrt(2 * Math.abs(value) / (mass * Eln.shaftEnergyFactor))
             else
                 rads = Math.sqrt(2 * value / (mass * Eln.shaftEnergyFactor))
+            DP.println(DPType.MECHANICAL, "energy: $value translated to $rads rad/s")
         }
 
     fun afterSetRads() {
-        if (_rads < 0) _rads = 0.0
-        if (radsLastPublished > _rads * 1.05 || radsLastPublished < _rads * 0.95) {
+        //if (_rads < 0) _rads = 0.0
+        if (Math.abs(radsLastPublished) > Math.abs(_rads * 1.05) || Math.abs(radsLastPublished) < Math.abs(_rads * 0.95)) {
             elements.forEach { it.needPublish() }
             radsLastPublished = _rads
         }

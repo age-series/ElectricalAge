@@ -33,15 +33,26 @@ class DelayInterSystem2 : VoltageSource("") {
             val originalU = d.u
 
             // 10.0
-            val aU = originalU
+            val aU = 10.0 //originalU
             d.u = aU
             val aI = d.getSubSystem()!!.solve(d.currentState)
 
             // 5.0
-            val bU = originalU * 0.95
+            val bU = 5.0 //originalU * 0.95
             d.u = bU
             val bI = d.getSubSystem()!!.solve(d.currentState)
 
+            d.Rth = (aU - bU) / (bI - aI) * 2
+
+            if (d.Rth.isNaN()) d.Rth = MnaConst.highImpedance
+            if (d.Rth < MnaConst.noImpedance) {
+                d.Rth = MnaConst.noImpedance
+            } else if (d.Rth > MnaConst.ultraImpedance) {
+                d.Rth = MnaConst.ultraImpedance
+            }
+            d.u = originalU + d.Rth * aI
+
+            /*
             d.Rth = (aU - bU) / (bI - aI) * 2
             if (d.Rth.isNaN()) d.Rth = MnaConst.noImpedance
             //if(Double.isInfinite(d.Rth)) d.Rth = Double.MAX_VALUE;
@@ -51,6 +62,7 @@ class DelayInterSystem2 : VoltageSource("") {
             } else {
                 d.u = originalU + d.Rth * aI
             }
+             */
         }
     }
 }

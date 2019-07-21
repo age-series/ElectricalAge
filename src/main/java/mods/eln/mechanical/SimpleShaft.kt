@@ -3,6 +3,8 @@ package mods.eln.mechanical
 import mods.eln.cable.CableRender
 import mods.eln.cable.CableRenderDescriptor
 import mods.eln.cable.CableRenderType
+import mods.eln.debug.DP
+import mods.eln.debug.DPType
 import mods.eln.misc.*
 import mods.eln.node.transparent.*
 import mods.eln.sim.process.destruct.WorldExplosion
@@ -41,7 +43,7 @@ abstract class SimpleShaftDescriptor(name: String, elm: KClass<out TransparentNo
             val oy = centre.yCoord
             val oz = centre.zCoord
             GL11.glTranslated(ox, oy, oz)
-            GL11.glRotatef(((angle * 360).toDouble() / 2.0 / Math.PI).toFloat(), 0f, 0f, 1f)
+            GL11.glRotatef(((angle * 360) / 2.0 / Math.PI).toFloat(), 0f, 0f, 1f)
             GL11.glTranslated(-ox, -oy, -oz)
             for (part in rotating) {
                 part.draw()
@@ -149,6 +151,7 @@ open class ShaftRender(entity: TransparentNodeEntity, desc: TransparentNodeDescr
 
     override fun refresh(deltaT: Float) {
         super.refresh(deltaT)
+        //DP.println(DPType.RENDER, "logRads: $logRads, deltaT: $deltaT")
         angle += logRads * deltaT
         volumeSetting.step(deltaT)
     }
@@ -156,7 +159,7 @@ open class ShaftRender(entity: TransparentNodeEntity, desc: TransparentNodeDescr
     override fun networkUnserialize(stream: DataInputStream) {
         super.networkUnserialize(stream)
         rads = stream.readFloat().toDouble()
-        logRads = Math.log(rads + 1) / Math.log(1.2)
+        logRads = (if (rads < 0) -1 else 1) * Math.log(Math.abs(rads) + 1) / Math.log(1.2)
         eConn.deserialize(stream)
         cableRefresh = true
     }

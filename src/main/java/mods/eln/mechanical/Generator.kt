@@ -2,6 +2,8 @@ package mods.eln.mechanical
 
 import mods.eln.Eln
 import mods.eln.cable.CableRenderDescriptor
+import mods.eln.debug.DP
+import mods.eln.debug.DPType
 import mods.eln.misc.*
 import mods.eln.node.NodeBase
 import mods.eln.node.transparent.EntityMetaTag
@@ -14,6 +16,7 @@ import mods.eln.sim.ThermalLoadInitializer
 import mods.eln.sim.mna.component.Resistor
 import mods.eln.sim.mna.component.VoltageSource
 import mods.eln.sim.mna.misc.IRootSystemPreStepProcess
+import mods.eln.sim.mna.misc.Th
 import mods.eln.sim.nbt.NbtElectricalLoad
 import mods.eln.sim.nbt.NbtThermalLoad
 import mods.eln.sim.process.destruct.ThermalLoadWatchDog
@@ -196,7 +199,7 @@ class GeneratorElement(node: TransparentNode, desc_: TransparentNodeDescriptor) 
 
             // Most things below were copied from TurbineElectricalProcess.
             // Some comments on what math is going on would be great.
-            val th = positiveLoad.subSystem!!.getTh(positiveLoad, electricalPowerSource)
+            val th = Th.getTh(positiveLoad, electricalPowerSource)
             var Ut: Double
             if (targetU < th.U) {
                 Ut = th.U * 0.999 + targetU * 0.001

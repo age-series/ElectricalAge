@@ -1,9 +1,8 @@
 package mods.eln.transparentnode.turbine;
 
 import mods.eln.sim.IProcess;
-import mods.eln.sim.mna.SubSystem.Th;
 import mods.eln.sim.mna.misc.IRootSystemPreStepProcess;
-
+import mods.eln.sim.mna.misc.Th;
 
 public class TurbineElectricalProcess implements IProcess, IRootSystemPreStepProcess {
     private final TurbineElement turbine;
@@ -18,7 +17,7 @@ public class TurbineElectricalProcess implements IProcess, IRootSystemPreStepPro
         double deltaT = turbine.warmLoad.Tc - turbine.coolLoad.Tc;
         double targetU = descriptor.TtoU.getValue(deltaT);
 
-        Th th = turbine.positiveLoad.getSubSystem().getTh(turbine.positiveLoad, turbine.electricalPowerSourceProcess);
+        Th th = mods.eln.sim.mna.misc.Th.getTh(turbine.positiveLoad, turbine.electricalPowerSourceProcess);
         double Ut;
         if (targetU < th.getU()) {
             Ut = th.getU();

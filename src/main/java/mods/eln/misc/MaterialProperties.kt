@@ -17,6 +17,10 @@ class MaterialProperties {
                 1.68,
                 385.0,
                 2530.0)
+            materials[MaterialType.RUBBER] = MaterialData(
+                1e5,
+                0.15,
+                Double.MAX_VALUE)
             prepared = true
         }
 
@@ -30,11 +34,7 @@ class MaterialProperties {
             if (!prepared) {
                 prepare()
             }
-            if (type in materials) {
-                return materials[type]!!.ELECTRICAL_RESISTIVITY * Math.pow(10.0, -8.0)
-            } else {
-                return 1.68
-            }
+            return (materials[type]?.ELECTRICAL_RESISTIVITY ?: 1.68) * 10e-8
         }
 
         /*
@@ -68,11 +68,7 @@ Source: http://hyperphysics.phy-astr.gsu.edu/hbase/Tables/rstiv.html
             if (!prepared) {
                 prepare()
             }
-            if (type in materials) {
-                return materials[type]!!.THERMAL_CONDUCTIVITY
-            } else {
-                return 385.0
-            }
+            return materials[type]?.THERMAL_CONDUCTIVITY ?: 385.0
         }
     }
 
@@ -90,21 +86,25 @@ Aluminum:   205.0
 Iron:       79.5
 Steel:      50.2
 Lead:       34.7
-Mercury:    8.3
+Mercury:    8.3   // I question using this because of convection
 Glass:      0.8
-Water:      0.6
-Air:        0.024
+Water:      0.6   // I question using this because of convection
+Air:        0.024 // I question using this because of convection
+
+Rubber, Vulcanized: 0.15
 
 Source: http://hyperphysics.phy-astr.gsu.edu/hbase/Tables/thrcn.html
+https://www.electronics-cooling.com/2001/11/the-thermal-conductivity-of-rubbers-elastomers/
 
 */
 
     // TODO: Get recommended amperage per material type per mm^2. (remember, skin effect on AC signals)
 
+    // TODO: Replace Fusing Current with Dielectric Strength? Fusing current is honestly kinda useless...
+    private data class MaterialData(val ELECTRICAL_RESISTIVITY: Double, val THERMAL_CONDUCTIVITY: Double, val FUSING_CURRENT: Double)
 }
 
 enum class MaterialType {
-    COPPER
+    COPPER,
+    RUBBER
 }
-
-data class MaterialData(val ELECTRICAL_RESISTIVITY: Double, val THERMAL_CONDUCTIVITY: Double, val FUSING_CURRENT: Double)

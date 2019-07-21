@@ -33,6 +33,7 @@ class ResistorSwitch : Resistor, INBTTReady {
         return state
     }
 
+    // TODO: Move to a ResistorSwitchNbt abstraction class
     override fun readFromNBT(nbt: NBTTagCompound, str: String) {
         var strl = str
         strl += name

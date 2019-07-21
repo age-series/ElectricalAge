@@ -44,16 +44,18 @@ class CurrentCableDescriptor(name: String, render: CableRenderDescriptor) : Gene
     /**
      *
      * @param conductorArea size of conductor area (mm^2)
-     * @param type material type (Copper, Iron, etc.)
+     * @param conductorType type of conductor (Copper, Iron, etc.)
      * @param insulationThickness thickness of insulation (mm)
+     * @param insulatorType type of insulation (Rubber, Glass, etc.)
      * @param thermalWarmLimit maximum temperature (C)
      * @param thermalCoolLimit minimum temperature (C)
      * @param thermalNominalHeatTime
      */
     fun setCableProperties(
         conductorArea: Double,
-        type: MaterialType,
+        conductorType: MaterialType,
         insulationThickness: Double,
+        insulatorType: MaterialType,
         thermalWarmLimit: Double,
         thermalCoolLimit: Double,
         thermalNominalHeatTime: Double
@@ -62,18 +64,18 @@ class CurrentCableDescriptor(name: String, render: CableRenderDescriptor) : Gene
         this.thermalWarmLimit = thermalWarmLimit
         this.thermalCoolLimit = thermalCoolLimit
 
-        this.electricalMaximalCurrent = 0.355 * conductorArea // roughly (mm^2 / I) that is suggested by https://www.powerstream.com/Wire_Size.htm for power transmission lines
+        electricalMaximalCurrent = 0.355 * conductorArea // roughly (mm^2 / I) that is suggested by https://www.powerstream.com/Wire_Size.htm for power transmission lines
 
-        electricalRs = MaterialProperties.getElectricalResistivity(type) * (conductorArea / 1000000.0 / 1.0) * Eln.cableResistanceMultiplier // resistivity (ohms/meter)* (cross sectional area (m) / length (m))
+        this.electricalRs = MaterialProperties.getElectricalResistivity(conductorType) * (conductorArea / 1000000.0 / 1.0) * Eln.cableResistanceMultiplier // resistivity (ohms/meter)* (cross sectional area (m) / length (m))
         DP.println(DPType.SIX_NODE, "(" + this.name + ") Current Cable Resistance: " + electricalRs)
 
-        electricalNominalVoltage = insulationThickness * 100
+        //electricalNominalVoltage = insulationThickness * 100
 
         // begin odd thermal system code
         val thermalMaximalPowerDissipated = electricalMaximalCurrent * electricalMaximalCurrent * electricalRs * 2.0
         thermalC = thermalMaximalPowerDissipated * thermalNominalHeatTime / thermalWarmLimit
         thermalRp = thermalWarmLimit / thermalMaximalPowerDissipated
-        thermalRs = MaterialProperties.getThermalConductivity(type) / 385.0 / thermalC / 2.0
+        thermalRs = MaterialProperties.getThermalConductivity(conductorType) / 385.0 / thermalC / 2.0
         // TODO: FIX WHEN REDOING THERMAL SYSTEM
         // I replaced thermalConductivityTao with (material.getThermalConductivity() / 385.0)
         // Since thermalConductivityTao is typically 1, I'm going to use Copper's thermal conductivity constant as a baseline.

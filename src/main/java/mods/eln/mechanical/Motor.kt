@@ -17,6 +17,7 @@ import mods.eln.sim.mna.component.Resistor
 import mods.eln.sim.mna.component.VoltageSource
 import mods.eln.sim.mna.misc.IRootSystemPreStepProcess
 import mods.eln.sim.mna.misc.MnaConst
+import mods.eln.sim.mna.misc.Th
 import mods.eln.sim.nbt.NbtElectricalLoad
 import mods.eln.sim.nbt.NbtThermalLoad
 import mods.eln.sim.process.destruct.ThermalLoadWatchDog
@@ -216,7 +217,7 @@ class MotorElement(node: TransparentNode, desc_: TransparentNodeDescriptor) :
 
             // Most of this was copied from Generator.kt, and bears the same
             // admonition: I don't actually know how this works.
-            val th = wireLoad.subSystem!!.getTh(wireLoad, powerSource)
+            val th = Th.getTh(wireLoad, powerSource)
             if (th.U.isNaN()) {
                 th.U = noTorqueU
                 th.R = MnaConst.highImpedance
@@ -245,10 +246,10 @@ class MotorElement(node: TransparentNode, desc_: TransparentNodeDescriptor) :
                 U = (-b + Math.sqrt(b * b - 4 * a * c)) / (2 * a)
                 last = 2
             }
-            //DP.println(DPType.MECHANICAL, "Voltage: " + U)
+            DP.println(DPType.MECHANICAL, "Voltage: " + U)
             powerSource.u = U
-            //DP.println(DPType.MECHANICAL, "Ohms: " + th.R)
-            //DP.println(DPType.MECHANICAL, "Current: " + powerSource.currentState.state)
+            DP.println(DPType.MECHANICAL, "Ohms: " + th.R)
+            DP.println(DPType.MECHANICAL, "Current: " + powerSource.currentState.state)
 
         }
 

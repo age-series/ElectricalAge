@@ -1,6 +1,8 @@
 package mods.eln.sim.mna
 
-import mods.eln.misc.Profiler
+import mods.eln.debug.DP
+import mods.eln.debug.DPType
+import mods.eln.debug.Profiler
 import mods.eln.sim.mna.component.Component
 import mods.eln.sim.mna.component.Delay
 import mods.eln.sim.mna.component.Resistor
@@ -8,7 +10,6 @@ import mods.eln.sim.mna.component.VoltageSource
 import mods.eln.sim.mna.misc.IDestructor
 import mods.eln.sim.mna.misc.ISubSystemProcessFlush
 import mods.eln.sim.mna.misc.ISubSystemProcessI
-import mods.eln.sim.mna.misc.MnaConst
 import mods.eln.sim.mna.state.State
 import mods.eln.sim.mna.state.VoltageState
 import org.apache.commons.math3.linear.MatrixUtils
@@ -19,37 +20,34 @@ import org.apache.commons.math3.linear.SingularValueDecomposition
 import java.util.ArrayList
 import java.util.LinkedList
 
-class SubSystem(root: RootSystem?, dt: Double) {
+class SubSystem(root: RootSystem?, val dt: Double) {
     var component = ArrayList<Component>()
     var states: MutableList<State> = ArrayList()
     var breakDestructor = LinkedList<IDestructor>()
     var interSystemConnectivity = ArrayList<SubSystem>()
-    internal var processI = ArrayList<ISubSystemProcessI>()
-    internal var statesTab: Array<State?>? = null
+    private var processI = ArrayList<ISubSystemProcessI>()
+    private var statesTab: Array<State?>? = null
 
     var root: RootSystem? = null
-        internal set
+        private set
 
-    var dt: Double = 0.toDouble()
-        internal set
-    internal var matrixValid = false
+    private var matrixValid = false
 
-    internal var stateCount: Int = 0
-    internal var A: RealMatrix? = null
-    //RealMatrix I;
-    internal var singularMatrix: Boolean = false
+    private var stateCount: Int = 0
+    private var a: RealMatrix? = null
+    private var singularMatrix: Boolean = false
 
-    internal var AInvdata: Array<DoubleArray>? = null
-    internal var Idata: DoubleArray? = null
+    private var aInverseData: Array<DoubleArray>? = null
+    private var iData: DoubleArray? = null
+    private var xTempData: DoubleArray? = null
 
-    internal var XtempData: DoubleArray? = null
+    private var breaked = false
 
-    internal var breaked = false
+    private var processF = ArrayList<ISubSystemProcessFlush>()
 
-    internal var processF = ArrayList<ISubSystemProcessFlush>()
+    private val matrixProfiler = Profiler()
 
     init {
-        this.dt = dt
         this.root = root
     }
 
@@ -81,16 +79,6 @@ class SubSystem(root: RootSystem?, dt: Double) {
         invalidate()
     }
 
-    /*public void removeAll() {
-		for (Component c : component) {
-			c.disconnectFromSubSystem();
-		}
-		for (State s : states) {
-			s.disconnectFromSubSystem();
-		}
-		invalidate();
-	}*/
-
     fun removeProcess(p: ISubSystemProcessI) {
         processI.remove(p)
         invalidate()
@@ -112,23 +100,16 @@ class SubSystem(root: RootSystem?, dt: Double) {
         processI.add(p)
     }
 
-    //double[][] getDataRef()
-
-    fun generateMatrix() {
+    private fun generateMatrix() {
         stateCount = states.size
 
-        val p = Profiler()
-        p.add("Inversse with $stateCount state : ")
+        matrixProfiler.reset()
+        matrixProfiler.add("Inversse with $stateCount state")
 
-        A = MatrixUtils.createRealMatrix(stateCount, stateCount)
+        a = MatrixUtils.createRealMatrix(stateCount, stateCount)
 
-        //Adata = ((Array2DRowRealMatrix) A).getDataRef();
-        // X = MatrixUtils.createRealMatrix(stateCount, 1); Xdata =
-        // ((Array2DRowRealMatrix)X).getDataRef();
-        //I = MatrixUtils.createRealMatrix(stateCount, 1);
-        //Idata = ((Array2DRowRealMatrix) I).getDataRef();
-        Idata = DoubleArray(stateCount)
-        XtempData = DoubleArray(stateCount)
+        iData = DoubleArray(stateCount)
+        xTempData = DoubleArray(stateCount)
         run {
             var idx = 0
             for (s in states) {
@@ -140,39 +121,34 @@ class SubSystem(root: RootSystem?, dt: Double) {
             c.applyTo(this)
         }
 
-        //	org.apache.commons.math3.linear.
-
-        val svd = SingularValueDecomposition(A)
+        val svd = SingularValueDecomposition(a)
         // Broken or large numbers are bad. Inverses are typically pretty ill-conditioned, but we're looking for egregious ones.
         // For every order of magnitude from 10^n, we get n more digits of error (apparently).
         // Some people say 10e8 or 10e12 may be more realistic? Not sure I want that much error. I set 10e4 for now.
         // Doubles have (roughly?) 15 decimal digits of precision. I can see 4 of them go away without too much trouble.
         if(svd.conditionNumber.isNaN() or (svd.conditionNumber > 10e4)) {
-            System.out.println("Condition of Matrix: " + svd.conditionNumber)
-            for (row in A!!.data) {
+            DP.println(DPType.MNA, "Condition of Matrix: " + svd.conditionNumber)
+            for (row in a!!.data) {
                 for (i in row) {
-                    System.out.print("" + i + ", ")
+                    DP.print(DPType.MNA, "$i, ")
                 }
-                System.out.println()
+                DP.println(DPType.MNA, "")
             }
         }
 
         try {
-            //FieldLUDecomposition QRDecomposition  LUDecomposition RRQRDecomposition
-            val Ainv = QRDecomposition(A).solver.inverse
-            AInvdata = Ainv.data
+            val aInverse = QRDecomposition(a).solver.inverse
+            aInverseData = aInverse.data
             singularMatrix = false
-        } catch (e: Exception) {
+        } catch (e: org.apache.commons.math3.linear.SingularMatrixException) {
             singularMatrix = true
             if (stateCount > 1) {
-                var idx = 0
-                idx++
-                System.out.println("//////////SingularMatrix////////////")
-                for (row in A!!.data) {
+                DP.println(DPType.MNA,"//////////SingularMatrix////////////")
+                for (row in a!!.data) {
                     for (i in row) {
-                        System.out.print("" + i + ", ")
+                        DP.print(DPType.MNA, "$i, ")
                     }
-                    System.out.println()
+                    DP.println(DPType.MNA, "")
                 }
             }
         }
@@ -182,33 +158,20 @@ class SubSystem(root: RootSystem?, dt: Double) {
 
         matrixValid = true
 
-        p.stop()
-        System.out.println(p.toString())
+        matrixProfiler.stop()
+        DP.println(DPType.MNA, matrixProfiler.toString())
     }
 
     fun addToA(a: State?, b: State?, v: Double) {
         if (a == null || b == null)
             return
-        A?.addToEntry(a.id, b.id, v)
-        //Adata[a.getId()][b.getId()] += v;
+        this.a?.addToEntry(a.id, b.id, v)
     }
 
     fun addToI(s: State?, v: Double) {
         if (s == null) return
-        Idata?.set(s.id, v)
-        //Idata[s.getId()][0] += v;
+        iData?.set(s.id, v)
     }
-
-    /*
-	 * public void pushX(){
-	 *
-	 * }
-	 */
-    /*
-	 * public void popX(){
-	 *
-	 * }
-	 */
 
     fun step() {
         stepCalc()
@@ -216,45 +179,34 @@ class SubSystem(root: RootSystem?, dt: Double) {
     }
 
     fun stepCalc() {
-        val profiler = Profiler()
-        //	profiler.add("generateMatrix");
         if (!matrixValid) {
             generateMatrix()
         }
-
         if (!singularMatrix) {
-            //profiler.add("generateMatrix");
             for (y in 0 until stateCount) {
-                Idata?.set(y, 0.0)
+                iData?.set(y, 0.0)
             }
-            //profiler.add("generateMatrix");
             for (p in processI) {
                 p.simProcessI(this)
             }
-            //	profiler.add("generateMatrix");
-
             for (idx2 in 0 until stateCount) {
                 var stack = 0.0
                 for (idx in 0 until stateCount) {
-                    stack += AInvdata!![idx2][idx] * Idata?.get(idx)!!
+                    stack += aInverseData!![idx2][idx] * iData?.get(idx)!!
                 }
-                XtempData!![idx2] = stack
+                xTempData!![idx2] = stack
             }
-            //Xtemp = Ainv.multiply(I);
         }
-        profiler.stop()
-        //Utils.println(profiler);
     }
 
     fun solve(pin: State): Double {
-        //Profiler profiler = new Profiler();
         if (!matrixValid) {
             generateMatrix()
         }
 
         if (!singularMatrix) {
             for (y in 0 until stateCount) {
-                Idata?.set(y, 0.0)
+                iData?.set(y, 0.0)
             }
             for (p in processI) {
                 p.simProcessI(this)
@@ -263,20 +215,17 @@ class SubSystem(root: RootSystem?, dt: Double) {
             val idx2 = pin.id
             var stack = 0.0
             for (idx in 0 until stateCount) {
-                stack += AInvdata!![idx2][idx] * Idata!![idx]
+                stack += aInverseData!![idx2][idx] * iData!![idx]
             }
             return stack
         }
         return 0.0
     }
 
-    //RealMatrix Xtemp;
     fun stepFlush() {
         if (!singularMatrix) {
             for (idx in 0 until stateCount) {
-                //statesTab[idx].state = Xtemp.getEntry(idx, 0);
-                statesTab?.get(idx)?.state = XtempData!![idx]
-
+                statesTab?.get(idx)?.state = xTempData!![idx]
             }
         } else {
             for (idx in 0 until stateCount) {
@@ -289,20 +238,12 @@ class SubSystem(root: RootSystem?, dt: Double) {
         }
     }
 
-    fun containe(state: State): Boolean {
+    fun contains(state: State): Boolean {
         return states.contains(state)
     }
 
-    fun setX(s: State, value: Double) {
-        s.state = value
-    }
-
-    fun getX(s: State): Double {
-        return s.state
-    }
-
     fun getXSafe(bPin: State?): Double {
-        return bPin?.let { getX(it) } ?: 0.0
+        return bPin?.state ?: 0.0
     }
 
     fun breakSystem(): Boolean {
@@ -342,56 +283,11 @@ class SubSystem(root: RootSystem?, dt: Double) {
         processF.remove(p)
     }
 
-    class Th {
-        var R: Double = 0.toDouble()
-        var U: Double = 0.toDouble()
-
-        val isHighImpedance: Boolean
-            get() = R > 1e8
-    }
-
-    fun getTh(d: State, voltageSource: VoltageSource): Th {
-        val th = Th()
-        val originalU = d.state
-
-        if (originalU.isNaN()) {
-            System.out.println("originalU NaN!")
-        }
-
-        val aU = originalU
-        voltageSource.u = aU
-        val aI = solve(voltageSource.currentState)
-
-        val bU = originalU * 0.95
-        voltageSource.u = bU
-        val bI = solve(voltageSource.currentState)
-
-        var Rth = (aU - bU) / (bI - aI)
-        if (Rth.isNaN()) Rth = MnaConst.noImpedance
-        //System.out.println("au ai bu bi r" + aU + " " + aI + " " + bU + " " + bI + " " + Rth)
-
-        val Uth: Double
-        //if(Double.isInfinite(d.Rth)) d.Rth = Double.MAX_VALUE;
-        if (Rth > 10000000000000000000.0 || Rth < 0) {
-            Uth = 0.0
-            Rth = 10000000000000000000.0
-        } else {
-            Uth = originalU + Rth * aI
-        }
-        voltageSource.u = Uth // originanlU
-
-        th.R = Rth
-        th.U = Uth
-        //System.out.println("" + th.R + " " + th.U)
-        return th
-    }
-
     override fun toString(): String {
         var str = ""
         for (c in component) {
             str += c.toString()
         }
-        //str = component.size() + "components";
         return str
     }
 
@@ -403,27 +299,11 @@ class SubSystem(root: RootSystem?, dt: Double) {
 
         @JvmStatic
         fun main(args: Array<String>) {
-            //		SubSystem s = new SubSystem(null, 0.1);
-            //		VoltageState n1, n2;
-            //		VoltageSource u1;
-            //		Resistor r1, r2;
-            //
-            //		s.addState(n1 = new VoltageState());
-            //		s.addState(n2 = new VoltageState());
-            //
-            //		//s.addComponent((u1 = new VoltageSource()).setU(1).connectTo(n1, null));
-            //
-            //		s.addComponent((r1 = new Resistor()).setR(10).connectTo(n1, n2));
-            //		s.addComponent((r2 = new Resistor()).setR(20).connectTo(n2, null));
-            //
-            //		s.step();
-            //		s.step();
-
             val s = SubSystem(null, 0.1)
             val n1 = VoltageState()
             val n2 = VoltageState()
             val n3 = VoltageState()
-            val u1: VoltageSource
+            val u1 = VoltageSource("")
             val r1 = Resistor()
             r1.r = 10.0
             r1.connectTo(n1, n2)
@@ -438,7 +318,6 @@ class SubSystem(root: RootSystem?, dt: Double) {
             s.addState(n2)
             s.addState(n3)
 
-            u1 = VoltageSource("")
             u1.u = 1.0
             u1.connectTo(n1, null)
             s.addComponent(u1)
@@ -447,16 +326,29 @@ class SubSystem(root: RootSystem?, dt: Double) {
             s.addComponent(d1)
             s.addComponent(r2)
 
-            for (idx in 0..99) {
+            val p = Profiler()
+
+            p.add("run")
+
+            // as it turns out, the first step where we build the matrix is what takes the longest time.
+            s.step()
+
+            p.add("first")
+
+            for (idx in 0..49) {
                 s.step()
             }
+            r1.r = 20.0
+            for (idx in 0..49) {
+                s.step()
+            }
+            p.stop()
 
-            System.out.println("END")
+            DP.println(DPType.CONSOLE, "$p ${p.list}")
+            DP.println(DPType.CONSOLE, "$s")
 
-            s.step()
-            s.step()
-            System.out.println(s)
-            s.step()
+            DP.println(DPType.CONSOLE, "first step finished in ${(p.list[1].nano - p.list.first.nano) / 1000}ps")
+            DP.println(DPType.CONSOLE, "other steps finished in ${(p.list.last.nano - p.list[1].nano) / 100 / 1000}ps")
         }
     }
 }

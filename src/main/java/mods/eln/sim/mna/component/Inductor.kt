@@ -56,6 +56,8 @@ class Inductor : Bipole, ISubSystemProcessI, INBTTReady {
         s.addProcess(this)
     }
 
+
+    // TODO: abstract to a new InductorNbt class
     override fun readFromNBT(nbt: NBTTagCompound, str: String) {
         var strl = str
         strl += name

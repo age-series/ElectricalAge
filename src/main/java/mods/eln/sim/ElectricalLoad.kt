@@ -9,10 +9,6 @@ import mods.eln.sim.mna.state.VoltageStateLineReady
 
 open class ElectricalLoad : VoltageStateLineReady() {
 
-    init {
-        name = "Electrical Load"
-    }
-
     var rs = MnaConst.highImpedance
         set(Rs) {
             if (this.rs != Rs) {
@@ -40,9 +36,5 @@ open class ElectricalLoad : VoltageStateLineReady() {
 
     fun highImpedance() {
         rs = MnaConst.highImpedance
-    }
-
-    companion object {
-        val groundLoad: State? = null
     }
 }
