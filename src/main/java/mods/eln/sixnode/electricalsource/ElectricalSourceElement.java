@@ -12,9 +12,9 @@ import mods.eln.node.NodeBase;
 import mods.eln.node.six.SixNode;
 import mods.eln.node.six.SixNodeDescriptor;
 import mods.eln.node.six.SixNodeElement;
-import mods.eln.sim.ElectricalLoad;
-import mods.eln.sim.ThermalLoad;
-import mods.eln.sim.mna.component.VoltageSource;
+import mods.eln.sim.mna.state.ElectricalLoad;
+import mods.eln.sim.nbt.NbtVoltageSource;
+import mods.eln.sim.thermal.ThermalLoad;
 import mods.eln.sim.nbt.NbtElectricalLoad;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -30,7 +30,7 @@ import java.util.Map;
 public class ElectricalSourceElement extends SixNodeElement implements IConfigurable {
 
     NbtElectricalLoad electricalLoad = new NbtElectricalLoad("electricalLoad");
-    VoltageSource voltageSource = new VoltageSource("voltSrc", electricalLoad, null);
+    NbtVoltageSource voltageSource = new NbtVoltageSource("voltSrc", electricalLoad, null);
 
     public static final int setVoltageId = 1;
 

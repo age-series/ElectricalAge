@@ -3,8 +3,8 @@ package mods.eln.node;
 import mods.eln.Eln;
 import mods.eln.misc.Direction;
 import mods.eln.misc.LRDU;
-import mods.eln.sim.ElectricalConnection;
-import mods.eln.sim.ThermalConnection;
+import mods.eln.sim.mna.misc.ElectricalConnection;
+import mods.eln.sim.thermal.ThermalConnection;
 
 import java.util.ArrayList;
 import java.util.List;

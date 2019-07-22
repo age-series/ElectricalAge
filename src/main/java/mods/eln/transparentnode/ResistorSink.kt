@@ -8,14 +8,14 @@ import mods.eln.i18n.I18N.tr
 import mods.eln.misc.*
 import mods.eln.node.NodeBase
 import mods.eln.node.transparent.*
-import mods.eln.sim.ElectricalLoad
-import mods.eln.sim.IProcess
+import mods.eln.sim.mna.state.ElectricalLoad
+import mods.eln.sim.core.IProcess
 import mods.eln.sim.ProcessType
-import mods.eln.sim.ThermalLoad
-import mods.eln.sim.mna.component.Resistor
-import mods.eln.sim.mna.component.VoltageSource
+import mods.eln.sim.thermal.ThermalLoad
+import mods.eln.sim.mna.passive.Resistor
 import mods.eln.sim.mna.misc.MnaConst
 import mods.eln.sim.nbt.NbtElectricalLoad
+import mods.eln.sim.nbt.NbtVoltageSource
 import mods.eln.sixnode.genericcable.GenericCableDescriptor
 import net.minecraft.client.gui.GuiScreen
 import net.minecraft.entity.player.EntityPlayer
@@ -63,7 +63,7 @@ class ResistorSinkElement(node: TransparentNode, desc_: TransparentNodeDescripto
     private var inLoad: NbtElectricalLoad = NbtElectricalLoad("inLoad")
     private var groundLoad: NbtElectricalLoad = NbtElectricalLoad("groundLoad")
     private val resistor: Resistor
-    private val ground: VoltageSource
+    private val ground: NbtVoltageSource
 
     private val powerCalc = ResistorSinkPowerCalculator()
     private val powerCalcBand = 0.01
@@ -73,7 +73,7 @@ class ResistorSinkElement(node: TransparentNode, desc_: TransparentNodeDescripto
 
     init {
         resistor = Resistor(inLoad, groundLoad)
-        ground = VoltageSource("ground", groundLoad, null)
+        ground = NbtVoltageSource("ground", groundLoad, null)
         ground.u = 0.0
         resistor.r = 1.0
         electricalLoadList.add(inLoad)

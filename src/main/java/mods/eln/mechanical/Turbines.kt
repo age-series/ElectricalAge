@@ -10,7 +10,7 @@ import mods.eln.node.transparent.EntityMetaTag
 import mods.eln.node.transparent.TransparentNode
 import mods.eln.node.transparent.TransparentNodeDescriptor
 import mods.eln.node.transparent.TransparentNodeEntity
-import mods.eln.sim.IProcess
+import mods.eln.sim.core.IProcess
 import mods.eln.sim.nbt.NbtElectricalGateInput
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.ItemStack

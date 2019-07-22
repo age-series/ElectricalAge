@@ -3,10 +3,10 @@ package mods.eln.sim.mna
 import mods.eln.debug.DP
 import mods.eln.debug.DPType
 import mods.eln.debug.Profiler
-import mods.eln.sim.mna.component.Component
-import mods.eln.sim.mna.component.Delay
-import mods.eln.sim.mna.component.Resistor
-import mods.eln.sim.mna.component.VoltageSource
+import mods.eln.sim.mna.passive.Component
+import mods.eln.sim.mna.passive.Delay
+import mods.eln.sim.mna.passive.Resistor
+import mods.eln.sim.mna.passive.VoltageSource
 import mods.eln.sim.mna.misc.IDestructor
 import mods.eln.sim.mna.misc.ISubSystemProcessFlush
 import mods.eln.sim.mna.misc.ISubSystemProcessI

@@ -3,11 +3,11 @@ package mods.eln.sim.mna
 import mods.eln.debug.DP
 import mods.eln.debug.DPType
 import mods.eln.debug.Profiler
-import mods.eln.sim.ElectricalLoad
-import mods.eln.sim.mna.component.*
+import mods.eln.sim.mna.state.ElectricalLoad
+import mods.eln.sim.mna.passive.*
 import mods.eln.sim.mna.misc.IRootSystemPreStepProcess
 import mods.eln.sim.mna.misc.ISubSystemProcessFlush
-import mods.eln.sim.mna.process.InterSystemAbstraction
+import mods.eln.sim.mna.active.InterSystemAbstraction
 import mods.eln.sim.mna.state.State
 import mods.eln.sim.mna.state.VoltageState
 

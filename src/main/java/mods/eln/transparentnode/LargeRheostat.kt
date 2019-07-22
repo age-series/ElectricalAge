@@ -9,10 +9,10 @@ import mods.eln.misc.*
 import mods.eln.misc.series.SerieEE
 import mods.eln.node.NodeBase
 import mods.eln.node.transparent.*
-import mods.eln.sim.ElectricalLoad
-import mods.eln.sim.IProcess
-import mods.eln.sim.ThermalLoad
-import mods.eln.sim.mna.component.Resistor
+import mods.eln.sim.mna.state.ElectricalLoad
+import mods.eln.sim.core.IProcess
+import mods.eln.sim.thermal.ThermalLoad
+import mods.eln.sim.mna.passive.Resistor
 import mods.eln.sim.mna.misc.MnaConst
 import mods.eln.sim.nbt.NbtElectricalGateInput
 import mods.eln.sim.nbt.NbtElectricalLoad

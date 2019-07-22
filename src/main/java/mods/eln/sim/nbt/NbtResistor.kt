@@ -1,7 +1,7 @@
 package mods.eln.sim.nbt
 
 import mods.eln.misc.INBTTReady
-import mods.eln.sim.mna.component.Resistor
+import mods.eln.sim.mna.passive.Resistor
 import mods.eln.sim.mna.state.State
 import net.minecraft.nbt.NBTTagCompound
 

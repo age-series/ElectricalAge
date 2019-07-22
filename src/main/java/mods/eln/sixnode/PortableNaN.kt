@@ -3,7 +3,6 @@ package mods.eln.sixnode
 import mods.eln.Eln
 import mods.eln.cable.CableRender
 import mods.eln.cable.CableRenderDescriptor
-import mods.eln.i18n.I18N
 import mods.eln.i18n.I18N.tr
 import mods.eln.misc.Direction
 import mods.eln.misc.LRDU
@@ -11,9 +10,9 @@ import mods.eln.misc.Utils
 import mods.eln.misc.UtilsClient
 import mods.eln.node.NodeBase
 import mods.eln.node.six.*
-import mods.eln.sim.ElectricalLoad
-import mods.eln.sim.ThermalLoad
-import mods.eln.sim.mna.component.Resistor
+import mods.eln.sim.mna.state.ElectricalLoad
+import mods.eln.sim.thermal.ThermalLoad
+import mods.eln.sim.mna.passive.Resistor
 import mods.eln.sim.nbt.NbtElectricalLoad
 import mods.eln.sim.nbt.NbtThermalLoad
 import mods.eln.sixnode.genericcable.GenericCableDescriptor

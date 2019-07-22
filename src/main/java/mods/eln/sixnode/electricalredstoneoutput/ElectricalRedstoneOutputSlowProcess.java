@@ -1,6 +1,6 @@
 package mods.eln.sixnode.electricalredstoneoutput;
 
-import mods.eln.sim.IProcess;
+import mods.eln.sim.core.IProcess;
 
 public class ElectricalRedstoneOutputSlowProcess implements IProcess {
 

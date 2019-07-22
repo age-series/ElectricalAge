@@ -1,8 +1,8 @@
 package mods.eln.sim
 
-import mods.eln.item.regulator.IRegulatorDescriptor
 import mods.eln.item.regulator.IRegulatorDescriptor.RegulatorType
 import mods.eln.misc.INBTTReady
+import mods.eln.sim.core.IProcess
 import net.minecraft.nbt.NBTTagCompound
 
 abstract class RegulatorProcess(internal var name: String) : IProcess, INBTTReady {

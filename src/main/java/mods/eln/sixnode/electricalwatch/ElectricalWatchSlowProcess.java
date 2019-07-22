@@ -2,7 +2,7 @@ package mods.eln.sixnode.electricalwatch;
 
 import mods.eln.item.electricalitem.BatteryItem;
 import mods.eln.misc.INBTTReady;
-import mods.eln.sim.IProcess;
+import mods.eln.sim.core.IProcess;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 

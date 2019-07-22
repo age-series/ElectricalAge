@@ -6,7 +6,7 @@ import mods.eln.misc.Direction
 import mods.eln.misc.INBTTReady
 import mods.eln.misc.UserError
 import mods.eln.node.NodeManager
-import mods.eln.sim.ElectricalConnection
+import mods.eln.sim.mna.misc.ElectricalConnection
 import mods.eln.sim.mna.misc.MnaConst
 import mods.eln.sixnode.electricalcable.ElectricalCableDescriptor
 import net.minecraft.item.ItemStack

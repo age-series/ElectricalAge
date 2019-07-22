@@ -13,9 +13,9 @@ import mods.eln.node.six.SixNode;
 import mods.eln.node.six.SixNodeDescriptor;
 import mods.eln.node.six.SixNodeElement;
 import mods.eln.node.six.SixNodeElementInventory;
-import mods.eln.sim.ElectricalLoad;
-import mods.eln.sim.ThermalLoad;
-import mods.eln.sim.mna.component.Inductor;
+import mods.eln.sim.mna.state.ElectricalLoad;
+import mods.eln.sim.nbt.NbtInductor;
+import mods.eln.sim.thermal.ThermalLoad;
 import mods.eln.sim.nbt.NbtElectricalLoad;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
@@ -33,7 +33,7 @@ public class PowerInductorSixElement extends SixNodeElement implements IConfigur
     NbtElectricalLoad positiveLoad = new NbtElectricalLoad("positiveLoad");
     NbtElectricalLoad negativeLoad = new NbtElectricalLoad("negativeLoad");
 
-    Inductor inductor = new Inductor("inductor", positiveLoad, negativeLoad);
+    NbtInductor inductor = new NbtInductor("inductor", positiveLoad, negativeLoad);
 
     boolean fromNbt = false;
 

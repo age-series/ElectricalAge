@@ -1,6 +1,7 @@
 package mods.eln.sim
 
 import mods.eln.Eln
+import mods.eln.sim.core.IProcess
 
 class TimeRemover(internal var observer: ITimeRemoverObserver) : IProcess {
     internal var timeout = 0.0

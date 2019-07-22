@@ -1,6 +1,7 @@
 package mods.eln.sim
 
-import mods.eln.sim.mna.component.Resistor
+import mods.eln.sim.mna.passive.Resistor
+import mods.eln.sim.thermal.ThermalLoad
 
 class RegulatorThermalLoadToElectricalResistor(name: String, internal var thermalLoad: ThermalLoad, internal var electricalResistor: Resistor) : RegulatorProcess(name) {
 

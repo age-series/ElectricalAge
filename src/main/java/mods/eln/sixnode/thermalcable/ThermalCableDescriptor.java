@@ -7,7 +7,7 @@ import mods.eln.debug.DPType;
 import mods.eln.misc.Utils;
 import mods.eln.misc.VoltageLevelColor;
 import mods.eln.node.six.SixNodeDescriptor;
-import mods.eln.sim.ThermalLoad;
+import mods.eln.sim.thermal.ThermalLoad;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 
@@ -56,8 +56,8 @@ public class ThermalCableDescriptor extends SixNodeDescriptor {
         thermalRs = thermalStdDrop / 2 / thermalStdPower;
         thermalRp = thermalStdT / thermalStdLost;
         //thermalC = thermalTao / (thermalRs * 2) ;
-        thermalC = Eln.simulator.getMinimalThermalC(thermalRs, thermalRp);
-        if (!Eln.simulator.checkThermalLoad(thermalRs, thermalRp, thermalC)) {
+        thermalC = ThermalLoad.getMinimalThermalC(thermalRs, thermalRp);
+        if (!ThermalLoad.checkThermalLoad(thermalRs, thermalRp, thermalC)) {
             DP.println(DPType.SIX_NODE, "Bad thermalCable setup");
             // removed infinite loop
         }

@@ -1,6 +1,6 @@
 package mods.eln.sixnode.electricaldigitaldisplay;
 
-import mods.eln.sim.IProcess;
+import mods.eln.sim.core.IProcess;
 
 public class ElectricalDigitalDisplayProcess implements IProcess {
     ElectricalDigitalDisplayElement element;

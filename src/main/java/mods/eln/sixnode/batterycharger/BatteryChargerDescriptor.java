@@ -3,7 +3,7 @@ package mods.eln.sixnode.batterycharger;
 import mods.eln.misc.*;
 import mods.eln.misc.Obj3D.Obj3DPart;
 import mods.eln.node.six.SixNodeDescriptor;
-import mods.eln.sim.mna.component.Resistor;
+import mods.eln.sim.mna.passive.Resistor;
 import mods.eln.sim.nbt.NbtElectricalLoad;
 import mods.eln.sixnode.electricalcable.ElectricalCableDescriptor;
 import net.minecraft.entity.player.EntityPlayer;

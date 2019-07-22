@@ -10,9 +10,9 @@ import mods.eln.i18n.I18N.tr
 import mods.eln.misc.*
 import mods.eln.node.Node
 import mods.eln.node.six.*
-import mods.eln.sim.ElectricalLoad
-import mods.eln.sim.IProcess
-import mods.eln.sim.ThermalLoad
+import mods.eln.sim.mna.state.ElectricalLoad
+import mods.eln.sim.core.IProcess
+import mods.eln.sim.thermal.ThermalLoad
 import mods.eln.sim.nbt.NbtElectricalGateInput
 import mods.eln.sim.nbt.NbtElectricalGateOutput
 import mods.eln.sim.nbt.NbtElectricalGateOutputProcess

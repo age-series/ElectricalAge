@@ -1,6 +1,6 @@
 package mods.eln.node;
 
-import mods.eln.sim.IProcess;
+import mods.eln.sim.core.IProcess;
 
 public class NodePeriodicPublishProcess implements IProcess {
     NodeBase node;

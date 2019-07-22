@@ -8,11 +8,11 @@ import mods.eln.node.Node
 import mods.eln.node.NodePeriodicPublishProcess
 import mods.eln.node.published
 import mods.eln.node.six.*
-import mods.eln.sim.ElectricalLoad
-import mods.eln.sim.IProcess
-import mods.eln.sim.ThermalLoad
-import mods.eln.sim.mna.component.ResistorSwitch
+import mods.eln.sim.mna.state.ElectricalLoad
+import mods.eln.sim.core.IProcess
+import mods.eln.sim.thermal.ThermalLoad
 import mods.eln.sim.nbt.NbtElectricalLoad
+import mods.eln.sim.nbt.NbtResistorSwitch
 import mods.eln.sim.process.destruct.VoltageStateWatchDog
 import mods.eln.sim.process.destruct.WorldExplosion
 import mods.eln.sixnode.electricalcable.ElectricalCableDescriptor
@@ -96,7 +96,7 @@ class EmergencyLampElement(sixNode: SixNode, side: Direction, descriptor: SixNod
 
     val desc = descriptor as EmergencyLampDescriptor
     val load = NbtElectricalLoad("load")
-    val chargingResistor = ResistorSwitch("chargingResistor", load, null)
+    val chargingResistor = NbtResistorSwitch("chargingResistor", load, null)
     var on by published(false, {
         sixNode.lightValue = if (it) desc.lightLevel else 0
     })

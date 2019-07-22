@@ -2,7 +2,7 @@ package mods.eln.sixnode.electricalredstoneinput;
 
 import mods.eln.misc.Coordonate;
 import mods.eln.misc.Utils;
-import mods.eln.sim.IProcess;
+import mods.eln.sim.core.IProcess;
 
 public class ElectricalRedstoneInputSlowProcess implements IProcess {
 

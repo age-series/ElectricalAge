@@ -9,7 +9,7 @@ import mods.eln.misc.Coordonate;
 import mods.eln.misc.INBTTReady;
 import mods.eln.misc.Utils;
 import mods.eln.server.SaveConfig;
-import mods.eln.sim.IProcess;
+import mods.eln.sim.core.IProcess;
 import mods.eln.sixnode.lampsupply.LampSupplyElement;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;

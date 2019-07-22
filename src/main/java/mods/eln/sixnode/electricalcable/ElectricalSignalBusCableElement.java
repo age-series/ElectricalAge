@@ -11,8 +11,8 @@ import mods.eln.node.NodeConnection;
 import mods.eln.node.six.SixNode;
 import mods.eln.node.six.SixNodeDescriptor;
 import mods.eln.node.six.SixNodeElement;
-import mods.eln.sim.ElectricalConnection;
-import mods.eln.sim.ElectricalLoad;
+import mods.eln.sim.mna.misc.ElectricalConnection;
+import mods.eln.sim.mna.state.ElectricalLoad;
 import mods.eln.sim.nbt.NbtElectricalLoad;
 import net.minecraft.util.EnumChatFormatting;
 

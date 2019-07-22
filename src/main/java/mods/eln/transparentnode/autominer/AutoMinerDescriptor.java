@@ -3,7 +3,7 @@ package mods.eln.transparentnode.autominer;
 import mods.eln.misc.*;
 import mods.eln.misc.Obj3D.Obj3DPart;
 import mods.eln.node.transparent.TransparentNodeDescriptor;
-import mods.eln.sim.ElectricalLoad;
+import mods.eln.sim.mna.state.ElectricalLoad;
 import mods.eln.sixnode.electricalcable.ElectricalCableDescriptor;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;

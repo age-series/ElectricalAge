@@ -8,11 +8,11 @@ import mods.eln.misc.Utils
 import mods.eln.node.NodePeriodicPublishProcess
 import mods.eln.node.transparent.TransparentNode
 import mods.eln.node.transparent.TransparentNodeDescriptor
-import mods.eln.sim.ElectricalLoad
-import mods.eln.sim.mna.component.VoltageSource
-import mods.eln.sim.mna.process.TransformerInterSystemProcess
+import mods.eln.sim.mna.state.ElectricalLoad
+import mods.eln.sim.mna.active.TransformerInterSystemProcess
 import mods.eln.sim.nbt.NbtElectricalLoad
 import mods.eln.sim.nbt.NbtThermalLoad
+import mods.eln.sim.nbt.NbtVoltageSource
 import mods.eln.sim.process.destruct.ThermalLoadWatchDog
 import mods.eln.sim.process.destruct.VoltageStateWatchDog
 import mods.eln.sim.process.destruct.WorldExplosion
@@ -23,8 +23,8 @@ import java.io.DataOutputStream
 class GridTransformerElement(node: TransparentNode, descriptor: TransparentNodeDescriptor) : GridElement(node, descriptor, 8) {
     var primaryLoad = NbtElectricalLoad("primaryLoad")
     var secondaryLoad = NbtElectricalLoad("secondaryLoad")
-    var primaryVoltageSource = VoltageSource("primaryVoltageSource", primaryLoad, null)
-    var secondaryVoltageSource = VoltageSource("secondaryVoltageSource", secondaryLoad, null)
+    var primaryVoltageSource = NbtVoltageSource("primaryVoltageSource", primaryLoad, null)
+    var secondaryVoltageSource = NbtVoltageSource("secondaryVoltageSource", secondaryLoad, null)
     var interSystemProcess = TransformerInterSystemProcess(primaryLoad, secondaryLoad, primaryVoltageSource, secondaryVoltageSource)
     internal var desc: GridTransformerDescriptor = descriptor as GridTransformerDescriptor
     internal var maxCurrent = desc.cableDescriptor.electricalMaximalCurrent.toFloat()

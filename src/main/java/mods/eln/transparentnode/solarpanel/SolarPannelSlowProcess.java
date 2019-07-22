@@ -2,7 +2,7 @@ package mods.eln.transparentnode.solarpanel;
 
 import mods.eln.misc.Coordonate;
 import mods.eln.misc.Utils;
-import mods.eln.sim.IProcess;
+import mods.eln.sim.core.IProcess;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 

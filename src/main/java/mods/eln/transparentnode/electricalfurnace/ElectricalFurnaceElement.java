@@ -14,12 +14,16 @@ import mods.eln.node.transparent.TransparentNodeDescriptor;
 import mods.eln.node.transparent.TransparentNodeElement;
 import mods.eln.node.transparent.TransparentNodeElementInventory;
 import mods.eln.sim.*;
-import mods.eln.sim.mna.component.ResistorSwitch;
 import mods.eln.sim.mna.misc.MnaConst;
+import mods.eln.sim.mna.state.ElectricalLoad;
 import mods.eln.sim.nbt.NbtElectricalLoad;
+import mods.eln.sim.nbt.NbtResistorSwitch;
 import mods.eln.sim.nbt.NbtThermalLoad;
 import mods.eln.sim.process.destruct.VoltageStateWatchDog;
 import mods.eln.sim.process.destruct.WorldExplosion;
+import mods.eln.sim.thermal.ElectricalResistorHeatThermalLoad;
+import mods.eln.sim.thermal.ThermalLoad;
+import mods.eln.sim.thermal.ThermalResistor;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
@@ -43,7 +47,7 @@ public class ElectricalFurnaceElement extends TransparentNodeElement {
     public static final int thermalRegulatorSlotId = 4;
 
     NbtElectricalLoad electricalLoad = new NbtElectricalLoad("electricalLoad");
-    ResistorSwitch heatingCorpResistor = new ResistorSwitch("heatResistor", electricalLoad, null);
+    NbtResistorSwitch heatingCorpResistor = new NbtResistorSwitch("heatResistor", electricalLoad, null);
 
     NbtThermalLoad thermalLoad = new NbtThermalLoad("thermalLoad");
     ThermalResistor smeltResistor = new ThermalResistor(thermalLoad, ThermalLoad.externalLoad);

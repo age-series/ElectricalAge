@@ -3,7 +3,7 @@ package mods.eln.sixnode.electricalweathersensor;
 import mods.eln.misc.Coordonate;
 import mods.eln.misc.INBTTReady;
 import mods.eln.misc.RcInterpolator;
-import mods.eln.sim.IProcess;
+import mods.eln.sim.core.IProcess;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 

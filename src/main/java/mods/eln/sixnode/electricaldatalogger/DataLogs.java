@@ -4,7 +4,7 @@ import mods.eln.debug.DP;
 import mods.eln.debug.DPType;
 import mods.eln.misc.INBTTReady;
 import mods.eln.misc.Utils;
-import mods.eln.sim.PhysicalConstant;
+import mods.eln.sim.thermal.PhysicalConstant;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.nbt.NBTTagCompound;

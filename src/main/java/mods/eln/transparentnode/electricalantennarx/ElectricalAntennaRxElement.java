@@ -10,9 +10,9 @@ import mods.eln.node.NodeBase;
 import mods.eln.node.transparent.TransparentNode;
 import mods.eln.node.transparent.TransparentNodeDescriptor;
 import mods.eln.node.transparent.TransparentNodeElement;
-import mods.eln.sim.ElectricalLoad;
-import mods.eln.sim.ThermalLoad;
-import mods.eln.sim.mna.component.PowerSource;
+import mods.eln.sim.mna.state.ElectricalLoad;
+import mods.eln.sim.nbt.NbtPowerSource;
+import mods.eln.sim.thermal.ThermalLoad;
 import mods.eln.sim.nbt.NbtElectricalGateInput;
 import mods.eln.sim.nbt.NbtElectricalLoad;
 import net.minecraft.entity.player.EntityPlayer;
@@ -29,7 +29,7 @@ public class ElectricalAntennaRxElement extends TransparentNodeElement {
     NbtElectricalLoad powerOut = new NbtElectricalLoad("powerOut");
     NbtElectricalGateInput signalIn = new NbtElectricalGateInput("signalIn");
 
-    PowerSource powerSrc = new PowerSource("powerSrc", powerOut);
+    NbtPowerSource powerSrc = new NbtPowerSource("powerSrc", powerOut);
 
     LRDU rot = LRDU.Up;
     Coordonate rxCoord = null;

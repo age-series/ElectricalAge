@@ -1,5 +1,7 @@
 package mods.eln.sim
 
+import mods.eln.sim.thermal.FurnaceProcess
+
 open class RegulatorFurnaceProcess(name: String, internal var furnace: FurnaceProcess) : RegulatorProcess(name) {
 
     override fun getHit(): Double {

@@ -1,6 +1,6 @@
 package mods.eln.transparentnode.electricalmachine;
 
-import mods.eln.sim.IProcess;
+import mods.eln.sim.core.IProcess;
 
 public class ElectricalMachineSlowProcess implements IProcess {
     private final ElectricalMachineElement element;

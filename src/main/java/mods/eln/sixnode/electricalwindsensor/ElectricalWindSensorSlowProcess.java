@@ -4,7 +4,7 @@ import mods.eln.misc.Coordonate;
 import mods.eln.misc.INBTTReady;
 import mods.eln.misc.RcInterpolator;
 import mods.eln.misc.Utils;
-import mods.eln.sim.IProcess;
+import mods.eln.sim.core.IProcess;
 import net.minecraft.nbt.NBTTagCompound;
 
 public class ElectricalWindSensorSlowProcess implements IProcess, INBTTReady {

@@ -12,9 +12,9 @@ import mods.eln.node.NodePeriodicPublishProcess;
 import mods.eln.node.transparent.TransparentNode;
 import mods.eln.node.transparent.TransparentNodeDescriptor;
 import mods.eln.node.transparent.TransparentNodeElement;
-import mods.eln.sim.ElectricalLoad;
-import mods.eln.sim.ThermalLoad;
-import mods.eln.sim.mna.component.PowerSource;
+import mods.eln.sim.mna.state.ElectricalLoad;
+import mods.eln.sim.nbt.NbtPowerSource;
+import mods.eln.sim.thermal.ThermalLoad;
 import mods.eln.sim.nbt.NbtElectricalLoad;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
@@ -26,7 +26,7 @@ import java.util.Map;
 
 public class WindTurbineElement extends TransparentNodeElement {
     private final NbtElectricalLoad positiveLoad = new NbtElectricalLoad("positiveLoad");
-    final PowerSource powerSource = new PowerSource("powerSource", positiveLoad);
+    final NbtPowerSource powerSource = new NbtPowerSource("powerSource", positiveLoad);
     private final WindTurbineSlowProcess slowProcess = new WindTurbineSlowProcess("slowProcess", this);
     final WindTurbineDescriptor descriptor;
     private Direction cableFront = Direction.ZP;

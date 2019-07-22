@@ -10,16 +10,16 @@ import mods.eln.node.transparent.EntityMetaTag
 import mods.eln.node.transparent.TransparentNode
 import mods.eln.node.transparent.TransparentNodeDescriptor
 import mods.eln.node.transparent.TransparentNodeEntity
-import mods.eln.sim.ElectricalLoad
-import mods.eln.sim.IProcess
-import mods.eln.sim.ThermalLoadInitializer
-import mods.eln.sim.mna.component.Resistor
-import mods.eln.sim.mna.component.VoltageSource
+import mods.eln.sim.mna.state.ElectricalLoad
+import mods.eln.sim.core.IProcess
+import mods.eln.sim.thermal.ThermalLoadInitializer
+import mods.eln.sim.mna.passive.Resistor
 import mods.eln.sim.mna.misc.IRootSystemPreStepProcess
 import mods.eln.sim.mna.misc.MnaConst
 import mods.eln.sim.mna.misc.Th
 import mods.eln.sim.nbt.NbtElectricalLoad
 import mods.eln.sim.nbt.NbtThermalLoad
+import mods.eln.sim.nbt.NbtVoltageSource
 import mods.eln.sim.process.destruct.ThermalLoadWatchDog
 import mods.eln.sim.process.destruct.WorldExplosion
 import mods.eln.sim.process.heater.ElectricalLoadHeatThermalLoad
@@ -105,7 +105,7 @@ class GenMotorElenemt(node: TransparentNode, desc_: TransparentNodeDescriptor): 
     val wireLoad: NbtElectricalLoad
     val shaftLoad: NbtElectricalLoad
     val wireShaftResistor: Resistor
-    val powerSource: VoltageSource
+    val powerSource: NbtVoltageSource
     val electicalProcess: GenMotorElectricalProcess
     val shaftProcess: GenMotorShaftProcess
     val thermal: NbtThermalLoad
@@ -121,7 +121,7 @@ class GenMotorElenemt(node: TransparentNode, desc_: TransparentNodeDescriptor): 
         wireShaftResistor = Resistor(wireLoad, shaftLoad)
         desc.cable.applyTo(wireShaftResistor)
         wireShaftResistor.r = 1.0
-        powerSource = VoltageSource("powerSource", shaftLoad, null)
+        powerSource = NbtVoltageSource("powerSource", shaftLoad, null)
         electicalProcess = GenMotorElectricalProcess()
         shaftProcess = GenMotorShaftProcess()
         thermal = NbtThermalLoad("thermal")

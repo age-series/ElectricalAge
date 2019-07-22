@@ -5,9 +5,9 @@ import mods.eln.cable.CableRenderDescriptor;
 import mods.eln.misc.Utils;
 import mods.eln.misc.VoltageLevelColor;
 import mods.eln.node.NodeBase;
-import mods.eln.sim.ElectricalLoad;
-import mods.eln.sim.ThermalLoad;
-import mods.eln.sim.mna.component.Resistor;
+import mods.eln.sim.mna.state.ElectricalLoad;
+import mods.eln.sim.thermal.ThermalLoad;
+import mods.eln.sim.mna.passive.Resistor;
 import mods.eln.sim.mna.misc.MnaConst;
 import mods.eln.sixnode.genericcable.GenericCableDescriptor;
 import net.minecraft.entity.player.EntityPlayer;
@@ -72,7 +72,7 @@ public class ElectricalCableDescriptor extends GenericCableDescriptor {
         thermalRp = thermalWarmLimit / thermalMaximalPowerDissipated;
         thermalRs = thermalConductivityTao / thermalC / 2;
 
-        Eln.simulator.checkThermalLoad(thermalRs, thermalRp, thermalC);
+        ThermalLoad.checkThermalLoad(thermalRs, thermalRp, thermalC);
 
         electricalRsPerCelcius = 0;
 

@@ -6,12 +6,16 @@ import cpw.mods.fml.common.gameevent.TickEvent.Phase
 import cpw.mods.fml.common.gameevent.TickEvent.ServerTickEvent
 import mods.eln.debug.DP
 import mods.eln.debug.DPType
+import mods.eln.sim.core.IProcess
 import mods.eln.sim.mna.RootSystem
-import mods.eln.sim.mna.component.Component
+import mods.eln.sim.mna.passive.Component
+import mods.eln.sim.mna.misc.ElectricalConnection
 import mods.eln.sim.mna.misc.MnaConst
+import mods.eln.sim.mna.state.ElectricalLoad
 import mods.eln.sim.mna.state.State
 import mods.eln.sim.process.destruct.IDestructable
-import net.minecraft.client.Minecraft
+import mods.eln.sim.thermal.ThermalConnection
+import mods.eln.sim.thermal.ThermalLoad
 
 import java.text.DecimalFormat
 import java.util.ArrayList
@@ -52,18 +56,6 @@ class Simulator /* ,IPacketHandler */(var callPeriod: Double, var electricalPeri
     private var printTimeCounter = 0
 
     var pleaseCrash = false
-
-    fun getMinimalThermalC(Rs: Double, Rp: Double): Double {
-        return thermalPeriod * 3 / (1 / (1 / Rp + 1 / Rs))
-    }
-
-    fun checkThermalLoad(thermalRs: Double, thermalRp: Double, thermalC: Double): Boolean {
-        if (thermalC < getMinimalThermalC(thermalRs, thermalRp)) {
-            DP.println(DPType.MNA, "checkThermalLoad ERROR")
-            Minecraft.getMinecraft().shutdown()
-        }
-        return true
-    }
 
     init {
 

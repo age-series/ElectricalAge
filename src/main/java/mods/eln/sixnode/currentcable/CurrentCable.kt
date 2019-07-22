@@ -8,9 +8,9 @@ import mods.eln.debug.DPType
 import mods.eln.generic.GenericItemUsingDamageDescriptor
 import mods.eln.misc.*
 import mods.eln.node.NodeBase
-import mods.eln.sim.ElectricalLoad
-import mods.eln.sim.ThermalLoad
-import mods.eln.sim.mna.component.Resistor
+import mods.eln.sim.mna.state.ElectricalLoad
+import mods.eln.sim.thermal.ThermalLoad
+import mods.eln.sim.mna.passive.Resistor
 import mods.eln.sixnode.genericcable.GenericCableDescriptor
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.ItemStack
@@ -81,7 +81,7 @@ class CurrentCableDescriptor(name: String, render: CableRenderDescriptor) : Gene
         // Since thermalConductivityTao is typically 1, I'm going to use Copper's thermal conductivity constant as a baseline.
         // When someone redoes the thermal system, please remove this shim and do it correctly.
 
-        Eln.simulator.checkThermalLoad(thermalRs, thermalRp, thermalC)
+        ThermalLoad.checkThermalLoad(thermalRs, thermalRp, thermalC)
 
         voltageLevelColor = VoltageLevelColor.None
     }

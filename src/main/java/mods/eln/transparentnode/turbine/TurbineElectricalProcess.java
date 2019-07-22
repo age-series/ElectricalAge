@@ -1,6 +1,6 @@
 package mods.eln.transparentnode.turbine;
 
-import mods.eln.sim.IProcess;
+import mods.eln.sim.core.IProcess;
 import mods.eln.sim.mna.misc.IRootSystemPreStepProcess;
 import mods.eln.sim.mna.misc.Th;
 

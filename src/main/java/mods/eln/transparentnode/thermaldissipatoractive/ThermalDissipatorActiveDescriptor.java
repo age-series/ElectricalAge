@@ -1,14 +1,13 @@
 package mods.eln.transparentnode.thermaldissipatoractive;
 
-import mods.eln.Eln;
 import mods.eln.misc.Obj3D;
 import mods.eln.misc.Obj3D.Obj3DPart;
 import mods.eln.misc.Utils;
 import mods.eln.misc.VoltageLevelColor;
 import mods.eln.node.transparent.TransparentNodeDescriptor;
-import mods.eln.sim.ElectricalLoad;
-import mods.eln.sim.ThermalLoad;
-import mods.eln.sim.mna.component.Resistor;
+import mods.eln.sim.mna.state.ElectricalLoad;
+import mods.eln.sim.thermal.ThermalLoad;
+import mods.eln.sim.mna.passive.Resistor;
 import mods.eln.sixnode.electricalcable.ElectricalCableDescriptor;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -44,7 +43,7 @@ public class ThermalDissipatorActiveDescriptor extends TransparentNodeDescriptor
         thermalC = (nominalP + nominalElectricalCoolingPower) * nominalTao / nominalT;
         thermalRp = nominalT / nominalP;
         thermalRs = nominalConnectionDrop / (nominalP + nominalElectricalCoolingPower);
-        Eln.simulator.checkThermalLoad(thermalRs, thermalRp, thermalC);
+        ThermalLoad.checkThermalLoad(thermalRs, thermalRp, thermalC);
         this.coolLimit = coolLimit;
         this.warmLimit = warmLimit;
         this.nominalP = nominalP;

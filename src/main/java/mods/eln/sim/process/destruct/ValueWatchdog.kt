@@ -3,7 +3,7 @@ package mods.eln.sim.process.destruct
 import mods.eln.debug.DP
 import mods.eln.debug.DPType
 import mods.eln.misc.Utils
-import mods.eln.sim.IProcess
+import mods.eln.sim.core.IProcess
 
 abstract class ValueWatchdog : IProcess {
 

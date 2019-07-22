@@ -5,7 +5,7 @@ import mods.eln.misc.Obj3D.Obj3DPart;
 import mods.eln.misc.UtilsClient;
 import mods.eln.misc.VoltageLevelColor;
 import mods.eln.node.transparent.TransparentNodeDescriptor;
-import mods.eln.sim.mna.component.Resistor;
+import mods.eln.sim.mna.passive.Resistor;
 import mods.eln.sim.mna.misc.MnaConst;
 import mods.eln.sim.nbt.NbtElectricalLoad;
 import mods.eln.sixnode.electricalcable.ElectricalCableDescriptor;

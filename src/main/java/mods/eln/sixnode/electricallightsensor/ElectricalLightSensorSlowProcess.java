@@ -2,7 +2,7 @@ package mods.eln.sixnode.electricallightsensor;
 
 import mods.eln.misc.Coordonate;
 import mods.eln.misc.Utils;
-import mods.eln.sim.IProcess;
+import mods.eln.sim.core.IProcess;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.EnumSkyBlock;
 import net.minecraft.world.World;

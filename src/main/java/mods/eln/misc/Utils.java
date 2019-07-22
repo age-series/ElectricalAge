@@ -9,7 +9,7 @@ import mods.eln.generic.GenericItemBlockUsingDamage;
 import mods.eln.generic.GenericItemUsingDamage;
 import mods.eln.misc.Obj3D.Obj3DPart;
 import mods.eln.node.ITileEntitySpawnClient;
-import mods.eln.sim.PhysicalConstant;
+import mods.eln.sim.thermal.PhysicalConstant;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityOtherPlayerMP;

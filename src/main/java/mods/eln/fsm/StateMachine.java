@@ -2,7 +2,7 @@ package mods.eln.fsm;
 
 import mods.eln.debug.DP;
 import mods.eln.debug.DPType;
-import mods.eln.sim.IProcess;
+import mods.eln.sim.core.IProcess;
 
 public class StateMachine implements IProcess {
 

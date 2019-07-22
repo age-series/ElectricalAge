@@ -5,7 +5,7 @@ import mods.eln.misc.Coordonate;
 import mods.eln.node.NodeBase;
 import mods.eln.node.NodeManager;
 import mods.eln.node.transparent.TransparentNode;
-import mods.eln.sim.IProcess;
+import mods.eln.sim.core.IProcess;
 import mods.eln.transparentnode.electricalantennarx.ElectricalAntennaRxElement;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;

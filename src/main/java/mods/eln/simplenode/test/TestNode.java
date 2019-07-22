@@ -3,9 +3,9 @@ package mods.eln.simplenode.test;
 import mods.eln.misc.Direction;
 import mods.eln.misc.LRDU;
 import mods.eln.node.simple.SimpleNode;
-import mods.eln.sim.ElectricalLoad;
-import mods.eln.sim.ThermalLoad;
-import mods.eln.sim.mna.component.Resistor;
+import mods.eln.sim.mna.state.ElectricalLoad;
+import mods.eln.sim.thermal.ThermalLoad;
+import mods.eln.sim.mna.passive.Resistor;
 import mods.eln.sim.nbt.NbtElectricalLoad;
 
 public class TestNode extends SimpleNode {

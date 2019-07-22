@@ -1,7 +1,7 @@
 package mods.eln.sixnode.electricalsensor;
 
 import mods.eln.Eln;
-import mods.eln.sim.IProcess;
+import mods.eln.sim.core.IProcess;
 
 public class ElectricalSensorProcess implements IProcess {
 

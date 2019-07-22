@@ -2,6 +2,7 @@ package mods.eln.sim
 
 import mods.eln.Eln
 import mods.eln.misc.INBTTReady
+import mods.eln.sim.core.IProcess
 import mods.eln.sim.nbt.NbtElectricalGateInput
 import net.minecraft.nbt.NBTTagCompound
 

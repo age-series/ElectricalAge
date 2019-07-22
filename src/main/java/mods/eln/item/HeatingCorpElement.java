@@ -2,7 +2,7 @@ package mods.eln.item;
 
 import mods.eln.misc.Utils;
 import mods.eln.misc.VoltageLevelColor;
-import mods.eln.sim.ElectricalLoad;
+import mods.eln.sim.mna.state.ElectricalLoad;
 import mods.eln.sim.RegulatorThermalLoadToElectricalResistor;
 import mods.eln.sixnode.electricalcable.ElectricalCableDescriptor;
 import net.minecraft.entity.player.EntityPlayer;

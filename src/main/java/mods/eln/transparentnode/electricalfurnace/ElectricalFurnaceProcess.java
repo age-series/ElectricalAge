@@ -3,7 +3,7 @@ package mods.eln.transparentnode.electricalfurnace;
 import mods.eln.generic.GenericItemUsingDamage;
 import mods.eln.item.ThermalIsolatorElement;
 import mods.eln.node.transparent.TransparentNodeElementInventory;
-import mods.eln.sim.IProcess;
+import mods.eln.sim.core.IProcess;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
 

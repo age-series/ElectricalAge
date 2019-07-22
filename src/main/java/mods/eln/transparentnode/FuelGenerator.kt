@@ -10,11 +10,11 @@ import mods.eln.node.NodeBase
 import mods.eln.node.NodePeriodicPublishProcess
 import mods.eln.node.published
 import mods.eln.node.transparent.*
-import mods.eln.sim.ElectricalLoad
-import mods.eln.sim.IProcess
-import mods.eln.sim.ThermalLoad
-import mods.eln.sim.mna.component.PowerSource
+import mods.eln.sim.mna.state.ElectricalLoad
+import mods.eln.sim.core.IProcess
+import mods.eln.sim.thermal.ThermalLoad
 import mods.eln.sim.nbt.NbtElectricalLoad
+import mods.eln.sim.nbt.NbtPowerSource
 import mods.eln.sixnode.electricalcable.ElectricalCableDescriptor
 import mods.eln.sound.LoopedSound
 import net.minecraft.client.audio.ISound
@@ -106,7 +106,7 @@ class FuelGeneratorDescriptor(name: String, internal val obj: Obj3D?, internal v
 class FuelGeneratorElement(transparentNode: TransparentNode, descriptor_: TransparentNodeDescriptor) :
     TransparentNodeElement(transparentNode, descriptor_) {
     internal var positiveLoad = NbtElectricalLoad("positiveLoad")
-    internal var powerSource = PowerSource("powerSource", positiveLoad)
+    internal var powerSource = NbtPowerSource("powerSource", positiveLoad)
     internal var slowProcess = FuelGeneratorSlowProcess(this)
     internal var descriptor = descriptor_ as FuelGeneratorDescriptor
     internal val fuels = FuelRegistry.fluidListToFluids(descriptor.fuels).map { it.id }

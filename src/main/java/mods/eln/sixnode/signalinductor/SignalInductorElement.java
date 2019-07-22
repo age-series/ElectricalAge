@@ -6,9 +6,9 @@ import mods.eln.misc.Utils;
 import mods.eln.node.six.SixNode;
 import mods.eln.node.six.SixNodeDescriptor;
 import mods.eln.node.six.SixNodeElement;
-import mods.eln.sim.ElectricalLoad;
-import mods.eln.sim.ThermalLoad;
-import mods.eln.sim.mna.component.Inductor;
+import mods.eln.sim.mna.state.ElectricalLoad;
+import mods.eln.sim.nbt.NbtInductor;
+import mods.eln.sim.thermal.ThermalLoad;
 import mods.eln.sim.nbt.NbtElectricalLoad;
 
 public class SignalInductorElement extends SixNodeElement {
@@ -16,7 +16,7 @@ public class SignalInductorElement extends SixNodeElement {
     public SignalInductorDescriptor descriptor;
     public NbtElectricalLoad postiveLoad = new NbtElectricalLoad("postiveLoad");
     public NbtElectricalLoad negativeLoad = new NbtElectricalLoad("negativeLoad");
-    public Inductor inductor = new Inductor("inductor", postiveLoad, negativeLoad);
+    public NbtInductor inductor = new NbtInductor("inductor", postiveLoad, negativeLoad);
 
     public SignalInductorElement(SixNode sixNode, Direction side, SixNodeDescriptor descriptor) {
         super(sixNode, side, descriptor);

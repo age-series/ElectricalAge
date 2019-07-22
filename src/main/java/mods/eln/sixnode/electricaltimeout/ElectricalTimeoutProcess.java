@@ -1,7 +1,7 @@
 package mods.eln.sixnode.electricaltimeout;
 
 import mods.eln.misc.INBTTReady;
-import mods.eln.sim.IProcess;
+import mods.eln.sim.core.IProcess;
 import mods.eln.sound.SoundCommand;
 import net.minecraft.nbt.NBTTagCompound;
 

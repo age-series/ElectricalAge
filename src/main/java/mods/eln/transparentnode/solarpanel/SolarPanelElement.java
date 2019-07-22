@@ -13,11 +13,11 @@ import mods.eln.node.transparent.TransparentNode;
 import mods.eln.node.transparent.TransparentNodeDescriptor;
 import mods.eln.node.transparent.TransparentNodeElement;
 import mods.eln.node.transparent.TransparentNodeElementInventory;
-import mods.eln.sim.DiodeProcess;
-import mods.eln.sim.ElectricalLoad;
-import mods.eln.sim.ThermalLoad;
-import mods.eln.sim.mna.component.VoltageSource;
-import mods.eln.sim.mna.process.PowerSourceBipole;
+import mods.eln.sim.mna.active.DiodeProcess;
+import mods.eln.sim.mna.state.ElectricalLoad;
+import mods.eln.sim.nbt.NbtVoltageSource;
+import mods.eln.sim.thermal.ThermalLoad;
+import mods.eln.sim.mna.active.PowerSourceBipole;
 import mods.eln.sim.nbt.NbtElectricalLoad;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
@@ -34,8 +34,8 @@ public class SolarPanelElement extends TransparentNodeElement {
     SolarPanelDescriptor descriptor;
     NbtElectricalLoad positiveLoad = new NbtElectricalLoad("positiveLoad");
     NbtElectricalLoad negativeLoad = new NbtElectricalLoad("negativeLoad");
-    VoltageSource positiveSrc = new VoltageSource("posSrc", positiveLoad, null);
-    VoltageSource negativeSrc = new VoltageSource("negSrc", negativeLoad, null);
+    NbtVoltageSource positiveSrc = new NbtVoltageSource("posSrc", positiveLoad, null);
+    NbtVoltageSource negativeSrc = new NbtVoltageSource("negSrc", negativeLoad, null);
 
     //ElectricalCurrentSource currentSource;
     DiodeProcess diode;

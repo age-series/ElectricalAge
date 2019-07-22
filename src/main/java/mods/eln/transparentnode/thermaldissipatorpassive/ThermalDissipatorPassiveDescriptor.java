@@ -6,7 +6,7 @@ import mods.eln.misc.Obj3D.Obj3DPart;
 import mods.eln.misc.Utils;
 import mods.eln.misc.VoltageLevelColor;
 import mods.eln.node.transparent.TransparentNodeDescriptor;
-import mods.eln.sim.ThermalLoad;
+import mods.eln.sim.thermal.ThermalLoad;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 
@@ -34,7 +34,7 @@ public class ThermalDissipatorPassiveDescriptor extends TransparentNodeDescripto
         this.warmLimit = warmLimit;
         this.nominalP = nominalP;
         this.nominalT = nominalT;
-        Eln.simulator.checkThermalLoad(thermalRs, thermalRp, thermalC);
+        ThermalLoad.checkThermalLoad(thermalRs, thermalRp, thermalC);
         this.obj = obj;
         if (obj != null) main = obj.getPart("main");
 

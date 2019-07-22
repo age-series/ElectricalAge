@@ -3,7 +3,7 @@ package mods.eln.solver;
 import mods.eln.Eln;
 import mods.eln.misc.FunctionTable;
 import mods.eln.misc.INBTTReady;
-import mods.eln.sim.IProcess;
+import mods.eln.sim.core.IProcess;
 import net.minecraft.nbt.NBTTagCompound;
 
 import java.util.ArrayList;

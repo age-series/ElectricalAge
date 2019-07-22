@@ -4,7 +4,7 @@ import mods.eln.debug.DP
 import mods.eln.debug.DPType
 import mods.eln.sim.mna.RootSystem
 import mods.eln.sim.mna.SubSystem
-import mods.eln.sim.mna.component.Component
+import mods.eln.sim.mna.passive.Component
 import mods.eln.sim.mna.misc.IAbstractor
 
 import java.util.ArrayList

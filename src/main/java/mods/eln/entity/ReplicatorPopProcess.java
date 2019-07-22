@@ -5,7 +5,7 @@ import mods.eln.Eln;
 import mods.eln.debug.DP;
 import mods.eln.debug.DPType;
 import mods.eln.misc.Utils;
-import mods.eln.sim.IProcess;
+import mods.eln.sim.core.IProcess;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.server.MinecraftServer;

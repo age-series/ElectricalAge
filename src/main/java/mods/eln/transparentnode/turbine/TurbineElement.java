@@ -10,10 +10,10 @@ import mods.eln.node.NodePeriodicPublishProcess;
 import mods.eln.node.transparent.TransparentNode;
 import mods.eln.node.transparent.TransparentNodeDescriptor;
 import mods.eln.node.transparent.TransparentNodeElement;
-import mods.eln.sim.ElectricalLoad;
-import mods.eln.sim.ThermalLoad;
-import mods.eln.sim.mna.component.Resistor;
-import mods.eln.sim.mna.component.VoltageSource;
+import mods.eln.sim.mna.state.ElectricalLoad;
+import mods.eln.sim.nbt.NbtVoltageSource;
+import mods.eln.sim.thermal.ThermalLoad;
+import mods.eln.sim.mna.passive.Resistor;
 import mods.eln.sim.nbt.NbtElectricalLoad;
 import mods.eln.sim.nbt.NbtThermalLoad;
 import mods.eln.sim.process.destruct.ThermalLoadWatchDog;
@@ -35,7 +35,7 @@ public class TurbineElement extends TransparentNodeElement {
     public final NbtThermalLoad warmLoad = new NbtThermalLoad("warmLoad");
     public final NbtThermalLoad coolLoad = new NbtThermalLoad("coolLoad");
 
-    public final VoltageSource electricalPowerSourceProcess = new VoltageSource("PowerSource", positiveLoad, null);
+    public final NbtVoltageSource electricalPowerSourceProcess = new NbtVoltageSource("PowerSource", positiveLoad, null);
     private final TurbineThermalProcess turbineThermaltProcess = new TurbineThermalProcess(this);
     private final TurbineElectricalProcess turbineElectricalProcess = new TurbineElectricalProcess(this);
 

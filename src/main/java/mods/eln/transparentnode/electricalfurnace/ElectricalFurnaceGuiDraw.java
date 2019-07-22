@@ -4,7 +4,7 @@ import mods.eln.gui.*;
 import mods.eln.item.HeatingCorpElement;
 import mods.eln.misc.Utils;
 import mods.eln.node.transparent.TransparentNodeElementInventory;
-import mods.eln.sim.PhysicalConstant;
+import mods.eln.sim.thermal.PhysicalConstant;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;

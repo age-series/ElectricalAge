@@ -3,8 +3,8 @@ package mods.eln.transparentnode.teleporter;
 import mods.eln.misc.Direction;
 import mods.eln.misc.LRDU;
 import mods.eln.node.GhostNode;
-import mods.eln.sim.ElectricalLoad;
-import mods.eln.sim.ThermalLoad;
+import mods.eln.sim.mna.state.ElectricalLoad;
+import mods.eln.sim.thermal.ThermalLoad;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
 

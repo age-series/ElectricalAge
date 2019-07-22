@@ -4,7 +4,7 @@ import mods.eln.Eln;
 import mods.eln.misc.IConfigSharing;
 import mods.eln.misc.Utils;
 import mods.eln.misc.VoltageLevelColor;
-import mods.eln.sim.mna.component.Resistor;
+import mods.eln.sim.mna.passive.Resistor;
 import mods.eln.sixnode.lampsocket.LampSocketType;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;

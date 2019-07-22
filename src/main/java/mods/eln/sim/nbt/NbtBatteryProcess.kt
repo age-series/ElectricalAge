@@ -3,15 +3,14 @@ package mods.eln.sim.nbt
 import mods.eln.misc.FunctionTable
 import mods.eln.misc.INBTTReady
 import mods.eln.node.NodeBase
-import mods.eln.sim.BatteryProcess
-import mods.eln.sim.BatterySlowProcess
-import mods.eln.sim.IProcess
-import mods.eln.sim.ThermalLoad
-import mods.eln.sim.mna.component.VoltageSource
+import mods.eln.sim.mna.active.BatteryProcess
+import mods.eln.sim.mna.active.BatterySlowProcess
+import mods.eln.sim.thermal.ThermalLoad
+import mods.eln.sim.mna.passive.VoltageSource
 import mods.eln.sim.mna.state.VoltageState
 import net.minecraft.nbt.NBTTagCompound
 
-class NbtBatteryProcess(positiveLoad: VoltageState, negativeLoad: VoltageState, voltageFunction: FunctionTable, IMax: Double, voltageSource: VoltageSource, thermalLoad: ThermalLoad) : BatteryProcess(positiveLoad, negativeLoad, voltageFunction, IMax, voltageSource, thermalLoad), INBTTReady {
+class NbtBatteryProcess(positiveLoad: VoltageState, negativeLoad: VoltageState, voltageFunction: FunctionTable, IMax: Double, batteryAging: Boolean, voltageSource: VoltageSource, thermalLoad: ThermalLoad) : BatteryProcess(positiveLoad, negativeLoad, voltageFunction, IMax, batteryAging, voltageSource, thermalLoad), INBTTReady {
 
     override fun readFromNBT(nbttagcompound: NBTTagCompound, str: String) {
         Q = nbttagcompound.getDouble(str + "NBP" + "Q")

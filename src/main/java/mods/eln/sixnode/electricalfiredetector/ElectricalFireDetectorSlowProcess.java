@@ -4,7 +4,7 @@ import mods.eln.item.electricalitem.BatteryItem;
 import mods.eln.misc.Coordonate;
 import mods.eln.misc.RcInterpolator;
 import mods.eln.misc.Utils;
-import mods.eln.sim.IProcess;
+import mods.eln.sim.core.IProcess;
 import mods.eln.sixnode.electricalwatch.ElectricalWatchContainer;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFire;

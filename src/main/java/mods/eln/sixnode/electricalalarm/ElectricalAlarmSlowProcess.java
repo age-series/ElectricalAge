@@ -3,7 +3,7 @@ package mods.eln.sixnode.electricalalarm;
 import mods.eln.Eln;
 import mods.eln.misc.Coordonate;
 import mods.eln.misc.Utils;
-import mods.eln.sim.IProcess;
+import mods.eln.sim.core.IProcess;
 import mods.eln.sound.SoundCommand;
 
 public class ElectricalAlarmSlowProcess implements IProcess {

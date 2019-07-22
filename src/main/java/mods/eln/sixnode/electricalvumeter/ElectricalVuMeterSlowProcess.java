@@ -1,6 +1,6 @@
 package mods.eln.sixnode.electricalvumeter;
 
-import mods.eln.sim.IProcess;
+import mods.eln.sim.core.IProcess;
 
 public class ElectricalVuMeterSlowProcess implements IProcess {
 

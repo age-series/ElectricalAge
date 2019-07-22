@@ -1,7 +1,7 @@
 package mods.eln.sim.mna.misc
 
 import mods.eln.sim.mna.SubSystem
-import mods.eln.sim.mna.component.Component
+import mods.eln.sim.mna.passive.Component
 
 /**
  * IAbstractor

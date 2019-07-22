@@ -3,7 +3,7 @@ package mods.eln.transparentnode.waterturbine;
 import mods.eln.misc.INBTTReady;
 import mods.eln.misc.RcRcInterpolator;
 import mods.eln.misc.Utils;
-import mods.eln.sim.IProcess;
+import mods.eln.sim.core.IProcess;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;

@@ -2,27 +2,24 @@ package mods.eln.mechanical
 
 import mods.eln.Eln
 import mods.eln.cable.CableRenderDescriptor
-import mods.eln.debug.DP
-import mods.eln.debug.DPType
 import mods.eln.misc.*
 import mods.eln.node.NodeBase
 import mods.eln.node.transparent.EntityMetaTag
 import mods.eln.node.transparent.TransparentNode
 import mods.eln.node.transparent.TransparentNodeDescriptor
 import mods.eln.node.transparent.TransparentNodeEntity
-import mods.eln.sim.ElectricalLoad
-import mods.eln.sim.IProcess
-import mods.eln.sim.ThermalLoadInitializer
-import mods.eln.sim.mna.component.Resistor
-import mods.eln.sim.mna.component.VoltageSource
+import mods.eln.sim.mna.state.ElectricalLoad
+import mods.eln.sim.core.IProcess
+import mods.eln.sim.thermal.ThermalLoadInitializer
+import mods.eln.sim.mna.passive.Resistor
 import mods.eln.sim.mna.misc.IRootSystemPreStepProcess
 import mods.eln.sim.mna.misc.Th
 import mods.eln.sim.nbt.NbtElectricalLoad
 import mods.eln.sim.nbt.NbtThermalLoad
+import mods.eln.sim.nbt.NbtVoltageSource
 import mods.eln.sim.process.destruct.ThermalLoadWatchDog
 import mods.eln.sim.process.destruct.WorldExplosion
 import mods.eln.sim.process.heater.ElectricalLoadHeatThermalLoad
-import mods.eln.sixnode.electricalcable.ElectricalCableDescriptor
 import mods.eln.sixnode.genericcable.GenericCableDescriptor
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.ItemStack
@@ -160,7 +157,7 @@ class GeneratorElement(node: TransparentNode, desc_: TransparentNodeDescriptor) 
     internal val inputLoad = NbtElectricalLoad("inputLoad")
     internal val positiveLoad = NbtElectricalLoad("positiveLoad")
     internal val inputToPositiveResistor = Resistor(inputLoad, positiveLoad)
-    internal val electricalPowerSource = VoltageSource("PowerSource", positiveLoad, null)
+    internal val electricalPowerSource = NbtVoltageSource("PowerSource", positiveLoad, null)
     internal val electricalProcess = GeneratorElectricalProcess()
     internal val shaftProcess = GeneratorShaftProcess()
 

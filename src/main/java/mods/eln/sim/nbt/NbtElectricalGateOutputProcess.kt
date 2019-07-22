@@ -3,9 +3,9 @@ package mods.eln.sim.nbt
 import mods.eln.Eln
 import mods.eln.misc.INBTTReady
 import mods.eln.misc.Utils
-import mods.eln.sim.ElectricalLoad
+import mods.eln.sim.mna.state.ElectricalLoad
 import mods.eln.sim.mna.SubSystem
-import mods.eln.sim.mna.component.Capacitor
+import mods.eln.sim.mna.passive.Capacitor
 import net.minecraft.nbt.NBTTagCompound
 
 class NbtElectricalGateOutputProcess(name: String, positiveLoad: ElectricalLoad) : Capacitor(positiveLoad, null), INBTTReady {

@@ -6,6 +6,7 @@ import mods.eln.debug.DPType
 import mods.eln.entity.ReplicatorEntity
 import mods.eln.misc.Coordonate
 import mods.eln.misc.Utils
+import mods.eln.sim.core.IProcess
 import net.minecraft.entity.boss.EntityWither
 import net.minecraft.entity.monster.EntityEnderman
 import net.minecraft.entity.monster.EntityMob
@@ -43,5 +44,4 @@ class MonsterPopFreeProcess(private val coordonate: Coordonate, private val rang
             oldList = list
         }
     }
-
 }

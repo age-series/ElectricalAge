@@ -3,7 +3,7 @@ package mods.eln.transparentnode.electricalmachine;
 import mods.eln.Eln;
 import mods.eln.misc.*;
 import mods.eln.misc.Obj3D.Obj3DPart;
-import mods.eln.sim.ThermalLoadInitializer;
+import mods.eln.sim.thermal.ThermalLoadInitializer;
 import mods.eln.sixnode.electricalcable.ElectricalCableDescriptor;
 import net.minecraft.entity.item.EntityItem;
 import org.lwjgl.opengl.GL11;

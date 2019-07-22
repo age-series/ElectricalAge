@@ -1,6 +1,6 @@
 package mods.eln.sim.process.destruct
 
-import mods.eln.sim.mna.component.Resistor
+import mods.eln.sim.mna.passive.Resistor
 
 class ResistorPowerWatchdog(internal val resistor: Resistor) : ValueWatchdog() {
 

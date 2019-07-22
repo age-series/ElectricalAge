@@ -2,7 +2,7 @@ package mods.eln.transparentnode.turret;
 
 import mods.eln.misc.SlewLimiter;
 import mods.eln.misc.Utils;
-import mods.eln.sim.IProcess;
+import mods.eln.sim.core.IProcess;
 
 public class TurretMechanicsSimulation implements IProcess {
     private final SlewLimiter turretAngle;

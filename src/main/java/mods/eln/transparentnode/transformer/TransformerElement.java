@@ -16,11 +16,11 @@ import mods.eln.node.transparent.TransparentNode;
 import mods.eln.node.transparent.TransparentNodeDescriptor;
 import mods.eln.node.transparent.TransparentNodeElement;
 import mods.eln.node.transparent.TransparentNodeElementInventory;
-import mods.eln.sim.ElectricalLoad;
-import mods.eln.sim.ThermalLoad;
-import mods.eln.sim.mna.component.Transformer;
-import mods.eln.sim.mna.component.VoltageSource;
-import mods.eln.sim.mna.process.TransformerInterSystemProcess;
+import mods.eln.sim.mna.state.ElectricalLoad;
+import mods.eln.sim.nbt.NbtVoltageSource;
+import mods.eln.sim.thermal.ThermalLoad;
+import mods.eln.sim.mna.passive.Transformer;
+import mods.eln.sim.mna.active.TransformerInterSystemProcess;
 import mods.eln.sim.nbt.NbtElectricalLoad;
 import mods.eln.sim.process.destruct.VoltageStateWatchDog;
 import mods.eln.sim.process.destruct.WorldExplosion;
@@ -41,8 +41,8 @@ public class TransformerElement extends TransparentNodeElement implements IConfi
     private final NbtElectricalLoad primaryLoad = new NbtElectricalLoad("primaryLoad");
     private final NbtElectricalLoad secondaryLoad = new NbtElectricalLoad("secondaryLoad");
 
-    private final VoltageSource primaryVoltageSource = new VoltageSource("primaryVoltageSource");
-    private final VoltageSource secondaryVoltageSource = new VoltageSource("secondaryVoltageSource");
+    private final NbtVoltageSource primaryVoltageSource = new NbtVoltageSource("primaryVoltageSource");
+    private final NbtVoltageSource secondaryVoltageSource = new NbtVoltageSource("secondaryVoltageSource");
 
     private final TransformerInterSystemProcess interSystemProcess =
         new TransformerInterSystemProcess(primaryLoad, secondaryLoad, primaryVoltageSource, secondaryVoltageSource);

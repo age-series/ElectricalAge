@@ -1,7 +1,7 @@
 package mods.eln.sixnode.electricalbreaker;
 
 import mods.eln.misc.INBTTReady;
-import mods.eln.sim.IProcess;
+import mods.eln.sim.core.IProcess;
 import mods.eln.sixnode.genericcable.GenericCableDescriptor;
 import net.minecraft.nbt.NBTTagCompound;
 

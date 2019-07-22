@@ -4,9 +4,9 @@ import mods.eln.cable.CableRenderDescriptor;
 import mods.eln.generic.GenericItemBlockUsingDamageDescriptor;
 import mods.eln.node.NodeBase;
 import mods.eln.node.six.SixNodeDescriptor;
-import mods.eln.sim.ElectricalLoad;
-import mods.eln.sim.ThermalLoad;
-import mods.eln.sim.mna.component.Resistor;
+import mods.eln.sim.mna.state.ElectricalLoad;
+import mods.eln.sim.thermal.ThermalLoad;
+import mods.eln.sim.mna.passive.Resistor;
 import net.minecraft.item.ItemStack;
 
 public abstract class GenericCableDescriptor extends SixNodeDescriptor {

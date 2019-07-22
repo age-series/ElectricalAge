@@ -1,8 +1,8 @@
 package mods.eln.sim.process.destruct
 
-import mods.eln.sim.ThermalLoad
-import mods.eln.sim.ThermalLoadInitializer
-import mods.eln.sim.ThermalLoadInitializerByPowerDrop
+import mods.eln.sim.thermal.ThermalLoad
+import mods.eln.sim.thermal.ThermalLoadInitializer
+import mods.eln.sim.thermal.ThermalLoadInitializerByPowerDrop
 
 class ThermalLoadWatchDog : ValueWatchdog() {
 

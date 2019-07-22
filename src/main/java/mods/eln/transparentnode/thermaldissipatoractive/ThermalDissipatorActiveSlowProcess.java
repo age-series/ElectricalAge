@@ -1,6 +1,6 @@
 package mods.eln.transparentnode.thermaldissipatoractive;
 
-import mods.eln.sim.IProcess;
+import mods.eln.sim.core.IProcess;
 
 public class ThermalDissipatorActiveSlowProcess implements IProcess {
     ThermalDissipatorActiveElement dissipator;

@@ -1,6 +1,6 @@
 package mods.eln.transparentnode.electricalantennatx;
 
-import mods.eln.sim.IProcess;
+import mods.eln.sim.core.IProcess;
 import mods.eln.transparentnode.electricalantennarx.ElectricalAntennaRxElement;
 
 public class ElectricalAntennaTxElectricalProcess implements IProcess {

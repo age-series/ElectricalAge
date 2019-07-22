@@ -12,16 +12,11 @@ import mods.eln.node.transparent.TransparentNode;
 import mods.eln.node.transparent.TransparentNodeDescriptor;
 import mods.eln.node.transparent.TransparentNodeElement;
 import mods.eln.node.transparent.TransparentNodeElementInventory;
-import mods.eln.sim.ElectricalLoad;
-import mods.eln.sim.NodeVoltageState;
-import mods.eln.sim.ThermalLoad;
-import mods.eln.sim.mna.component.Resistor;
-import mods.eln.sim.mna.component.ResistorSwitch;
-import mods.eln.sim.mna.component.VoltageSource;
-import mods.eln.sim.nbt.NbtBatteryProcess;
-import mods.eln.sim.nbt.NbtBatterySlowProcess;
-import mods.eln.sim.nbt.NbtElectricalLoad;
-import mods.eln.sim.nbt.NbtThermalLoad;
+import mods.eln.server.SaveConfig;
+import mods.eln.sim.mna.state.ElectricalLoad;
+import mods.eln.sim.nbt.*;
+import mods.eln.sim.thermal.ThermalLoad;
+import mods.eln.sim.mna.passive.Resistor;
 import mods.eln.sim.process.destruct.ThermalLoadWatchDog;
 import mods.eln.sim.process.destruct.WorldExplosion;
 import mods.eln.sim.process.heater.ElectricalLoadHeatThermalLoad;
@@ -38,18 +33,18 @@ import java.util.Map;
 public class BatteryElement extends TransparentNodeElement {
 
     public NbtElectricalLoad cutLoad = new NbtElectricalLoad("cutLoad");
-    public NodeVoltageState positiveLoad = new NodeVoltageState("positiveLoad");
+    public NbtVoltageState positiveLoad = new NbtVoltageState("positiveLoad");
     public NbtElectricalLoad negativeLoad = new NbtElectricalLoad("negativeLoad");
-    public VoltageSource voltageSource = new VoltageSource("volSrc", positiveLoad, negativeLoad);
+    public NbtVoltageSource voltageSource = new NbtVoltageSource("volSrc", positiveLoad, negativeLoad);
 
     public NbtThermalLoad thermalLoad = new NbtThermalLoad("thermalLoad");
     public ElectricalLoadHeatThermalLoad negativeETProcess = new ElectricalLoadHeatThermalLoad(negativeLoad, thermalLoad);
     public ThermalLoadWatchDog thermalWatchdog = new ThermalLoadWatchDog();
 
-    public NbtBatteryProcess batteryProcess = new NbtBatteryProcess(positiveLoad, negativeLoad, null, 0, voltageSource, thermalLoad);
+    public NbtBatteryProcess batteryProcess = new NbtBatteryProcess(positiveLoad, negativeLoad, null, 0, SaveConfig.instance.batteryAging, voltageSource, thermalLoad);
 
     public Resistor dischargeResistor = new Resistor(positiveLoad, negativeLoad);
-    public ResistorSwitch cutSwitch = new ResistorSwitch("cutSwitch", cutLoad, positiveLoad);
+    public NbtResistorSwitch cutSwitch = new NbtResistorSwitch("cutSwitch", cutLoad, positiveLoad);
 
     public BatteryInventoryProcess inventoryProcess = new BatteryInventoryProcess(this);
 

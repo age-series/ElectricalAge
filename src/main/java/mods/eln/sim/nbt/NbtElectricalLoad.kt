@@ -1,7 +1,7 @@
 package mods.eln.sim.nbt
 
 import mods.eln.misc.INBTTReady
-import mods.eln.sim.ElectricalLoad
+import mods.eln.sim.mna.state.ElectricalLoad
 import net.minecraft.nbt.NBTTagCompound
 
 open class NbtElectricalLoad(name: String) : ElectricalLoad(), INBTTReady {

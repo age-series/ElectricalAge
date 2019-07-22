@@ -6,8 +6,8 @@ import mods.eln.misc.LRDU
 import mods.eln.node.NodeBase
 import mods.eln.node.transparent.TransparentNode
 import mods.eln.node.transparent.TransparentNodeDescriptor
-import mods.eln.sim.ElectricalLoad
-import mods.eln.sim.ThermalLoad
+import mods.eln.sim.mna.state.ElectricalLoad
+import mods.eln.sim.thermal.ThermalLoad
 import mods.eln.sim.nbt.NbtElectricalLoad
 import mods.eln.sim.nbt.NbtThermalLoad
 import mods.eln.sim.process.destruct.ThermalLoadWatchDog

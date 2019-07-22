@@ -10,12 +10,12 @@ import mods.eln.misc.*
 import mods.eln.misc.Obj3D.Obj3DPart
 import mods.eln.node.NodeBase
 import mods.eln.node.six.*
-import mods.eln.sim.ElectricalLoad
-import mods.eln.sim.IProcess
-import mods.eln.sim.ThermalLoad
-import mods.eln.sim.mna.component.Resistor
-import mods.eln.sim.mna.component.ResistorSwitch
+import mods.eln.sim.mna.state.ElectricalLoad
+import mods.eln.sim.core.IProcess
+import mods.eln.sim.thermal.ThermalLoad
+import mods.eln.sim.mna.passive.Resistor
 import mods.eln.sim.nbt.NbtElectricalLoad
+import mods.eln.sim.nbt.NbtResistorSwitch
 import mods.eln.sim.process.destruct.VoltageStateWatchDog
 import mods.eln.sim.process.destruct.WorldExplosion
 import mods.eln.sixnode.currentcable.CurrentCableDescriptor
@@ -245,7 +245,7 @@ class EnergyMeterElement(sixNode: SixNode, side: Direction, descriptor: SixNodeD
     var descriptor: EnergyMeterDescriptor
     var aLoad = NbtElectricalLoad("aLoad")
     var bLoad = NbtElectricalLoad("bLoad")
-    var shunt = ResistorSwitch("shunt", aLoad, bLoad)
+    var shunt = NbtResistorSwitch("shunt", aLoad, bLoad)
 
     internal var inventory = SixNodeElementInventory(1, 64, this)
 

@@ -1,6 +1,6 @@
 package mods.eln.sim.mna.misc
 
-import mods.eln.sim.mna.component.VoltageSource
+import mods.eln.sim.mna.passive.VoltageSource
 import mods.eln.sim.mna.state.State
 import java.lang.Exception
 

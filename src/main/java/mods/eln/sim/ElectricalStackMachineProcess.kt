@@ -1,9 +1,9 @@
 package mods.eln.sim
 
-import mods.eln.misc.Recipe
 import mods.eln.misc.RecipesList
 import mods.eln.misc.Utils
-import mods.eln.sim.mna.component.Resistor
+import mods.eln.sim.core.IProcess
+import mods.eln.sim.mna.passive.Resistor
 import net.minecraft.inventory.IInventory
 import net.minecraft.item.ItemStack
 
@@ -54,7 +54,7 @@ class ElectricalStackMachineProcess(var inventory: IInventory, internal var inpu
         setResistorValue(resistorValue)
     }
 
-    override fun process(time: Double) {
+    override fun process(dt: Double) {
         val itemStackIn = inventory.getStackInSlot(inputSlotId)
 
         val itemTypeChanged = itemStackIn == null && itemStackInOld != null ||
@@ -67,7 +67,7 @@ class ElectricalStackMachineProcess(var inventory: IInventory, internal var inpu
         }
 
         if (smeltInProcess) {
-            energyCounter += power * time
+            energyCounter += power * dt
             if (energyCounter > energyNeeded) {
                 energyCounter -= energyNeeded
                 smeltItem()

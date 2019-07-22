@@ -1,6 +1,6 @@
 package mods.eln.transparentnode.battery;
 
-import mods.eln.sim.IProcess;
+import mods.eln.sim.core.IProcess;
 
 public class BatteryInventoryProcess implements IProcess {
 

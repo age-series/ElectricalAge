@@ -1,7 +1,9 @@
 package mods.eln.sim
 
-import mods.eln.sim.mna.component.Resistor
+import mods.eln.sim.core.IProcess
+import mods.eln.sim.mna.passive.Resistor
 import mods.eln.sim.mna.misc.MnaConst
+import mods.eln.sim.thermal.ThermalLoad
 import mods.eln.sixnode.resistor.ResistorDescriptor
 import mods.eln.sixnode.resistor.ResistorElement
 
@@ -25,6 +27,10 @@ class ResistorProcess(internal var element: ResistorElement, internal var r: Res
             element.needPublish()
         }
 
+        // NOTE: While a thermistor seems like a neat idea, it may be prohibitively computationally expensive,
+        //       since it can be using a lot of CPU time (every time it updates the resistance, the A matrix needs to
+        //       be recalculated
+        //
         //        /*
         //        * https://en.wikipedia.org/wiki/Thermistor
         //        *

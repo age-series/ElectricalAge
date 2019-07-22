@@ -1,7 +1,7 @@
 package mods.eln.sim.nbt
 
 import mods.eln.misc.INBTTReady
-import mods.eln.sim.ThermalLoad
+import mods.eln.sim.thermal.ThermalLoad
 import net.minecraft.nbt.NBTTagCompound
 
 class NbtThermalLoad : ThermalLoad, INBTTReady {

@@ -12,9 +12,9 @@ import mods.eln.node.transparent.TransparentNode;
 import mods.eln.node.transparent.TransparentNodeDescriptor;
 import mods.eln.node.transparent.TransparentNodeElement;
 import mods.eln.node.transparent.TransparentNodeElementInventory;
-import mods.eln.sim.ElectricalLoad;
-import mods.eln.sim.ThermalLoad;
-import mods.eln.sim.mna.component.PowerSource;
+import mods.eln.sim.mna.state.ElectricalLoad;
+import mods.eln.sim.nbt.NbtPowerSource;
+import mods.eln.sim.thermal.ThermalLoad;
 import mods.eln.sim.nbt.NbtElectricalLoad;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
@@ -29,7 +29,7 @@ public class WaterTurbineElement extends TransparentNodeElement {
 
     NbtElectricalLoad positiveLoad = new NbtElectricalLoad("positiveLoad");
 
-    PowerSource powerSource = new PowerSource("powerSource", positiveLoad);
+    NbtPowerSource powerSource = new NbtPowerSource("powerSource", positiveLoad);
 
     WaterTurbineSlowProcess slowProcess = new WaterTurbineSlowProcess(this);
 

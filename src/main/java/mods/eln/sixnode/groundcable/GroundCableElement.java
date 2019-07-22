@@ -12,9 +12,9 @@ import mods.eln.node.six.SixNode;
 import mods.eln.node.six.SixNodeDescriptor;
 import mods.eln.node.six.SixNodeElement;
 import mods.eln.node.six.SixNodeElementInventory;
-import mods.eln.sim.ElectricalLoad;
-import mods.eln.sim.ThermalLoad;
-import mods.eln.sim.mna.component.VoltageSource;
+import mods.eln.sim.mna.state.ElectricalLoad;
+import mods.eln.sim.nbt.NbtVoltageSource;
+import mods.eln.sim.thermal.ThermalLoad;
 import mods.eln.sim.nbt.NbtElectricalLoad;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
@@ -31,7 +31,7 @@ import java.util.Map;
 public class GroundCableElement extends SixNodeElement {
 
     NbtElectricalLoad electricalLoad = new NbtElectricalLoad("electricalLoad");
-    VoltageSource ground = new VoltageSource("ground", electricalLoad, null);
+    NbtVoltageSource ground = new NbtVoltageSource("ground", electricalLoad, null);
     //ElectricalSourceRefGroundProcess groundProcess = new ElectricalSourceRefGroundProcess(electricalLoad, 0);
 
     int color = 0;

@@ -10,12 +10,12 @@ import mods.eln.node.NodeBase
 import mods.eln.node.NodePeriodicPublishProcess
 import mods.eln.node.transparent.TransparentNode
 import mods.eln.node.transparent.TransparentNodeDescriptor
-import mods.eln.sim.ElectricalLoad
-import mods.eln.sim.ThermalLoad
-import mods.eln.sim.mna.component.VoltageSource
-import mods.eln.sim.mna.process.TransformerInterSystemProcess
+import mods.eln.sim.mna.state.ElectricalLoad
+import mods.eln.sim.thermal.ThermalLoad
+import mods.eln.sim.mna.active.TransformerInterSystemProcess
 import mods.eln.sim.nbt.NbtElectricalLoad
 import mods.eln.sim.nbt.NbtThermalLoad
+import mods.eln.sim.nbt.NbtVoltageSource
 import mods.eln.sim.process.destruct.ThermalLoadWatchDog
 import mods.eln.sim.process.destruct.VoltageStateWatchDog
 import mods.eln.sim.process.destruct.WorldExplosion
@@ -26,8 +26,8 @@ import java.io.IOException
 
 data class Transformer(
     val secondaryLoad: NbtElectricalLoad,
-    val primaryVoltageSource: VoltageSource,
-    val secondaryVoltageSource: VoltageSource,
+    val primaryVoltageSource: NbtVoltageSource,
+    val secondaryVoltageSource: NbtVoltageSource,
     val interSystemProcess: TransformerInterSystemProcess,
     val voltageSecondaryWatchdog: VoltageStateWatchDog
 )
@@ -78,8 +78,8 @@ class ElectricalPoleElement(node: TransparentNode, descriptor: TransparentNodeDe
 
         if (desc.includeTransformer) {
             val secondaryLoad = NbtElectricalLoad("secondaryLoad")
-            val primaryVoltageSource = VoltageSource("primaryVoltageSource", electricalLoad, null)
-            val secondaryVoltageSource = VoltageSource("secondaryVoltageSource", secondaryLoad, null)
+            val primaryVoltageSource = NbtVoltageSource("primaryVoltageSource", electricalLoad, null)
+            val secondaryVoltageSource = NbtVoltageSource("secondaryVoltageSource", secondaryLoad, null)
             val interSystemProcess = TransformerInterSystemProcess(electricalLoad, secondaryLoad, primaryVoltageSource, secondaryVoltageSource)
             val voltageSecondaryWatchdog = VoltageStateWatchDog()
 
