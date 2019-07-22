@@ -1,4 +1,4 @@
-package mods.eln.sim.process.destruct
+package mods.eln.sim.destruct
 
 import mods.eln.Eln
 import mods.eln.sim.core.IProcess

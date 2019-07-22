@@ -19,8 +19,8 @@ import mods.eln.sim.mna.state.ElectricalLoad
 import mods.eln.sim.core.IProcess
 import mods.eln.sim.thermal.ThermalLoad
 import mods.eln.sim.nbt.NbtElectricalGateInput
-import mods.eln.sim.process.destruct.DelayedDestruction
-import mods.eln.sim.process.destruct.WorldExplosion
+import mods.eln.sim.destruct.DelayedDestruction
+import mods.eln.sim.destruct.WorldExplosion
 import mods.eln.sound.LoopedSound
 import mods.eln.sound.SoundCommand
 import net.minecraft.client.gui.GuiScreen

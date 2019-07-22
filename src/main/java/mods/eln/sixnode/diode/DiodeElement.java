@@ -15,9 +15,9 @@ import mods.eln.sim.nbt.NbtResistorSwitch;
 import mods.eln.sim.thermal.ThermalLoad;
 import mods.eln.sim.nbt.NbtElectricalLoad;
 import mods.eln.sim.nbt.NbtThermalLoad;
-import mods.eln.sim.process.destruct.ThermalLoadWatchDog;
-import mods.eln.sim.process.destruct.WorldExplosion;
-import mods.eln.sim.process.heater.DiodeHeatThermalLoad;
+import mods.eln.sim.thermal.ThermalLoadWatchDog;
+import mods.eln.sim.destruct.WorldExplosion;
+import mods.eln.sim.thermal.DiodeHeatThermalLoad;
 import net.minecraft.nbt.NBTTagCompound;
 
 import java.io.DataOutputStream;

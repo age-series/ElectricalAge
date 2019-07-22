@@ -1,7 +1,8 @@
-package mods.eln.sim.process.destruct
+package mods.eln.sim.mna
 
 import mods.eln.debug.DP
 import mods.eln.debug.DPType
+import mods.eln.sim.core.ValueWatchdog
 import mods.eln.sim.mna.state.VoltageState
 
 class VoltageStateWatchDog : ValueWatchdog() {

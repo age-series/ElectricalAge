@@ -10,10 +10,10 @@ import mods.eln.sim.mna.state.ElectricalLoad
 import mods.eln.sim.thermal.ThermalLoad
 import mods.eln.sim.nbt.NbtElectricalLoad
 import mods.eln.sim.nbt.NbtThermalLoad
-import mods.eln.sim.process.destruct.ThermalLoadWatchDog
-import mods.eln.sim.process.destruct.VoltageStateWatchDog
-import mods.eln.sim.process.destruct.WorldExplosion
-import mods.eln.sim.process.heater.ElectricalLoadHeatThermalLoad
+import mods.eln.sim.thermal.ThermalLoadWatchDog
+import mods.eln.sim.mna.VoltageStateWatchDog
+import mods.eln.sim.destruct.WorldExplosion
+import mods.eln.sim.thermal.ElectricalLoadHeatThermalLoad
 import mods.eln.sixnode.electricalcable.ElectricalCableDescriptor
 
 /**

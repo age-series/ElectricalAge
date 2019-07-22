@@ -1,9 +1,9 @@
-package mods.eln.sim.process.destruct
+package mods.eln.sim.core
 
 import mods.eln.debug.DP
 import mods.eln.debug.DPType
 import mods.eln.misc.Utils
-import mods.eln.sim.core.IProcess
+import mods.eln.sim.destruct.IDestructable
 
 abstract class ValueWatchdog : IProcess {
 

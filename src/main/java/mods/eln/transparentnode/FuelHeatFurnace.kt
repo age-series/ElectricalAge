@@ -18,8 +18,8 @@ import mods.eln.sim.RegulatorProcess
 import mods.eln.sim.thermal.ThermalLoadInitializerByPowerDrop
 import mods.eln.sim.nbt.NbtElectricalGateInput
 import mods.eln.sim.nbt.NbtThermalLoad
-import mods.eln.sim.process.destruct.ThermalLoadWatchDog
-import mods.eln.sim.process.destruct.WorldExplosion
+import mods.eln.sim.thermal.ThermalLoadWatchDog
+import mods.eln.sim.destruct.WorldExplosion
 import mods.eln.sound.LoopedSound
 import net.minecraft.client.gui.GuiButton
 import net.minecraft.entity.player.EntityPlayer

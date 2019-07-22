@@ -9,8 +9,8 @@ import mods.eln.sim.core.IProcess;
 import mods.eln.sim.thermal.ThermalLoad;
 import mods.eln.sim.nbt.NbtElectricalLoad;
 import mods.eln.sim.nbt.NbtResistor;
-import mods.eln.sim.process.destruct.VoltageStateWatchDog;
-import mods.eln.sim.process.destruct.WorldExplosion;
+import mods.eln.sim.mna.VoltageStateWatchDog;
+import mods.eln.sim.destruct.WorldExplosion;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 

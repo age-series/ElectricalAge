@@ -13,8 +13,8 @@ import mods.eln.sim.core.IProcess
 import mods.eln.sim.thermal.ThermalLoad
 import mods.eln.sim.nbt.NbtElectricalLoad
 import mods.eln.sim.nbt.NbtResistorSwitch
-import mods.eln.sim.process.destruct.VoltageStateWatchDog
-import mods.eln.sim.process.destruct.WorldExplosion
+import mods.eln.sim.mna.VoltageStateWatchDog
+import mods.eln.sim.destruct.WorldExplosion
 import mods.eln.sixnode.electricalcable.ElectricalCableDescriptor
 import mods.eln.sixnode.lampsupply.LampSupplyElement
 import net.minecraft.client.gui.GuiButton

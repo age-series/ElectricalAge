@@ -21,8 +21,8 @@ import mods.eln.sim.ElectricalStackMachineProcess.ElectricalStackMachineProcessO
 import mods.eln.sim.thermal.ThermalLoad;
 import mods.eln.sim.mna.passive.Resistor;
 import mods.eln.sim.nbt.NbtElectricalLoad;
-import mods.eln.sim.process.destruct.VoltageStateWatchDog;
-import mods.eln.sim.process.destruct.WorldExplosion;
+import mods.eln.sim.mna.VoltageStateWatchDog;
+import mods.eln.sim.destruct.WorldExplosion;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;

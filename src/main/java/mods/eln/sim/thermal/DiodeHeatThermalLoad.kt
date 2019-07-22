@@ -1,4 +1,4 @@
-package mods.eln.sim.process.heater
+package mods.eln.sim.thermal
 
 import mods.eln.sim.core.IProcess
 import mods.eln.sim.thermal.ThermalLoad

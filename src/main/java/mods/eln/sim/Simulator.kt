@@ -13,7 +13,7 @@ import mods.eln.sim.mna.misc.ElectricalConnection
 import mods.eln.sim.mna.misc.MnaConst
 import mods.eln.sim.mna.state.ElectricalLoad
 import mods.eln.sim.mna.state.State
-import mods.eln.sim.process.destruct.IDestructable
+import mods.eln.sim.destruct.IDestructable
 import mods.eln.sim.thermal.ThermalConnection
 import mods.eln.sim.thermal.ThermalLoad
 

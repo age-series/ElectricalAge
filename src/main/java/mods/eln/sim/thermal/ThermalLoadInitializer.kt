@@ -1,7 +1,5 @@
 package mods.eln.sim.thermal
 
-import mods.eln.sim.process.destruct.ThermalLoadWatchDog
-
 class ThermalLoadInitializer(var warmLimit: Double, var coolLimit: Double, internal var heatingTao: Double, internal var conductionTao: Double) {
 
     internal var Rs: Double = 0.toDouble()

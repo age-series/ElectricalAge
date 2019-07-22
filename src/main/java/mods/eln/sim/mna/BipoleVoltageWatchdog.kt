@@ -1,5 +1,6 @@
-package mods.eln.sim.process.destruct
+package mods.eln.sim.mna
 
+import mods.eln.sim.core.ValueWatchdog
 import mods.eln.sim.mna.passive.Bipole
 
 class BipoleVoltageWatchdog(internal val bipole: Bipole) : ValueWatchdog() {

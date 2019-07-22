@@ -1,4 +1,4 @@
-package mods.eln.sim.process.heater
+package mods.eln.sim.thermal
 
 import mods.eln.sim.mna.state.ElectricalLoad
 import mods.eln.sim.core.IProcess
@@ -11,9 +11,4 @@ class ElectricalLoadHeatThermalLoad(internal var r: ElectricalLoad, internal var
         val I = r.i
         load.movePowerTo(I * I * r.rs * 2.0)
     }
-
-    /*double powerMax = 100000;
-    public void setDeltaTPerSecondMax(double deltaTPerSecondMax) {
-		powerMax = deltaTPerSecondMax*load.C;
-	}*/
 }

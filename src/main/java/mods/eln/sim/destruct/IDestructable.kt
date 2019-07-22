@@ -1,4 +1,4 @@
-package mods.eln.sim.process.destruct
+package mods.eln.sim.destruct
 
 interface IDestructable {
     fun destructImpl()
