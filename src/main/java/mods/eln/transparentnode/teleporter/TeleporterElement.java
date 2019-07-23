@@ -3,7 +3,7 @@ package mods.eln.transparentnode.teleporter;
 import mods.eln.debug.DP;
 import mods.eln.debug.DPType;
 import mods.eln.i18n.I18N;
-import mods.eln.misc.Coordonate;
+import mods.eln.misc.Coordinate;
 import mods.eln.misc.Direction;
 import mods.eln.misc.LRDU;
 import mods.eln.misc.Utils;
@@ -69,7 +69,7 @@ public class TeleporterElement extends TransparentNodeElement implements ITelepo
 
     VoltageStateWatchDog voltageWatchdog = new VoltageStateWatchDog();
 
-    Coordonate lightCoordonate;
+    Coordinate lightCoordonate;
 
     @Override
     public ElectricalLoad getElectricalLoad(Direction side, LRDU lrdu) {
@@ -115,7 +115,7 @@ public class TeleporterElement extends TransparentNodeElement implements ITelepo
 
         powerResistor.highImpedance();
 
-        for (Coordonate c : descriptor.getPowerCoordonate(node.coordonate.world())) {
+        for (Coordinate c : descriptor.getPowerCoordonate(node.coordonate.world())) {
             TeleporterPowerNode n = new TeleporterPowerNode();
             n.setElement(this);
             c.applyTransformation(front, node.coordonate);
@@ -124,7 +124,7 @@ public class TeleporterElement extends TransparentNodeElement implements ITelepo
             powerNodeList.add(n);
         }
 
-        lightCoordonate = new Coordonate(this.descriptor.lightCoordonate);
+        lightCoordonate = new Coordinate(this.descriptor.lightCoordonate);
         lightCoordonate.applyTransformation(front, node.coordonate);
 
         descriptor.ghostDoorClose.newRotate(front).eraseGeo(node.coordonate);
@@ -313,7 +313,7 @@ public class TeleporterElement extends TransparentNodeElement implements ITelepo
                 if (target == null) {
                     energyTarget = 0;
                 } else {
-                    Coordonate c = getTeleportCoordonate();
+                    Coordinate c = getTeleportCoordonate();
                     double distance = getTeleportCoordonate().trueDistanceTo(target.getTeleportCoordonate());
                     AxisAlignedBB bb = descriptor.getBB(node.coordonate, front);
                     int playerCount = c.world().getEntitiesWithinAABB(EntityPlayer.class, bb).size();
@@ -450,7 +450,7 @@ public class TeleporterElement extends TransparentNodeElement implements ITelepo
                         setState(StateOpen);
                     } else {
                         ITeleporter target = getTarget(targetNameCopy);
-                        Coordonate c = getTeleportCoordonate();
+                        Coordinate c = getTeleportCoordonate();
                         // double distance = getTeleportCoordonate().trueDistanceTo(c);
                         // AxisAlignedBB bb = descriptor.getBB(node.coordonate, front);
                         // int playerCount = c.world().getEntitiesWithinAABB(EntityPlayer.class, bb).size();
@@ -523,7 +523,7 @@ public class TeleporterElement extends TransparentNodeElement implements ITelepo
     int getTargetCount(String str) {
         int count = 0;
         for (ITeleporter t : teleporterList) {
-            if (t.getName().equals(str) && node.coordonate.dimention == t.getTeleportCoordonate().dimention) {
+            if (t.getName().equals(str) && node.coordonate.dimension == t.getTeleportCoordonate().dimension) {
                 count++;
             }
         }
@@ -533,7 +533,7 @@ public class TeleporterElement extends TransparentNodeElement implements ITelepo
     ITeleporter getTarget(String str) {
         ITeleporter target = null;
         for (ITeleporter t : teleporterList) {
-            if (t.getName().equals(str) && node.coordonate.dimention == t.getTeleportCoordonate().dimention) {
+            if (t.getName().equals(str) && node.coordonate.dimension == t.getTeleportCoordonate().dimension) {
                 if (target != null) return null;
                 target = t;
             }
@@ -616,7 +616,7 @@ public class TeleporterElement extends TransparentNodeElement implements ITelepo
     }
 
     @Override
-    public Coordonate getTeleportCoordonate() {
+    public Coordinate getTeleportCoordonate() {
 
         return descriptor.getTeleportCoordonate(front, node.coordonate);
     }

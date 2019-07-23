@@ -11,7 +11,7 @@ import mods.eln.Eln;
 import mods.eln.Other;
 import mods.eln.debug.DP;
 import mods.eln.debug.DPType;
-import mods.eln.misc.Coordonate;
+import mods.eln.misc.Coordinate;
 import mods.eln.misc.Direction;
 import mods.eln.misc.LRDU;
 import mods.eln.misc.Utils;
@@ -354,7 +354,7 @@ public class ComputerProbeNode extends SimpleNode implements IPeripheral {
         double value;
 
         @Override
-        public Coordonate getCoordonate() {
+        public Coordinate getCoordonate() {
             return coordonate;
         }
 

@@ -338,7 +338,7 @@ class GenMotorRender(entity: TransparentNodeEntity, desc_: TransparentNodeDescri
         volumeSetting.target = Math.min(1.0f, Math.abs(power /desc.nominalP).toFloat() / 4f)
     }
 
-    inner class GenMotorLoopedSound(sound: String, coord: Coordonate) :
+    inner class GenMotorLoopedSound(sound: String, coord: Coordinate) :
         LoopedSound(sound, coord) {
         override fun getPitch() = Math.max(0.05, rads / desc.nominalRads).toFloat()
         override fun getVolume() = volumeSetting.position

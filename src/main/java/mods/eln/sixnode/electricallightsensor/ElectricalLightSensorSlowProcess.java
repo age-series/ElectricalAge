@@ -1,6 +1,7 @@
 package mods.eln.sixnode.electricallightsensor;
 
-import mods.eln.misc.Coordonate;
+import mods.eln.misc.Coordinate;
+import mods.eln.misc.Coordinate;
 import mods.eln.misc.Utils;
 import mods.eln.sim.core.IProcess;
 import net.minecraft.util.MathHelper;
@@ -27,7 +28,7 @@ public class ElectricalLightSensorSlowProcess implements IProcess {
             timeCounter -= refreshPeriode;
 
             if (!element.sixNode.coordonate.getBlockExist()) return;
-            Coordonate coord = element.sixNode.coordonate;
+            Coordinate coord = element.sixNode.coordonate;
             //int light = coord.world().getSavedLightValue(EnumSkyBlock.Sky, coord.x, coord.y, coord.z) - coord.world().skylightSubtracted;
             //	Utils.println("Light : " + light);
             World world = coord.world();

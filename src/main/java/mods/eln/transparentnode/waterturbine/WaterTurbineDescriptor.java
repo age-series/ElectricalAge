@@ -20,7 +20,7 @@ public class WaterTurbineDescriptor extends TransparentNodeDescriptor {
         ElectricalCableDescriptor cable,
         double nominalPower,
         double maxVoltage,
-        Coordonate waterCoord,
+        Coordinate waterCoord,
         String soundName,
         float nominalVolume
     ) {
@@ -44,7 +44,7 @@ public class WaterTurbineDescriptor extends TransparentNodeDescriptor {
         voltageLevelColor = VoltageLevelColor.LowVoltage;
     }
 
-    Coordonate waterCoord;
+    Coordinate waterCoord;
     Obj3DPart wheel, support, generator;
 
     Obj3D obj;
@@ -112,15 +112,15 @@ public class WaterTurbineDescriptor extends TransparentNodeDescriptor {
     }
 
 
-    public Coordonate getWaterCoordonate(World w) {
-        Coordonate coord = new Coordonate(waterCoord);
-        coord.setDimention(w.provider.dimensionId);
+    public Coordinate getWaterCoordonate(World w) {
+        Coordinate coord = new Coordinate(waterCoord);
+        coord.setDimension(w.provider.dimensionId);
         return coord;
     }
 
 
     @Override
-    public String checkCanPlace(Coordonate coord, Direction front) {
+    public String checkCanPlace(Coordinate coord, Direction front) {
 
         String str = super.checkCanPlace(coord, front);
         if (str != null) return str;
@@ -129,8 +129,8 @@ public class WaterTurbineDescriptor extends TransparentNodeDescriptor {
     }
 
 
-    public boolean checkCanPlaceWater(Coordonate coord, Direction front) {
-        Coordonate water = new Coordonate(waterCoord);
+    public boolean checkCanPlaceWater(Coordinate coord, Direction front) {
+        Coordinate water = new Coordinate(waterCoord);
         water.applyTransformation(front, coord);
         if (coord.getBlockExist() == false) return true;
         if (water.getBlock() == Blocks.air || Utils.isWater(water)) return true;

@@ -13,7 +13,7 @@ import mods.eln.node.six.SixNodeRender;
 import mods.eln.node.transparent.TransparentNodeEntity;
 import mods.eln.node.transparent.TransparentNodeRender;
 import mods.eln.sixnode.tutorialsign.TutorialSignOverlay;
-import mods.eln.sound.SoundClientEventListener;
+import mods.eln.sound.ClientSoundHandler;
 import net.minecraft.client.model.ModelSilverfish;
 import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.common.MinecraftForge;
@@ -21,7 +21,7 @@ import net.minecraftforge.common.MinecraftForge;
 public class ClientProxy extends CommonProxy {
 
     public static UuidManager uuidManager;
-    public static SoundClientEventListener soundClientEventListener;
+    public static ClientSoundHandler clientSoundHandler;
 
     @Override
     public void registerRenderers() {
@@ -40,7 +40,6 @@ public class ClientProxy extends CommonProxy {
         FMLCommonHandler.instance().bus().register(Eln.clientKeyHandler);
         MinecraftForge.EVENT_BUS.register(new TutorialSignOverlay());
         uuidManager = new UuidManager();
-        soundClientEventListener = new SoundClientEventListener(uuidManager);
 
         if (Eln.versionCheckEnabled)
             FMLCommonHandler.instance().bus().register(VersionCheckerHandler.getInstance());
@@ -50,6 +49,9 @@ public class ClientProxy extends CommonProxy {
 
         new FrameTime();
         new ConnectionListener();
+
+        clientSoundHandler = new ClientSoundHandler();
+        MinecraftForge.EVENT_BUS.register(clientSoundHandler);
     }
 
     @Override

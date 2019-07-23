@@ -119,7 +119,7 @@ class MotorRender(entity: TransparentNodeEntity, desc_: TransparentNodeDescripto
         RED
     )
 
-    inner class MotorLoopedSound(sound: String, coord: Coordonate) :
+    inner class MotorLoopedSound(sound: String, coord: Coordinate) :
         LoopedSound(sound, coord) {
         override fun getPitch() = Math.max(0.05, rads / desc.nominalRads).toFloat()
         override fun getVolume() = volumeSetting.position

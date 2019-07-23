@@ -5,7 +5,7 @@ import cpw.mods.fml.common.LoaderState
 import mods.eln.Eln
 import mods.eln.debug.DP
 import mods.eln.debug.DPType
-import mods.eln.misc.Coordonate
+import mods.eln.misc.Coordinate
 import mods.eln.misc.Direction
 import mods.eln.misc.INBTTReady
 import mods.eln.misc.KSF
@@ -270,7 +270,7 @@ open class ShaftNetwork() : INBTTReady {
     }
 
     private fun getNeighbours(from: ShaftElement): ArrayList<ShaftNeighbour> {
-        val c = Coordonate()
+        val c = Coordinate()
         val ret = ArrayList<ShaftNeighbour>(6)
         for (dir in from.shaftConnectivity) {
             c.copyFrom(from.coordonate())
@@ -330,7 +330,7 @@ class StaticShaftNetwork() : ShaftNetwork() {
 interface ShaftElement {
     val shaftMass: Double
     val shaftConnectivity: Array<Direction>
-    fun coordonate(): Coordonate
+    fun coordonate(): Coordinate
     fun getShaft(dir: Direction): ShaftNetwork?
     fun setShaft(dir: Direction, net: ShaftNetwork?)
     fun isInternallyConnected(a: Direction, b: Direction): Boolean = true

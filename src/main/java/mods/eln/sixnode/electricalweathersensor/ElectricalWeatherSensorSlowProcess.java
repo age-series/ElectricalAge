@@ -1,6 +1,7 @@
 package mods.eln.sixnode.electricalweathersensor;
 
-import mods.eln.misc.Coordonate;
+import mods.eln.misc.Coordinate;
+import mods.eln.misc.Coordinate;
 import mods.eln.misc.INBTTReady;
 import mods.eln.misc.RcInterpolator;
 import mods.eln.sim.core.IProcess;
@@ -26,7 +27,7 @@ public class ElectricalWeatherSensorSlowProcess implements IProcess, INBTTReady 
 
         if (timeCounter > refreshPeriode) {
             timeCounter -= refreshPeriode;
-            Coordonate coord = element.sixNode.coordonate;
+            Coordinate coord = element.sixNode.coordonate;
 
             float target = 0f;
 

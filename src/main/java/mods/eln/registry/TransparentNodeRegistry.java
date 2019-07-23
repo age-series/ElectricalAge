@@ -6,7 +6,8 @@ import mods.eln.gridnode.electricalpole.ElectricalPoleDescriptor;
 import mods.eln.gridnode.transformer.GridTransformerDescriptor;
 import mods.eln.i18n.I18N;
 import mods.eln.mechanical.*;
-import mods.eln.misc.Coordonate;
+import mods.eln.misc.Coordinate;
+import mods.eln.misc.Coordinate;
 import mods.eln.misc.FunctionTable;
 import mods.eln.misc.FunctionTableYProtect;
 import mods.eln.misc.Utils;
@@ -782,7 +783,7 @@ public class TransparentNodeRegistry {
         {
             subId = 3;
             name = TR_NAME(I18N.Type.NONE, "2x3 Solar Panel");
-            Coordonate groundCoordinate = new Coordonate(1, 0, 0, 0);
+            Coordinate groundCoordinate = new Coordinate(1, 0, 0, 0);
             ghostGroup = new GhostGroup();
             ghostGroup.addRectangle(0, 1, 0, 0, -1, 1);
             ghostGroup.removeElement(0, 0, 0);
@@ -799,7 +800,7 @@ public class TransparentNodeRegistry {
         {
             subId = 4;
             name = TR_NAME(I18N.Type.NONE, "2x3 Rotating Solar Panel");
-            Coordonate groundCoordinate = new Coordonate(1, 0, 0, 0);
+            Coordinate groundCoordinate = new Coordinate(1, 0, 0, 0);
             ghostGroup = new GhostGroup();
             ghostGroup.addRectangle(0, 1, 0, 0, -1, 1);
             ghostGroup.removeElement(0, 0, 0);
@@ -1301,7 +1302,7 @@ public class TransparentNodeRegistry {
         {
             subId = 16;
             name = TR_NAME(I18N.Type.NONE, "Water Turbine");
-            Coordonate waterCoord = new Coordonate(1, -1, 0, 0);
+            Coordinate waterCoord = new Coordinate(1, -1, 0, 0);
             WaterTurbineDescriptor desc = new WaterTurbineDescriptor(
                 name, Eln.obj.getObj("SmallWaterWheel"),
                 Eln.lowVoltageCableDescriptor,
@@ -1466,9 +1467,9 @@ public class TransparentNodeRegistry {
         {
             subId = 0;
             name = TR_NAME(I18N.Type.NONE, "Experimental Transporter");
-            Coordonate[] powerLoad = new Coordonate[2];
-            powerLoad[0] = new Coordonate(-1, 0, 1, 0);
-            powerLoad[1] = new Coordonate(-1, 0, -1, 0);
+            Coordinate[] powerLoad = new Coordinate[2];
+            powerLoad[0] = new Coordinate(-1, 0, 1, 0);
+            powerLoad[1] = new Coordinate(-1, 0, -1, 0);
             GhostGroup doorOpen = new GhostGroup();
             doorOpen.addRectangle(-4, -3, 2, 2, 0, 0);
             GhostGroup doorClose = new GhostGroup();
@@ -1476,7 +1477,7 @@ public class TransparentNodeRegistry {
             TeleporterDescriptor desc = new TeleporterDescriptor(
                 name, Eln.obj.getObj("Transporter"),
                 Eln.highVoltageCableDescriptor,
-                new Coordonate(-1, 0, 0, 0), new Coordonate(-1, 1, 0, 0),
+                new Coordinate(-1, 0, 0, 0), new Coordinate(-1, 1, 0, 0),
                 2,// int areaH
                 powerLoad,
                 doorOpen, doorClose
@@ -1656,11 +1657,11 @@ public class TransparentNodeRegistry {
             subId = 0;
             name = TR_NAME(I18N.Type.NONE, "Auto Miner");
 
-            Coordonate[] powerLoad = new Coordonate[2];
-            powerLoad[0] = new Coordonate(-2, -1, 1, 0);
-            powerLoad[1] = new Coordonate(-2, -1, -1, 0);
-            Coordonate lightCoord = new Coordonate(-3, 0, 0, 0);
-            Coordonate miningCoord = new Coordonate(-1, 0, 1, 0);
+            Coordinate[] powerLoad = new Coordinate[2];
+            powerLoad[0] = new Coordinate(-2, -1, 1, 0);
+            powerLoad[1] = new Coordinate(-2, -1, -1, 0);
+            Coordinate lightCoord = new Coordinate(-3, 0, 0, 0);
+            Coordinate miningCoord = new Coordinate(-1, 0, 1, 0);
             AutoMinerDescriptor desc = new AutoMinerDescriptor(name,
                 Eln.obj.getObj("AutoMiner"),
                 powerLoad, lightCoord, miningCoord,

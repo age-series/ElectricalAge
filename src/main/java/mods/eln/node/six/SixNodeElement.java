@@ -63,12 +63,11 @@ public abstract class SixNodeElement implements GhostObserver, IPlayer, INodeEle
     }
 
     public void play(SoundCommand s) {
-        s.addUuid(getUuid());
         s.set(sixNode.coordonate);
         s.play();
     }
 
-    public Coordonate getCoordonate() {
+    public Coordinate getCoordonate() {
         return sixNode.coordonate;
     }
 
@@ -187,29 +186,12 @@ public abstract class SixNodeElement implements GhostObserver, IPlayer, INodeEle
      }*/
     public abstract void initialize();
 
-
     @Override
     public void stop(int uuid) {
-        ByteArrayOutputStream bos = new ByteArrayOutputStream(8);
-        DataOutputStream stream = new DataOutputStream(bos);
 
-        try {
-            stream.writeByte(Eln.PACKET_DESTROY_UUID);
-            stream.writeInt(uuid);
-
-            sendPacketToAllClient(bos);
-        } catch (IOException e) {
-
-            e.printStackTrace();
-
-        }
     }
 
     public void destroy(EntityPlayerMP entityPlayer) {
-        if (useUuid()) {
-            stop(uuid);
-        }
-
         if (sixNodeElementDescriptor.hasGhostGroup()) {
             Eln.ghostManager.removeObserver(sixNode.coordonate);
             sixNodeElementDescriptor.getGhostGroup(side, front).erase(sixNode.coordonate);
@@ -360,7 +342,7 @@ public abstract class SixNodeElement implements GhostObserver, IPlayer, INodeEle
         return false;
     }
 
-    public Coordonate getGhostObserverCoordonate() {
+    public Coordinate getGhostObserverCoordonate() {
         return sixNode.coordonate;
 
     }
@@ -380,19 +362,6 @@ public abstract class SixNodeElement implements GhostObserver, IPlayer, INodeEle
 
     private void selfDestroy() {
         sixNode.deleteSubBlock(null, side);
-    }
-
-    private int uuid = 0;
-
-    public int getUuid() {
-        if (uuid == 0) {
-            uuid = Utils.getUuid();
-        }
-        return uuid;
-    }
-
-    public boolean useUuid() {
-        return uuid != 0;
     }
 
     public void globalBoot() {

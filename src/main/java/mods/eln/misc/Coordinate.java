@@ -11,25 +11,25 @@ import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraftforge.common.DimensionManager;
 
-public class Coordonate implements INBTTReady {
+public class Coordinate implements INBTTReady {
 
-    public int x, y, z, dimention;
+    public int x, y, z, dimension;
 
-    public Coordonate() {
+    public Coordinate() {
         x = 0;
         y = 0;
         z = 0;
-        dimention = 0;
+        dimension = 0;
     }
 
-    public Coordonate(Coordonate coord) {
+    public Coordinate(Coordinate coord) {
         x = coord.x;
         y = coord.y;
         z = coord.z;
-        dimention = coord.dimention;
+        dimension = coord.dimension;
     }
 
-    public Coordonate(NBTTagCompound nbt, String str) {
+    public Coordinate(NBTTagCompound nbt, String str) {
         readFromNBT(nbt, str);
     }
 
@@ -40,72 +40,59 @@ public class Coordonate implements INBTTReady {
 
 
     public int worldDimension() {
-        return dimention;
+        return dimension;
     }
 
     private World w = null;
 
     public World world() {
-        //	Side sideCS = FMLCommonHandler.instance().getEffectiveSide();
-        //	if (sideCS == Side.CLIENT) return null;
-
-        //Minecraft m = Minecraft.getMinecraft();
-        //if(FMLCommonHandler.instance().getSidedDelegate().)
-        //WorldManager
-        //Minecraft.getMinecraft().
-        //World
-        //Minecraft m = Minecraft.getMinecraft();
-
-		
-		/*if(w == null) *///w = FMLCommonHandler.instance().getMinecraftServerInstance().worldServerForDimension(worldDimension());
-
         if (w == null) {
             return FMLCommonHandler.instance().getMinecraftServerInstance().worldServerForDimension(worldDimension());
         }
         return w;
     }
 
-    public Coordonate(NodeBlockEntity entity) {
+    public Coordinate(NodeBlockEntity entity) {
         x = entity.xCoord;
         y = entity.yCoord;
         z = entity.zCoord;
-        dimention = entity.getWorldObj().provider.dimensionId;
+        dimension = entity.getWorldObj().provider.dimensionId;
     }
 
-    public Coordonate(int x, int y, int z, int dimention) {
+    public Coordinate(int x, int y, int z, int dimension) {
         this.x = x;
         this.y = y;
         this.z = z;
-        this.dimention = dimention;
+        this.dimension = dimension;
     }
 
-    public Coordonate(int x, int y, int z, World world) {
+    public Coordinate(int x, int y, int z, World world) {
         this.x = x;
         this.y = y;
         this.z = z;
-        this.dimention = world.provider.dimensionId;
+        this.dimension = world.provider.dimensionId;
         if (world.isRemote)
             this.w = world;
     }
 
-    public Coordonate(TileEntity entity) {
+    public Coordinate(TileEntity entity) {
         this.x = entity.xCoord;
         this.y = entity.yCoord;
         this.z = entity.zCoord;
-        this.dimention = entity.getWorldObj().provider.dimensionId;
+        this.dimension = entity.getWorldObj().provider.dimensionId;
         if (entity.getWorldObj().isRemote)
             this.w = entity.getWorldObj();
     }
 
-    public Coordonate newWithOffset(int x, int y, int z) {
-        return new Coordonate(this.x + x, this.y + y, this.z + z, dimention);
+    public Coordinate newWithOffset(int x, int y, int z) {
+        return new Coordinate(this.x + x, this.y + y, this.z + z, dimension);
     }
 
     @Override
     public boolean equals(Object obj) {
-        if (!(obj instanceof Coordonate)) return false;
-        Coordonate id = (Coordonate) obj;
-        return id.x == x && id.y == y && id.z == z && id.dimention == dimention;
+        if (!(obj instanceof Coordinate)) return false;
+        Coordinate id = (Coordinate) obj;
+        return id.x == x && id.y == y && id.z == z && id.dimension == dimension;
     }
 
     @Override
@@ -113,7 +100,7 @@ public class Coordonate implements INBTTReady {
         x = nbt.getInteger(str + "x");
         y = nbt.getInteger(str + "y");
         z = nbt.getInteger(str + "z");
-        dimention = nbt.getInteger(str + "d");
+        dimension = nbt.getInteger(str + "d");
     }
 
     @Override
@@ -121,12 +108,12 @@ public class Coordonate implements INBTTReady {
         nbt.setInteger(str + "x", x);
         nbt.setInteger(str + "y", y);
         nbt.setInteger(str + "z", z);
-        nbt.setInteger(str + "d", dimention);
+        nbt.setInteger(str + "d", dimension);
     }
 
     @Override
     public String toString() {
-        return "X : " + x + " Y : " + y + " Z : " + z + " D : " + dimention;
+        return "X : " + x + " Y : " + y + " Z : " + z + " D : " + dimension;
     }
 
     public void move(Direction dir) {
@@ -154,8 +141,8 @@ public class Coordonate implements INBTTReady {
         }
     }
 
-    public Coordonate moved(final Direction direction) {
-        Coordonate moved = new Coordonate(this);
+    public Coordinate moved(final Direction direction) {
+        Coordinate moved = new Coordinate(this);
         moved.move(direction);
         return moved;
     }
@@ -164,7 +151,7 @@ public class Coordonate implements INBTTReady {
         return world().getBlock(x, y, z);
     }
 
-    public static AxisAlignedBB getAxisAlignedBB(Coordonate a, Coordonate b) {
+    public static AxisAlignedBB getAxisAlignedBB(Coordinate a, Coordinate b) {
         AxisAlignedBB bb = AxisAlignedBB.getBoundingBox(
             Math.min(a.x, b.x), Math.min(a.y, b.y), Math.min(a.z, b.z),
             Math.max(a.x, b.x) + 1.0, Math.max(a.y, b.y) + 1.0, Math.max(a.z, b.z) + 1.0);
@@ -181,30 +168,25 @@ public class Coordonate implements INBTTReady {
     public double distanceTo(Entity e) {
         return Math.abs(e.posX - (x + 0.5)) + Math.abs(e.posY - (y + 0.5)) + Math.abs(e.posZ - (z + 0.5));
     }
-	
-	/*public void setBlock(int id, int meta) {
-		world().setBlock(x, y, z, id, meta, 2);
-	}*/
 
     public int getMeta() {
         return world().getBlockMetadata(x, y, z);
     }
 
     public boolean getBlockExist() {
-        World w = DimensionManager.getWorld(dimention);
+        World w = DimensionManager.getWorld(dimension);
         if (w == null) return false;
         return w.blockExists(x, y, z);
     }
 
     public boolean getWorldExist() {
-        return DimensionManager.getWorld(dimention) != null;
+        return DimensionManager.getWorld(dimension) != null;
     }
 
     public void copyTo(double[] v) {
         v[0] = x + 0.5;
         v[1] = y + 0.5;
         v[2] = z + 0.5;
-
     }
 
     public void setPosition(double[] vp) {
@@ -227,33 +209,33 @@ public class Coordonate implements INBTTReady {
         x = -1;
         y = -1;
         z = -1;
-        dimention = -5123;
+        dimension = -5123;
     }
 
     public boolean isValid() {
-        return dimention != -5123;
+        return dimension != -5123;
     }
 
-    public double trueDistanceTo(Coordonate c) {
+    public double trueDistanceTo(Coordinate c) {
         long dx = x - c.x;
         long dy = y - c.y;
         long dz = z - c.z;
         return Math.sqrt(dx * dx + dy * dy + dz * dz);
     }
 
-    public void setDimention(int dimention) {
-        this.dimention = dimention;
+    public void setDimension(int dimension) {
+        this.dimension = dimension;
         w = null;
     }
 
-    public void copyFrom(Coordonate c) {
+    public void copyFrom(Coordinate c) {
         this.x = c.x;
         this.y = c.y;
         this.z = c.z;
-        this.dimention = c.dimention;
+        this.dimension = c.dimension;
     }
 
-    public void applyTransformation(Direction front, Coordonate coordonate) {
+    public void applyTransformation(Direction front, Coordinate coordonate) {
         front.rotateFromXN(this);
         x += coordonate.x;
         y += coordonate.y;
@@ -263,7 +245,7 @@ public class Coordonate implements INBTTReady {
     public void setWorld(World worldObj) {
         if (worldObj.isRemote)
             w = worldObj;
-        dimention = worldObj.provider.dimensionId;
+        dimension = worldObj.provider.dimensionId;
     }
 
     public void setMetadata(int meta) {
@@ -274,9 +256,9 @@ public class Coordonate implements INBTTReady {
         world().setBlock(x, y, z, b);
     }
 
-    public int compareTo(Coordonate o) {
-        if (dimention != o.dimention) {
-            return dimention - o.dimention;
+    public int compareTo(Coordinate o) {
+        if (dimension != o.dimension) {
+            return dimension - o.dimension;
         } else if (x != o.x) {
             return x - o.x;
         } else if (y != o.y) {
@@ -287,11 +269,11 @@ public class Coordonate implements INBTTReady {
         return 0;
     }
 
-    public Coordonate subtract(Coordonate b) {
+    public Coordinate subtract(Coordinate b) {
         return newWithOffset(-b.x, -b.y, -b.z);
     }
 
-    public Coordonate negate() {
-        return new Coordonate(-x, -y, -z, dimention);
+    public Coordinate negate() {
+        return new Coordinate(-x, -y, -z, dimension);
     }
 }

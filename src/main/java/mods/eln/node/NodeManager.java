@@ -2,7 +2,7 @@ package mods.eln.node;
 
 import mods.eln.debug.DP;
 import mods.eln.debug.DPType;
-import mods.eln.misc.Coordonate;
+import mods.eln.misc.Coordinate;
 import mods.eln.misc.Utils;
 import mods.eln.node.transparent.TransparentNode;
 import mods.eln.node.transparent.TransparentNodeElement;
@@ -14,10 +14,10 @@ import java.util.*;
 public class NodeManager extends WorldSavedData {
     public static NodeManager instance = null;
 
-    private HashMap<Coordonate, NodeBase> nodesMap;
+    private HashMap<Coordinate, NodeBase> nodesMap;
     private ArrayList<NodeBase> nodes;
 
-    public HashMap<Coordonate, NodeBase> getNodeArray() {
+    public HashMap<Coordinate, NodeBase> getNodeArray() {
         return nodesMap;
     }
 
@@ -39,7 +39,7 @@ public class NodeManager extends WorldSavedData {
 
     public NodeManager(String par1Str) {
         super(par1Str);
-        nodesMap = new HashMap<Coordonate, NodeBase>();
+        nodesMap = new HashMap<Coordinate, NodeBase>();
         nodes = new ArrayList<NodeBase>();
         instance = this;
 
@@ -69,7 +69,7 @@ public class NodeManager extends WorldSavedData {
         DP.println(DPType.NODE, "NodeManager has " + nodesMap.size() + "node");
     }
 
-    public void removeCoordonate(Coordonate c) {
+    public void removeCoordonate(Coordinate c) {
         // nodeArray.remove(node);
         NodeBase n = nodesMap.remove(c);
         if (n != null) nodes.remove(n);
@@ -107,7 +107,7 @@ public class NodeManager extends WorldSavedData {
 		 */
     }
 
-    public NodeBase getNodeFromCoordonate(Coordonate nodeCoordonate) {
+    public NodeBase getNodeFromCoordonate(Coordinate nodeCoordonate) {
         int idx = 0;
         idx++;
         // for(Node node : nodeArray)
@@ -118,7 +118,7 @@ public class NodeManager extends WorldSavedData {
         // return null;
     }
 
-    public TransparentNodeElement getTransparentNodeFromCoordinate(Coordonate coord) {
+    public TransparentNodeElement getTransparentNodeFromCoordinate(Coordinate coord) {
         NodeBase base = getNodeFromCoordonate(coord);
         if (base instanceof TransparentNode) {
             TransparentNode n = (TransparentNode) base;
@@ -163,7 +163,7 @@ public class NodeManager extends WorldSavedData {
         for (NodeBase node : nodesCopy) {
             try {
                 if (node.mustBeSaved() == false) continue;
-                if (dim != Integer.MIN_VALUE && node.coordonate.dimention != dim) continue;
+                if (dim != Integer.MIN_VALUE && node.coordonate.dimension != dim) continue;
                 NBTTagCompound nbtNode = new NBTTagCompound();
                 nbtNode.setString("tag", node.getNodeUuid());
                 node.writeToNBT(nbtNode);
@@ -186,7 +186,7 @@ public class NodeManager extends WorldSavedData {
         Iterator<NodeBase> i = nodes.iterator();
         while (i.hasNext()) {
             NodeBase n = i.next();
-            if (n.coordonate.dimention == dimensionId) {
+            if (n.coordonate.dimension == dimensionId) {
                 n.unload();
                 i.remove();
                 nodesMap.remove(n.coordonate);

@@ -4,7 +4,7 @@ import mods.eln.Eln;
 import mods.eln.item.ElectricalDrillDescriptor;
 import mods.eln.item.MiningPipeDescriptor;
 import mods.eln.item.electricalitem.PortableOreScannerItem;
-import mods.eln.misc.Coordonate;
+import mods.eln.misc.Coordinate;
 import mods.eln.misc.INBTTReady;
 import mods.eln.misc.Utils;
 import mods.eln.ore.OreBlock;
@@ -37,7 +37,7 @@ public class AutoMinerSlowProcess implements IProcess, INBTTReady {
 
     jobType job = jobType.none;
     private jobType oldJob = jobType.none;
-    private final Coordonate jobCoord = new Coordonate();
+    private final Coordinate jobCoord = new Coordinate();
     private int blinkCounter = 0;
 
     private int drillCount = 1;
@@ -206,7 +206,7 @@ public class AutoMinerSlowProcess implements IProcess, INBTTReady {
     }
     private IInventory getDropInventory() {
         IInventory inventoryEntity = null;
-	    Coordonate outputLocation = new Coordonate(1, -1, 0, miner.world());	
+	    Coordinate outputLocation = new Coordinate(1, -1, 0, miner.world());
 	    outputLocation.applyTransformation(miner.front, miner.coordonate());
 	    if (outputLocation.getTileEntity() instanceof IInventory) {
 		    inventoryEntity = (IInventory) outputLocation.getTileEntity();	
@@ -240,7 +240,7 @@ public class AutoMinerSlowProcess implements IProcess, INBTTReady {
         int scannerRadius = Eln.instance.autominerRange;
         double scannerEnergy = 0;
 
-        jobCoord.dimention = miner.node.coordonate.dimention;
+        jobCoord.dimension = miner.node.coordonate.dimension;
         jobCoord.x = miner.node.coordonate.x;
         jobCoord.y = miner.node.coordonate.y - pipeLength;
         jobCoord.z = miner.node.coordonate.z;
@@ -351,7 +351,7 @@ public class AutoMinerSlowProcess implements IProcess, INBTTReady {
         this.job = job;
     }
 
-    private boolean checkIsOre(Coordonate coordonate) {
+    private boolean checkIsOre(Coordinate coordonate) {
         Block block = coordonate.world().getBlock(coordonate.x, coordonate.y, coordonate.z);
         if (block instanceof BlockOre) return true;
         if (block instanceof OreBlock) return true;
@@ -374,7 +374,7 @@ public class AutoMinerSlowProcess implements IProcess, INBTTReady {
     }
 
     private void dropPipe() {
-        Coordonate coord = new Coordonate(miner.node.coordonate);
+        Coordinate coord = new Coordinate(miner.node.coordonate);
         for (coord.y = miner.node.coordonate.y - 1; coord.y >= miner.node.coordonate.y - pipeLength; coord.y--) {
             Utils.dropItem(Eln.miningPipeDescriptor.newItemStack(1), coord);
         }

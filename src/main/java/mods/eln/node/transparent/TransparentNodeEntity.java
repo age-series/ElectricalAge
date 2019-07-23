@@ -2,7 +2,8 @@ package mods.eln.node.transparent;
 
 import mods.eln.Eln;
 import mods.eln.cable.CableRenderDescriptor;
-import mods.eln.misc.Coordonate;
+import mods.eln.misc.Coordinate;
+import mods.eln.misc.Coordinate;
 import mods.eln.misc.Direction;
 import mods.eln.misc.FakeSideInventory;
 import mods.eln.misc.LRDU;
@@ -123,7 +124,7 @@ public class TransparentNodeEntity extends NodeBlockEntity implements ISidedInve
         if (elementRender != null) elementRender.notifyNeighborSpawn();
     }
 
-    public void addCollisionBoxesToList(AxisAlignedBB par5AxisAlignedBB, List list, Coordonate blockCoord) {
+    public void addCollisionBoxesToList(AxisAlignedBB par5AxisAlignedBB, List list, Coordinate blockCoord) {
         TransparentNodeDescriptor desc = null;
         if (worldObj.isRemote) {
             desc = elementRender == null ? null : elementRender.transparentNodedescriptor;

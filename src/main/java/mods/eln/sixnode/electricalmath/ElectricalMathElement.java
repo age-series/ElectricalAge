@@ -18,7 +18,7 @@ import mods.eln.sim.nbt.NbtElectricalGateInput;
 import mods.eln.sim.nbt.NbtElectricalGateOutput;
 import mods.eln.sim.nbt.NbtElectricalGateOutputProcess;
 import mods.eln.solver.Equation;
-import mods.eln.solver.ISymbole;
+import mods.eln.solver.ISymbol;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.Container;
@@ -40,7 +40,7 @@ public class ElectricalMathElement extends SixNodeElement implements IConfigurab
 
     NbtElectricalGateInput[] gateInput = new NbtElectricalGateInput[]{new NbtElectricalGateInput("gateA"), new NbtElectricalGateInput("gateB"), new NbtElectricalGateInput("gateC")};
 
-    ArrayList<ISymbole> symboleList = new ArrayList<ISymbole>();
+    ArrayList<ISymbol> symboleList = new ArrayList<ISymbol>();
 
     ElectricalMathElectricalProcess electricalProcess = new ElectricalMathElectricalProcess(this);
 
@@ -75,7 +75,7 @@ public class ElectricalMathElement extends SixNodeElement implements IConfigurab
         symboleList.add(new DayTime());
     }
 
-    class GateInputSymbol implements ISymbole {
+    class GateInputSymbol implements ISymbol {
         private String name;
         private NbtElectricalGateInput gate;
 
@@ -131,7 +131,7 @@ public class ElectricalMathElement extends SixNodeElement implements IConfigurab
         checkRedstone();
     }
 
-    public class DayTime implements ISymbole {
+    public class DayTime implements ISymbol {
 
         @Override
         public double getValue() {

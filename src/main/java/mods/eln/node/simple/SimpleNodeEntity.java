@@ -5,7 +5,8 @@ import cpw.mods.fml.relauncher.SideOnly;
 import mods.eln.Eln;
 import mods.eln.debug.DP;
 import mods.eln.debug.DPType;
-import mods.eln.misc.Coordonate;
+import mods.eln.misc.Coordinate;
+import mods.eln.misc.Coordinate;
 import mods.eln.misc.DescriptorManager;
 import mods.eln.misc.Direction;
 import mods.eln.misc.Utils;
@@ -34,9 +35,9 @@ public abstract class SimpleNodeEntity extends TileEntity implements INodeEntity
         }
         if (this.worldObj == null) return null;
         if (node == null) {
-            node = (SimpleNode) NodeManager.instance.getNodeFromCoordonate(new Coordonate(xCoord, yCoord, zCoord, this.worldObj));
+            node = (SimpleNode) NodeManager.instance.getNodeFromCoordonate(new Coordinate(xCoord, yCoord, zCoord, this.worldObj));
             if (node == null) {
-                DelayedBlockRemove.add(new Coordonate(xCoord, yCoord, zCoord, this.worldObj));
+                DelayedBlockRemove.add(new Coordinate(xCoord, yCoord, zCoord, this.worldObj));
                 return null;
             }
         }

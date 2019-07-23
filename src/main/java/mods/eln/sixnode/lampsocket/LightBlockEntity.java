@@ -3,7 +3,8 @@ package mods.eln.sixnode.lampsocket;
 import mods.eln.Eln;
 import mods.eln.debug.DP;
 import mods.eln.debug.DPType;
-import mods.eln.misc.Coordonate;
+import mods.eln.misc.Coordinate;
+import mods.eln.misc.Coordinate;
 import mods.eln.misc.INBTTReady;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
@@ -31,7 +32,7 @@ public class LightBlockEntity extends TileEntity {
 
 
     public interface LightBlockObserver {
-        void lightBlockDestructor(Coordonate coord);
+        void lightBlockDestructor(Coordinate coord);
     }
 
     static class LightHandle implements INBTTReady {
@@ -157,21 +158,21 @@ public class LightBlockEntity extends TileEntity {
             DP.println(DPType.SIX_NODE, "ASSERT if(t != null && t instanceof LightBlockEntity)");
     }
 
-    public static void addLight(Coordonate coord, int light, int timeout) {
+    public static void addLight(Coordinate coord, int light, int timeout) {
         addLight(coord.world(), coord.x, coord.y, coord.z, light, timeout);
     }
 
-	/*public static void removeLight(Coordonate coord, int light) {
+	/*public static void removeLight(Coordinate coord, int light) {
 		int blockId = coord.getBlockId();
 		if (blockId != Eln.lightBlockId) return;
 		((LightBlockEntity)coord.getTileEntity()).removeLight(light);
 	}
 	
-	public static void replaceLight(Coordonate coord, int oldLight, int newLight) {
+	public static void replaceLight(Coordinate coord, int oldLight, int newLight) {
 		int blockId = coord.getBlockId();
 		if (blockId != Eln.lightBlockId) {
 			//coord.setBlock(Eln.lightBlockId, newLight);
-			Utils.println("ASSERT public static void replaceLight(Coordonate coord, int oldLight, int newLight) " + coord);
+			Utils.println("ASSERT public static void replaceLight(Coordinate coord, int oldLight, int newLight) " + coord);
 			return;
 		}
 		((LightBlockEntity)coord.getTileEntity()).replaceLight(oldLight,newLight);

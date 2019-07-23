@@ -496,7 +496,7 @@ class ClutchRender(entity: TransparentNodeEntity, desc_: TransparentNodeDescript
         }
     }
 
-    inner class ClutchLoopedSound(sound: String, coord: Coordonate) : LoopedSound(sound, coord) {
+    inner class ClutchLoopedSound(sound: String, coord: Coordinate) : LoopedSound(sound, coord) {
         override fun getPitch() = Math.max(0.1, Math.min(1.5, Math.abs(lRads - rRads) / 200.0)).toFloat()
         override fun getVolume() = volumeSetting.position
     }

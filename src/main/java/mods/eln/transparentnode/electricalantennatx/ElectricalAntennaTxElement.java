@@ -4,7 +4,8 @@ import mods.eln.Eln;
 import mods.eln.debug.DP;
 import mods.eln.debug.DPType;
 import mods.eln.i18n.I18N;
-import mods.eln.misc.Coordonate;
+import mods.eln.misc.Coordinate;
+import mods.eln.misc.Coordinate;
 import mods.eln.misc.Direction;
 import mods.eln.misc.LRDU;
 import mods.eln.misc.Utils;
@@ -43,7 +44,7 @@ public class ElectricalAntennaTxElement extends TransparentNodeElement {
 
     ElectricalAntennaTxDescriptor descriptor;
 
-    Coordonate rxCoord = null;
+    Coordinate rxCoord = null;
     ElectricalAntennaRxElement rxElement = null;
     double powerEfficency = 0.0;
 
@@ -149,7 +150,7 @@ public class ElectricalAntennaTxElement extends TransparentNodeElement {
     public void readFromNBT(NBTTagCompound nbt) {
         super.readFromNBT(nbt);
         if (nbt.getBoolean("rxCoordValid")) {
-            rxCoord = new Coordonate();
+            rxCoord = new Coordinate();
             rxCoord.readFromNBT(nbt, "rxCoord");
         }
         rot = LRDU.readFromNBT(nbt, "rot");

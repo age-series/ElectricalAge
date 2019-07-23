@@ -4,7 +4,7 @@ import mods.eln.generic.GenericItemUsingDamageDescriptor;
 import mods.eln.item.BrushDescriptor;
 import mods.eln.item.ConfigCopyToolDescriptor;
 import mods.eln.item.IConfigurable;
-import mods.eln.misc.Coordonate;
+import mods.eln.misc.Coordinate;
 import mods.eln.misc.Direction;
 import mods.eln.misc.LRDU;
 import mods.eln.misc.Utils;
@@ -87,7 +87,7 @@ public class PowerSocketElement extends SixNodeElement implements IConfigurable 
 
         @Override
         public void process(double time) {
-            Coordonate local = sixNode.coordonate;
+            Coordinate local = sixNode.coordonate;
             LampSupplyElement.PowerSupplyChannelHandle handle = null;
             float bestDist = 1e9f;
             List<LampSupplyElement.PowerSupplyChannelHandle> handles = LampSupplyElement.channelMap.get(channel);

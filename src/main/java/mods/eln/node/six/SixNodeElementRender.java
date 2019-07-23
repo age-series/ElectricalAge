@@ -170,29 +170,12 @@ public abstract class SixNodeElementRender {
 
     }
 
-    private int uuid = 0;
-
-    public int getUuid() {
-        if (uuid == 0) {
-            uuid = UtilsClient.getUuid();
-        }
-        return uuid;
-    }
-
-    public boolean usedUuid() {
-        return uuid != 0;
-    }
-
     public void play(SoundCommand s) {
-        s.addUuid(getUuid());
         s.set(tileEntity);
         s.play();
     }
 
     public void destructor() {
-        if (usedUuid())
-            ClientProxy.uuidManager.kill(uuid);
-
         if (glListEnable()) {
             UtilsClient.glDeleteListsSafe(glList);
         }

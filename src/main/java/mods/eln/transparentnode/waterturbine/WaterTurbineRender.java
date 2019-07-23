@@ -1,6 +1,7 @@
 package mods.eln.transparentnode.waterturbine;
 
-import mods.eln.misc.Coordonate;
+import mods.eln.misc.Coordinate;
+import mods.eln.misc.Coordinate;
 import mods.eln.misc.Direction;
 import mods.eln.misc.RcInterpolator;
 import mods.eln.misc.Utils;
@@ -24,7 +25,7 @@ public class WaterTurbineRender extends TransparentNodeElementRender {
 
     }
 
-    Coordonate waterCoord, waterCoordRight;
+    Coordinate waterCoord, waterCoordRight;
     RcInterpolator powerFactorFilter = new RcInterpolator(1);
     RcInterpolator dirFilter = new RcInterpolator(0.5f);
     WaterTurbineDescriptor descriptor;
@@ -60,7 +61,7 @@ public class WaterTurbineRender extends TransparentNodeElementRender {
             alpha += 360;
 
         if ((int) (alpha / 45) != (int) (alphaN_1 / 45) && soundPlaying == false) {
-            Coordonate coord = coordonate();
+            Coordinate coord = coordonate();
             play(new SoundCommand(descriptor.soundName)
                 .mulVolume(descriptor.nominalVolume * (0.007f + 0.2f * (float) powerFactorFilter.get() * (float) powerFactorFilter.get()),
                     1.1f));
@@ -101,7 +102,7 @@ public class WaterTurbineRender extends TransparentNodeElementRender {
         waterCoord = this.descriptor.getWaterCoordonate(tileEntity.getWorldObj());
         waterCoord.setWorld(tileEntity.getWorldObj());
         waterCoord.applyTransformation(front, coordonate());
-        waterCoordRight = new Coordonate(waterCoord);
+        waterCoordRight = new Coordinate(waterCoord);
         waterCoordRight.setWorld(tileEntity.getWorldObj());
         waterCoordRight.move(front.right());
     }

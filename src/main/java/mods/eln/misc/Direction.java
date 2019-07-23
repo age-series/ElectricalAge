@@ -422,7 +422,7 @@ public enum Direction {
         }
     }
 
-    public TileEntity getTileEntity(Coordonate coordonate) {
+    public TileEntity getTileEntity(Coordinate coordonate) {
         int x = coordonate.x, y = coordonate.y, z = coordonate.z;
         switch (this) {
             case XN:
@@ -554,7 +554,7 @@ public enum Direction {
         }
     }
 
-    public void rotateFromXN(Coordonate p) {
+    public void rotateFromXN(Coordinate p) {
         int x = p.x, y = p.y, z = p.z;
         switch (this) {
             case XN:

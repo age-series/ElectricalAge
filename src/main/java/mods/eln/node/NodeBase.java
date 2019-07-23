@@ -67,7 +67,7 @@ public abstract class NodeBase {
     public byte neighborOpaque;
     public byte neighborWrapable;
 
-    public Coordonate coordonate;
+    public Coordinate coordonate;
 
     public ArrayList<NodeConnection> nodeConnectionList = new ArrayList<NodeConnection>(4);
 
@@ -148,7 +148,7 @@ public abstract class NodeBase {
     }
 
     public NodeBase() {
-        coordonate = new Coordonate();
+        coordonate = new Coordinate();
     }
 
     boolean destructed = false;
@@ -170,7 +170,7 @@ public abstract class NodeBase {
     }
 
     // NodeBaseTodo
-    public void onBlockPlacedBy(Coordonate coordonate, Direction front, EntityLivingBase entityLiving, ItemStack itemStack) {
+    public void onBlockPlacedBy(Coordinate coordonate, Direction front, EntityLivingBase entityLiving, ItemStack itemStack) {
         // this.entity = entity;
         this.coordonate = coordonate;
         neighborBlockRead();
@@ -190,7 +190,7 @@ public abstract class NodeBase {
         position[1] = coordonate.y;
         position[2] = coordonate.z;
         direction.applyTo(position, 1);
-        Coordonate nodeCoordonate = new Coordonate(position[0], position[1], position[2], coordonate.dimention);
+        Coordinate nodeCoordonate = new Coordinate(position[0], position[1], position[2], coordonate.dimension);
         return NodeManager.instance.getNodeFromCoordonate(nodeCoordonate);
     }
 
@@ -345,7 +345,7 @@ public abstract class NodeBase {
                         otherBlockCoord[1] = emptyBlockCoord[1];
                         otherBlockCoord[2] = emptyBlockCoord[2];
                         elementSide.applyTo(otherBlockCoord, 1);
-                        NodeBase otherNode = NodeManager.instance.getNodeFromCoordonate(new Coordonate(otherBlockCoord[0], otherBlockCoord[1], otherBlockCoord[2], coordonate.dimention));
+                        NodeBase otherNode = NodeManager.instance.getNodeFromCoordonate(new Coordinate(otherBlockCoord[0], otherBlockCoord[1], otherBlockCoord[2], coordonate.dimension));
                         if (otherNode == null) continue;
                         Direction otherDirection = elementSide.getInverse();
                         LRDU otherLRDU = otherDirection.getLRDUGoingTo(direction).inverse();
@@ -492,7 +492,7 @@ public abstract class NodeBase {
             stream.writeInt(coordonate.y);
             stream.writeInt(coordonate.z);
 
-            stream.writeByte(coordonate.dimention);
+            stream.writeByte(coordonate.dimension);
 
             stream.writeUTF(getNodeUuid());
 
@@ -518,7 +518,7 @@ public abstract class NodeBase {
             EntityPlayerMP player = (EntityPlayerMP) obj;
             WorldServer worldServer = (WorldServer) MinecraftServer.getServer().worldServerForDimension(player.dimension);
             PlayerManager playerManager = worldServer.getPlayerManager();
-            if (player.dimension != this.coordonate.dimention) continue;
+            if (player.dimension != this.coordonate.dimension) continue;
             if (!playerManager.isPlayerWatchingChunk(player, coordonate.x / 16, coordonate.z / 16)) continue;
             if (coordonate.distanceTo(player) > range) continue;
 
@@ -539,7 +539,7 @@ public abstract class NodeBase {
             stream.writeInt(coordonate.x);
             stream.writeInt(coordonate.y);
             stream.writeInt(coordonate.z);
-            stream.writeByte(coordonate.dimention);
+            stream.writeByte(coordonate.dimension);
 
             stream.writeUTF(getNodeUuid());
 
@@ -561,7 +561,7 @@ public abstract class NodeBase {
             EntityPlayerMP player = (EntityPlayerMP) obj;
             WorldServer worldServer = (WorldServer) MinecraftServer.getServer().worldServerForDimension(player.dimension);
             PlayerManager playerManager = worldServer.getPlayerManager();
-            if (player.dimension != this.coordonate.dimention) continue;
+            if (player.dimension != this.coordonate.dimension) continue;
             if (!playerManager.isPlayerWatchingChunk(player, coordonate.x / 16, coordonate.z / 16)) continue;
 
             Utils.sendPacketToClient(getPublishPacket(), player);

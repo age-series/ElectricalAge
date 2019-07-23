@@ -1,7 +1,7 @@
 package mods.eln.gridnode
 
 import mods.eln.Eln
-import mods.eln.misc.Coordonate
+import mods.eln.misc.Coordinate
 import mods.eln.misc.Direction
 import mods.eln.misc.INBTTReady
 import mods.eln.misc.UserError
@@ -18,8 +18,8 @@ import java.util.*
  */
 class GridLink : INBTTReady {
 
-    internal var a = Coordonate()
-    internal var b = Coordonate()
+    internal var a = Coordinate()
+    internal var b = Coordinate()
 
     internal var connected = false
     // Drop this if the link is broken.
@@ -31,7 +31,7 @@ class GridLink : INBTTReady {
     private var ab: ElectricalConnection? = null
     private var rs = MnaConst.highImpedance
 
-    constructor(a: Coordonate, b: Coordonate, `as`: Direction, bs: Direction, cable: ItemStack, rs: Double) {
+    constructor(a: Coordinate, b: Coordinate, `as`: Direction, bs: Direction, cable: ItemStack, rs: Double) {
         this.rs = rs
         this.a = a
         this.b = b
@@ -176,7 +176,7 @@ class GridLink : INBTTReady {
 
     companion object {
 
-        fun getElementFromCoordinate(coord: Coordonate?): GridElement? {
+        fun getElementFromCoordinate(coord: Coordinate?): GridElement? {
             if (coord == null) return null
             val element = NodeManager.instance.getTransparentNodeFromCoordinate(coord)
             if (element is GridElement) {

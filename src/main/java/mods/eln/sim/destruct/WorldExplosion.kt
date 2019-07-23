@@ -1,7 +1,7 @@
 package mods.eln.sim.destruct
 
 import mods.eln.Eln
-import mods.eln.misc.Coordonate
+import mods.eln.misc.Coordinate
 import mods.eln.node.six.SixNodeElement
 import mods.eln.node.transparent.TransparentNodeElement
 import mods.eln.simplenode.energyconverter.EnergyConverterElnToOtherNode
@@ -9,11 +9,11 @@ import net.minecraft.init.Blocks
 
 class WorldExplosion : IDestructable {
 
-    internal var c: Coordonate
+    internal var c: Coordinate
     internal var strength: Float = 0.toFloat()
     internal var type: String
 
-    constructor(c: Coordonate) {
+    constructor(c: Coordinate) {
         this.c = c
         this.type = "Generic Explosion at $c"
     }

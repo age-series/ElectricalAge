@@ -1346,7 +1346,7 @@ public class SixNodeRegistry {
             subId = 0;
             name = TR_NAME(I18N.Type.NONE, "Nuclear Alarm");
             desc = new ElectricalAlarmDescriptor(name,
-                Eln.obj.getObj("alarmmedium"), 7, "eln:alarma", 11, 1f);
+                Eln.obj.getObj("alarmmedium"), 7, "eln:alarma", 0.2f);
             Eln.sixNodeItem.addDescriptor(subId + (id << 6), desc);
         }
         {
@@ -1354,7 +1354,7 @@ public class SixNodeRegistry {
             name = TR_NAME(I18N.Type.NONE, "Standard Alarm");
             desc = new ElectricalAlarmDescriptor(name,
                 Eln.obj.getObj("alarmmedium"), 7, "eln:smallalarm_critical",
-                1.2, 2f);
+                0.4f);
             Eln.sixNodeItem.addDescriptor(subId + (id << 6), desc);
         }
     }

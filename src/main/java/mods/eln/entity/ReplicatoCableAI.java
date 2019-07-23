@@ -1,7 +1,8 @@
 package mods.eln.entity;
 
 import mods.eln.Eln;
-import mods.eln.misc.Coordonate;
+import mods.eln.misc.Coordinate;
+import mods.eln.misc.Coordinate;
 import mods.eln.node.NodeBase;
 import mods.eln.node.NodeManager;
 import mods.eln.node.six.SixNode;
@@ -23,7 +24,7 @@ public class ReplicatoCableAI extends EntityAIBase implements ITimeRemoverObserv
 
     ReplicatorEntity entity;
 
-    public Coordonate cableCoordonate = null;
+    public Coordinate cableCoordonate = null;
     Random rand = new Random();
     int lookingPerUpdate = 20;
 

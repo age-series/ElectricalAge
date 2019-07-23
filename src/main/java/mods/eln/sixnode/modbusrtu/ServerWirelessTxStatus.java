@@ -1,7 +1,8 @@
 package mods.eln.sixnode.modbusrtu;
 
 import mods.eln.Eln;
-import mods.eln.misc.Coordonate;
+import mods.eln.misc.Coordinate;
+import mods.eln.misc.Coordinate;
 import mods.eln.misc.Utils;
 import mods.eln.sixnode.wirelesssignal.IWirelessSignalTx;
 import mods.eln.sixnode.wirelesssignal.tx.WirelessSignalTxElement;
@@ -11,12 +12,12 @@ public class ServerWirelessTxStatus extends WirelessTxStatus implements IWireles
 
     private ModbusRtuElement rtu;
 
-    Coordonate coordonate;
+    Coordinate coordonate;
 
     short getHoldingRegister_1;
     short setHoldingRegister_0;
 
-    public ServerWirelessTxStatus(String name, int id, double value, Coordonate coordonate, int uuid, ModbusRtuElement rtu) {
+    public ServerWirelessTxStatus(String name, int id, double value, Coordinate coordonate, int uuid, ModbusRtuElement rtu) {
         super(name, id, value, uuid);
         this.coordonate = coordonate;
         WirelessSignalTxElement.channelRegister(this);
@@ -45,7 +46,7 @@ public class ServerWirelessTxStatus extends WirelessTxStatus implements IWireles
     }
 
     @Override
-    public Coordonate getCoordonate() {
+    public Coordinate getCoordonate() {
         return coordonate;
     }
 

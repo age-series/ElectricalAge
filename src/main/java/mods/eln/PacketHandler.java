@@ -7,7 +7,7 @@ import io.netty.channel.ChannelHandler.Sharable;
 import mods.eln.client.ClientProxy;
 import mods.eln.debug.DP;
 import mods.eln.debug.DPType;
-import mods.eln.misc.Coordonate;
+import mods.eln.misc.Coordinate;
 import mods.eln.misc.IConfigSharing;
 import mods.eln.misc.KeyRegistry;
 import mods.eln.misc.Utils;
@@ -15,6 +15,7 @@ import mods.eln.node.INodeEntity;
 import mods.eln.node.NodeBase;
 import mods.eln.node.NodeManager;
 import mods.eln.server.PlayerManager;
+import mods.eln.sound.ClientSoundHandler;
 import mods.eln.sound.SoundClient;
 import mods.eln.sound.SoundCommand;
 import net.minecraft.entity.player.EntityPlayer;
@@ -65,8 +66,8 @@ public class PacketHandler {
                 case Eln.PACKET_PLAY_SOUND:
                     packetPlaySound(stream, manager, player);
                     break;
-                case Eln.PACKET_DESTROY_UUID:
-                    packetDestroyUuid(stream, manager, player);
+                case Eln.PACKET_STOP_SOUND:
+
                     break;
                 case Eln.PACKET_CLIENT_TO_SERVER_CONNECTION:
                     packetNewClient(manager, player);
@@ -88,7 +89,7 @@ public class PacketHandler {
 
         try {
             stream.writeByte(Eln.PACKET_SERVER_TO_CLIENT_INFO);
-            for (IConfigSharing c : Eln.instance.configShared) {
+            for (IConfigSharing c : Eln.configShared) {
                 c.serializeConfig(stream);
             }
         } catch (IOException e) {
@@ -99,7 +100,7 @@ public class PacketHandler {
     }
 
     private void packetServerInfo(DataInputStream stream, NetworkManager manager, EntityPlayer player) {
-        for (IConfigSharing c : Eln.instance.configShared) {
+        for (IConfigSharing c : Eln.configShared) {
             try {
                 c.deserialize(stream);
             } catch (IOException e) {
@@ -108,23 +109,23 @@ public class PacketHandler {
         }
     }
 
-    private void packetDestroyUuid(DataInputStream stream, NetworkManager manager, EntityPlayer player) {
-        try {
-            ClientProxy.uuidManager.kill(stream.readInt());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
     void packetPlaySound(DataInputStream stream, NetworkManager manager, EntityPlayer player) {
         try {
             if (stream.readByte() != player.dimension)
                 return;
-            SoundClient.play(SoundCommand.fromStream(stream, player.worldObj));
+            DP.println(DPType.SOUND, "Playing sound on client!");
+
+            SoundCommand sc = SoundCommand.Companion.fromStream(stream, player.worldObj);
+            ClientSoundHandler.SoundData sd = SoundCommand.Companion.toSoundData(sc, player);
+            ClientProxy.clientSoundHandler.start(sd);
 
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+    }
+
+    void packetStopSound(DataInputStream stream, NetworkManager manager, EntityPlayer player) {
 
     }
 
@@ -141,7 +142,7 @@ public class PacketHandler {
 
     void packetForNode(DataInputStream stream, NetworkManager manager, EntityPlayer player) {
         try {
-            Coordonate coordonate = new Coordonate(stream.readInt(),
+            Coordinate coordonate = new Coordinate(stream.readInt(),
                 stream.readInt(), stream.readInt(), stream.readByte());
 
             NodeBase node = NodeManager.instance.getNodeFromCoordonate(coordonate);

@@ -1,7 +1,8 @@
 package mods.eln.ghost;
 
 import mods.eln.Eln;
-import mods.eln.misc.Coordonate;
+import mods.eln.misc.Coordinate;
+import mods.eln.misc.Coordinate;
 import mods.eln.misc.Direction;
 import mods.eln.misc.INBTTReady;
 import net.minecraft.entity.player.EntityPlayer;
@@ -9,18 +10,18 @@ import net.minecraft.nbt.NBTTagCompound;
 
 public class GhostElement implements INBTTReady {
 
-    Coordonate elementCoordonate;
-    Coordonate observatorCoordonate;
+    Coordinate elementCoordonate;
+    Coordinate observatorCoordonate;
     int UUID;
 
-    public Coordonate getObservatorCoordonate() {
+    public Coordinate getObservatorCoordonate() {
         return observatorCoordonate;
     }
 
     public GhostElement() {
     }
 
-    public GhostElement(Coordonate elementCoordonate, Coordonate observatorCoordonate, int UUID) {
+    public GhostElement(Coordinate elementCoordonate, Coordinate observatorCoordonate, int UUID) {
         this.elementCoordonate = elementCoordonate;
         this.observatorCoordonate = observatorCoordonate;
         this.UUID = UUID;
@@ -44,8 +45,8 @@ public class GhostElement implements INBTTReady {
 
     @Override
     public void readFromNBT(NBTTagCompound nbt, String str) {
-        elementCoordonate = new Coordonate(nbt, str + "elemCoord");
-        observatorCoordonate = new Coordonate(nbt, str + "obserCoord");
+        elementCoordonate = new Coordinate(nbt, str + "elemCoord");
+        observatorCoordonate = new Coordinate(nbt, str + "obserCoord");
         UUID = nbt.getInteger(str + "UUID");
     }
 

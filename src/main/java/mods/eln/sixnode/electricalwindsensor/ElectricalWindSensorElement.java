@@ -84,7 +84,7 @@ public class ElectricalWindSensorElement extends SixNodeElement {
     public void networkSerialize(DataOutputStream stream) {
         super.networkSerialize(stream);
         try {
-            stream.writeFloat((float) Utils.getWind(sixNode.coordonate.dimention, sixNode.coordonate.y));
+            stream.writeFloat((float) Utils.getWind(sixNode.coordonate.dimension, sixNode.coordonate.y));
         } catch (IOException e) {
             e.printStackTrace();
         }

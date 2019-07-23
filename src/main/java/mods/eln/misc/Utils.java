@@ -611,7 +611,7 @@ public class Utils {
         }
     }
 
-    public static void dropItem(ItemStack itemStack, Coordonate coordonate) {
+    public static void dropItem(ItemStack itemStack, Coordinate coordonate) {
         dropItem(itemStack, coordonate.x, coordonate.y, coordonate.z, coordonate.world());
     }
 
@@ -846,7 +846,7 @@ public class Utils {
             || Eln.configCopyToolElement.checkSameItemStack(cur);
     }
 
-    public static int getRedstoneLevelAround(Coordonate coord, Direction side) {
+    public static int getRedstoneLevelAround(Coordinate coord, Direction side) {
         int level = coord.world().getStrongestIndirectPower(coord.x, coord.y, coord.z);
         if (level >= 15) return 15;
 
@@ -969,7 +969,7 @@ public class Utils {
         return false;
     }
 
-    public static Vec3 getVec05(Coordonate c) {
+    public static Vec3 getVec05(Coordinate c) {
         return Vec3.createVectorHelper(c.x + (c.x < 0 ? -1 : 1) * 0.5, c.y + (c.y < 0 ? -1 : 1) * 0.5, c.z + (c.z < 0 ? -1 : 1) * 0.5);
     }
 
@@ -1291,7 +1291,7 @@ public class Utils {
         return world.getWorldTime() / (23999.0);
     }
 
-    public static boolean isWater(Coordonate waterCoord) {
+    public static boolean isWater(Coordinate waterCoord) {
         Block block = waterCoord.getBlock();
         return (block == Blocks.flowing_water || block == Blocks.water);
     }

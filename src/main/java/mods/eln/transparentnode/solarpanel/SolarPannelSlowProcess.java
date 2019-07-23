@@ -1,6 +1,6 @@
 package mods.eln.transparentnode.solarpanel;
 
-import mods.eln.misc.Coordonate;
+import mods.eln.misc.Coordinate;
 import mods.eln.misc.Utils;
 import mods.eln.sim.core.IProcess;
 import net.minecraft.util.Vec3;
@@ -44,7 +44,7 @@ public class SolarPannelSlowProcess implements IProcess {
         }
 
 
-        Coordonate coordonate = solarPannel.node.coordonate;
+        Coordinate coordonate = solarPannel.node.coordonate;
         Vec3 v = Utils.getVec05(coordonate);
         double x = v.xCoord + solarPannel.descriptor.solarOffsetX, y = v.yCoord + solarPannel.descriptor.solarOffsetY, z = v.zCoord + solarPannel.descriptor.solarOffsetZ;
 

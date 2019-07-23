@@ -34,31 +34,10 @@ public abstract class TransparentNodeElementRender {
 
     protected EntityItem unserializeItemStackToEntityItem(DataInputStream stream, EntityItem old) throws IOException {
         return Utils.unserializeItemStackToEntityItem(stream, old, tileEntity);
-
     }
 
-    public void drawEntityItem(EntityItem entityItem, double x, double y, double z, float roty, float scale) {/*
-        if(entityItem == null) return;
-		
-
-
-		entityItem.hoverStart = 0.0f;
-		entityItem.rotationYaw = 0.0f;
-		entityItem.motionX = 0.0;
-		entityItem.motionY = 0.0;
-		entityItem.motionZ =0.0;
-		
-		Render var10 = null;
-		var10 = RenderManager.instance.getEntityRenderObject(entityItem);
-		GL11.glPushMatrix();
-			GL11.glTranslatef((float)x, (float)y, (float)z);
-			GL11.glRotatef(roty, 0, 1, 0);
-			GL11.glScalef(scale, scale, scale);
-			var10.doRender(entityItem,0, 0, 0, 0, 0);	
-		GL11.glPopMatrix();	
-		*/
+    public void drawEntityItem(EntityItem entityItem, double x, double y, double z, float roty, float scale) {
         UtilsClient.drawEntityItem(entityItem, x, y, z, roty, scale);
-
     }
 
     public void glCableTransforme(Direction inverse) {
@@ -194,7 +173,6 @@ public abstract class TransparentNodeElementRender {
     }
 
     public CableRenderDescriptor getCableRender(Direction side, LRDU lrdu) {
-
         return null;
     }
 
@@ -209,7 +187,7 @@ public abstract class TransparentNodeElementRender {
 
         for (LRDU lrdu : LRDU.values()) {
             Utils.setGlColorFromDye(renderPreProcess.otherdry[lrdu.toInt()]);
-            if (connection.get(lrdu) == false) continue;
+            if (!connection.get(lrdu)) continue;
             maskTempDraw.set(1 << lrdu.toInt());
             CableRender.drawCable(render, maskTempDraw, renderPreProcess);
         }
@@ -220,36 +198,18 @@ public abstract class TransparentNodeElementRender {
 
     public void notifyNeighborSpawn() {
 
-
     }
 
     public void serverPacketUnserialize(DataInputStream stream) {
 
-
     }
 
-    protected Coordonate coordonate() {
+    protected Coordinate coordonate() {
 
-        return new Coordonate(tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord, tileEntity.getWorldObj());
+        return new Coordinate(tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord, tileEntity.getWorldObj());
     }
-
-
-    private int uuid = 0;
-
-    public int getUuid() {
-        if (uuid == 0) {
-            uuid = UtilsClient.getUuid();
-        }
-        return uuid;
-    }
-
-    public boolean usedUuid() {
-        return uuid != 0;
-    }
-
 
     public void play(SoundCommand s) {
-        s.addUuid(getUuid());
         s.set(tileEntity);
         s.play();
     }
@@ -262,9 +222,6 @@ public abstract class TransparentNodeElementRender {
     }
 
     public void destructor() {
-        if (usedUuid())
-            ClientProxy.uuidManager.kill(uuid);
-
         loopedSoundManager.dispose();
     }
 

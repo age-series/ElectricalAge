@@ -3,7 +3,8 @@ package mods.eln.sixnode.TreeResinCollector;
 import mods.eln.Eln;
 import mods.eln.debug.DP;
 import mods.eln.debug.DPType;
-import mods.eln.misc.Coordonate;
+import mods.eln.misc.Coordinate;
+import mods.eln.misc.Coordinate;
 import mods.eln.misc.Direction;
 import mods.eln.misc.LRDU;
 import mods.eln.misc.Utils;
@@ -68,7 +69,7 @@ public class TreeResinCollectorElement extends SixNodeElement {
     }
 
     double getProductPerSecond() {
-        Coordonate coord = sixNode.coordonate;
+        Coordinate coord = sixNode.coordonate;
         World worldObj = coord.world();
         int[] posWood = new int[3];
         int[] posCollector = new int[3];
@@ -98,7 +99,7 @@ public class TreeResinCollectorElement extends SixNodeElement {
         yEnd = posWood[1];
 
         int collectiorCount = 0;
-        Coordonate coordTemp = new Coordonate(posCollector[0], 0, posCollector[2], worldObj);
+        Coordinate coordTemp = new Coordinate(posCollector[0], 0, posCollector[2], worldObj);
         posCollector[1] = yStart;
         for (posCollector[1] = yStart; posCollector[1] <= yEnd; posCollector[1]++) {
             coordTemp.y = posCollector[1];

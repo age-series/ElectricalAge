@@ -1,7 +1,8 @@
 package mods.eln.transparentnode.electricalantennatx;
 
 import mods.eln.Eln;
-import mods.eln.misc.Coordonate;
+import mods.eln.misc.Coordinate;
+import mods.eln.misc.Coordinate;
 import mods.eln.node.NodeBase;
 import mods.eln.node.NodeManager;
 import mods.eln.node.transparent.TransparentNode;
@@ -33,7 +34,7 @@ public class ElectricalAntennaTxSlowProcess implements IProcess {
         if (timeCounter <= 0.0) {
             timeCounter = periode;
             int rangeMax = element.descriptor.rangeMax;
-            Coordonate coord = new Coordonate(element.node.coordonate);
+            Coordinate coord = new Coordinate(element.node.coordonate);
 
             int distance = 0;
             TransparentNode node = null;
@@ -74,7 +75,7 @@ public class ElectricalAntennaTxSlowProcess implements IProcess {
             } while (distance < rangeMax);
             if (!find) {
                 element.txDisconnect();
-                Coordonate coordCpy = new Coordonate(coord);
+                Coordinate coordCpy = new Coordinate(coord);
                 coordCpy.move(element.front.getInverse());
                 if (element.powerResistor.getPower() > 50) {
                     if (coordCpy.world().blockExists(coordCpy.x, coordCpy.y, coordCpy.z)) {
@@ -92,7 +93,7 @@ public class ElectricalAntennaTxSlowProcess implements IProcess {
                 element.rxCoord = node.coordonate;
                 element.rxElement = (ElectricalAntennaRxElement) node.element;
             }
-            List list = world.getEntitiesWithinAABBExcludingEntity((Entity) null, Coordonate.getAxisAlignedBB(element.node.coordonate, coord));
+            List list = world.getEntitiesWithinAABBExcludingEntity((Entity) null, Coordinate.getAxisAlignedBB(element.node.coordonate, coord));
 
             for (Object o : list) {
                 Entity e = (Entity) o;

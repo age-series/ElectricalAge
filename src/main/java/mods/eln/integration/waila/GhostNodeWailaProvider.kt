@@ -6,7 +6,7 @@ import mcp.mobius.waila.api.IWailaConfigHandler
 import mcp.mobius.waila.api.IWailaDataAccessor
 import mcp.mobius.waila.api.IWailaDataProvider
 import mcp.mobius.waila.api.SpecialChars
-import mods.eln.misc.Coordonate
+import mods.eln.misc.Coordinate
 import mods.eln.misc.Direction
 import mods.eln.packets.GhostNodeWailaResponsePacket
 import net.minecraft.entity.player.EntityPlayerMP
@@ -19,7 +19,7 @@ import net.minecraft.world.World
 @Optional.Interface(iface = "mcp.mobius.waila.api.IWailaDataProvider", modid = "Waila")
 class GhostNodeWailaProvider(private val transparentNodeProvider: TransparentNodeWailaProvider,
                              private val sixNodeProvider: SixNodeWailaProvider) : IWailaDataProvider {
-    private class WailaDataAccessorProxy(val accessor: IWailaDataAccessor, val coord: Coordonate,
+    private class WailaDataAccessorProxy(val accessor: IWailaDataAccessor, val coord: Coordinate,
                                          val side: Direction? = null) : IWailaDataAccessor {
         override fun getPlayer() = accessor.player
         override fun getStack() = accessor.stack
@@ -40,7 +40,7 @@ class GhostNodeWailaProvider(private val transparentNodeProvider: TransparentNod
     }
 
     private fun getGhostData(accessor: IWailaDataAccessor): GhostNodeWailaData? {
-        val coord = Coordonate(accessor.position.blockX, accessor.position.blockY, accessor.position.blockZ,
+        val coord = Coordinate(accessor.position.blockX, accessor.position.blockY, accessor.position.blockZ,
             accessor.world)
         var ghostData: GhostNodeWailaData? = null
         try {

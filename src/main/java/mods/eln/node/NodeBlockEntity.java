@@ -244,13 +244,13 @@ public abstract class NodeBlockEntity extends TileEntity implements ITileEntityS
             return null;
         }
         if (node == null) {
-            NodeBase nodeFromCoordonate = NodeManager.instance.getNodeFromCoordonate(new Coordonate(xCoord, yCoord, zCoord, worldObj));
+            NodeBase nodeFromCoordonate = NodeManager.instance.getNodeFromCoordonate(new Coordinate(xCoord, yCoord, zCoord, worldObj));
             if (nodeFromCoordonate instanceof Node) {
                 node = (Node) nodeFromCoordonate;
             } else {
-                DP.println(DPType.NODE, "ASSERT WRONG TYPE public Node getNode " + new Coordonate(xCoord, yCoord, zCoord, worldObj));
+                DP.println(DPType.NODE, "ASSERT WRONG TYPE public Node getNode " + new Coordinate(xCoord, yCoord, zCoord, worldObj));
             }
-            if (node == null) DelayedBlockRemove.add(new Coordonate(xCoord, yCoord, zCoord, this.worldObj));
+            if (node == null) DelayedBlockRemove.add(new Coordinate(xCoord, yCoord, zCoord, this.worldObj));
         }
         return node;
     }

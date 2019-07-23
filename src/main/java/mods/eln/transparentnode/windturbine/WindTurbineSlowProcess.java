@@ -2,7 +2,7 @@ package mods.eln.transparentnode.windturbine;
 
 import mods.eln.debug.DP;
 import mods.eln.debug.DPType;
-import mods.eln.misc.Coordonate;
+import mods.eln.misc.Coordinate;
 import mods.eln.misc.INBTTReady;
 import mods.eln.misc.Utils;
 import mods.eln.sim.core.IProcess;
@@ -34,7 +34,7 @@ class WindTurbineSlowProcess implements IProcess, INBTTReady {
     }
 
     double getWind() {
-        return Math.abs(localWind + Utils.getWind(turbine.node.coordonate.dimention, turbine.node.coordonate.y +
+        return Math.abs(localWind + Utils.getWind(turbine.node.coordonate.dimension, turbine.node.coordonate.y +
             turbine.descriptor.offY)) * environmentWindFactor;
     }
 
@@ -51,7 +51,7 @@ class WindTurbineSlowProcess implements IProcess, INBTTReady {
 
             int x1, x2, y1, y2, z1, z2;
 
-            Coordonate coord = new Coordonate(turbine.node.coordonate);
+            Coordinate coord = new Coordinate(turbine.node.coordonate);
 
             x1 = coord.x - d.rayX;
             x2 = coord.x + d.rayX;

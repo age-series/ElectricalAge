@@ -2,7 +2,8 @@ package mods.eln.sixnode.wirelesssignal.source;
 
 import mods.eln.i18n.I18N;
 import mods.eln.item.IConfigurable;
-import mods.eln.misc.Coordonate;
+import mods.eln.misc.Coordinate;
+import mods.eln.misc.Coordinate;
 import mods.eln.misc.Direction;
 import mods.eln.misc.LRDU;
 import mods.eln.misc.Utils;
@@ -157,7 +158,7 @@ public class WirelessSignalSourceElement extends SixNodeElement implements IWire
     }
 
     @Override
-    public Coordonate getCoordonate() {
+    public Coordinate getCoordonate() {
         return sixNode.coordonate;
     }
 

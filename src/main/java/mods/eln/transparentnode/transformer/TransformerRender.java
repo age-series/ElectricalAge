@@ -40,7 +40,7 @@ public class TransformerRender extends TransparentNodeElementRender {
             }
         });
 
-        coordinate = new Coordonate(tileEntity);
+        coordinate = new Coordinate(tileEntity);
         doorOpen = new PhysicalInterpolator(0.4f, 4.0f, 0.9f, 0.05f);
     }
 
@@ -68,7 +68,7 @@ public class TransformerRender extends TransparentNodeElementRender {
     private Obj3DPart feroPart;
     private boolean hasCasing = false;
 
-    private final Coordonate coordinate;
+    private final Coordinate coordinate;
     private final PhysicalInterpolator doorOpen;
 
     @Override

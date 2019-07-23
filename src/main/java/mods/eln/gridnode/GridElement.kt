@@ -275,6 +275,6 @@ abstract class GridElement(transparentNode: TransparentNode, descriptor: Transpa
         /**
          * The last place any given player tried to link two instance nodes.
          */
-        private val pending = HashMap<UUID, Pair<Coordonate, Direction>>()
+        private val pending = HashMap<UUID, Pair<Coordinate, Direction>>()
     }
 }

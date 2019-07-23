@@ -83,7 +83,7 @@ open class ShaftRender(entity: TransparentNodeEntity, desc: TransparentNodeDescr
     private var soundLooper: ShaftSoundLooper? = null
     val volumeSetting = SlewLimiter(0.5f)
 
-    inner private class ShaftSoundLooper(sound: String, coord: Coordonate) : LoopedSound(sound, coord) {
+    inner private class ShaftSoundLooper(sound: String, coord: Coordinate) : LoopedSound(sound, coord) {
         override fun getPitch() = Math.max(0.05, rads / absoluteMaximumShaftSpeed).toFloat()
         override fun getVolume() = volumeSetting.position
     }

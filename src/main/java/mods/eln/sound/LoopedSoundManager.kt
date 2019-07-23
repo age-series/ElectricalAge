@@ -1,52 +1,43 @@
 package mods.eln.sound
 
-import mods.eln.Eln
-import mods.eln.debug.DP
-import mods.eln.debug.DPType
+import mods.eln.client.ClientProxy
+import mods.eln.sound.ClientSoundHandler.*
 import net.minecraft.client.Minecraft
 
 class LoopedSoundManager(val updateInterval: Float = 0.5f) {
     private var remaining = 0f
-    private val loops = mutableSetOf<LoopedSound>()
+    private val loops = mutableSetOf<SoundData>()
 
-    fun add(loop: LoopedSound?) {
-        if (loop != null && loop.active) {
-            loops.add(loop)
+    fun add(loop: LoopedSound) {
+        if (loop.active) {
+            loops.add(SoundData(loop, 100.0 * 100.0))
         }
     }
 
-    fun dispose() = loops.forEach { it.active = false }
+    fun dispose() = loops.forEach {
+        if (it.sound is LoopedSound)
+            it.sound.active = false
+            ClientProxy.clientSoundHandler.stop(it)
+    }
 
     // takes in two points and gets the squared distance delta between them
-    inline fun sqDistDelta(cx: Double, cy: Double, cz: Double, px: Double, py: Double, pz: Double) = (cx - px) * (cx - px) + (cy - py) * (cy - py) + (cz - pz) * (cz - pz)
+    fun sqDistDelta(cx: Double, cy: Double, cz: Double, px: Double, py: Double, pz: Double) = (cx - px) * (cx - px) + (cy - py) * (cy - py) + (cz - pz) * (cz - pz)
 
     fun process(deltaT: Float) {
         remaining -= deltaT
         if (remaining <= 0) {
-            val soundHandler = Minecraft.getMinecraft().soundHandler
             loops.forEach {
+                if (it.sound !is LoopedSound) return
                 // add 0.5 to put the point in the center of the block making sounds
-                val cx = it.coord.x + 0.5
-                val cy = it.coord.y + 0.5
-                val cz = it.coord.z + 0.5
+                val cx = it.sound.coord.x + 0.5
+                val cy = it.sound.coord.y + 0.5
+                val cz = it.sound.coord.z + 0.5
                 // get the player, and get the squared distance between the player and the block
                 val player = Minecraft.getMinecraft().thePlayer
                 val distDeltaSquared = sqDistDelta(cx, cy, cz, player.posX, player.posY, player.posZ)
                 // when comparing, compare distDeltaSquared to the square of the distance delta that you are trying to compare against.
-                if (it.volume > 0 && it.pitch > 0 && !soundHandler.isSoundPlaying(it) && distDeltaSquared < Eln.maxSoundDistance * Eln.maxSoundDistance) {
-                    try {
-                        soundHandler.playSound(it)
-                    } catch (e: IllegalArgumentException) {
-                        DP.println(DPType.SOUND, e.toString())
-                    }
-                }
-                if (distDeltaSquared >= Eln.maxSoundDistance * Eln.maxSoundDistance || it.volume == 0f || it.pitch == 0f) {
-                    try {
-                        soundHandler.stopSound(it)
-                    }catch (e: Exception) {
-                        System.out.println(e)
-                    }
-                }
+                it.distSquared = distDeltaSquared
+                ClientProxy.clientSoundHandler.start(it)
             }
             remaining = updateInterval
         }

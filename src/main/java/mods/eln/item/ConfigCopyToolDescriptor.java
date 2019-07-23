@@ -3,7 +3,7 @@ package mods.eln.item;
 import mods.eln.Eln;
 import mods.eln.generic.GenericItemBlockUsingDamageDescriptor;
 import mods.eln.generic.GenericItemUsingDamageDescriptor;
-import mods.eln.misc.Coordonate;
+import mods.eln.misc.Coordinate;
 import mods.eln.misc.Direction;
 import mods.eln.node.NodeBase;
 import mods.eln.node.NodeBlock;
@@ -27,7 +27,7 @@ public class ConfigCopyToolDescriptor extends GenericItemUsingDamageDescriptor {
         Block block = world.getBlock(x, y, z);
 
         if(block instanceof NodeBlock) {
-            NodeBase node = NodeManager.instance.getNodeFromCoordonate(new Coordonate(x, y, z, world));
+            NodeBase node = NodeManager.instance.getNodeFromCoordonate(new Coordinate(x, y, z, world));
             if(node != null) {
                 node.onBlockActivated(player, Direction.fromIntMinecraftSide(side), vx, vy, vz);
             }

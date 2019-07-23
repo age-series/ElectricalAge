@@ -2,7 +2,7 @@ package mods.eln.packets
 
 import cpw.mods.fml.common.network.ByteBufUtils
 import io.netty.buffer.ByteBuf
-import mods.eln.misc.Coordonate
+import mods.eln.misc.Coordinate
 import mods.eln.misc.Direction
 import net.minecraft.item.ItemStack
 
@@ -12,7 +12,7 @@ class SixNodeWailaResponsePacket : TransparentNodeResponsePacket {
 
     constructor() {}
 
-    constructor(coord: Coordonate, side: Direction, itemStack: ItemStack?, data: Map<String, String>) : super(data, coord) {
+    constructor(coord: Coordinate, side: Direction, itemStack: ItemStack?, data: Map<String, String>) : super(data, coord) {
         this.side = side
         this.itemStack = itemStack
     }
