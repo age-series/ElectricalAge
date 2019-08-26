@@ -252,6 +252,9 @@ public class Eln {
     public static TransparentNodeItem transparentNodeItem;
     public static OreItem oreItem;
 
+    public static String analyticsURL = "";
+    public static boolean analyticsPlayerUUIDOptIn = false;
+
     // The instance of your mod that Forge uses.
     @Instance("Eln")
     public static Eln instance;
@@ -296,7 +299,7 @@ public class Eln {
 
     boolean xRayScannerCanBeCrafted = true;
     public boolean forceOreRegen;
-    public boolean explosionEnable;
+    public static boolean explosionEnable;
 
     public static boolean debugEnabled = false;  // Read from configuration file. Default is `false`.
     public static boolean versionCheckEnabled = true; // Read from configuration file. Default is `true`.
@@ -390,8 +393,12 @@ public class Eln {
         explosionEnable = config.get("gameplay", "explosion", true).getBoolean(true);
 
         //explosionEnable = false;
-        versionCheckEnabled = config.get("general", "versionCheckEnable", true).getBoolean(true);
-        analyticsEnabled = config.get("general", "analyticsEnable", true).getBoolean(true);
+
+        Eln.versionCheckEnabled = config.get("general", "versionCheckEnable", true, "Enable version checker").getBoolean(true);
+        Eln.analyticsEnabled = config.get("general", "analyticsEnable", true).getBoolean(true);
+        Eln.analyticsEnabled = config.get("general", "analyticsEnable", true, "Enable Analytics for Electrical Age").getBoolean(true);
+        Eln.analyticsURL = config.get("general", "analyticsURL", "http://eln.ja13.org/stat", "Set update checker URL").getString();
+        Eln.analyticsPlayerUUIDOptIn = config.get("general", "analyticsPlayerOptIn", false, "Opt into sending player UUID when sending analytics (default DISABLED)").getBoolean(false);
 
         if (analyticsEnabled) {
             final Property p = config.get("general", "playerUUID", "");
