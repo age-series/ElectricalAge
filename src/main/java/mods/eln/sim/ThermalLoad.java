@@ -51,6 +51,7 @@ public class ThermalLoad {
     }
 
     public static void moveEnergy(double energy, double time, ThermalLoad from, ThermalLoad to) {
+        if(Double.isNaN(energy) || Double.isNaN(time)|| time == 0.0 || time == -0.0 ||Double.isNaN(from.PcTemp) || Double.isNaN(from.PspTemp)) return;
         double I = energy / time;
         double absI = Math.abs(I);
         from.PcTemp -= I;
@@ -60,6 +61,7 @@ public class ThermalLoad {
     }
 
     public static void movePower(double power, ThermalLoad from, ThermalLoad to) {
+        if(Double.isNaN(power) || Double.isNaN(from.PcTemp) || Double.isNaN(from.PspTemp)) return;
         double absI = Math.abs(power);
         from.PcTemp -= power;
         to.PcTemp += power;
@@ -68,12 +70,16 @@ public class ThermalLoad {
     }
 
     public void movePowerTo(double power) {
+        if(Double.isNaN(power)) return;
         double absI = Math.abs(power);
         PcTemp += power;
         PspTemp += absI;
     }
 
     public double getT() {
+        if (Double.isNaN(Tc)) {
+            Tc = 0.0;
+        }
         return Tc;
     }
 

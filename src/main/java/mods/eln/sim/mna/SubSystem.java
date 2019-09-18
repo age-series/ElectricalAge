@@ -9,6 +9,7 @@ import mods.eln.sim.mna.component.VoltageSource;
 import mods.eln.sim.mna.misc.IDestructor;
 import mods.eln.sim.mna.misc.ISubSystemProcessFlush;
 import mods.eln.sim.mna.misc.ISubSystemProcessI;
+import mods.eln.sim.mna.misc.MnaConst;
 import mods.eln.sim.mna.state.State;
 import mods.eln.sim.mna.state.VoltageState;
 import org.apache.commons.math3.linear.MatrixUtils;
@@ -405,8 +406,20 @@ public class SubSystem {
         }
         voltageSource.setU(originalU);
 
+
+
         th.R = Rth;
         th.U = Uth;
+
+        if(Double.isNaN(th.U)) {
+            th.U = originalU;
+            th.R = MnaConst.highImpedance;
+        }
+        if (Double.isNaN(th.R)) {
+            th.U = originalU;
+            th.R = MnaConst.highImpedance;
+        }
+
         return th;
     }
 

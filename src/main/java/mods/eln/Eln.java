@@ -280,6 +280,9 @@ public class Eln {
     public ElectricalCableDescriptor meduimVoltageCableDescriptor;
     public ElectricalCableDescriptor signalBusCableDescriptor;
 
+    public static PortableNaNDescriptor portableNaNDescriptor = null;
+    public static CableRenderDescriptor stdPortableNaN = null;
+
     public OreRegenerate oreRegenerate;
 
     public static final Obj3DFolder obj = new Obj3DFolder();
@@ -671,6 +674,7 @@ public class Eln {
         registerElectricalTool(121);
         registerPortableItem(122);
         registerFuelBurnerItem(124);
+        registerPortableNaN(); // 125
 
         OreDictionary.registerOre("blockAluminum", arcClayBlock);
         OreDictionary.registerOre("blockSteel", arcMetalBlock);
@@ -5538,6 +5542,19 @@ public class Eln {
         sharedItem.addElement(57 + (id << 6), new ClutchPlateItem("Copper Clutch Plate", 8192f, 4096f, 1024f, 512f, 0.0003f, false));
         sharedItem.addElement(58 + (id << 6), new ClutchPlateItem("Lead Clutch Plate", 15360f, 1024f, 1536f, 768f, 0.0015f, false));
         sharedItem.addElement(59 + (id << 6), new ClutchPlateItem("Coal Clutch Plate", 1024f, 128f, 128f, 32f, 0.1f, true));
+    }
+
+    public static void registerPortableNaN() {
+        int id, subId;
+        String name;
+        id = 125;
+        {
+            subId = 0;
+            name = TR_NAME(I18N.Type.NONE, "Portable NaN");
+            Eln.stdPortableNaN = new CableRenderDescriptor("eln", "sprites/nan.png", 3.95f, 0.95f);
+            Eln.portableNaNDescriptor = new PortableNaNDescriptor(name, Eln.stdPortableNaN);
+            Eln.sixNodeItem.addDescriptor(subId + (id << 6), Eln.portableNaNDescriptor);
+        }
     }
 
     public DataLogsPrintDescriptor dataLogsPrintDescriptor;

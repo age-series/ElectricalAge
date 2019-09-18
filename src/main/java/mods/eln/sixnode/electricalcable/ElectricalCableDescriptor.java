@@ -2,18 +2,15 @@ package mods.eln.sixnode.electricalcable;
 
 import mods.eln.Eln;
 import mods.eln.cable.CableRenderDescriptor;
-import mods.eln.generic.GenericItemBlockUsingDamageDescriptor;
 import mods.eln.misc.Utils;
 import mods.eln.misc.VoltageLevelColor;
 import mods.eln.node.NodeBase;
-import mods.eln.node.six.SixNodeDescriptor;
 import mods.eln.sim.ElectricalLoad;
 import mods.eln.sim.ThermalLoad;
 import mods.eln.sim.mna.component.Resistor;
 import mods.eln.sim.mna.misc.MnaConst;
-import mods.eln.wiki.Data;
+import mods.eln.sixnode.genericcable.GenericCableDescriptor;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
 import java.util.Collections;
@@ -21,18 +18,13 @@ import java.util.List;
 
 import static mods.eln.i18n.I18N.tr;
 
-public class ElectricalCableDescriptor extends SixNodeDescriptor {
+public class ElectricalCableDescriptor extends GenericCableDescriptor {
 
-    double electricalNominalRs;
-    public double electricalNominalVoltage, electricalNominalPower, electricalNominalPowerDropFactor;
+    public double electricalNominalPowerDropFactor;
     public boolean signalWire;
 
-    public double electricalMaximalVoltage, electricalMaximalCurrent;
-    public double electricalRp = Double.POSITIVE_INFINITY, electricalRs = Double.POSITIVE_INFINITY, electricalC = 1;
-    public double thermalRp = 1, thermalRs = 1, thermalC = 1;
-    public double thermalWarmLimit = 100, thermalCoolLimit = -100;
-    double electricalMaximalI;
-    public double electricalRsMin = 0;
+    public double electricalRp = Double.POSITIVE_INFINITY;
+
     public double electricalRsPerCelcius = 0;
 
     public double dielectricBreakOhmPerVolt = 0;
@@ -42,14 +34,16 @@ public class ElectricalCableDescriptor extends SixNodeDescriptor {
 
     String description = "todo cable";
 
-    public CableRenderDescriptor render;
-
     public ElectricalCableDescriptor(String name, CableRenderDescriptor render, String description, boolean signalWire) {
         super(name, ElectricalCableElement.class, ElectricalCableRender.class);
-
+        thermalRp = 1;
+        thermalRs = 1;
+        thermalC = 1;
         this.description = description;
         this.render = render;
         this.signalWire = signalWire;
+        this.thermalWarmLimit = 100;
+        this.thermalCoolLimit = -100;
 
     }
 
@@ -69,19 +63,17 @@ public class ElectricalCableDescriptor extends SixNodeDescriptor {
 
         electricalRp = MnaConst.highImpedance;
         double electricalNorminalI = electricalNominalPower / electricalNominalVoltage;
-        electricalNominalRs = (electricalNominalPower * electricalNominalPowerDropFactor) / electricalNorminalI / electricalNorminalI / 2;
-        electricalRs = electricalNominalRs;
+        electricalRs = (electricalNominalPower * electricalNominalPowerDropFactor) / electricalNorminalI / electricalNorminalI / 2;
         //electricalC = Eln.simulator.getMinimalElectricalC(electricalNominalRs, electricalRp);
 
-        electricalMaximalI = electricalMaximalPower / electricalNominalVoltage;
-        double thermalMaximalPowerDissipated = electricalMaximalI * electricalMaximalI * electricalRs * 2;
+        electricalNominalPower = electricalMaximalPower / electricalNominalVoltage;
+        double thermalMaximalPowerDissipated = electricalNominalPower * electricalNominalPower * electricalRs * 2;
         thermalC = thermalMaximalPowerDissipated * thermalNominalHeatTime / (thermalWarmLimit);
         thermalRp = thermalWarmLimit / thermalMaximalPowerDissipated;
         thermalRs = thermalConductivityTao / thermalC / 2;
 
         Eln.simulator.checkThermalLoad(thermalRs, thermalRp, thermalC);
 
-        electricalRsMin = electricalNominalRs;
         electricalRsPerCelcius = 0;
 
         dielectricBreakOhmPerVolt = 0.95;
@@ -92,16 +84,6 @@ public class ElectricalCableDescriptor extends SixNodeDescriptor {
         this.electricalMaximalCurrent = electricalMaximalPower / electricalNominalVoltage;
 
         voltageLevelColor = VoltageLevelColor.fromCable(this);
-    }
-
-    @Override
-    public void setParent(Item item, int damage) {
-        super.setParent(item, damage);
-        Data.addWiring(newItemStack());
-
-        if (signalWire) {
-            Data.addSignal(newItemStack());
-        }
     }
 
     public void applyTo(ElectricalLoad electricalLoad, double rsFactor) {
@@ -149,24 +131,16 @@ public class ElectricalCableDescriptor extends SixNodeDescriptor {
             list.add("  " + tr("Voltage: %1$V", Utils.plotValue(electricalNominalVoltage)));
             list.add("  " + tr("Current: %1$A", Utils.plotValue(electricalNominalPower / electricalNominalVoltage)));
             list.add("  " + tr("Power: %1$W", Utils.plotValue(electricalNominalPower)));
-            list.add("  " + tr("Serial resistance: %1$\u2126", Utils.plotValue(electricalNominalRs * 2)));
+            list.add("  " + tr("Serial resistance: %1$\u2126", Utils.plotValue(electricalRs * 2)));
         }
     }
 
+    @Override
     public int getNodeMask() {
         if (signalWire)
             return NodeBase.maskElectricalGate;
         else
             return NodeBase.maskElectricalPower;
-    }
-
-    public static CableRenderDescriptor getCableRender(ItemStack cable) {
-        if (cable == null) return null;
-        GenericItemBlockUsingDamageDescriptor desc = ElectricalCableDescriptor.getDescriptor(cable);
-        if (desc instanceof ElectricalCableDescriptor)
-            return ((ElectricalCableDescriptor) desc).render;
-        else
-            return null;
     }
 
     public void bindCableTexture() {

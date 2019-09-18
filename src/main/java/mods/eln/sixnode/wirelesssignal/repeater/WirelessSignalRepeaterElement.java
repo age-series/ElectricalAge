@@ -45,7 +45,6 @@ public class WirelessSignalRepeaterElement extends SixNodeElement {
 
     @Override
     public int getConnectionMask(LRDU lrdu) {
-        if (front == lrdu) return NodeBase.maskElectricalOutputGate;
         return 0;
     }
 

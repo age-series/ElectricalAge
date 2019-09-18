@@ -200,5 +200,5 @@ class ScannerRender(entity: SixNodeEntity, side: Direction, descriptor: SixNodeD
         mode = ScanMode.fromByte(stream.readByte())!!
     }
 
-    override fun getCableRender(lrdu: LRDU?): CableRenderDescriptor = Eln.instance.signalCableDescriptor.render
+    override fun getCableRender(lrdu: LRDU?): CableRenderDescriptor? = Eln.instance.signalCableDescriptor.render
 }
