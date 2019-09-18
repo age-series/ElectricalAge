@@ -4,6 +4,7 @@ import mods.eln.misc.INBTTReady;
 import mods.eln.sim.mna.SubSystem;
 import mods.eln.sim.mna.component.VoltageSource;
 import mods.eln.sim.mna.misc.IRootSystemPreStepProcess;
+import mods.eln.sim.mna.misc.MnaConst;
 import mods.eln.sim.mna.state.State;
 import net.minecraft.nbt.NBTTagCompound;
 
@@ -48,7 +49,14 @@ public class PowerSourceBipole implements IRootSystemPreStepProcess, INBTTReady 
     public void rootSystemPreStepProcess() {
         SubSystem.Th a = aPin.getSubSystem().getTh(aPin, aSrc);
         SubSystem.Th b = bPin.getSubSystem().getTh(bPin, bSrc);
-
+        if (Double.isNaN(a.U)) {
+            a.U = 0.0;
+            a.R = MnaConst.highImpedance;
+        }
+        if (Double.isNaN(b.U)) {
+            b.U = 0.0;
+            b.R = MnaConst.highImpedance;
+        }
         double Uth = a.U - b.U;
         double Rth = a.R + b.R;
         if (Uth >= Umax) {

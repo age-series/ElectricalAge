@@ -40,6 +40,7 @@ public class ThermalLoad {
     }
 
     public double getPower() {
+        if (Double.isNaN(Prs) || Double.isNaN(Pc) || Double.isNaN(Tc) || Double.isNaN(Rp) || Double.isNaN(Psp)) return 0.0;
         return (Prs + Math.abs(Pc) + Tc / Rp + Psp) / 2;
     }
 

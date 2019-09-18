@@ -222,6 +222,8 @@ class GeneratorElement(node: TransparentNode, desc_: TransparentNodeDescriptor) 
             val p = electricalPowerSource.p
             powerFraction = (p / desc.nominalP).toFloat()
             var E = p * time
+            if (E.isNaN())
+                E = 0.0
             if (E < 0)
                 E *= 0.75  // Not a very efficient motor.
             maybePublishE(E / time)
