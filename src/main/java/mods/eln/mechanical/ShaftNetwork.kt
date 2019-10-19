@@ -40,7 +40,7 @@ open class ShaftNetwork() : INBTTReady {
     // This has to remain overridable/RO because of things like the fixed shaft  - Grissess
     open val mass: Double
         get() {
-            return _mass
+            return if (_mass.isNaN()) 0.0 else _mass
         }
     fun updateCache() {
         parts.forEach { elements.add(it.element) }
@@ -73,20 +73,21 @@ open class ShaftNetwork() : INBTTReady {
     // Aggregate properties of the (current) shaft:
     var _rads = 0.0
     open var rads: Double
-        get() = _rads
+        get() = if (_rads.isNaN()) 0.0 else _rads
         set(v) {
-            _rads = v
+            if (!v.isNaN())
+                _rads = v
             afterSetRads()
         }
     var radsLastPublished = rads
 
     var energy: Double
-        get() = mass * rads * rads * 0.5 * Eln.shaftEnergyFactor
+        get() = if (mass.isNaN() || rads.isNaN()) 0.0 else mass * rads * rads * 0.5 * Eln.shaftEnergyFactor
         set(value) {
-            if(value < 0)
+            if(value < 0 || value.isNaN())
                 rads = 0.0
             else
-                rads = Math.sqrt(2 * value / (mass * Eln.shaftEnergyFactor))
+                rads = Math.sqrt(2 * value / ((if(mass.isNaN()) 0.0 else mass) * Eln.shaftEnergyFactor))
         }
 
     fun afterSetRads() {
@@ -221,7 +222,7 @@ open class ShaftNetwork() : INBTTReady {
         val unseen = HashSet<ShaftPart>(parts)
         val queue = HashMap<ShaftPart,ShaftNetwork>()
         val seen = HashSet<ShaftPart>()
-        val curRads = rads
+        val curRads = if(rads.isNaN()) 0.0 else rads
         var shaft = ShaftNetwork()
         shaft.rads = curRads
         // Utils.println("SN.rN ----- START -----")
