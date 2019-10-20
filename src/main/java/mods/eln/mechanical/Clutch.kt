@@ -130,8 +130,8 @@ class ClutchElement(node: TransparentNode, desc_: TransparentNodeDescriptor) : S
         val rRads = rightShaft.rads
         leftShaft = ShaftNetwork(this, front.left())
         rightShaft = ShaftNetwork(this, front.right())
-        leftShaft.rads = if (lRads.isNaN()) 0.0 else lRads
-        rightShaft.rads = if (rRads.isNaN()) 0.0 else rRads
+        leftShaft.rads = if (lRads.isFinite()) lRads else 0.0
+        rightShaft.rads = if (rRads.isFinite()) rRads else 0.0
         // These calls can still change the speed via mergeShaft
         leftShaft.connectShaft(this, front.left())
         rightShaft.connectShaft(this, front.right())
@@ -214,7 +214,7 @@ class ClutchElement(node: TransparentNode, desc_: TransparentNodeDescriptor) : S
     inner class ClutchPostProcess : IProcess {
         override fun process(time: Double) {
             val clutching = inputGate.normalized
-            if (clutching == 0.0 || clutching.isNaN()) {
+            if (clutching == 0.0 || !clutching.isFinite()) {
                 // Utils.println("CP.p: stop: no input")
                 slipping = true
                 return
@@ -240,7 +240,7 @@ class ClutchElement(node: TransparentNode, desc_: TransparentNodeDescriptor) : S
 
             if(leftShaft == rightShaft) Utils.println("WARN (ClutchProcess): Networks are the same!")
 
-            val mass = (if (leftShaft.mass.isNaN()) 1.0 else leftShaft.mass) + (if (rightShaft.mass.isNaN()) 1.0 else rightShaft.mass)
+            val mass = (if (leftShaft.mass.isFinite()) leftShaft.mass else 1.0) + (if (rightShaft.mass.isFinite()) rightShaft.mass else 1.0)
             val slower: ShaftNetwork
             val faster: ShaftNetwork
             val slowerIdx: Int

@@ -16,7 +16,6 @@ import net.minecraft.server.MinecraftServer
 import java.lang.Double.isNaN
 import java.util.*
 
-
 // Speed above which shafts will (by default) explode.
 val absoluteMaximumShaftSpeed = 1000.0
 // "Standard" drag, in J/t per rad.
@@ -40,7 +39,7 @@ open class ShaftNetwork() : INBTTReady {
     // This has to remain overridable/RO because of things like the fixed shaft  - Grissess
     open val mass: Double
         get() {
-            return if (_mass.isNaN()) 0.0 else _mass
+            return if (_mass.isFinite()) _mass else 0.0
         }
     fun updateCache() {
         parts.forEach { elements.add(it.element) }
@@ -73,21 +72,21 @@ open class ShaftNetwork() : INBTTReady {
     // Aggregate properties of the (current) shaft:
     var _rads = 0.0
     open var rads: Double
-        get() = if (_rads.isNaN()) 0.0 else _rads
+        get() = if (_rads.isFinite()) _rads else 0.0
         set(v) {
-            if (!v.isNaN())
+            if (v.isFinite())
                 _rads = v
             afterSetRads()
         }
     var radsLastPublished = rads
 
     var energy: Double
-        get() = if (mass.isNaN() || rads.isNaN()) 0.0 else mass * rads * rads * 0.5 * Eln.shaftEnergyFactor
+        get() = if (mass.isFinite() && rads.isFinite()) mass * rads * rads * 0.5 * Eln.shaftEnergyFactor else 0.0
         set(value) {
-            if(value < 0 || value.isNaN())
+            if(value < 0 || !value.isFinite())
                 rads = 0.0
             else
-                rads = Math.sqrt(2 * value / ((if(mass.isNaN()) 0.0 else mass) * Eln.shaftEnergyFactor))
+                rads = Math.sqrt(2 * value / ((if(mass.isFinite()) mass else 0.0) * Eln.shaftEnergyFactor))
         }
 
     fun afterSetRads() {
@@ -292,7 +291,7 @@ open class ShaftNetwork() : INBTTReady {
 
     override fun readFromNBT(nbt: NBTTagCompound, str: String?) {
         rads = nbt.getFloat(str + "rads").toDouble()
-        if(isNaN(rads)) rads = 0.0
+        if(!rads.isFinite()) rads = 0.0
         // Utils.println(String.format("SN.rFN: load %s r=%f", this, rads))
     }
 
