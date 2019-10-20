@@ -150,6 +150,7 @@ import mods.eln.transparentnode.thermaldissipatorpassive.ThermalDissipatorPassiv
 import mods.eln.transparentnode.transformer.TransformerDescriptor;
 import mods.eln.transparentnode.turbine.TurbineDescriptor;
 import mods.eln.transparentnode.turret.TurretDescriptor;
+import mods.eln.transparentnode.variabledcdc.VariableDcDcDescriptor;
 import mods.eln.transparentnode.waterturbine.WaterTurbineDescriptor;
 import mods.eln.transparentnode.windturbine.WindTurbineDescriptor;
 import mods.eln.wiki.Data;
@@ -2861,6 +2862,16 @@ public class Eln {
             TransformerDescriptor desc = new TransformerDescriptor(name, obj.getObj("transformator"),
                 obj.getObj("feromagneticcorea"), obj.getObj("transformatorCase"), 0.5f);
             transparentNodeItem.addDescriptor(subId + (id << 6), desc);
+        }
+
+        {
+            subId = 1;
+            name = TR_NAME(Type.NONE, "Variable DC-DC Converter");
+
+            VariableDcDcDescriptor desc = new VariableDcDcDescriptor(name, obj.getObj("transformator"),
+                obj.getObj("feromagneticcorea"), obj.getObj("transformatorCase"));
+            transparentNodeItem.addDescriptor(subId + (id << 6), desc);
+
         }
 
     }
