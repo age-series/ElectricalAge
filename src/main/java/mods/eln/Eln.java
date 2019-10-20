@@ -6133,6 +6133,12 @@ public class Eln {
             "III",
             'C', findItemStack("Copper Cable"),
             'I', new ItemStack(Items.iron_ingot));
+        addRecipe(findItemStack("Variable DC-DC Converter"),
+            "CBC",
+            "III",
+            'C', findItemStack("Copper Cable"),
+            'I', new ItemStack(Items.iron_ingot),
+            'B', dictCheapChip);
     }
 
     private void recipeHeatFurnace() {
