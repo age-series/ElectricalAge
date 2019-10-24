@@ -66,4 +66,8 @@ public class TransformerInterSystemProcess implements IRootSystemPreStepProcess 
     public void setRatio(double ratio) {
         this.ratio = ratio;
     }
+
+    public double getRatio() {
+        return this.ratio;
+    }
 }
