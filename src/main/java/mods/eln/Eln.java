@@ -2868,7 +2868,7 @@ public class Eln {
             subId = 1;
             name = TR_NAME(Type.NONE, "Variable DC-DC Converter");
 
-            VariableDcDcDescriptor desc = new VariableDcDcDescriptor(name, obj.getObj("transformator"),
+            VariableDcDcDescriptor desc = new VariableDcDcDescriptor(name, obj.getObj("variabledcdc"),
                 obj.getObj("feromagneticcorea"), obj.getObj("transformatorCase"));
             transparentNodeItem.addDescriptor(subId + (id << 6), desc);
 

@@ -536,14 +536,19 @@ class VariableDcDcGui(player: EntityPlayer, inventory: IInventory, val render: V
 }
 
 class VariableDcDcContainer(player: EntityPlayer, inventory: IInventory) : BasicContainer
-    (player, inventory, arrayOf(SixNodeItemSlot(inventory, primaryCableSlotId, 58, 30, 16, arrayOf<Class<*>>(ElectricalCableDescriptor::class.java),
-    ISlotSkin.SlotSkin.medium,
-    arrayOf(tr("Electrical cable slot"))), SixNodeItemSlot(inventory, secondaryCableSlotId, 100, 30, 16,
-    arrayOf<Class<*>>(ElectricalCableDescriptor::class.java), ISlotSkin.SlotSkin.medium,
-    arrayOf(tr("Electrical cable slot"))), GenericItemUsingDamageSlot(inventory, ferromagneticSlotId, 58 + (100 - 58) / 2, 30, 1,
-    arrayOf<Class<*>>(FerromagneticCoreDescriptor::class.java), ISlotSkin.SlotSkin.medium,
-    arrayOf(tr("Ferromagnetic core slot"))), GenericItemUsingDamageSlot(inventory, CasingSlotId, 130, 74, 1,
-    arrayOf<Class<*>>(CaseItemDescriptor::class.java), ISlotSkin.SlotSkin.medium, arrayOf(tr("Casing slot")))))
+    (player, inventory, arrayOf(
+        SixNodeItemSlot(inventory, primaryCableSlotId, 58, 30, 4,
+            arrayOf<Class<*>>(ElectricalCableDescriptor::class.java),
+            ISlotSkin.SlotSkin.medium, arrayOf(tr("Electrical cable slot"), tr("4 Cables Required"))),
+        SixNodeItemSlot(inventory, secondaryCableSlotId, 100, 30, 4,
+            arrayOf<Class<*>>(ElectricalCableDescriptor::class.java),
+            ISlotSkin.SlotSkin.medium, arrayOf(tr("Electrical cable slot"), tr("4 Cables Required"))),
+        GenericItemUsingDamageSlot(inventory, ferromagneticSlotId, 58 + (100 - 58) / 2, 30, 1,
+            arrayOf<Class<*>>(FerromagneticCoreDescriptor::class.java),
+            ISlotSkin.SlotSkin.medium, arrayOf(tr("Ferromagnetic core slot"))),
+        GenericItemUsingDamageSlot(inventory, CasingSlotId, 130, 74, 1,
+            arrayOf<Class<*>>(CaseItemDescriptor::class.java),
+            ISlotSkin.SlotSkin.medium, arrayOf(tr("Casing slot")))))
 {
     companion object {
         val primaryCableSlotId = 0
