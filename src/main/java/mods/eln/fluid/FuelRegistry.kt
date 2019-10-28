@@ -29,6 +29,7 @@ object FuelRegistry {
         "bioethanol" to 17826480.0, // Forestry
         "gasoline" to 25820000.0, // PneumaticCraft, density = 0.755 kg/L, heat value = 34,2 MJ/l
         "kerosene" to 34800000.0, // PneumaticCraft, heat value = 34,8 MJ/l
+        "highgradekerosene" to 39200000.0, // Silfryi's ContentTweaker scripts, Refined Form of Kerosene, heat value = 39,2 MJ/l
         "lpg" to 24840000.0, // PneumaticCraft, density = 0.54 kg/l, heat value = 46 MJ/kg
         "fuelgc" to 31570000.0, // GalactiCraft, see "fuel"
         "lightoil" to 35358000.0    // Magneticraft, density = 0.83 kg/l, heating value = 42.6 MJ/kg
