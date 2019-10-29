@@ -1472,7 +1472,7 @@ public class Eln {
 
         Utils.printFunction(voltageFunction, -0.2, 1.2, 0.1);
 
-        double stdDischargeTime = 60 * 16;
+        double stdDischargeTime = 60 * 8;
         double stdU = LVU;
         double stdP = LVP() / 4;
         double stdEfficiency = 1.0 - 2.0 / 50.0;
@@ -3119,7 +3119,7 @@ public class Eln {
             name = TR_NAME(Type.NONE, "200V Macerator");
 
             MaceratorDescriptor desc = new MaceratorDescriptor(name,
-                "maceratorb", MVU, 400,// double nominalU,double nominalP,
+                "maceratorb", MVU, 2000,// double nominalU,double nominalP,
                 MVU * 1.25,// double maximalU,
                 new ThermalLoadInitializer(80, -100, 10, 100000.0),// thermal,
                 meduimVoltageCableDescriptor,// ElectricalCableDescriptor
@@ -3187,7 +3187,7 @@ public class Eln {
             PlateMachineDescriptor desc = new PlateMachineDescriptor(
                 name,// String name,
                 obj.getObj("platemachineb"),
-                MVU, 400,// double nominalU,double nominalP,
+                MVU, 2000,// double nominalU,double nominalP,
                 MVU * 1.25,// double maximalU,
                 new ThermalLoadInitializer(80, -100, 10, 100000.0),// thermal,
                 meduimVoltageCableDescriptor,// ElectricalCableDescriptor
@@ -3247,7 +3247,7 @@ public class Eln {
             CompressorDescriptor desc = new CompressorDescriptor(
                 name,// String name,
                 obj.getObj("compressorb"),
-                MVU, 400,// double nominalU,double nominalP,
+                MVU, 2000,// double nominalU,double nominalP,
                 MVU * 1.25,// double maximalU,
                 new ThermalLoadInitializer(80, -100, 10, 100000.0),// thermal,
                 meduimVoltageCableDescriptor,// ElectricalCableDescriptor
@@ -3291,7 +3291,7 @@ public class Eln {
             MagnetizerDescriptor desc = new MagnetizerDescriptor(
                 name,// String name,
                 obj.getObj("magnetizerb"),
-                MVU, 400,// double nominalU,double nominalP,
+                MVU, 2000,// double nominalU,double nominalP,
                 MVU * 1.25,// double maximalU,
                 new ThermalLoadInitializer(80, -100, 10, 100000.0),// thermal,
                 meduimVoltageCableDescriptor,// ElectricalCableDescriptor
@@ -7415,15 +7415,15 @@ public class Eln {
         maceratorRecipes.addRecipe(new Recipe(findItemStack("E-Coal Leggings"),
             new ItemStack[]{findItemStack("Coal Dust", 24)}, 10.0 * f));
         maceratorRecipes.addRecipe(new Recipe(findItemStack("Cost Oriented Battery"),
-            new ItemStack[]{findItemStack("Lead Dust", 6)}, 50.0 * f));
+            new ItemStack[]{findItemStack("Lead Dust", 6)}, 12.5 * f));
         maceratorRecipes.addRecipe(new Recipe(findItemStack("Life Oriented Battery"),
-            new ItemStack[]{findItemStack("Lead Dust", 6)}, 50.0 * f));
+            new ItemStack[]{findItemStack("Lead Dust", 6)}, 12.5 * f));
         maceratorRecipes.addRecipe(new Recipe(findItemStack("Current Oriented Battery"),
-            new ItemStack[]{findItemStack("Lead Dust", 6)}, 50.0 * f));
+            new ItemStack[]{findItemStack("Lead Dust", 6)}, 12.5 * f));
         maceratorRecipes.addRecipe(new Recipe(findItemStack("Voltage Oriented Battery"),
-            new ItemStack[]{findItemStack("Lead Dust", 6)}, 50.0 * f));
+            new ItemStack[]{findItemStack("Lead Dust", 6)}, 12.5 * f));
         maceratorRecipes.addRecipe(new Recipe(findItemStack("Capacity Oriented Battery"),
-            new ItemStack[]{findItemStack("Lead Dust", 6)}, 50.0 * f));
+            new ItemStack[]{findItemStack("Lead Dust", 6)}, 12.5 * f));
         maceratorRecipes.addRecipe(new Recipe(findItemStack("Single-use Battery"),
             new ItemStack[]{findItemStack("Copper Dust", 3)}, 10.0 * f));
 
