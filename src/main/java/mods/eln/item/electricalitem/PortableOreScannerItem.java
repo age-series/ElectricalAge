@@ -565,22 +565,24 @@ public class PortableOreScannerItem extends GenericItemUsingDamageDescriptor imp
                             int zBlock = posZint + (int) zFloor;
                             blockKey = 0;
                             if (yBlock >= 0 && yBlock < 256) {
-                                Chunk chunk = w.getChunkFromBlockCoords(xBlock, zBlock);
-                                if (chunk != null) {
-                                    ExtendedBlockStorage storage = chunk.getBlockStorageArray()[yBlock >> 4];
-                                    if (storage != null) {
-                                        int xLocal = xBlock & 0xF;
-                                        int yLocal = yBlock & 0xF;
-                                        int zLocal = zBlock & 0xF;
+                                if (w.getTileEntity(xBlock,yBlock,zBlock) == null) {
+                                    Chunk chunk = w.getChunkFromBlockCoords(xBlock, zBlock);
+                                    if (chunk != null) {
+                                        ExtendedBlockStorage storage = chunk.getBlockStorageArray()[yBlock >> 4];
+                                        if (storage != null) {
+                                            int xLocal = xBlock & 0xF;
+                                            int yLocal = yBlock & 0xF;
+                                            int zLocal = zBlock & 0xF;
 
-                                        int blockId = storage.getBlockLSBArray()[yLocal << 8 | zLocal << 4 | xLocal] & 0xFF;
-                                        if (storage.getBlockMSBArray() != null) {
-                                            blockId |= storage.getBlockMSBArray().get(xLocal, yLocal, zLocal) << 8;
+                                            int blockId = storage.getBlockLSBArray()[yLocal << 8 | zLocal << 4 | xLocal] & 0xFF;
+                                            if (storage.getBlockMSBArray() != null) {
+                                                blockId |= storage.getBlockMSBArray().get(xLocal, yLocal, zLocal) << 8;
+                                            }
+
+                                            blockKey = (blockId + (storage.getExtBlockMetadata(xLocal, yLocal, zLocal) << 12));
                                         }
-
-                                        blockKey = (blockId + (storage.getExtBlockMetadata(xLocal, yLocal, zLocal) << 12));
                                     }
-                                }
+                                } else blockKey = 65534;
                             }
                             if (blockKey >= 1024 * 64) {
                                 blockKey = 0;
