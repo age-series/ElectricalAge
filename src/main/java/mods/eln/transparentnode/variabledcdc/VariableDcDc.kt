@@ -12,10 +12,7 @@ import mods.eln.gui.GuiHelperContainer
 import mods.eln.gui.ISlotSkin
 import mods.eln.i18n.I18N
 import mods.eln.i18n.I18N.tr
-import mods.eln.item.CaseItemDescriptor
-import mods.eln.item.ConfigCopyToolDescriptor
-import mods.eln.item.FerromagneticCoreDescriptor
-import mods.eln.item.IConfigurable
+import mods.eln.item.*
 import mods.eln.misc.*
 import mods.eln.node.NodeBase
 import mods.eln.node.NodePeriodicPublishProcess
@@ -223,6 +220,7 @@ class VariableDcDcElement(transparentNode: TransparentNode, descriptor: Transpar
         secondaryVoltageSource.connectTo(secondaryLoad, null)
         electricalComponentList.add(primaryVoltageSource)
         electricalComponentList.add(secondaryVoltageSource)
+        interSystemProcess.ratio = 1.0
         computeInventory()
         connect()
     }
@@ -231,15 +229,6 @@ class VariableDcDcElement(transparentNode: TransparentNode, descriptor: Transpar
         val primaryCable = inventory.getStackInSlot(VariableDcDcContainer.primaryCableSlotId)
         val secondaryCable = inventory.getStackInSlot(VariableDcDcContainer.secondaryCableSlotId)
         val core = inventory.getStackInSlot(VariableDcDcContainer.ferromagneticSlotId)
-        var primaryCableDescriptor: ElectricalCableDescriptor? = null
-        var secondaryCableDescriptor: ElectricalCableDescriptor? = null
-
-        if (primaryCable != null) {
-            primaryCableDescriptor = Eln.sixNodeItem.getDescriptor(primaryCable) as ElectricalCableDescriptor
-        }
-        if (secondaryCable != null) {
-            secondaryCableDescriptor = Eln.sixNodeItem.getDescriptor(secondaryCable) as ElectricalCableDescriptor
-        }
 
         primaryVoltageWatchdog.setUNominal(3200.0)
         secondaryVoltageWatchdog.setUNominal(3200.0)
@@ -257,14 +246,14 @@ class VariableDcDcElement(transparentNode: TransparentNode, descriptor: Transpar
             primaryLoad.highImpedance()
             populated = false
         } else {
-            primaryCableDescriptor!!.applyTo(primaryLoad, coreFactor)
+            primaryLoad.rs = coreFactor * 0.01
         }
 
         if (secondaryCable == null || core == null || secondaryCable.stackSize < 4) {
             secondaryLoad.highImpedance()
             populated = false
         } else {
-            secondaryCableDescriptor!!.applyTo(secondaryLoad, coreFactor)
+            secondaryLoad.rs = coreFactor * 0.01
         }
 
         populated = primaryCable != null && secondaryCable != null && primaryCable.stackSize >= 4 && secondaryCable.stackSize >= 4 && core != null
@@ -333,10 +322,9 @@ class VariableDcDcElement(transparentNode: TransparentNode, descriptor: Transpar
     override fun getWaila(): Map<String, String> {
         val info = HashMap<String, String>()
         info[I18N.tr("Ratio")] = Utils.plotValue(interSystemProcess.ratio)
-        if (Eln.wailaEasyMode) {
-            info["Voltages"] = "\u00A7a" + Utils.plotVolt("", primaryLoad.u) + " " +
-                "\u00A7e" + Utils.plotVolt("", secondaryLoad.u)
-        }
+        // It's just not fair not to show the voltages on the VDC/DC. It's so variable...
+        info["Voltages"] = "\u00A7a" + Utils.plotVolt("", primaryLoad.u) + " " +
+            "\u00A7e" + Utils.plotVolt("", secondaryLoad.u)
         info["Control Voltage"] = Utils.plotVolt(control.u)
         try {
             val leftSubSystemSize = primaryLoad.subSystem.component.size
@@ -398,7 +386,11 @@ class VariableDcDcProcess(val element: VariableDcDcElement): IProcess {
             element.control.normalized < 0.0 -> 0.0
             else -> element.control.normalized
         }
-        element.interSystemProcess.setRatio(1-ratio)
+        if (ratio.isFinite()) {
+            element.interSystemProcess.ratio = 1-ratio
+        } else {
+            element.interSystemProcess.ratio = 1.0
+        }
     }
 }
 
@@ -537,11 +529,11 @@ class VariableDcDcGui(player: EntityPlayer, inventory: IInventory, val render: V
 
 class VariableDcDcContainer(player: EntityPlayer, inventory: IInventory) : BasicContainer
     (player, inventory, arrayOf(
-        SixNodeItemSlot(inventory, primaryCableSlotId, 58, 30, 4,
-            arrayOf<Class<*>>(ElectricalCableDescriptor::class.java),
+        GenericItemUsingDamageSlot(inventory, primaryCableSlotId, 58, 30, 4,
+            arrayOf<Class<*>>(ElectricalCableDescriptor::class.java, CopperCableDescriptor::class.java),
             ISlotSkin.SlotSkin.medium, arrayOf(tr("Electrical cable slot"), tr("4 Cables Required"))),
-        SixNodeItemSlot(inventory, secondaryCableSlotId, 100, 30, 4,
-            arrayOf<Class<*>>(ElectricalCableDescriptor::class.java),
+        GenericItemUsingDamageSlot(inventory, secondaryCableSlotId, 100, 30, 4,
+            arrayOf<Class<*>>(ElectricalCableDescriptor::class.java, CopperCableDescriptor::class.java),
             ISlotSkin.SlotSkin.medium, arrayOf(tr("Electrical cable slot"), tr("4 Cables Required"))),
         GenericItemUsingDamageSlot(inventory, ferromagneticSlotId, 58 + (100 - 58) / 2, 30, 1,
             arrayOf<Class<*>>(FerromagneticCoreDescriptor::class.java),
