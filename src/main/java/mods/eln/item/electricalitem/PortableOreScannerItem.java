@@ -582,7 +582,7 @@ public class PortableOreScannerItem extends GenericItemUsingDamageDescriptor imp
                                             blockKey = (blockId + (storage.getExtBlockMetadata(xLocal, yLocal, zLocal) << 12));
                                         }
                                     }
-                                } else blockKey = 65534;
+                                } else if (w.getBlock(xBlock,yBlock,zBlock) == Blocks.stone) blockKey = 65534;
                             }
                             if (blockKey >= 1024 * 64) {
                                 blockKey = 0;
