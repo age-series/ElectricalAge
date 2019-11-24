@@ -1,5 +1,6 @@
 package mods.eln.sixnode.lampsocket;
 
+import mods.eln.Eln;
 import mods.eln.misc.LRDU;
 import mods.eln.misc.Obj3D;
 import mods.eln.misc.Obj3D.Obj3DPart;
@@ -15,9 +16,28 @@ public class LampSocketSuspendedObjRender implements LampSocketObjRender {
     ResourceLocation tOn, tOff;
     private boolean onOffModel;
     private int length;
+    private boolean canSwing = true;
     float baseLength, chainLength, chainFactor;
 
     public LampSocketSuspendedObjRender(Obj3D obj, boolean onOffModel, int length) {
+        this.obj = obj;
+        this.length = length;
+        this.onOffModel = onOffModel;
+        if (obj != null) {
+            socket = obj.getPart("socket");
+            chain = obj.getPart("chain");
+            base = obj.getPart("base");
+            lightAlphaPlaneNoDepth = obj.getPart("lightAlphaNoDepth");
+            tOff = obj.getModelResourceLocation(obj.getString("tOff"));
+            tOn = obj.getModelResourceLocation(obj.getString("tOn"));
+            chainLength = chain.getFloat("length");
+            chainFactor = chain.getFloat("factor");
+            baseLength = base.getFloat("length");
+        }
+    }
+
+    public LampSocketSuspendedObjRender(Obj3D obj, boolean onOffModel, int length, boolean canSwing) {
+        this.canSwing = canSwing;
         this.obj = obj;
         this.length = length;
         this.onOffModel = onOffModel;
@@ -64,13 +84,17 @@ public class LampSocketSuspendedObjRender implements LampSocketObjRender {
         GL11.glTranslatef(baseLength, 0, 0);
 
         for (int idx = 0; idx < length; idx++) {
-            GL11.glRotatef(pertuPy, 0, 1, 0);
-            GL11.glRotatef(pertuPz, 0, 0, 1);
+            if (canSwing && Eln.allowSwingingLamps) {
+                GL11.glRotatef(pertuPy, 0, 1, 0);
+                GL11.glRotatef(pertuPz, 0, 0, 1);
+            }
             chain.draw();
             GL11.glTranslatef(chainLength, 0, 0);
         }
-        GL11.glRotatef(pertuPy, 0, 1, 0);
-        GL11.glRotatef(pertuPz, 0, 0, 1);
+        if (canSwing && Eln.allowSwingingLamps) {
+            GL11.glRotatef(pertuPy, 0, 1, 0);
+            GL11.glRotatef(pertuPz, 0, 0, 1);
+        }
 
         GL11.glEnable(GL11.GL_CULL_FACE);
         if (!onOffModel) {
