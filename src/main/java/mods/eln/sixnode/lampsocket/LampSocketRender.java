@@ -105,6 +105,7 @@ public class LampSocketRender extends SixNodeElementRender {
             if (tileEntity.getWorldObj().getSavedLightValue(EnumSkyBlock.Sky, tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord) > 3) {
                 float weather = (float) UtilsClient.getWeather(tileEntity.getWorldObj()) * 0.9f + 0.1f;
 
+                // TODO: Reduce swinging of lamps to some degree?
                 weatherAlphaY += (0.4 - Math.random()) * dt * Math.PI / 0.2 * weather;
                 weatherAlphaZ += (0.4 - Math.random()) * dt * Math.PI / 0.2 * weather;
                 if (weatherAlphaY > 2 * Math.PI)

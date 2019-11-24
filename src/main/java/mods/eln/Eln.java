@@ -339,6 +339,8 @@ public class Eln {
     public static double maxSoundDistance = 16;
     private double cablePowerFactor;
 
+    public static boolean allowSwingingLamps = true;
+
     @EventHandler
     public void preInit(FMLPreInitializationEvent event) {
 
@@ -472,6 +474,7 @@ public class Eln {
         carbonLampLife = config.get("lamp", "carbonLifeInHours", 6.0).getDouble(6.0) * 3600;
         ledLampLife = config.get("lamp", "ledLifeInHours", 512.0).getDouble(512.0) * 3600;
         ledLampInfiniteLife = config.get("lamp", "infiniteLedLife", false).getBoolean();
+        allowSwingingLamps = config.get("lamp", "swingingLamps", true).getBoolean();
 
         fuelGeneratorTankCapacity = config.get("fuelGenerator",
             "tankCapacityInSecondsAtNominalPower", 20 * 60).getDouble(20 * 60);
@@ -1859,6 +1862,37 @@ public class Eln {
         sixNodeItem.addDescriptor(16 + (id << 6),
             new EmergencyLampDescriptor(TR_NAME(Type.NONE, "200V Emergency Lamp"),
                 meduimVoltageCableDescriptor, 10 * 60 * 20, 25, 10, 8, obj.getObj("EmergencyExitLighting")));
+
+        {
+            subId = 17;
+
+            name = TR_NAME(Type.NONE, "Suspended Lamp Socket (No Swing)");
+
+            LampSocketDescriptor desc = new LampSocketDescriptor(name,
+                new LampSocketSuspendedObjRender(obj.getObj("RobustLampSuspended"), true, 3, false),
+                LampSocketType.Douille, // LampSocketType
+                false,
+                3, 0, 0, 0);
+            desc.setPlaceDirection(Direction.YP);
+
+            sixNodeItem.addDescriptor(subId + (id << 6), desc);
+            desc.cameraOpt = false;
+        }
+        {
+            subId = 18;
+
+            name = TR_NAME(Type.NONE, "Long Suspended Lamp Socket (No Swing)");
+
+            LampSocketDescriptor desc = new LampSocketDescriptor(name,
+                new LampSocketSuspendedObjRender(obj.getObj("RobustLampSuspended"), true, 7, false),
+                LampSocketType.Douille, // LampSocketType
+                false,
+                4, 0, 0, 0);
+            desc.setPlaceDirection(Direction.YP);
+
+            sixNodeItem.addDescriptor(subId + (id << 6), desc);
+            desc.cameraOpt = false;
+        }
     }
 
     private void registerLampSupply(int id) {
@@ -5709,6 +5743,19 @@ public class Eln {
             "G",
             'G', findItemStack("Robust Lamp Socket"),
             'I', findItemStack("Iron Cable"));
+
+        addRecipe(findItemStack("Suspended Lamp Socket (No Swing)", 4),
+            "I",
+            "G",
+            'G', findItemStack("Robust Lamp Socket"),
+            'I', new ItemStack(Items.iron_ingot));
+
+        addRecipe(findItemStack("Long Suspended Lamp Socket (No Swing)", 4),
+            "I",
+            "I",
+            "G",
+            'G', findItemStack("Robust Lamp Socket"),
+            'I', new ItemStack(Items.iron_ingot));
 
         addRecipe(findItemStack("Sconce Lamp Socket", 2),
             "GCG",
