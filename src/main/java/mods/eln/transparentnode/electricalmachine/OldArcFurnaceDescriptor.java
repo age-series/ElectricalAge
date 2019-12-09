@@ -7,15 +7,15 @@ import mods.eln.sixnode.electricalcable.ElectricalCableDescriptor;
 import net.minecraft.entity.item.EntityItem;
 import org.lwjgl.opengl.GL11;
 
-public class ArcFurnaceDescriptor extends ElectricalMachineDescriptor {
+public class OldArcFurnaceDescriptor extends ElectricalMachineDescriptor {
     private float tyOn;
     private float tyOff;
 
     private Obj3DPart main;
     private Obj3DPart move;
 
-    public ArcFurnaceDescriptor(String name, Obj3D obj, double nominalU, double nominalP, double maximalU,
-                                ThermalLoadInitializer thermal, ElectricalCableDescriptor cable, RecipesList recipe) {
+    public OldArcFurnaceDescriptor(String name, Obj3D obj, double nominalU, double nominalP, double maximalU,
+                                   ThermalLoadInitializer thermal, ElectricalCableDescriptor cable, RecipesList recipe) {
         super(name, nominalU, nominalP, maximalU, thermal, cable, recipe);
 
         if (obj != null) {

@@ -109,7 +109,6 @@ import mods.eln.sixnode.modbusrtu.ModbusTcpServer;
 import mods.eln.sixnode.powercapacitorsix.PowerCapacitorSixDescriptor;
 import mods.eln.sixnode.powerinductorsix.PowerInductorSixDescriptor;
 import mods.eln.sixnode.powersocket.PowerSocketDescriptor;
-import mods.eln.sixnode.powersocket.PowerSocketElement;
 import mods.eln.sixnode.resistor.ResistorDescriptor;
 import mods.eln.sixnode.thermalcable.ThermalCableDescriptor;
 import mods.eln.sixnode.thermalsensor.ThermalSensorDescriptor;
@@ -123,10 +122,7 @@ import mods.eln.sixnode.wirelesssignal.source.WirelessSignalSourceDescriptor;
 import mods.eln.sixnode.wirelesssignal.tx.WirelessSignalTxDescriptor;
 import mods.eln.sixnode.wirelesssignal.tx.WirelessSignalTxElement;
 import mods.eln.sound.SoundCommand;
-import mods.eln.transparentnode.FuelGeneratorDescriptor;
-import mods.eln.transparentnode.FuelHeatFurnaceDescriptor;
-import mods.eln.transparentnode.LargeRheostatDescriptor;
-import mods.eln.transparentnode.NixieTubeDescriptor;
+import mods.eln.transparentnode.*;
 import mods.eln.transparentnode.autominer.AutoMinerDescriptor;
 import mods.eln.transparentnode.battery.BatteryDescriptor;
 import mods.eln.transparentnode.computercraftio.PeripheralHandler;
@@ -134,11 +130,7 @@ import mods.eln.transparentnode.eggincubator.EggIncubatorDescriptor;
 import mods.eln.transparentnode.electricalantennarx.ElectricalAntennaRxDescriptor;
 import mods.eln.transparentnode.electricalantennatx.ElectricalAntennaTxDescriptor;
 import mods.eln.transparentnode.electricalfurnace.ElectricalFurnaceDescriptor;
-import mods.eln.transparentnode.electricalmachine.ArcFurnaceDescriptor;
-import mods.eln.transparentnode.electricalmachine.CompressorDescriptor;
-import mods.eln.transparentnode.electricalmachine.MaceratorDescriptor;
-import mods.eln.transparentnode.electricalmachine.MagnetizerDescriptor;
-import mods.eln.transparentnode.electricalmachine.PlateMachineDescriptor;
+import mods.eln.transparentnode.electricalmachine.*;
 import mods.eln.transparentnode.heatfurnace.HeatFurnaceDescriptor;
 import mods.eln.transparentnode.powercapacitor.PowerCapacitorDescriptor;
 import mods.eln.transparentnode.powerinductor.PowerInductorDescriptor;
@@ -649,6 +641,7 @@ public class Eln {
         registerTurret(66);
         registerFuelGenerator(67);
         registerGridDevices(123);
+        //registerFloodlight(68);
 
 
         //ITEM REGISTRATION
@@ -1892,6 +1885,24 @@ public class Eln {
 
             sixNodeItem.addDescriptor(subId + (id << 6), desc);
             desc.cameraOpt = false;
+        }
+
+    }
+
+    private void registerFloodlight(int id) {
+        int subId;
+        String name;
+        {
+            subId = 0;
+            name = TR_NAME(Type.NONE, "Basic Floodlight");
+            BasicFloodlightDescriptor desc = new BasicFloodlightDescriptor(name, obj.getObj("Floodlight"));
+            transparentNodeItem.addDescriptor(subId + (id << 6), desc);
+        }
+        {
+            subId = 1;
+            name = TR_NAME(Type.NONE, "Motorized Floodlight");
+            MotorizedFloodlightDescriptor desc = new MotorizedFloodlightDescriptor(name, obj.getObj("FloodlightMotor"));
+            transparentNodeItem.addDescriptor(subId + (id << 6), desc);
         }
     }
 
@@ -3171,15 +3182,15 @@ public class Eln {
 
     private void registerArcFurnace(int id) {
 
-        int subId, completId;
+        int subId;
         String name;
         {
             subId = 0;
-            name = TR_NAME(Type.NONE, "800V Arc Furnace");
+            name = TR_NAME(Type.NONE, "Old 800V Arc Furnace");
 
-            ArcFurnaceDescriptor desc = new ArcFurnaceDescriptor(
+            OldArcFurnaceDescriptor desc = new OldArcFurnaceDescriptor(
                 name,// String name,
-                obj.getObj("arcfurnace"),
+                obj.getObj("arcfurnaceold"),
                 HVU, 10000,// double nominalU,double nominalP,
                 HVU * 1.25,// double maximalU,
                 new ThermalLoadInitializer(80, -100, 10, 100000.0),// thermal,
@@ -3190,6 +3201,22 @@ public class Eln {
             desc.setRunningSound("eln:arc_furnace");
 
         }
+        /*
+
+        To be released at a later date. Needs a bit of code in the backend, and there's a rendering bug and some other
+        minor issues to be resolved.
+
+        {
+            subId = 1;
+            name = TR_NAME(Type.NONE, "800V Arc Furnace");
+
+            ArcFurnaceDescriptor desc = new ArcFurnaceDescriptor(name, obj.getObj("arcfurnace"));
+
+            transparentNodeItem.addDescriptor(subId + (id << 6), desc);
+            //desc.setRunningSound("eln:arc_furnace");
+
+        }
+        */
     }
 
     private void registerPlateMachine(int id) {

@@ -83,7 +83,8 @@ public class Utils {
     public static void println(Object str) {
         if (!Eln.debugEnabled)
             return;
-        System.out.println(str.toString());
+        if (str != null)
+            System.out.println(str.toString());
     }
 
     public static void print(String str) {
