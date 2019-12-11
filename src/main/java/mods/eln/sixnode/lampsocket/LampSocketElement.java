@@ -325,7 +325,6 @@ public class LampSocketElement extends SixNodeElement implements IConfigurable {
     @Override
     public void destroy(EntityPlayerMP entityPlayer) {
         super.destroy(entityPlayer);
-        lampProcess.destructor();
     }
 
     void setIsConnectedToLampSupply(boolean value) {

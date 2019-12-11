@@ -238,7 +238,7 @@ class VariableDcDcElement(transparentNode: TransparentNode, descriptor: Transpar
 
         var coreFactor = 1.0
         if (core != null) {
-            val coreDescriptor = FerromagneticCoreDescriptor.getDescriptor(core) as FerromagneticCoreDescriptor
+            val coreDescriptor = GenericItemUsingDamageDescriptor.getDescriptor(core) as FerromagneticCoreDescriptor
             coreFactor = coreDescriptor.cableMultiplicator
         }
 
@@ -450,7 +450,7 @@ class VariableDcDcRender(tileEntity: TransparentNodeEntity, val descriptor: Tran
             primaryStackSize = stream.readByte()
             secondaryStackSize = stream.readByte()
             val feroStack = Utils.unserialiseItemStack(stream)
-            val feroDesc: GenericItemUsingDamageDescriptor? = FerromagneticCoreDescriptor.getDescriptor(feroStack, FerromagneticCoreDescriptor::class.java)
+            val feroDesc: GenericItemUsingDamageDescriptor? = GenericItemUsingDamageDescriptor.getDescriptor(feroStack, FerromagneticCoreDescriptor::class.java)
             if (feroDesc != null)
                 feroPart = (feroDesc as FerromagneticCoreDescriptor).feroPart
 

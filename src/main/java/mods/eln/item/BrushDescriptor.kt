@@ -16,16 +16,17 @@ import org.lwjgl.opengl.GL11
 
 class BrushDescriptor(name: String): GenericItemUsingDamageDescriptor(name) {
 
-    private val icon = ResourceLocation("eln", "textures/items/" + name.toLowerCase().replace(" ", "") + ".png")
+    private val ricon = ResourceLocation("eln", "textures/items/" + name.toLowerCase().replace(" ", "") + ".png")
+
 
     override fun getName(stack: ItemStack): String {
         val creative = Minecraft.getMinecraft().thePlayer.capabilities.isCreativeMode
         val color = getColor(stack)
         val life = getLife(stack)
-        return if (!creative && color == 15 && life == 0) "Empty " + super.getName(stack) else super.getName(stack)
+        return if (!creative && color == 15 && life == 0) "Empty " + super.getName(stack) else super.getName(stack)?: ""
     }
 
-    override fun setParent(item: Item, damage: Int) {
+    override fun setParent(item: Item?, damage: Int) {
         super.setParent(item, damage)
         Data.addWiring(newItemStack())
     }
@@ -47,7 +48,7 @@ class BrushDescriptor(name: String): GenericItemUsingDamageDescriptor(name) {
         return nbt
     }
 
-    override fun addInformation(itemStack: ItemStack?, entityPlayer: EntityPlayer?, list: MutableList<Any?>, par4: Boolean) {
+    override fun addInformation(itemStack: ItemStack?, entityPlayer: EntityPlayer?, list: MutableList<String>, par4: Boolean) {
         super.addInformation(itemStack, entityPlayer, list, par4)
 
         if (itemStack != null) {
@@ -72,15 +73,15 @@ class BrushDescriptor(name: String): GenericItemUsingDamageDescriptor(name) {
         }
     }
 
-    override fun handleRenderType(item: ItemStack, type: IItemRenderer.ItemRenderType) = type == IItemRenderer.ItemRenderType.INVENTORY
+    override fun handleRenderType(item: ItemStack?, type: IItemRenderer.ItemRenderType?) = type == IItemRenderer.ItemRenderType.INVENTORY
 
-    override fun shouldUseRenderHelper(type: IItemRenderer.ItemRenderType, item: ItemStack, helper: IItemRenderer.ItemRendererHelper) =
+    override fun shouldUseRenderHelper(type: IItemRenderer.ItemRenderType?, item: ItemStack?, helper: IItemRenderer.ItemRendererHelper?) =
         type != IItemRenderer.ItemRenderType.INVENTORY
 
-    override fun renderItem(type: IItemRenderer.ItemRenderType, item: ItemStack, vararg data: Any) {
+    override fun renderItem(type: IItemRenderer.ItemRenderType?, item: ItemStack?, vararg data: Any?) {
         if (type == IItemRenderer.ItemRenderType.INVENTORY) {
             val creative = Minecraft.getMinecraft().thePlayer.capabilities.isCreativeMode
-            UtilsClient.drawIcon(type, icon)
+            UtilsClient.drawIcon(type, ricon)
             if (!creative) {
                 GL11.glColor4f(1f, 1f, 1f, 0.75f - 0.75f * getLife(item) / 32f)
                 UtilsClient.drawIcon(type, dryOverlay)

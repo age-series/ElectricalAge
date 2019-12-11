@@ -170,7 +170,7 @@ public class ElectricalCableElement extends SixNodeElement {
         } else if (currentItemStack != null) {
             Item item = currentItemStack.getItem();
 
-            GenericItemUsingDamageDescriptor gen = BrushDescriptor.getDescriptor(currentItemStack);
+            GenericItemUsingDamageDescriptor gen = GenericItemUsingDamageDescriptor.getDescriptor(currentItemStack);
             if (gen != null && gen instanceof BrushDescriptor) {
                 BrushDescriptor brush = (BrushDescriptor) gen;
                 int brushColor = brush.getColor(currentItemStack);

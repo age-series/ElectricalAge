@@ -131,7 +131,7 @@ class ElectricalFuseHolderElement(sixNode: SixNode, side: Direction, descriptor:
             if (fuseCompound != null) {
                 val fuseStack = ItemStack.loadItemStackFromNBT(fuseCompound)
                 if (fuseStack != null) {
-                    installedFuse = GenericItemUsingDamageDescriptorUpgrade.getDescriptor(fuseStack) as? ElectricalFuseDescriptor
+                    installedFuse = GenericItemUsingDamageDescriptor.getDescriptor(fuseStack) as? ElectricalFuseDescriptor
                 }
             }
 
@@ -171,8 +171,7 @@ class ElectricalFuseHolderElement(sixNode: SixNode, side: Direction, descriptor:
     override fun multiMeterString() = Utils.plotAmpere("I:", Math.abs(aLoad.current))
 
     override fun getWaila(): MutableMap<String, String> {
-        val infos = mutableMapOf(Pair(I18N.tr("Current"), Utils.plotAmpere("", Math.abs(aLoad.current))))
-        return infos
+        return mutableMapOf(Pair(I18N.tr("Current"), Utils.plotAmpere("", Math.abs(aLoad.current))))
     }
 
     override fun thermoMeterString(): String? = null
@@ -207,7 +206,7 @@ class ElectricalFuseHolderElement(sixNode: SixNode, side: Direction, descriptor:
 
         var takenOutFuse: ElectricalFuseDescriptor? = null
         val itemStack = entityPlayer?.currentEquippedItem
-        val fuseDescriptor = GenericItemUsingDamageDescriptorUpgrade.getDescriptor(itemStack) as? ElectricalFuseDescriptor
+        val fuseDescriptor = itemStack?.let { GenericItemUsingDamageDescriptor.getDescriptor(it) } as? ElectricalFuseDescriptor
         if (itemStack != null) {
             if (fuseDescriptor != null && itemStack.stackSize > 0) {
                 // The player puts in a new lead fuse.

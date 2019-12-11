@@ -23,7 +23,7 @@ class FuelBurnerDescriptor(name: String, val producedHeatPower: Double, val type
         FuelBurnerDescriptor.descriptors[type] = this
     }
 
-    override fun addInformation(itemStack: ItemStack?, entityPlayer: EntityPlayer?, list: MutableList<Any?>, par4: Boolean) {
+    override fun addInformation(itemStack: ItemStack?, entityPlayer: EntityPlayer?, list: MutableList<String>, par4: Boolean) {
         super.addInformation(itemStack, entityPlayer, list, par4)
         list.add(I18N.tr("Burn unit for the gas heat furnace."))
         list.add(Utils.plotPower(I18N.tr("Produced heat power: "), producedHeatPower))

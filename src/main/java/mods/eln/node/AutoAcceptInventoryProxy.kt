@@ -27,25 +27,26 @@ class AutoAcceptInventoryProxy(val inventory: IInventory) {
         : ItemAcceptor(index, acceptedItems) {
         override fun take(itemStack: ItemStack?, inventory: IInventory): Boolean {
             if (inventory.getStackInSlot(index) == null) {
-                GenericItemUsingDamageDescriptor.getDescriptor(itemStack)?.let { desc ->
-                    if (acceptedItems.any { it.isAssignableFrom(desc.javaClass) }) {
-                        val newItemStack = desc.newItemStack()
-                        (desc as? IItemEnergyBattery)?.let { it.setEnergy(newItemStack, it.getEnergy(itemStack)) }
-                        itemStack!!.stackSize -= 1
-                        inventory.setInventorySlotContents(index, newItemStack)
-                        return true
+                if (itemStack != null ) {
+                    GenericItemUsingDamageDescriptor.getDescriptor(itemStack)?.let { desc ->
+                        if (acceptedItems.any { it.isAssignableFrom(desc.javaClass) }) {
+                            val newItemStack = desc.newItemStack()
+                            (desc as? IItemEnergyBattery)?.let { it.setEnergy(newItemStack, it.getEnergy(itemStack)) }
+                            itemStack.stackSize -= 1
+                            inventory.setInventorySlotContents(index, newItemStack)
+                            return true
+                        }
                     }
-                }
 
-                GenericItemBlockUsingDamageDescriptor.getDescriptor(itemStack)?.let { desc ->
-                    if (acceptedItems.any { it.isAssignableFrom(desc.javaClass) }) {
-                        itemStack!!.stackSize -= 1
-                        inventory.setInventorySlotContents(index, desc.newItemStack())
-                        return true
+                    GenericItemBlockUsingDamageDescriptor.getDescriptor(itemStack)?.let { desc ->
+                        if (acceptedItems.any { it.isAssignableFrom(desc.javaClass) }) {
+                            itemStack.stackSize -= 1
+                            inventory.setInventorySlotContents(index, desc.newItemStack())
+                            return true
+                        }
                     }
                 }
             }
-
             return false
         }
     }
@@ -55,6 +56,8 @@ class AutoAcceptInventoryProxy(val inventory: IInventory) {
         override fun take(itemStack: ItemStack?, inventory: IInventory): Boolean {
             if (super.take(itemStack, inventory)) return true
 
+            if (itemStack == null) return false
+
             val existingStack = inventory.getStackInSlot(index)
             if (existingStack?.stackSize ?: 0 >= maxItems) return false
 
@@ -62,7 +65,7 @@ class AutoAcceptInventoryProxy(val inventory: IInventory) {
             val itemDescriptor = GenericItemUsingDamageDescriptor.getDescriptor(itemStack)
 
             if (existingItemDescriptor != null && existingItemDescriptor == itemDescriptor) {
-                itemStack!!.stackSize -= 1
+                itemStack.stackSize -= 1
                 existingStack.stackSize += 1
                 return true
             }
@@ -71,7 +74,7 @@ class AutoAcceptInventoryProxy(val inventory: IInventory) {
             val itemBlockDescriptor = GenericItemBlockUsingDamageDescriptor.getDescriptor(itemStack)
 
             if (existingItemBloackDescriptor != null && existingItemBloackDescriptor == itemBlockDescriptor) {
-                itemStack!!.stackSize -= 1
+                itemStack.stackSize -= 1
                 existingStack.stackSize += 1
                 return true
             }
@@ -86,11 +89,13 @@ class AutoAcceptInventoryProxy(val inventory: IInventory) {
         override fun take(itemStack: ItemStack?, inventory: IInventory): Boolean {
             if (super.take(itemStack, inventory)) return true
 
+            if (itemStack == null) return false
+
             // TODO: What do we do with the item that is actually in the slot? For the moment it just disappears.
 
             GenericItemUsingDamageDescriptor.getDescriptor(itemStack)?.let {
                 if (acceptedItems.contains(it.javaClass)) {
-                    itemStack!!.stackSize -= 1
+                    itemStack.stackSize -= 1
                     existingItemHandler?.handleExistingInventoryItem(inventory.getStackInSlot(index))
                     inventory.setInventorySlotContents(index, it.newItemStack())
                     return true
@@ -99,7 +104,7 @@ class AutoAcceptInventoryProxy(val inventory: IInventory) {
 
             GenericItemBlockUsingDamageDescriptor.getDescriptor(itemStack)?.let {
                 if (acceptedItems.contains(it.javaClass)) {
-                    itemStack!!.stackSize -= 1
+                    itemStack.stackSize -= 1
                     existingItemHandler?.handleExistingInventoryItem(inventory.getStackInSlot(index))
                     inventory.setInventorySlotContents(index, it.newItemStack())
                     return true

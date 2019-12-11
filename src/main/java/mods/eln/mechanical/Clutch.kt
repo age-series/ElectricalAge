@@ -45,7 +45,7 @@ class ClutchPlateItem(
 
     fun setWear(stack: ItemStack, wear: Double) {
         if (!stack.hasTagCompound()) {
-            stack.tagCompound = defaultNBT
+            stack.tagCompound = getDefaultNBT()
         }
         stack.tagCompound.setDouble("wear", wear)
     }
@@ -62,7 +62,7 @@ class ClutchPlateItem(
     fun slipWearF(stack: ItemStack): IFunction =
         LinearFunction(0f, 0f, 1000f, wearSpeed)
 
-    override fun addInformation(itemStack: ItemStack?, entityPlayer: EntityPlayer?, list: MutableList<Any?>?, par4: Boolean) {
+    override fun addInformation(itemStack: ItemStack?, entityPlayer: EntityPlayer?, list: MutableList<String>, par4: Boolean) {
         super.addInformation(itemStack, entityPlayer, list, par4)
         if(itemStack != null) {
             val wear = getWear(itemStack)
