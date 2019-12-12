@@ -1915,7 +1915,7 @@ public class Eln {
         }
 
     }
-
+/*
     private void registerFloodlight(int id) {
         int subId;
         String name;
@@ -1932,7 +1932,7 @@ public class Eln {
             transparentNodeItem.addDescriptor(subId + (id << 6), desc);
         }
     }
-
+*/
     private void registerLampSupply(int id) {
         int subId, completId;
         String name;
