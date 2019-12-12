@@ -1129,3 +1129,9 @@ Grid_DC-DC_Converter.name=Grid Transformer
 Transmission_Tower.name=T2 Transmission Tower
 Utility_Pole.name=T1 Utility Pole
 Utility_Pole_w/DC-DC_Converter.name=T1 Utility Pole with Transformer
+
+# some other stuff
+
+Christmas_Tree.name=Christmas Tree
+Holiday_Candle.name=Holiday Candle
+String_Lights.name=String Lights

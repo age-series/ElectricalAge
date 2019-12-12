@@ -336,6 +336,8 @@ public class Eln {
 
     public static boolean allowSwingingLamps = true;
 
+    public static boolean enableFestivities = true;
+
     @EventHandler
     public void preInit(FMLPreInitializationEvent event) {
 
@@ -400,6 +402,7 @@ public class Eln {
         Eln.analyticsEnabled = config.get("general", "analyticsEnable", true, "Enable Analytics for Electrical Age").getBoolean(true);
         Eln.analyticsURL = config.get("general", "analyticsURL", "http://eln.ja13.org/stat", "Set update checker URL").getString();
         Eln.analyticsPlayerUUIDOptIn = config.get("general", "analyticsPlayerOptIn", false, "Opt into sending player UUID when sending analytics (default DISABLED)").getBoolean(false);
+        Eln.enableFestivities = config.get("general", "enableFestiveItems", true, "Set this to false to disable holiday themed items").getBoolean();
 
         if (analyticsEnabled) {
             final Property p = config.get("general", "playerUUID", "");
@@ -693,19 +696,31 @@ public class Eln {
             subId = 0;
             name = TR_NAME(Type.NONE, "Christmas Tree");
             ChristmasTreeDescriptor desc = new ChristmasTreeDescriptor(name, obj.getObj("Christmas_Tree"));
-            transparentNodeItem.addDescriptor(subId + (id << 6), desc);
+            if (Eln.enableFestivities) {
+                transparentNodeItem.addDescriptor(subId + (id << 6), desc);
+            } else {
+                transparentNodeItem.addWithoutRegistry(subId + (id << 6), desc);
+            }
         }
         {
             subId = 1;
             name = TR_NAME(Type.NONE, "Holiday Candle");
             HolidayCandleDescriptor desc = new HolidayCandleDescriptor(name, obj.getObj("Candle_Light"));
-            transparentNodeItem.addDescriptor(subId + (id << 6), desc);
+            if (Eln.enableFestivities) {
+                transparentNodeItem.addDescriptor(subId + (id << 6), desc);
+            } else {
+                transparentNodeItem.addWithoutRegistry(subId + (id << 6), desc);
+            }
         }
         {
             subId = 2;
             name = TR_NAME(Type.NONE, "String Lights");
             StringLightsDescriptor desc = new StringLightsDescriptor(name, obj.getObj("Christmas_Lights"));
-            transparentNodeItem.addDescriptor(subId + (id << 6), desc);
+            if (Eln.enableFestivities) {
+                transparentNodeItem.addDescriptor(subId + (id << 6), desc);
+            } else {
+                transparentNodeItem.addWithoutRegistry(subId + (id << 6), desc);
+            }
         }
     }
 
