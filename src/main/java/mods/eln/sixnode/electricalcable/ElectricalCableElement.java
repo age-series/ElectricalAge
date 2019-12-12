@@ -114,7 +114,6 @@ public class ElectricalCableElement extends SixNodeElement {
     @Override
     public Map<String, String> getWaila() {
         Map<String, String> info = new HashMap<String, String>();
-
         if (descriptor.signalWire) {
             info.put(I18N.tr("Signal Voltage"), Utils.plotVolt("", electricalLoad.getU()));
         } else {
@@ -124,7 +123,16 @@ public class ElectricalCableElement extends SixNodeElement {
                 info.put(I18N.tr("Voltage"), Utils.plotVolt("", electricalLoad.getU()));
             }
         }
-
+        int subSystemSize = electricalLoad.getSubSystem().component.size();
+        String textColor = "";
+        if (subSystemSize <= 8) {
+            textColor = "§a";
+        } else if (subSystemSize <= 15) {
+            textColor = "§6";
+        } else {
+            textColor = "§c";
+        }
+        info.put(I18N.tr("Subsystem Matrix Size"), textColor + subSystemSize);
         return info;
     }
 
@@ -171,7 +179,7 @@ public class ElectricalCableElement extends SixNodeElement {
             Item item = currentItemStack.getItem();
 
             GenericItemUsingDamageDescriptor gen = GenericItemUsingDamageDescriptor.getDescriptor(currentItemStack);
-            if (gen != null && gen instanceof BrushDescriptor) {
+            if (gen instanceof BrushDescriptor) {
                 BrushDescriptor brush = (BrushDescriptor) gen;
                 int brushColor = brush.getColor(currentItemStack);
                 if (brushColor != color && brush.use(currentItemStack, entityPlayer)) {

@@ -28,8 +28,6 @@ class LampSocketProcess(var lamp: LampSocketElement) : IProcess, INBTTReady /*,L
     var stableProb = 0.0
     var lampStackLast: ItemStack? = null
     var boot = true
-    var vp = DoubleArray(3)
-    private var oldLampSupply: LampSupplyElement? = null
     var lbCoord: Coordonate
 
     var bestChannelHandle: Pair<Double, PowerSupplyChannelHandle>? = null
@@ -49,11 +47,44 @@ class LampSocketProcess(var lamp: LampSocketElement) : IProcess, INBTTReady /*,L
         return bestChannelHandle
     }
 
+    private fun updateNearbyBlocks(growRate: Double, nominalLight: Double, deltaT: Double) {
+        val randTarget = 1.0 / growRate * deltaT * (1.0 * light / nominalLight / 15.0)
+        if (randTarget > Math.random()) {
+            var exit = false
+            val vv = Vec3.createVectorHelper(1.0, 0.0, 0.0)
+            val vp = Vec3.createVectorHelper(lamp.sixNode.coordonate.x + 0.5, lamp.sixNode.coordonate.y + 0.5, lamp.sixNode.coordonate.z + 0.5)
+            vv.rotateAroundZ((alphaZ * Math.PI / 180.0).toFloat())
+            vv.rotateAroundY(((Math.random() - 0.5) * 2 * Math.PI / 4).toFloat())
+            vv.rotateAroundZ(((Math.random() - 0.5) * 2 * Math.PI / 4).toFloat())
+            lamp.front.rotateOnXnLeft(vv)
+            lamp.side.rotateFromXN(vv)
+            val c = Coordonate(lamp.sixNode.coordonate)
+            for (idx in 0 until lamp.socketDescriptor.range + light) { // newCoord.move(lamp.side.getInverse());
+                vp.xCoord += vv.xCoord
+                vp.yCoord += vv.yCoord
+                vp.zCoord += vv.zCoord
+                c.setPosition(vp)
+                if (!c.blockExist) {
+                    exit = true
+                    break
+                }
+                if (isOpaque(c)) {
+                    vp.xCoord -= vv.xCoord
+                    vp.yCoord -= vv.yCoord
+                    vp.zCoord -= vv.zCoord
+                    c.setPosition(vp)
+                    break
+                }
+            }
+            if (!exit && c.block !== Blocks.air)
+                c.block.updateTick(c.world(), c.x, c.y, c.z, c.world().rand)
+        }
+    }
+
     override fun process(time: Double) {
         val lampStack = lamp.inventory.getStackInSlot(0)
         if (!lamp.poweredByLampSupply || lamp.inventory.getStackInSlot(LampSocketContainer.cableSlotId) == null) {
             lamp.setIsConnectedToLampSupply(false)
-            oldLampSupply = null
         } else {
             val lampSupplyList = findBestSupply(lamp.sixNode.coordonate)
             val best = lampSupplyList?.second
@@ -63,53 +94,10 @@ class LampSocketProcess(var lamp: LampSocketElement) : IProcess, INBTTReady /*,L
                     best.element.addToRp(lampDescriptor.r)
                 }
                 lamp.positiveLoad.state = best.element.powerLoad.state
-                oldLampSupply = best.element
             } else {
                 lamp.positiveLoad.state = 0.0
-                oldLampSupply = null
             }
             lamp.setIsConnectedToLampSupply(best != null)
-        }
-        if (lampStack != null) {
-            val lampDescriptor = (lampStack.item as GenericItemUsingDamage<GenericItemUsingDamageDescriptor>).getDescriptor(lampStack) as LampDescriptor
-            if (lamp.coordonate.blockExist && lampDescriptor.vegetableGrowRate != 0.0) {
-                val randTarget = 1.0 / lampDescriptor.vegetableGrowRate * time * (1.0 * light / lampDescriptor.nominalLight / 15.0)
-                if (randTarget > Math.random()) {
-                    var exit = false
-                    val vv = Vec3.createVectorHelper(1.0, 0.0, 0.0)
-                    val vp = Vec3.createVectorHelper(lamp.sixNode.coordonate.x + 0.5, lamp.sixNode.coordonate.y + 0.5, lamp.sixNode.coordonate.z + 0.5)
-                    vv.rotateAroundZ((alphaZ * Math.PI / 180.0).toFloat())
-                    vv.rotateAroundY(((Math.random() - 0.5) * 2 * Math.PI / 4).toFloat())
-                    vv.rotateAroundZ(((Math.random() - 0.5) * 2 * Math.PI / 4).toFloat())
-                    lamp.front.rotateOnXnLeft(vv)
-                    lamp.side.rotateFromXN(vv)
-                    val c = Coordonate(lamp.sixNode.coordonate)
-                    for (idx in 0 until lamp.socketDescriptor.range + light) { // newCoord.move(lamp.side.getInverse());
-                        vp.xCoord += vv.xCoord
-                        vp.yCoord += vv.yCoord
-                        vp.zCoord += vv.zCoord
-                        c.setPosition(vp)
-                        var b = c.block
-                        if (!c.blockExist) {
-                            exit = true
-                            break
-                        }
-                        if (isOpaque(c)) {
-                            vp.xCoord -= vv.xCoord
-                            vp.yCoord -= vv.yCoord
-                            vp.zCoord -= vv.zCoord
-                            c.setPosition(vp)
-                            break
-                        }
-                    }
-                    if (!exit) {
-                        val b = c.block
-                        if (b !== Blocks.air) {
-                            b.updateTick(c.world(), c.x, c.y, c.z, c.world().rand)
-                        }
-                    }
-                }
-            }
         }
         lamp.computeElectricalLoad()
         if (!boot && (lampStack != lampStackLast || lampStack == null)) {
@@ -119,10 +107,12 @@ class LampSocketProcess(var lamp: LampSocketElement) : IProcess, INBTTReady /*,L
             val lampDescriptor = (lampStack.item as? GenericItemUsingDamage<GenericItemUsingDamageDescriptor>)?.getDescriptor(lampStack) as LampDescriptor
             if (stableProb < 0) stableProb = 0.0
             var lightDouble = 0.0
+
+            // This code makes the ECO lights blink, and the other lights are just "stable"
             when (lampDescriptor.type) {
                 LampDescriptor.Type.INCANDESCENT, LampDescriptor.Type.LED -> {
                     lightDouble = lampDescriptor.nominalLight * (Math.abs(lamp.lampResistor.u) - lampDescriptor.minimalU) / (lampDescriptor.nominalU - lampDescriptor.minimalU)
-                    lightDouble = lightDouble * 16
+                    lightDouble *= 16
                 }
                 LampDescriptor.Type.ECO -> {
                     val U = Math.abs(lamp.lampResistor.u)
@@ -137,48 +127,44 @@ class LampSocketProcess(var lamp: LampSocketElement) : IProcess, INBTTReady /*,L
                             lightDouble = 0.0
                         } else {
                             lightDouble = lampDescriptor.nominalLight * powerFactor
-                            lightDouble = lightDouble * 16
+                            lightDouble *= 16
                         }
                     }
                 }
             }
 
             light = lightDouble.toInt()
-            light.coerceIn(0, 14)
+            light.coerceIn(0, 15)
 
             fun lampAgeFactor(voltage: Double): Double {
-                // 0.000008x^3-0.003225x^2+0.33x
                 return 0.000008 * Math.pow(voltage, 3.0) - 0.003225 * Math.pow(voltage, 2.0) + 0.33 * voltage
             }
 
             val bulbCanAge = !(lampDescriptor.type == LampDescriptor.Type.LED && Eln.ledLampInfiniteLife) && SaveConfig.instance.electricalLampAging
 
             if (bulbCanAge) {
-                println("lamp V: ${lamp.lampResistor.u}")
                 val ageFactor = lampAgeFactor(lamp.lampResistor.u)
-                println("AgeFactor: $ageFactor")
                 // nominal life is in hours. We want lifeLost to be the duration of the number of ticks.
                 // there are 72,000 ticks per hour.
-                println("Nominal Life: ${lampDescriptor.nominalLife}")
-                println("Nominal Life depleted per tick: ${lampDescriptor.nominalLife / 72000.0}")
                 val lifeLost = (lampDescriptor.nominalLife / 72000.0) * ageFactor * (time * 20.0)
                 println("Life Lost: $lifeLost")
-                println("life before: ${lampDescriptor.getLifeInTag(lampStack)}")
                 lampDescriptor.setLifeInTag(lampStack, lampDescriptor.getLifeInTag(lampStack) - lifeLost)
-                println("life after: ${lampDescriptor.getLifeInTag(lampStack)}")
             }
             if (lampDescriptor.getLifeInTag(lampStack) <= 0.0) {
                 lamp.inventory.setInventorySlotContents(0, null)
                 light = 0
             }
 
+            if (lamp.coordonate.blockExist && lampDescriptor.vegetableGrowRate != 0.0) {
+                updateNearbyBlocks(lampDescriptor.vegetableGrowRate, lampDescriptor.nominalLight, time)
+            }
+
             boot = false
+        }else {
+            light = 0
         }
         lampStackLast = lampStack
         placeSpot(light)
-
-        // TODO: So we need to work on this some more, bulbs are not needed apparently, as well as some problems with the
-        // mechanic around bulb death... it used to be RANDOM
     }
 
     // ElectricalConnectionOneWay connection = null;

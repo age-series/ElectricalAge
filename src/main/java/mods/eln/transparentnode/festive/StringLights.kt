@@ -1,19 +1,19 @@
 package mods.eln.transparentnode.festive
 
 import mods.eln.misc.Direction
-import mods.eln.misc.LRDU
 import mods.eln.misc.Obj3D
 import mods.eln.misc.UtilsClient
-import mods.eln.node.NodeBase
-import mods.eln.node.transparent.*
-import mods.eln.sim.ElectricalLoad
-import mods.eln.sim.ThermalLoad
-import mods.eln.sim.mna.component.Resistor
-import mods.eln.sim.nbt.NbtElectricalLoad
-import net.minecraft.entity.player.EntityPlayer
+import mods.eln.node.transparent.TransparentNodeDescriptor
+import mods.eln.node.transparent.TransparentNodeElementRender
+import mods.eln.node.transparent.TransparentNodeEntity
+import net.minecraft.init.Blocks
+import net.minecraft.util.AxisAlignedBB
+import net.minecraft.world.World
 import org.lwjgl.opengl.GL11
+import java.io.DataInputStream
+import java.io.IOException
 
-class StringLightsDescriptor(val name: String, val obj: Obj3D): TransparentNodeDescriptor(name, StringLightsElement::class.java, StringLightsRender::class.java) {
+class StringLightsDescriptor(val name: String, val obj: Obj3D): TransparentNodeDescriptor(name, FestiveElement::class.java, StringLightsRender::class.java) {
     private var base: Obj3D.Obj3DPart? = null
     private var light: Obj3D.Obj3DPart? = null
 
@@ -22,57 +22,48 @@ class StringLightsDescriptor(val name: String, val obj: Obj3D): TransparentNodeD
         light = obj.getPart("LightOn_Cube.002")
     }
 
-    fun draw(front: Direction) {
+    fun draw(front: Direction, powered: Boolean) {
         if (base != null && light != null) {
             front.glRotateZnRef()
-            GL11.glTranslatef(-0.5f, -0.5f, 0.5f)
+            GL11.glRotatef(180.0f, 0f, 1f, 0f)
+            GL11.glTranslatef(-0.5f, -0.5f, -0.5f)
             base?.draw()
-            UtilsClient.drawLight(light)
+            if (powered)
+                UtilsClient.drawLight(light)
         }
     }
-}
 
-class StringLightsElement(node: TransparentNode, descriptor: TransparentNodeDescriptor): TransparentNodeElement(node, descriptor) {
+    override fun mustHaveWall() = true
+    override fun mustHaveFloor() = false
 
-    val electricalLoad = NbtElectricalLoad("electricalLoad")
-    val loadResistor = Resistor(electricalLoad, null)
+    /*
 
-    init {
-        loadResistor.r = 15.0
+    TODO: Fix Hitbox
+
+    override fun addCollisionBoxesToList(par5AxisAlignedBB: AxisAlignedBB, list: MutableList<AxisAlignedBB>, world: World?, x: Int, y: Int, z: Int) {
+        val bb = Blocks.stone.getCollisionBoundingBoxFromPool(world, x, y, z)
+        bb.maxZ -= 0.5
+        if (par5AxisAlignedBB.intersectsWith(bb)) list.add(bb)
     }
-
-    override fun thermoMeterString(side: Direction?): String {
-        return ""
-    }
-
-    override fun multiMeterString(side: Direction?): String {
-        return ""
-    }
-
-    override fun getElectricalLoad(side: Direction?, lrdu: LRDU?): ElectricalLoad? {
-        return electricalLoad
-    }
-
-    override fun onBlockActivated(entityPlayer: EntityPlayer?, side: Direction?, vx: Float, vy: Float, vz: Float): Boolean {
-        return false
-    }
-
-    override fun getConnectionMask(side: Direction?, lrdu: LRDU?): Int {
-        return NodeBase.maskElectricalPower
-    }
-
-    override fun getThermalLoad(side: Direction?, lrdu: LRDU?): ThermalLoad? {
-        return null
-    }
-
-    override fun initialize() {
-        connect()
-    }
+     */
 }
 
 class StringLightsRender(val tileEntity: TransparentNodeEntity, val descriptor: TransparentNodeDescriptor): TransparentNodeElementRender(tileEntity, descriptor) {
+
+    var powered = false
+
+    override fun networkUnserialize(stream: DataInputStream?) {
+        super.networkUnserialize(stream)
+        try {
+            powered = stream!!.readBoolean()
+
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
+    }
+
     override fun draw() {
-        (descriptor as StringLightsDescriptor).draw(front)
+        (descriptor as StringLightsDescriptor).draw(front, powered)
     }
 }
 

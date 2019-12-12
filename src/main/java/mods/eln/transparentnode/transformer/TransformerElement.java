@@ -349,7 +349,7 @@ public class TransformerElement extends TransparentNodeElement implements IConfi
                 } else {
                     textColorRight = "§c";
                 }
-                info.put(I18N.tr("Subsystem Matrix Size: "), textColorLeft + leftSubSystemSize + " §r| " + textColorRight + rightSubSystemSize + "");
+                info.put(I18N.tr("Subsystem Matrix Size"), textColorLeft + leftSubSystemSize + " §r| " + textColorRight + rightSubSystemSize + "");
             } else {
                 int subSystemSize = transformer.getSubSystem().component.size();
                 String textColor = "";
@@ -360,14 +360,14 @@ public class TransformerElement extends TransparentNodeElement implements IConfi
                 } else {
                     textColor = "§c";
                 }
-                info.put(I18N.tr("Subsystem Matrix Size: "), textColor + subSystemSize);
+                info.put(I18N.tr("Subsystem Matrix Size"), textColor + subSystemSize);
             }
 
         } catch (Exception e) {
             if (populated) {
-                info.put(I18N.tr("Subsystem Matrix Size: "), "§cNot part of a subsystem!?");
+                info.put(I18N.tr("Subsystem Matrix Size"), "§cNot part of a subsystem!?");
             } else {
-                info.put(I18N.tr("Subsystem Matrix Size: "), "Not part of a subsystem");
+                info.put(I18N.tr("Subsystem Matrix Size"), "Not part of a subsystem");
             }
         }
 

@@ -268,15 +268,25 @@ public class BatteryElement extends TransparentNodeElement {
 
     @Override
     public Map<String, String> getWaila() {
-        Map<String, String> wailaList = new HashMap<String, String>();
-        wailaList.put(I18N.tr("Charge"), Utils.plotPercent("", batteryProcess.getCharge()));
-        wailaList.put(I18N.tr("Energy"), Utils.plotEnergy("", batteryProcess.getEnergy()));
-        wailaList.put(I18N.tr("Life"), Utils.plotPercent("", batteryProcess.life));
+        Map<String, String> info = new HashMap<String, String>();
+        info.put(I18N.tr("Charge"), Utils.plotPercent("", batteryProcess.getCharge()));
+        info.put(I18N.tr("Energy"), Utils.plotEnergy("", batteryProcess.getEnergy()));
+        info.put(I18N.tr("Life"), Utils.plotPercent("", batteryProcess.life));
         if (Eln.wailaEasyMode) {
-            wailaList.put(I18N.tr("Voltage"), Utils.plotVolt("", batteryProcess.getU()));
-            wailaList.put(I18N.tr("Current"), Utils.plotAmpere("", batteryProcess.getDischargeCurrent()));
-            wailaList.put(I18N.tr("Temperature"), Utils.plotCelsius("", thermalLoad.Tc));
+            info.put(I18N.tr("Voltage"), Utils.plotVolt("", batteryProcess.getU()));
+            info.put(I18N.tr("Current"), Utils.plotAmpere("", batteryProcess.getDischargeCurrent()));
+            info.put(I18N.tr("Temperature"), Utils.plotCelsius("", thermalLoad.Tc));
         }
-        return wailaList;
+        int subSystemSize = positiveLoad.getSubSystem().component.size();
+        String textColor = "";
+        if (subSystemSize <= 8) {
+            textColor = "§a";
+        } else if (subSystemSize <= 15) {
+            textColor = "§6";
+        } else {
+            textColor = "§c";
+        }
+        info.put(I18N.tr("Subsystem Matrix Size"), textColor + subSystemSize);
+        return info;
     }
 }

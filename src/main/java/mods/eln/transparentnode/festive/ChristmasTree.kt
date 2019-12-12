@@ -2,19 +2,16 @@ package mods.eln.transparentnode.festive
 
 import mods.eln.ghost.GhostGroup
 import mods.eln.misc.Direction
-import mods.eln.misc.LRDU
 import mods.eln.misc.Obj3D
 import mods.eln.misc.UtilsClient
-import mods.eln.node.NodeBase
-import mods.eln.node.transparent.*
-import mods.eln.sim.ElectricalLoad
-import mods.eln.sim.ThermalLoad
-import mods.eln.sim.mna.component.Resistor
-import mods.eln.sim.nbt.NbtElectricalLoad
-import net.minecraft.entity.player.EntityPlayer
+import mods.eln.node.transparent.TransparentNodeDescriptor
+import mods.eln.node.transparent.TransparentNodeElementRender
+import mods.eln.node.transparent.TransparentNodeEntity
 import org.lwjgl.opengl.GL11
+import java.io.DataInputStream
+import java.io.IOException
 
-class ChristmasTreeDescriptor(val name: String, val obj: Obj3D): TransparentNodeDescriptor(name, ChristmasTreeElemnent::class.java, ChristmasTreeRender::class.java) {
+class ChristmasTreeDescriptor(val name: String, val obj: Obj3D): TransparentNodeDescriptor(name, FestiveElement::class.java, ChristmasTreeRender::class.java) {
     private var star: Obj3D.Obj3DPart? = null
     private var string1: Obj3D.Obj3DPart? = null
     private var string2: Obj3D.Obj3DPart? = null
@@ -33,17 +30,22 @@ class ChristmasTreeDescriptor(val name: String, val obj: Obj3D): TransparentNode
         ghostGroup = gg
     }
 
-    fun draw(front: Direction, delta: Int) {
+    fun draw(front: Direction, delta: Int, powered: Boolean) {
         if (star != null && tree != null && string1 != null && string2 != null) {
             front.glRotateZnRef()
             GL11.glTranslatef(0.5f, -0.5f, 0.5f)
-            if (delta > 10) {
+            if (powered) {
                 UtilsClient.drawLight(star)
-                UtilsClient.drawLight(string2)
-                string1?.draw()
+                if (delta > 10) {
+                    UtilsClient.drawLight(string2)
+                    string1?.draw()
+                } else {
+                    UtilsClient.drawLight(string1)
+                    string2?.draw()
+                }
             } else {
                 star?.draw()
-                UtilsClient.drawLight(string1)
+                string1?.draw()
                 string2?.draw()
             }
             tree?.draw()
@@ -51,51 +53,22 @@ class ChristmasTreeDescriptor(val name: String, val obj: Obj3D): TransparentNode
     }
 }
 
-class ChristmasTreeElemnent(node: TransparentNode, descriptor: TransparentNodeDescriptor): TransparentNodeElement(node, descriptor) {
-
-    val electricalLoad = NbtElectricalLoad("electricalLoad")
-    val loadResistor = Resistor(electricalLoad, null)
-
-    init {
-        loadResistor.r = 15.0
-        node.lightValue = 8
-    }
-
-    override fun thermoMeterString(side: Direction?): String {
-        return ""
-    }
-
-    override fun multiMeterString(side: Direction?): String {
-        return ""
-    }
-
-    override fun getElectricalLoad(side: Direction?, lrdu: LRDU?): ElectricalLoad? {
-        return electricalLoad
-    }
-
-    override fun onBlockActivated(entityPlayer: EntityPlayer?, side: Direction?, vx: Float, vy: Float, vz: Float): Boolean {
-        return false
-    }
-
-    override fun getConnectionMask(side: Direction?, lrdu: LRDU?): Int {
-        return NodeBase.maskElectricalPower
-    }
-
-    override fun getThermalLoad(side: Direction?, lrdu: LRDU?): ThermalLoad? {
-        return null
-    }
-
-    override fun initialize() {
-        connect()
-    }
-}
-
 class ChristmasTreeRender(val tileEntity: TransparentNodeEntity, val descriptor: TransparentNodeDescriptor): TransparentNodeElementRender(tileEntity, descriptor) {
-
     var x = 0
+    var powered = false
+
+    override fun networkUnserialize(stream: DataInputStream?) {
+        super.networkUnserialize(stream)
+        try {
+            powered = stream!!.readBoolean()
+
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
+    }
 
     override fun draw() {
-        (descriptor as ChristmasTreeDescriptor).draw(front, x)
+        (descriptor as ChristmasTreeDescriptor).draw(front, x, powered)
     }
 
     override fun refresh(deltaT: Float) {

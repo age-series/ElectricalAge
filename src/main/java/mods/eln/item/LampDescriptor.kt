@@ -90,6 +90,8 @@ class LampDescriptor(
             } else {
                 list.add(I18N.tr("Condition:") + " " + I18N.tr("Bad"))
             }
+            if (Eln.debugEnabled)
+                list.add("Life: ${getLifeInTag(itemStack)}")
         }
     }
 

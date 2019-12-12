@@ -464,10 +464,10 @@ public class Eln {
             dictAdvancedChip = "circuitElnAdvanced";
         }
 
-        incandescentLampLife = config.get("lamp", "incandescentLifeInHours", 16.0).getDouble(16.0) * 3600;
-        economicLampLife = config.get("lamp", "economicLifeInHours", 64.0).getDouble(64.0) * 3600;
-        carbonLampLife = config.get("lamp", "carbonLifeInHours", 6.0).getDouble(6.0) * 3600;
-        ledLampLife = config.get("lamp", "ledLifeInHours", 512.0).getDouble(512.0) * 3600;
+        incandescentLampLife = config.get("lamp", "incandescentLifeInHours", 16.0).getDouble(16.0);
+        economicLampLife = config.get("lamp", "economicLifeInHours", 64.0).getDouble(64.0);
+        carbonLampLife = config.get("lamp", "carbonLifeInHours", 6.0).getDouble(6.0);
+        ledLampLife = config.get("lamp", "ledLifeInHours", 512.0).getDouble(512.0);
         ledLampInfiniteLife = config.get("lamp", "infiniteLedLife", false).getBoolean();
         allowSwingingLamps = config.get("lamp", "swingingLamps", true).getBoolean();
 
