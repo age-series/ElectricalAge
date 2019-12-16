@@ -3140,6 +3140,18 @@ public class Eln {
             );
             transparentNodeItem.addDescriptor(subId + (id << 6), desc);
         }
+        /*
+        // Soon, you may have it. But not yet...
+        // TODO: Particles flying out the back, hitbox, efficiency curves, more testing...
+        {
+            subId = 19;
+            RotaryMotorDescriptor desc = new RotaryMotorDescriptor(
+                TR_NAME(Type.NONE, "Rotary Motor"),
+                obj.getObj("Starter_Motor")
+            );
+            transparentNodeItem.addDescriptor(subId + (id << 6), desc);
+        }
+        */
     }
 
     public ArrayList<ItemStack> furnaceList = new ArrayList<ItemStack>();

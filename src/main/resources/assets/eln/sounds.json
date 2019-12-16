@@ -331,5 +331,14 @@
 				"stream": false
 			}
 		]
-	}
+	},
+    "RotaryEngine": {
+        "category": "block",
+        "sounds": [
+            {
+                "name": "RotaryEngine",
+                "stream": false
+            }
+        ]
+    }
 }

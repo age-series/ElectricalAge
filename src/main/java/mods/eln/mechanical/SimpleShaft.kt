@@ -30,7 +30,10 @@ abstract class SimpleShaftDescriptor(name: String, elm: KClass<out TransparentNo
         voltageLevelColor = VoltageLevelColor.Neutral
     }
 
+    open fun preDraw() {}
+
     open fun draw(angle: Double) {
+        preDraw()
         for (part in static) {
             part.draw()
         }
@@ -84,9 +87,22 @@ open class ShaftRender(entity: TransparentNodeEntity, desc: TransparentNodeDescr
     private var soundLooper: ShaftSoundLooper? = null
     val volumeSetting = SlewLimiter(0.5f)
 
-    inner private class ShaftSoundLooper(sound: String, coord: Coordonate) : LoopedSound(sound, coord) {
-        override fun getPitch() = Math.max(0.05, rads / absoluteMaximumShaftSpeed).toFloat()
-        override fun getVolume() = volumeSetting.position
+    private open inner class ShaftSoundLooper(sound: String, coord: Coordonate) : LoopedSound(sound, coord) {
+        override fun getPitch(): Float {
+            if (this.sample == "eln:FuelGenerator") {
+                return (rads / 250.0).toFloat()
+            }
+            return Math.max(0.05, rads / absoluteMaximumShaftSpeed).toFloat()
+        }
+        override fun getVolume(): Float {
+            if (this.sample == "eln:FuelGenerator") {
+                if (volumeSetting.position < 0.001) {
+                    return 0.0f
+                }
+                return 1.0f
+            }
+            return volumeSetting.position
+        }
     }
 
     open fun initSound(desc: SimpleShaftDescriptor) {
@@ -122,7 +138,7 @@ open class ShaftRender(entity: TransparentNodeEntity, desc: TransparentNodeDescr
             if (front == Direction.XP || front == Direction.ZP)
                 desc.draw(angle)
             else
-                desc.draw(-angle);
+                desc.draw(-angle)
 
             extra()
         }
@@ -130,12 +146,12 @@ open class ShaftRender(entity: TransparentNodeEntity, desc: TransparentNodeDescr
         if (cableRender != null) {
             preserveMatrix {
                 if (cableRefresh) {
-                    cableRefresh = false;
+                    cableRefresh = false
                     connectionType = CableRender.connectionType(tileEntity, eConn, front.down())
                 }
 
-                glCableTransforme(front.down());
-                cableRender!!.bindCableTexture();
+                glCableTransforme(front.down())
+                cableRender!!.bindCableTexture()
 
                 for (lrdu in LRDU.values()) {
                     Utils.setGlColorFromDye(connectionType!!.otherdry[lrdu.toInt()])
@@ -176,7 +192,7 @@ abstract class SimpleShaftElement(node: TransparentNode, desc_: TransparentNodeD
 
     init {
         val exp = WorldExplosion(this).machineExplosion()
-        slowProcessList.add(createShaftWatchdog(this).set(exp));
+        slowProcessList.add(createShaftWatchdog(this).set(exp))
     }
 
     override val shaftConnectivity: Array<Direction>
