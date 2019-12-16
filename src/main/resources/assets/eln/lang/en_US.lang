@@ -879,7 +879,6 @@ Set_point\:_%1$°C=Set point: %1$°C
 
 # ./src/main/java/mods/eln/transparentnode/electricalmachine/ElectricalMachineDescriptor.java
 Cost=Cost
-Nominal_voltage\:_%1V$=Nominal voltage: %1V$
 
 # ./src/main/java/mods/eln/transparentnode/electricalmachine/ElectricalMachineElement.java
 Power_provided=Power provided
@@ -1132,6 +1131,8 @@ Utility_Pole_w/DC-DC_Converter.name=T1 Utility Pole with Transformer
 
 # some other stuff
 
+Portable_NaN.name=Portable NaN (DEV ITEM)
+Old_800v_Arc_Furnace.name=Old 800V Arc Furnace
 Christmas_Tree.name=Christmas Tree
 Holiday_Candle.name=Holiday Candle
 String_Lights.name=String Lights
