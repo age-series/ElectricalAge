@@ -44,11 +44,14 @@ public class HubRender extends SixNodeElementRender {
         try {
             for (int idx = 0; idx < 4; idx++) {
                 ItemStack cableStack = Utils.unserialiseItemStack(stream);
-                ElectricalCableDescriptor desc = (ElectricalCableDescriptor) ElectricalCableDescriptor.getDescriptor(cableStack, ElectricalCableDescriptor.class);
-                if (desc == null)
-                    cableRender[idx] = null;
-                else
-                    cableRender[idx] = desc.render;
+                if (cableStack != null) {
+                    ElectricalCableDescriptor desc = (ElectricalCableDescriptor) ElectricalCableDescriptor.getDescriptor(cableStack, ElectricalCableDescriptor.class);
+                    if (desc == null)
+                        cableRender[idx] = null;
+                    else
+                        cableRender[idx] = desc.render;
+                }
+                cableRender[idx] = null;
             }
             for (int idx = 0; idx < 6; idx++) {
                 connectionGrid[idx] = stream.readBoolean();

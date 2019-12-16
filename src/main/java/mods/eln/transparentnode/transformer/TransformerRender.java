@@ -85,18 +85,28 @@ public class TransformerRender extends TransparentNodeElementRender {
                 feroPart = feroDesc.feroPart;
 
             ItemStack priStack = Utils.unserialiseItemStack(stream);
-            ElectricalCableDescriptor priDesc = (ElectricalCableDescriptor) ElectricalCableDescriptor.getDescriptor(priStack, ElectricalCableDescriptor.class);
-            if (priDesc == null)
+            if (priStack != null) {
+                ElectricalCableDescriptor priDesc = (ElectricalCableDescriptor) ElectricalCableDescriptor.getDescriptor(priStack, ElectricalCableDescriptor.class);
+                if (priDesc == null)
+                    priRender = null;
+                else
+                    priRender = priDesc.render;
+            } else {
                 priRender = null;
-            else
-                priRender = priDesc.render;
+            }
+
 
             ItemStack secStack = Utils.unserialiseItemStack(stream);
-            ElectricalCableDescriptor secDesc = (ElectricalCableDescriptor) ElectricalCableDescriptor.getDescriptor(secStack, ElectricalCableDescriptor.class);
-            if (secDesc == null)
+            if (secStack != null) {
+                ElectricalCableDescriptor secDesc = (ElectricalCableDescriptor) ElectricalCableDescriptor.getDescriptor(secStack, ElectricalCableDescriptor.class);
+                if (secDesc == null)
+                    secRender = null;
+                else
+                    secRender = secDesc.render;
+            } else {
                 secRender = null;
-            else
-                secRender = secDesc.render;
+            }
+
 
             eConn.deserialize(stream);
 

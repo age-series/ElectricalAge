@@ -50,19 +50,22 @@ public class ConfigCopyToolDescriptor extends GenericItemUsingDamageDescriptor {
                 amt = compound.getInteger(name + "Amt");
             }
             int type = compound.getInteger(name + "Type");
-            GenericItemBlockUsingDamageDescriptor thisCableDesc = GenericItemBlockUsingDamageDescriptor.getDescriptor(inv.getStackInSlot(slot), ElectricalCableDescriptor.class);
-            if(thisCableDesc != null) {
-                (new ItemMovingHelper() {
-                    @Override
-                    public boolean acceptsStack(ItemStack stack) {
-                        return thisCableDesc.checkSameItemStack(stack);
-                    }
+            ItemStack stackInSlot = inv.getStackInSlot(slot);
+            if (stackInSlot != null) {
+                GenericItemBlockUsingDamageDescriptor thisCableDesc = GenericItemBlockUsingDamageDescriptor.getDescriptor(stackInSlot, ElectricalCableDescriptor.class);
+                if(thisCableDesc != null) {
+                    (new ItemMovingHelper() {
+                        @Override
+                        public boolean acceptsStack(ItemStack stack) {
+                            return thisCableDesc.checkSameItemStack(stack);
+                        }
 
-                    @Override
-                    public ItemStack newStackOfSize(int items) {
-                        return thisCableDesc.newItemStack(items);
-                    }
-                }).move(invoker.inventory, inv, slot, 0);
+                        @Override
+                        public ItemStack newStackOfSize(int items) {
+                            return thisCableDesc.newItemStack(items);
+                        }
+                    }).move(invoker.inventory, inv, slot, 0);
+                }
             }
             if(type != -1) {
                 GenericItemBlockUsingDamageDescriptor cableDesc = Eln.sixNodeItem.getDescriptor(type);

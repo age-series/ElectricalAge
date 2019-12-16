@@ -450,19 +450,24 @@ class VariableDcDcRender(tileEntity: TransparentNodeEntity, val descriptor: Tran
             primaryStackSize = stream.readByte()
             secondaryStackSize = stream.readByte()
             val feroStack = Utils.unserialiseItemStack(stream)
-            val feroDesc: GenericItemUsingDamageDescriptor? = GenericItemUsingDamageDescriptor.getDescriptor(feroStack, FerromagneticCoreDescriptor::class.java)
-            if (feroDesc != null)
-                feroPart = (feroDesc as FerromagneticCoreDescriptor).feroPart
-
+            if (feroStack != null) {
+                val feroDesc: GenericItemUsingDamageDescriptor? = GenericItemUsingDamageDescriptor.getDescriptor(feroStack, FerromagneticCoreDescriptor::class.java)
+                if (feroDesc != null)
+                    feroPart = (feroDesc as FerromagneticCoreDescriptor).feroPart
+            }
             val priStack = Utils.unserialiseItemStack(stream)
-            val priDesc: GenericItemBlockUsingDamageDescriptor? = ElectricalCableDescriptor.getDescriptor(priStack, ElectricalCableDescriptor::class.java)
-            if (priDesc != null)
-                priRender = (priDesc as ElectricalCableDescriptor).render
+            if (priStack != null) {
+                val priDesc: GenericItemBlockUsingDamageDescriptor? = ElectricalCableDescriptor.getDescriptor(priStack, ElectricalCableDescriptor::class.java)
+                if (priDesc != null)
+                    priRender = (priDesc as ElectricalCableDescriptor).render
+            }
 
             val secStack = Utils.unserialiseItemStack(stream)
-            val secDesc: GenericItemBlockUsingDamageDescriptor? = ElectricalCableDescriptor.getDescriptor(secStack, ElectricalCableDescriptor::class.java)
-            if (secDesc != null)
-                secRender = (secDesc as ElectricalCableDescriptor).render
+            if (secStack != null) {
+                val secDesc: GenericItemBlockUsingDamageDescriptor? = ElectricalCableDescriptor.getDescriptor(secStack, ElectricalCableDescriptor::class.java)
+                if (secDesc != null)
+                    secRender = (secDesc as ElectricalCableDescriptor).render
+            }
 
             eConn.deserialize(stream)
 
