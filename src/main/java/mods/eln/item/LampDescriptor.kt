@@ -49,7 +49,9 @@ class LampDescriptor(
 
     fun getLifeInTag(stack: ItemStack): Double {
         if (!stack.hasTagCompound()) stack.tagCompound = getDefaultNBT()
-        return if (stack.tagCompound.hasKey("life")) stack.tagCompound.getDouble("life") else throw (Exception("UFFFF"))
+        return if (stack.tagCompound.hasKey("life")) stack.tagCompound.getDouble("life") else {
+            32.0 * 60.0 * 60.0 * 20.0
+        } // 32 hours * 60 * 60 seconds/hour * 20 ticks/second
     }
 
     fun setLifeInTag(stack: ItemStack, life: Double) {
