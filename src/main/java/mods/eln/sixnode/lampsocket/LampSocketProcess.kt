@@ -116,10 +116,10 @@ class LampSocketProcess(var lamp: LampSocketElement) : IProcess, INBTTReady /*,L
                     } else {
                         lightDouble = lampDescriptor.nominalLight * ((Math.abs(lamp.lampResistor.u) - lampDescriptor.minimalU) / (lampDescriptor.nominalU - lampDescriptor.minimalU))
                     }
-                    println(lampDescriptor.nominalLight)
-                    println(lightDouble)
+                    //println(lampDescriptor.nominalLight)
+                    //println(lightDouble)
                     lightDouble *= 15
-                    println(lightDouble)
+                    //println(lightDouble)
                 }
                 LampDescriptor.Type.ECO -> {
                     val U = Math.abs(lamp.lampResistor.u)
@@ -144,7 +144,7 @@ class LampSocketProcess(var lamp: LampSocketElement) : IProcess, INBTTReady /*,L
             //light.coerceIn(0, 15) // IT F'ING LIES
             if (light > 15) light = 15
             if (light < 0) light = 0
-            println(light)
+            //println(light)
 
             fun lampAgeFactor(voltage: Double): Double {
                 return 0.000008 * Math.pow(voltage, 3.0) - 0.003225 * Math.pow(voltage, 2.0) + 0.33 * voltage
