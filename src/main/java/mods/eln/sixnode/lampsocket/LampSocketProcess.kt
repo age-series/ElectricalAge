@@ -83,96 +83,90 @@ class LampSocketProcess(var lamp: LampSocketElement) : IProcess, INBTTReady /*,L
 
     override fun process(time: Double) {
         val lampStack = lamp.inventory.getStackInSlot(0)
-        if (!lamp.poweredByLampSupply || lamp.inventory.getStackInSlot(LampSocketContainer.cableSlotId) == null) {
-            lamp.setIsConnectedToLampSupply(false)
-        } else {
-            val lampSupplyList = findBestSupply(lamp.sixNode.coordonate)
-            val best = lampSupplyList?.second
-            if (best != null && best.element.getChannelState(best.id)) {
-                if (lampStack != null) {
-                    val lampDescriptor = (lampStack.item as GenericItemUsingDamage<GenericItemUsingDamageDescriptor>).getDescriptor(lampStack) as LampDescriptor
-                    best.element.addToRp(lampDescriptor.r)
-                }
-                lamp.positiveLoad.state = best.element.powerLoad.state
-            } else {
-                lamp.positiveLoad.state = 0.0
-            }
-            lamp.setIsConnectedToLampSupply(best != null)
+        val cableStack = lamp.inventory.getStackInSlot(LampSocketContainer.cableSlotId)
+        if (cableStack == null || lampStack == null) {
+            light = 0
+            stableProb = 0.0
+            return
         }
+
+        val lampSupplyList = findBestSupply(lamp.sixNode.coordonate)
+        val best = lampSupplyList?.second
+        if (best != null && best.element.getChannelState(best.id)) {
+            val lampDescriptor = (lampStack.item as GenericItemUsingDamage<*>).getDescriptor(lampStack) as LampDescriptor
+            best.element.addToRp(lampDescriptor.r)
+            lamp.positiveLoad.state = best.element.powerLoad.state
+        } else {
+            lamp.positiveLoad.state = 0.0
+        }
+        lamp.setIsConnectedToLampSupply(best != null)
         lamp.computeElectricalLoad()
-        if (!boot && (lampStack != lampStackLast || lampStack == null)) {
+        if (lampStack != lampStackLast) {
             stableProb = 0.0
         }
-        if (lampStack != null) {
-            val lampDescriptor = (lampStack.item as? GenericItemUsingDamage<GenericItemUsingDamageDescriptor>)?.getDescriptor(lampStack) as LampDescriptor
-            if (stableProb < 0) stableProb = 0.0
-            var lightDouble = 0.0
 
-            // This code makes the ECO lights blink, and the other lights are just "stable"
-            when (lampDescriptor.type) {
-                LampDescriptor.Type.INCANDESCENT, LampDescriptor.Type.LED -> {
-                    if (lamp.lampResistor.u < lampDescriptor.minimalU) {
-                        lightDouble = 0.0
-                    } else {
-                        lightDouble = lampDescriptor.nominalLight * ((Math.abs(lamp.lampResistor.u) - lampDescriptor.minimalU) / (lampDescriptor.nominalU - lampDescriptor.minimalU))
-                    }
-                    //println(lampDescriptor.nominalLight)
-                    //println(lightDouble)
-                    lightDouble *= 15
-                    //println(lightDouble)
+        val lampDescriptor = (lampStack.item as? GenericItemUsingDamage<*>)?.getDescriptor(lampStack) as LampDescriptor
+        if (stableProb < 0) stableProb = 0.0
+        var lightDouble = 0.0
+
+        // This code makes the ECO lights blink, and the other lights are just "stable"
+        when (lampDescriptor.type) {
+            LampDescriptor.Type.INCANDESCENT, LampDescriptor.Type.LED -> {
+                if (lamp.lampResistor.u < lampDescriptor.minimalU) {
+                    lightDouble = 0.0
+                } else {
+                    lightDouble = lampDescriptor.nominalLight * ((Math.abs(lamp.lampResistor.u) - lampDescriptor.minimalU) / (lampDescriptor.nominalU - lampDescriptor.minimalU))
                 }
-                LampDescriptor.Type.ECO -> {
-                    val U = Math.abs(lamp.lampResistor.u)
-                    if (U < lampDescriptor.minimalU) {
-                        stableProb = 0.0
+                lightDouble *= 15
+            }
+            LampDescriptor.Type.ECO -> {
+                val U = Math.abs(lamp.lampResistor.u)
+                if (U < lampDescriptor.minimalU) {
+                    stableProb = 0.0
+                    lightDouble = 0.0
+                } else {
+                    val powerFactor = U / lampDescriptor.nominalU
+                    stableProb += U / lampDescriptor.stableU * time / lampDescriptor.stableTime * lampDescriptor.stableUNormalised
+                    if (stableProb > U / lampDescriptor.stableU) stableProb = U / lampDescriptor.stableU
+                    if (Math.random() > stableProb) {
                         lightDouble = 0.0
                     } else {
-                        val powerFactor = U / lampDescriptor.nominalU
-                        stableProb += U / lampDescriptor.stableU * time / lampDescriptor.stableTime * lampDescriptor.stableUNormalised
-                        if (stableProb > U / lampDescriptor.stableU) stableProb = U / lampDescriptor.stableU
-                        if (Math.random() > stableProb) {
-                            lightDouble = 0.0
-                        } else {
-                            lightDouble = lampDescriptor.nominalLight * powerFactor
-                            lightDouble *= 16
-                        }
+                        lightDouble = lampDescriptor.nominalLight * powerFactor
+                        lightDouble *= 16
                     }
                 }
             }
+        }
 
-            light = lightDouble.toInt()
-            //light.coerceIn(0, 15) // IT F'ING LIES
-            if (light > 15) light = 15
-            if (light < 0) light = 0
-            //println(light)
+        light = lightDouble.toInt()
+        //light.coerceIn(0, 15) // IT F'ING LIES
+        if (light > 15) light = 15
+        if (light < 0) light = 0
 
-            fun lampAgeFactor(voltage: Double): Double {
-                return 0.000008 * Math.pow(voltage, 3.0) - 0.003225 * Math.pow(voltage, 2.0) + 0.33 * voltage
-            }
+        fun lampAgeFactor(voltage: Double): Double {
+            return 0.000008 * Math.pow(voltage, 3.0) - 0.003225 * Math.pow(voltage, 2.0) + 0.33 * voltage
+        }
 
-            val bulbCanAge = !(lampDescriptor.type == LampDescriptor.Type.LED && Eln.ledLampInfiniteLife) && SaveConfig.instance.electricalLampAging
+        val bulbCanAge = !(lampDescriptor.type == LampDescriptor.Type.LED && Eln.ledLampInfiniteLife) && SaveConfig.instance.electricalLampAging
 
-            if (bulbCanAge) {
-                val ageFactor = lampAgeFactor(lamp.lampResistor.u)
-                // nominal life is in hours. We want lifeLost to be the duration of the number of ticks.
-                // there are 72,000 ticks per hour.
-                val lifeLost = (lampDescriptor.nominalLife / 72000.0) * ageFactor * (time * 20.0)
-                println("Life Lost: $lifeLost")
-                lampDescriptor.setLifeInTag(lampStack, lampDescriptor.getLifeInTag(lampStack) - lifeLost)
-            }
-            if (lampDescriptor.getLifeInTag(lampStack) <= 0.0) {
-                lamp.inventory.setInventorySlotContents(0, null)
-                light = 0
-            }
-
-            if (lamp.coordonate.blockExist && lampDescriptor.vegetableGrowRate != 0.0) {
-                updateNearbyBlocks(lampDescriptor.vegetableGrowRate, lampDescriptor.nominalLight, time)
-            }
-
-            boot = false
-        }else {
+        if (bulbCanAge) {
+            val ageFactor = lampAgeFactor(lamp.lampResistor.u)
+            // nominal life is in hours. We want lifeLost to be the duration of the number of ticks.
+            // there are 72,000 ticks per hour.
+            val lifeLost = (lampDescriptor.nominalLife / 72000.0) * ageFactor * (time * 20.0)
+            println("Life Lost: $lifeLost")
+            lampDescriptor.setLifeInTag(lampStack, lampDescriptor.getLifeInTag(lampStack) - lifeLost)
+        }
+        if (lampDescriptor.getLifeInTag(lampStack) <= 0.0) {
+            lamp.inventory.setInventorySlotContents(0, null)
             light = 0
         }
+
+        if (lamp.coordonate.blockExist && lampDescriptor.vegetableGrowRate != 0.0) {
+            updateNearbyBlocks(lampDescriptor.vegetableGrowRate, lampDescriptor.nominalLight, time)
+        }
+
+        boot = false
         lampStackLast = lampStack
         placeSpot(light)
     }
