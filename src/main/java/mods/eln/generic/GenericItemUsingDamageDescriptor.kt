@@ -145,12 +145,13 @@ open class GenericItemUsingDamageDescriptor {
         }
 
         @JvmStatic
-        fun getDescriptor(stack: ItemStack): GenericItemUsingDamageDescriptor? {
-            return if (!(stack.item is GenericItemUsingDamage<*>)) null else (stack.item as GenericItemUsingDamage<GenericItemUsingDamageDescriptor?>).getDescriptor(stack)
+        fun getDescriptor(stack: ItemStack?): GenericItemUsingDamageDescriptor? {
+            if (stack == null) return null
+            return if (stack.item !is GenericItemUsingDamage<*>) null else (stack.item as GenericItemUsingDamage<*>).getDescriptor(stack)
         }
 
         @JvmStatic
-        fun getDescriptor(stack: ItemStack, extendClass: Class<*>): GenericItemUsingDamageDescriptor? {
+        fun getDescriptor(stack: ItemStack?, extendClass: Class<*>): GenericItemUsingDamageDescriptor? {
             val desc = getDescriptor(stack) ?: return null
             return if (!extendClass.isAssignableFrom(desc.javaClass)) null else desc
         }
