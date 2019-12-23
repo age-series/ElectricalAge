@@ -13,6 +13,7 @@ import mods.eln.node.six.SixNodeDescriptor;
 import mods.eln.node.six.SixNodeElement;
 import mods.eln.sim.ElectricalLoad;
 import mods.eln.sim.ThermalLoad;
+import mods.eln.sim.mna.SubSystem;
 import mods.eln.sim.nbt.NbtElectricalLoad;
 import mods.eln.sim.nbt.NbtThermalLoad;
 import mods.eln.sim.process.destruct.ThermalLoadWatchDog;
@@ -123,16 +124,21 @@ public class ElectricalCableElement extends SixNodeElement {
                 info.put(I18N.tr("Voltage"), Utils.plotVolt("", electricalLoad.getU()));
             }
         }
-        int subSystemSize = electricalLoad.getSubSystem().component.size();
-        String textColor = "";
-        if (subSystemSize <= 8) {
-            textColor = "§a";
-        } else if (subSystemSize <= 15) {
-            textColor = "§6";
+        SubSystem ss = electricalLoad.getSubSystem();
+        if(ss != null) {
+            int subSystemSize = electricalLoad.getSubSystem().component.size();
+            String textColor = "";
+            if (subSystemSize <= 8) {
+                textColor = "§a";
+            } else if (subSystemSize <= 15) {
+                textColor = "§6";
+            } else {
+                textColor = "§c";
+            }
+            info.put(I18N.tr("Subsystem Matrix Size"), textColor + subSystemSize);
         } else {
-            textColor = "§c";
+            info.put(I18N.tr("Subsystem Matrix Size"), "§cnull SubSystem");
         }
-        info.put(I18N.tr("Subsystem Matrix Size"), textColor + subSystemSize);
         return info;
     }
 

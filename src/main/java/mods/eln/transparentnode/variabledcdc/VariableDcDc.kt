@@ -200,8 +200,8 @@ class VariableDcDcElement(transparentNode: TransparentNode, descriptor: Transpar
     override fun getConnectionMask(side: Direction, lrdu: LRDU): Int {
         if (lrdu != LRDU.Down) return 0
         return when (side) {
-            front -> NodeBase.maskElectricalInputGate
-            front.back() -> NodeBase.maskElectricalInputGate
+            front -> NodeBase.maskElectricalGate
+            front.back() -> NodeBase.maskElectricalGate
             else -> NodeBase.maskElectricalPower
         }
     }
