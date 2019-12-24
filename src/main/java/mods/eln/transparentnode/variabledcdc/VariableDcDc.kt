@@ -164,6 +164,9 @@ class VariableDcDcElement(transparentNode: TransparentNode, descriptor: Transpar
     init {
         electricalLoadList.add(primaryLoad)
         electricalLoadList.add(secondaryLoad)
+        electricalLoadList.add(control)
+        electricalComponentList.add(primaryVoltageSource)
+        electricalComponentList.add(secondaryVoltageSource)
         val exp = WorldExplosion(this).machineExplosion()
         slowProcessList.add(primaryVoltageWatchdog.set(primaryLoad).set(exp))
         slowProcessList.add(secondaryVoltageWatchdog.set(secondaryLoad).set(exp))
@@ -430,8 +433,6 @@ class VariableDcDcRender(tileEntity: TransparentNodeEntity, val descriptor: Tran
 
         coordinate = Coordonate(tileEntity)
         doorOpen = PhysicalInterpolator(0.4f, 4.0f, 0.9f, 0.05f)
-        controlConn.set(LRDU.Left, true)
-        controlConn.set(LRDU.Right, true)
     }
 
     override fun draw() {
@@ -473,14 +474,18 @@ class VariableDcDcRender(tileEntity: TransparentNodeEntity, val descriptor: Tran
 
             priConn.mask = 0
             secConn.mask = 0
+            controlConn.mask = 0
             for (lrdu in LRDU.values()) {
-                if (!eConn.get(lrdu) || front.down().applyLRDU(lrdu) == front.left() || front.down().applyLRDU(lrdu) == front.right())
+                if(!eConn.get(lrdu)) continue
+                if(front.down().applyLRDU(lrdu) == front.left()) {
+                    priConn.set(lrdu, true)
                     continue
-                val render = getCableRender(front.down().applyLRDU(lrdu), LRDU.Down)
-
-                if (render === priRender) priConn.set(lrdu, true)
-                if (render === secRender) secConn.set(lrdu, true)
-
+                }
+                if(front.down().applyLRDU(lrdu) == front.right()) {
+                    secConn.set(lrdu, true)
+                    continue
+                }
+                controlConn.set(lrdu, true)
             }
             cableRenderType = null
 

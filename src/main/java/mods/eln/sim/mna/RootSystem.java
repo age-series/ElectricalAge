@@ -235,6 +235,8 @@ public class RootSystem {
                 new InterSystemAbstraction(this, r);
             } catch(NullPointerException npe) {
                 Utils.println("WARN: failed to create InterSystemAbstraction for Resistor: " + r.toString());
+                SubSystem sa = r.aPin.getSubSystem(), sb = r.bPin.getSubSystem();
+                Utils.println("... with subsystems: " + sa + ", " + sb);
             }
             ic.remove();
         }
