@@ -231,7 +231,13 @@ public class RootSystem {
             // If a pin is disconnected, we can't be intersystem
             if(r.aPin == null || r.bPin == null) continue;
 
-            new InterSystemAbstraction(this, r);
+            try {
+                new InterSystemAbstraction(this, r);
+            } catch(NullPointerException npe) {
+                Utils.println("WARN: failed to create InterSystemAbstraction for Resistor: " + r.toString());
+                SubSystem sa = r.aPin.getSubSystem(), sb = r.bPin.getSubSystem();
+                Utils.println("... with subsystems: " + sa + ", " + sb);
+            }
             ic.remove();
         }
     }
