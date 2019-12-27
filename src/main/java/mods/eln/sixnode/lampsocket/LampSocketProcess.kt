@@ -154,7 +154,7 @@ class LampSocketProcess(var lamp: LampSocketElement) : IProcess, INBTTReady /*,L
             // nominal life is in hours. We want lifeLost to be the duration of the number of ticks.
             // there are 72,000 ticks per hour.
             val lifeLost = (lampDescriptor.nominalLife / 72000.0) * ageFactor * (time * 20.0)
-            println("Life Lost: $lifeLost")
+            //println("Life Lost: $lifeLost")
             lampDescriptor.setLifeInTag(lampStack, lampDescriptor.getLifeInTag(lampStack) - lifeLost)
         }
         if (lampDescriptor.getLifeInTag(lampStack) <= 0.0) {
