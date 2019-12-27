@@ -237,6 +237,7 @@ public class RootSystem {
                 Utils.println("WARN: failed to create InterSystemAbstraction for Resistor: " + r.toString());
                 SubSystem sa = r.aPin.getSubSystem(), sb = r.bPin.getSubSystem();
                 Utils.println("... with subsystems: " + sa + ", " + sb);
+                Utils.println("WARN: Did you remember to add ALL electrical components to the simulation BEFORE connecting?");
             }
             ic.remove();
         }
