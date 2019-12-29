@@ -107,11 +107,10 @@ public class EnergyMeterRender extends SixNodeElementRender {
             timerCouter = stream.readDouble();
             // energyStack = stream.readDouble();
             ItemStack itemStack = Utils.unserialiseItemStack(stream);
+            energyUnit = stream.readByte();
+            timeUnit = stream.readByte();
             if (itemStack != null) {
                 ElectricalCableDescriptor desc = (ElectricalCableDescriptor) ElectricalCableDescriptor.getDescriptor(itemStack, ElectricalCableDescriptor.class);
-
-                energyUnit = stream.readByte();
-                timeUnit = stream.readByte();
                 if (desc == null)
                     cableRender = null;
                 else

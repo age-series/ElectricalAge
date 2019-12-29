@@ -94,7 +94,7 @@ public class SixNodeEntity extends NodeBlockEntity {
                             break;
                         }
                     }
-                    elementRenderList[idx].publishUnserialize(stream);
+                    if(elementRenderList[idx] != null) elementRenderList[idx].publishUnserialize(stream);
                 }
             }
 
