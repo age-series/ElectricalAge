@@ -16,6 +16,7 @@ import net.minecraft.world.chunk.Chunk;
 
 import java.io.DataInputStream;
 import java.io.IOException;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
 public class SixNodeEntity extends NodeBlockEntity {
@@ -66,30 +67,38 @@ public class SixNodeEntity extends NodeBlockEntity {
                     elementRenderList[idx] = null;
                 } else {
                     if (id != elementRenderIdList[idx]) {
+                        boolean failed = false;
                         elementRenderIdList[idx] = id;
                         SixNodeDescriptor descriptor = Eln.sixNodeItem.getDescriptor(id);
-                        elementRenderList[idx] = (SixNodeElementRender) descriptor.RenderClass.getConstructor(SixNodeEntity.class, Direction.class, SixNodeDescriptor.class).newInstance(this, Direction.fromInt(idx), descriptor);
+                        if(descriptor == null) {
+                            Utils.println("ERROR: Server sent bad SixNodeDescriptor id " + id);
+                            failed = true;
+                        }
+                        if(!failed && descriptor.RenderClass == null) {
+                            Utils.println("ERROR: Id " + id + " gives descriptor " + descriptor + " with null RenderClass");
+                            failed = true;
+                        }
+                        if(!failed) {
+                            try {
+                                elementRenderList[idx] = (SixNodeElementRender) descriptor.RenderClass.getConstructor(SixNodeEntity.class, Direction.class, SixNodeDescriptor.class).newInstance(this, Direction.fromInt(idx), descriptor);
+                            } catch(Exception e) {
+                                Utils.println("ERROR: Initialize SixNodeElementRender for id " + id + " descriptor " + descriptor + " RenderClass " + descriptor.RenderClass + " failed with exception " + e);
+                                e.printStackTrace();
+                                failed = true;
+                            }
+                        }
+                        if(failed) {
+                            Utils.println("ERROR: A previous failure has desynchronized the DataInputStream for this packet. No further information can be processed. If something isn't rendering right now, please post a bug report for this version of Electrical Age.");
+                            Utils.println("... " + stream.available() + " bytes remained on the stream, consuming all of them");
+                            stream.skip(stream.available());
+                            break;
+                        }
                     }
                     elementRenderList[idx].publishUnserialize(stream);
                 }
             }
 
         } catch (IOException e) {
-
-            e.printStackTrace();
-        } catch (InstantiationException e) {
-
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-
-            e.printStackTrace();
-        } catch (IllegalArgumentException e) {
-
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-
-            e.printStackTrace();
-        } catch (NoSuchMethodException e) {
 
             e.printStackTrace();
         } catch (SecurityException e) {
