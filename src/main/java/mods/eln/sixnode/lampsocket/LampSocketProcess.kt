@@ -82,6 +82,7 @@ class LampSocketProcess(var lamp: LampSocketElement) : IProcess, INBTTReady /*,L
     }
 
     override fun process(time: Double) {
+        val lastLight = light
         val lampStack = lamp.inventory.getStackInSlot(0)
         val cableStack = lamp.inventory.getStackInSlot(LampSocketContainer.cableSlotId)
         if (cableStack == null || lampStack == null) {
@@ -169,6 +170,8 @@ class LampSocketProcess(var lamp: LampSocketElement) : IProcess, INBTTReady /*,L
         boot = false
         lampStackLast = lampStack
         placeSpot(light)
+        if (light != lastLight)
+            lamp.needPublish()
     }
 
     // ElectricalConnectionOneWay connection = null;
