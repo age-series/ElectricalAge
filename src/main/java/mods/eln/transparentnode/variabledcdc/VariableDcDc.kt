@@ -541,10 +541,10 @@ class VariableDcDcContainer(player: EntityPlayer, inventory: IInventory) : Basic
     (player, inventory, arrayOf(
         GenericItemUsingDamageSlot(inventory, primaryCableSlotId, 58, 30, 4,
             arrayOf<Class<*>>(ElectricalCableDescriptor::class.java, CopperCableDescriptor::class.java),
-            ISlotSkin.SlotSkin.medium, arrayOf(tr("Electrical cable slot"), tr("4 Cables Required"))),
+            ISlotSkin.SlotSkin.medium, arrayOf(tr("Electrical cable slot"), tr("4 Copper Cables Required"))),
         GenericItemUsingDamageSlot(inventory, secondaryCableSlotId, 100, 30, 4,
             arrayOf<Class<*>>(ElectricalCableDescriptor::class.java, CopperCableDescriptor::class.java),
-            ISlotSkin.SlotSkin.medium, arrayOf(tr("Electrical cable slot"), tr("4 Cables Required"))),
+            ISlotSkin.SlotSkin.medium, arrayOf(tr("Electrical cable slot"), tr("4 Copper Cables Required"))),
         GenericItemUsingDamageSlot(inventory, ferromagneticSlotId, 58 + (100 - 58) / 2, 30, 1,
             arrayOf<Class<*>>(FerromagneticCoreDescriptor::class.java),
             ISlotSkin.SlotSkin.medium, arrayOf(tr("Ferromagnetic core slot"))),
