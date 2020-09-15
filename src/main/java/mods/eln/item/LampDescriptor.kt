@@ -27,7 +27,7 @@ class LampDescriptor(
 
     var nominalP: Double
     var nominalLight: Double
-    var nominalLifeHours: Double
+    var nominalLife: Double
     @JvmField
     var type: Type
     @JvmField
@@ -61,7 +61,7 @@ class LampDescriptor(
 
     override fun getDefaultNBT(): NBTTagCompound {
         val tag = NBTTagCompound()
-        tag.setDouble("life", nominalLifeHours)
+        tag.setDouble("life", nominalLife)
         return tag
     }
 
@@ -99,7 +99,7 @@ class LampDescriptor(
 
     @Throws(IOException::class)
     override fun serializeConfig(stream: DataOutputStream) {
-        stream.writeDouble(nominalLifeHours)
+        stream.writeDouble(nominalLife)
     }
 
     @Throws(IOException::class)
@@ -114,7 +114,7 @@ class LampDescriptor(
         this.nominalU = nominalU
         this.nominalP = nominalP
         this.nominalLight = nominalLight
-        this.nominalLifeHours = nominalLife
+        this.nominalLife = nominalLife
         this.vegetableGrowRate = vegetableGrowRate
         when (type) {
             Type.INCANDESCENT -> minimalU = nominalU * 0.5

@@ -128,6 +128,7 @@ public class LampSocketElement extends SixNodeElement implements IConfigurable {
                     break;
                 case tooglePowerSupplyType:
                     setPoweredByLampSupply(!poweredByLampSupply);
+
                     reconnect();
                     break;
                 case setChannel:
@@ -230,7 +231,7 @@ public class LampSocketElement extends SixNodeElement implements IConfigurable {
             info.put(I18N.tr("Voltage"), Utils.plotVolt("", positiveLoad.getU()));
             ItemStack lampStack = acceptingInventory.getInventory().getStackInSlot(0);
             if (lampStack != null && lampDescriptor != null) {
-                info.put(I18N.tr("Life Left: "), Utils.plotValue(lampDescriptor.getLifeInTag(lampStack)) + " Hours");
+                info.put(I18N.tr("Life"), Utils.plotValue(lampDescriptor.getLifeInTag(lampStack)));
             }
 
         }
