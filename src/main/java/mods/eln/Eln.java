@@ -727,12 +727,6 @@ public class Eln {
     private void registerGridDevices(int id) {
         int subId;
         {
-            subId = 2;
-//			DownlinkDescriptor descriptor =
-//					new DownlinkDescriptor("Downlink", obj.getObj("DownLink"), "textures/wire.png", highVoltageCableDescriptor);
-//			transparentNodeItem.addDescriptor(subId + (id << 6), descriptor);
-        }
-        {
             subId = 3;
             GridTransformerDescriptor descriptor =
                 new GridTransformerDescriptor("Grid DC-DC Converter", obj.getObj("GridConverter"), "textures/wire.png", highVoltageCableDescriptor);
@@ -756,8 +750,8 @@ public class Eln {
                     "textures/wire.png",
                     highVoltageCableDescriptor,
                     false,
-                    24,
-                    12800);
+                    40,
+                    51200);
             GhostGroup g = new GhostGroup();
             g.addElement(0, 1, 0);
             g.addElement(0, 2, 0);
@@ -775,7 +769,7 @@ public class Eln {
                     "textures/wire.png",
                     highVoltageCableDescriptor,
                     true,
-                    24,
+                    40,
                     12800);
             GhostGroup g = new GhostGroup();
             g.addElement(0, 1, 0);
@@ -3140,18 +3134,25 @@ public class Eln {
             );
             transparentNodeItem.addDescriptor(subId + (id << 6), desc);
         }
-        /*
-        // Soon, you may have it. But not yet...
-        // TODO: Particles flying out the back, hitbox, efficiency curves, more testing...
+
         {
             subId = 19;
             RotaryMotorDescriptor desc = new RotaryMotorDescriptor(
                 TR_NAME(Type.NONE, "Rotary Motor"),
                 obj.getObj("Starter_Motor")
             );
+            GhostGroup g = new GhostGroup();
+            for (int x = -1; x < 2; x++) {
+                for (int y = -1; y < 2; y++) {
+                    for (int z = -1; z > -3; z--) {
+                        g.addElement(x, y, z);
+                    }
+                }
+            }
+            g.removeElement(0, 0, 0);
+            desc.setGhostGroup(g);
             transparentNodeItem.addDescriptor(subId + (id << 6), desc);
         }
-        */
     }
 
     public ArrayList<ItemStack> furnaceList = new ArrayList<ItemStack>();
@@ -6324,6 +6325,14 @@ public class Eln {
             'S', firstExistingOre("blockSteel", "blockIron"),
             'M', findItemStack("Advanced Machine Block")
         );
+        addRecipe(findItemStack("Rotary Motor"),
+            " r ",
+            "rSr",
+            " rM",
+            'r', "plateAlloy",
+            'S', firstExistingOre("blockSteel", "blockIron"),
+            'M', findItemStack("Advanced Machine Block")
+        );
 
         addRecipe(findItemStack("Joint"),
             "   ",
@@ -6998,9 +7007,6 @@ public class Eln {
             'I', new ItemStack(Items.iron_ingot),
             'R', new ItemStack(Items.redstone),
             'C', findItemStack("Medium Voltage Cable"));
-
-        // TODO
-
     }
 
     private void recipeSolarTracker() {

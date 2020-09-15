@@ -33,7 +33,7 @@ public class Equation implements IValue, INBTTReady {
     int operatorCount; // Juste a counter for fun
 
     static {
-        staticSeparatorList = "+-*&|/%^,()<>=!";
+        staticSeparatorList = "+-*&|/^,()<>=!";
         staticOperatorList = new HashMap<Integer, ArrayList<IOperatorMapper>>();
 
         int priority = 0;
@@ -58,6 +58,8 @@ public class Equation implements IValue, INBTTReady {
             list.add(new OperatorMapperFunc("rc", 2, RC.class));
             list.add(new OperatorMapperFunc("if", 3, If.class));
             list.add(new OperatorMapperFunc("scale", 5, Scale.class));
+            // Added mod here becuase % wasn't working. $%^&@#!
+            list.add(new OperatorMapperFunc("mod", 2, Mod.class));
             list.add(new OperatorMapperBracket());
             staticOperatorList.put(priority++, list);
         }
@@ -71,7 +73,7 @@ public class Equation implements IValue, INBTTReady {
             list.add(new OperatorMapperA("!", Not.class));
             list.add(new OperatorMapperAB("*", Mul.class));
             list.add(new OperatorMapperAB("/", Div.class));
-            list.add(new OperatorMapperAB("%", Mod.class));
+            // I had mod here but it's not working. FML.
             staticOperatorList.put(priority++, list);
         }
         {
