@@ -23,7 +23,6 @@ import java.io.IOException
 class LampSocketProcess(var lamp: LampSocketElement) : IProcess, INBTTReady /*,LightBlockObserver*/ {
     @JvmField
     var light = 0 // 0..15
-    private var lastLight = 0
     @JvmField
     var alphaZ = 0.0
     var stableProb = 0.0
@@ -83,35 +82,25 @@ class LampSocketProcess(var lamp: LampSocketElement) : IProcess, INBTTReady /*,L
     }
 
     override fun process(time: Double) {
+        val lastLight = light
         val lampStack = lamp.inventory.getStackInSlot(0)
         val cableStack = lamp.inventory.getStackInSlot(LampSocketContainer.cableSlotId)
-
-        lastLight = light
-
         if (cableStack == null || lampStack == null) {
             light = 0
             stableProb = 0.0
             return
         }
 
-        if(lamp.poweredByLampSupply)
-        {
-            val lampSupplyList = findBestSupply(lamp.sixNode.coordonate)
-            val best = lampSupplyList?.second
-            if (best != null && best.element.getChannelState(best.id)) {
-                val lampDescriptor = (lampStack.item as GenericItemUsingDamage<*>).getDescriptor(lampStack) as LampDescriptor
-                best.element.addToRp(lampDescriptor.r)
-                lamp.positiveLoad.state = best.element.powerLoad.state
-            } else {
-                lamp.positiveLoad.state = 0.0
-            }
-            lamp.setIsConnectedToLampSupply(best != null)
+        val lampSupplyList = findBestSupply(lamp.sixNode.coordonate)
+        val best = lampSupplyList?.second
+        if (best != null && best.element.getChannelState(best.id)) {
+            val lampDescriptor = (lampStack.item as GenericItemUsingDamage<*>).getDescriptor(lampStack) as LampDescriptor
+            best.element.addToRp(lampDescriptor.r)
+            lamp.positiveLoad.state = best.element.powerLoad.state
+        } else {
+            lamp.positiveLoad.state = 0.0
         }
-        else
-        {
-            lamp.setIsConnectedToLampSupply(false)
-        }
-
+        lamp.setIsConnectedToLampSupply(best != null)
         lamp.computeElectricalLoad()
         if (lampStack != lampStackLast) {
             stableProb = 0.0
@@ -180,7 +169,7 @@ class LampSocketProcess(var lamp: LampSocketElement) : IProcess, INBTTReady /*,L
 
         boot = false
         lampStackLast = lampStack
-        placeSpot()
+        placeSpot(light)
         if (light != lastLight)
             lamp.needPublish()
     }
@@ -197,7 +186,7 @@ class LampSocketProcess(var lamp: LampSocketElement) : IProcess, INBTTReady /*,L
         v.zCoord = d2
     }
 
-    fun placeSpot() {
+    fun placeSpot(newLight: Int) {
         var exit = false
         if (!lbCoord.blockExist) return
         val vv = Vec3.createVectorHelper(1.0, 0.0, 0.0)
@@ -237,7 +226,7 @@ class LampSocketProcess(var lamp: LampSocketElement) : IProcess, INBTTReady /*,L
                 newCoord.setPosition(vp)
             }
         }
-        if (!exit) setLightAt(newCoord)
+        if (!exit) setLightAt(newCoord, newLight)
     }
 
     private fun isOpaque(coord: Coordonate): Boolean {
@@ -245,19 +234,21 @@ class LampSocketProcess(var lamp: LampSocketElement) : IProcess, INBTTReady /*,L
         return !(block === Blocks.air) && (block.isOpaqueCube && !(block === Blocks.farmland))
     }
 
-    fun setLightAt(coord: Coordonate) {
+    fun setLightAt(coord: Coordonate, value: Int) {
         val oldLbCoord = lbCoord
         lbCoord = Coordonate(coord)
+        val oldLight = light
         val same = coord == oldLbCoord
+        light = value
         if (!same && oldLbCoord == lamp.sixNode.coordonate) {
             lamp.sixNode.recalculateLightValue()
         }
         if (lbCoord == lamp.sixNode.coordonate) {
-            if (light != lastLight || !same) lamp.sixNode.recalculateLightValue()
+            if (light != oldLight || !same) lamp.sixNode.recalculateLightValue()
         } else {
             LightBlockEntity.addLight(lbCoord, light, 5)
         }
-        if (light != lastLight) {
+        if (light != oldLight) {
             val bos = ByteArrayOutputStream(64)
             val packet = DataOutputStream(bos)
             lamp.preparePacketForClient(packet)
