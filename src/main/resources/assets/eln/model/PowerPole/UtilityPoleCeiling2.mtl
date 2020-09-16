@@ -1,5 +1,5 @@
 # Blender MTL File: 'UtilityPoleCeiling2.blend'
-# Material Count: 4
+# Material Count: 3
 
 newmtl Material.003
 Ns 96.078431
@@ -24,15 +24,6 @@ illum 2
 map_Kd UtilityPole3.png
 
 newmtl None
-Ns 0
-Ka 0.000000 0.000000 0.000000
-Kd 0.8 0.8 0.8
-Ks 0.8 0.8 0.8
-d 1
-illum 2
-map_Kd UtilityPole3.png
-
-newmtl None_NONE
 Ns 0
 Ka 0.000000 0.000000 0.000000
 Kd 0.8 0.8 0.8
