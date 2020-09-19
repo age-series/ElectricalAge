@@ -48,8 +48,8 @@ class LampSocketProcess(var lamp: LampSocketElement) : IProcess, INBTTReady /*,L
         return bestChannelHandle
     }
 
-    private fun updateNearbyBlocks(growRate: Double, nominalLight: Double, deltaT: Double) {
-        val randTarget = 1.0 / growRate * deltaT * (1.0 * light / nominalLight / 15.0)
+    private fun updateNearbyBlocks(growRate: Double, nominalLight: Double, actualLight: Int, deltaT: Double) {
+        val randTarget = 1.0 / growRate * deltaT * (1.0 * actualLight / nominalLight / 15.0)
         if (randTarget > Math.random()) {
             var exit = false
             val vv = Vec3.createVectorHelper(1.0, 0.0, 0.0)
@@ -60,7 +60,7 @@ class LampSocketProcess(var lamp: LampSocketElement) : IProcess, INBTTReady /*,L
             lamp.front.rotateOnXnLeft(vv)
             lamp.side.rotateFromXN(vv)
             val c = Coordonate(lamp.sixNode.coordonate)
-            for (idx in 0 until lamp.socketDescriptor.range + light) { // newCoord.move(lamp.side.getInverse());
+            for (idx in 0 until lamp.socketDescriptor.range + actualLight) { // newCoord.move(lamp.side.getInverse());
                 vp.xCoord += vv.xCoord
                 vp.yCoord += vv.yCoord
                 vp.zCoord += vv.zCoord
@@ -83,7 +83,7 @@ class LampSocketProcess(var lamp: LampSocketElement) : IProcess, INBTTReady /*,L
     }
 
     override fun process(time: Double) {
-        val lastLight = light
+        var newLight: Int
         val lampStack = lamp.inventory.getStackInSlot(0)
         val cableStack = lamp.inventory.getStackInSlot(LampSocketContainer.cableSlotId)
         // LampDescriptor? is *important* here. Otherwise, NPE.
@@ -92,7 +92,6 @@ class LampSocketProcess(var lamp: LampSocketElement) : IProcess, INBTTReady /*,L
             /*
             Cable slot and lamp slot are empty. This means no light, and disconnect from lamp supply.
              */
-            light = 0
             stableProb = 0.0
             lamp.setIsConnectedToLampSupply(false)
         } else {
@@ -161,10 +160,10 @@ class LampSocketProcess(var lamp: LampSocketElement) : IProcess, INBTTReady /*,L
             lightDouble = 0.0
         }
 
-        light = lightDouble.toInt()
+        newLight = lightDouble.toInt()
         //light.coerceIn(0, 15) // IT F'ING LIES
-        if (light > 15) light = 15
-        if (light < 0) light = 0
+        if (newLight > 15) newLight = 15
+        if (newLight < 0) newLight = 0
 
         fun lampAgeFactor(voltage: Double): Double {
             return 0.000008 * Math.pow(voltage, 3.0) - 0.003225 * Math.pow(voltage, 2.0) + 0.33 * voltage
@@ -181,20 +180,20 @@ class LampSocketProcess(var lamp: LampSocketElement) : IProcess, INBTTReady /*,L
             }
             if (lampDescriptor.getLifeInTag(lampStack) <= 0.0) {
                 lamp.inventory.setInventorySlotContents(0, null)
-                light = 0
+                newLight = 0
             }
         } else {
-            light = 0
+            newLight = 0
         }
 
         if (lamp.coordonate.blockExist && lampDescriptor != null && lampDescriptor.vegetableGrowRate != 0.0) {
-            updateNearbyBlocks(lampDescriptor.vegetableGrowRate, lampDescriptor.nominalLight, time)
+            updateNearbyBlocks(lampDescriptor.vegetableGrowRate, lampDescriptor.nominalLight, newLight, time)
         }
 
         boot = false
         lampStackLast = lampStack
-        placeSpot(light)
-        if (light != lastLight)
+        placeSpot(newLight)
+        if (light != newLight)
             lamp.needPublish()
     }
 
