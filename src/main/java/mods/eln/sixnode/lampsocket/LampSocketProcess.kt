@@ -39,11 +39,10 @@ class LampSocketProcess(var lamp: LampSocketElement) : IProcess, INBTTReady /*,L
             return bestChanHand // we good!
         }
         val list = LampSupplyElement.channelMap[lamp.channel]?.filterNotNull() ?: return null
-        val map = list
+        val chanHand = list
             .map { Pair(it.element.sixNode.coordonate.trueDistanceTo(here), it) }
-            .filter{it.first < it.second.element.range}
-        val sortedBy = map.sortedBy { it.first }
-        val chanHand = sortedBy.first()
+            .filter { it.first < it.second.element.range }
+            .minBy { it.first }
         bestChannelHandle = chanHand
         return bestChannelHandle
     }
