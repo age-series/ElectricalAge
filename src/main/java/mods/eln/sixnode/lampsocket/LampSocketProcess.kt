@@ -102,13 +102,13 @@ class LampSocketProcess(var lamp: LampSocketElement) : IProcess, INBTTReady /*,L
                 val lampSupplyList = findBestSupply(lamp.sixNode.coordonate)
                 val bestLampSupply = lampSupplyList?.second
                 if (bestLampSupply != null && lampDescriptor != null && bestLampSupply.element.getChannelState(bestLampSupply.id)) {
-                    lamp.setIsConnectedToLampSupply(true)
                     bestLampSupply.element.addToRp(lampDescriptor.r)
                     lamp.positiveLoad.state = bestLampSupply.element.powerLoad.state
                 } else {
-                    lamp.setIsConnectedToLampSupply(false)
                     lamp.positiveLoad.state = 0.0
                 }
+
+                lamp.setIsConnectedToLampSupply(bestLampSupply != null)
             }
             else
             {
