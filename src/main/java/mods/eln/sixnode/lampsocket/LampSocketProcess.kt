@@ -87,9 +87,7 @@ class LampSocketProcess(var lamp: LampSocketElement) : IProcess, INBTTReady /*,L
         val lampStack = lamp.inventory.getStackInSlot(0)
         val cableStack = lamp.inventory.getStackInSlot(LampSocketContainer.cableSlotId)
         // LampDescriptor? is *important* here. Otherwise, NPE.
-        val gItem = if (lampStack != null && lampStack.item != null) lampStack.item as GenericItemUsingDamage<*> else null
-        val gDescriptor = gItem?.getDescriptor(lampStack)
-        val lampDescriptor = if (gDescriptor != null) gDescriptor as LampDescriptor else null
+        val lampDescriptor = (lampStack?.item as? GenericItemUsingDamage<*>)?.getDescriptor(lampStack) as? LampDescriptor
         if (cableStack == null || lampStack == null) {
             /*
             Cable slot and lamp slot are empty. This means no light, and disconnect from lamp supply.
@@ -106,6 +104,7 @@ class LampSocketProcess(var lamp: LampSocketElement) : IProcess, INBTTReady /*,L
                 val lampSupplyList = findBestSupply(lamp.sixNode.coordonate)
                 val bestLampSupply = lampSupplyList?.second
                 if (bestLampSupply != null && lampDescriptor != null && bestLampSupply.element.getChannelState(bestLampSupply.id)) {
+                    lamp.setIsConnectedToLampSupply(true)
                     bestLampSupply.element.addToRp(lampDescriptor.r)
                     lamp.positiveLoad.state = bestLampSupply.element.powerLoad.state
                 } else {
@@ -113,7 +112,11 @@ class LampSocketProcess(var lamp: LampSocketElement) : IProcess, INBTTReady /*,L
                     lamp.positiveLoad.state = 0.0
                 }
             }
-            // Not powered by a lamp supply.
+            else
+            {
+                // Not powered by a lamp supply.
+                lamp.setIsConnectedToLampSupply(false)
+            }
         }
 
         lamp.computeElectricalLoad()
