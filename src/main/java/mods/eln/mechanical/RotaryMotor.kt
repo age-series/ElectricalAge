@@ -26,6 +26,9 @@ import java.io.DataOutputStream
 
 class RotaryMotorDescriptor(baseName: String, obj: Obj3D) :
     SimpleShaftDescriptor(baseName, RotaryMotorElement::class, RotaryMotorRender::class, EntityMetaTag.Fluid) {
+    companion object {
+        const val GAS_GUZZLER_CONSTANT = 0.5
+    }
 
     override val sound = "eln:RotaryEngine"
     override val static = arrayOf(
@@ -39,9 +42,8 @@ class RotaryMotorDescriptor(baseName: String, obj: Obj3D) :
     }
     // Overall time for steam input changes to take effect, in seconds.
     val inertia: Float = 3f
-    // Optimal fluid consumed per second, mB.
-    // Computed to equal a single 36LP Railcraft boiler, or half of a 36HP.
-    val fluidConsumption: Float = 24f
+    // Maximum fluid consumed per second, mB.
+    val fluidConsumption: Float = 64f
     // How we describe the fluid in the tooltip.
     val fluidDescription: String = "gasoline"
     // The fluids actually accepted.
@@ -73,7 +75,7 @@ class RotaryMotorDescriptor(baseName: String, obj: Obj3D) :
         } else if (power.size == 1) {
             list.add(Utils.plotPower("  Power out: ", power[0]))
         } else {
-            list.add("  Power out: ${Utils.plotPower(minFluidPower)}- ${Utils.plotPower(maxFluidPower)}")
+            list.add("  Power out: ${Utils.plotPower(minFluidPower  * GAS_GUZZLER_CONSTANT)}- ${Utils.plotPower(maxFluidPower * GAS_GUZZLER_CONSTANT)}")
         }
         list.add(Utils.plotRads("  Optimal rads: ", optimalRads))
         list.add(Utils.plotRads("Max rads:  ", absoluteMaximumShaftSpeed))
@@ -100,7 +102,7 @@ class RotaryMotorElement(node: TransparentNode, desc_: TransparentNodeDescriptor
             // Do anything at all?
             val target: Float
             val computedEfficiency = if (shaft.rads > 700) {
-                 Math.max(Math.pow(Math.cos(((shaft.rads - desc.optimalRads) / (desc.optimalRads * desc.efficiencyCurve)) * (Math.PI / 2)), 3.0), 0.0)
+                 Math.max(Math.pow(Math.cos(((shaft.rads - desc.optimalRads) / (desc.optimalRads * desc.efficiencyCurve)) * (Math.PI / 2)), 3.0), 0.0) * RotaryMotorDescriptor.GAS_GUZZLER_CONSTANT
             } else {
                 0.25
             }
@@ -192,4 +194,7 @@ class RotaryMotorRender(entity: TransparentNodeEntity, desc: TransparentNodeDesc
         super.networkUnserialize(stream)
         volumeSetting.target = stream.readFloat()
     }
+
+    // Prevents it from not rendering when the main block is just out of frame.
+    override fun cameraDrawOptimisation() = false
 }

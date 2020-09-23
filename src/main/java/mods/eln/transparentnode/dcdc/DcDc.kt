@@ -1,4 +1,4 @@
-package mods.eln.transparentnode.variabledcdc
+package mods.eln.transparentnode.dcdc
 
 import mods.eln.Eln
 import mods.eln.cable.CableRenderDescriptor
@@ -8,19 +8,36 @@ import mods.eln.generic.GenericItemUsingDamageDescriptor
 import mods.eln.generic.GenericItemUsingDamageSlot
 import mods.eln.gui.GuiContainerEln
 import mods.eln.gui.GuiHelperContainer
-import mods.eln.gui.ISlotSkin
-import mods.eln.i18n.I18N.tr
-import mods.eln.item.*
-import mods.eln.misc.*
+import mods.eln.gui.ISlotSkin.SlotSkin
+import mods.eln.i18n.I18N
+import mods.eln.item.CaseItemDescriptor
+import mods.eln.item.ConfigCopyToolDescriptor
+import mods.eln.item.CopperCableDescriptor
+import mods.eln.item.FerromagneticCoreDescriptor
+import mods.eln.item.IConfigurable
+import mods.eln.misc.BasicContainer
+import mods.eln.misc.Coordonate
+import mods.eln.misc.Direction
+import mods.eln.misc.LRDU
+import mods.eln.misc.LRDUMask
+import mods.eln.misc.Obj3D
+import mods.eln.misc.PhysicalInterpolator
+import mods.eln.misc.SlewLimiter
+import mods.eln.misc.Utils
+import mods.eln.misc.VoltageLevelColor
 import mods.eln.node.NodeBase
 import mods.eln.node.NodePeriodicPublishProcess
-import mods.eln.node.transparent.*
+import mods.eln.node.transparent.TransparentNode
+import mods.eln.node.transparent.TransparentNodeDescriptor
+import mods.eln.node.transparent.TransparentNodeElement
+import mods.eln.node.transparent.TransparentNodeElementInventory
+import mods.eln.node.transparent.TransparentNodeElementRender
+import mods.eln.node.transparent.TransparentNodeEntity
 import mods.eln.sim.ElectricalLoad
 import mods.eln.sim.IProcess
 import mods.eln.sim.ThermalLoad
 import mods.eln.sim.mna.component.VoltageSource
 import mods.eln.sim.mna.process.TransformerInterSystemProcess
-import mods.eln.sim.nbt.NbtElectricalGateInput
 import mods.eln.sim.nbt.NbtElectricalLoad
 import mods.eln.sim.process.destruct.VoltageStateWatchDog
 import mods.eln.sim.process.destruct.WorldExplosion
@@ -42,11 +59,12 @@ import java.io.DataOutputStream
 import java.io.IOException
 import java.util.*
 
-class VariableDcDcDescriptor(name: String, objM: Obj3D, coreM: Obj3D, casingM: Obj3D): TransparentNodeDescriptor(name, VariableDcDcElement::class.java, VariableDcDcRender::class.java) {
+class DcDcDescriptor(name: String, objM: Obj3D, coreM: Obj3D, casingM: Obj3D, val minimalLoadToHum: Float):
+    TransparentNodeDescriptor(name, DcDcElement::class.java, DcDcRender::class.java) {
+
     companion object {
-        val MIN_LOAD_HUM = 0.5
-        val COIL_SCALE: Float = 4.0f
-        val COIL_SCALE_LIMIT: Int = 16
+        const val COIL_SCALE: Float = 4.0f
+        const val COIL_SCALE_LIMIT: Int = 16
     }
 
     var main: Obj3D.Obj3DPart? = null
@@ -74,8 +92,7 @@ class VariableDcDcDescriptor(name: String, objM: Obj3D, coreM: Obj3D, casingM: O
 
     override fun addInformation(itemStack: ItemStack, entityPlayer: EntityPlayer, list: MutableList<String>, par4: Boolean) {
         super.addInformation(itemStack, entityPlayer, list, par4)
-        Collections.addAll(list, *tr("Transforms an input voltage to\nan output voltage.")!!.split("\n".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray())
-        Collections.addAll(list, *tr("The output voltage is controlled\nfrom a signal input")!!.split("\n".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray())
+        Collections.addAll(list, *I18N.tr("Transforms an input voltage to\nan output voltage.")!!.split("\n".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray())
     }
 
     override fun shouldUseRenderHelper(type: IItemRenderer.ItemRenderType, item: ItemStack, helper: IItemRenderer.ItemRendererHelper): Boolean {
@@ -137,11 +154,9 @@ class VariableDcDcDescriptor(name: String, objM: Obj3D, coreM: Obj3D, casingM: O
     }
 }
 
-class VariableDcDcElement(transparentNode: TransparentNode, descriptor: TransparentNodeDescriptor): TransparentNodeElement(transparentNode, descriptor), IConfigurable {
+class DcDcElement(transparentNode: TransparentNode, descriptor: TransparentNodeDescriptor): TransparentNodeElement(transparentNode, descriptor), IConfigurable {
     val primaryLoad = NbtElectricalLoad("primaryLoad")
     val secondaryLoad = NbtElectricalLoad("secondaryLoad")
-
-    val control = NbtElectricalGateInput("control")
 
     val primaryVoltageSource = VoltageSource("primaryVoltageSource")
     val secondaryVoltageSource = VoltageSource("secondaryVoltageSource")
@@ -158,17 +173,18 @@ class VariableDcDcElement(transparentNode: TransparentNode, descriptor: Transpar
 
     var populated = false
 
+    var ratioControl = 1.0
+
     init {
         electricalLoadList.add(primaryLoad)
         electricalLoadList.add(secondaryLoad)
-        electricalLoadList.add(control)
         electricalComponentList.add(primaryVoltageSource)
         electricalComponentList.add(secondaryVoltageSource)
         val exp = WorldExplosion(this).machineExplosion()
         slowProcessList.add(primaryVoltageWatchdog.set(primaryLoad).set(exp))
         slowProcessList.add(secondaryVoltageWatchdog.set(secondaryLoad).set(exp))
         slowProcessList.add(NodePeriodicPublishProcess(node, 1.0, .5))
-        slowProcessList.add(VariableDcDcProcess(this))
+        slowProcessList.add(DcDcProcess(this))
     }
 
     override fun disconnectJob() {
@@ -187,8 +203,6 @@ class VariableDcDcElement(transparentNode: TransparentNode, descriptor: Transpar
         return when (side) {
             front.right() -> secondaryLoad
             front.left() -> primaryLoad
-            front -> control
-            front.back() -> control
             else -> null
         }
     }
@@ -200,9 +214,9 @@ class VariableDcDcElement(transparentNode: TransparentNode, descriptor: Transpar
     override fun getConnectionMask(side: Direction, lrdu: LRDU): Int {
         if (lrdu != LRDU.Down) return 0
         return when (side) {
-            front -> NodeBase.maskElectricalGate
-            front.back() -> NodeBase.maskElectricalGate
-            else -> NodeBase.maskElectricalPower
+            front.left() -> NodeBase.maskElectricalPower
+            front.right() -> NodeBase.maskElectricalPower
+            else -> 0
         }
     }
 
@@ -230,9 +244,9 @@ class VariableDcDcElement(transparentNode: TransparentNode, descriptor: Transpar
     }
 
     private fun computeInventory() {
-        val primaryCable = inventory.getStackInSlot(VariableDcDcContainer.primaryCableSlotId)
-        val secondaryCable = inventory.getStackInSlot(VariableDcDcContainer.secondaryCableSlotId)
-        val core = inventory.getStackInSlot(VariableDcDcContainer.ferromagneticSlotId)
+        val primaryCable = inventory.getStackInSlot(DcDcContainer.primaryCableSlotId)
+        val secondaryCable = inventory.getStackInSlot(DcDcContainer.secondaryCableSlotId)
+        val core = inventory.getStackInSlot(DcDcContainer.ferromagneticSlotId)
 
         primaryVoltageWatchdog.setUNominal(3200.0)
         secondaryVoltageWatchdog.setUNominal(3200.0)
@@ -246,21 +260,27 @@ class VariableDcDcElement(transparentNode: TransparentNode, descriptor: Transpar
             coreFactor = coreDescriptor.cableMultiplicator
         }
 
-        if (primaryCable == null || core == null || primaryCable.stackSize < 4) {
+        if (primaryCable == null || core == null || primaryCable.stackSize < 1) {
             primaryLoad.highImpedance()
             populated = false
         } else {
             primaryLoad.rs = coreFactor * 0.01
         }
 
-        if (secondaryCable == null || core == null || secondaryCable.stackSize < 4) {
+        if (secondaryCable == null || core == null || secondaryCable.stackSize < 1) {
             secondaryLoad.highImpedance()
             populated = false
         } else {
             secondaryLoad.rs = coreFactor * 0.01
         }
 
-        populated = primaryCable != null && secondaryCable != null && primaryCable.stackSize >= 4 && secondaryCable.stackSize >= 4 && core != null
+        populated = primaryCable != null && secondaryCable != null && primaryCable.stackSize >= 1 && secondaryCable.stackSize >= 1 && core != null
+
+        ratioControl = if (populated) {
+            primaryCable.stackSize.toDouble() / secondaryCable.stackSize.toDouble()
+        } else {
+            1.0
+        }
     }
 
     override fun inventoryChange(inventory: IInventory?) {
@@ -279,7 +299,7 @@ class VariableDcDcElement(transparentNode: TransparentNode, descriptor: Transpar
     }
 
     override fun newContainer(side: Direction, player: EntityPlayer): Container? {
-        return VariableDcDcContainer(player, inventory)
+        return DcDcContainer(player, inventory)
     }
 
     override fun getLightOpacity(): Float {
@@ -307,9 +327,9 @@ class VariableDcDcElement(transparentNode: TransparentNode, descriptor: Transpar
                 stream.writeByte(0)
             else
                 stream.writeByte(inventory.getStackInSlot(1).stackSize)
-            Utils.serialiseItemStack(stream, inventory.getStackInSlot(VariableDcDcContainer.ferromagneticSlotId))
-            Utils.serialiseItemStack(stream, inventory.getStackInSlot(VariableDcDcContainer.primaryCableSlotId))
-            Utils.serialiseItemStack(stream, inventory.getStackInSlot(VariableDcDcContainer.secondaryCableSlotId))
+            Utils.serialiseItemStack(stream, inventory.getStackInSlot(DcDcContainer.ferromagneticSlotId))
+            Utils.serialiseItemStack(stream, inventory.getStackInSlot(DcDcContainer.primaryCableSlotId))
+            Utils.serialiseItemStack(stream, inventory.getStackInSlot(DcDcContainer.secondaryCableSlotId))
             node.lrduCubeMask.getTranslate(front.down()).serialize(stream)
             var load = 0f
             if (primaryMaxCurrent != 0.0 && secondaryMaxCurrent != 0.0) {
@@ -325,11 +345,11 @@ class VariableDcDcElement(transparentNode: TransparentNode, descriptor: Transpar
 
     override fun getWaila(): Map<String, String> {
         val info = HashMap<String, String>()
-        info[tr("Ratio")] = Utils.plotValue(interSystemProcess.ratio)
-        // It's just not fair not to show the voltages on the VDC/DC. It's so variable...
-        info["Voltages"] = "\u00A7a" + Utils.plotVolt("", primaryLoad.u) + " " +
-            "\u00A7e" + Utils.plotVolt("", secondaryLoad.u)
-        info["Control Voltage"] = Utils.plotVolt(control.u)
+        info[I18N.tr("Ratio")] = Utils.plotValue(interSystemProcess.ratio)
+        if (Eln.wailaEasyMode) {
+            info["Voltages"] = "\u00A7a" + Utils.plotVolt("", primaryLoad.u) + " " +
+                "\u00A7e" + Utils.plotVolt("", secondaryLoad.u)
+        }
         try {
             val leftSubSystemSize = primaryLoad.subSystem.component.size
             val rightSubSystemSize = secondaryLoad.subSystem.component.size
@@ -343,12 +363,12 @@ class VariableDcDcElement(transparentNode: TransparentNode, descriptor: Transpar
                 rightSubSystemSize <= 15 -> "§6"
                 else -> "§c"
             }
-            info[tr("Subsystem Matrix Size: ")] = "$textColorLeft$leftSubSystemSize §r| $textColorRight$rightSubSystemSize"
+            info[I18N.tr("Subsystem Matrix Size: ")] = "$textColorLeft$leftSubSystemSize §r| $textColorRight$rightSubSystemSize"
         } catch (e: Exception) {
             if (populated) {
-                info[tr("Subsystem Matrix Size: ")] = "§cNot part of a subsystem!?"
+                info[I18N.tr("Subsystem Matrix Size: ")] = "§cNot part of a subsystem!?"
             } else {
-                info[tr("Subsystem Matrix Size: ")] = "Not part of a subsystem"
+                info[I18N.tr("Subsystem Matrix Size: ")] = "Not part of a subsystem"
             }
         }
         return info
@@ -360,37 +380,43 @@ class VariableDcDcElement(transparentNode: TransparentNode, descriptor: Transpar
             reconnect()
             needPublish()
         }
-        if (ConfigCopyToolDescriptor.readCableType(compound, "primary", inventory, VariableDcDcContainer.primaryCableSlotId, invoker))
+        if (ConfigCopyToolDescriptor.readCableType(compound, "primary", inventory, DcDcContainer.primaryCableSlotId, invoker))
             inventoryChange(inventory)
-        if (ConfigCopyToolDescriptor.readCableType(compound, "secondary", inventory, VariableDcDcContainer.secondaryCableSlotId, invoker))
+        if (ConfigCopyToolDescriptor.readCableType(compound, "secondary", inventory, DcDcContainer.secondaryCableSlotId, invoker))
             inventoryChange(inventory)
-        if (ConfigCopyToolDescriptor.readGenDescriptor(compound, "core", inventory, VariableDcDcContainer.ferromagneticSlotId, invoker))
+        if (ConfigCopyToolDescriptor.readGenDescriptor(compound, "core", inventory, DcDcContainer.ferromagneticSlotId, invoker))
             inventoryChange(inventory)
     }
 
     override fun writeConfigTool(compound: NBTTagCompound, invoker: EntityPlayer) {
-        ConfigCopyToolDescriptor.writeCableType(compound, "primary", inventory.getStackInSlot(VariableDcDcContainer.primaryCableSlotId))
-        ConfigCopyToolDescriptor.writeCableType(compound, "secondary", inventory.getStackInSlot(VariableDcDcContainer.secondaryCableSlotId))
-        ConfigCopyToolDescriptor.writeGenDescriptor(compound, "core", inventory.getStackInSlot(VariableDcDcContainer.ferromagneticSlotId))
+        ConfigCopyToolDescriptor.writeCableType(compound, "primary", inventory.getStackInSlot(DcDcContainer.primaryCableSlotId))
+        ConfigCopyToolDescriptor.writeCableType(compound, "secondary", inventory.getStackInSlot(DcDcContainer.secondaryCableSlotId))
+        ConfigCopyToolDescriptor.writeGenDescriptor(compound, "core", inventory.getStackInSlot(DcDcContainer.ferromagneticSlotId))
     }
 }
 
-class VariableDcDcProcess(val element: VariableDcDcElement): IProcess {
+class DcDcProcess(val element: DcDcElement): IProcess {
+
+    companion object {
+        const val MAX_RATIO = 16.0
+        const val MIN_RATIO = 1.0 / 16.0
+    }
+
     override fun process(time: Double) {
         val ratio = when {
-            element.control.normalized > 0.9 -> 0.9
-            element.control.normalized < 0.0 -> 0.0
-            else -> element.control.normalized
+            element.ratioControl > MAX_RATIO -> MAX_RATIO
+            element.ratioControl < MIN_RATIO -> MIN_RATIO
+            else -> element.ratioControl
         }
         if (ratio.isFinite()) {
-            element.interSystemProcess.ratio = 1-ratio
+            element.interSystemProcess.ratio = ratio
         } else {
             element.interSystemProcess.ratio = 1.0
         }
     }
 }
 
-class VariableDcDcRender(tileEntity: TransparentNodeEntity, val descriptor: TransparentNodeDescriptor): TransparentNodeElementRender(tileEntity, descriptor) {
+class DcDcRender(tileEntity: TransparentNodeEntity, val descriptor: TransparentNodeDescriptor): TransparentNodeElementRender(tileEntity, descriptor) {
 
     val inventory = TransparentNodeElementInventory(4, 64, this)
 
@@ -400,7 +426,6 @@ class VariableDcDcRender(tileEntity: TransparentNodeEntity, val descriptor: Tran
     var secondaryStackSize: Byte = 0
     var priRender: CableRenderDescriptor? = null
     var secRender: CableRenderDescriptor? = null
-    var controlRender: CableRenderDescriptor? = null
 
     private var feroPart: Obj3D.Obj3DPart? = null
     private var hasCasing = false
@@ -417,8 +442,8 @@ class VariableDcDcRender(tileEntity: TransparentNodeEntity, val descriptor: Tran
     init {
         addLoopedSound(object : LoopedSound("eln:Transformer", coordonate(), ISound.AttenuationType.LINEAR) {
             override fun getVolume(): Float {
-                return if (load.position > VariableDcDcDescriptor.MIN_LOAD_HUM)
-                    0.1f * (load.position - VariableDcDcDescriptor.MIN_LOAD_HUM).toFloat() / (1 - VariableDcDcDescriptor.MIN_LOAD_HUM).toFloat()
+                return if (load.position > (descriptor as DcDcDescriptor).minimalLoadToHum)
+                    0.1f * (load.position - descriptor.minimalLoadToHum) / (1 - descriptor.minimalLoadToHum)
                 else
                     0f
             }
@@ -431,11 +456,10 @@ class VariableDcDcRender(tileEntity: TransparentNodeEntity, val descriptor: Tran
     override fun draw() {
         GL11.glPushMatrix()
         front.glRotateXnRef()
-        (descriptor as VariableDcDcDescriptor).draw(feroPart, primaryStackSize.toInt(), secondaryStackSize.toInt(), hasCasing, doorOpen.get())
+        (descriptor as DcDcDescriptor).draw(feroPart, primaryStackSize.toInt(), secondaryStackSize.toInt(), hasCasing, doorOpen.get())
         GL11.glPopMatrix()
         cableRenderType = drawCable(front.down(), priRender, priConn, cableRenderType)
         cableRenderType = drawCable(front.down(), secRender, secConn, cableRenderType)
-        cableRenderType = drawCable(front.down(), Eln.instance.stdCableRenderSignal, controlConn, cableRenderType)
     }
 
     override fun networkUnserialize(stream: DataInputStream) {
@@ -467,7 +491,6 @@ class VariableDcDcRender(tileEntity: TransparentNodeEntity, val descriptor: Tran
 
             priConn.mask = 0
             secConn.mask = 0
-            controlConn.mask = 0
             for (lrdu in LRDU.values()) {
                 if(!eConn.get(lrdu)) continue
                 if(front.down().applyLRDU(lrdu) == front.left()) {
@@ -520,30 +543,30 @@ class VariableDcDcRender(tileEntity: TransparentNodeEntity, val descriptor: Tran
     }
 
     override fun newGuiDraw(side: Direction, player: EntityPlayer): GuiScreen? {
-        return VariableDcDcGui(player, inventory, this)
+        return DcDcGui(player, inventory, this)
     }
 }
 
-class VariableDcDcGui(player: EntityPlayer, inventory: IInventory, val render: VariableDcDcRender): GuiContainerEln(VariableDcDcContainer(player, inventory)) {
+class DcDcGui(player: EntityPlayer, inventory: IInventory, val render: DcDcRender): GuiContainerEln(DcDcContainer(player, inventory)) {
     override fun newHelper(): GuiHelperContainer {
-        return GuiHelperContainer(this, 176, 194 - 33 + 20, 8, 84 + 194 - 166 - 33 + 20, "vdcdc.png")
+        return GuiHelperContainer(this, 176, 194 - 33 + 20, 8, 84 + 194 - 166 - 33 + 20, "transformer.png")
     }
 }
 
-class VariableDcDcContainer(player: EntityPlayer, inventory: IInventory) : BasicContainer(player, inventory,
+class DcDcContainer(player: EntityPlayer, inventory: IInventory) : BasicContainer(player, inventory,
     arrayOf(
-        GenericItemUsingDamageSlot(inventory, primaryCableSlotId, 58, 30, 4,
+        GenericItemUsingDamageSlot(inventory, primaryCableSlotId, 58, 30, 16,
             arrayOf<Class<*>>(CopperCableDescriptor::class.java),
-            ISlotSkin.SlotSkin.medium, arrayOf(tr("Copper cable slot"), tr("4 Copper Cables Required"))),
-        GenericItemUsingDamageSlot(inventory, secondaryCableSlotId, 100, 30, 4,
+            SlotSkin.medium, arrayOf(I18N.tr("Copper cable slot"))),
+        GenericItemUsingDamageSlot(inventory, secondaryCableSlotId, 100, 30, 16,
             arrayOf<Class<*>>(CopperCableDescriptor::class.java),
-            ISlotSkin.SlotSkin.medium, arrayOf(tr("Copper cable slot"), tr("4 Copper Cables Required"))),
+            SlotSkin.medium, arrayOf(I18N.tr("Copper cable slot"))),
         GenericItemUsingDamageSlot(inventory, ferromagneticSlotId, 58 + (100 - 58) / 2, 30, 1,
             arrayOf<Class<*>>(FerromagneticCoreDescriptor::class.java),
-            ISlotSkin.SlotSkin.medium, arrayOf(tr("Ferromagnetic core slot"))),
+            SlotSkin.medium, arrayOf(I18N.tr("Ferromagnetic core slot"))),
         GenericItemUsingDamageSlot(inventory, CasingSlotId, 130, 74, 1,
             arrayOf<Class<*>>(CaseItemDescriptor::class.java),
-            ISlotSkin.SlotSkin.medium, arrayOf(tr("Casing slot")))))
+            SlotSkin.medium, arrayOf(I18N.tr("Casing slot")))))
     {
     companion object {
         const val primaryCableSlotId = 0

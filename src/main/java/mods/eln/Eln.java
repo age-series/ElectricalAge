@@ -126,6 +126,8 @@ import mods.eln.transparentnode.*;
 import mods.eln.transparentnode.autominer.AutoMinerDescriptor;
 import mods.eln.transparentnode.battery.BatteryDescriptor;
 import mods.eln.transparentnode.computercraftio.PeripheralHandler;
+import mods.eln.transparentnode.dcdc.DcDcDescriptor;
+import mods.eln.transparentnode.dcdc.LegacyDcDcDescriptor;
 import mods.eln.transparentnode.eggincubator.EggIncubatorDescriptor;
 import mods.eln.transparentnode.electricalantennarx.ElectricalAntennaRxDescriptor;
 import mods.eln.transparentnode.electricalantennatx.ElectricalAntennaTxDescriptor;
@@ -142,7 +144,6 @@ import mods.eln.transparentnode.teleporter.TeleporterDescriptor;
 import mods.eln.transparentnode.teleporter.TeleporterElement;
 import mods.eln.transparentnode.thermaldissipatoractive.ThermalDissipatorActiveDescriptor;
 import mods.eln.transparentnode.thermaldissipatorpassive.ThermalDissipatorPassiveDescriptor;
-import mods.eln.transparentnode.transformer.TransformerDescriptor;
 import mods.eln.transparentnode.turbine.TurbineDescriptor;
 import mods.eln.transparentnode.turret.TurretDescriptor;
 import mods.eln.transparentnode.variabledcdc.VariableDcDcDescriptor;
@@ -2938,13 +2939,12 @@ public class Eln {
 
         {
             subId = 0;
-            name = TR_NAME(Type.NONE, "DC-DC Converter");
+            name = TR_NAME(Type.NONE, "Legacy DC-DC Converter");
 
-            TransformerDescriptor desc = new TransformerDescriptor(name, obj.getObj("transformator"),
+            LegacyDcDcDescriptor desc = new LegacyDcDcDescriptor(name, obj.getObj("transformator"),
                 obj.getObj("feromagneticcorea"), obj.getObj("transformatorCase"), 0.5f);
             transparentNodeItem.addDescriptor(subId + (id << 6), desc);
         }
-
         {
             subId = 1;
             name = TR_NAME(Type.NONE, "Variable DC-DC Converter");
@@ -2952,9 +2952,15 @@ public class Eln {
             VariableDcDcDescriptor desc = new VariableDcDcDescriptor(name, obj.getObj("variabledcdc"),
                 obj.getObj("feromagneticcorea"), obj.getObj("transformatorCase"));
             transparentNodeItem.addDescriptor(subId + (id << 6), desc);
-
         }
+        {
+            subId = 2;
+            name = TR_NAME(Type.NONE, "DC-DC Converter");
 
+            DcDcDescriptor desc = new DcDcDescriptor(name, obj.getObj("transformator"),
+                obj.getObj("feromagneticcorea"), obj.getObj("transformatorCase"), 0.5f);
+            transparentNodeItem.addDescriptor(subId + (id << 6), desc);
+        }
     }
 
     private void registerHeatFurnace(int id) {

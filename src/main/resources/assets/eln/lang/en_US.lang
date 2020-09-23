@@ -101,6 +101,7 @@ Copper_Thermal_Cable.name=Copper Thermal Cable
 Cost_Oriented_Battery.name=Cost Oriented Battery
 Current_Oriented_Battery.name=Current Oriented Battery
 Cyan_Brush.name=Cyan Brush
+Legacy_DC-DC_Converter.name=DC-DC Converter (Legacy)
 DC-DC_Converter.name=DC-DC Converter
 Variable_DC-DC_Converter.name=Variable DC-DC Converter
 D_Flip_Flop_Chip.name=D Flip Flop Chip
@@ -1132,7 +1133,8 @@ Utility_Pole_w/DC-DC_Converter.name=T1 Utility Pole with Transformer
 # some other stuff
 
 Portable_NaN.name=Portable NaN (DEV ITEM)
-Old_800v_Arc_Furnace.name=Old 800V Arc Furnace
+Old_800v_Arc_Furnace.name=800V Arc Furnace
 Christmas_Tree.name=Christmas Tree
 Holiday_Candle.name=Holiday Candle
 String_Lights.name=String Lights
+Rotary_Motor.name=Rotary Motor
