@@ -240,11 +240,37 @@ class PIDRegulator : AnalogFunction() {
 
     private var lastError = 0.0
     private var errorIntegral = 0.0
+    private var clamping = false
 
     override fun process(inputs: Array<Double?>, deltaTime: Double): Double {
         val error = (inputs[0] ?: 0.0) - (inputs[1] ?: 0.0)
-        errorIntegral += error * deltaTime
-        val result = Kp * error + Ki * errorIntegral + Kd * (error - lastError) / deltaTime
+
+        // proportional term calculation
+        val proportionalTerm = Kp * error
+
+        // integral term calculation
+        if(!clamping) errorIntegral += error * deltaTime
+        val integralTerm =  Ki * errorIntegral
+
+        // derivative term calculation
+        val derivativeTerm = Kd * ((error - lastError) / deltaTime)
+
+        //output calculation + windup protection (clamping)
+        var result = proportionalTerm + integralTerm + derivativeTerm
+        when {
+            result > Eln.SVU -> {
+                result = Eln.SVU
+                clamping = error > 0.0;
+            }
+            result < 0.0 -> {
+                result = 0.0
+                clamping = error < 0.0;
+            }
+            else -> {
+                clamping = false
+            }
+        }
+
         lastError = error
         return result
     }
