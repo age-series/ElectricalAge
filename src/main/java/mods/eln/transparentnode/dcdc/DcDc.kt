@@ -277,7 +277,7 @@ class DcDcElement(transparentNode: TransparentNode, descriptor: TransparentNodeD
         populated = primaryCable != null && secondaryCable != null && primaryCable.stackSize >= 1 && secondaryCable.stackSize >= 1 && core != null
 
         ratioControl = if (populated) {
-            primaryCable.stackSize.toDouble() / secondaryCable.stackSize.toDouble()
+            secondaryCable.stackSize.toDouble() / primaryCable.stackSize.toDouble()
         } else {
             1.0
         }
