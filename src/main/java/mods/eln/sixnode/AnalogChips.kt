@@ -240,6 +240,7 @@ class PIDRegulator : AnalogFunction() {
 
     private var lastError = 0.0
     private var errorIntegral = 0.0
+    private var clamping = false
 
     override fun process(inputs: Array<Double?>, deltaTime: Double): Double {
         val error = (inputs[0] ?: 0.0) - (inputs[1] ?: 0.0)
@@ -248,16 +249,30 @@ class PIDRegulator : AnalogFunction() {
         val proportionalTerm = Kp * error
 
         // integral term calculation
-        val maxErrorIntegral = Eln.SVU / Ki
-        errorIntegral += error * deltaTime
-        errorIntegral = Utils.limit(errorIntegral, -maxErrorIntegral, maxErrorIntegral) //windup protection
+        if(!clamping) errorIntegral += error * deltaTime
         val integralTerm =  Ki * errorIntegral
 
         // derivative term calculation
         val derivativeTerm = Kd * ((error - lastError) / deltaTime)
 
+        //output calculation + windup protection (clamping)
+        var result = proportionalTerm + integralTerm + derivativeTerm
+        when {
+            result > Eln.SVU -> {
+                result = Eln.SVU
+                clamping = error > 0.0;
+            }
+            result < 0.0 -> {
+                result = 0.0
+                clamping = error < 0.0;
+            }
+            else -> {
+                clamping = false
+            }
+        }
+
         lastError = error
-        return Utils.limit(proportionalTerm + integralTerm + derivativeTerm, -Eln.SVU, Eln.SVU)
+        return result
     }
 
     override fun readFromNBT(nbt: NBTTagCompound?, str: String?) {
