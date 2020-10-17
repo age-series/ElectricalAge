@@ -22,13 +22,18 @@ public class TransformerInterSystemProcess implements IRootSystemPreStepProcess 
         Th a = getTh(aState, aVoltgeSource);
         Th b = getTh(bState, bVoltgeSource);
 
-        double aU = (a.U * b.R + ratio * b.U * a.R) / (b.R + ratio * ratio * a.R);
-        if (Double.isNaN(aU)) {
-            aU = 0;
+        double cU;
+        if (b.U - a.U * ratio > 1.0) {
+            cU = (b.U / ratio * b.R + ratio * b.U * a.R) / (b.R + ratio * ratio * a.R);
+        } else {
+            cU = (a.U * b.R + ratio * b.U * a.R) / (b.R + ratio * ratio * a.R);
+        }
+        if (Double.isNaN(cU)) {
+            cU = 0;
         }
 
-        aVoltgeSource.setU(aU);
-        bVoltgeSource.setU(aU * ratio);
+        aVoltgeSource.setU(cU);
+        bVoltgeSource.setU(cU * ratio);
     }
 
     static class Th {
