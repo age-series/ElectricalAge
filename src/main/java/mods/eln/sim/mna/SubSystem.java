@@ -197,8 +197,8 @@ public class SubSystem {
     }
 
     public void stepCalc() {
-        Profiler profiler = new Profiler();
-        //	profiler.add("generateMatrix");
+        //Profiler profiler = new Profiler();
+        //profiler.add("generateMatrix");
         if (!matrixValid) {
             generateMatrix();
         }
@@ -212,7 +212,7 @@ public class SubSystem {
             for (ISubSystemProcessI p : processI) {
                 p.simProcessI(this);
             }
-            //	profiler.add("generateMatrix");
+            //profiler.add("generateMatrix");
 
             for (int idx2 = 0; idx2 < stateCount; idx2++) {
                 double stack = 0;
@@ -223,7 +223,7 @@ public class SubSystem {
             }
             //Xtemp = Ainv.multiply(I);
         }
-        profiler.stop();
+        //profiler.stop();
         //Utils.println(profiler);
     }
 
