@@ -20,8 +20,8 @@ public class TransformerInterSystemProcess implements IRootSystemPreStepProcess 
 
     @Override
     public void rootSystemPreStepProcess() {
-        Th a = aState.getSubSystem().getTh(aState, aVoltgeSource);
-        Th b = bState.getSubSystem().getTh(bState, bVoltgeSource);
+        Th a = aVoltgeSource.getSubSystem().getTh(aState, aVoltgeSource);
+        Th b = bVoltgeSource.getSubSystem().getTh(bState, bVoltgeSource);
 
         double aU = (a.U * b.R + ratio * b.U * a.R) / (b.R + ratio * ratio * a.R);
         if (Double.isNaN(aU)) {

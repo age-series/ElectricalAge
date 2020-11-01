@@ -394,7 +394,7 @@ public class SubSystem {
         voltageSource.setU(originalU);
         double originalI = solve(voltageSource.getCurrentState());
 
-        double Rth = (originalU - otherU) / (originalI - otherI);
+        double Rth = (otherU - originalU) / (originalI - otherI);
         double Uth;
         //if(Double.isInfinite(d.Rth)) d.Rth = Double.MAX_VALUE;
         if (Rth > 10000000000000000000.0 || Rth < 0) {
