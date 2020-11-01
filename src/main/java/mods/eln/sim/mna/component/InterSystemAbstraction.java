@@ -3,18 +3,19 @@ package mods.eln.sim.mna.component;
 import mods.eln.sim.mna.RootSystem;
 import mods.eln.sim.mna.SubSystem;
 import mods.eln.sim.mna.misc.IDestructor;
+import mods.eln.sim.mna.misc.IRootSystemPreStepProcess;
 import mods.eln.sim.mna.state.State;
 import mods.eln.sim.mna.state.VoltageState;
+import mods.eln.sim.mna.SubSystem.Th;
 
-public class InterSystemAbstraction implements IAbstractor, IDestructor {
+public class InterSystemAbstraction implements IAbstractor, IDestructor, IRootSystemPreStepProcess {
 
     VoltageState aNewState;
     Resistor aNewResistor;
-    DelayInterSystem2 aNewDelay;
+    VoltageSource aNewDelay;
     VoltageState bNewState;
     Resistor bNewResistor;
-    DelayInterSystem2 bNewDelay;
-    DelayInterSystem2.ThevnaCalculator thevnaCalc;
+    VoltageSource bNewDelay;
 
     RootSystem root;
     Resistor interSystemResistor;
@@ -38,10 +39,10 @@ public class InterSystemAbstraction implements IAbstractor, IDestructor {
 
         aNewState = new VoltageState();
         aNewResistor = new Resistor();
-        aNewDelay = new DelayInterSystem2();
+        aNewDelay = new VoltageSource("aNewDelay");
         bNewState = new VoltageState();
         bNewResistor = new Resistor();
-        bNewDelay = new DelayInterSystem2();
+        bNewDelay = new VoltageSource("bNewDelay");
 
         aNewResistor.connectGhostTo(aState, aNewState);
         aNewDelay.connectTo(aNewState, null);
@@ -62,8 +63,7 @@ public class InterSystemAbstraction implements IAbstractor, IDestructor {
 
         interSystemResistor.abstractedBy = this;
 
-        thevnaCalc = new DelayInterSystem2.ThevnaCalculator(aNewDelay, bNewDelay);
-        root.addProcess(thevnaCalc);
+        root.addProcess(this);
     }
 
     void calibrate() {
@@ -97,10 +97,24 @@ public class InterSystemAbstraction implements IAbstractor, IDestructor {
         bSystem.removeComponent(bNewResistor);
         bSystem.removeState(bNewState);
 
-        root.removeProcess(thevnaCalc);
+        root.removeProcess(this);
 
         interSystemResistor.abstractedBy = null;
 
         aSystem.component.add(interSystemResistor);
+    }
+
+    @Override
+    public void rootSystemPreStepProcess() {
+        Th a = aNewDelay.getSubSystem().getTh(aState,aNewDelay);
+        Th b = bNewDelay.getSubSystem().getTh(bState,bNewDelay);
+
+        double U = (a.U - b.U) * b.R / (a.R + b.R) + b.U;
+        if (Double.isNaN(U)) {
+            U = 0;
+        }
+
+        aNewDelay.setU(U);
+        bNewDelay.setU(U);
     }
 }
