@@ -387,26 +387,23 @@ public class SubSystem {
         Th th = new Th();
         double originalU = d.state;
 
-        double aU = 10;
-        voltageSource.setU(aU);
-        double aI = solve(voltageSource.getCurrentState());
+        double otherU = originalU + 5;
+        voltageSource.setU(otherU);
+        double otherI = solve(voltageSource.getCurrentState());
 
-        double bU = 5;
-        voltageSource.setU(bU);
-        double bI = solve(voltageSource.getCurrentState());
+        voltageSource.setU(originalU);
+        double originalI = solve(voltageSource.getCurrentState());
 
-        double Rth = (aU - bU) / (bI - aI);
+        double Rth = (originalU - otherU) / (originalI - otherI);
         double Uth;
         //if(Double.isInfinite(d.Rth)) d.Rth = Double.MAX_VALUE;
         if (Rth > 10000000000000000000.0 || Rth < 0) {
             Uth = 0;
             Rth = 10000000000000000000.0;
         } else {
-            Uth = aU + Rth * aI;
+            Uth = otherU + Rth * otherI;
         }
         voltageSource.setU(originalU);
-
-
 
         th.R = Rth;
         th.U = Uth;
