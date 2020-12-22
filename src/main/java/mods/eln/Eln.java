@@ -339,6 +339,8 @@ public class Eln {
 
     public static boolean enableFestivities = true;
 
+    public static boolean verticalIronCableCrafting = false;
+
     @EventHandler
     public void preInit(FMLPreInitializationEvent event) {
 
@@ -404,6 +406,7 @@ public class Eln {
         Eln.analyticsURL = config.get("general", "analyticsURL", "http://eln.ja13.org/stat", "Set update checker URL").getString();
         Eln.analyticsPlayerUUIDOptIn = config.get("general", "analyticsPlayerOptIn", false, "Opt into sending player UUID when sending analytics (default DISABLED)").getBoolean(false);
         Eln.enableFestivities = config.get("general", "enableFestiveItems", true, "Set this to false to disable holiday themed items").getBoolean();
+        Eln.verticalIronCableCrafting = config.get("general", "verticalIronCableCrafting", false, "Set this to true to craft with vertical ingots instead of horizontal ones").getBoolean();
 
         if (analyticsEnabled) {
             final Property p = config.get("general", "playerUUID", "");
@@ -7163,9 +7166,14 @@ public class Eln {
             "III",
             'I', "ingotCopper");
 
-        addRecipe(findItemStack("Iron Cable", 12),
-            "III",
-            'I', new ItemStack(Items.iron_ingot));
+        if (Eln.verticalIronCableCrafting) {
+            addRecipe(findItemStack("Iron Cable", 12),
+                "I  ", "I  ", "I  ", 'I', new ItemStack(Items.iron_ingot));
+        } else {
+            addRecipe(findItemStack("Iron Cable", 12),
+                "III",
+                'I', new ItemStack(Items.iron_ingot));
+        }
 
         addRecipe(findItemStack("Tungsten Cable", 6),
             "III",
