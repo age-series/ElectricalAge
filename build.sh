@@ -9,7 +9,7 @@ mv gradle.properties.new gradle.properties
 
 # set variables in gradle.properties
 echo "" >> gradle.properties
-echo "BUILD_HOST = '$(hostname)'" >> gradle.properties
+echo "BUILD_HOST = '$(cat /etc/hostname)'" >> gradle.properties
 echo "BUILD_DATE = '$(date)'" >> gradle.properties
 echo "JAVA_VERSION = '$(java -version 2>&1 | awk -F\" '/version/ {print $2}')'" >> gradle.properties
 echo "GIT_REVISION = '$(git log --pretty=format:'%H' -n 1)'" >> gradle.properties

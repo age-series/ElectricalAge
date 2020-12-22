@@ -4693,6 +4693,14 @@ public class Eln {
 			transparentNodeItem.addWithoutRegistry(subId + (id << 6), desc);
 		}*/
 
+        {
+            subId = 2;
+            name = TR_NAME(Type.NONE, "Thermal Heat Exchanger");
+            HeatExchangerDescriptor desc = new HeatExchangerDescriptor(
+                name, new ThermalLoadInitializerByPowerDrop(780, -100, 10, 2)
+            );
+            transparentNodeItem.addDescriptor(subId + (id << 6), desc);
+        }
     }
 
     private void registerTurret(int id) {
