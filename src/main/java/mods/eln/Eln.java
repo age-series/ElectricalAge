@@ -72,6 +72,7 @@ import mods.eln.simplenode.test.TestBlock;
 import mods.eln.sixnode.*;
 import mods.eln.sixnode.TreeResinCollector.TreeResinCollectorDescriptor;
 import mods.eln.sixnode.batterycharger.BatteryChargerDescriptor;
+import mods.eln.sixnode.currentsource.CurrentSourceDescriptor;
 import mods.eln.sixnode.diode.DiodeDescriptor;
 import mods.eln.sixnode.electricalalarm.ElectricalAlarmDescriptor;
 import mods.eln.sixnode.electricalbreaker.ElectricalBreakerDescriptor;
@@ -1741,6 +1742,14 @@ public class Eln {
 
             ElectricalSourceDescriptor desc = new ElectricalSourceDescriptor(
                 name, obj.getObj("signalsource"), true);
+            sixNodeItem.addDescriptor(subId + (id << 6), desc);
+        }
+        {
+            subId = 2;
+            name = TR_NAME(Type.NONE, "Current Source");
+
+            CurrentSourceDescriptor desc = new CurrentSourceDescriptor(
+                name, obj.getObj("voltagesource"));
             sixNodeItem.addDescriptor(subId + (id << 6), desc);
         }
     }
