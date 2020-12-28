@@ -2,10 +2,7 @@ package mods.eln.sim.mna;
 
 import mods.eln.misc.Profiler;
 import mods.eln.misc.Utils;
-import mods.eln.sim.mna.component.Component;
-import mods.eln.sim.mna.component.Delay;
-import mods.eln.sim.mna.component.Resistor;
-import mods.eln.sim.mna.component.VoltageSource;
+import mods.eln.sim.mna.component.*;
 import mods.eln.sim.mna.misc.IDestructor;
 import mods.eln.sim.mna.misc.ISubSystemProcessFlush;
 import mods.eln.sim.mna.misc.ISubSystemProcessI;
@@ -288,34 +285,19 @@ public class SubSystem {
 //		s.step();
 
         SubSystem s = new SubSystem(null, 0.1);
-        VoltageState n1, n2, n3, n4, n5;
-        VoltageSource u1;
-        Resistor r1, r2, r3;
-        Delay d1, d2;
+        VoltageState n1, n2;
+        CurrentSource cs1;
+        Resistor r1;
 
         s.addState(n1 = new VoltageState());
-        s.addState(n2 = new VoltageState());
-        s.addState(n3 = new VoltageState());
-        //	s.addState(n4 = new VoltageState());
-        //	s.addState(n5 = new VoltageState());
 
-        s.addComponent((u1 = new VoltageSource("")).setU(1).connectTo(n1, null));
-
-        s.addComponent((r1 = new Resistor()).setR(10).connectTo(n1, n2));
-        s.addComponent((d1 = new Delay()).set(1).connectTo(n2, n3));
-        s.addComponent((r2 = new Resistor()).setR(10).connectTo(n3, null));
-        //s.addComponent((d2 = new Delay()).set(10).connectTo(n4, n5));
-        //s.addComponent((r2 = new Resistor()).setR(10).connectTo(n5, null));
-
-        for (int idx = 0; idx < 100; idx++) {
-            s.step();
-        }
-
-        System.out.println("END");
+        s.addComponent((cs1 = new CurrentSource("cs1")).setCurrent(0.01).connectTo(n1, null));
+        s.addComponent((r1 = new Resistor()).setR(10).connectTo(n1, null));
 
         s.step();
-        s.step();
-        s.step();
+
+        System.out.println("R: U = " + r1.getU() + ", I = " + r1.getI());
+        System.out.println("CS: U = " + cs1.getU());
     }
 
     public boolean containe(State state) {
