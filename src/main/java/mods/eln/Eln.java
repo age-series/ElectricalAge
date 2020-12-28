@@ -1752,7 +1752,7 @@ public class Eln {
             name = TR_NAME(Type.NONE, "Current Source");
 
             CurrentSourceDescriptor desc = new CurrentSourceDescriptor(
-                name, obj.getObj("voltagesource"));
+                name, obj.getObj("currentsource"));
             sixNodeItem.addDescriptor(subId + (id << 6), desc);
         }
     }
