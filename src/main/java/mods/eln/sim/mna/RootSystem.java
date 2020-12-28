@@ -227,9 +227,15 @@ public class RootSystem {
             }
             */
 
-            Resistor r = (Resistor) c;
-            // If a pin is disconnected, we can't be intersystem
-            if(r.aPin == null || r.bPin == null) continue;
+            Resistor r;
+            try {
+                r = (Resistor) c;
+                // If a pin is disconnected, we can't be intersystem
+                if(r.aPin == null || r.bPin == null) continue;
+            } catch (ClassCastException cce) {
+                Utils.println("WARN: RootSystem tried to treat a " + c.getClass() + " as a resistor");
+                continue;
+            }
 
             try {
                 new InterSystemAbstraction(this, r);

@@ -37,13 +37,14 @@ public class CurrentSource extends Bipole implements ISubSystemProcessI, INBTTRe
 
     @Override
     public void quitSubSystem() {
-        subSystem.removeProcess(this);
+        if (subSystem != null)
+            subSystem.removeProcess(this);
     }
 
     @Override
     public void simProcessI(SubSystem s) {
-        s.addToI(aPin, -currentToSource);
-        s.addToI(bPin, currentToSource);
+        s.addToI(aPin, currentToSource);
+        s.addToI(bPin, -currentToSource);
     }
 
     @Override
