@@ -34,9 +34,6 @@ public class ElectricalSourceElement extends SixNodeElement implements IConfigur
 
     public static final int setVoltageId = 1;
 
-    int color = 0;
-    int colorCare = 0;
-
     public ElectricalSourceElement(SixNode sixNode, Direction side, SixNodeDescriptor descriptor) {
         super(sixNode, side, descriptor);
         electricalLoadList.add(electricalLoad);
@@ -46,10 +43,6 @@ public class ElectricalSourceElement extends SixNodeElement implements IConfigur
     @Override
     public void readFromNBT(NBTTagCompound nbt) {
         super.readFromNBT(nbt);
-        byte b = nbt.getByte("color");
-        color = b & 0xF;
-        colorCare = (b >> 4) & 1;
-
         voltageSource.setU(nbt.getDouble("voltage"));
     }
 
@@ -60,8 +53,6 @@ public class ElectricalSourceElement extends SixNodeElement implements IConfigur
     @Override
     public void writeToNBT(NBTTagCompound nbt) {
         super.writeToNBT(nbt);
-        nbt.setByte("color", (byte) (color + (colorCare << 4)));
-
         nbt.setDouble("voltage", voltageSource.getU());
     }
 
@@ -78,11 +69,9 @@ public class ElectricalSourceElement extends SixNodeElement implements IConfigur
     @Override
     public int getConnectionMask(LRDU lrdu) {
         if (((ElectricalSourceDescriptor) sixNodeElementDescriptor).isSignalSource()) {
-            return NodeBase.maskElectricalGate + (color << NodeBase.maskColorShift) +
-                (colorCare << NodeBase.maskColorCareShift);
+            return NodeBase.maskElectricalGate;
         } else {
-            return NodeBase.maskElectricalPower + (color << NodeBase.maskColorShift) +
-                (colorCare << NodeBase.maskColorCareShift);
+            return NodeBase.maskElectricalPower;
         }
     }
 
@@ -111,7 +100,6 @@ public class ElectricalSourceElement extends SixNodeElement implements IConfigur
     public void networkSerialize(DataOutputStream stream) {
         super.networkSerialize(stream);
         try {
-            stream.writeByte((color << 4));
             stream.writeFloat((float) voltageSource.getU());
         } catch (IOException e) {
             e.printStackTrace();
@@ -125,22 +113,7 @@ public class ElectricalSourceElement extends SixNodeElement implements IConfigur
 
     @Override
     public boolean onBlockActivated(EntityPlayer entityPlayer, Direction side, float vx, float vy, float vz) {
-        if (onBlockActivatedRotate(entityPlayer)) return true;
-        ItemStack currentItemStack = entityPlayer.getCurrentEquippedItem();
-        if (currentItemStack != null) {
-            Item item = currentItemStack.getItem();
-
-            GenericItemUsingDamageDescriptor gen = BrushDescriptor.getDescriptor(currentItemStack);
-            if (gen != null && gen instanceof BrushDescriptor) {
-                BrushDescriptor brush = (BrushDescriptor) gen;
-                int brushColor = brush.getColor(currentItemStack);
-                if (brushColor != color && brush.use(currentItemStack, entityPlayer)) {
-                    color = brushColor;
-                    sixNode.reconnect();
-                }
-            }
-        }
-        return false;
+        return onBlockActivatedRotate(entityPlayer);
     }
 
     @Override

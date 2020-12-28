@@ -1,4 +1,4 @@
-package mods.eln.transparentnode
+package mods.eln.transparentnode.themralheatexchanger
 
 import mods.eln.Eln
 import mods.eln.fluid.ElementSidedFluidHandler
@@ -36,13 +36,13 @@ import org.lwjgl.opengl.GL11
 import java.lang.Math.ceil
 import java.lang.Math.min
 
-class HeatExchangerDescriptor(
+class ThermalHeatExchangerDescriptor(
     name: String,
     val thermal: ThermalLoadInitializerByPowerDrop
 ): TransparentNodeDescriptor(
     name,
-    HeatExchangerElement::class.java,
-    HeatExchangerRender::class.java,
+    ThermalHeatExchangerElement::class.java,
+    ThermalHeatExchangerRender::class.java,
     EntityMetaTag.Fluid
 ) {
 
@@ -73,7 +73,7 @@ class HeatExchangerDescriptor(
 
 data class ThermalPairing(val input: Fluid, val output: Fluid, val joulesPerMb: Double, val maxMbInputPerTick: Int, val ratio: Double = 1.0, val reversible: Boolean = false)
 
-class HeatExchangerElement(
+class ThermalHeatExchangerElement(
     transparentNode: TransparentNode,
     descriptor: TransparentNodeDescriptor
 ): TransparentNodeElement(transparentNode, descriptor) {
@@ -157,7 +157,7 @@ class HeatExchangerElement(
         thermalFastProcessList.add(thermalRegulatorProcess)
         slowProcessList.add(NodePeriodicPublishProcess(transparentNode, 2.0, 1.0))
         slowProcessList.add(thermalWatchdog)
-        thermalWatchdog.set(thermalLoad).setLimit((descriptor as HeatExchangerDescriptor).thermal)
+        thermalWatchdog.set(thermalLoad).setLimit((descriptor as ThermalHeatExchangerDescriptor).thermal)
             .set(WorldExplosion(this).machineExplosion())
 
         if (ic2hotcoolant != null && ic2coolant != null)
@@ -220,7 +220,7 @@ class HeatExchangerElement(
     }
 
     override fun initialize() {
-        (descriptor as HeatExchangerDescriptor).thermal.applyTo(thermalLoad)
+        (descriptor as ThermalHeatExchangerDescriptor).thermal.applyTo(thermalLoad)
         connect()
     }
 
@@ -231,12 +231,12 @@ class HeatExchangerElement(
     }
 }
 
-class HeatExchangerRender(
+class ThermalHeatExchangerRender(
     tileEntity: TransparentNodeEntity,
     descriptor: TransparentNodeDescriptor
 ): TransparentNodeElementRender(tileEntity, descriptor) {
     override fun draw() {
         front.glRotateXnRef()
-        (transparentNodedescriptor as HeatExchangerDescriptor).draw()
+        (transparentNodedescriptor as ThermalHeatExchangerDescriptor).draw()
     }
 }

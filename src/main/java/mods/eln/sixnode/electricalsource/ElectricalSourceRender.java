@@ -2,13 +2,13 @@ package mods.eln.sixnode.electricalsource;
 
 import mods.eln.Eln;
 import mods.eln.cable.CableRenderDescriptor;
-import mods.eln.misc.Direction;
-import mods.eln.misc.LRDU;
+import mods.eln.misc.*;
 import mods.eln.node.six.SixNodeDescriptor;
 import mods.eln.node.six.SixNodeElementRender;
 import mods.eln.node.six.SixNodeEntity;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
+import org.lwjgl.opengl.*;
 
 import java.io.DataInputStream;
 import java.io.IOException;
@@ -38,12 +38,7 @@ public class ElectricalSourceRender extends SixNodeElementRender {
     public void publishUnserialize(DataInputStream stream) {
         super.publishUnserialize(stream);
         try {
-            Byte b;
-            b = stream.readByte();
-
-            color = (b >> 4) & 0xF;
             voltage = stream.readFloat();
-
             needRedrawCable();
         } catch (IOException e) {
             e.printStackTrace();

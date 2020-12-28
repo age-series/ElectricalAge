@@ -1,5 +1,6 @@
 package mods.eln.sim.process.destruct;
 
+import mods.eln.*;
 import mods.eln.misc.Utils;
 import mods.eln.sim.IProcess;
 
@@ -43,7 +44,8 @@ public abstract class ValueWatchdog implements IProcess {
             Utils.print("%s destroying %s",
                 getClass().getName(),
                 destructable.describe());
-            destructable.destructImpl();
+            if (!Eln.debugExplosions)
+                destructable.destructImpl();
         }
     }
 

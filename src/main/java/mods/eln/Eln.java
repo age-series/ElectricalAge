@@ -142,6 +142,7 @@ import mods.eln.transparentnode.powerinductor.PowerInductorDescriptor;
 import mods.eln.transparentnode.solarpanel.SolarPanelDescriptor;
 import mods.eln.transparentnode.teleporter.TeleporterDescriptor;
 import mods.eln.transparentnode.teleporter.TeleporterElement;
+import mods.eln.transparentnode.themralheatexchanger.*;
 import mods.eln.transparentnode.thermaldissipatoractive.ThermalDissipatorActiveDescriptor;
 import mods.eln.transparentnode.thermaldissipatorpassive.ThermalDissipatorPassiveDescriptor;
 import mods.eln.transparentnode.turbine.TurbineDescriptor;
@@ -302,6 +303,7 @@ public class Eln {
     public static boolean explosionEnable;
 
     public static boolean debugEnabled = false;  // Read from configuration file. Default is `false`.
+    public static boolean debugExplosions = false;
     public static boolean versionCheckEnabled = true; // Read from configuration file. Default is `true`.
     public static boolean analyticsEnabled = true; // Read from configuration file. Default is `true`.
     public static String playerUUID = null; // Read from configuration file. Default is `null`.
@@ -394,7 +396,8 @@ public class Eln {
 
         modbusEnable = config.get("modbus", "enable", false).getBoolean(false);
         modbusPort = config.get("modbus", "port", 1502).getInt(1502);
-        debugEnabled = config.get("debug", "enable", false).getBoolean(false);
+        debugEnabled = config.get("debug", "enable", false, "Enables debug printing spam").getBoolean(false);
+        debugExplosions = config.get("debug", "explosions", false, "For debugging core MNA features that are very explody. NOT FOR NORMAL GAMEPLAY - WILL CORRUPT STUFF").getBoolean(false);
 
         explosionEnable = config.get("gameplay", "explosion", true).getBoolean(true);
 
@@ -4699,7 +4702,7 @@ public class Eln {
         {
             subId = 2;
             name = TR_NAME(Type.NONE, "Thermal Heat Exchanger");
-            HeatExchangerDescriptor desc = new HeatExchangerDescriptor(
+            ThermalHeatExchangerDescriptor desc = new ThermalHeatExchangerDescriptor(
                 name, new ThermalLoadInitializerByPowerDrop(780, -100, 10, 2)
             );
             transparentNodeItem.addDescriptor(subId + (id << 6), desc);
@@ -6717,7 +6720,16 @@ public class Eln {
             'D', findItemStack("Small Passive Thermal Dissipator"),
             'M', findItemStack("Advanced Electrical Motor"),
             'R', "itemRubber");
-
+        addRecipe(
+            findItemStack("Thermal Heat Exchanger"),
+            "STS",
+            "CCC",
+            "SAS",
+            'S', Items.iron_ingot, // This should be steel and then iron if DNE, but aaaaaaaaie the code no cooperate.
+            'T', findItemStack("Copper Thermal Cable"),
+            'C', findItemStack("Copper Plate"),
+            'A', findItemStack("Advanced Machine Block")
+        );
     }
 
     private void recipeGeneral() {
