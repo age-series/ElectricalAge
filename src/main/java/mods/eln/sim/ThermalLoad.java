@@ -71,9 +71,9 @@ public class ThermalLoad {
 
     public void movePowerTo(double power) {
         if(Double.isNaN(power)) return;
-        double absI = Math.abs(power);
+        //double absI = Math.abs(power);
         PcTemp += power;
-        PspTemp += absI;
+        PspTemp += power;
     }
 
     public double getT() {

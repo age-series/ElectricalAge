@@ -107,7 +107,7 @@ public class ElectricalCableElement extends SixNodeElement {
     @Override
     public String multiMeterString() {
         if (!descriptor.signalWire)
-            return Utils.plotUIP(electricalLoad.getU(), electricalLoad.getI(), electricalLoad.getRs());
+            return Utils.plotUIP(electricalLoad.getU(), electricalLoad.getI()) + " " + Utils.plotPower("Cable Power Loss", electricalLoad.getI() * electricalLoad.getI() * electricalLoad.getRs());
         else
             return Utils.plotSignal(electricalLoad.getU());
     }

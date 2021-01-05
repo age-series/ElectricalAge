@@ -71,7 +71,7 @@ class ThermalHeatExchangerDescriptor(
     }
 }
 
-data class ThermalPairing(val input: Fluid, val output: Fluid, val joulesPerMb: Double, val maxMbInputPerTick: Int, val ratio: Double = 1.0, val reversible: Boolean = false)
+data class ThermalPairing(val input: Fluid, val output: Fluid, val joulesPerMb: Double, val maxMbInputPerTick: Int, val ratio: Double = 1.0, val reversible: Boolean = false, val minTemp: Double? = null, val maxTemp: Double? = null)
 
 class ThermalHeatExchangerElement(
     transparentNode: TransparentNode,
@@ -107,12 +107,12 @@ class ThermalHeatExchangerElement(
             thermalPairs.filter { it.input.id == inputFluid.id || (it.reversible && it.output.id == inputFluid.id) }.forEach {
                 if (it.input.id == inputFluid.id) {
                     // Normal Forwards conversion
-                    inputMbPerTick = moveFluidProcess(it.output, it.maxMbInputPerTick, it.ratio)
+                    inputMbPerTick = moveFluidProcess(it.output, it.maxMbInputPerTick, it.ratio, it.minTemp, it.maxTemp)
                     outputMbPerTick = (inputMbPerTick * it.ratio).toInt()
                     joulesPerMb = it.joulesPerMb
                 } else {
                     // Reversed conversion
-                    inputMbPerTick = moveFluidProcess(it.input, it.maxMbInputPerTick, it.ratio)
+                    inputMbPerTick = moveFluidProcess(it.input, it.maxMbInputPerTick, it.ratio, it.minTemp, it.maxTemp)
                     outputMbPerTick = (inputMbPerTick * it.ratio).toInt()
                     joulesPerMb = -it.joulesPerMb
                 }
@@ -122,7 +122,7 @@ class ThermalHeatExchangerElement(
         joulesPerTick = outputMbPerTick * joulesPerMb
     }
 
-    fun moveFluidProcess(outputFluid: Fluid, maxMbInputPerTick: Int, ratio: Double): Int {
+    fun moveFluidProcess(outputFluid: Fluid, maxMbInputPerTick: Int, ratio: Double, minTemp: Double?, maxTemp: Double?): Int {
         // Check that we can put the amount into the output, then pull what we can from the input and put to the output
 
         val maxMbOutputPerTick = ceil(maxMbInputPerTick * ratio).toInt()
@@ -130,7 +130,18 @@ class ThermalHeatExchangerElement(
         //println("maxMbOutputPerTick: $maxMbOutputPerTick")
         val canMoveOutputMb = tank.fill(OUTPUT_SIDE, FluidStack(outputFluid, maxMbOutputPerTick), false)
         //println("canMoveOutputMb: $canMoveOutputMb")
-        val shouldMoveOutputMb = min(maxMbOutputPerTick * electricalControlLoad.normalized, canMoveOutputMb.toDouble())
+        var inTempRange = 1.0
+        if (minTemp != null) {
+            if (thermalLoad.Tc < minTemp) {
+                inTempRange = 0.0
+            }
+        }
+        if (maxTemp != null) {
+            if (thermalLoad.Tc > maxTemp) {
+                inTempRange = 0.0
+            }
+        }
+        val shouldMoveOutputMb = min(maxMbOutputPerTick * electricalControlLoad.normalized, canMoveOutputMb.toDouble()) * inTempRange
         //println("shouldMoveOutputMb: $shouldMoveOutputMb")
         val predictedInputMb = ceil(shouldMoveOutputMb / ratio).toInt()
         //println("predictedInputMb: $predictedInputMb")
@@ -168,7 +179,7 @@ class ThermalHeatExchangerElement(
 
         if (steam != null) {
             //println("Steam Enabled in Thermal Heat Exchanger")
-            thermalPairs.add(ThermalPairing(FluidRegistry.WATER, steam, 1/0.45, 36,10.0, false))
+            thermalPairs.add(ThermalPairing(FluidRegistry.WATER, steam, -1/0.45, 36,10.0, false, minTemp = 100.0))
         }
 
         thermalPairs.forEach {
@@ -202,7 +213,7 @@ class ThermalHeatExchangerElement(
 
     // This would be thermalLoad.power but it's not accurate.
     override fun multiMeterString(side: Direction?): String = Utils.plotPercent("Ctl:", electricalControlLoad.normalized)
-    override fun thermoMeterString(side: Direction): String = Utils.plotCelsius("T:", thermalLoad.Tc) + "\n" + Utils.plotPower(joulesPerTick * 20)
+    override fun thermoMeterString(side: Direction): String = Utils.plotCelsius("T:", thermalLoad.Tc) + " " + Utils.plotPower(joulesPerTick * 20)
 
     override fun getWaila(): Map<String, String> = mutableMapOf(
         Pair(I18N.tr("Control"), Utils.plotPercent("", electricalControlLoad.normalized)),
