@@ -336,6 +336,11 @@ public class Utils {
         return plotVolt("U", U) + plotAmpere("I", I) + plotPower("P", Math.abs(U * I));
     }
 
+    public static String plotUIP(double U, double I, double R) {
+        return plotVolt("U", U) + plotAmpere("I", I) + plotPower("P", I * I * R);
+    }
+
+
     public static String plotTime(double value) {
         String str = "";
         int h, mn, s;
@@ -1445,8 +1450,8 @@ public class Utils {
         return false;
     }
 
-    public static String plotSignal(double U, double I) {
-        return plotVolt("U", U) + plotAmpere("I", I) + plotPercent("Value", U / Eln.SVU);
+    public static String plotSignal(double U) {
+        return plotVolt("U", U) + plotPercent("Value", U / Eln.SVU);
     }
 
     public static float limit(float value, float min, float max) {
