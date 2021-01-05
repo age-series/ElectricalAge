@@ -146,11 +146,7 @@ class RotaryMotorElement(node: TransparentNode, desc_: TransparentNodeDescriptor
     override fun getElectricalLoad(side: Direction, lrdu: LRDU) = throttle
     override fun getThermalLoad(side: Direction?, lrdu: LRDU?) = null
     override fun getConnectionMask(side: Direction, lrdu: LRDU): Int {
-        if (lrdu == LRDU.Down && (side == front.up() || side == front.down())) return NodeBase.maskElectricalGate
-        if (lrdu == LRDU.Up && (side == front.up() || side == front.down())) return NodeBase.maskElectricalGate
-        if (lrdu == LRDU.Left && (side == front || side == front.back())) return NodeBase.maskElectricalGate
-        if (lrdu == LRDU.Right && (side == front || side == front.back())) return NodeBase.maskElectricalGate
-        return 0
+        return NodeBase.maskElectricalGate
     }
 
     override fun onBlockActivated(entityPlayer: EntityPlayer?, side: Direction?, vx: Float, vy: Float, vz: Float) = false
