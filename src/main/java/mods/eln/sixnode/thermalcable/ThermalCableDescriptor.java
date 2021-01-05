@@ -104,6 +104,7 @@ public class ThermalCableDescriptor extends SixNodeDescriptor {
         super.addInformation(itemStack, entityPlayer, list, par4);
 
         list.add(tr("Max. temperature: %1$°C", Utils.plotValue(thermalWarmLimit)));
+        list.add(tr("Min. temperature: %1$°C", Utils.plotValue(thermalCoolLimit)));
         list.add(tr("Serial resistance: %1$K/W", Utils.plotValue(thermalRs * 2)));
         list.add(tr("Parallel resistance: %1$K/W", Utils.plotValue(thermalRp)));
         list.add("");

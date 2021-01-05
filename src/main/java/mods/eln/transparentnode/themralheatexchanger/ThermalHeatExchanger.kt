@@ -147,7 +147,8 @@ class ThermalHeatExchangerElement(
     private val thermalRegulatorProcess = IProcess { time ->
         //Yes, it's magic number time. 1.25 is a rough estimate of the "what the fuck" measure I got from thermal power.
         val heatPower = joulesPerTick / (Eln.instance.thermalFrequency / Eln.instance.electricalFrequency) * 1.25 / time
-        thermalLoad.PcTemp += heatPower
+        thermalLoad.movePowerTo(heatPower)
+        //thermalLoad.PcTemp += heatPower
     }
 
     init {
@@ -160,11 +161,15 @@ class ThermalHeatExchangerElement(
         thermalWatchdog.set(thermalLoad).setLimit((descriptor as ThermalHeatExchangerDescriptor).thermal)
             .set(WorldExplosion(this).machineExplosion())
 
-        if (ic2hotcoolant != null && ic2coolant != null)
+        if (ic2hotcoolant != null && ic2coolant != null) {
+            //println("IC2 Coolant Enabled in Thermal Heat Exchanger")
             thermalPairs.add(ThermalPairing(ic2hotcoolant, ic2coolant, 640.0 / 7.0, 9, 1.0, true))
+        }
 
-        if (steam != null)
+        if (steam != null) {
+            //println("Steam Enabled in Thermal Heat Exchanger")
             thermalPairs.add(ThermalPairing(FluidRegistry.WATER, steam, 1/0.45, 36,10.0, false))
+        }
 
         thermalPairs.forEach {
             tank.addFluidWhitelist(INPUT_SIDE, it.input)

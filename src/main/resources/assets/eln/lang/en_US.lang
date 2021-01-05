@@ -1067,6 +1067,7 @@ Is_off=Is off
 Is_on=Is on
 Life=Life
 Max._temperature\:_%1$°C=Max. temperature: %1$°C
+Min._temperature\:_%1$°C=Min. temperature: %1$°C
 Measured_value\ncorresponding\nto_0%_output=Measured value\ncorresponding\nto 0% output
 Measured_value\ncorresponding\nto_100%_output=Measured value\ncorresponding\nto 100% output
 No=No
