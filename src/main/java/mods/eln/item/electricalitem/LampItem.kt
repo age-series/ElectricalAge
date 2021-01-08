@@ -32,8 +32,11 @@ abstract class LampItem(name: String?) : GenericItemUsingDamageDescriptor(name!!
                 x += v.xCoord
                 y += v.yCoord
                 z += v.zCoord
-                val block = world.getBlock(MathHelper.floor_double(x), MathHelper.floor_double(y), MathHelper.floor_double(z))
-                if (block !== Blocks.air && block !== Eln.lightBlock /*&& Block.blocksList[blockId].isOpaqueCube() == false*/) {
+                val fx = MathHelper.floor_double(x)
+                val fy = MathHelper.floor_double(y)
+                val fz = MathHelper.floor_double(z)
+                val block = world.getBlock(fx, fy, fz)
+                if (!block.isAir(world, fx, fy, fz)) {
                     x -= v.xCoord
                     y -= v.yCoord
                     z -= v.zCoord
@@ -42,20 +45,19 @@ abstract class LampItem(name: String?) : GenericItemUsingDamageDescriptor(name!!
                 rCount++
             }
             while (rCount > 0) {
-                val block = world.getBlock(MathHelper.floor_double(x), MathHelper.floor_double(y), MathHelper.floor_double(z))
-                if (block === Blocks.air || block === Eln.lightBlock) {
-                    //break;
-                    LightBlockEntity.addLight(world, MathHelper.floor_double(x), MathHelper.floor_double(y), MathHelper.floor_double(z), light, 10)
-                    return  /*
-                    x -= v.xCoord * 4;
-					y -= v.yCoord * 4;
-					z -= v.zCoord * 4;
-					rCount -= 4;*/
+                var stride = 1
+                val fx = MathHelper.floor_double(x)
+                val fy = MathHelper.floor_double(y)
+                val fz = MathHelper.floor_double(z)
+                val block = world.getBlock(fx, fy, fz)
+                if (block.isAir(world, fx, fy, fz)) {
+                    LightBlockEntity.addLight(world, fx, fy, fz, light, 5)
+                    stride = 3
                 }
-                x -= v.xCoord
-                y -= v.yCoord
-                z -= v.zCoord
-                rCount--
+                x -= v.xCoord * stride
+                y -= v.yCoord * stride
+                z -= v.zCoord * stride
+                rCount -= stride
             }
         }
     }

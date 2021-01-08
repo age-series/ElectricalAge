@@ -56,11 +56,11 @@ class ModbusTcpServer(port: Int = 1502) {
 
         fun start() = Thread(Runnable {
             while (!socket.isClosed) {
+                inputBuffer.clear()
                 val size = socket.inputStream.read(inputBuffer.array(), inputBuffer.position(), inputBuffer.remaining())
                 if (size > 0) {
                     inputBuffer.position(inputBuffer.position() + size).flip()
                     handle(socket.outputStream)
-                    inputBuffer.flip()
                 } else {
                     socket.close()
                 }
@@ -76,7 +76,10 @@ class ModbusTcpServer(port: Int = 1502) {
                         val slaveAddress = inputBuffer.get()
                         val functionCode = inputBuffer.get()
                         val response = ByteBuffer.allocate(OutputBufferSize)
-                            .putShort(transactionId).putShort(0).putShort(0).put(slaveAddress)
+                            .putShort(transactionId)
+                            .putShort(0) // protocol
+                            .putShort(0) // length, actually 0...
+                            .put(slaveAddress) // start address
                         val slave = slaves[slaveAddress.toInt()]
                         if (slave != null) {
                             synchronized(slave) {
@@ -87,6 +90,8 @@ class ModbusTcpServer(port: Int = 1502) {
                                     0x04 -> readInputRegisters(slave, response)
                                     0x05 -> writeSingleCoil(slave, response)
                                     0x06 -> writeSingleRegister(slave, response)
+                                    0x0f -> writeMultipleCoils(slave, response)
+                                    0x10 -> writeMultipleRegisters(slave, response)
                                     else -> {
                                         response.put((0x80 + functionCode).toByte()).put(0x01.toByte())
                                         inputBuffer.position(inputBuffer.position() + remaining - 2)
@@ -97,8 +102,9 @@ class ModbusTcpServer(port: Int = 1502) {
                             response.put((0x80 + functionCode).toByte()).put(0x0B.toByte())
                             inputBuffer.position(inputBuffer.position() + remaining - 2)
                         }
-                        response.putShort(4, (response.position() - 6).toShort()).flip()
-                        output.write(response.array(), 0, response.remaining())
+                        val position = response.position()
+                        response.putShort(4, (position - 6).toShort()).flip()
+                        output.write(response.array(), 0, position)
                         output.flush()
                     } else {
                         return
@@ -198,6 +204,80 @@ class ModbusTcpServer(port: Int = 1502) {
             } catch (e: IllegalAddressException) {
             }
             response.put((0x86.toByte())).put(0x02.toByte())
+        }
+
+        private fun writeMultipleCoils(slave: IModbusSlave, response: ByteBuffer) {
+            val address = inputBuffer.short
+            val quantity = inputBuffer.short
+            val byteCount = inputBuffer.get()
+
+            // Check quantity
+            var bCountChecked = (quantity/8).toByte()
+            if (quantity % 8 != 0)
+                bCountChecked++
+
+            if ((quantity < 1 || quantity > 0x07b0) && (byteCount != bCountChecked)) {
+                response.put((0x8f.toByte())).put(0x03.toByte())
+                return
+            }
+
+            // check addresses
+            if (!(address >= 0x0000 && (address + quantity) <= 0xffff)) {
+                response.put((0x8f.toByte())).put(0x02.toByte())
+                return
+            }
+
+            // check remaining amount of data and writing coils
+            if (inputBuffer.remaining().toByte() >= byteCount) {
+                // Wrinting registers...
+                try {
+                    var addr  = address
+                    for (i in 1..quantity) {
+                        slave.setHoldingRegister(addr.toInt(), inputBuffer.short)
+                        addr++
+                    }
+                    response.put(0x0f.toByte()).putShort(address).putShort(quantity)
+                    return
+
+                } catch (e: IllegalAddressException) {
+                }
+            }
+            response.put((0x8f.toByte())).put(0x04.toByte())
+        }
+
+        private fun writeMultipleRegisters(slave: IModbusSlave, response: ByteBuffer) {
+            val address = inputBuffer.short
+            val quantity = inputBuffer.short
+            val byteCount = inputBuffer.get()
+
+            // Check quantity
+            if ((quantity < 1 || quantity > 0x007b) && (byteCount != (2 * quantity).toByte())) {
+                response.put((0x90.toByte())).put(0x03.toByte())
+                return
+            }
+
+            // check addresses
+            if (!(address >= 0x0000 && (address + quantity) <= 0xffff)) {
+                response.put((0x90.toByte())).put(0x02.toByte())
+                return
+            }
+
+            // check remaining amount of data and writing coils
+            if (inputBuffer.remaining().toByte() >= byteCount) {
+                // Wrinting registers...
+                try {
+                    var addr  = address
+                    for (i in 1..quantity) {
+                        val value = inputBuffer.short
+                        slave.setHoldingRegister(addr.toInt(), value)
+                        addr++
+                    }
+                    response.put(0x10.toByte()).putShort(address).putShort(quantity)
+                    return
+                } catch (e: IllegalAddressException) {
+                }
+            }
+            response.put((0x90.toByte())).put(0x04.toByte())
         }
 
         fun destroy() = socket.close()

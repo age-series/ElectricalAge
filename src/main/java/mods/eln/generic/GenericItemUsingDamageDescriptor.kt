@@ -107,7 +107,7 @@ open class GenericItemUsingDamageDescriptor {
     }
 
     open fun onUpdate(stack: ItemStack, world: World, entity: Entity, par4: Int, par5: Boolean) {}
-    protected fun getNbt(stack: ItemStack): NBTTagCompound? {
+    protected fun getNbt(stack: ItemStack): NBTTagCompound {
         var nbt = stack.tagCompound
         if (nbt == null) {
             stack.tagCompound = getDefaultNBT().also { nbt = it }

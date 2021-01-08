@@ -3919,7 +3919,17 @@ public class Eln {
             element = new CombustionChamber(TR_NAME(Type.NONE, "Combustion Chamber"));
             sharedItem.addElement(completId, element);
         }
-
+        {
+            ThermalIsolatorElement element;
+            subId = 1;
+            completId = subId + (id << 6);
+            element = new ThermalIsolatorElement(
+                TR_NAME(Type.NONE, "Thermal Insulation"),
+                0.5,
+                500
+            );
+            sharedItem.addElement(completId, element);
+        }
     }
 
     private void registerFerromagneticCore(int id) {
@@ -5342,8 +5352,19 @@ public class Eln {
             ElectricalLampItem desc = new ElectricalLampItem(
                 name,
                 //10, 8, 20, 15, 5, 50, old
-                10, 8, 20, 15, 5, 50,// int light,int range
-                6000, 100// , energyStorage,discharg, charge
+                10, 6, 20, 12, 8, 50,// int light,int range,
+                6000, 100// , energyStorage, discharge, charge
+            );
+            sharedItemStackOne.addElement(subId + (id << 6), desc);
+        }
+        {
+            subId = 1;
+            name = TR_NAME(Type.NONE, "Improved Flashlight");
+
+            ElectricalLampItem desc = new ElectricalLampItem(
+                name,
+                15, 8, 20, 15, 12, 50,// int light,int range,
+                24000, 400// , energyStorage, discharge, charge
             );
             sharedItemStackOne.addElement(subId + (id << 6), desc);
         }
@@ -5355,7 +5376,7 @@ public class Eln {
             ElectricalPickaxe desc = new ElectricalPickaxe(
                 name,
                 22, 1,// float strengthOn,float strengthOff, - Haxorian note: buffed this from 8,3 putting it around eff 4
-                40000, 200, 10000// double energyStorage,double
+                120000, 200, 10000// double energyStorage,double
                 // energyPerBlock,double chargePower
             );
             sharedItemStackOne.addElement(subId + (id << 6), desc);
@@ -6977,6 +6998,12 @@ public class Eln {
             "L L",
             " L ",
             'L', new ItemStack(Blocks.stone));
+        addRecipe(findItemStack("Thermal Insulation", 4),
+            "WSW",
+            "SWS",
+            "WSW",
+            'S', new ItemStack(Blocks.stone),
+            'W', new ItemStack(Blocks.wool));
     }
 
     private void recipeFerromagneticCore() {
@@ -7298,6 +7325,15 @@ public class Eln {
             " I ",
             'L', findItemStack("50V Incandescent Light Bulb"),
             'B', findItemStack("Portable Battery"),
+            'G', new ItemStack(Blocks.glass_pane),
+            'I', new ItemStack(Items.iron_ingot));
+
+        addRecipe(findItemStack("Improved Flashlight"),
+            "GLG",
+            "IBI",
+            " I ",
+            'L', findItemStack("50V LED Bulb"),
+            'B', findItemStack("Portable Battery Pack"),
             'G', new ItemStack(Blocks.glass_pane),
             'I', new ItemStack(Items.iron_ingot));
 

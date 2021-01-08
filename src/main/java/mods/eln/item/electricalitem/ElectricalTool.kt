@@ -29,13 +29,17 @@ open class ElectricalTool(name: String, var strengthOn: Float, var strengthOff: 
     }
 
     override fun onBlockDestroyed(stack: ItemStack, w: World, block: Block, x: Int, y: Int, z: Int, entity: EntityLivingBase): Boolean {
+        subtractEnergyForBlockBreak(stack, block)
+        Utils.println("destroy")
+        return true
+    }
+
+    fun subtractEnergyForBlockBreak(stack: ItemStack, block: Block) {
         if (getStrVsBlock(stack, block) == strengthOn) {
-            var e = getEnergy(stack!!) - energyPerBlock
+            var e = getEnergy(stack) - energyPerBlock
             if (e < 0) e = 0.0
             setEnergy(stack, e)
         }
-        Utils.println("destroy")
-        return true
     }
 
     fun getStrength(stack: ItemStack): Float {

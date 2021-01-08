@@ -77,9 +77,9 @@ class ElectricalLampItem(name: String, var lightMin: Int, var rangeMin: Int, dis
             var lightState = getLightState(s) + 1
             if (lightState > 2) lightState = 0
             when (lightState) {
-                0 -> Utils.addChatMessage(p as EntityPlayerMP?, "flashlight OFF")
-                1 -> Utils.addChatMessage(p as EntityPlayerMP?, "flashlight ON")
-                2 -> Utils.addChatMessage(p as EntityPlayerMP?, "flashlight BOOSTED")
+                0 -> Utils.addChatMessage(p as EntityPlayerMP?, "Flashlight OFF")
+                1 -> Utils.addChatMessage(p as EntityPlayerMP?, "Flashlight ON")
+                2 -> Utils.addChatMessage(p as EntityPlayerMP?, "Flashlight BOOSTED")
                 else -> {
                 }
             }
