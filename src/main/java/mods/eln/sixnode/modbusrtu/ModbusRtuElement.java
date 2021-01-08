@@ -548,6 +548,13 @@ public class ModbusRtuElement extends SixNodeElement implements IModbusSlave {
     }
 
     @Override
+    public short getHoldingRegister(int id) throws IllegalAddressException {
+        IModbusSlot slot = getModbusSlot(id);
+        id -= slot.getOffset();
+        return slot.getHoldingRegister(id);
+    }
+
+    @Override
     public int getSlaveId() {
         return station;
     }

@@ -46,7 +46,7 @@ open class GenericItemUsingDamageDescriptor {
 
     open fun addInformation(itemStack: ItemStack?, entityPlayer: EntityPlayer?, list: MutableList<String>, par4: Boolean) {}
 
-    open fun onItemRightClick(s: ItemStack?, w: World?, p: EntityPlayer?): ItemStack? {
+    open fun onItemRightClick(s: ItemStack, w: World, p: EntityPlayer): ItemStack {
         return s
     }
 
@@ -106,7 +106,7 @@ open class GenericItemUsingDamageDescriptor {
         UtilsClient.drawIcon(type, ResourceLocation("eln", "textures/items/$icon.png"))
     }
 
-    open fun onUpdate(stack: ItemStack?, world: World?, entity: Entity?, par4: Int, par5: Boolean) {}
+    open fun onUpdate(stack: ItemStack, world: World, entity: Entity, par4: Int, par5: Boolean) {}
     protected fun getNbt(stack: ItemStack): NBTTagCompound? {
         var nbt = stack.tagCompound
         if (nbt == null) {
@@ -115,15 +115,15 @@ open class GenericItemUsingDamageDescriptor {
         return nbt
     }
 
-    open fun getStrVsBlock(stack: ItemStack?, block: Block?): Float {
+    open fun getStrVsBlock(stack: ItemStack, block: Block?): Float {
         return 0.2f
     }
 
-    open fun onBlockDestroyed(stack: ItemStack?, w: World?, block: Block?, x: Int, y: Int, z: Int, entity: EntityLivingBase?): Boolean {
+    open fun onBlockDestroyed(stack: ItemStack, w: World, block: Block, x: Int, y: Int, z: Int, entity: EntityLivingBase): Boolean {
         return false
     }
 
-    open fun onDroppedByPlayer(item: ItemStack?, player: EntityPlayer?): Boolean {
+    open fun onDroppedByPlayer(item: ItemStack, player: EntityPlayer?): Boolean {
         return true
     }
 

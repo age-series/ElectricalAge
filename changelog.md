@@ -1,3 +1,268 @@
+## 1.16.14
+
+- Fixes the steam generation taking place when the temperature is not high enough for steam
+- Fixes power being misinterpreted by cables
+
+## 1.16.13
+
+- Fixes negative thermal power not causing negative temperatures
+- Adds tooltip to thermal cables, showing minimum temperature
+
+## 1.16.12
+
+- Heat exchanger crafting
+- Creative current sources
+- other bugs fixed
+
+## 1.16.11
+
+### Adds:
+
+- Alternative recipe to make iron cables when your mods conflict
+
+### Changes:
+
+- Less explody poles by reducing current inrushes (protip: aparently buggy)
+
+## 1.16.10
+
+### Adds:
+
+- Thermal Heat Exchanger
+
+### Changes:
+
+- DC/DC now uses copper cables, and reverse bug is fixed
+- Performance imporvements in the MNA
+- Slight thermal system changes
+
+The thermal heat exchanger can be currently used for two things:
+
+- Convert back and forth between ic2hotcoolant and ic2coolant and Eln heat
+- Convert water into (ic2)steam (10x steam per water)
+
+The thermal heat exchanger requires a signal input on the far side from the heat input. The fluids must flow from bottom to top of the exchanger.
+
+The exchanger must be placed on the ground before the bottom pipes are connected. The exchanger will not move fluids on it's own, so you will need to pull the fluids out of the internal tank at the top.
+
+## 1.16.9
+
+### Adds:
+
+- Rotary motor has an item texture now!
+
+### Changes:
+
+- vDC/DC has new textures in GUI and on device
+- DC/DC code rewritten in Kotlin, expect less bugs
+- en_US language file has updated
+- DC/DC no longer accepts rubber based cables, and doesn't have voltage limits anymore!
+
+## 1.16.8
+
+### Fixes:
+
+- Lighting bug with lamp supplies and such
+
+## 1.16.7
+
+### Fixes:
+
+- T1 power poles can now handle 51.2kV like the T2 poles (since why not)
+
+### Added:
+
+- Rotary motor - takes 24mB/t of fuel
+
+It is best to let the rotary motor start up to full speed (you can use a shaft motor to speed this up) and then use a clutch to slowly introduce power into flywheels or an entire shaft network. It can provide a little over 50kW of power sustained, but it's not really designed for base power. Use steam turbines for best fuel efficiency.
+
+Efficiency curve of the Rotary Motor:
+
+![](https://user-images.githubusercontent.com/14130505/93027986-bc5d5700-f5de-11ea-8546-8da08c380b06.png)
+
+Placement of the rotary motor is a little wonky due to the shaft location. Place a single block, and then place it on top of that block. Then, remove that block and profit. Signal input accepted on the front edge of the shaft motor, next to where the shaft is.
+
+1[](https://user-images.githubusercontent.com/14130505/93028053-41487080-f5df-11ea-9fe8-beefbcd13141.png)
+
+## 1.16.6
+
+### Fixes:
+
+- Lamps now properly connect to wires and lamp supplies
+- Lamps no longer consume infinite current
+- Lamps no longer cause certain lighting bugs
+- Bulb life actually works now and ranges from 4 to 512 real-life hours
+- `mod()` operator in the sigproc: takes two args and runs mod on them
+
+## 1.16.5
+
+### Fixes:
+
+- The variable DC/DC converters no longer corrupt the world AND it now attempts to try and fix corrupted worlds. Neato!
+- Null item stacks in devices that accepts items no longer crash the client and server (as accidentally introduced last version)
+
+## 1.16.4
+
+### Added:
+
+- Christmas Trees
+- Holiday Candles
+- String lights
+- Grinch mode
+- Non-swinging variants of suspended lamps
+
+### Fixes:
+
+- Tooltip fixes on machines
+
+### Bugs:
+
+- The vDC/DC's *cannot* be placed next to one another or it will corrupt your world. If this happens, contact a developer to get your world fixed.
+
+## 1.15.11
+
+### Changed:
+
+- vDC/DC converter now allows basic uninsulated copper cables to be used in the coils
+- Haxorian balance patches...
+    - Batteries last 1/4 of the time they used to
+    - Machines can draw more power (and do things faster!)
+    - Recycling old batteries is now less
+
+## 1.15.8
+
+### Adds:
+
+- Variable DC/DC Converter - allows for much more flexible control over the voltage output.
+
+You can boost or buck based on the orientation of the vDC/DC on the ground. One can use this block to create a stable output voltage on one side with some control circuitry.
+
+The ratio range is from 1.0 to 0.1, the input signal is clamped to prevent too high of a voltage output.
+
+Crafting the device is the same as a DC/DC except that there's a cheap chip between the copper cables.
+
+## 1.15.7
+
+Clutches don't allow NaN as an input anymore.
+
+## 1.15.6
+
+It says that we fixed NaN's around shafts, but that's a lie.
+
+## 1.15.5
+
+It apparently didn't fix anything.
+
+## 1.15.4
+
+### Changes:
+
+- Mining pipes and alloy dust are a bit less grindy
+- Updated version checker to include stat feature
+
+### Bugfixes:
+
+- Added matrix debugging information to WAILA
+- Fixed autominer to use full chest
+- Fixed creative flywheel throwing bug
+- Cached important shaft variables
+
+## 1.15.3 (LLv11.1)
+
+### Added:
+
+- Ability to cancel grid connections!
+
+### Changed:
+
+- Rebalancing of clutches and clutch plates
+
+### Bugfixes:
+
+- Datalogger rotations
+
+## 1.15.2 (LLv11)
+
+### Added:
+
+- HV and VHV furnace heating cores for the electric furnace
+- New Shaft objects!
+    - Fixed shaft: does not rotate, can be used for additional braking power
+    - Clutch: engage and disengages shafts at will!
+- MNA state exporter for debugging
+- Power sockets now work
+- New build tools
+- Updated version checker
+- Much more build information
+- `/eln version` command for build information ingame!
+- You can now craft Nixie Tubes and Digital Displays!
+- Haxorian Changes:
+    - Arc furnace, arc clay, arc metal, creative cables, etc.
+- Config copy tool: copies configs and items in and out of devices. Use shift right click to copy and right click to paste. Very useful!
+
+### Changed:
+
+- Various motor balance changes
+- Shaft Hubs now do vertical!
+- Turrets ignore invulnerability timer
+- Updated developer list
+- Modifications to Travis CI build system
+- Updated contribution guide
+- You can color displays and outlets
+- Many crafting recipies modified
+
+### Bugfixes:
+
+- Msc fixes from upstream for build tools
+- Single use batteries are now actually single use
+- Texture fixes with thermal probe chip
+- Wire ID fix from bad Haxorian changes
+
+## -1.14.6 (LLv10)
+
+### Added:
+
+- microfarad support (and micro support for most other units)
+- Portable capacitors and capacitor packs
+- Nixie Tubes!
+- Digital Displays!
+- Dataloggers now support the "No Unit" `Unit` type, which shows just the numbers.
+
+### Changed:
+
+- Updatesd were made to the language files
+- German language file
+- Motor behavior is modified, less noise from shaft motors!
+- The "Haxorian Balance Patch", which modifies the balance of armor, tools, and portable batteries.
+- Electrical meter information about batteries on the ground is more useful
+
+### Bugfixes:
+
+- Fixed render glitches with biome colored blocks (grass, leaves) on SixNode
+- Fixed Quartz not being able to be placed on SixNode as a cover (as well as other blocks)
+- Rendering bugs with the printouts of displays are now fixed.
+
+## -1.14.5 (LLv9)
+
+### Added:
+
+- Shaft motor: Create shaft power efficiently!
+- Signal Bus Cable: Combine up to 16 signals in a single signal cable! Breakout of colors required, colored Signal Bus cables are NOT supported.
+
+### Changed:
+
+- Updates were made to the language file. Spelling mistakes, clarifications, and other fixes included
+
+### Bugfixes:
+
+- Brushes (for coloring wires) are fixed in Multiplayer servers
+- Sound bug has been resolved, and a configruation option added. A value of 16 is generally good enough but some installations may need it as low as 6.
+- Fixes to initial rendering bugs of Signal Bus cables in LLv8
+
+### Removed:
+
+- We removed the broken language file helper
+
 ## 1.14.2
 
 ### Bugfixes
