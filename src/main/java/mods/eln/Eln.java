@@ -63,9 +63,6 @@ import mods.eln.simplenode.computerprobe.ComputerProbeEntity;
 import mods.eln.simplenode.computerprobe.ComputerProbeNode;
 import mods.eln.simplenode.energyconverter.EnergyConverterElnToOtherBlock;
 import mods.eln.simplenode.energyconverter.EnergyConverterElnToOtherDescriptor;
-import mods.eln.simplenode.energyconverter.EnergyConverterElnToOtherDescriptor.ElnDescriptor;
-import mods.eln.simplenode.energyconverter.EnergyConverterElnToOtherDescriptor.Ic2Descriptor;
-import mods.eln.simplenode.energyconverter.EnergyConverterElnToOtherDescriptor.OcDescriptor;
 import mods.eln.simplenode.energyconverter.EnergyConverterElnToOtherEntity;
 import mods.eln.simplenode.energyconverter.EnergyConverterElnToOtherNode;
 import mods.eln.simplenode.test.TestBlock;
@@ -269,13 +266,10 @@ public class Eln {
     public GraphiteDescriptor GraphiteDescriptor;
 
     public ElectricalCableDescriptor creativeCableDescriptor;
-    /*public ElectricalCableDescriptor T2TransmissionCableDescriptor;
-    public ElectricalCableDescriptor T1TransmissionCableDescriptor;*/
     public ElectricalCableDescriptor veryHighVoltageCableDescriptor;
     public ElectricalCableDescriptor highVoltageCableDescriptor;
     public ElectricalCableDescriptor signalCableDescriptor;
     public ElectricalCableDescriptor lowVoltageCableDescriptor;
-    public ElectricalCableDescriptor batteryCableDescriptor;
     public ElectricalCableDescriptor meduimVoltageCableDescriptor;
     public ElectricalCableDescriptor signalBusCableDescriptor;
 
@@ -593,7 +587,7 @@ public class Eln {
         SixNode.sixNodeCacheList.add(new SixNodeCacheStd());
 
         registerTestBlock();
-        registerEnergyConverter();
+        //registerEnergyConverter();
         registerComputer();
 
         registerArmor();
@@ -839,7 +833,7 @@ public class Eln {
         registerReplicator();
         //
 
-        recipeEnergyConverter();
+        //recipeEnergyConverter();
         recipeComputerProbe();
 
         recipeArmor();
@@ -946,9 +940,9 @@ public class Eln {
         Utils.println("Electrical age init done");
     }
 
-    private EnergyConverterElnToOtherBlock elnToOtherBlockLvu;
-    private EnergyConverterElnToOtherBlock elnToOtherBlockMvu;
-    private EnergyConverterElnToOtherBlock elnToOtherBlockHvu;
+    private EnergyConverterElnToOtherBlock elnToOtherBlockConverter;
+
+    public Double ELN_CONVERTER_MAX_POWER = 120_000.0;
 
     private void registerEnergyConverter() {
         if (ElnToOtherEnergyConverterEnable) {
@@ -958,37 +952,12 @@ public class Eln {
             NodeManager.registerUuid(EnergyConverterElnToOtherNode.getNodeUuidStatic(), EnergyConverterElnToOtherNode.class);
 
             {
-                String blockName = TR_NAME(Type.TILE, "eln.EnergyConverterElnToOtherLVUBlock");
-                ElnDescriptor elnDesc = new ElnDescriptor(LVU, LVP());
-                Ic2Descriptor ic2Desc = new Ic2Descriptor(32, 1);
-                OcDescriptor ocDesc = new OcDescriptor(ic2Desc.outMax * Other.getElnToOcConversionRatio() / Other.getElnToIc2ConversionRatio());
+                String blockName = TR_NAME(Type.TILE, "eln.EnergyConverter");
                 EnergyConverterElnToOtherDescriptor desc =
-                    new EnergyConverterElnToOtherDescriptor("EnergyConverterElnToOtherLVU", elnDesc, ic2Desc, ocDesc);
-                elnToOtherBlockLvu = new EnergyConverterElnToOtherBlock(desc);
-                elnToOtherBlockLvu.setCreativeTab(creativeTab).setBlockName(blockName);
-                GameRegistry.registerBlock(elnToOtherBlockLvu, SimpleNodeItem.class, blockName);
-            }
-            {
-                String blockName = TR_NAME(Type.TILE, "eln.EnergyConverterElnToOtherMVUBlock");
-                ElnDescriptor elnDesc = new ElnDescriptor(MVU, MVP());
-                Ic2Descriptor ic2Desc = new Ic2Descriptor(128, 2);
-                OcDescriptor ocDesc = new OcDescriptor(ic2Desc.outMax * Other.getElnToOcConversionRatio() / Other.getElnToIc2ConversionRatio());
-                EnergyConverterElnToOtherDescriptor desc =
-                    new EnergyConverterElnToOtherDescriptor("EnergyConverterElnToOtherMVU", elnDesc, ic2Desc, ocDesc);
-                elnToOtherBlockMvu = new EnergyConverterElnToOtherBlock(desc);
-                elnToOtherBlockMvu.setCreativeTab(creativeTab).setBlockName(blockName);
-                GameRegistry.registerBlock(elnToOtherBlockMvu, SimpleNodeItem.class, blockName);
-            }
-            {
-                String blockName = TR_NAME(Type.TILE, "eln.EnergyConverterElnToOtherHVUBlock");
-                ElnDescriptor elnDesc = new ElnDescriptor(HVU, HVP());
-                Ic2Descriptor ic2Desc = new Ic2Descriptor(512, 3);
-                OcDescriptor ocDesc = new OcDescriptor(ic2Desc.outMax * Other.getElnToOcConversionRatio() / Other.getElnToIc2ConversionRatio());
-                EnergyConverterElnToOtherDescriptor desc =
-                    new EnergyConverterElnToOtherDescriptor("EnergyConverterElnToOtherHVU", elnDesc, ic2Desc, ocDesc);
-                elnToOtherBlockHvu = new EnergyConverterElnToOtherBlock(desc);
-                elnToOtherBlockHvu.setCreativeTab(creativeTab).setBlockName(blockName);
-                GameRegistry.registerBlock(elnToOtherBlockHvu, SimpleNodeItem.class, blockName);
+                    new EnergyConverterElnToOtherDescriptor("EnergyConverterElnToOtherLVU", ELN_CONVERTER_MAX_POWER);
+                elnToOtherBlockConverter = new EnergyConverterElnToOtherBlock(desc);
+                elnToOtherBlockConverter.setCreativeTab(creativeTab).setBlockName(blockName);
+                //GameRegistry.registerBlock(elnToOtherBlockConverter, SimpleNodeItem.class, blockName);
             }
         }
     }
@@ -1309,7 +1278,6 @@ public class Eln {
                 cableHeatingTime, cableThermalConductionTao// thermalNominalHeatTime,
                 // thermalConductivityTao
             );
-            batteryCableDescriptor = desc;
 
         }
 
@@ -1498,16 +1466,12 @@ public class Eln {
     public FunctionTable batteryVoltageFunctionTable;
 
     private void registerBattery(int id) {
-        int subId, completId;
+        int subId;
         String name;
         double heatTIme = 30;
         double[] voltageFunctionTable = {0.000, 0.9, 1.0, 1.025, 1.04, 1.05,
             2.0};
         FunctionTable voltageFunction = new FunctionTable(voltageFunctionTable,
-            6.0 / 5);
-        double[] condoVoltageFunctionTable = {0.000, 0.89, 0.90, 0.905, 0.91, 1.1,
-            1.5};
-        FunctionTable condoVoltageFunction = new FunctionTable(condoVoltageFunctionTable,
             6.0 / 5);
 
         Utils.printFunction(voltageFunction, -0.2, 1.2, 0.1);
@@ -1516,28 +1480,25 @@ public class Eln {
         double stdU = LVU;
         double stdP = LVP() / 4;
         double stdEfficiency = 1.0 - 2.0 / 50.0;
-        double condoEfficiency = 1.0 - 2.0 / 50.0;
 
         batteryVoltageFunctionTable = voltageFunction;
         {
             subId = 0;
             name = TR_NAME(Type.NONE, "Cost Oriented Battery");
 
-            BatteryDescriptor desc = new BatteryDescriptor(name, "BatteryBig", batteryCableDescriptor,
-                0.5, //what % of charge it starts out with
-                true, true,  //is rechargable?, Uses Life Mechanic?
+            BatteryDescriptor desc = new BatteryDescriptor(name, "BatteryBig",
+                0.5,
+                true, true,
                 voltageFunction,
-                stdU, //battery nominal voltage
-                stdP * 1.2, //how much power it can handle at max,
-                0.00,  //precentage of its total output to self-discharge. Should probably be 0
-                stdP, //no idea
+                stdU,
+                stdP * 1.2,
+                0.0,
+                stdP,
                 stdDischargeTime * batteryCapacityFactor, stdEfficiency, stdBatteryHalfLife,
-
-                heatTIme, 60, -100, // thermalHeatTime, thermalWarmLimit, // thermalCoolLimit,
-                "Cheap battery" // name, description)
+                heatTIme, 60, -100
             );
             desc.setRenderSpec("lowcost");
-            desc.setCurrentDrop(desc.electricalU * 1.2, desc.electricalStdP * 1.0);
+            desc.setCurrentDrop(desc.getElectricalU() * 1.2, desc.getElectricalStdP() * 1.0);
             transparentNodeItem.addDescriptor(subId + (id << 6), desc);
         }
         {
@@ -1545,19 +1506,14 @@ public class Eln {
             name = TR_NAME(Type.NONE, "Capacity Oriented Battery");
 
             BatteryDescriptor desc = new BatteryDescriptor(name,
-                "BatteryBig", batteryCableDescriptor, 0.5, true, true, voltageFunction,
-                stdU / 4, stdP / 2 * 1.2, 0.000, // electricalU,
-                // electricalPMax,electricalDischargeRate
-                stdP / 2, stdDischargeTime * 8 * batteryCapacityFactor, stdEfficiency, stdBatteryHalfLife, // electricalStdP,
-                // electricalStdDischargeTime,
-                // electricalStdEfficiency,
-                // electricalStdHalfLife,
-                heatTIme, 60, -100, // thermalHeatTime, thermalWarmLimit,
-                // thermalCoolLimit,
-                "the battery" // name, description)
+                "BatteryBig", 0.5, true, true, voltageFunction,
+                stdU / 4, stdP / 2 * 1.2, 0.000,
+                stdP / 2,
+                stdDischargeTime * 8 * batteryCapacityFactor, stdEfficiency, stdBatteryHalfLife,
+                heatTIme, 60, -100
             );
             desc.setRenderSpec("capacity");
-            desc.setCurrentDrop(desc.electricalU * 1.2, desc.electricalStdP * 1.0);
+            desc.setCurrentDrop(desc.getElectricalU() * 1.2, desc.getElectricalStdP() * 1.0);
             transparentNodeItem.addDescriptor(subId + (id << 6), desc);
         }
         {
@@ -1565,19 +1521,13 @@ public class Eln {
             name = TR_NAME(Type.NONE, "Voltage Oriented Battery");
 
             BatteryDescriptor desc = new BatteryDescriptor(name,
-                "BatteryBig", meduimVoltageCableDescriptor, 0.5, true, true, voltageFunction, stdU * 4,
-                stdP * 1.2, 0.000, // electricalU,
-                // electricalPMax,electricalDischargeRate
-                stdP, stdDischargeTime * batteryCapacityFactor, stdEfficiency, stdBatteryHalfLife, // electricalStdP,
-                // electricalStdDischargeTime,
-                // electricalStdEfficiency,
-                // electricalStdHalfLife,
-                heatTIme, 60, -100, // thermalHeatTime, thermalWarmLimit,
-                // thermalCoolLimit,
-                "the battery" // name, description)
+                "BatteryBig", 0.5, true, true, voltageFunction, stdU * 4,
+                stdP * 1.2, 0.000,
+                stdP, stdDischargeTime * batteryCapacityFactor, stdEfficiency, stdBatteryHalfLife,
+                heatTIme, 60, -100
             );
             desc.setRenderSpec("highvoltage");
-            desc.setCurrentDrop(desc.electricalU * 1.2, desc.electricalStdP * 1.0);
+            desc.setCurrentDrop(desc.getElectricalU() * 1.2, desc.getElectricalStdP() * 1.0);
             transparentNodeItem.addDescriptor(subId + (id << 6), desc);
         }
 
@@ -1586,19 +1536,13 @@ public class Eln {
             name = TR_NAME(Type.NONE, "Current Oriented Battery");
 
             BatteryDescriptor desc = new BatteryDescriptor(name,
-                "BatteryBig", batteryCableDescriptor, 0.5, true, true, voltageFunction, stdU,
-                stdP * 1.2 * 4, 0.000, // electricalU,
-                // electricalPMax,electricalDischargeRate
-                stdP * 4, stdDischargeTime / 6 * batteryCapacityFactor, stdEfficiency, stdBatteryHalfLife, // electricalStdP,
-                // electricalStdDischargeTime,
-                // electricalStdEfficiency,
-                // electricalStdHalfLife,
-                heatTIme, 60, -100, // thermalHeatTime, thermalWarmLimit,
-                // thermalCoolLimit,
-                "the battery" // name, description)
+                "BatteryBig", 0.5, true, true, voltageFunction, stdU,
+                stdP * 1.2 * 4, 0.000,
+                stdP * 4, stdDischargeTime / 6 * batteryCapacityFactor, stdEfficiency, stdBatteryHalfLife,
+                heatTIme, 60, -100
             );
             desc.setRenderSpec("current");
-            desc.setCurrentDrop(desc.electricalU * 1.2, desc.electricalStdP * 1.0);
+            desc.setCurrentDrop(desc.getElectricalU() * 1.2, desc.getElectricalStdP() * 1.0);
             transparentNodeItem.addDescriptor(subId + (id << 6), desc);
         }
         {
@@ -1606,19 +1550,13 @@ public class Eln {
             name = TR_NAME(Type.NONE, "Life Oriented Battery");
 
             BatteryDescriptor desc = new BatteryDescriptor(name,
-                "BatteryBig", batteryCableDescriptor, 0.5, true, false, voltageFunction, stdU,
-                stdP * 1.2, 0.000, // electricalU,
-                // electricalPMax,electricalDischargeRate
-                stdP, stdDischargeTime * batteryCapacityFactor, stdEfficiency, stdBatteryHalfLife * 8, // electricalStdP,
-                // electricalStdDischargeTime,
-                // electricalStdEfficiency,
-                // electricalStdHalfLife,
-                heatTIme, 60, -100, // thermalHeatTime, thermalWarmLimit,
-                // thermalCoolLimit,
-                "the battery" // name, description)
+                "BatteryBig", 0.5, true, false, voltageFunction, stdU,
+                stdP * 1.2, 0.000,
+                stdP, stdDischargeTime * batteryCapacityFactor, stdEfficiency, stdBatteryHalfLife * 8,
+                heatTIme, 60, -100
             );
             desc.setRenderSpec("life");
-            desc.setCurrentDrop(desc.electricalU * 1.2, desc.electricalStdP * 1.0);
+            desc.setCurrentDrop(desc.getElectricalU() * 1.2, desc.getElectricalStdP() * 1.0);
             transparentNodeItem.addDescriptor(subId + (id << 6), desc);
         }
 
@@ -1627,16 +1565,10 @@ public class Eln {
             name = TR_NAME(Type.NONE, "Single-use Battery");
 
             BatteryDescriptor desc = new BatteryDescriptor(name,
-                "BatteryBig", batteryCableDescriptor, 1.0, false, false, voltageFunction, stdU,
-                stdP * 1.2 * 2, 0.000, // electricalU,
-                // electricalPMax,electricalDischargeRate
-                stdP * 2, stdDischargeTime / 4 * batteryCapacityFactor, stdEfficiency, stdBatteryHalfLife * 8, // electricalStdP,
-                // electricalStdDischargeTime,
-                // electricalStdEfficiency,
-                // electricalStdHalfLife,
-                heatTIme, 60, -100, // thermalHeatTime, thermalWarmLimit,
-                // thermalCoolLimit,
-                "the battery" // name, description)
+                "BatteryBig", 1.0, false, false, voltageFunction, stdU,
+                stdP * 1.2 * 2, 0.000,
+                stdP * 2, stdDischargeTime / 4 * batteryCapacityFactor, stdEfficiency, stdBatteryHalfLife * 8,
+                heatTIme, 60, -100
             );
             desc.setRenderSpec("coal");
             transparentNodeItem.addDescriptor(subId + (id << 6), desc);
@@ -1646,64 +1578,15 @@ public class Eln {
             name = TR_NAME(Type.NONE, "Experimental Battery");
 
             BatteryDescriptor desc = new BatteryDescriptor(name,
-                "BatteryBig", batteryCableDescriptor, 0.5, true, false, voltageFunction, stdU * 2,
-                stdP * 1.2 * 8, 0.025, // electricalU,
-                // electricalPMax,electricalDischargeRate
-                stdP * 8, stdDischargeTime / 4 * batteryCapacityFactor, stdEfficiency, stdBatteryHalfLife * 8, // electricalStdP,
-                // electricalStdDischargeTime,
-                // electricalStdEfficiency,
-                // electricalStdHalfLife,
-                heatTIme, 60, -100, // thermalHeatTime, thermalWarmLimit,
-                // thermalCoolLimit,
-                "You were unable to fix the power leaking problem, though." // name, description)
+                "BatteryBig", 0.5, true, false, voltageFunction, stdU * 2,
+                stdP * 1.2 * 8, 0.025,
+                stdP * 8, stdDischargeTime / 4 * batteryCapacityFactor, stdEfficiency, stdBatteryHalfLife * 8,
+                heatTIme, 60, -100
             );
             desc.setRenderSpec("highvoltage");
-            desc.setCurrentDrop(desc.electricalU * 1.2, desc.electricalStdP * 1.0);
+            desc.setCurrentDrop(desc.getElectricalU() * 1.2, desc.getElectricalStdP() * 1.0);
             transparentNodeItem.addDescriptor(subId + (id << 6), desc);
         }
-        /*{
-            subId = 32;
-            name = TR_NAME(Type.NONE, "50V Condensator");
-
-            BatteryDescriptor desc = new BatteryDescriptor(name,
-                "condo200", batteryCableDescriptor, 0.0, true, false,
-                condoVoltageFunction,
-                stdU, stdP * 1.2 * 8, 0.005, // electricalU,//
-                // electricalPMax,electricalDischargeRate
-                stdP * 8, 4, condoEfficiency, stdBatteryHalfLife, // electricalStdP,
-                // electricalStdDischargeTime,
-                // electricalStdEfficiency,
-                // electricalStdHalfLife,
-                heatTIme, 60, -100, // thermalHeatTime, thermalWarmLimit,
-                // thermalCoolLimit,
-                "Obselete, must be deleted" // name, description)
-            );
-            desc.setCurrentDrop(desc.electricalU * 1.2, desc.electricalStdP * 2.0);
-            desc.setDefaultIcon("empty-texture");
-            transparentNodeItem.addWithoutRegistry(subId + (id << 6), desc);
-        }
-
-        {
-            subId = 36;
-            name = TR_NAME(I18N.Type.NONE, "200V Condensator");
-
-            BatteryDescriptor desc = new BatteryDescriptor(name,
-                "condo200", highVoltageCableDescriptor, 0.0, true, false,
-                condoVoltageFunction,
-                MVU, MVP() * 1.5, 0.005, // electricalU,//
-                // electricalPMax,electricalDischargeRate
-                MVP(), 4, condoEfficiency, stdBatteryHalfLife, // electricalStdP,
-                // electricalStdDischargeTime,
-                // electricalStdEfficiency,
-                // electricalStdHalfLife,
-                heatTIme, 60, -100, // thermalHeatTime, thermalWarmLimit,
-                // thermalCoolLimit,
-                "the battery" // name, description)
-            );
-            desc.setCurrentDrop(desc.electricalU * 1.2, desc.electricalStdP * 2.0);
-            desc.setDefaultIcon("empty-texture");
-            transparentNodeItem.addWithoutRegistry(subId + (id << 6), desc);
-        } */
     }
 
     private void registerGround(int id) {
@@ -2958,7 +2841,7 @@ public class Eln {
 
             LegacyDcDcDescriptor desc = new LegacyDcDcDescriptor(name, obj.getObj("transformator"),
                 obj.getObj("feromagneticcorea"), obj.getObj("transformatorCase"), 0.5f);
-            transparentNodeItem.addDescriptor(subId + (id << 6), desc);
+            transparentNodeItem.addWithoutRegistry(subId + (id << 6), desc);
         }
         {
             subId = 1;
@@ -8316,25 +8199,7 @@ public class Eln {
 
     private void recipeEnergyConverter() {
         if (ElnToOtherEnergyConverterEnable) {
-            addRecipe(new ItemStack(elnToOtherBlockLvu),
-                "III",
-                "cCR",
-                "III",
-                'C', dictCheapChip,
-                'c', findItemStack("Low Voltage Cable"),
-                'I', findItemStack("Iron Cable"),
-                'R', "ingotCopper");
-
-            addRecipe(new ItemStack(elnToOtherBlockMvu),
-                "III",
-                "cCR",
-                "III",
-                'C', dictCheapChip,
-                'c', findItemStack("Medium Voltage Cable"),
-                'I', findItemStack("Iron Cable"),
-                'R', dictTungstenIngot);
-
-            addRecipe(new ItemStack(elnToOtherBlockHvu),
+            addRecipe(new ItemStack(elnToOtherBlockConverter),
                 "III",
                 "cCR",
                 "III",
@@ -8342,7 +8207,6 @@ public class Eln {
                 'c', findItemStack("High Voltage Cable"),
                 'I', findItemStack("Iron Cable"),
                 'R', new ItemStack(Items.gold_ingot));
-
         }
     }
 

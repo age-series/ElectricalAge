@@ -129,4 +129,22 @@ public class NodeEntityClientSender {
         }
 
     }
+
+    public void clientSendDouble(Byte id, double num) {
+        try {
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            DataOutputStream stream = new DataOutputStream(bos);
+
+            preparePacketForServer(stream);
+
+            stream.writeByte(id);
+            stream.writeDouble(num);
+
+            sendPacketToServer(bos);
+        } catch (IOException e) {
+
+            e.printStackTrace();
+        }
+
+    }
 }

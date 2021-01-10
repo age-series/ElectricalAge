@@ -1,5 +1,6 @@
 package mods.eln.sim.mna.component;
 
+import mods.eln.misc.Utils;
 import mods.eln.sim.mna.SubSystem;
 import mods.eln.sim.mna.misc.MnaConst;
 import mods.eln.sim.mna.state.State;
@@ -47,6 +48,10 @@ public class Resistor extends Bipole {
     }
 
     public Resistor setR(double r) {
+        if (Double.isNaN(r) || Double.isInfinite(r)) {
+            Utils.println("Error! Resistor cannot be set to " + r );
+            return this;
+        }
         if (this.r != r) {
             this.r = r;
             this.rInv = 1 / r;

@@ -154,17 +154,17 @@ open class ElementSidedFluidHandler: IFluidHandler, INBTTReady {
             tank.readFromNBT(nbt, "${str}tank$idx")
             tankList.add(tank)
         }
-        println("numTanks: $numTanks")
-        println("tankList $tankList")
+        //println("numTanks: $numTanks")
+        //println("tankList $tankList")
         tanks.clear()
         ForgeDirection.VALID_DIRECTIONS.forEach {
             val tankRef = nbt.getInteger("${str}${it.name}tankRef")
             if (tankRef != -1 && numTanks != 0) {
-                println("$it: $tankRef")
+                //println("$it: $tankRef")
                 tanks[it] = tankList[tankRef]
             }
         }
-        println("tanks: $tanks")
+        //println("tanks: $tanks")
     }
 
     override fun writeToNBT(nbt: NBTTagCompound, str: String) {
