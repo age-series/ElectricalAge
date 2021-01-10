@@ -3,7 +3,6 @@ package mods.eln.simplenode.energyconverter
 import cofh.api.energy.IEnergyHandler
 import mods.eln.Other
 import mods.eln.misc.Direction
-import mods.eln.node.simple.SimpleNode
 
 object EnergyConverterElnToOtherFireWallRf {
 
@@ -17,11 +16,12 @@ object EnergyConverterElnToOtherFireWallRf {
             .filter{ it.first is IEnergyHandler }
             .map { Pair(it.first as IEnergyHandler, it.second) }
         if (energySinkList.isEmpty()) return
-        val pMax = node.getOtherModEnergyBuffer(Other.getElnToTeConversionRatio())
-
-        val energyUsed = energySinkList.map {
-            it.first.receiveEnergy(it.second.toForge(), pMax.toInt() / energySinkList.size, false).toDouble()
+        val rfUsed = energySinkList.map {
+            val rfAvailable = (node.availableEnergyInModUnits(Other.getWattsToRf()) / energySinkList.size)
+            // receiveEnergy takes RF in, gives out RF
+            val rfUsed = it.first.receiveEnergy(it.second.toForge(), rfAvailable.toInt(), false).toDouble()
+            rfUsed
         }.sum()
-        node.drawEnergy(energyUsed, Other.getElnToTeConversionRatio())
+        node.drawEnergy(rfUsed, Other.getWattsToRf())
     }
 }

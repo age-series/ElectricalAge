@@ -178,6 +178,7 @@ import net.minecraftforge.oredict.ShapelessOreRecipe;
 
 import java.util.*;
 
+import static jdk.nashorn.internal.objects.NativeMath.max;
 import static mods.eln.i18n.I18N.*;
 
 @SuppressWarnings({"SameParameterValue", "PointlessArithmeticExpression"})
@@ -338,6 +339,8 @@ public class Eln {
 
     public static boolean verticalIronCableCrafting = false;
 
+    public static Double flywheelMass = 0.0;
+
     @EventHandler
     public void preInit(FMLPreInitializationEvent event) {
 
@@ -423,10 +426,9 @@ public class Eln {
         fuelHeatFurnacePowerFactor = config.get("balancing", "fuelHeatFurnacePowerFactor", 1.0).getDouble();
         autominerRange = config.get("balancing", "autominerRange", 10, "Maximum horizontal distance from autominer that will be mined").getInt(10);
 
-        Other.ElnToIc2ConversionRatio = config.get("balancing", "ElnToIndustrialCraftConversionRatio", 1.0 / 3.0).getDouble(1.0 / 3.0);
-        Other.ElnToOcConversionRatio = config.get("balancing", "ElnToOpenComputerConversionRatio", 1.0 / 3.0 / 2.5).getDouble(1.0 / 3.0 / 2.5);
-        Other.ElnToTeConversionRatio = config.get("balancing", "ElnToThermalExpansionConversionRatio", 1.0 / 3.0 * 4).getDouble(1.0 / 3.0 * 4);
-        //	Other.ElnToBuildcraftConversionRatio = config.get("balancing", "ElnToBuildcraftConversionRatio", 1.0 / 3.0 / 5 * 2).getDouble(1.0 / 3.0 / 5 * 2);
+        Other.wattsToEu = config.get("balancing", "ElnToIndustrialCraftConversionRatio", 1.0 / 3.0).getDouble(1.0 / 3.0);
+        Other.wattsToOC = config.get("balancing", "ElnToOpenComputerConversionRatio", 1.0 / 3.0 / 2.5).getDouble(1.0 / 3.0 / 2.5);
+        Other.wattsToRf = config.get("balancing", "ElnToThermalExpansionConversionRatio", 1.0 / 3.0 * 4).getDouble(1.0 / 3.0 * 4);
         plateConversionRatio = config.get("balancing", "platesPerIngot", 1).getInt(1);
         shaftEnergyFactor = config.get("balancing", "shaftEnergyFactor", 0.05).getDouble(0.05);
 
@@ -436,7 +438,7 @@ public class Eln {
         ComputerProbeEnable = config.get("compatibility", "ComputerProbeEnable", true).getBoolean(true);
         ElnToOtherEnergyConverterEnable = config.get("compatibility", "ElnToOtherEnergyConverterEnable", true).getBoolean(true);
 
-        replicatorPop = config.get("entity", "replicatorPop", true).getBoolean(true);
+        replicatorPop = config.get("entity", "replicatorPop", false).getBoolean(false);
         ReplicatorPopProcess.popPerSecondPerPlayer = config.get("entity", "replicatorPopWhenThunderPerSecond", 1.0 / 120).getDouble(1.0 / 120);
         replicatorRegistrationId = config.get("entity", "replicatorId", -1).getInt(-1);
         killMonstersAroundLamps = config.get("entity", "killMonstersAroundLamps", true).getBoolean(true);
@@ -500,6 +502,8 @@ public class Eln {
         Eln.noVoltageBackground = config.get("general", "noVoltageBackground", false).getBoolean();
 
         Eln.maxSoundDistance = config.get("debug", "maxSoundDistance", 16.0).getDouble();
+
+        Eln.flywheelMass = Math.min(Math.max(config.get("balancing", "flywheelMass", 50.0).getDouble(), 1.0), 1000.0);
 
         config.save();
 
@@ -587,7 +591,7 @@ public class Eln {
         SixNode.sixNodeCacheList.add(new SixNodeCacheStd());
 
         registerTestBlock();
-        //registerEnergyConverter();
+        registerEnergyConverter();
         registerComputer();
 
         registerArmor();
@@ -833,7 +837,7 @@ public class Eln {
         registerReplicator();
         //
 
-        //recipeEnergyConverter();
+        recipeEnergyConverter();
         recipeComputerProbe();
 
         recipeArmor();
@@ -957,7 +961,7 @@ public class Eln {
                     new EnergyConverterElnToOtherDescriptor("EnergyConverterElnToOtherLVU", ELN_CONVERTER_MAX_POWER);
                 elnToOtherBlockConverter = new EnergyConverterElnToOtherBlock(desc);
                 elnToOtherBlockConverter.setCreativeTab(creativeTab).setBlockName(blockName);
-                //GameRegistry.registerBlock(elnToOtherBlockConverter, SimpleNodeItem.class, blockName);
+                GameRegistry.registerBlock(elnToOtherBlockConverter, SimpleNodeItem.class, blockName);
             }
         }
     }

@@ -69,6 +69,11 @@ class ThermalHeatExchangerDescriptor(
         list.add(I18N.tr("Ejects out ic2:coolant"))
         list.add(Utils.plotCelsius(I18N.tr("  Max. temperature: "), thermal.warmLimit))
     }
+
+    override fun mustHaveFloor() = false
+    override fun mustHaveCeiling() = false
+    override fun mustHaveWall() = false
+    override fun mustHaveWallFrontInverse() = false
 }
 
 data class ThermalPairing(val input: Fluid, val output: Fluid, val joulesPerMb: Double, val maxMbInputPerTick: Int, val ratio: Double = 1.0, val reversible: Boolean = false, val minTemp: Double? = null, val maxTemp: Double? = null)

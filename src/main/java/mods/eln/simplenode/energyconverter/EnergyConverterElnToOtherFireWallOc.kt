@@ -28,10 +28,10 @@ class EnergyConverterElnToOtherFireWallOc(var e: EnergyConverterElnToOtherEntity
                 if (e.node == null) return
                 val c = node as Connector
                 val node = e.node as EnergyConverterElnToOtherNode
-                var eMax = node.getOtherModEnergyBuffer(Other.getElnToOcConversionRatio())
+                var eMax = node.availableEnergyInModUnits(Other.getWattsToOC())
                 eMax = Math.min(Math.min(eMax, c.globalBufferSize() - c.globalBuffer()), node.descriptor!!.maxPower)
                 if (c.tryChangeBuffer(eMax)) {
-                    node.drawEnergy(eMax, Other.getElnToOcConversionRatio())
+                    node.drawEnergy(eMax, Other.getWattsToOC())
                 }
             }
         }

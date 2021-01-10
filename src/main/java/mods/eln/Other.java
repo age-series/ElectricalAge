@@ -9,9 +9,9 @@ public class Other {
     public static boolean ccLoaded = false;
     public static boolean teLoaded = false;
 
-    public static double ElnToIc2ConversionRatio;
-    public static double ElnToOcConversionRatio;
-    public static double ElnToTeConversionRatio;
+    public static double wattsToEu;
+    public static double wattsToOC;
+    public static double wattsToRf;
 
     public static final String modIdIc2 = "IC2";
     public static final String modIdOc = "OpenComputers";
@@ -25,15 +25,15 @@ public class Other {
         teLoaded = Loader.isModLoaded(modIdTe);
     }
 
-    public static double getElnToIc2ConversionRatio() {
-        return ElnToIc2ConversionRatio;
+    public static double getWattsToEu() {
+        return wattsToEu;
     }
 
-    public static double getElnToOcConversionRatio() {
-        return ElnToOcConversionRatio;
+    public static double getWattsToOC() {
+        return wattsToOC;
     }
 
-    public static double getElnToTeConversionRatio() {
-        return ElnToTeConversionRatio;
+    public static double getWattsToRf() {
+        return wattsToRf;
     }
 }

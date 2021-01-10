@@ -19,7 +19,6 @@ import net.minecraft.tileentity.TileEntity
 import net.minecraftforge.common.util.ForgeDirection
 import java.io.DataInputStream
 import java.io.IOException
-import kotlin.math.min
 
 @InterfaceList(Optional.Interface(iface = "ic2.api.energy.tile.IEnergySource", modid = Other.modIdIc2), Optional.Interface(iface = "cofh.api.energy.IEnergyHandler", modid = Other.modIdTe), Optional.Interface(iface = "li.cil.oc.api.network.Environment", modid = Other.modIdOc))
 class EnergyConverterElnToOtherEntity : SimpleNodeEntity(), IEnergySource, Environment, IEnergyHandler {
@@ -30,6 +29,7 @@ class EnergyConverterElnToOtherEntity : SimpleNodeEntity(), IEnergySource, Envir
     var ocEnergy: EnergyConverterElnToOtherFireWallOc? = null
     @JvmField
     var addedToEnet = false
+    var ic2tier = 1
 
     @SideOnly(Side.CLIENT)
     override fun newGuiDraw(side: Direction, player: EntityPlayer): GuiScreen {
@@ -40,6 +40,7 @@ class EnergyConverterElnToOtherEntity : SimpleNodeEntity(), IEnergySource, Envir
         super.serverPublishUnserialize(stream)
         try {
             selectorPower = stream.readDouble()
+            ic2tier = stream.readInt()
             hasChanges = true
         } catch (e: IOException) {
             e.printStackTrace()
@@ -63,10 +64,7 @@ class EnergyConverterElnToOtherEntity : SimpleNodeEntity(), IEnergySource, Envir
         if (worldObj.isRemote) return 0.0
         if (node == null) return 0.0
         val node = node as EnergyConverterElnToOtherNode
-        //val offered = node.getOtherModEnergyBuffer(Other.ElnToIc2ConversionRatio)
-        val offered = node.getOtherModOutMax(node.energyBuffer, Other.getElnToIc2ConversionRatio())
-        println("offering: $offered of ${node.energyBuffer}")
-        return offered
+        return node.availableEnergyInModUnitsWithLimit(IC2Tiers.values().first { it.tier == node.ic2tier }.euPerTick.toDouble(), Other.getWattsToEu())
     }
 
     @Optional.Method(modid = Other.modIdIc2)
@@ -74,8 +72,7 @@ class EnergyConverterElnToOtherEntity : SimpleNodeEntity(), IEnergySource, Envir
         if (worldObj.isRemote) return
         if (node == null) return
         val node = node as EnergyConverterElnToOtherNode
-        val draw = node.drawEnergy(amount, Other.getElnToIc2ConversionRatio())
-        println("drawing $draw")
+        node.drawEnergy(amount, Other.getWattsToEu())
     }
 
     @Optional.Method(modid = Other.modIdIc2)
@@ -146,8 +143,8 @@ class EnergyConverterElnToOtherEntity : SimpleNodeEntity(), IEnergySource, Envir
         if (worldObj.isRemote) return 0
         if (node == null) return 0
         val node = node as EnergyConverterElnToOtherNode
-        val extract = Math.max(0, Math.min(maxExtract, node.getOtherModEnergyBuffer(Other.getElnToTeConversionRatio()).toInt()))
-        if (!simulate) node.drawEnergy(extract.toDouble(), Other.getElnToTeConversionRatio())
+        val extract = Math.max(0, Math.min(maxExtract, node.availableEnergyInModUnits(Other.getWattsToRf()).toInt()))
+        if (!simulate) node.drawEnergy(extract.toDouble(), Other.getWattsToRf())
         return extract
     }
 

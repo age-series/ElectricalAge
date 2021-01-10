@@ -1,7 +1,6 @@
 package mods.eln.simplenode.energyconverter
 
 import mods.eln.Eln
-import mods.eln.Other
 import mods.eln.misc.Direction
 import mods.eln.misc.LRDU
 import mods.eln.node.simple.SimpleNode
@@ -11,13 +10,13 @@ import mods.eln.sim.ThermalLoad
 import mods.eln.sim.mna.misc.MnaConst
 import mods.eln.sim.nbt.NbtElectricalLoad
 import mods.eln.sim.nbt.NbtResistor
-import net.minecraft.client.renderer.texture.ITickable
 import net.minecraft.entity.player.EntityPlayerMP
 import net.minecraft.nbt.NBTTagCompound
 import java.io.DataInputStream
 import java.io.DataOutputStream
 import java.io.IOException
 import kotlin.math.max
+import kotlin.math.min
 
 class EnergyConverterElnToOtherNode : SimpleNode() {
     var descriptor: EnergyConverterElnToOtherDescriptor? = null
@@ -71,46 +70,59 @@ class EnergyConverterElnToOtherNode : SimpleNode() {
             timeout -= time
             if (timeout < 0) {
                 timeout = 0.05
-                val energyMiss = energyBufferMax - energyBuffer
-                if (energyMiss <= 0) {
+                if (energyBufferMax - energyBuffer <= 0) {
                     powerInResistor.highImpedance()
                 } else {
-                    val inP = selectedPower
-                    if (inP <= 0.0) {
+                    if (selectedPower <= 0.0) {
                         powerInResistor.r = MnaConst.highImpedance
                     } else {
-                        powerInResistor.r = max(Eln.getSmallRs(), load.u * load.u / inP)
+                        powerInResistor.r = max(Eln.getSmallRs(), load.u * load.u / selectedPower)
                     }
                 }
             }
-            println("Energy buffer: $energyBuffer/$energyBufferMax")
         }
     }
 
-    fun getOtherModEnergyBuffer(conversionRatio: Double): Double {
+    /**
+     * @param conversionRatio Conversion Ratio (Input mod conversion ratio here)
+     * @return energy buffer in that mod unit (Units are RF/EU/OC, etc.)
+     */
+    fun availableEnergyInModUnits(conversionRatio: Double): Double {
         return energyBuffer * conversionRatio
     }
 
+    /**
+     * @param otherModEnergy Energy from other mod (RF/EU/OC, etc.) to draw
+     * @param conversionRatio Conversion Ratio (Input mod conversion ratio here)
+     * @return Watts drawn from the energy buffer
+     */
     fun drawEnergy(otherModEnergy: Double, conversionRatio: Double): Double {
         val drawEnergy = otherModEnergy / conversionRatio
         energyBuffer -= drawEnergy
         return drawEnergy
     }
 
-    fun getOtherModOutMax(otherOutMax: Double, conversionRatio: Double): Double {
-        return Math.min(getOtherModEnergyBuffer(conversionRatio), otherOutMax)
+    /**
+     * @param maximumModUnits The maximum number of mod units (EU/RF/OC/etc.) that can be drawn
+     * @param conversionRatio Conversion Ratio (Input mod conversion ratio here)
+     * @return maximum Mod Units that can be drawn
+     */
+    fun availableEnergyInModUnitsWithLimit(maximumModUnits: Double, conversionRatio: Double): Double {
+        return min(availableEnergyInModUnits(conversionRatio), maximumModUnits * conversionRatio) / conversionRatio
     }
 
     override fun writeToNBT(nbt: NBTTagCompound) {
         super.writeToNBT(nbt)
         nbt.setDouble("energyBuffer", energyBuffer)
         nbt.setDouble("selectedPower", selectedPower)
+        nbt.setInteger("ic2tier", ic2tier)
     }
 
     override fun readFromNBT(nbt: NBTTagCompound) {
         super.readFromNBT(nbt)
         energyBuffer = nbt.getDouble("energyBuffer")
         selectedPower = nbt.getDouble("selectedPower")
+        ic2tier = nbt.getInteger("ic2tier")
     }
 
     override fun hasGui(side: Direction): Boolean {
@@ -121,6 +133,7 @@ class EnergyConverterElnToOtherNode : SimpleNode() {
         super.publishSerialize(stream)
         try {
             stream.writeDouble(selectedPower)
+            stream.writeInt(ic2tier)
         } catch (e: IOException) {
             e.printStackTrace()
         }
@@ -130,21 +143,16 @@ class EnergyConverterElnToOtherNode : SimpleNode() {
         try {
             when (stream.readByte()) {
                 NetworkType.SET_POWER.id -> {
-                    selectedPower = stream.readDouble()
+                    val power = stream.readDouble()
+                    if (power in 0.0 .. 120_000.0) {
+                        selectedPower = power
+                    }
                     needPublish()
                 }
                 NetworkType.SET_IC2_TIER.id -> {
                     val tier = stream.readInt()
-                    if (tier in 1..5) {
-                        val tierLimit = when(tier) {
-                            1 -> 32
-                            2 -> 128
-                            3 -> 512
-                            4 -> 2048
-                            5 -> 8192
-                            else -> 32
-                        }
-                        selectedPower = tierLimit * (1 / Other.getElnToIc2ConversionRatio())
+                    if (tier in 1..4) {
+                        ic2tier = tier
                         needPublish()
                     }
                 }
@@ -168,4 +176,13 @@ class EnergyConverterElnToOtherNode : SimpleNode() {
 enum class NetworkType(val id: Byte) {
     SET_POWER(1),
     SET_IC2_TIER(2)
+}
+
+enum class IC2Tiers(val tier: Int, val euPerTick: Int) {
+    TIER_1(1, 32),
+    TIER_2(2, 128),
+    TIER_3(3, 512),
+    TIER_4(4, 2048)
+    // Yes, there is a Tier 5, no it does not work.
+    // It caps at around 2kEU/t with an infinite energy sink, after that it voids energy
 }

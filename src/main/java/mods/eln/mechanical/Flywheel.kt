@@ -1,5 +1,6 @@
 package mods.eln.mechanical
 
+import mods.eln.Eln
 import mods.eln.misc.Direction
 import mods.eln.misc.LinearFunction
 import mods.eln.misc.Obj3D
@@ -21,7 +22,7 @@ class FlywheelDescriptor(baseName: String, obj: Obj3D) : SimpleShaftDescriptor(b
 }
 
 class FlyWheelElement(node: TransparentNode, desc_: TransparentNodeDescriptor) : StraightJointElement(node, desc_) {
-    override val shaftMass = 10.0
+    override val shaftMass = Eln.flywheelMass?: 50.0
 
     inner class FlyWheelFlingProcess : IProcess {
         val interval = 0.05

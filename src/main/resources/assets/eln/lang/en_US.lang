@@ -122,7 +122,7 @@ Electrical_Light_Sensor.name=Electrical Light Sensor
 Electrical_Motor.name=Electrical Motor
 Electrical_Probe.name=Electrical Probe
 Electrical_Probe_Chip.name=Electrical Probe Chip
-Electrical_Source.name=Electrical Source
+Electrical_Source.name=Voltage Source
 Electrical_Timer.name=Electrical Timer
 Electrical_Weather_Sensor.name=Electrical Weather Sensor
 Electrical_age_wrench,\nCan_be_used_to_turn\nsmall_wall_blocks=Electrical age wrench,\nCan be used to turn\nsmall wall blocks
@@ -333,9 +333,7 @@ mod.meta.desc=Electricity in your base!
 tile.arc_clay_block.name=Arc Clay Block
 tile.arc_metal_block.name=Arc Metal Block
 tile.eln.ElnProbe.name=Eln Computer Probe
-tile.eln.EnergyConverterElnToOtherHVUBlock.name=800V Electrical Age to other energy exporter
-tile.eln.EnergyConverterElnToOtherLVUBlock.name=50V Electrical Age to other energy exporter
-tile.eln.EnergyConverterElnToOtherMVUBlock.name=200V Electrical Age to other energy exporter
+tile.eln.EnergyConverter.name=Energy Exporter
 
 # ./src/main/java/mods/eln/i18n/I18N.java
 You_have_%1$_lives_left=You have %1$ lives left
