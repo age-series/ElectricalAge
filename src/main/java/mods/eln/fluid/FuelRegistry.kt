@@ -14,7 +14,8 @@ object FuelRegistry {
         "biodiesel" to 32560000.0, // Immersive Engineering, density = 0.88 kg/l, heating value = 37 MJ/kg
         "heavyoil" to 39100000.0,    // Magneticraft, heating value = 39.1 MJ/l
         "diesel" to 39100000.0,     // Immersive Petrolium and Pneumaticraft, heating value ~ 38.6-39.6 MJ/L
-        "creosote" to 750000.0      // Railcraft, heating value 7.5 MJ/l
+        "creosote" to 750000.0,      // Railcraft, heating value 7.5 MJ/l
+        "hootch" to (17826480.0 * 0.6) //EnderIO hootch - roughly equivalent to diesel (omega)
     )
     val dieselList = dieselFuels.keys.toTypedArray()
 
@@ -29,6 +30,9 @@ object FuelRegistry {
         "rc ethanol" to 21172000.0, // RotaryCraft, density = 0,79 kg/l, heating value = 26.8 MJ/kg
         "biofuel" to 17826480.0, // Minefactory Reloaded, (Bioethanol) density = 0.786 kg/l, heating value = 22,68 MJ/l
         "bioethanol" to 17826480.0, // Forestry
+        "ic2biogas" to 17826480.0,    // IC2 biogas (omega)
+        "fire_water" to (17826480.0 * 2), // EnderIO fire water - Something like ethanol (omega)
+        "rocket_fuel" to (17826480.0 * 1.866), // EnderIO rocket fuel - Something like ethanol (omega)
         "gasoline" to 25820000.0, // PneumaticCraft, density = 0.755 kg/L, heat value = 34,2 MJ/l
         "kerosene" to 34800000.0, // PneumaticCraft, heat value = 34,8 MJ/l
         "highgradekerosene" to 39200000.0, // Silfryi's ContentTweaker scripts, Refined Form of Kerosene, heat value = 39,2 MJ/l
@@ -59,7 +63,9 @@ object FuelRegistry {
      */
     private val steam = mapOf(
         "steam" to 2.257,  // Heat of vaporization: 2.257 J/g
-        "ic2steam" to 2.257  // Ditto, this is still steam. IC2 doesn't want to use other mods' steam.
+        "ic2steam" to 2.257,  // Ditto, this is still steam. IC2 doesn't want to use other mods' steam.
+        "ic2superheatedsteam" to (2.257 * 3) // This is triple condensed ic2steam
+
     ).mapValues {
         // Unusually, the commonly accepted value (2.2) is pretty much correct. Undo the usual mapping.
         it.value / Eln.fuelHeatValueFactor
