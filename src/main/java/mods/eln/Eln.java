@@ -177,8 +177,6 @@ import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 
 import java.util.*;
-
-import static jdk.nashorn.internal.objects.NativeMath.max;
 import static mods.eln.i18n.I18N.*;
 
 @SuppressWarnings({"SameParameterValue", "PointlessArithmeticExpression"})
