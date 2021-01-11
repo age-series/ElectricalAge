@@ -29,10 +29,13 @@ public class ElectricalVuMeterDescriptor extends SixNodeDescriptor {
     public boolean onOffOnly;
 
     public float[] pinDistance;
+	
+	public String name;
 
     public ElectricalVuMeterDescriptor(String name, String objName, boolean onOffOnly) {
         super(name, ElectricalVuMeterElement.class, ElectricalVuMeterRender.class);
         this.onOffOnly = onOffOnly;
+		this.name = name;
         obj = Eln.instance.obj.getObj(objName);
 
         if (obj != null) {
@@ -66,16 +69,39 @@ public class ElectricalVuMeterDescriptor extends SixNodeDescriptor {
         switch (objType) {
             case LedOnOff:
                 main.draw();
-                boolean s = factor > 0.5;
-                Color c = UtilsClient.ledOnOffColorC(s);
-                GL11.glColor3f(c.getRed() / 255f, c.getGreen() / 255f, c.getBlue() / 255f);
-                UtilsClient.drawLight(led);
-                //Utils.enableBilinear();
-                if (entity != null)
-                    UtilsClient.drawHalo(halo, c.getRed() / 255f, c.getGreen() / 255f, c.getBlue() / 255f, entity, false);
-                else
-                    UtilsClient.drawLight(halo);
-                //Utils.disableBilinear();
+				if(this.name != "Multicolor LED vuMeter") {
+					boolean s = factor > 0.5;
+					Color c = UtilsClient.ledOnOffColorC(s);
+					GL11.glColor3f(c.getRed() / 255f, c.getGreen() / 255f, c.getBlue() / 255f);
+					UtilsClient.drawLight(led);
+					//Utils.enableBilinear();
+					if (entity != null)
+						UtilsClient.drawHalo(halo, c.getRed() / 255f, c.getGreen() / 255f, c.getBlue() / 255f, entity, false);
+					else
+						UtilsClient.drawLight(halo);
+					//Utils.disableBilinear();
+				} else {
+					
+					org.lwjgl.util.Color ledColor = new org.lwjgl.util.Color();
+					ledColor.fromHSB(factor,1f,1f);
+					if(factor > 0.005f) {
+						GL11.glColor3f(ledColor.getRed() / 255f, ledColor.getGreen() / 255f, ledColor.getBlue() / 255f);
+					} else {
+						GL11.glColor3f(0.5f, 0.5f, 0.5f);
+					}
+					UtilsClient.drawLight(led);
+					//Utils.enableBilinear();
+					if (entity != null)
+						if(factor > 0.005f) {
+							UtilsClient.drawHalo(halo, ledColor.getRed() / 255f, ledColor.getGreen() / 255f, ledColor.getBlue() / 255f, entity, false);
+						};
+					else {
+						if(factor > 0.005f) {
+							UtilsClient.drawLight(halo);
+						}
+					}
+					//Utils.disableBilinear();
+				}
                 break;
             case Rot:
                 vumeter.draw();
