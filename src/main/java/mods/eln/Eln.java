@@ -2432,6 +2432,12 @@ public class Eln {
             desc = new ElectricalVuMeterDescriptor(name, "Led", true);
             sixNodeItem.addDescriptor(subId + (id << 6), desc);
         }
+		{
+            subId = 9;
+            name = TR_NAME(Type.NONE, "Multicolor LED vuMeter");
+            desc = new ElectricalVuMeterDescriptor(name, "Led", false);
+            sixNodeItem.addDescriptor(subId + (id << 6), desc);
+        }
     }
 
     private void registerElectricalAlarm(int id) {
