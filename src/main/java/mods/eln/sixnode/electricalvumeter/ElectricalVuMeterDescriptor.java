@@ -91,10 +91,11 @@ public class ElectricalVuMeterDescriptor extends SixNodeDescriptor {
 					}
 					UtilsClient.drawLight(led);
 					//Utils.enableBilinear();
-					if (entity != null)
+					if (entity != null) {
 						if(factor > 0.005f) {
 							UtilsClient.drawHalo(halo, ledColor.getRed() / 255f, ledColor.getGreen() / 255f, ledColor.getBlue() / 255f, entity, false);
 						};
+					}
 					else {
 						if(factor > 0.005f) {
 							UtilsClient.drawLight(halo);
