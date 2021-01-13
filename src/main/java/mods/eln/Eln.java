@@ -70,7 +70,7 @@ import mods.eln.simplenode.test.TestBlock;
 import mods.eln.sixnode.*;
 import mods.eln.sixnode.TreeResinCollector.TreeResinCollectorDescriptor;
 import mods.eln.sixnode.batterycharger.BatteryChargerDescriptor;
-import mods.eln.sixnode.currentsource.CurrentSourceDescriptor;
+import mods.eln.sixnode.CurrentSourceDescriptor;
 import mods.eln.sixnode.diode.DiodeDescriptor;
 import mods.eln.sixnode.electricalalarm.ElectricalAlarmDescriptor;
 import mods.eln.sixnode.electricalbreaker.ElectricalBreakerDescriptor;
