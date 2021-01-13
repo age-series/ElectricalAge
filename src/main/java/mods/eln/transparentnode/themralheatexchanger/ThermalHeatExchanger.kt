@@ -179,7 +179,7 @@ class ThermalHeatExchangerElement(
 
         if (ic2hotcoolant != null && ic2coolant != null) {
             //println("IC2 Coolant Enabled in Thermal Heat Exchanger")
-            thermalPairs.add(ThermalPairing(ic2hotcoolant, ic2coolant, 640.0 / 7.0, 9, 1.0, true))
+            thermalPairs.add(ThermalPairing(ic2hotcoolant, ic2coolant, 640.0 / 7.0, 9, 1.0, true, minTemp = 300.0))
         }
 
         if (steam != null) {

@@ -2,6 +2,7 @@ package mods.eln.sound
 
 import mods.eln.Eln
 import net.minecraft.client.Minecraft
+import net.minecraft.client.audio.SoundManager
 
 class LoopedSoundManager(val updateInterval: Float = 0.5f) {
     private var remaining = 0f

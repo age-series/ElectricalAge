@@ -90,6 +90,15 @@ class ElnAgingCommand: IConsoleCommand {
     }
 
     override fun requiredPermission() = listOf(UserPermission.IS_OPERATOR)
+
+    override fun getTabCompletion(args: List<String>): List<String> {
+        val options = listOf("true", "false")
+        return if (args.isEmpty() || args[0] == "") {
+            options
+        } else {
+            return options.filter {it.startsWith(args[0], ignoreCase = true)}
+        }
+    }
 }
 
 class ElnCablePaceCommand: IConsoleCommand {
@@ -131,6 +140,15 @@ class ElnLampAgingCommand: IConsoleCommand {
     }
 
     override fun requiredPermission() = listOf(UserPermission.IS_OPERATOR)
+
+    override fun getTabCompletion(args: List<String>): List<String> {
+        val options = listOf("true", "false")
+        return if (args.isEmpty() || args[0] == "") {
+            options
+        } else {
+            return options.filter {it.startsWith(args[0], ignoreCase = true)}
+        }
+    }
 }
 
 class ElnBatteryAgingCommand: IConsoleCommand {
@@ -157,6 +175,15 @@ class ElnBatteryAgingCommand: IConsoleCommand {
     }
 
     override fun requiredPermission() = listOf(UserPermission.IS_OPERATOR)
+
+    override fun getTabCompletion(args: List<String>): List<String> {
+        val options = listOf("true", "false")
+        return if (args.isEmpty() || args[0] == "") {
+            options
+        } else {
+            return options.filter {it.startsWith(args[0], ignoreCase = true)}
+        }
+    }
 }
 
 class ElnHeatFurnaceFuelCommand: IConsoleCommand {
@@ -183,6 +210,15 @@ class ElnHeatFurnaceFuelCommand: IConsoleCommand {
     }
 
     override fun requiredPermission() = listOf(UserPermission.IS_OPERATOR)
+
+    override fun getTabCompletion(args: List<String>): List<String> {
+        val options = listOf("true", "false")
+        return if (args.isEmpty() || args[0] == "") {
+            options
+        } else {
+            return options.filter {it.startsWith(args[0], ignoreCase = true)}
+        }
+    }
 }
 
 class ElnNewWindDirectionCommand: IConsoleCommand {
@@ -251,6 +287,15 @@ class ElnLampsKillMonstersCommand: IConsoleCommand {
     }
 
     override fun requiredPermission() = listOf(UserPermission.IS_OPERATOR)
+
+    override fun getTabCompletion(args: List<String>): List<String> {
+        val options = listOf("true", "false")
+        return if (args.isEmpty() || args[0] == "") {
+            options
+        } else {
+            return options.filter {it.startsWith(args[0], ignoreCase = true)}
+        }
+    }
 }
 
 class ElnMatrixCommand: IConsoleCommand {
@@ -332,6 +377,43 @@ class ElnManCommand: IConsoleCommand {
             ElnConsoleCommandList.map {it.name}.toMutableList()
         } else {
             return ElnConsoleCommandList.filter {it.name.startsWith(args[0], ignoreCase = true)}.map{it.name}.toMutableList()
+        }
+    }
+}
+
+class ElnWailaEasyModeCommand: IConsoleCommand {
+    override val name = "wailaEasyMode"
+
+    override fun runCommand(ics: ICommandSender, args: List<String>) {
+        if (args.size == 1) {
+            val wailaEasyMode = getArgBool(ics, args[0])?: return
+            Eln.wailaEasyMode = wailaEasyMode
+            var nonsense = false
+            Eln.config.get("balancing", "wailaEasyMode", nonsense).set(Eln.wailaEasyMode)
+            Eln.config.save()
+            cprint(ics, "Waila Easy Mode: ${FC.DARK_GREEN}${boolToStr(wailaEasyMode)}", indent = 1)
+        } else {
+            cprint(ics, "This command only takes one argument - true or false")
+        }
+    }
+
+    override fun getManPage(ics: ICommandSender, args: List<String>) {
+        cprint(ics, "Enables/disables waila easy mode.", indent = 1)
+        cprint(ics, "This will save to the server config file.", indent = 1)
+        cprint(ics, "")
+        cprint(ics, "Parameters:", indent = 1)
+        cprint(ics, "@0:bool : Aging state (enabled/disabled).", indent = 2)
+        cprint(ics, "")
+    }
+
+    override fun requiredPermission() = listOf(UserPermission.IS_OPERATOR)
+
+    override fun getTabCompletion(args: List<String>): List<String> {
+        val options = listOf("true", "false")
+        return if (args.isEmpty() || args[0] == "") {
+            options
+        } else {
+            return options.filter {it.startsWith(args[0], ignoreCase = true)}
         }
     }
 }

@@ -105,8 +105,8 @@ import mods.eln.sixnode.lampsupply.LampSupplyElement;
 import mods.eln.sixnode.logicgate.*;
 import mods.eln.sixnode.modbusrtu.ModbusRtuDescriptor;
 import mods.eln.sixnode.modbusrtu.ModbusTcpServer;
-import mods.eln.sixnode.powercapacitorsix.PowerCapacitorSixDescriptor;
-import mods.eln.sixnode.powerinductorsix.PowerInductorSixDescriptor;
+import mods.eln.sixnode.PowerCapacitorSixDescriptor;
+import mods.eln.sixnode.PowerInductorSixDescriptor;
 import mods.eln.sixnode.powersocket.PowerSocketDescriptor;
 import mods.eln.sixnode.resistor.ResistorDescriptor;
 import mods.eln.sixnode.thermalcable.ThermalCableDescriptor;
@@ -176,6 +176,7 @@ import net.minecraftforge.common.config.Property;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
+import paulscode.sound.SoundSystemConfig;
 
 import java.util.*;
 import static mods.eln.i18n.I18N.*;
@@ -353,6 +354,8 @@ public class Eln {
     public static String dictNibbleMemory;
     public static String dictALU;
 
+    public static Configuration config;
+
     @EventHandler
     public void preInit(FMLPreInitializationEvent event) {
 
@@ -385,10 +388,8 @@ public class Eln {
         if (side == Side.CLIENT)
             MinecraftForge.EVENT_BUS.register(new SoundLoader());
 
-        Configuration config = new Configuration(
-            event.getSuggestedConfigurationFile());
+        config = new Configuration(event.getSuggestedConfigurationFile());
         config.load();
-
 
         //Hacks for correct long date typing failures in config file
         //WARNING/BUG: "renameProperty" changes the type to String! However read functions don't seem to care attention to it, so it's OK... for the moment.

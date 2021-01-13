@@ -26,7 +26,8 @@ class ElnConsoleCommands: ICommand {
             ElnRegenOreQueueCommand(),
             ElnLampsKillMonstersCommand(),
             ElnMatrixCommand(),
-            ElnManCommand()
+            ElnManCommand(),
+            ElnWailaEasyModeCommand()
         ))
     }
 
