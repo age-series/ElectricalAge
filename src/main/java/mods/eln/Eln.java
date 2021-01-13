@@ -52,6 +52,7 @@ import mods.eln.ore.OreDescriptor;
 import mods.eln.ore.OreItem;
 import mods.eln.packets.*;
 import mods.eln.server.*;
+import mods.eln.server.console.ElnConsoleCommands;
 import mods.eln.signalinductor.SignalInductorDescriptor;
 import mods.eln.sim.Simulator;
 import mods.eln.sim.ThermalLoadInitializer;
@@ -189,7 +190,7 @@ public class Eln {
     public final static String URL = "https://eln.ja13.org";
     public final static String UPDATE_URL = "https://github.com/jrddunbr/ElectricalAge/releases";
     public final static String SRC_URL = "https://github.com/jrddunbr/ElectricalAge";
-    public final static String[] AUTHORS = {"Dolu1990", "lambdaShade", "cm0x4D", "metc", "Baughn", "jrddunbr", "Grissess", "OmegaHaxors"};
+    public final static String[] AUTHORS = {"Dolu1990", "jrddunbr", "Baughn", "Grissess", "Caeleron", "OmegaHaxors", "lambdaShade", "cm0x4D", "metc"};
 
     public static final String channelName = "miaouMod";
     public static final double solarPanelBasePower = 65.0;
@@ -228,8 +229,9 @@ public class Eln {
     public static CreativeTabs creativeTab;
 
     public static Item swordCopper, hoeCopper, shovelCopper, pickaxeCopper, axeCopper;
+    public static GenericItemUsingDamageDescriptorWithComment plateCopper;
 
-    public static ItemArmor helmetCopper, plateCopper, legsCopper, bootsCopper;
+    public static ItemArmor helmetCopper, chestplateCopper, legsCopper, bootsCopper;
     public static ItemArmor helmetECoal, plateECoal, legsECoal, bootsECoal;
 
     public static SharedItem sharedItem;
@@ -329,7 +331,7 @@ public class Eln {
     public static boolean noVoltageBackground = false;
 
     public static double maxSoundDistance = 16;
-    private double cablePowerFactor;
+    public static double cablePowerFactor;
 
     public static boolean allowSwingingLamps = true;
 
@@ -338,6 +340,18 @@ public class Eln {
     public static boolean verticalIronCableCrafting = false;
 
     public static Double flywheelMass = 0.0;
+
+    public static SiliconWafer siliconWafer;
+    public static Transistor transistor;
+    public static Thermistor thermistor;
+    public static NibbleMemory nibbleMemory;
+    public static ArithmeticLogicUnit alu;
+
+    public static String dictSiliconWafer;
+    public static String dictTransistor;
+    public static String dictThermistor;
+    public static String dictNibbleMemory;
+    public static String dictALU;
 
     @EventHandler
     public void preInit(FMLPreInitializationEvent event) {
@@ -653,6 +667,7 @@ public class Eln {
         registerGridDevices(123);
         //registerFloodlight(68);
         registerFestive(69);
+        registerFab(70);
 
 
         //ITEM REGISTRATION
@@ -683,6 +698,7 @@ public class Eln {
         registerPortableItem(122);
         registerFuelBurnerItem(124);
         registerPortableNaN(); // 125
+        registerBasicItems(126);
 
         OreDictionary.registerOre("blockAluminum", arcClayBlock);
         OreDictionary.registerOre("blockSteel", arcMetalBlock);
@@ -725,6 +741,15 @@ public class Eln {
             } else {
                 transparentNodeItem.addWithoutRegistry(subId + (id << 6), desc);
             }
+        }
+    }
+
+    private void registerFab(int id) {
+        int subId;
+        {
+            subId = 0;
+            FabricatorDescriptor desc = new FabricatorDescriptor(TR_NAME(Type.NONE, "Fabricator"));
+            transparentNodeItem.addDescriptor(subId + (id << 6), desc);
         }
     }
 
@@ -1156,7 +1181,7 @@ public class Eln {
             MinecraftServer s = MinecraftServer.getServer();
             ICommandManager command = s.getCommandManager();
             ServerCommandManager manager = (ServerCommandManager) command;
-            manager.registerCommand(new ConsoleListener());
+            manager.registerCommand(new ElnConsoleCommands());
         }
 
         regenOreScannerFactors();
@@ -4074,7 +4099,7 @@ public class Eln {
 
     }
 
-    private GenericItemUsingDamageDescriptorWithComment tinIngot, copperIngot,
+    public GenericItemUsingDamageDescriptorWithComment tinIngot, copperIngot,
         silverIngot, plumbIngot, tungstenIngot;
 
     private void registerIngot(int id) {
@@ -4231,9 +4256,9 @@ public class Eln {
         }
         {
             name = TR_NAME(Type.ITEM, "Copper Chestplate");
-            plateCopper = (ItemArmor) (new genericArmorItem(ArmorMaterial.IRON, 2, ArmourType.Chestplate, "eln:textures/armor/copper_layer_1.png", "eln:textures/armor/copper_layer_2.png")).setUnlocalizedName(name).setTextureName("eln:copper_chestplate").setCreativeTab(creativeTab);
-            GameRegistry.registerItem(plateCopper, "Eln." + name);
-            GameRegistry.registerCustomItemStack(name, new ItemStack(plateCopper));
+            chestplateCopper = (ItemArmor) (new genericArmorItem(ArmorMaterial.IRON, 2, ArmourType.Chestplate, "eln:textures/armor/copper_layer_1.png", "eln:textures/armor/copper_layer_2.png")).setUnlocalizedName(name).setTextureName("eln:copper_chestplate").setCreativeTab(creativeTab);
+            GameRegistry.registerItem(chestplateCopper, "Eln." + name);
+            GameRegistry.registerCustomItemStack(name, new ItemStack(chestplateCopper));
         }
         {
             name = TR_NAME(Type.ITEM, "Copper Leggings");
@@ -5415,6 +5440,7 @@ public class Eln {
                 name, new String[]{});
             sharedItem.addElement(subId + (id << 6), desc);
             Data.addResource(desc.newItemStack());
+            Eln.plateCopper = desc;
             addToOre("plateCopper", desc.newItemStack());
         }
         {
@@ -5596,6 +5622,46 @@ public class Eln {
             Eln.stdPortableNaN = new CableRenderDescriptor("eln", "sprites/nan.png", 3.95f, 0.95f);
             Eln.portableNaNDescriptor = new PortableNaNDescriptor(name, Eln.stdPortableNaN);
             Eln.sixNodeItem.addDescriptor(subId + (id << 6), Eln.portableNaNDescriptor);
+        }
+    }
+
+    private static void registerBasicItems(int id) {
+        int subId;
+        String name;
+        {
+            subId = 0;
+            name = TR_NAME(Type.NONE, "Silicon Wafer");
+            siliconWafer = new SiliconWafer(name);
+            sharedItem.addElement(subId + (id << 6), siliconWafer);
+            OreDictionary.registerOre(dictSiliconWafer, siliconWafer.newItemStack());
+        }
+        {
+            subId = 1;
+            name = TR_NAME(Type.NONE, "Transistor");
+            transistor = new Transistor(name);
+            sharedItem.addElement(subId + (id << 6), transistor);
+            OreDictionary.registerOre(dictTransistor, transistor.newItemStack());
+        }
+        {
+            subId = 2;
+            name = TR_NAME(Type.NONE, "Thermistor");
+            thermistor = new Thermistor(name);
+            sharedItem.addElement(subId + (id << 6), thermistor);
+            OreDictionary.registerOre(dictThermistor, thermistor.newItemStack());
+        }
+        {
+            subId = 3;
+            name = TR_NAME(Type.NONE, "Nibble Memory Chip");
+            nibbleMemory = new NibbleMemory(name);
+            sharedItem.addElement(subId + (id << 6), nibbleMemory);
+            OreDictionary.registerOre(dictNibbleMemory, nibbleMemory.newItemStack());
+        }
+        {
+            subId = 4;
+            name = TR_NAME(Type.NONE, "Arithmetic Logic Unit");
+            alu = new ArithmeticLogicUnit(name);
+            sharedItem.addElement(subId + (id << 6), alu);
+            OreDictionary.registerOre(dictALU, alu.newItemStack());
         }
     }
 
@@ -8232,7 +8298,7 @@ public class Eln {
             "C C",
             'C', "ingotCopper");
 
-        addRecipe(new ItemStack(plateCopper),
+        addRecipe(new ItemStack(chestplateCopper),
             "C C",
             "CCC",
             "CCC",

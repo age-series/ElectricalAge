@@ -8,7 +8,7 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.ClientTickEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.Phase;
 import mods.eln.Eln;
-import mods.eln.misc.Color;
+import mods.eln.misc.FC;
 import mods.eln.misc.Version;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.WorldClient;
@@ -95,7 +95,7 @@ public class VersionCheckerHandler {
                         int major = stable.get("version_major").getAsInt();
                         int minor = stable.get("version_minor").getAsInt();
                         int revision = stable.get("version_revision").getAsInt();
-                        msg = String.format(Color.GREEN + "> New stable version available: %d.%d.%d" + " - please upgrade !",
+                        msg = String.format(FC.GREEN + "> New stable version available: %d.%d.%d" + " - please upgrade !",
                             major, minor, revision);
                     }
                     // No update
@@ -104,13 +104,13 @@ public class VersionCheckerHandler {
                     }
                     // DEV version (not stable)
                     else {
-                        msg = Color.RED + "> Warning: this is a version under test !";
+                        msg = FC.RED + "> Warning: this is a version under test !";
                     }
 
                 } catch (Exception e) {
                     final String error = "Unable to check the latest available version.";
                     System.err.println(error);
-                    msg = Color.RED + "> " + error;
+                    msg = FC.RED + "> " + error;
 
                     e.printStackTrace();
                 }

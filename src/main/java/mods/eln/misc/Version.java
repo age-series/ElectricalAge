@@ -57,8 +57,8 @@ public final class Version {
     }
 
     public final static String printColor() {
-        return Color.WHITE + tr("mod.name") + " version "
-            + Color.ORANGE + getVersionName();
+        return FC.WHITE + tr("mod.name") + " version "
+            + FC.ORANGE + getVersionName();
     }
 
     public static void main(String... args) {

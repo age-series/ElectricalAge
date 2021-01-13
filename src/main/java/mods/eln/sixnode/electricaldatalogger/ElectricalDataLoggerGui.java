@@ -5,7 +5,7 @@ import mods.eln.gui.GuiHelperContainer;
 import mods.eln.gui.GuiTextFieldEln;
 import mods.eln.gui.GuiTextFieldEln.GuiTextFieldElnObserver;
 import mods.eln.gui.IGuiObject;
-import mods.eln.misc.Color;
+import mods.eln.misc.FC;
 import mods.eln.misc.UtilsClient;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.entity.player.EntityPlayer;
@@ -190,9 +190,9 @@ public class ElectricalDataLoggerGui extends GuiContainerEln implements GuiTextF
         }
 
         if (render.pause)
-            pause.displayString = Color.COLOR_DARK_YELLOW + "Paused";
+            pause.displayString = FC.DARK_YELLOW + "Paused";
         else
-            pause.displayString = Color.COLOR_BRIGHT_GREEN + "Running";
+            pause.displayString = FC.BRIGHT_GREEN + "Running";
 
         boolean a = inventorySlots.getSlot(ElectricalDataLoggerContainer.paperSlotId).getStack() != null;
         boolean b = inventorySlots.getSlot(ElectricalDataLoggerContainer.printSlotId).getStack() == null;
