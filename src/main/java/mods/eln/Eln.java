@@ -92,7 +92,7 @@ import mods.eln.sixnode.electricalsensor.ElectricalSensorDescriptor;
 import mods.eln.sixnode.electricalsource.ElectricalSourceDescriptor;
 import mods.eln.sixnode.electricalswitch.ElectricalSwitchDescriptor;
 import mods.eln.sixnode.electricaltimeout.ElectricalTimeoutDescriptor;
-import mods.eln.sixnode.electricalvumeter.ElectricalVuMeterDescriptor;
+import mods.eln.sixnode.ElectricalVuMeterDescriptor;
 import mods.eln.sixnode.electricalwatch.ElectricalWatchDescriptor;
 import mods.eln.sixnode.electricalweathersensor.ElectricalWeatherSensorDescriptor;
 import mods.eln.sixnode.electricalwindsensor.ElectricalWindSensorDescriptor;
