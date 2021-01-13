@@ -64,10 +64,10 @@ class ElnAgingCommand: IConsoleCommand {
     override fun runCommand(ics: ICommandSender, args: List<String>) {
         if (args.size == 1) {
             val aging = getArgBool(ics, args[0])?: return
-            SaveConfig.instance.batteryAging = aging
-            SaveConfig.instance.electricalLampAging = aging
-            SaveConfig.instance.heatFurnaceFuel = aging
-            SaveConfig.instance.infinitePortableBattery = !aging
+            SaveConfig.instance?.batteryAging = aging
+            SaveConfig.instance?.electricalLampAging = aging
+            SaveConfig.instance?.heatFurnaceFuel = aging
+            SaveConfig.instance?.infinitePortableBattery = !aging
             cprint(ics, "Batteries / Furnace Fuel / Lamp aging: ${FC.DARK_GREEN}${boolToStr(aging)}", indent = 1)
             cprint(ics, "Parameter saved in the map.", indent = 1)
         } else {
@@ -122,7 +122,7 @@ class ElnLampAgingCommand: IConsoleCommand {
     override fun runCommand(ics: ICommandSender, args: List<String>) {
         if (args.size == 1) {
             val lampAging = getArgBool(ics, args[0])?: return
-            SaveConfig.instance.electricalLampAging = lampAging
+            SaveConfig.instance?.electricalLampAging = lampAging
             cprint(ics, "Lamp aging: ${FC.DARK_GREEN}${boolToStr(lampAging)}", indent = 1)
             cprint(ics, "Parameter saved in the map.", indent = 1)
         } else {
@@ -157,7 +157,7 @@ class ElnBatteryAgingCommand: IConsoleCommand {
     override fun runCommand(ics: ICommandSender, args: List<String>) {
         if (args.size == 1) {
             val lampAging = getArgBool(ics, args[0])?: return
-            SaveConfig.instance.batteryAging = lampAging
+            SaveConfig.instance?.batteryAging = lampAging
             cprint(ics, "Non portable batteries aging: ${FC.DARK_GREEN}${boolToStr(lampAging)}", indent = 1)
             cprint(ics, "Parameter saved in the map.", indent = 1)
         } else {
@@ -192,7 +192,7 @@ class ElnHeatFurnaceFuelCommand: IConsoleCommand {
     override fun runCommand(ics: ICommandSender, args: List<String>) {
         if (args.size == 1) {
             val furnaceFuelAging = getArgBool(ics, args[0])?: return
-            SaveConfig.instance.heatFurnaceFuel = furnaceFuelAging
+            SaveConfig.instance?.heatFurnaceFuel = furnaceFuelAging
             cprint(ics, "Furnace fuel aging: ${FC.DARK_GREEN}${boolToStr(furnaceFuelAging)}", indent = 1)
             cprint(ics, "Parameter saved in the map.", indent = 1)
         } else {

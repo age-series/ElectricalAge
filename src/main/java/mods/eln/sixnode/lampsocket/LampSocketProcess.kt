@@ -169,7 +169,7 @@ class LampSocketProcess(var lamp: LampSocketElement) : IProcess, INBTTReady /*,L
         }
 
         if (lampDescriptor != null) {
-            val bulbCanAge = !(lampDescriptor.type == LampDescriptor.Type.LED && Eln.ledLampInfiniteLife) && SaveConfig.instance.electricalLampAging
+            val bulbCanAge = !(lampDescriptor.type == LampDescriptor.Type.LED && Eln.ledLampInfiniteLife) && SaveConfig.instance!!.electricalLampAging
 
             if (bulbCanAge) {
                 val ageFactor = lampAgeFactor(lamp.lampResistor.u)

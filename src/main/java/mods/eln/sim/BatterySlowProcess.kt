@@ -17,7 +17,7 @@ abstract class BatterySlowProcess(var batteryProcess: BatteryProcess, var therma
             destroy()
             return
         }
-        if (SaveConfig.instance.batteryAging) {
+        if (SaveConfig.instance!!.batteryAging) {
             var newLife = batteryProcess.life
             val normalisedCurrent = Math.abs(batteryProcess.dischargeCurrent) / lifeNominalCurrent
             newLife -= normalisedCurrent * normalisedCurrent * lifeNominalLost * time
