@@ -29,6 +29,7 @@ import mods.eln.ghost.GhostManager;
 import mods.eln.ghost.GhostManagerNbt;
 import mods.eln.gridnode.GridSwitchDescriptor;
 import mods.eln.gridnode.electricalpole.ElectricalPoleDescriptor;
+import mods.eln.gridnode.electricalpole.Kind;
 import mods.eln.gridnode.transformer.GridTransformerDescriptor;
 import mods.eln.i18n.I18N;
 import mods.eln.item.*;
@@ -779,7 +780,7 @@ public class Eln {
                     obj.getObj("UtilityPole"),
                     "textures/wire.png",
                     highVoltageCableDescriptor,
-                    false,
+                    Kind.OVERHEAD,
                     40,
                     51200);
             GhostGroup g = new GhostGroup();
@@ -797,7 +798,7 @@ public class Eln {
                     obj.getObj("UtilityPole"),
                     "textures/wire.png",
                     highVoltageCableDescriptor,
-                    true,
+                    Kind.TRANSFORMER_TO_GROUND,
                     40,
                     51200);
             GhostGroup g = new GhostGroup();
@@ -814,7 +815,7 @@ public class Eln {
                     obj.getObj("TransmissionTower"),
                     "textures/wire.png",
                     highVoltageCableDescriptor,
-                    false,
+                    Kind.OVERHEAD,
                     96,
                     51200);
             GhostGroup g = new GhostGroup();
@@ -832,7 +833,7 @@ public class Eln {
                     obj.getObj("UtilityPole"),
                     "textures/wire.png",
                     highVoltageCableDescriptor,
-                    false,
+                    Kind.SHUNT_TO_GROUND,
                     40,
                     51200);
             GhostGroup g = new GhostGroup();

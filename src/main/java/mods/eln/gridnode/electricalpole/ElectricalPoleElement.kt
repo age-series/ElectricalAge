@@ -129,7 +129,11 @@ class ElectricalPoleElement(node: TransparentNode, descriptor: TransparentNodeDe
     }
 
     override fun getElectricalLoad(side: Direction, lrdu: LRDU): ElectricalLoad? {
-        return trafo?.secondaryLoad
+        return when(desc.kind) {
+            Kind.OVERHEAD -> null
+            Kind.TRANSFORMER_TO_GROUND -> trafo?.secondaryLoad
+            Kind.SHUNT_TO_GROUND -> electricalLoad
+        }
     }
 
     override fun getGridElectricalLoad(side: Direction): ElectricalLoad {
@@ -140,12 +144,10 @@ class ElectricalPoleElement(node: TransparentNode, descriptor: TransparentNodeDe
         return thermalLoad
     }
 
-    override fun getConnectionMask(side: Direction, lrdu: LRDU): Int {
-        if (desc.includeTransformer) {
-            return NodeBase.maskElectricalPower
-        } else {
-            return 0
-        }
+    override fun getConnectionMask(side: Direction, lrdu: LRDU): Int = if(desc.kind == Kind.OVERHEAD) {
+        0
+    } else {
+        NodeBase.maskElectricalPower
     }
 
     override fun initialize() {
