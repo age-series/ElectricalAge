@@ -27,7 +27,8 @@ class ElnConsoleCommands: ICommand {
             ElnLampsKillMonstersCommand(),
             ElnMatrixCommand(),
             ElnManCommand(),
-            ElnWailaEasyModeCommand()
+            ElnWailaEasyModeCommand(),
+            ElnDebugCommand()
         ))
     }
 

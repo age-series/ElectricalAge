@@ -27,6 +27,7 @@ import mods.eln.ghost.GhostBlock;
 import mods.eln.ghost.GhostGroup;
 import mods.eln.ghost.GhostManager;
 import mods.eln.ghost.GhostManagerNbt;
+import mods.eln.gridnode.GridSwitchDescriptor;
 import mods.eln.gridnode.electricalpole.ElectricalPoleDescriptor;
 import mods.eln.gridnode.transformer.GridTransformerDescriptor;
 import mods.eln.i18n.I18N;
@@ -125,8 +126,8 @@ import mods.eln.transparentnode.*;
 import mods.eln.transparentnode.autominer.AutoMinerDescriptor;
 import mods.eln.transparentnode.battery.BatteryDescriptor;
 import mods.eln.transparentnode.computercraftio.PeripheralHandler;
-import mods.eln.transparentnode.dcdc.DcDcDescriptor;
-import mods.eln.transparentnode.dcdc.LegacyDcDcDescriptor;
+import mods.eln.transparentnode.DcDcDescriptor;
+import mods.eln.transparentnode.LegacyDcDcDescriptor;
 import mods.eln.transparentnode.eggincubator.EggIncubatorDescriptor;
 import mods.eln.transparentnode.electricalantennarx.ElectricalAntennaRxDescriptor;
 import mods.eln.transparentnode.electricalantennatx.ElectricalAntennaTxDescriptor;
@@ -146,7 +147,7 @@ import mods.eln.transparentnode.thermaldissipatoractive.ThermalDissipatorActiveD
 import mods.eln.transparentnode.thermaldissipatorpassive.ThermalDissipatorPassiveDescriptor;
 import mods.eln.transparentnode.turbine.TurbineDescriptor;
 import mods.eln.transparentnode.turret.TurretDescriptor;
-import mods.eln.transparentnode.variabledcdc.VariableDcDcDescriptor;
+import mods.eln.transparentnode.VariableDcDcDescriptor;
 import mods.eln.transparentnode.waterturbine.WaterTurbineDescriptor;
 import mods.eln.transparentnode.windturbine.WindTurbineDescriptor;
 import mods.eln.wiki.Data;
@@ -785,7 +786,6 @@ public class Eln {
             g.addElement(0, 1, 0);
             g.addElement(0, 2, 0);
             g.addElement(0, 3, 0);
-            //g.addRectangle(-1, 1, 3, 4, -1, 1);
             descriptor.setGhostGroup(g);
             transparentNodeItem.addDescriptor(subId + (id << 6), descriptor);
         }
@@ -799,12 +799,11 @@ public class Eln {
                     highVoltageCableDescriptor,
                     true,
                     40,
-                    12800);
+                    51200);
             GhostGroup g = new GhostGroup();
             g.addElement(0, 1, 0);
             g.addElement(0, 2, 0);
             g.addElement(0, 3, 0);
-            //g.addRectangle(-1, 1, 3, 4, -1, 1);
             descriptor.setGhostGroup(g);
             transparentNodeItem.addDescriptor(subId + (id << 6), descriptor);
         }
@@ -827,7 +826,31 @@ public class Eln {
         }
         {
             subId = 7;
-            // Reserved for T2.5 poles.
+            ElectricalPoleDescriptor descriptor =
+                new ElectricalPoleDescriptor(
+                    "Direct Utility Pole",
+                    obj.getObj("UtilityPole"),
+                    "textures/wire.png",
+                    highVoltageCableDescriptor,
+                    false,
+                    40,
+                    51200);
+            GhostGroup g = new GhostGroup();
+            g.addElement(0, 1, 0);
+            g.addElement(0, 2, 0);
+            g.addElement(0, 3, 0);
+            descriptor.setGhostGroup(g);
+            transparentNodeItem.addDescriptor(subId + (id << 6), descriptor);
+        }
+        {
+            subId = 8;
+            String name = TR_NAME(Type.NONE, "Grid Switch");
+            GridSwitchDescriptor desc = new GridSwitchDescriptor(name);
+            GhostGroup g = new GhostGroup();
+            g.addRectangle(-1, 1, 0, 4, -2, 2);
+            g.removeElement(0, 0, 0);
+            desc.setGhostGroup(g);
+            transparentNodeItem.addDescriptor(subId + (id << 6), desc);
         }
     }
 

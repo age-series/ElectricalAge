@@ -37,6 +37,9 @@ open class GridDescriptor(name: String, private val obj: Obj3D, ElementClass: Cl
     }
 
     fun draw(idealRenderingAngle: Float) {
+        // The utility pole draws without a foot, and thus needs to be lowered slightly.
+        if (name in listOf("Utility Pole"))
+            glTranslated(0.0, -0.1, 0.0)
         preserveMatrix {
             glRotatef(idealRenderingAngle, 0f, 1f, 0f)
             for (part in rotating_parts) {

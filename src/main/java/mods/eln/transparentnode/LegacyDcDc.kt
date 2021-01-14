@@ -1,4 +1,4 @@
-package mods.eln.transparentnode.dcdc
+package mods.eln.transparentnode
 
 import mods.eln.Eln
 import mods.eln.cable.CableRenderDescriptor

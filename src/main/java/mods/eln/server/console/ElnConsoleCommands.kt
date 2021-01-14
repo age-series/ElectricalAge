@@ -417,3 +417,40 @@ class ElnWailaEasyModeCommand: IConsoleCommand {
         }
     }
 }
+
+class ElnDebugCommand: IConsoleCommand {
+    override val name = "debug"
+
+    override fun runCommand(ics: ICommandSender, args: List<String>) {
+        if (args.size == 1) {
+            val debug = getArgBool(ics, args[0])?: return
+            Eln.debugEnabled = debug
+            val nonsense = false
+            Eln.config.get("debug", "enable", nonsense).set(Eln.debugEnabled)
+            Eln.config.save()
+            cprint(ics, "Debug mode: ${FC.DARK_GREEN}${boolToStr(debug)}", indent = 1)
+        } else {
+            cprint(ics, "This command only takes one argument - true or false")
+        }
+    }
+
+    override fun getManPage(ics: ICommandSender, args: List<String>) {
+        cprint(ics, "Enables/disables debug mode.", indent = 1)
+        cprint(ics, "This will save to the server config file.", indent = 1)
+        cprint(ics, "")
+        cprint(ics, "Parameters:", indent = 1)
+        cprint(ics, "@0:bool : Aging state (enabled/disabled).", indent = 2)
+        cprint(ics, "")
+    }
+
+    override fun requiredPermission() = listOf(UserPermission.IS_OPERATOR)
+
+    override fun getTabCompletion(args: List<String>): List<String> {
+        val options = listOf("true", "false")
+        return if (args.isEmpty() || args[0] == "") {
+            options
+        } else {
+            return options.filter {it.startsWith(args[0], ignoreCase = true)}
+        }
+    }
+}

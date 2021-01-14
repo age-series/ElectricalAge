@@ -1,4 +1,4 @@
-package mods.eln.transparentnode.variabledcdc
+package mods.eln.transparentnode
 
 import mods.eln.Eln
 import mods.eln.cable.CableRenderDescriptor
@@ -234,8 +234,8 @@ class VariableDcDcElement(transparentNode: TransparentNode, descriptor: Transpar
         val secondaryCable = inventory.getStackInSlot(VariableDcDcContainer.secondaryCableSlotId)
         val core = inventory.getStackInSlot(VariableDcDcContainer.ferromagneticSlotId)
 
-        primaryVoltageWatchdog.setUNominal(3200.0)
-        secondaryVoltageWatchdog.setUNominal(3200.0)
+        primaryVoltageWatchdog.setUNominal(12800.0)
+        secondaryVoltageWatchdog.setUNominal(12800.0)
 
         primaryMaxCurrent = 5.0
         secondaryMaxCurrent = 5.0

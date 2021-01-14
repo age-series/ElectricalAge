@@ -17,7 +17,9 @@ class ElectricalPoleDescriptor(name: String,
 
     init {
         obj.getPart("foot")?.let {
-            static_parts.add(it)
+            // Don't draw the foot on the utility pole.
+            if (name !in listOf("Utility Pole"))
+                static_parts.add(it)
         }
         if (includeTransformer) {
             arrayOf("transformer", "cables").forEach {
