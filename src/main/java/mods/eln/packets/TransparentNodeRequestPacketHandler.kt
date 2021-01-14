@@ -2,6 +2,7 @@ package mods.eln.packets
 
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler
 import cpw.mods.fml.common.network.simpleimpl.MessageContext
+import mods.eln.Eln
 import mods.eln.misc.Utils
 import mods.eln.node.NodeManager
 import mods.eln.node.transparent.TransparentNode
@@ -11,7 +12,9 @@ import mods.eln.node.transparent.TransparentNode
  */
 class TransparentNodeRequestPacketHandler : IMessageHandler<TransparentNodeRequestPacket, TransparentNodeResponsePacket> {
     override fun onMessage(message: TransparentNodeRequestPacket?, ctx: MessageContext?): TransparentNodeResponsePacket? {
-        val c = message!!.coord
+        var c = message!!.coord
+        val ghostElem = Eln.ghostManager.getGhost(c)
+        if(ghostElem != null) c = ghostElem.observatorCoordonate
         val node = NodeManager.instance.getNodeFromCoordonate(c) as? TransparentNode
         var stringMap: Map<String, String> = emptyMap()
         if (node != null) {

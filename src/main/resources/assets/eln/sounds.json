@@ -17,6 +17,15 @@
             }
         ]
     },
+	"arc": {
+		"category": "block",
+		"sounds": [
+			{
+				"name": "arc",
+				"stream": false
+			}
+		]
+	},
     "arc_furnace": {
         "category": "block",
         "sounds": [

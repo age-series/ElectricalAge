@@ -175,7 +175,7 @@ class Coordinate : INBTTReady {
         z = vp.zCoord.toInt()
     }
 
-    val tileEntity: TileEntity
+    val tileEntity: TileEntity?
         get() = world().getTileEntity(x, y, z)
 
     fun invalidate() {

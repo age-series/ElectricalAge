@@ -7,7 +7,7 @@ import mods.eln.sim.ThermalLoad
 import net.minecraft.entity.EntityLivingBase
 import net.minecraft.item.ItemStack
 
-class GhostPowerNode(origin: Coordinate, front: Direction, offset: Coordinate, val load: ElectricalLoad): GhostNode() {
+class GhostPowerNode(origin: Coordinate, front: Direction, offset: Coordinate, val load: ElectricalLoad, val mask: Int = NodeBase.maskElectricalPower): GhostNode() {
 
     val coord = Coordinate(offset).apply {
         applyTransformation(front, origin)
@@ -25,7 +25,7 @@ class GhostPowerNode(origin: Coordinate, front: Direction, offset: Coordinate, v
     override fun initializeFromNBT() {
     }
 
-    override fun getSideConnectionMask(directionA: Direction?, lrduA: LRDU?) = NodeBase.maskElectricalPower
+    override fun getSideConnectionMask(directionA: Direction?, lrduA: LRDU?) = mask
 
     override fun getThermalLoad(directionA: Direction, lrduA: LRDU, mask: Int): ThermalLoad? = null
 
