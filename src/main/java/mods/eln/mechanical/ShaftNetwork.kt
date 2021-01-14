@@ -257,9 +257,17 @@ open class ShaftNetwork() : INBTTReady {
             // Utils.println("SN.rN new shaft, unseen.size = " + unseen.size)
             // We ran out of network. Any elements remaining in unseen should thus form a new network.
             shaft.updateCache()
+            shaft.elements.forEach { it.needPublish() }
             shaft = ShaftNetwork()
             shaft.rads = curRads
         }
+
+        // Before we exit, make sure the last shaft constructed has its cache rebuilt.
+        shaft.updateCache()
+        shaft.elements.forEach { it.needPublish() }
+
+        // At this point, it's likely that `this` is no longer referenced by
+        // any object and will be dropped on return.
 
         // Utils.println("SN.rN ----- FINISH -----")
     }
