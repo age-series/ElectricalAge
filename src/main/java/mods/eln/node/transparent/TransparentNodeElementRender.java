@@ -228,9 +228,9 @@ public abstract class TransparentNodeElementRender {
 
     }
 
-    protected Coordonate coordonate() {
+    protected Coordinate coordonate() {
 
-        return new Coordonate(tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord, tileEntity.getWorldObj());
+        return new Coordinate(tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord, tileEntity.getWorldObj());
     }
 
 

@@ -3,7 +3,7 @@ package mods.eln.transparentnode.powerinductor;
 import mods.eln.Eln;
 import mods.eln.item.FerromagneticCoreDescriptor;
 import mods.eln.misc.Obj3D;
-import mods.eln.misc.series.ISerie;
+import mods.eln.misc.IFunction;
 import mods.eln.node.transparent.TransparentNodeDescriptor;
 import mods.eln.sim.mna.misc.MnaConst;
 import net.minecraft.inventory.IInventory;
@@ -16,7 +16,7 @@ public class PowerInductorDescriptor extends TransparentNodeDescriptor {
     public PowerInductorDescriptor(
         String name,
         Obj3D obj,
-        ISerie serie
+        IFunction serie
 
     ) {
         super(name, PowerInductorElement.class, PowerInductorRender.class);
@@ -28,7 +28,7 @@ public class PowerInductorDescriptor extends TransparentNodeDescriptor {
 
     }
 
-    ISerie serie;
+    IFunction serie;
 
     public double getlValue(int cableCount) {
         if (cableCount == 0) return 0;

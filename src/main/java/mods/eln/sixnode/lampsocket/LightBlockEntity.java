@@ -1,7 +1,7 @@
 package mods.eln.sixnode.lampsocket;
 
 import mods.eln.Eln;
-import mods.eln.misc.Coordonate;
+import mods.eln.misc.Coordinate;
 import mods.eln.misc.INBTTReady;
 import mods.eln.misc.Utils;
 import net.minecraft.block.Block;
@@ -30,7 +30,7 @@ public class LightBlockEntity extends TileEntity {
 
 
     public interface LightBlockObserver {
-        void lightBlockDestructor(Coordonate coord);
+        void lightBlockDestructor(Coordinate coord);
     }
 
     static class LightHandle implements INBTTReady {
@@ -156,7 +156,7 @@ public class LightBlockEntity extends TileEntity {
             Utils.println("ASSERT if(t != null && t instanceof LightBlockEntity)");
     }
 
-    public static void addLight(Coordonate coord, int light, int timeout) {
+    public static void addLight(Coordinate coord, int light, int timeout) {
         addLight(coord.world(), coord.x, coord.y, coord.z, light, timeout);
     }
 

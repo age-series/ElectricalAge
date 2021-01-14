@@ -14,11 +14,11 @@ import mods.eln.item.IConfigurable
 import mods.eln.item.ItemMovingHelper
 import mods.eln.misc.BasicContainer
 import mods.eln.misc.Direction
+import mods.eln.misc.IFunction
 import mods.eln.misc.LRDU
 import mods.eln.misc.Obj3D
 import mods.eln.misc.Utils
 import mods.eln.misc.VoltageLevelColor
-import mods.eln.misc.series.ISerie
 import mods.eln.node.NodeBase
 import mods.eln.node.six.SixNode
 import mods.eln.node.six.SixNodeDescriptor
@@ -47,13 +47,13 @@ import kotlin.math.abs
 
 class PowerInductorSixDescriptor(name: String,
                                  obj: Obj3D,
-                                 var serie: ISerie) : SixNodeDescriptor(name, PowerInductorSixElement::class.java, PowerInductorSixRender::class.java) {
+                                 var serie: IFunction) : SixNodeDescriptor(name, PowerInductorSixElement::class.java, PowerInductorSixRender::class.java) {
     var InductorBaseExtention: Obj3D.Obj3DPart? = null
     var InductorCables: Obj3D.Obj3DPart? = null
     var InductorCore: Obj3D.Obj3DPart? = null
     var Base: Obj3D.Obj3DPart? = null
     fun getlValue(cableCount: Int): Double {
-        return if (cableCount == 0) 0.0 else serie.getValue(cableCount - 1)
+        return if (cableCount == 0) 0.0 else serie.getValue((cableCount - 1).toDouble())
     }
 
     fun getlValue(inventory: IInventory): Double {

@@ -1,6 +1,6 @@
 package mods.eln.simplenode.energyconverter
 
-import mods.eln.misc.DescriptorBase
+import mods.eln.node.simple.DescriptorBase
 
 class EnergyConverterElnToOtherDescriptor(
     key: String,

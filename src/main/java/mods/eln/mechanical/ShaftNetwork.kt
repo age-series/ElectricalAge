@@ -3,7 +3,7 @@ package mods.eln.mechanical
 import cpw.mods.fml.common.Loader
 import cpw.mods.fml.common.LoaderState
 import mods.eln.Eln
-import mods.eln.misc.Coordonate
+import mods.eln.misc.Coordinate
 import mods.eln.misc.Direction
 import mods.eln.misc.INBTTReady
 import mods.eln.misc.Utils
@@ -12,8 +12,6 @@ import mods.eln.sim.process.destruct.DelayedDestruction
 import mods.eln.sim.process.destruct.ShaftSpeedWatchdog
 import mods.eln.sim.process.destruct.WorldExplosion
 import net.minecraft.nbt.NBTTagCompound
-import net.minecraft.server.MinecraftServer
-import java.lang.Double.isNaN
 import java.util.*
 
 // Speed above which shafts will (by default) explode.
@@ -265,7 +263,7 @@ open class ShaftNetwork() : INBTTReady {
     }
 
     private fun getNeighbours(from: ShaftElement): ArrayList<ShaftNeighbour> {
-        val c = Coordonate()
+        val c = Coordinate()
         val ret = ArrayList<ShaftNeighbour>(6)
         for (dir in from.shaftConnectivity) {
             c.copyFrom(from.coordonate())
@@ -289,14 +287,14 @@ open class ShaftNetwork() : INBTTReady {
         return ret
     }
 
-    override fun readFromNBT(nbt: NBTTagCompound, str: String?) {
-        rads = nbt.getFloat(str + "rads").toDouble()
+    override fun readFromNBT(nbt: NBTTagCompound?, str: String?) {
+        rads = nbt!!.getFloat(str + "rads").toDouble()
         if(!rads.isFinite()) rads = 0.0
         // Utils.println(String.format("SN.rFN: load %s r=%f", this, rads))
     }
 
-    override fun writeToNBT(nbt: NBTTagCompound, str: String?) {
-        nbt.setFloat(str + "rads", rads.toFloat())
+    override fun writeToNBT(nbt: NBTTagCompound?, str: String?) {
+        nbt!!.setFloat(str + "rads", rads.toFloat())
         // Utils.println(String.format("SN.wTN: save %s r=%f", this, rads))
     }
 
@@ -325,7 +323,7 @@ class StaticShaftNetwork() : ShaftNetwork() {
 interface ShaftElement {
     val shaftMass: Double
     val shaftConnectivity: Array<Direction>
-    fun coordonate(): Coordonate
+    fun coordonate(): Coordinate
     fun getShaft(dir: Direction): ShaftNetwork?
     fun setShaft(dir: Direction, net: ShaftNetwork?)
     fun isInternallyConnected(a: Direction, b: Direction): Boolean = true

@@ -2,13 +2,11 @@ package mods.eln.mechanical
 
 import mods.eln.Eln
 import mods.eln.cable.CableRender
-import mods.eln.cable.CableRenderDescriptor
 import mods.eln.generic.GenericItemUsingDamage
 import mods.eln.generic.GenericItemUsingDamageDescriptor
 import mods.eln.generic.GenericItemUsingDamageDescriptorWithComment
 import mods.eln.generic.GenericItemUsingDamageSlot
 import mods.eln.gui.GuiContainerEln
-import mods.eln.gui.GuiHelperContainer
 import mods.eln.gui.HelperStdContainer
 import mods.eln.gui.ISlotSkin
 import mods.eln.i18n.I18N.tr
@@ -24,13 +22,10 @@ import mods.eln.sim.process.destruct.WorldExplosion
 import mods.eln.sound.LoopedSound
 import mods.eln.sound.SoundCommand
 import net.minecraft.client.gui.GuiScreen
-import net.minecraft.entity.EntityLivingBase
 import net.minecraft.entity.player.EntityPlayer
-import net.minecraft.inventory.Container
 import net.minecraft.inventory.IInventory
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
-import net.minecraft.world.World
 import org.lwjgl.opengl.GL11
 import java.io.DataInputStream
 import java.io.DataOutputStream
@@ -499,7 +494,7 @@ class ClutchRender(entity: TransparentNodeEntity, desc_: TransparentNodeDescript
         }
     }
 
-    inner class ClutchLoopedSound(sound: String, coord: Coordonate) : LoopedSound(sound, coord) {
+    inner class ClutchLoopedSound(sound: String, coord: Coordinate) : LoopedSound(sound, coord) {
         override fun getPitch() = Math.max(0.1, Math.min(1.5, Math.abs(lRads - rRads) / 200.0)).toFloat()
         override fun getVolume() = volumeSetting.position
     }

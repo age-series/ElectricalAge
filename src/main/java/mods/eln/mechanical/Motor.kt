@@ -10,7 +10,6 @@ import mods.eln.node.transparent.TransparentNodeDescriptor
 import mods.eln.node.transparent.TransparentNodeEntity
 import mods.eln.sim.ElectricalLoad
 import mods.eln.sim.IProcess
-import mods.eln.sim.ThermalLoad
 import mods.eln.sim.ThermalLoadInitializer
 import mods.eln.sim.mna.component.Resistor
 import mods.eln.sim.mna.component.VoltageSource
@@ -29,7 +28,6 @@ import org.lwjgl.opengl.GL11
 import java.awt.Color
 import java.io.DataInputStream
 import java.io.DataOutputStream
-import javax.rmi.CORBA.Util
 
 class MotorDescriptor(
     val name: String,
@@ -117,7 +115,7 @@ class MotorRender(entity: TransparentNodeEntity, desc_: TransparentNodeDescripto
         RED
     )
 
-    inner class MotorLoopedSound(sound: String, coord: Coordonate) :
+    inner class MotorLoopedSound(sound: String, coord: Coordinate) :
         LoopedSound(sound, coord) {
         override fun getPitch() = Math.max(0.05, rads / desc.nominalRads).toFloat()
         override fun getVolume() = volumeSetting.position

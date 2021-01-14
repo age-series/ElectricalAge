@@ -1,28 +1,28 @@
 package mods.eln.server
 
 import mods.eln.Eln
-import mods.eln.misc.Coordonate
+import mods.eln.misc.Coordinate
 import mods.eln.server.DelayedTaskManager.ITask
 import net.minecraft.init.Blocks
 import java.util.*
 
-class DelayedBlockRemove private constructor(var c: Coordonate) : ITask {
+class DelayedBlockRemove private constructor(var c: Coordinate) : ITask {
     override fun run() {
-        blocks.remove(c)
+        BLOCKS.remove(c)
         c.block = Blocks.air
     }
 
     companion object {
-        private val blocks: MutableSet<Coordonate> = HashSet()
+        private val BLOCKS: MutableSet<Coordinate> = HashSet()
         @JvmStatic
         fun clear() {
-            blocks.clear()
+            BLOCKS.clear()
         }
 
         @JvmStatic
-        fun add(c: Coordonate) {
-            if (blocks.contains(c)) return
-            blocks.add(c)
+        fun add(c: Coordinate) {
+            if (BLOCKS.contains(c)) return
+            BLOCKS.add(c)
             Eln.delayedTask.add(DelayedBlockRemove(c))
         }
     }

@@ -3,6 +3,13 @@ package mods.eln.misc;
 import static mods.eln.i18n.I18N.tr;
 
 /**
+ *
+ * ====================================================================================
+ *
+ * WARNING! DO NOT CONVERT THIS TO KOTLIN WITHOUT CHECKING HOW GRADLE PARSES THIS FILE!
+ *
+ * ====================================================================================
+ *
  * Current mod version. Used to check if a new mod version is available. Must be
  * set correctly for each mod release.
  *

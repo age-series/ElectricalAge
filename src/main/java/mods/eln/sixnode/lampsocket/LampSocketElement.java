@@ -1,7 +1,6 @@
 package mods.eln.sixnode.lampsocket;
 
 import mods.eln.Eln;
-import mods.eln.generic.GenericItemBlockUsingDamageDescriptor;
 import mods.eln.generic.GenericItemUsingDamageDescriptor;
 import mods.eln.i18n.I18N;
 import mods.eln.item.*;
@@ -28,7 +27,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
-import net.minecraft.world.WorldSettings;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -40,7 +38,7 @@ public class LampSocketElement extends SixNodeElement implements IConfigurable {
 
     LampSocketDescriptor socketDescriptor = null;
 
-    public MonsterPopFreeProcess monsterPopFreeProcess = new MonsterPopFreeProcess(sixNode.coordonate, Eln.instance.killMonstersAroundLampsRange);
+    public MonsterPopFreeProcess monsterPopFreeProcess = new MonsterPopFreeProcess(sixNode.coordinate, Eln.instance.killMonstersAroundLampsRange);
     public NbtElectricalLoad positiveLoad = new NbtElectricalLoad("positiveLoad");
 
     public LampSocketProcess lampProcess = new LampSocketProcess(this);

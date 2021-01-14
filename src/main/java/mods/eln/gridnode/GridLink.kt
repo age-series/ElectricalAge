@@ -1,14 +1,12 @@
 package mods.eln.gridnode
 
 import mods.eln.Eln
-import mods.eln.misc.Coordonate
+import mods.eln.misc.Coordinate
 import mods.eln.misc.Direction
 import mods.eln.misc.INBTTReady
 import mods.eln.misc.UserError
 import mods.eln.node.NodeManager
-import mods.eln.node.transparent.TransparentNodeElement
 import mods.eln.sim.ElectricalConnection
-import mods.eln.sim.ElectricalLoad
 import mods.eln.sim.mna.misc.MnaConst
 import mods.eln.sixnode.electricalcable.ElectricalCableDescriptor
 import net.minecraft.item.ItemStack
@@ -22,8 +20,8 @@ import java.util.Optional
  */
 class GridLink : INBTTReady {
 
-    internal var a = Coordonate()
-    internal var b = Coordonate()
+    internal var a = Coordinate()
+    internal var b = Coordinate()
 
     internal var connected = false
     // Drop this if the link is broken.
@@ -35,7 +33,7 @@ class GridLink : INBTTReady {
     private var ab: ElectricalConnection? = null
     private var rs = MnaConst.highImpedance
 
-    constructor(a: Coordonate, b: Coordonate, `as`: Direction, bs: Direction, cable: ItemStack, rs: Double) {
+    constructor(a: Coordinate, b: Coordinate, `as`: Direction, bs: Direction, cable: ItemStack, rs: Double) {
         this.rs = rs
         this.a = a
         this.b = b
@@ -131,21 +129,21 @@ class GridLink : INBTTReady {
         return false
     }
 
-    override fun readFromNBT(nbt: NBTTagCompound, str: String) {
+    override fun readFromNBT(nbt: NBTTagCompound?, str: String?) {
         a.readFromNBT(nbt, str + "a")
         b.readFromNBT(nbt, str + "b")
         `as` = Direction.readFromNBT(nbt, str + "as")
         bs = Direction.readFromNBT(nbt, str + "bs")
-        rs = nbt.getDouble(str + "rs")
+        rs = nbt!!.getDouble(str + "rs")
         cable = ItemStack.loadItemStackFromNBT(nbt)
     }
 
-    override fun writeToNBT(nbt: NBTTagCompound, str: String) {
+    override fun writeToNBT(nbt: NBTTagCompound?, str: String?) {
         a.writeToNBT(nbt, str + "a")
         b.writeToNBT(nbt, str + "b")
         `as`.writeToNBT(nbt, str + "as")
         bs.writeToNBT(nbt, str + "bs")
-        nbt.setDouble(str + "rs", rs)
+        nbt!!.setDouble(str + "rs", rs)
         cable.writeToNBT(nbt)
     }
 
@@ -180,7 +178,7 @@ class GridLink : INBTTReady {
 
     companion object {
 
-        fun getElementFromCoordinate(coord: Coordonate?): GridElement? {
+        fun getElementFromCoordinate(coord: Coordinate?): GridElement? {
             if (coord == null) return null
             val element = NodeManager.instance.getTransparentNodeFromCoordinate(coord)
             if (element is GridElement) {

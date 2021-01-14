@@ -404,33 +404,9 @@ public class Utils {
     }
 
     public static void sendPacketToClient(ByteArrayOutputStream bos, EntityPlayerMP player) {
-        // Profiler p = new Profiler();
-        // p.add("A");
-        // ElnServerPacket packet = new ElnServerPacket(Eln.channelName, bos.toByteArray());
-        // ByteBuf b = Unpooled.buffer().capacity(bos.size()).setBytes(0, bos.toByteArray());
-        // p.add("B");
-        // Eln.eventChannel.sendTo(new FMLProxyPacket(b, Eln.channelName), player);
-        // p.stop();
-        // Utils.println(p);
-
         S3FPacketCustomPayload packet = new S3FPacketCustomPayload(Eln.channelName, bos.toByteArray());
         player.playerNetServerHandler.sendPacket(packet);
-
-        // FMLCommonHandler.instance().getMinecraftServerInstance().getEln.eventChannel.sendTo(new FMLProxyPacket(packet),player);
     }
-
-	/*
-	 * public static void sendPacketToPlayer( ElnServerPacket packet, EntityPlayerMP player) {
-	 * 
-	 * Eln.eventChannel.sendTo(new FMLProxyPacket(packet), player); // player.playerNetServerHandler.sendPacket(new FMLProxyPacket(packet)); }
-	 */
-
-    // private static Color[] dyeColors
-
-    // public Color getDyeColor(ItemStack stack)
-    // {
-    // ItemDye.dyeColors[stack.getItemDamage()];
-    // }
 
     public static void setGlColorFromDye(int damage) {
         setGlColorFromDye(damage, 1.0f);
@@ -604,8 +580,8 @@ public class Utils {
         }
     }
 
-    public static void dropItem(ItemStack itemStack, Coordonate coordonate) {
-        dropItem(itemStack, coordonate.x, coordonate.y, coordonate.z, coordonate.world());
+    public static void dropItem(ItemStack itemStack, Coordinate coordinate) {
+        dropItem(itemStack, coordinate.x, coordinate.y, coordinate.z, coordinate.world());
     }
 
     public static boolean tryPutStackInInventory(ItemStack stack, IInventory inventory) {
@@ -839,7 +815,7 @@ public class Utils {
             || Eln.configCopyToolElement.checkSameItemStack(cur);
     }
 
-    public static int getRedstoneLevelAround(Coordonate coord, Direction side) {
+    public static int getRedstoneLevelAround(Coordinate coord, Direction side) {
         int level = coord.world().getStrongestIndirectPower(coord.x, coord.y, coord.z);
         if (level >= 15) return 15;
 
@@ -966,7 +942,7 @@ public class Utils {
         return false;
     }
 
-    public static Vec3 getVec05(Coordonate c) {
+    public static Vec3 getVec05(Coordinate c) {
         return Vec3.createVectorHelper(c.x + (c.x < 0 ? -1 : 1) * 0.5, c.y + (c.y < 0 ? -1 : 1) * 0.5, c.z + (c.z < 0 ? -1 : 1) * 0.5);
     }
 
@@ -1288,7 +1264,7 @@ public class Utils {
         return world.getWorldTime() / (23999.0);
     }
 
-    public static boolean isWater(Coordonate waterCoord) {
+    public static boolean isWater(Coordinate waterCoord) {
         Block block = waterCoord.getBlock();
         return (block == Blocks.flowing_water || block == Blocks.water);
     }

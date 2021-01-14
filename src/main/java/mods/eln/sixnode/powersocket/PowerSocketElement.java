@@ -1,11 +1,10 @@
 package mods.eln.sixnode.powersocket;
 
-import mods.eln.generic.GenericItemUsingDamage;
 import mods.eln.generic.GenericItemUsingDamageDescriptor;
 import mods.eln.item.BrushDescriptor;
 import mods.eln.item.ConfigCopyToolDescriptor;
 import mods.eln.item.IConfigurable;
-import mods.eln.misc.Coordonate;
+import mods.eln.misc.Coordinate;
 import mods.eln.misc.Direction;
 import mods.eln.misc.LRDU;
 import mods.eln.misc.Utils;
@@ -36,8 +35,6 @@ import net.minecraft.nbt.NBTTagString;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 public class PowerSocketElement extends SixNodeElement implements IConfigurable {
@@ -89,13 +86,13 @@ public class PowerSocketElement extends SixNodeElement implements IConfigurable 
 
         @Override
         public void process(double time) {
-            Coordonate local = sixNode.coordonate;
+            Coordinate local = sixNode.coordinate;
             LampSupplyElement.PowerSupplyChannelHandle handle = null;
             float bestDist = 1e9f;
             List<LampSupplyElement.PowerSupplyChannelHandle> handles = LampSupplyElement.channelMap.get(channel);
             if(handles != null) {
                 for(LampSupplyElement.PowerSupplyChannelHandle hdl : handles) {
-                    float dist = (float) hdl.element.sixNode.coordonate.trueDistanceTo(local);
+                    float dist = (float) hdl.element.sixNode.coordinate.trueDistanceTo(local);
                     if(dist < bestDist && dist <= hdl.element.getRange()) {
                         bestDist = dist;
                         handle = hdl;

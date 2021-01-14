@@ -2,6 +2,7 @@ package mods.eln.transparentnode
 
 import mods.eln.Eln
 import mods.eln.generic.GenericItemUsingDamageDescriptor
+import mods.eln.gui.GuiButtonEln
 import mods.eln.gui.GuiContainerEln
 import mods.eln.gui.GuiHelperContainer
 import mods.eln.gui.ISlotSkin.SlotSkin

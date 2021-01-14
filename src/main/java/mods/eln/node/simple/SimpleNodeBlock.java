@@ -1,6 +1,5 @@
 package mods.eln.node.simple;
 
-import mods.eln.misc.DescriptorBase;
 import mods.eln.misc.Direction;
 import mods.eln.misc.Utils;
 import net.minecraft.block.Block;

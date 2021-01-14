@@ -6,7 +6,7 @@ import cpw.mods.fml.common.gameevent.TickEvent
 import cpw.mods.fml.common.gameevent.TickEvent.ServerTickEvent
 import mods.eln.Eln
 import mods.eln.item.electricalitem.TreeCapitation.process
-import mods.eln.misc.Coordonate
+import mods.eln.misc.Coordinate
 import mods.eln.misc.Utils
 import mods.eln.node.NodeManager
 import mods.eln.server.ElnWorldStorage.Companion.forWorld
@@ -49,7 +49,7 @@ class ServerEventListener {
         lightningList.clear()
     }
 
-    fun getLightningClosestTo(c: Coordonate): Double {
+    fun getLightningClosestTo(c: Coordinate): Double {
         var best = 10000000.0
         for (l in lightningList) {
             if (c.world() !== l.worldObj) continue

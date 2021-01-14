@@ -3,7 +3,7 @@ package mods.eln.ghost;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import mods.eln.Eln;
-import mods.eln.misc.Coordonate;
+import mods.eln.misc.Coordinate;
 import mods.eln.misc.Direction;
 import mods.eln.node.transparent.TransparentNodeEntity;
 import net.minecraft.block.Block;
@@ -52,10 +52,10 @@ public class GhostBlock extends Block {
                 break;
             default:
                 GhostElement element = getElement(world, x, y, z);
-                Coordonate coord = element == null ? null : element.observatorCoordonate;
+                Coordinate coord = element == null ? null : element.observatorCoordinate;
                 TileEntity te = coord == null ? null : coord.getTileEntity();
                 if (te != null && te instanceof TransparentNodeEntity) {
-                    ((TransparentNodeEntity) te).addCollisionBoxesToList(par5AxisAlignedBB, list, element.elementCoordonate);
+                    ((TransparentNodeEntity) te).addCollisionBoxesToList(par5AxisAlignedBB, list, element.elementCoordinate);
                 } else {
                     super.addCollisionBoxesToList(world, x, y, z, par5AxisAlignedBB, list, entity);
                 }
@@ -169,7 +169,7 @@ public class GhostBlock extends Block {
     }
 
     GhostElement getElement(World world, int x, int y, int z) {
-        return Eln.ghostManager.getGhost(new Coordonate(x, y, z, world));
+        return Eln.ghostManager.getGhost(new Coordinate(x, y, z, world));
     }
 
     @Override

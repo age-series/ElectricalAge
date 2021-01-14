@@ -98,13 +98,13 @@ class LampDescriptor(
     }
 
     @Throws(IOException::class)
-    override fun serializeConfig(stream: DataOutputStream) {
-        stream.writeDouble(nominalLifeHours)
+    override fun serializeConfig(stream: DataOutputStream?) {
+        stream!!.writeDouble(nominalLifeHours)
     }
 
     @Throws(IOException::class)
-    override fun deserialize(stream: DataInputStream) {
-        serverNominalLife = stream.readDouble()
+    override fun deserialize(stream: DataInputStream?) {
+        serverNominalLife = stream!!.readDouble()
     }
 
     init {

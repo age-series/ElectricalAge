@@ -39,7 +39,7 @@ import mods.eln.item.regulator.RegulatorAnalogDescriptor;
 import mods.eln.item.regulator.RegulatorOnOffDescriptor;
 import mods.eln.mechanical.*;
 import mods.eln.misc.*;
-import mods.eln.misc.series.SerieEE;
+import mods.eln.misc.SeriesFunction;
 import mods.eln.node.NodeBlockEntity;
 import mods.eln.node.NodeManager;
 import mods.eln.node.NodeManagerNbt;
@@ -176,7 +176,6 @@ import net.minecraftforge.common.config.Property;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
-import paulscode.sound.SoundSystemConfig;
 
 import java.util.*;
 import static mods.eln.i18n.I18N.*;
@@ -1998,7 +1997,7 @@ public class Eln {
             name = TR_NAME(Type.NONE, "Power Capacitor");
 
             PowerCapacitorSixDescriptor desc = new PowerCapacitorSixDescriptor(
-                name, obj.getObj("PowerElectricPrimitives"), SerieEE.newE6(-1), 60 * 2000
+                name, obj.getObj("PowerElectricPrimitives"), SeriesFunction.newE6(-1), 60 * 2000
             );
 
             sixNodeItem.addDescriptor(subId + (id << 6), desc);
@@ -2010,7 +2009,7 @@ public class Eln {
             name = TR_NAME(Type.NONE, "Power Inductor");
 
             PowerInductorSixDescriptor desc = new PowerInductorSixDescriptor(
-                name, obj.getObj("PowerElectricPrimitives"), SerieEE.newE6(-1)
+                name, obj.getObj("PowerElectricPrimitives"), SeriesFunction.newE6(-1)
             );
 
             sixNodeItem.addDescriptor(subId + (id << 6), desc);
@@ -2022,7 +2021,7 @@ public class Eln {
             name = TR_NAME(Type.NONE, "Power Resistor");
 
             ResistorDescriptor desc = new ResistorDescriptor(
-                name, obj.getObj("PowerElectricPrimitives"), SerieEE.newE12(-2), 0, false
+                name, obj.getObj("PowerElectricPrimitives"), SeriesFunction.newE12(-2), 0, false
             );
 
             sixNodeItem.addDescriptor(subId + (id << 6), desc);
@@ -2033,7 +2032,7 @@ public class Eln {
             name = TR_NAME(Type.NONE, "Rheostat");
 
             ResistorDescriptor desc = new ResistorDescriptor(
-                name, obj.getObj("PowerElectricPrimitives"), SerieEE.newE12(-2), 0, true
+                name, obj.getObj("PowerElectricPrimitives"), SeriesFunction.newE12(-2), 0, true
             );
 
             sixNodeItem.addDescriptor(subId + (id << 6), desc);
@@ -2045,7 +2044,7 @@ public class Eln {
             name = TR_NAME(Type.NONE, "Thermistor");
 
             ResistorDescriptor desc = new ResistorDescriptor(
-                name, obj.getObj("PowerElectricPrimitives"), SerieEE.newE12(-2), -0.01, false
+                name, obj.getObj("PowerElectricPrimitives"), SeriesFunction.newE12(-2), -0.01, false
             );
 
             sixNodeItem.addDescriptor(subId + (id << 6), desc);
@@ -2064,7 +2063,7 @@ public class Eln {
                 10, 1// double nominalTao,double nominalConnectionDrop
             );
             LargeRheostatDescriptor desc = new LargeRheostatDescriptor(
-                name, dissipator, veryHighVoltageCableDescriptor, SerieEE.newE12(0)
+                name, dissipator, veryHighVoltageCableDescriptor, SeriesFunction.newE12(0)
             );
 
             transparentNodeItem.addDescriptor(subId + (id << 6), desc);
@@ -2082,7 +2081,7 @@ public class Eln {
             name = TR_NAME(Type.NONE, "Power inductor");
 
             PowerInductorDescriptor desc = new PowerInductorDescriptor(
-                name, null, SerieEE.newE12(-1)
+                name, null, SeriesFunction.newE12(-1)
             );
 
             transparentNodeItem.addWithoutRegistry(subId + (id << 6), desc);
@@ -2094,7 +2093,7 @@ public class Eln {
             name = TR_NAME(Type.NONE, "Power capacitor");
 
             PowerCapacitorDescriptor desc = new PowerCapacitorDescriptor(
-                name, null, SerieEE.newE6(-2), 300
+                name, null, SeriesFunction.newE6(-2), 300
             );
 
             transparentNodeItem.addWithoutRegistry(subId + (id << 6), desc);
@@ -3420,7 +3419,7 @@ public class Eln {
             subId = 3;
             name = TR_NAME(Type.NONE, "2x3 Solar Panel");
 
-            Coordonate groundCoordinate = new Coordonate(1, 0, 0, 0);
+            Coordinate groundCoordinate = new Coordinate(1, 0, 0, 0);
 
             ghostGroup = new GhostGroup();
             ghostGroup.addRectangle(0, 1, 0, 0, -1, 1);
@@ -3441,7 +3440,7 @@ public class Eln {
             subId = 4;
             name = TR_NAME(Type.NONE, "2x3 Rotating Solar Panel");
 
-            Coordonate groundCoordinate = new Coordonate(1, 0, 0, 0);
+            Coordinate groundCoordinate = new Coordinate(1, 0, 0, 0);
 
             ghostGroup = new GhostGroup();
             ghostGroup.addRectangle(0, 1, 0, 0, -1, 1);
@@ -4472,7 +4471,7 @@ public class Eln {
             subId = 16;
             name = TR_NAME(Type.NONE, "Water Turbine");
 
-            Coordonate waterCoord = new Coordonate(1, -1, 0, 0);
+            Coordinate waterCoord = new Coordinate(1, -1, 0, 0);
 
             WaterTurbineDescriptor desc = new WaterTurbineDescriptor(
                 name, obj.getObj("SmallWaterWheel"), // name,Obj3D obj,
@@ -4582,9 +4581,9 @@ public class Eln {
             subId = 0;
             name = TR_NAME(Type.NONE, "Experimental Transporter");
 
-            Coordonate[] powerLoad = new Coordonate[2];
-            powerLoad[0] = new Coordonate(-1, 0, 1, 0);
-            powerLoad[1] = new Coordonate(-1, 0, -1, 0);
+            Coordinate[] powerLoad = new Coordinate[2];
+            powerLoad[0] = new Coordinate(-1, 0, 1, 0);
+            powerLoad[1] = new Coordinate(-1, 0, -1, 0);
 
             GhostGroup doorOpen = new GhostGroup();
             doorOpen.addRectangle(-4, -3, 2, 2, 0, 0);
@@ -4595,7 +4594,7 @@ public class Eln {
             TeleporterDescriptor desc = new TeleporterDescriptor(
                 name, obj.getObj("Transporter"),
                 highVoltageCableDescriptor,
-                new Coordonate(-1, 0, 0, 0), new Coordonate(-1, 1, 0, 0),
+                new Coordinate(-1, 0, 0, 0), new Coordinate(-1, 1, 0, 0),
                 2,// int areaH
                 powerLoad,
                 doorOpen, doorClose
@@ -5003,13 +5002,13 @@ public class Eln {
             subId = 0;
             name = TR_NAME(Type.NONE, "Auto Miner");
 
-            Coordonate[] powerLoad = new Coordonate[2];
-            powerLoad[0] = new Coordonate(-2, -1, 1, 0);
-            powerLoad[1] = new Coordonate(-2, -1, -1, 0);
+            Coordinate[] powerLoad = new Coordinate[2];
+            powerLoad[0] = new Coordinate(-2, -1, 1, 0);
+            powerLoad[1] = new Coordinate(-2, -1, -1, 0);
 
-            Coordonate lightCoord = new Coordonate(-3, 0, 0, 0);
+            Coordinate lightCoord = new Coordinate(-3, 0, 0, 0);
 
-            Coordonate miningCoord = new Coordonate(-1, 0, 1, 0);
+            Coordinate miningCoord = new Coordinate(-1, 0, 1, 0);
 
             AutoMinerDescriptor desc = new AutoMinerDescriptor(name,
                 obj.getObj("AutoMiner"),

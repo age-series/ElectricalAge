@@ -3,7 +3,7 @@ package mods.eln.sixnode.wirelesssignal.tx;
 import mods.eln.Eln;
 import mods.eln.i18n.I18N;
 import mods.eln.item.IConfigurable;
-import mods.eln.misc.Coordonate;
+import mods.eln.misc.Coordinate;
 import mods.eln.misc.Direction;
 import mods.eln.misc.LRDU;
 import mods.eln.misc.Utils;
@@ -54,14 +54,14 @@ public class WirelessSignalTxElement extends SixNodeElement implements IWireless
 
     static public class LightningGlitchProcess implements IProcess {
         double range = 64;
-        Coordonate c;
+        Coordinate c;
         double glichedTimer = 0;
         double glichedStrangth = 0;
         final double glitchLength = 6;
 
         public double glitchOffset = 0;
 
-        public LightningGlitchProcess(Coordonate c) {
+        public LightningGlitchProcess(Coordinate c) {
             this.c = c;
         }
 
@@ -176,8 +176,8 @@ public class WirelessSignalTxElement extends SixNodeElement implements IWireless
     }
 
     @Override
-    public Coordonate getCoordonate() {
-        return sixNode.coordonate;
+    public Coordinate getCoordonate() {
+        return sixNode.coordinate;
     }
 
     @Override

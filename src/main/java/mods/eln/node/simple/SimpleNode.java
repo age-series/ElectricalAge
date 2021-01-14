@@ -1,7 +1,6 @@
 package mods.eln.node.simple;
 
 import mods.eln.Eln;
-import mods.eln.misc.DescriptorManager;
 import mods.eln.misc.Direction;
 import mods.eln.misc.INBTTReady;
 import mods.eln.node.NodeBase;
@@ -41,7 +40,7 @@ public abstract class SimpleNode extends NodeBase {
     public void setFront(Direction front) {
         this.front = front;
         if (applayFrontToMetadata()) {
-            coordonate.setMetadata(front.getInt());
+            coordinate.setMetadata(front.getInt());
         }
     }
 

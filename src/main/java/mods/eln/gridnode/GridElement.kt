@@ -6,7 +6,6 @@ import mods.eln.node.transparent.TransparentNode
 import mods.eln.node.transparent.TransparentNodeDescriptor
 import mods.eln.node.transparent.TransparentNodeElement
 import mods.eln.sim.ElectricalLoad
-import mods.eln.sim.ThermalLoad
 import mods.eln.sixnode.electricalcable.ElectricalCableDescriptor
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.entity.player.EntityPlayerMP
@@ -17,7 +16,6 @@ import org.apache.commons.lang3.tuple.Pair
 
 import java.io.DataOutputStream
 import java.io.IOException
-import java.util.ArrayList
 import java.util.HashMap
 import java.util.HashSet
 import java.util.UUID
@@ -280,6 +278,6 @@ abstract class GridElement(transparentNode: TransparentNode, descriptor: Transpa
         /**
          * The last place any given player tried to link two instance nodes.
          */
-        private val pending = HashMap<UUID, Pair<Coordonate, Direction>>()
+        private val pending = HashMap<UUID, Pair<Coordinate, Direction>>()
     }
 }

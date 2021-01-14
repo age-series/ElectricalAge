@@ -100,7 +100,7 @@ open class GenericItemUsingDamageDescriptor {
 
     open fun renderItem(type: ItemRenderType?, item: ItemStack?, vararg data: Any?) {
         if (icon == null) return
-        voltageLevelColor.drawIconBackground(type)
+        voltageLevelColor.drawIconBackground(type!!)
         // remove "eln:" to add the full path replace("eln:", "textures/blocks/") + ".png";
         val icon = icon!!.iconName.substring(4)
         UtilsClient.drawIcon(type, ResourceLocation("eln", "textures/items/$icon.png"))

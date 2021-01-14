@@ -6,8 +6,6 @@ import sun.audio.AudioPlayer.player
 import net.minecraft.network.play.server.S2FPacketSetSlot
 import net.minecraft.entity.player.EntityPlayerMP
 
-
-
 /**
  * Contains utilities for dealing with player entities.
  */
@@ -26,14 +24,12 @@ fun EntityPlayer.removeMultipleItems(stack: ItemStack, count: Int) {
     try {
         inventory.mainInventory.indices.reversed().forEach { i ->
             val invStack = inventory.mainInventory[i]
-            if (invStack?.isItemEqual(stack) ?: false) {
-                left -= invStack.splitStack(Math.min(invStack.stackSize, left)).stackSize
+            if (invStack?.isItemEqual(stack) == true) {
+                left -= invStack.splitStack(invStack.stackSize.coerceAtMost(left)).stackSize
                 assert(invStack.stackSize >= 0)
-                if (this is EntityPlayerMP) {
-                    // Black magic used to synchronize immediately with the client.
-                    val slot = openContainer.getSlotFromInventory(inventory, i)
-                    playerNetServerHandler.sendPacket(S2FPacketSetSlot(openContainer.windowId, slot.slotNumber, invStack))
-                }
+                // Black magic used to synchronize immediately with the client.
+                val slot = openContainer.getSlotFromInventory(inventory, i)
+                playerNetServerHandler.sendPacket(S2FPacketSetSlot(openContainer.windowId, slot.slotNumber, invStack))
                 if (left == 0) return
             }
         }

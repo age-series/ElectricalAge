@@ -101,44 +101,44 @@ public class TransparentNodeDescriptor extends GenericItemBlockUsingDamageDescri
         return false;
     }
 
-    public String checkCanPlace(Coordonate coord, Direction front) {
+    public String checkCanPlace(Coordinate coord, Direction front) {
         Block block;
         boolean needDestroy = false;
         if (mustHaveFloor()) {
-            Coordonate temp = new Coordonate(coord);
+            Coordinate temp = new Coordinate(coord);
             temp.move(Direction.YN);
             block = temp.getBlock();
             if (block == null || ((!block.isOpaqueCube()) && block instanceof BlockHopper == false))
                 return tr("You can't place this block at this side");
         }
         if (mustHaveCeiling()) {
-            Coordonate temp = new Coordonate(coord);
+            Coordinate temp = new Coordinate(coord);
             temp.move(Direction.YP);
             block = temp.getBlock();
             if (block == null || !block.isOpaqueCube()) return tr("You can't place this block at this side");
         }
         if (mustHaveWallFrontInverse()) {
-            Coordonate temp = new Coordonate(coord);
+            Coordinate temp = new Coordinate(coord);
             temp.move(front.getInverse());
             block = temp.getBlock();
             if (block == null || !block.isOpaqueCube()) return tr("You can't place this block at this side");
         }
         if (mustHaveWall()) {
-            Coordonate temp;
+            Coordinate temp;
             boolean wall = false;
-            temp = new Coordonate(coord);
+            temp = new Coordinate(coord);
             temp.move(Direction.XN);
             block = temp.getBlock();
             if (block != null && block.isOpaqueCube()) wall = true;
-            temp = new Coordonate(coord);
+            temp = new Coordinate(coord);
             temp.move(Direction.XP);
             block = temp.getBlock();
             if (block != null && block.isOpaqueCube()) wall = true;
-            temp = new Coordonate(coord);
+            temp = new Coordinate(coord);
             temp.move(Direction.ZN);
             block = temp.getBlock();
             if (block != null && block.isOpaqueCube()) wall = true;
-            temp = new Coordonate(coord);
+            temp = new Coordinate(coord);
             temp.move(Direction.ZP);
             block = temp.getBlock();
             if (block != null && block.isOpaqueCube()) wall = true;

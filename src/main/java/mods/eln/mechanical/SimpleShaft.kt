@@ -7,7 +7,6 @@ import mods.eln.misc.*
 import mods.eln.node.transparent.*
 import mods.eln.sim.process.destruct.WorldExplosion
 import mods.eln.sound.LoopedSound
-import net.minecraft.entity.EntityLivingBase
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraftforge.client.IItemRenderer
@@ -87,7 +86,7 @@ open class ShaftRender(entity: TransparentNodeEntity, desc: TransparentNodeDescr
     private var soundLooper: ShaftSoundLooper? = null
     val volumeSetting = SlewLimiter(0.5f)
 
-    private open inner class ShaftSoundLooper(sound: String, coord: Coordonate) : LoopedSound(sound, coord) {
+    private open inner class ShaftSoundLooper(sound: String, coord: Coordinate) : LoopedSound(sound, coord) {
         override fun getPitch(): Float {
             if (this.sample == "eln:FuelGenerator") {
                 return (rads / 250.0).toFloat()

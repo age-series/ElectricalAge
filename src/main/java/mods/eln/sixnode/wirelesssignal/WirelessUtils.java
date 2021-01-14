@@ -1,9 +1,8 @@
 package mods.eln.sixnode.wirelesssignal;
 
-import mods.eln.misc.Coordonate;
+import mods.eln.misc.Coordinate;
 import mods.eln.sixnode.wirelesssignal.tx.WirelessSignalTxElement;
 import net.minecraft.block.Block;
-import net.minecraft.init.Blocks;
 import net.minecraft.world.World;
 
 import java.util.*;
@@ -107,7 +106,7 @@ public class WirelessUtils {
 	 * if(channel != null){ ArrayList<IWirelessSignalTx> txs = root.getTx().get(channel); if(txs != null) txSet.addAll(txs); }else{ for(ArrayList<IWirelessSignalTx> txs : root.getTx().values()){ txSet.addAll(txs); } } }
 	 */
 
-    public static WirelessSignalSpot buildSpot(Coordonate c, String channel, int range) {
+    public static WirelessSignalSpot buildSpot(Coordinate c, String channel, int range) {
         HashMap<String, ArrayList<IWirelessSignalTx>> txs = new HashMap<String, ArrayList<IWirelessSignalTx>>();
         ArrayList<IWirelessSignalSpot> spots = new ArrayList<IWirelessSignalSpot>();
 
@@ -148,14 +147,14 @@ public class WirelessUtils {
         return new WirelessSignalSpot(txs, spots, c, range);
     }
 
-    static private boolean isInRange(Coordonate txC, Coordonate rxC, double range) {
+    static private boolean isInRange(Coordinate txC, Coordinate rxC, double range) {
         double distance = txC.trueDistanceTo(rxC);
         if (distance > range) return false;
         if (getVirtualDistance(txC, rxC, distance) > range) return false;
         return true;
     }
 
-    static private double getVirtualDistance(Coordonate txC, Coordonate rxC, double distance) {
+    static private double getVirtualDistance(Coordinate txC, Coordinate rxC, double distance) {
         double virtualDistance = distance;
         if (distance > 2) {
             double vx, vy, vz;
@@ -167,8 +166,8 @@ public class WirelessUtils {
             dx = (txC.x - rxC.x) / distance;
             dy = (txC.y - rxC.y) / distance;
             dz = (txC.z - rxC.z) / distance;
-            Coordonate c = new Coordonate();
-            c.setDimention(rxC.dimention);
+            Coordinate c = new Coordinate();
+            c.setDimension(rxC.dimension);
 
             for (int idx = 0; idx < distance - 1; idx++) {
                 vx += dx;
@@ -195,13 +194,13 @@ public class WirelessUtils {
 
         HashMap<String, ArrayList<IWirelessSignalTx>> txs;
         ArrayList<IWirelessSignalSpot> spots;
-        Coordonate coordonate;
+        Coordinate coordinate;
         int range;
 
-        public WirelessSignalSpot(HashMap<String, ArrayList<IWirelessSignalTx>> txs, ArrayList<IWirelessSignalSpot> spots, Coordonate coordonate, int range) {
+        public WirelessSignalSpot(HashMap<String, ArrayList<IWirelessSignalTx>> txs, ArrayList<IWirelessSignalSpot> spots, Coordinate coordinate, int range) {
             this.txs = txs;
             this.spots = spots;
-            this.coordonate = coordonate;
+            this.coordinate = coordinate;
             this.range = range;
         }
 
@@ -216,8 +215,8 @@ public class WirelessUtils {
         }
 
         @Override
-        public Coordonate getCoordonate() {
-            return coordonate;
+        public Coordinate getCoordonate() {
+            return coordinate;
         }
 
         @Override

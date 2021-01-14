@@ -67,7 +67,7 @@ class ScannerElement(sixNode: SixNode, side: Direction, descriptor: SixNodeDescr
 
     val updater = IProcess {
         val appliedLRDU = side.applyLRDU(front)
-        val scannedCoord = Coordonate(coordonate).apply {
+        val scannedCoord = Coordinate(coordonate).apply {
             move(appliedLRDU)
         }
         val targetSide: ForgeDirection = appliedLRDU.inverse.toForge()
@@ -89,16 +89,14 @@ class ScannerElement(sixNode: SixNode, side: Direction, descriptor: SixNodeDescr
         slowProcessList.add(updater)
     }
 
-    private fun scanBlock(scannedCoord: Coordonate, targetSide: ForgeDirection): Double {
-        val block = scannedCoord.block
-        if (block.hasComparatorInputOverride()) {
-            return block.getComparatorInputOverride(scannedCoord.world(), scannedCoord.x, scannedCoord.y, scannedCoord.z, targetSide.ordinal) / 15.0
-        } else if (block.isOpaqueCube) {
-            return 1.0
-        } else if (block.isAir(scannedCoord.world(), scannedCoord.x, scannedCoord.y, scannedCoord.z)) {
-            return 0.0
-        } else {
-            return 1.0/3.0
+    private fun scanBlock(scannedCoord: Coordinate, targetSide: ForgeDirection): Double {
+        val block = scannedCoord.block?: return 1.0/3.0
+        return when {
+            block.hasComparatorInputOverride() ->
+                block.getComparatorInputOverride(scannedCoord.world(), scannedCoord.x, scannedCoord.y, scannedCoord.z, targetSide.ordinal) / 15.0
+            block.isOpaqueCube -> 1.0
+            block.isAir(scannedCoord.world(), scannedCoord.x, scannedCoord.y, scannedCoord.z) -> 0.0
+            else -> 1.0/3.0
         }
     }
 

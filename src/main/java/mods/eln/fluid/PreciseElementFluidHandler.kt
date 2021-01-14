@@ -6,14 +6,14 @@ import net.minecraftforge.common.util.ForgeDirection
 class PreciseElementFluidHandler(tankSize: Int) : ElementFluidHandler(tankSize) {
     private var fixup = 0.0
 
-    override fun readFromNBT(nbt: NBTTagCompound, str: String?) {
+    override fun readFromNBT(nbt: NBTTagCompound?, str: String?) {
         super.readFromNBT(nbt, str)
-        fixup = nbt.getDouble(str + "fixup")
+        fixup = nbt!!.getDouble(str + "fixup")
     }
 
-    override fun writeToNBT(nbt: NBTTagCompound, str: String?) {
+    override fun writeToNBT(nbt: NBTTagCompound?, str: String?) {
         super.writeToNBT(nbt, str)
-        nbt.setDouble(str + "fixup", fixup)
+        nbt!!.setDouble(str + "fixup", fixup)
     }
 
     fun drain(demand: Double): Double {

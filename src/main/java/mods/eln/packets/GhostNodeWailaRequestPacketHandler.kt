@@ -3,7 +3,7 @@ package mods.eln.packets
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler
 import cpw.mods.fml.common.network.simpleimpl.MessageContext
 import mods.eln.Eln
-import mods.eln.misc.Coordonate
+import mods.eln.misc.Coordinate
 import mods.eln.misc.Direction
 import mods.eln.node.NodeManager
 import mods.eln.node.six.SixNodeElement
@@ -32,7 +32,7 @@ class GhostNodeWailaRequestPacketHandler : IMessageHandler<GhostNodeWailaRequest
             }
         }
 
-        return GhostNodeWailaResponsePacket(message.coord, realCoord ?: Coordonate(0, 0, 0, 0), itemStack, type,
+        return GhostNodeWailaResponsePacket(message.coord, realCoord ?: Coordinate(0, 0, 0, 0), itemStack, type,
             realSide)
     }
 }

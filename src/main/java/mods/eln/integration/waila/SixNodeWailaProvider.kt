@@ -6,7 +6,7 @@ import mcp.mobius.waila.api.IWailaConfigHandler
 import mcp.mobius.waila.api.IWailaDataAccessor
 import mcp.mobius.waila.api.IWailaDataProvider
 import mcp.mobius.waila.api.SpecialChars
-import mods.eln.misc.Coordonate
+import mods.eln.misc.Coordinate
 import mods.eln.misc.Direction
 import net.minecraft.entity.player.EntityPlayerMP
 import net.minecraft.item.ItemStack
@@ -17,7 +17,7 @@ import net.minecraft.world.World
 @Optional.Interface(iface = "mcp.mobius.waila.api.IWailaDataProvider", modid = "Waila")
 class SixNodeWailaProvider : IWailaDataProvider {
     private fun getSixData(accessor: IWailaDataAccessor): SixNodeWailaData? {
-        val coord = Coordonate(accessor.position.blockX, accessor.position.blockY, accessor.position.blockZ,
+        val coord = Coordinate(accessor.position.blockX, accessor.position.blockY, accessor.position.blockZ,
             accessor.world)
         val side = Direction.from(accessor.side)
         var sixData: SixNodeWailaData? = null

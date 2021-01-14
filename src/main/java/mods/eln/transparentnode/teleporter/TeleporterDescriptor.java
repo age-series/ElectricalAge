@@ -29,16 +29,16 @@ public class TeleporterDescriptor extends TransparentNodeDescriptor {
     public TeleporterDescriptor(
         String name, Obj3D obj,
         ElectricalCableDescriptor cable,
-        Coordonate areaCoordonate, Coordonate lightCoordonate,
+        Coordinate areaCoordinate, Coordinate lightCoordinate,
         int areaH,
-        Coordonate[] powerCoordonate,
+        Coordinate[] powerCoordinate,
         GhostGroup ghostDoorOpen, GhostGroup ghostDoorClose
 
     ) {
         super(name, TeleporterElement.class, TeleporterRender.class);
         this.cable = cable;
         this.obj = obj;
-        this.powerCoordonate = powerCoordonate;
+        this.powerCoordinate = powerCoordinate;
         if (obj != null) {
             main = obj.getPart("main");
             ext_control = obj.getPart("ext_control");
@@ -64,11 +64,11 @@ public class TeleporterDescriptor extends TransparentNodeDescriptor {
                 leds[idx] = obj.getPart("led" + idx);
             }
         }
-        this.areaCoordonate = areaCoordonate;
+        this.areaCoordinate = areaCoordinate;
         this.areaH = areaH;
         this.ghostDoorClose = ghostDoorClose;
         this.ghostDoorOpen = ghostDoorOpen;
-        this.lightCoordonate = lightCoordonate;
+        this.lightCoordinate = lightCoordinate;
 
         voltageLevelColor = VoltageLevelColor.HighVoltage;
     }
@@ -82,20 +82,20 @@ public class TeleporterDescriptor extends TransparentNodeDescriptor {
     public GhostGroup ghostDoorOpen, ghostDoorClose;
 
     int areaH;
-    public Coordonate areaCoordonate, lightCoordonate;
+    public Coordinate areaCoordinate, lightCoordinate;
 
-    public AxisAlignedBB getBB(Coordonate c, Direction front) {
-        Coordonate temp = new Coordonate(areaCoordonate);
-        temp.setDimention(c.dimention);
+    public AxisAlignedBB getBB(Coordinate c, Direction front) {
+        Coordinate temp = new Coordinate(areaCoordinate);
+        temp.setDimension(c.dimension);
         temp.applyTransformation(front, c);
 
         AxisAlignedBB bb = AxisAlignedBB.getBoundingBox(temp.x, temp.y, temp.z, temp.x + 1, temp.y + areaH, temp.z + 1);
         return bb;
     }
 
-    public Coordonate getTeleportCoordonate(Direction front, Coordonate c) {
-        Coordonate temp = new Coordonate(areaCoordonate);
-        temp.setDimention(c.dimention);
+    public Coordinate getTeleportCoordonate(Direction front, Coordinate c) {
+        Coordinate temp = new Coordinate(areaCoordinate);
+        temp.setDimension(c.dimension);
         temp.applyTransformation(front, c);
 
         return temp;
@@ -119,13 +119,13 @@ public class TeleporterDescriptor extends TransparentNodeDescriptor {
         if (door_out != null) door_out.draw();
     }
 
-    Coordonate[] powerCoordonate;
+    Coordinate[] powerCoordinate;
 
-    public Coordonate[] getPowerCoordonate(World w) {
-        Coordonate[] temp = new Coordonate[powerCoordonate.length];
+    public Coordinate[] getPowerCoordonate(World w) {
+        Coordinate[] temp = new Coordinate[powerCoordinate.length];
         for (int idx = 0; idx < temp.length; idx++) {
-            temp[idx] = new Coordonate(powerCoordonate[idx]);
-            temp[idx].setDimention(w.provider.dimensionId);
+            temp[idx] = new Coordinate(powerCoordinate[idx]);
+            temp[idx].setDimension(w.provider.dimensionId);
         }
         return temp;
     }

@@ -226,7 +226,7 @@ class ElnNewWindDirectionCommand: IConsoleCommand {
 
     override fun runCommand(ics: ICommandSender, args: List<String>) {
         Eln.wind.newWindTarget()
-        cprint(ics, "New random wind amplitude target: ${Eln.wind.targetNotFiltred}")
+        cprint(ics, "New random wind amplitude target: ${Eln.wind.targetNotFiltered}")
     }
 
     override fun getManPage(ics: ICommandSender, args: List<String>) {

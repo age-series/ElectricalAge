@@ -1,6 +1,6 @@
 package mods.eln.transparentnode.festive
 
-import mods.eln.misc.Coordonate
+import mods.eln.misc.Coordinate
 import mods.eln.misc.Direction
 import mods.eln.misc.LRDU
 import mods.eln.node.transparent.TransparentNode
@@ -67,7 +67,7 @@ class FestiveElement(node: TransparentNode, descriptor: TransparentNodeDescripto
     class FestiveElementProcess(val elem: FestiveElement): IProcess {
         var bestChannelHandle: Pair<Double, LampSupplyElement.PowerSupplyChannelHandle>? = null
 
-        private fun findBestSupply(here: Coordonate, forceUpdate: Boolean = false): Pair<Double, LampSupplyElement.PowerSupplyChannelHandle>? {
+        private fun findBestSupply(here: Coordinate, forceUpdate: Boolean = false): Pair<Double, LampSupplyElement.PowerSupplyChannelHandle>? {
             val chanMap = LampSupplyElement.channelMap[elem.powerChannel] ?: return null
             val bestChanHand = bestChannelHandle
             // Here's our cached value. We just check if it's null and if it's still a thing.
@@ -75,7 +75,7 @@ class FestiveElement(node: TransparentNode, descriptor: TransparentNodeDescripto
                 return bestChanHand // we good!
             }
             val list = LampSupplyElement.channelMap[elem.powerChannel]?.filterNotNull() ?: return null
-            val map = list.map { Pair(it.element.sixNode.coordonate.trueDistanceTo(here), it) }
+            val map = list.map { Pair(it.element.sixNode.coordinate.trueDistanceTo(here), it) }
             val sortedBy = map.sortedBy { it.first }
             val chanHand = sortedBy.first()
             bestChannelHandle = chanHand
@@ -83,7 +83,7 @@ class FestiveElement(node: TransparentNode, descriptor: TransparentNodeDescripto
         }
 
         override fun process(time: Double) {
-            val lampSupplyList = findBestSupply(elem.node.coordonate)
+            val lampSupplyList = findBestSupply(elem.node.coordinate)
             val best = lampSupplyList?.second
             if (best != null && best.element.getChannelState(best.id)) {
                 best.element.addToRp(elem.loadResistor.r)

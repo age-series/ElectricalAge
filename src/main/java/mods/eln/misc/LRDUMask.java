@@ -40,14 +40,14 @@ public class LRDUMask {
 
     public void set(LRDU lrdu, boolean value) {
         if (value) {
-            this.mask |= (1 << lrdu.dir);
+            this.mask |= (1 << lrdu.getDir());
         } else {
-            this.mask &= ~(1 << lrdu.dir);
+            this.mask &= ~(1 << lrdu.getDir());
         }
     }
 
     public boolean get(LRDU lrdu) {
-        return (mask & (1 << lrdu.dir)) != 0;
+        return (mask & (1 << lrdu.getDir())) != 0;
     }
 
     public void serialize(DataOutputStream stream) {

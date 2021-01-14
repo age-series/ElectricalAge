@@ -6,7 +6,7 @@ import mods.eln.gui.HelperStdContainer
 import mods.eln.i18n.I18N
 import mods.eln.i18n.I18N.tr
 import mods.eln.misc.*
-import mods.eln.misc.series.SerieEE
+import mods.eln.misc.SeriesFunction
 import mods.eln.node.NodeBase
 import mods.eln.node.transparent.*
 import mods.eln.sim.ElectricalLoad
@@ -34,7 +34,7 @@ import java.io.DataOutputStream
 
 // TODO: Make the whole thing brighter when it heats up, not just redder.
 
-class LargeRheostatDescriptor(name: String, val dissipator: ThermalDissipatorPassiveDescriptor, val cable: ElectricalCableDescriptor, val series: SerieEE) :
+class LargeRheostatDescriptor(name: String, val dissipator: ThermalDissipatorPassiveDescriptor, val cable: ElectricalCableDescriptor, val series: SeriesFunction) :
     TransparentNodeDescriptor(name, LargeRheostatElement::class.java, LargeRheostatRender::class.java) {
 
     init {
@@ -53,9 +53,9 @@ class LargeRheostatDescriptor(name: String, val dissipator: ThermalDissipatorPas
     }
 
     fun getRsValue(inventory: IInventory): Double {
-        val core = inventory.getStackInSlot(ResistorContainer.coreId) ?: return series.getValue(0)
+        val core = inventory.getStackInSlot(ResistorContainer.coreId) ?: return series.getValue(0.0)
 
-        return series.getValue(core.stackSize)
+        return series.getValue(core.stackSize.toDouble())
     }
 
     fun draw(position: Float = 0f) {

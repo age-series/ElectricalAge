@@ -18,8 +18,8 @@ import java.util.List;
 import static mods.eln.i18n.I18N.tr;
 
 public class AutoMinerDescriptor extends TransparentNodeDescriptor {
-    private final Coordonate[] powerCoord;
-    final Coordonate lightCoord;
+    private final Coordinate[] powerCoord;
+    final Coordinate lightCoord;
     private final Obj3DPart core;
     private final Obj3DPart gui;
     private final Obj3DPart lampSocket;
@@ -48,8 +48,8 @@ public class AutoMinerDescriptor extends TransparentNodeDescriptor {
 
     final double pipeOperationRp;
 
-    public AutoMinerDescriptor(String name, Obj3D obj, Coordonate[] powerCoord, Coordonate lightCoord,
-                               Coordonate miningCoord, int deltaX, int deltaY, int deltaZ,
+    public AutoMinerDescriptor(String name, Obj3D obj, Coordinate[] powerCoord, Coordinate lightCoord,
+                               Coordinate miningCoord, int deltaX, int deltaY, int deltaZ,
                                ElectricalCableDescriptor cable, double pipeOperationTime, double pipeOperationEnergy) {
         super(name, AutoMinerElement.class, AutoMinerRender.class);
         this.nominalVoltage = cable.electricalNominalVoltage;
@@ -177,11 +177,11 @@ public class AutoMinerDescriptor extends TransparentNodeDescriptor {
         return type != ItemRenderType.INVENTORY;
     }
 
-    public Coordonate[] getPowerCoordonate(World w) {
-        Coordonate[] temp = new Coordonate[powerCoord.length];
+    public Coordinate[] getPowerCoordonate(World w) {
+        Coordinate[] temp = new Coordinate[powerCoord.length];
         for (int idx = 0; idx < temp.length; idx++) {
-            temp[idx] = new Coordonate(powerCoord[idx]);
-            temp[idx].setDimention(w.provider.dimensionId);
+            temp[idx] = new Coordinate(powerCoord[idx]);
+            temp[idx].setDimension(w.provider.dimensionId);
         }
         return temp;
     }

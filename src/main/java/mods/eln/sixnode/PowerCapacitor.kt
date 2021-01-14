@@ -15,11 +15,11 @@ import mods.eln.item.IConfigurable
 import mods.eln.item.ItemMovingHelper
 import mods.eln.misc.BasicContainer
 import mods.eln.misc.Direction
+import mods.eln.misc.IFunction
 import mods.eln.misc.LRDU
 import mods.eln.misc.Obj3D
 import mods.eln.misc.Utils
 import mods.eln.misc.VoltageLevelColor
-import mods.eln.misc.series.ISerie
 import mods.eln.node.NodeBase
 import mods.eln.node.six.SixNode
 import mods.eln.node.six.SixNodeDescriptor
@@ -52,7 +52,7 @@ import kotlin.math.pow
 
 class PowerCapacitorSixDescriptor(name: String,
                                   obj: Obj3D,
-                                  var serie: ISerie,
+                                  var serie: IFunction,
                                   var dischargeTao: Double) : SixNodeDescriptor(name, PowerCapacitorSixElement::class.java, PowerCapacitorSixRender::class.java) {
     private var CapacitorCore: Obj3D.Obj3DPart? = null
     private var CapacitorCables: Obj3D.Obj3DPart? = null
@@ -60,7 +60,7 @@ class PowerCapacitorSixDescriptor(name: String,
     fun getCValue(cableCount: Int, nominalDielVoltage: Double): Double {
         if (cableCount == 0) return 1e-6
         val uTemp = nominalDielVoltage / Eln.LVU
-        return serie.getValue(cableCount - 1) / uTemp / uTemp
+        return serie.getValue((cableCount - 1) / uTemp / uTemp)
     }
 
     fun getCValue(inventory: IInventory): Double {

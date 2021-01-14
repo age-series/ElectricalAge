@@ -6,11 +6,11 @@ import cpw.mods.fml.common.network.simpleimpl.MessageContext
 import mods.eln.integration.waila.SixNodeCoordonate
 import mods.eln.integration.waila.SixNodeWailaData
 import mods.eln.integration.waila.WailaCache
-import mods.eln.misc.Coordonate
+import mods.eln.misc.Coordinate
 
 class SixNodeWailaResponsePacketHandler : IMessageHandler<SixNodeWailaResponsePacket, IMessage> {
 
-    private fun Coordonate.isNull() = this.x == 0 && this.y == 0 && this.z == 0 && this.dimention == 0
+    private fun Coordinate.isNull() = this.x == 0 && this.y == 0 && this.z == 0 && this.dimension == 0
 
     override fun onMessage(message: SixNodeWailaResponsePacket, ctx: MessageContext?): IMessage? {
         if (!message.coord.isNull()) {

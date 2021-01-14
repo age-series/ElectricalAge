@@ -21,19 +21,19 @@ import static mods.eln.i18n.I18N.tr;
 
 public class SolarPanelDescriptor extends TransparentNodeDescriptor {
 
-    final Coordonate groundCoordinate;
+    final Coordinate groundCoordinate;
     boolean basicModel;
     private Obj3D obj;
     private Obj3DPart main;
     private Obj3DPart panel;
 
     public SolarPanelDescriptor(
-        String name,
-        Obj3D obj, CableRenderDescriptor cableRender,
-        GhostGroup ghostGroup, int solarOffsetX, int solarOffsetY, int solarOffsetZ,
-        Coordonate groundCoordinate, double electricalUmax, double electricalPmax,
-        double electricalDropFactor,
-        double alphaMin, double alphaMax
+            String name,
+            Obj3D obj, CableRenderDescriptor cableRender,
+            GhostGroup ghostGroup, int solarOffsetX, int solarOffsetY, int solarOffsetZ,
+            Coordinate groundCoordinate, double electricalUmax, double electricalPmax,
+            double electricalDropFactor,
+            double alphaMin, double alphaMax
 
     ) {
         super(name, SolarPanelElement.class, SolarPanelRender.class);
