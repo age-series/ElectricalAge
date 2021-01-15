@@ -14,11 +14,14 @@ import mods.eln.sim.nbt.NbtElectricalLoad
 import mods.eln.sim.process.destruct.VoltageStateWatchDog
 import mods.eln.sim.process.destruct.WorldExplosion
 import mods.eln.sound.LoopedSound
+import net.minecraft.item.ItemStack
 import net.minecraft.util.Vec3
+import net.minecraftforge.client.IItemRenderer
 import org.lwjgl.opengl.GL11
 import java.io.DataInputStream
 import java.io.DataOutputStream
 import kotlin.math.abs
+import kotlin.math.pow
 
 class GridSwitchDescriptor(
     name: String
@@ -86,13 +89,18 @@ class GridSwitchDescriptor(
         static_parts.addAll(rotors.keys)
     }
 
-    fun draw(angle: Double) {
-        GL11.glRotated(90.0, 0.0, 1.0, 0.0)
-        GL11.glTranslated(
-            renderOffset.xCoord,
-            renderOffset.yCoord,
-            renderOffset.zCoord
-        )
+    fun draw(angle: Double, isInventory: Boolean = false) {
+        if (!isInventory) {
+            GL11.glRotated(90.0, 0.0, 1.0, 0.0)
+            GL11.glTranslated(
+                renderOffset.xCoord,
+                renderOffset.yCoord,
+                renderOffset.zCoord
+            )
+        } else {
+            //GL11.glTranslated(-0.5, -0.5, -0.5)
+            GL11.glScaled(0.25, 0.25, 0.25)
+        }
         objectList.forEach {
             it.draw()
         }
@@ -117,6 +125,14 @@ class GridSwitchDescriptor(
     }
 
     override fun rotationIsFixed() = true
+
+    override fun hasCustomIcon() = false
+
+    override fun handleRenderType(item: ItemStack, type: IItemRenderer.ItemRenderType) = true
+
+    override fun renderItem(type: IItemRenderer.ItemRenderType, item: ItemStack, vararg data: Any) {
+        draw(0.0, true)
+    }
 }
 
 class GridSwitchElement(node: TransparentNode, descriptor: TransparentNodeDescriptor): GridElement(node, descriptor, 12) {
@@ -131,6 +147,7 @@ class GridSwitchElement(node: TransparentNode, descriptor: TransparentNodeDescri
 
     val control = NbtElectricalGateInput("control")
     val power = NbtElectricalLoad("power")
+    val powerResistor = Resistor(power, null)
     //val powerSink = Resistor(power, null).apply { r = desc.sinkMax }
 
     val grida = NbtElectricalLoad("grida")
@@ -165,7 +182,7 @@ class GridSwitchElement(node: TransparentNode, descriptor: TransparentNodeDescri
 
     inner class SlowProcess(): IProcess {
         override fun process(time: Double) {
-            interp.ff = ((power.u / desc.nominalU) * desc.nominalAccel).toFloat()
+            interp.ff = if (powerResistor.p > 190.0) ((power.u / desc.nominalU) * desc.nominalAccel).toFloat() else 0.0f
             interp.target = control.normalized.toFloat()
             interp.step(time.toFloat())
             //powerSink.r = desc.sinkMin.toDouble() + (desc.sinkMax - desc.sinkMin).toDouble() * (1.0 - abs(interp.get() - interp.target))
@@ -208,7 +225,7 @@ class GridSwitchElement(node: TransparentNode, descriptor: TransparentNodeDescri
         return 0
     }
 
-    override fun thermoMeterString(side: Direction): String? = ""
+    override fun thermoMeterString(side: Direction): String = ""
     override fun multiMeterString(side: Direction): String =
         Utils.plotUIP(grida.u, grida.i) + " / " + Utils.plotUIP(gridb.u, gridb.i) + " @" + interp.get() + "/" +
             control.normalized + " " + Utils.plotUIP(power.u, power.i)
@@ -226,6 +243,8 @@ class GridSwitchElement(node: TransparentNode, descriptor: TransparentNodeDescri
             control, NodeBase.maskElectricalGate
         )
         ghostControl!!.initialize()
+        // Set the power required to move the gate to ~ 200W at nominal voltage
+        powerResistor.r = desc.nominalU.pow(2) / 200.0
         Utils.println("GS.i: ghost power at ${ghostPower!!.coord}, control at ${ghostControl!!.coord}")
         super.initialize()
     }
@@ -268,10 +287,12 @@ class GridSwitchElement(node: TransparentNode, descriptor: TransparentNodeDescri
     }
 
     override fun getWaila(): MutableMap<String, String> {
-        var info = mutableMapOf<String, String>()
-        info["Left"] = Utils.plotUIP(grida.u, grida.i)
-        info["Right"] = Utils.plotUIP(gridb.u, gridb.i)
-        info["Transfer"] = Utils.plotPower(transfer.p)
+        val info = mutableMapOf<String, String>()
+        if (!Eln.wailaEasyMode) {
+            info["Left"] = Utils.plotUIP(grida.u, grida.i)
+            info["Right"] = Utils.plotUIP(gridb.u, gridb.i)
+            info["Transfer"] = Utils.plotPower(transfer.p)
+        }
         //info["Drive"] = Utils.plotUIP(power.u, power.i, powerSink.r) + " " + Utils.plotOhm(powerSink.r)
         info["Drive"] = Utils.plotUIP(power.u, power.i)
         info["Signal"] = Utils.plotSignal(control.u)

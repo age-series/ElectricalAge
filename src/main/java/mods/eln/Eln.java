@@ -61,6 +61,9 @@ import mods.eln.sim.ThermalLoadInitializer;
 import mods.eln.sim.ThermalLoadInitializerByPowerDrop;
 import mods.eln.sim.mna.component.Resistor;
 import mods.eln.sim.nbt.NbtElectricalLoad;
+import mods.eln.simplenode.DeviceProbeBlock;
+import mods.eln.simplenode.DeviceProbeEntity;
+import mods.eln.simplenode.DeviceProbeNode;
 import mods.eln.simplenode.computerprobe.ComputerProbeBlock;
 import mods.eln.simplenode.computerprobe.ComputerProbeEntity;
 import mods.eln.simplenode.computerprobe.ComputerProbeNode;
@@ -849,6 +852,9 @@ public class Eln {
             GridSwitchDescriptor desc = new GridSwitchDescriptor(name);
             GhostGroup g = new GhostGroup();
             g.addRectangle(-1, 1, 0, 4, -2, 2);
+            g.removeRectangle(-1, -1, 2, 4, -1, 1);
+            g.removeRectangle(1, 1, 2, 4, -1, 1);
+            g.removeRectangle(0, 0, 1, 4, -2, 2);
             g.removeElement(0, 0, 0);
             desc.setGhostGroup(g);
             transparentNodeItem.addDescriptor(subId + (id << 6), desc);
@@ -1028,7 +1034,14 @@ public class Eln {
             computerProbeBlock.setCreativeTab(creativeTab).setBlockName(entityName);
             GameRegistry.registerBlock(computerProbeBlock, SimpleNodeItem.class, entityName);
         }
-
+        if (ComputerProbeEnable) {
+            String name = TR_NAME(Type.TILE, "eln.ElnDeviceProbe");
+            TileEntity.addMapping(DeviceProbeEntity.class, name);
+            NodeManager.registerUuid(DeviceProbeNode.Companion.getNodeUuidStatic(), DeviceProbeNode.class);
+            DeviceProbeBlock deviceProbeBlock = new DeviceProbeBlock();
+            deviceProbeBlock.setCreativeTab(creativeTab).setBlockName(name);
+            GameRegistry.registerBlock(deviceProbeBlock, SimpleNodeItem.class, name);
+        }
     }
 
     TestBlock testBlock;
