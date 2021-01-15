@@ -146,9 +146,10 @@ class GridSwitchElement(node: TransparentNode, descriptor: TransparentNodeDescri
     )
 
     val control = NbtElectricalGateInput("control")
-    val power = NbtElectricalLoad("power")
-    val powerResistor = Resistor(power, null)
-    //val powerSink = Resistor(power, null).apply { r = desc.sinkMax }
+    val power = NbtElectricalLoad("power").apply {
+        Eln.instance.meduimVoltageCableDescriptor.applyTo(this)
+    }
+    val powerSink = Resistor(power, null).apply { r = desc.sinkMax.toDouble() }
 
     val grida = NbtElectricalLoad("grida")
     val gridb = NbtElectricalLoad("gridb")
@@ -182,10 +183,10 @@ class GridSwitchElement(node: TransparentNode, descriptor: TransparentNodeDescri
 
     inner class SlowProcess(): IProcess {
         override fun process(time: Double) {
-            interp.ff = if (powerResistor.p > 190.0) ((power.u / desc.nominalU) * desc.nominalAccel).toFloat() else 0.0f
+            interp.ff = ((power.u / desc.nominalU) * desc.nominalAccel).toFloat()
             interp.target = control.normalized.toFloat()
             interp.step(time.toFloat())
-            //powerSink.r = desc.sinkMin.toDouble() + (desc.sinkMax - desc.sinkMin).toDouble() * (1.0 - abs(interp.get() - interp.target))
+            powerSink.r = desc.sinkMin.toDouble() + (desc.sinkMax - desc.sinkMin).toDouble() * (1.0 - abs(interp.get() - interp.target))
             if(abs(lastPos - interp.get()) > 0.1 || abs(lastTarget - interp.target) > 0.001) {
                 lastPos = interp.get()
                 lastTarget = interp.target
@@ -212,8 +213,7 @@ class GridSwitchElement(node: TransparentNode, descriptor: TransparentNodeDescri
 
     init {
         electricalLoadList.addAll(listOf(power, control, grida, gridb))
-        //electricalComponentList.addAll(listOf(powerSink, transfer))
-        electricalComponentList.addAll(listOf(transfer))
+        electricalComponentList.addAll(listOf(powerSink, transfer))
         slowProcessList.add(slowProcess)
     }
 
@@ -243,8 +243,6 @@ class GridSwitchElement(node: TransparentNode, descriptor: TransparentNodeDescri
             control, NodeBase.maskElectricalGate
         )
         ghostControl!!.initialize()
-        // Set the power required to move the gate to ~ 200W at nominal voltage
-        powerResistor.r = desc.nominalU.pow(2) / 200.0
         Utils.println("GS.i: ghost power at ${ghostPower!!.coord}, control at ${ghostControl!!.coord}")
         super.initialize()
     }
@@ -288,13 +286,12 @@ class GridSwitchElement(node: TransparentNode, descriptor: TransparentNodeDescri
 
     override fun getWaila(): MutableMap<String, String> {
         val info = mutableMapOf<String, String>()
-        if (!Eln.wailaEasyMode) {
+        if (Eln.wailaEasyMode) {
             info["Left"] = Utils.plotUIP(grida.u, grida.i)
             info["Right"] = Utils.plotUIP(gridb.u, gridb.i)
             info["Transfer"] = Utils.plotPower(transfer.p)
         }
-        //info["Drive"] = Utils.plotUIP(power.u, power.i, powerSink.r) + " " + Utils.plotOhm(powerSink.r)
-        info["Drive"] = Utils.plotUIP(power.u, power.i)
+        info["Drive"] = Utils.plotUIP(power.u, power.i, powerSink.r) + " " + Utils.plotOhm(powerSink.r)
         info["Signal"] = Utils.plotSignal(control.u)
         info["Closed?"] = if(closed) { "Yes" } else { "No" }
         return info
