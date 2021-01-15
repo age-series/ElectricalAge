@@ -138,9 +138,9 @@ class ClutchElement(node: TransparentNode, desc_: TransparentNodeDescriptor) : S
     }
 
     override fun onBreakElement() {
-        destructing = true
         leftShaft.disconnectShaft(this)
         rightShaft.disconnectShaft(this)
+        super.onBreakElement()
     }
 
     override fun isDestructing() = destructing
