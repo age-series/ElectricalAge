@@ -116,7 +116,7 @@ class GridSwitchDescriptor(
         }
     }
 
-    override fun hasCustomIcon() = false
+    override fun rotationIsFixed() = true
 }
 
 class GridSwitchElement(node: TransparentNode, descriptor: TransparentNodeDescriptor): GridElement(node, descriptor, 12) {
@@ -247,8 +247,12 @@ class GridSwitchElement(node: TransparentNode, descriptor: TransparentNodeDescri
         }
         val part = (if(i == 0) { desc.plus } else { desc.gnd })[idx]
         val ro = desc.renderOffset
-        return part.boundingBox().centre().addVector(
+        val pt = part.boundingBox().centre().addVector(
             ro.xCoord, ro.yCoord, ro.zCoord
+        )
+        // Rotate this point by a quarter turn around y to correspond to our rendering offset
+        return Vec3.createVectorHelper(
+            pt.zCoord, pt.yCoord, -pt.xCoord
         )
     }
 
@@ -320,7 +324,10 @@ class GridSwitchRender(entity: TransparentNodeEntity, descriptor: TransparentNod
     }
 
     override fun draw() {
-        front.glRotateXnRef()
-        desc.draw(interp.get() * GridSwitchDescriptor.QUARTER_TURN)
+        preserveMatrix {
+            front.glRotateXnRef()
+            desc.draw(interp.get() * GridSwitchDescriptor.QUARTER_TURN)
+        }
+        drawCables()
     }
 }

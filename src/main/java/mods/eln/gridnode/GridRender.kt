@@ -27,7 +27,10 @@ abstract class GridRender(tileEntity: TransparentNodeEntity, descriptor: Transpa
 
     override fun draw() {
         descriptor.draw(idealRenderingAngle)
+        drawCables()
+    }
 
+    open fun drawCables() {
         UtilsClient.bindTexture(cableTexture)
         // TODO: Try not to need this. (How? Math.)
         glDisable(GL_CULL_FACE)
