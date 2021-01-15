@@ -61,20 +61,30 @@ public class GhostGroup {
         }
     }
 
+    public void removeRectangle(int x1, int x2, int y1, int y2, int z1, int z2) {
+        for (int x = x1; x <= x2; x++) {
+            for (int y = y1; y <= y2; y++) {
+                for (int z = z1; z <= z2; z++) {
+                    removeElement(x, y, z);
+                }
+            }
+        }
+    }
+
     public boolean canBePloted(Coordinate c) {
         return canBePloted(c.world(), c.x, c.y, c.z);
     }
 
     public boolean canBePloted(World world, int x, int y, int z) {
         for (GhostGroupElement element : elementList) {
-            if (false == Eln.ghostManager.canCreateGhostAt(world, x + element.x, y + element.y, z + element.z))
+            if (!Eln.ghostManager.canCreateGhostAt(world, x + element.x, y + element.y, z + element.z))
                 return false;
         }
         return true;
     }
 
     public boolean plot(Coordinate coordinate, Coordinate observerCoordinate, int UUID) {
-        if (canBePloted(coordinate.world(), coordinate.x, coordinate.y, coordinate.z) == false) return false;
+        if (!canBePloted(coordinate.world(), coordinate.x, coordinate.y, coordinate.z)) return false;
 
         for (GhostGroupElement element : elementList) {
             Coordinate offsetCoordinate = coordinate.newWithOffset(element.x, element.y, element.z);
@@ -141,16 +151,10 @@ public class GhostGroup {
     }
 
     public GhostGroup newRotate(Direction dir, LRDU front) {
-        GhostGroup g = newRotate(dir);
-        return g;
+        return newRotate(dir);
     }
 
     public int size() {
         return elementList.size();
     }
-
-	/*public void eraseWithNoNotification(Coordonate observerCoordonate) {
-        Eln.ghostManager.removeGhostAndBlockWithObserver(observerCoordonate);
-	}
-	*/
 }

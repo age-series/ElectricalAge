@@ -10,6 +10,7 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
+map_Kd Belt.png
 
 newmtl BeltPulley
 Ns 225.000000
@@ -20,6 +21,7 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 1
+map_Kd BeltPulley.png
 
 newmtl ContactF
 Ns 225.000000
@@ -30,6 +32,7 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
+map_Kd SwitchContactF.png
 
 newmtl ContactM
 Ns 225.000000
@@ -40,6 +43,7 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
+map_Kd SwitchContactM.png
 
 newmtl Lid
 Ns 225.000000
@@ -50,6 +54,7 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 1
+map_Kd Lid.png
 
 newmtl None
 Ns 500
@@ -58,6 +63,7 @@ Kd 0.8 0.8 0.8
 Ks 0.8 0.8 0.8
 d 1
 illum 2
+map_Kd SwitchBase.png
 
 newmtl SwitchBase
 Ns 225.000000
@@ -68,3 +74,4 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
+map_Kd SwitchBase.png
