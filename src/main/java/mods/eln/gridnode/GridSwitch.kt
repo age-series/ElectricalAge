@@ -98,8 +98,9 @@ class GridSwitchDescriptor(
                 renderOffset.zCoord
             )
         } else {
-            //GL11.glTranslated(-0.5, -0.5, -0.5)
-            GL11.glScaled(0.25, 0.25, 0.25)
+            // what a darn hack this is. Would love to figure out what is *actually* going on here.
+            GL11.glScaled(0.2, 0.2, 0.2)
+            GL11.glTranslated(0.0, -4.0, 0.0)
         }
         objectList.forEach {
             it.draw()

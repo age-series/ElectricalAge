@@ -409,21 +409,19 @@ public class Eln {
             config.renameProperty("simulation", "thermalFrequancy", "thermalFrequency");
 
 
-        modbusEnable = config.get("modbus", "enable", false).getBoolean(false);
-        modbusPort = config.get("modbus", "port", 1502).getInt(1502);
+        modbusEnable = config.get("modbus", "enable", false, "Enable Modbus RTU").getBoolean(false);
+        modbusPort = config.get("modbus", "port", 1502, "TCP Port for Modbus RTU").getInt(1502);
         debugEnabled = config.get("debug", "enable", false, "Enables debug printing spam").getBoolean(false);
-        debugExplosions = config.get("debug", "explosions", false, "For debugging core MNA features that are very explody. NOT FOR NORMAL GAMEPLAY - WILL CORRUPT STUFF").getBoolean(false);
-
-        explosionEnable = config.get("gameplay", "explosion", true).getBoolean(true);
+        debugExplosions = config.get("debug", "watchdog", false, "Watchdog Impl. check").getBoolean(false);
+        explosionEnable = config.get("gameplay", "explosion", false, "Make explosions a bit bigger").getBoolean(true);
 
         //explosionEnable = false;
 
         Eln.versionCheckEnabled = config.get("general", "versionCheckEnable", true, "Enable version checker").getBoolean(true);
-        Eln.analyticsEnabled = config.get("general", "analyticsEnable", true).getBoolean(true);
         Eln.analyticsEnabled = config.get("general", "analyticsEnable", true, "Enable Analytics for Electrical Age").getBoolean(true);
         Eln.analyticsURL = config.get("general", "analyticsURL", "http://eln.ja13.org/stat", "Set update checker URL").getString();
-        Eln.analyticsPlayerUUIDOptIn = config.get("general", "analyticsPlayerOptIn", false, "Opt into sending player UUID when sending analytics (default DISABLED)").getBoolean(false);
-        Eln.enableFestivities = config.get("general", "enableFestiveItems", true, "Set this to false to disable holiday themed items").getBoolean();
+        Eln.analyticsPlayerUUIDOptIn = config.get("general", "analyticsPlayerOptIn", false, "Opt into sending player UUID when sending analytics").getBoolean(false);
+        Eln.enableFestivities = config.get("general", "enableFestiveItems", true, "Set this to false to enable grinch mode").getBoolean();
         Eln.verticalIronCableCrafting = config.get("general", "verticalIronCableCrafting", false, "Set this to true to craft with vertical ingots instead of horizontal ones").getBoolean();
 
         if (analyticsEnabled) {
@@ -443,19 +441,19 @@ public class Eln {
         fuelHeatFurnacePowerFactor = config.get("balancing", "fuelHeatFurnacePowerFactor", 1.0).getDouble();
         autominerRange = config.get("balancing", "autominerRange", 10, "Maximum horizontal distance from autominer that will be mined").getInt(10);
 
-        Other.wattsToEu = config.get("balancing", "ElnToIndustrialCraftConversionRatio", 1.0 / 3.0).getDouble(1.0 / 3.0);
-        Other.wattsToOC = config.get("balancing", "ElnToOpenComputerConversionRatio", 1.0 / 3.0 / 2.5).getDouble(1.0 / 3.0 / 2.5);
-        Other.wattsToRf = config.get("balancing", "ElnToThermalExpansionConversionRatio", 1.0 / 3.0 * 4).getDouble(1.0 / 3.0 * 4);
-        plateConversionRatio = config.get("balancing", "platesPerIngot", 1).getInt(1);
+        Other.wattsToEu = config.get("balancing", "ElnToIndustrialCraftConversionRatio", 1.0 / 3.0, "Watts to EU").getDouble(1.0 / 3.0);
+        Other.wattsToOC = config.get("balancing", "ElnToOpenComputerConversionRatio", 1.0 / 3.0 / 2.5, "Watts to OC Power").getDouble(1.0 / 3.0 / 2.5);
+        Other.wattsToRf = config.get("balancing", "ElnToThermalExpansionConversionRatio", 1.0 / 3.0 * 4, "Watts to RF").getDouble(1.0 / 3.0 * 4);
+        plateConversionRatio = config.get("balancing", "platesPerIngot", 1, "Plates made per ingot").getInt(1);
         shaftEnergyFactor = config.get("balancing", "shaftEnergyFactor", 0.05).getDouble(0.05);
 
         stdBatteryHalfLife = config.get("battery", "batteryHalfLife", 2, "How many days it takes for a battery to decay half way").getDouble(2) * Utils.minecraftDay;
-        batteryCapacityFactor = config.get("balancing", "batteryCapacityFactor", 1.).getDouble(1.);
+        batteryCapacityFactor = config.get("balancing", "batteryCapacityFactor", 1).getDouble(1.);
 
-        ComputerProbeEnable = config.get("compatibility", "ComputerProbeEnable", true).getBoolean(true);
-        ElnToOtherEnergyConverterEnable = config.get("compatibility", "ElnToOtherEnergyConverterEnable", true).getBoolean(true);
+        ComputerProbeEnable = config.get("compatibility", "ComputerProbeEnable", true, "Enable the OC/CC <-> Eln Computer Probe").getBoolean(true);
+        ElnToOtherEnergyConverterEnable = config.get("compatibility", "ElnToOtherEnergyConverterEnable", true, "Enable the Eln Energy Exporter").getBoolean(true);
 
-        replicatorPop = config.get("entity", "replicatorPop", false).getBoolean(false);
+        replicatorPop = config.get("entity", "replicatorPop", false, "Enable the replicator mob").getBoolean(false);
         ReplicatorPopProcess.popPerSecondPerPlayer = config.get("entity", "replicatorPopWhenThunderPerSecond", 1.0 / 120).getDouble(1.0 / 120);
         replicatorRegistrationId = config.get("entity", "replicatorId", -1).getInt(-1);
         killMonstersAroundLamps = config.get("entity", "killMonstersAroundLamps", true).getBoolean(true);
@@ -499,28 +497,28 @@ public class Eln {
             "tankCapacityInSecondsAtNominalPower", 20 * 60).getDouble(20 * 60);
 
         addOtherModOreToXRay = config.get("xrayscannerconfig", "addOtherModOreToXRay", true).getBoolean(true);
-        xRayScannerRange = (float) config.get("xrayscannerconfig", "rangeInBloc", 5.0).getDouble(5.0);
+        xRayScannerRange = (float) config.get("xrayscannerconfig", "rangeInBloc", 5.0, "X-Ray Scanner range; set between 4 and 10 blocks").getDouble(5.0);
         xRayScannerRange = Math.max(Math.min(xRayScannerRange, 10), 4);
         xRayScannerCanBeCrafted = config.get("xrayscannerconfig", "canBeCrafted", true).getBoolean(true);
 
-        electricalFrequency = config.get("simulation", "electricalFrequency", 20).getDouble(20);
-        electricalInterSystemOverSampling = config.get("simulation", "electricalInterSystemOverSampling", 50).getInt(50);
-        thermalFrequency = config.get("simulation", "thermalFrequency", 400).getDouble(400);
+        electricalFrequency = config.get("simulation", "electricalFrequency", 20, "Set to a clean divisor of 20").getDouble(20);
+        electricalInterSystemOverSampling = config.get("simulation", "electricalInterSystemOverSampling", 50, "You don't want to set this lower than 50.").getInt(50);
+        thermalFrequency = config.get("simulation", "thermalFrequency", 400, "I wouldn't touch this one either").getDouble(400);
 
-        wirelessTxRange = config.get("wireless", "txRange", 32).getInt();
+        wirelessTxRange = config.get("wireless", "txRange", 32, "Maximum range for wireless transmitters to be recieved, as well as lamp supplies").getInt();
 
-        wailaEasyMode = config.get("balancing", "wailaEasyMode", false, "Display more detailed WAILA info on some machines").getBoolean(false);
+        wailaEasyMode = config.get("balancing", "wailaEasyMode", false, "Display more detailed WAILA info on some machines (good for creative mode)").getBoolean(false);
         cablePowerFactor = config.get("balancing", "cablePowerFactor", 1.0, "Multiplication factor for cable power capacity. We recommend 2.0 to 4.0 for larger modpacks, but 1.0 for Eln standalone, or if you like a challenge.", 0.5, 4.0).getDouble(1.0);
 
         fuelHeatValueFactor = config.get("balancing", "fuelHeatValueFactor", 0.0000675,
             "Factor to apply when converting real word heat values to Minecraft heat values (1mB = 1l).").getDouble();
 
-        Eln.noSymbols = config.get("general", "noSymbols", false).getBoolean();
-        Eln.noVoltageBackground = config.get("general", "noVoltageBackground", false).getBoolean();
+        Eln.noSymbols = config.get("general", "noSymbols", false, "Show the item instead of the electrical symbol as an icon").getBoolean();
+        Eln.noVoltageBackground = config.get("general", "noVoltageBackground", false, "Disable colored background to items").getBoolean();
 
-        Eln.maxSoundDistance = config.get("debug", "maxSoundDistance", 16.0).getDouble();
+        Eln.maxSoundDistance = config.get("debug", "maxSoundDistance", 16.0, "Set this lower if you have clipping sounds in spaces with many sound sources (generators)").getDouble();
 
-        Eln.flywheelMass = Math.min(Math.max(config.get("balancing", "flywheelMass", 50.0).getDouble(), 1.0), 1000.0);
+        Eln.flywheelMass = Math.min(Math.max(config.get("balancing", "flywheelMass", 50.0, "How heavy is *your* flywheel?").getDouble(), 1.0), 1000.0);
 
         config.save();
 
@@ -552,8 +550,8 @@ public class Eln {
 
         oreBlock = (OreBlock) new OreBlock().setCreativeTab(creativeTab).setBlockName("OreEln");
 
-        arcClayBlock = (ArcClayBlock) new ArcClayBlock();
-        arcMetalBlock = (ArcMetalBlock) new ArcMetalBlock();
+        arcClayBlock = new ArcClayBlock();
+        arcMetalBlock = new ArcMetalBlock();
 
         sharedItem = (SharedItem) new SharedItem()
             .setCreativeTab(creativeTab).setMaxStackSize(64)
@@ -574,7 +572,7 @@ public class Eln {
             .setBlockTextureName("iron_block");
 
         ghostBlock = (GhostBlock) new GhostBlock().setBlockTextureName("iron_block");
-        lightBlock = (LightBlock) new LightBlock();
+        lightBlock = new LightBlock();
 
         obj.loadAllElnModels();
 
@@ -880,7 +878,7 @@ public class Eln {
 
     @EventHandler
     public void load(FMLInitializationEvent event) {
-        HashSet<String> oreNames = new HashSet<String>();
+        HashSet<String> oreNames = new HashSet<>();
         {
             final String[] names = OreDictionary.getOreNames();
             Collections.addAll(oreNames, names);
@@ -1267,10 +1265,9 @@ public class Eln {
     public static int wirelessTxRange = 32;
 
     private void registerElectricalCable(int id) {
-        int subId, completId;
+        int subId;
         String name;
 
-        CableRenderDescriptor render;
         ElectricalCableDescriptor desc;
         {
             subId = 0;
@@ -1444,8 +1441,8 @@ public class Eln {
 
             creativeCableDescriptor = desc;
 
-            desc.setPhysicalConstantLikeNormalCable(VVU, VVU * VVP(), 1e-9, //what!?
-                VVU * 1.3, VVU * VVP() * 1.2,
+            desc.setPhysicalConstantLikeNormalCable(VVU * 16, VVU * 16 * VVP(), 1e-9, //what!?
+                VVU * 16 * 1.3, VVU * 16 * VVP() * 1.2,
                 40,// electricalOverVoltageStartPowerLost,
                 cableWarmLimit, -100,// thermalWarmLimit, thermalCoolLimit,
                 cableHeatingTime, cableThermalConductionTao// thermalNominalHeatTime,
@@ -1488,7 +1485,7 @@ public class Eln {
     }
 
     private void registerThermalCable(int id) {
-        int subId, completId;
+        int subId;
         String name;
 
         {
@@ -1654,7 +1651,7 @@ public class Eln {
     }
 
     private void registerGround(int id) {
-        int subId, completId;
+        int subId;
         String name;
 
         {
@@ -1674,7 +1671,7 @@ public class Eln {
     }
 
     private void registerElectricalSource(int id) {
-        int subId, completId;
+        int subId;
         String name;
 
         {
@@ -1705,7 +1702,7 @@ public class Eln {
     }
 
     private void registerLampSocket(int id) {
-        int subId, completId;
+        int subId;
         String name;
 
         {
@@ -1906,7 +1903,7 @@ public class Eln {
     }
 */
     private void registerLampSupply(int id) {
-        int subId, completId;
+        int subId;
         String name;
 
         {
@@ -1951,7 +1948,7 @@ public class Eln {
     }
 
     private void registerPassiveComponent(int id) {
-        int subId, completId;
+        int subId;
         String name;
         IFunction function;
         FunctionTableYProtect baseFunction = new FunctionTableYProtect(
@@ -2109,7 +2106,7 @@ public class Eln {
     }
 
     private void registerPowerComponent(int id) {
-        int subId, completId;
+        int subId;
         String name;
 
         {
@@ -2138,9 +2135,8 @@ public class Eln {
     }
 
     private void registerSwitch(int id) {
-        int subId, completId;
+        int subId;
         String name;
-        IFunction function;
         ElectricalSwitchDescriptor desc;
 
 
@@ -2235,7 +2231,7 @@ public class Eln {
 
     private void registerSixNodeMisc(int id) {
 
-        int subId, completId;
+        int subId;
         String name;
         {
             subId = 0;
@@ -2317,7 +2313,7 @@ public class Eln {
     }
 
     private void registerElectricalManager(int id) {
-        int subId, completId;
+        int subId;
         String name;
 
         {
@@ -2399,7 +2395,7 @@ public class Eln {
     }
 
     private void registerElectricalSensor(int id) {
-        int subId, completId;
+        int subId;
         String name;
         ElectricalSensorDescriptor desc;
 
@@ -2426,7 +2422,7 @@ public class Eln {
     }
 
     private void registerThermalSensor(int id) {
-        int subId, completId;
+        int subId;
         String name;
         ThermalSensorDescriptor desc;
 
@@ -2454,7 +2450,7 @@ public class Eln {
     }
 
     private void registerElectricalVuMeter(int id) {
-        int subId, completId;
+        int subId;
         String name;
         ElectricalVuMeterDescriptor desc;
         {
@@ -2478,7 +2474,7 @@ public class Eln {
     }
 
     private void registerElectricalAlarm(int id) {
-        int subId, completId;
+        int subId;
         String name;
         ElectricalAlarmDescriptor desc;
         {
@@ -2499,7 +2495,7 @@ public class Eln {
     }
 
     private void registerElectricalEnvironmentalSensor(int id) {
-        int subId, completId;
+        int subId;
         String name;
         {
             ElectricalLightSensorDescriptor desc;
@@ -2573,7 +2569,7 @@ public class Eln {
     }
 
     private void registerElectricalRedstone(int id) {
-        int subId, completId;
+        int subId;
         String name;
         {
             ElectricalRedstoneInputDescriptor desc;
@@ -2594,7 +2590,7 @@ public class Eln {
     }
 
     private void registerElectricalGate(int id) {
-        int subId, completId;
+        int subId;
         String name;
         {
             ElectricalTimeoutDescriptor desc;
@@ -2621,7 +2617,7 @@ public class Eln {
     }
 
     private void registerWirelessSignal(int id) {
-        int subId, completId;
+        int subId;
         String name;
 
         {
@@ -2671,7 +2667,7 @@ public class Eln {
     }
 
     private void registerElectricalDataLogger(int id) {
-        int subId, completId;
+        int subId;
         String name;
         {
             ElectricalDataLoggerDescriptor desc;
@@ -2708,7 +2704,7 @@ public class Eln {
     }
 
     private void registerElectricalRelay(int id) {
-        int subId, completId;
+        int subId;
         String name;
         ElectricalRelayDescriptor desc;
 
@@ -2771,7 +2767,7 @@ public class Eln {
     }
 
     private void registerElectricalGateSource(int id) {
-        int subId, completId;
+        int subId;
         String name;
 
         ElectricalGateSourceRenderObj signalsourcepot = new ElectricalGateSourceRenderObj(obj.getObj("signalsourcepot"));
@@ -2963,7 +2959,7 @@ public class Eln {
     }
 
     private void registerTurbine(int id) {
-        int subId, completId;
+        int subId;
         String name;
 
         FunctionTable TtoU = new FunctionTable(new double[]{0, 0.1, 0.85,
@@ -3132,7 +3128,7 @@ public class Eln {
     public ArrayList<ItemStack> furnaceList = new ArrayList<ItemStack>();
 
     private void registerElectricalFurnace(int id) {
-        int subId, completId;
+        int subId;
         String name;
         furnaceList.add(new ItemStack(Blocks.furnace));
         {
@@ -3171,7 +3167,7 @@ public class Eln {
     public RecipesList maceratorRecipes = new RecipesList();
 
     private void registerMacerator(int id) {
-        int subId, completId;
+        int subId;
         String name;
         {
             subId = 0;
@@ -3250,7 +3246,7 @@ public class Eln {
 
     private void registerPlateMachine(int id) {
 
-        int subId, completId;
+        int subId;
         String name;
         {
             subId = 0;
@@ -3292,7 +3288,7 @@ public class Eln {
 
     private void registerEggIncubator(int id) {
 
-        int subId, completId;
+        int subId;
         String name;
         {
             subId = 0;
@@ -3309,7 +3305,7 @@ public class Eln {
 
     private void registerCompressor(int id) {
 
-        int subId, completId;
+        int subId;
         String name;
         {
             subId = 0;
@@ -3354,7 +3350,7 @@ public class Eln {
 
     private void registerMagnetizer(int id) {
 
-        int subId, completId;
+        int subId;
         String name;
         {
             subId = 0;
@@ -3395,7 +3391,7 @@ public class Eln {
     }
 
     private void registerSolarPanel(int id) {
-        int subId, completId;
+        int subId;
         GhostGroup ghostGroup;
         String name;
 
@@ -3498,7 +3494,6 @@ public class Eln {
 
     private void registerHeatingCorp(int id) {
         int subId, completId;
-        String name;
 
         HeatingCorpElement element;
         {
@@ -3669,7 +3664,6 @@ public class Eln {
 
     private void registerRegulatorItem(int id) {
         int subId, completId;
-        String name;
         IRegulatorDescriptor element;
         {
             subId = 0;
@@ -4288,7 +4282,6 @@ public class Eln {
     }
 
     private void registerArmor() {
-        ItemStack stack;
         String name;
 
         {
@@ -4316,17 +4309,15 @@ public class Eln {
             GameRegistry.registerCustomItemStack(name, new ItemStack(bootsCopper));
         }
 
-        int armorPoint;
         String t1, t2;
         t1 = "eln:textures/armor/ecoal_layer_1.png";
         t2 = "eln:textures/armor/ecoal_layer_2.png";
         double energyPerDamage = 500;
-        int armor, armorMarge;
+        int armor;
         ArmorMaterial eCoalMaterial = net.minecraftforge.common.util.EnumHelper.addArmorMaterial("ECoal", 10, new int[]{3, 8, 6, 3}, 9);
         {
             name = TR_NAME(Type.ITEM, "E-Coal Helmet");
             armor = 3;
-            armorMarge = 2; //getting rid of this. Safe to delete.
             helmetECoal = (ItemArmor) (new ElectricalArmor(eCoalMaterial, 2, ArmourType.Helmet, t1, t2,
                 //(armor + armorMarge) * energyPerDamage * 10
                 8000, 2000.0,// double energyStorage,double chargePower
@@ -4339,7 +4330,6 @@ public class Eln {
         {
             name = TR_NAME(Type.ITEM, "E-Coal Chestplate");
             armor = 8;
-            armorMarge = 4;
             plateECoal = (ItemArmor) (new ElectricalArmor(eCoalMaterial, 2, ArmourType.Chestplate, t1, t2,
                 //(armor + armorMarge) * energyPerDamage * 10
                 8000, 2000.0,// double
@@ -4356,7 +4346,6 @@ public class Eln {
         {
             name = TR_NAME(Type.ITEM, "E-Coal Leggings");
             armor = 6;
-            armorMarge = 3;
             legsECoal = (ItemArmor) (new ElectricalArmor(eCoalMaterial, 2, ArmourType.Leggings, t1, t2,
                 //(armor + armorMarge) * energyPerDamage * 10
                 8000, 2000.0,// double
@@ -4373,7 +4362,6 @@ public class Eln {
         {
             name = TR_NAME(Type.ITEM, "E-Coal Boots");
             armor = 3;
-            armorMarge = 2;
             bootsECoal = (ItemArmor) (new ElectricalArmor(eCoalMaterial, 2, ArmourType.Boots, t1, t2,
                 //(armor + armorMarge) * energyPerDamage * 10
                 8000, 2000.0,// double
@@ -4390,7 +4378,6 @@ public class Eln {
     }
 
     private void registerTool() {
-        ItemStack stack;
         String name;
         {
             name = TR_NAME(Type.ITEM, "Copper Sword");
@@ -4427,7 +4414,6 @@ public class Eln {
 
     private void registerSolarTracker(int id) {
         int subId, completId;
-        String name;
 
         SolarTrackerDescriptor element;
         {
@@ -4442,7 +4428,7 @@ public class Eln {
     }
 
     private void registerWindTurbine(int id) {
-        int subId, completId;
+        int subId;
         String name;
 
         FunctionTable PfW = new FunctionTable(
@@ -4550,7 +4536,7 @@ public class Eln {
     }
 
     private void registerThermalDissipatorPassiveAndActive(int id) {
-        int subId, completId;
+        int subId;
         String name;
         {
             subId = 0;
@@ -4612,7 +4598,7 @@ public class Eln {
     }
 
     private void registerTransparentNodeMisc(int id) {
-        int subId, completId;
+        int subId;
         String name;
         {
             subId = 0;
@@ -4693,7 +4679,7 @@ public class Eln {
     }
 
     private void registerElectricalAntenna(int id) {
-        int subId, completId;
+        int subId;
         String name;
         {
 
@@ -5033,7 +5019,7 @@ public class Eln {
     }
 
     private void registerAutoMiner(int id) {
-        int subId, completId;
+        int subId;
         String name;
         {
             subId = 0;
@@ -5246,8 +5232,7 @@ public class Eln {
     }
 
     private void registerBrush(int id) {
-
-        int subId, completId;
+        int subId;
         BrushDescriptor whiteDesc = null;
         String name;
         String[] subNames = {
@@ -5295,8 +5280,7 @@ public class Eln {
     }
 
     private void registerElectricalTool(int id) {
-        int subId, completId;
-        ItemStack stack;
+        int subId;
         String name;
         {
             subId = 0;
@@ -5350,7 +5334,7 @@ public class Eln {
     }
 
     private void registerPortableItem(int id) {
-        int subId, completId;
+        int subId;
         String name;
         {
             subId = 0;
@@ -5430,7 +5414,7 @@ public class Eln {
     }
 
     private void registerMiscItem(int id) {
-        int subId, completId;
+        int subId;
         String name;
         {
             subId = 0;
@@ -6535,16 +6519,16 @@ public class Eln {
                     "ii ",
                     "mi ",
                     " B ",
-                    Character.valueOf('i'), ingotType,
-                    Character.valueOf('B'), blockType,
-                    Character.valueOf('m'), findItemStack("Machine Block"));
+                    'i', ingotType,
+                    'B', blockType,
+                    'm', findItemStack("Machine Block"));
                 addRecipe(findItemStack("Grid DC-DC Converter"),
                     "i i",
                     "mtm",
                     "imi",
-                    Character.valueOf('i'), ingotType,
-                    Character.valueOf('t'), findItemStack("DC-DC Converter"),
-                    Character.valueOf('m'), findItemStack("Advanced Machine Block"));
+                    'i', ingotType,
+                    't', findItemStack("DC-DC Converter"),
+                    'm', findItemStack("Advanced Machine Block"));
             }
         }
 
@@ -7795,7 +7779,7 @@ public class Eln {
         in = findItemStack("Tungsten Dust");
         Utils.addSmelting(in.getItem(), in.getItemDamage(),
             findItemStack("Tungsten Ingot"));
-        in = findItemStack("ingotAlloy");
+        //in = findItemStack("ingotAlloy");
         // Utils.addSmelting(in.getItem().itemID, in.getItemDamage(),
         // findItemStack("Ferrite Ingot"));
         in = findItemStack("dustIron");
