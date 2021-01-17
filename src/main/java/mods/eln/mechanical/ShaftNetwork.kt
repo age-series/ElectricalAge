@@ -295,14 +295,14 @@ open class ShaftNetwork() : INBTTReady {
         return ret
     }
 
-    override fun readFromNBT(nbt: NBTTagCompound?, str: String?) {
-        rads = nbt!!.getFloat(str + "rads").toDouble()
+    override fun readFromNBT(nbt: NBTTagCompound, str: String) {
+        rads = nbt.getFloat(str + "rads").toDouble()
         if(!rads.isFinite()) rads = 0.0
         // Utils.println(String.format("SN.rFN: load %s r=%f", this, rads))
     }
 
-    override fun writeToNBT(nbt: NBTTagCompound?, str: String?) {
-        nbt!!.setFloat(str + "rads", rads.toFloat())
+    override fun writeToNBT(nbt: NBTTagCompound, str: String) {
+        nbt.setFloat(str + "rads", rads.toFloat())
         // Utils.println(String.format("SN.wTN: save %s r=%f", this, rads))
     }
 

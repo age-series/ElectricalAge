@@ -17,6 +17,7 @@ import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
@@ -149,7 +150,7 @@ public class TransparentNodeEntity extends NodeBlockEntity implements ISidedInve
         }
     }
 
-    public void serverPacketUnserialize(DataInputStream stream) {
+    public void serverPacketUnserialize(@NotNull DataInputStream stream) {
         super.serverPacketUnserialize(stream);
         if (elementRender != null)
             elementRender.serverPacketUnserialize(stream);

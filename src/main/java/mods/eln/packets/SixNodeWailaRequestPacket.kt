@@ -15,7 +15,7 @@ class SixNodeWailaRequestPacket : TransparentNodeRequestPacket {
 
     override fun fromBytes(buf: ByteBuf?) {
         super.fromBytes(buf)
-        side = Direction.fromInt(buf?.readInt() ?: 0)
+        side = Direction.fromInt(buf?.readInt() ?: 0)!!
     }
 
     override fun toBytes(buf: ByteBuf?) {

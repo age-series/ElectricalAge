@@ -4,11 +4,9 @@ import mods.eln.gui.GuiButtonEln
 import mods.eln.gui.GuiHelper
 import mods.eln.gui.GuiScreenEln
 import mods.eln.gui.GuiTextFieldEln
-import mods.eln.gui.IGuiObject
 import mods.eln.misc.Direction
 import mods.eln.misc.INBTTReady
 import mods.eln.misc.LRDU
-import mods.eln.node.NodeBase
 import mods.eln.node.simple.SimpleNode
 import mods.eln.node.simple.SimpleNodeBlock
 import mods.eln.node.simple.SimpleNodeEntity
@@ -25,7 +23,6 @@ import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.util.IIcon
 import net.minecraft.world.World
-import org.lwjgl.opengl.GL11
 import java.io.DataInputStream
 import java.io.DataOutputStream
 
@@ -54,7 +51,7 @@ class DeviceProbeNode: SimpleNode() {
     init {
         (0 until 6).forEach {
             idx ->
-            val name = Direction.fromInt(idx).name
+            val name = Direction.fromInt(idx)!!.name
             val pin = NbtElectricalGateInputOutput(name)
             val process = NbtElectricalGateOutputProcess(name, pin)
             process.isHighImpedance = true
@@ -63,19 +60,18 @@ class DeviceProbeNode: SimpleNode() {
         }
     }
 
-    override fun getNodeUuid(): String {
-        return getNodeUuidStatic()
+    override val nodeUuid: String
+        get() = getNodeUuidStatic()
+
+    override fun getSideConnectionMask(side: Direction, lrdu: LRDU): Int {
+        return maskElectricalGate
     }
 
-    override fun getSideConnectionMask(directionA: Direction?, lrduA: LRDU?): Int {
-        return NodeBase.maskElectricalGate
-    }
-
-    override fun getThermalLoad(directionA: Direction?, lrduA: LRDU?, mask: Int): ThermalLoad? {
+    override fun getThermalLoad(side: Direction, lrdu: LRDU, mask: Int): ThermalLoad? {
         return null
     }
 
-    override fun getElectricalLoad(side: Direction, lrdu: LRDU?, mask: Int): ElectricalLoad {
+    override fun getElectricalLoad(side: Direction, lrdu: LRDU, mask: Int): ElectricalLoad {
         return pinInformation[side.toSideValue()].electricalLoadPin
     }
 
@@ -93,29 +89,29 @@ class DeviceProbeNode: SimpleNode() {
         }
     }
 
-    override fun hasGui(side: Direction?): Boolean {
+    override fun hasGui(side: Direction): Boolean {
         return true
     }
 
-    override fun publishSerialize(stream: DataOutputStream?) {
+    override fun publishSerialize(stream: DataOutputStream) {
         super.publishSerialize(stream)
         Direction.values().forEach {
             side ->
-            pinInformation[side.toSideValue()].writeToNetwork(stream!!)
+            pinInformation[side.toSideValue()].writeToNetwork(stream)
         }
     }
 
-    override fun networkUnserialize(stream: DataInputStream?, player: EntityPlayerMP?) {
+    override fun networkUnserialize(stream: DataInputStream, player: EntityPlayerMP?) {
         super.networkUnserialize(stream, player)
         Direction.values().forEach {
             side ->
-            pinInformation[side.toSideValue()].readFromNetwork(stream!!)
+            pinInformation[side.toSideValue()].readFromNetwork(stream)
         }
     }
 
-    override fun readFromNBT(nbt: NBTTagCompound?) {
+    override fun readFromNBT(nbt: NBTTagCompound) {
         super.readFromNBT(nbt)
-        if (nbt!!.hasKey("arduinoData")) {
+        if (nbt.hasKey("arduinoData")) {
             Direction.values().forEach {
                 side ->
                 pinInformation[side.toSideValue()].readFromNBT(nbt, side.name)
@@ -123,9 +119,9 @@ class DeviceProbeNode: SimpleNode() {
         }
     }
 
-    override fun writeToNBT(nbt: NBTTagCompound?) {
+    override fun writeToNBT(nbt: NBTTagCompound) {
         super.writeToNBT(nbt)
-        nbt!!.setBoolean("arduinoData", true)
+        nbt.setBoolean("arduinoData", true)
         Direction.values().forEach {
             side ->
             pinInformation[side.toSideValue()].writeToNBT(nbt, side.name)
@@ -141,8 +137,8 @@ data class ServerPinInformation(
     var portMode: PortMode
     ): INBTTReady {
 
-    override fun readFromNBT(nbt: NBTTagCompound?, str: String?) {
-        electricalLoadPin.writeToNBT(nbt!!, str)
+    override fun readFromNBT(nbt: NBTTagCompound, str: String) {
+        electricalLoadPin.writeToNBT(nbt, str)
         electricalProcess.writeToNBT(nbt, str)
         if (arduinoPin != null)
             nbt.setInteger("${str}arduinoPin", arduinoPin!!)
@@ -150,8 +146,8 @@ data class ServerPinInformation(
         nbt.setInteger("${str}portMode", portMode.id)
     }
 
-    override fun writeToNBT(nbt: NBTTagCompound?, str: String?) {
-        electricalLoadPin.readFromNBT(nbt!!, str)
+    override fun writeToNBT(nbt: NBTTagCompound, str: String) {
+        electricalLoadPin.readFromNBT(nbt, str)
         electricalProcess.readFromNBT(nbt, str)
         arduinoPin = if (nbt.hasKey("${str}arduinoPin")) {
             nbt.getInteger("${str}arduinoPin")
@@ -230,19 +226,17 @@ class DeviceProbeEntity : SimpleNodeEntity() {
         }
     }
 
-    override fun getNodeUuid(): String {
-        return "ElnDeviceProbe"
-    }
+    override val nodeUuid = "ElnDeviceProbe"
 
-    override fun newGuiDraw(side: Direction?, player: EntityPlayer?): GuiScreen {
+    override fun newGuiDraw(side: Direction, player: EntityPlayer): GuiScreen {
         return DeviceProbeGui(this)
     }
 
-    override fun serverPublishUnserialize(stream: DataInputStream?) {
+    override fun serverPublishUnserialize(stream: DataInputStream) {
         super.serverPublishUnserialize(stream)
         Direction.values().forEach {
             side ->
-            pinInformation[side.toSideValue()].readFromNetwork(stream!!)
+            pinInformation[side.toSideValue()].readFromNetwork(stream)
         }
     }
 }

@@ -94,15 +94,15 @@ class Coordinate : INBTTReady {
         return other.x == x && other.y == y && other.z == z && other.dimension == dimension
     }
 
-    override fun readFromNBT(nbt: NBTTagCompound?, str: String?) {
-        x = nbt!!.getInteger(str + "x")
+    override fun readFromNBT(nbt: NBTTagCompound, str: String) {
+        x = nbt.getInteger(str + "x")
         y = nbt.getInteger(str + "y")
         z = nbt.getInteger(str + "z")
         dimension = nbt.getInteger(str + "d")
     }
 
-    override fun writeToNBT(nbt: NBTTagCompound?, str: String?) {
-        nbt!!.setInteger(str + "x", x)
+    override fun writeToNBT(nbt: NBTTagCompound, str: String) {
+        nbt.setInteger(str + "x", x)
         nbt.setInteger(str + "y", y)
         nbt.setInteger(str + "z", z)
         nbt.setInteger(str + "d", dimension)

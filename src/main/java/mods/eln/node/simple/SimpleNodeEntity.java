@@ -16,6 +16,7 @@ import net.minecraft.inventory.Container;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S3FPacketCustomPayload;
 import net.minecraft.tileentity.TileEntity;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.DataInputStream;
 import java.io.IOException;
@@ -123,7 +124,7 @@ public abstract class SimpleNodeEntity extends TileEntity implements INodeEntity
     }
 
     @Override
-    public void serverPacketUnserialize(DataInputStream stream) {
+    public void serverPacketUnserialize(@NotNull DataInputStream stream) {
 
     }
 

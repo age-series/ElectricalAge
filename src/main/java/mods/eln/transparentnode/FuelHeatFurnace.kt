@@ -328,9 +328,9 @@ class FuelHeatFurnaceContainer(val base: NodeBase?, player: EntityPlayer, invent
         val RegulatorSlot = 1
     }
 
-    override fun getNode() = base
+    override val node = base
 
-    override fun getRefreshRateDivider() = 1
+    override val refreshRateDivider = 1
 }
 
 class FuelHeatFurnaceGui(player: EntityPlayer, val inventory: IInventory, val render: FuelHeatFurnaceRender) :

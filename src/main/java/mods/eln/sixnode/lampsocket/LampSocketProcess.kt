@@ -283,15 +283,15 @@ class LampSocketProcess(var lamp: LampSocketElement) : IProcess, INBTTReady /*,L
         }
     }
 
-    override fun readFromNBT(nbt: NBTTagCompound?, str: String?) {
-        stableProb = nbt!!.getDouble(str + "LSP" + "stableProb")
+    override fun readFromNBT(nbt: NBTTagCompound, str: String) {
+        stableProb = nbt.getDouble(str + "LSP" + "stableProb")
         lbCoord.readFromNBT(nbt, str + "lbCoordInst")
         alphaZ = nbt.getFloat(str + "alphaZ").toDouble()
         light = nbt.getInteger(str + "light")
     }
 
-    override fun writeToNBT(nbt: NBTTagCompound?, str: String?) {
-        nbt!!.setDouble(str + "LSP" + "stableProb", stableProb)
+    override fun writeToNBT(nbt: NBTTagCompound, str: String) {
+        nbt.setDouble(str + "LSP" + "stableProb", stableProb)
         lbCoord.writeToNBT(nbt, str + "lbCoordInst")
         nbt.setFloat(str + "alphaZ", alphaZ.toFloat())
         nbt.setInteger(str + "light", light)

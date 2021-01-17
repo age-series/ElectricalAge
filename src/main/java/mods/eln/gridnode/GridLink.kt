@@ -129,21 +129,21 @@ class GridLink : INBTTReady {
         return false
     }
 
-    override fun readFromNBT(nbt: NBTTagCompound?, str: String?) {
+    override fun readFromNBT(nbt: NBTTagCompound, str: String) {
         a.readFromNBT(nbt, str + "a")
         b.readFromNBT(nbt, str + "b")
-        `as` = Direction.readFromNBT(nbt, str + "as")
-        bs = Direction.readFromNBT(nbt, str + "bs")
-        rs = nbt!!.getDouble(str + "rs")
+        `as` = Direction.readFromNBT(nbt, str + "as")!!
+        bs = Direction.readFromNBT(nbt, str + "bs")!!
+        rs = nbt.getDouble(str + "rs")
         cable = ItemStack.loadItemStackFromNBT(nbt)
     }
 
-    override fun writeToNBT(nbt: NBTTagCompound?, str: String?) {
+    override fun writeToNBT(nbt: NBTTagCompound, str: String) {
         a.writeToNBT(nbt, str + "a")
         b.writeToNBT(nbt, str + "b")
         `as`.writeToNBT(nbt, str + "as")
         bs.writeToNBT(nbt, str + "bs")
-        nbt!!.setDouble(str + "rs", rs)
+        nbt.setDouble(str + "rs", rs)
         cable.writeToNBT(nbt)
     }
 
@@ -180,7 +180,7 @@ class GridLink : INBTTReady {
 
         fun getElementFromCoordinate(coord: Coordinate?): GridElement? {
             if (coord == null) return null
-            val element = NodeManager.instance.getTransparentNodeFromCoordinate(coord)
+            val element = NodeManager.instance!!.getTransparentNodeFromCoordinate(coord)
             if (element is GridElement) {
                 return element
             } else {

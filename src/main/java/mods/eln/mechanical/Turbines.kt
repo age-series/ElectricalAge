@@ -146,11 +146,11 @@ class TurbineElement(node: TransparentNode, desc_: TransparentNodeDescriptor) :
             volume = power / desc.maxFluidPower.toFloat()
         }
 
-        override fun readFromNBT(nbt: NBTTagCompound?, str: String?) {
+        override fun readFromNBT(nbt: NBTTagCompound, str: String) {
             rc.readFromNBT(nbt, str)
         }
 
-        override fun writeToNBT(nbt: NBTTagCompound?, str: String?) {
+        override fun writeToNBT(nbt: NBTTagCompound, str: String) {
             rc.writeToNBT(nbt, str)
         }
     }

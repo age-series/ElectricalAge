@@ -301,21 +301,13 @@ enum class FabricatorSlots(val slotId: Int) {
 }
 
 class FabricatorContainer(
-    node: NodeBase?,
+    override val node: NodeBase?,
     player: EntityPlayer,
     inventory: IInventory,
     descriptor: FabricatorDescriptor
 ): BasicContainer(player, inventory, getSlot(inventory, descriptor)), INodeContainer {
 
-    val nb = node
-
-    override fun getNode(): NodeBase? {
-        return nb
-    }
-
-    override fun getRefreshRateDivider(): Int {
-        return 1
-    }
+    override val refreshRateDivider = 1
 
     companion object {
         private fun getSlot(inventory: IInventory, descriptor: FabricatorDescriptor): Array<Slot> {

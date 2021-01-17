@@ -126,11 +126,11 @@ class RotaryMotorElement(node: TransparentNode, desc_: TransparentNodeDescriptor
             }
         }
 
-        override fun readFromNBT(nbt: NBTTagCompound?, str: String?) {
+        override fun readFromNBT(nbt: NBTTagCompound, str: String) {
             rc.readFromNBT(nbt, str)
         }
 
-        override fun writeToNBT(nbt: NBTTagCompound?, str: String?) {
+        override fun writeToNBT(nbt: NBTTagCompound, str: String) {
             rc.writeToNBT(nbt, str)
         }
     }

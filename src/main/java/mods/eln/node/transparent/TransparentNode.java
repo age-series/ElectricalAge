@@ -16,6 +16,7 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fluids.IFluidHandler;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -134,7 +135,7 @@ public class TransparentNode extends Node {
     }
 
     @Override
-    public void publishSerialize(DataOutputStream stream) {
+    public void publishSerialize(@NotNull DataOutputStream stream) {
 
         super.publishSerialize(stream);
 
@@ -204,7 +205,7 @@ public class TransparentNode extends Node {
     }
 
     @Override
-    public boolean hasGui(Direction side) {
+    public boolean hasGui(@NotNull Direction side) {
         if (element == null) return false;
         return element.hasGui();
     }

@@ -13,6 +13,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.inventory.Container;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.DataInputStream;
 import java.io.IOException;
@@ -118,7 +119,7 @@ public class SixNodeEntity extends NodeBlockEntity {
     }
 
     @Override
-    public void serverPacketUnserialize(DataInputStream stream) {
+    public void serverPacketUnserialize(@NotNull DataInputStream stream) {
 
         super.serverPacketUnserialize(stream);
 

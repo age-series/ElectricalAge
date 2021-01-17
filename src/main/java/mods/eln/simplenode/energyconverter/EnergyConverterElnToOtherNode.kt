@@ -139,7 +139,7 @@ class EnergyConverterElnToOtherNode : SimpleNode() {
         }
     }
 
-    override fun networkUnserialize(stream: DataInputStream, player: EntityPlayerMP) {
+    override fun networkUnserialize(stream: DataInputStream, player: EntityPlayerMP?) {
         try {
             when (stream.readByte()) {
                 NetworkType.SET_POWER.id -> {
@@ -163,9 +163,7 @@ class EnergyConverterElnToOtherNode : SimpleNode() {
         }
     }
 
-    override fun getNodeUuid(): String {
-        return nodeUuidStatic
-    }
+    override val nodeUuid = nodeUuidStatic
 
     companion object {
         @JvmStatic

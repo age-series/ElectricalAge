@@ -5,6 +5,7 @@ import mods.eln.gui.*
 import mods.eln.i18n.I18N.tr
 import mods.eln.misc.*
 import mods.eln.node.Node
+import mods.eln.node.NodeBase
 import mods.eln.node.NodePeriodicPublishProcess
 import mods.eln.node.published
 import mods.eln.node.six.*
@@ -168,8 +169,8 @@ class EmergencyLampElement(sixNode: SixNode, side: Direction, descriptor: SixNod
     }
 
     override fun getConnectionMask(lrdu: LRDU) = when {
-        poweredByCable && side == Direction.YP -> Node.maskElectricalPower
-        poweredByCable && (lrdu == front.left() || lrdu == front.right()) -> Node.maskElectricalPower
+        poweredByCable && side == Direction.YP -> NodeBase.maskElectricalPower
+        poweredByCable && (lrdu == front.left() || lrdu == front.right()) -> NodeBase.maskElectricalPower
         else -> 0
     }
 

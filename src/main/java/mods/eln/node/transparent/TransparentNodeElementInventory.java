@@ -6,6 +6,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import org.jetbrains.annotations.NotNull;
 
 public class TransparentNodeElementInventory implements ISidedInventory, INBTTReady {
     protected TransparentNodeElementRender transparentNodeRender = null;
@@ -121,7 +122,7 @@ public class TransparentNodeElementInventory implements ISidedInventory, INBTTRe
     }
 
     @Override
-    public void writeToNBT(NBTTagCompound nbt, String str) {
+    public void writeToNBT(@NotNull NBTTagCompound nbt, @NotNull String str) {
 
         Utils.writeToNBT(nbt, str, this);
     }

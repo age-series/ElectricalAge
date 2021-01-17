@@ -13,6 +13,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -63,7 +64,7 @@ public abstract class SimpleNode extends NodeBase {
 
 
     @Override
-    public void publishSerialize(DataOutputStream stream) {
+    public void publishSerialize(@NotNull DataOutputStream stream) {
         super.publishSerialize(stream);
         try {
             stream.writeByte(front.getInt());

@@ -157,8 +157,7 @@ class AutoAcceptInventoryProxy(val inventory: IInventory) {
     fun takeFrom(inv: InventoryPlayer, nodeElement: INodeElement?, publish: Boolean = false, notifyInventoryChange: Boolean = false, matchDescriptor: GenericItemUsingDamageDescriptor? = null): Boolean {
         var ret = false
         for(idx in 0 until inv.sizeInventory) {
-            val stack = inv.getStackInSlot(idx)
-            if(stack == null) continue
+            val stack = inv.getStackInSlot(idx) ?: continue
             if(matchDescriptor != null) {
                 val desc = GenericItemUsingDamageDescriptor.getDescriptor(stack)
                 if(matchDescriptor != desc) continue

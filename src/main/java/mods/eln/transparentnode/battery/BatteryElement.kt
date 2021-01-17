@@ -28,7 +28,7 @@ import java.io.DataOutputStream
 import java.io.IOException
 import java.util.*
 
-class BatteryElement(transparentNode: TransparentNode?, descriptor: TransparentNodeDescriptor) : TransparentNodeElement(transparentNode, descriptor) {
+class BatteryElement(transparentNode: TransparentNode, descriptor: TransparentNodeDescriptor) : TransparentNodeElement(transparentNode, descriptor) {
     var descriptor: BatteryDescriptor = descriptor as BatteryDescriptor
     var positiveLoad = NbtElectricalLoad("positiveLoad")
     var negativeLoad = NbtElectricalLoad("negativeLoad")
@@ -168,7 +168,7 @@ class BatteryElement(transparentNode: TransparentNode?, descriptor: TransparentN
         electricalProcessList.add(batteryProcess)
         thermalFastProcessList.add(negativeETProcess)
         slowProcessList.add(batterySlowProcess)
-        slowProcessList.add(NodePeriodicPublishProcess(transparentNode, 1.0, 0.0))
+        slowProcessList.add(NodePeriodicPublishProcess(transparentNode!!, 1.0, 0.0))
         batteryProcess.IMax = this.descriptor.IMax
         slowProcessList.add(thermalWatchdog)
         thermalWatchdog

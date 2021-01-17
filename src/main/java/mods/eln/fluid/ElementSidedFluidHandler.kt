@@ -146,9 +146,9 @@ open class ElementSidedFluidHandler: IFluidHandler, INBTTReady {
         return tank.tank.fluid.getFluid().id == fluid.id
     }
 
-    override fun readFromNBT(nbt: NBTTagCompound?, str: String?) {
+    override fun readFromNBT(nbt: NBTTagCompound, str: String) {
         val tankList = mutableListOf<TankData>()
-        val numTanks = nbt!!.getInteger("${str}numTanks")
+        val numTanks = nbt.getInteger("${str}numTanks")
         for (idx in 0 .. numTanks) {
             val tank = TankData(FluidTank(0), mutableListOf())
             tank.readFromNBT(nbt, "${str}tank$idx")
@@ -167,14 +167,14 @@ open class ElementSidedFluidHandler: IFluidHandler, INBTTReady {
         //println("tanks: $tanks")
     }
 
-    override fun writeToNBT(nbt: NBTTagCompound?, str: String?) {
+    override fun writeToNBT(nbt: NBTTagCompound, str: String) {
         val tanksList = mutableListOf<TankData>()
         tanks.forEach {
             if (it.value !in tanksList) {
                 tanksList.add(it.value)
             }
         }
-        nbt?.setInteger("${str}numTanks", tanksList.size)
+        nbt.setInteger("${str}numTanks", tanksList.size)
         tanksList.forEachIndexed {
             idx: Int, tank: TankData ->
             tank.writeToNBT(nbt, "${str}tank$idx")
@@ -182,15 +182,15 @@ open class ElementSidedFluidHandler: IFluidHandler, INBTTReady {
         ForgeDirection.VALID_DIRECTIONS.forEach {
             val tank = tanks[it]
             val tankRef = tanksList.indexOf(tank)
-            nbt?.setInteger("${str}${it.name}tankRef", tankRef)
+            nbt.setInteger("${str}${it.name}tankRef", tankRef)
         }
     }
 }
 
 data class TankData(val tank: FluidTank, val fluidWhitelist: MutableList<Fluid> = mutableListOf(), var fractionalDemandMb: Double = 0.0): INBTTReady {
 
-    override fun readFromNBT(nbt: NBTTagCompound?, str: String?) {
-        tank.readFromNBT(nbt!!.getCompoundTag("${str}tank"))
+    override fun readFromNBT(nbt: NBTTagCompound, str: String) {
+        tank.readFromNBT(nbt.getCompoundTag("${str}tank"))
         val fluidWhitelistNames = nbt.getString("${str}whitelist")?.split("|")!!
         fluidWhitelist.clear()
         fluidWhitelistNames.forEach {
@@ -204,13 +204,13 @@ data class TankData(val tank: FluidTank, val fluidWhitelist: MutableList<Fluid> 
         tank.capacity = nbt.getInteger("${str}capacity")
     }
 
-    override fun writeToNBT(nbt: NBTTagCompound?, str: String?) {
+    override fun writeToNBT(nbt: NBTTagCompound, str: String) {
         val tag = NBTTagCompound()
         tank.writeToNBT(tag)
-        nbt?.setTag("${str}tank", tag)
-        nbt?.setString("${str}whitelist", fluidWhitelist.joinToString("|") { it.name })
-        nbt?.setDouble("${str}demandMb", fractionalDemandMb)
-        nbt?.setInteger("${str}capacity", tank.capacity)
+        nbt.setTag("${str}tank", tag)
+        nbt.setString("${str}whitelist", fluidWhitelist.joinToString("|") { it.name })
+        nbt.setDouble("${str}demandMb", fractionalDemandMb)
+        nbt.setInteger("${str}capacity", tank.capacity)
     }
 
     override fun toString(): String {

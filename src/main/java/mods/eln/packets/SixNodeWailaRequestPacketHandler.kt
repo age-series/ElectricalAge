@@ -10,7 +10,7 @@ class SixNodeWailaRequestPacketHandler : IMessageHandler<SixNodeWailaRequestPack
     override fun onMessage(message: SixNodeWailaRequestPacket, ctx: MessageContext?): SixNodeWailaResponsePacket {
         val coord = message.coord
         val side = message.side
-        val node = NodeManager.instance.getNodeFromCoordonate(coord) as? SixNode
+        val node = NodeManager.instance!!.getNodeFromCoordonate(coord) as? SixNode
         var stringMap: Map<String, String> = emptyMap()
         var itemStack: ItemStack? = null
         if (node != null) {

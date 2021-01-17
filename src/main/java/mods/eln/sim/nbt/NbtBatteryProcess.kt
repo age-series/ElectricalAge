@@ -17,15 +17,15 @@ class NbtBatteryProcess(
     thermalLoad: ThermalLoad
 ) : BatteryProcess(positiveLoad, negativeLoad, voltageFunction, IMax, voltageSource, thermalLoad), INBTTReady {
 
-    override fun readFromNBT(nbt: NBTTagCompound?, str: String?) {
-        Q = nbt!!.getDouble(str + "NBP" + "Q")
+    override fun readFromNBT(nbt: NBTTagCompound, str: String) {
+        Q = nbt.getDouble(str + "NBP" + "Q")
         if (!Q.isFinite()) Q = 0.0
         life = nbt.getDouble(str + "NBP" + "life")
         if (!life.isFinite()) life = 1.0
     }
 
-    override fun writeToNBT(nbt: NBTTagCompound?, str: String?) {
-        nbt!!.setDouble(str + "NBP" + "Q", Q)
+    override fun writeToNBT(nbt: NBTTagCompound, str: String) {
+        nbt.setDouble(str + "NBP" + "Q", Q)
         nbt.setDouble(str + "NBP" + "life", life)
     }
 }

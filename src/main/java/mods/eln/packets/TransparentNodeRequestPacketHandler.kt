@@ -15,7 +15,7 @@ class TransparentNodeRequestPacketHandler : IMessageHandler<TransparentNodeReque
         var c = message!!.coord
         val ghostElem = Eln.ghostManager.getGhost(c)
         if(ghostElem != null) c = ghostElem.observatorCoordonate
-        val node = NodeManager.instance.getNodeFromCoordonate(c) as? TransparentNode
+        val node = NodeManager.instance!!.getNodeFromCoordonate(c) as? TransparentNode
         var stringMap: Map<String, String> = emptyMap()
         if (node != null) {
             try {

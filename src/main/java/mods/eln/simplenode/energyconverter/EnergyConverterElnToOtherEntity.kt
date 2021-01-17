@@ -47,9 +47,7 @@ class EnergyConverterElnToOtherEntity : SimpleNodeEntity(), IEnergySource, Envir
         }
     }
 
-    override fun getNodeUuid(): String {
-        return EnergyConverterElnToOtherNode.nodeUuidStatic
-    }
+    override val nodeUuid = EnergyConverterElnToOtherNode.nodeUuidStatic
 
     // ********************IC2********************
     @Optional.Method(modid = Other.modIdIc2)

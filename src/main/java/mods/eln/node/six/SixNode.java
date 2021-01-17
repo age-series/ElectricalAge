@@ -20,6 +20,7 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.chunk.Chunk;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -320,7 +321,7 @@ public class SixNode extends Node {
     }
 
     @Override
-    public void publishSerialize(DataOutputStream stream) {
+    public void publishSerialize(@NotNull DataOutputStream stream) {
 
         super.publishSerialize(stream);
         try {
@@ -491,8 +492,8 @@ public class SixNode extends Node {
     }
 
     public void newConnectionAt(NodeConnection connection, boolean isA) {
-        Direction side = isA? connection.dir1 : connection.dir2;
-        LRDU lrdu = isA? connection.lrdu1 : connection.lrdu2;
+        Direction side = isA? connection.getDir1() : connection.getDir2();
+        LRDU lrdu = isA? connection.getLrdu1() : connection.getLrdu2();
         Direction elementSide = side.applyLRDU(lrdu);
         SixNodeElement element = sideElementList[elementSide.getInt()];
         if (element == null) {

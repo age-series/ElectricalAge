@@ -92,7 +92,7 @@ class ServerEventListener {
         if (e.world.isRemote) return
         loadedWorlds.remove(e.world.provider.dimensionId)
         try {
-            NodeManager.instance.unload(e.world.provider.dimensionId)
+            NodeManager.instance!!.unload(e.world.provider.dimensionId)
             Eln.ghostManager.unload(e.world.provider.dimensionId)
         } catch (ex: Exception) {
             ex.printStackTrace()
@@ -152,7 +152,7 @@ class ServerEventListener {
     companion object {
         fun readFromEaWorldNBT(nbt: NBTTagCompound) {
             try {
-                NodeManager.instance.loadFromNbt(nbt.getCompoundTag("nodes"))
+                NodeManager.instance!!.loadFromNbt(nbt.getCompoundTag("nodes"))
             } catch (e: Exception) {
                 e.printStackTrace()
             }
@@ -165,7 +165,7 @@ class ServerEventListener {
 
         fun writeToEaWorldNBT(nbt: NBTTagCompound?, dim: Int) {
             try {
-                NodeManager.instance.saveToNbt(Utils.newNbtTagCompund(nbt, "nodes"), dim)
+                NodeManager.instance!!.saveToNbt(Utils.newNbtTagCompund(nbt, "nodes"), dim)
             } catch (e: Exception) {
                 e.printStackTrace()
             }

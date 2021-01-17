@@ -22,12 +22,11 @@ class GhostPowerNode(origin: Coordinate, front: Direction, offset: Coordinate, v
         connect()
     }
 
-    override fun initializeFromNBT() {
-    }
+    override fun initializeFromNBT() {}
 
-    override fun getSideConnectionMask(directionA: Direction?, lrduA: LRDU?) = mask
+    override fun getSideConnectionMask(directionA: Direction, lrduA: LRDU) = mask
 
     override fun getThermalLoad(directionA: Direction, lrduA: LRDU, mask: Int): ThermalLoad? = null
 
-    override fun getElectricalLoad(directionB: Direction, lrduB: LRDU, mask: Int): ElectricalLoad? = load
+    override fun getElectricalLoad(directionB: Direction, lrduB: LRDU, mask: Int): ElectricalLoad = load
 }

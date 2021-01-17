@@ -40,8 +40,8 @@ class WindProcess : IProcess, INBTTReady {
         return y.toDouble().coerceIn(windHit * y / 100.0, 100.0)
     }
 
-    override fun readFromNBT(nbt: NBTTagCompound?, str: String?) {
-        windHit = nbt!!.getDouble(str + "windHit")
+    override fun readFromNBT(nbt: NBTTagCompound, str: String) {
+        windHit = nbt.getDouble(str + "windHit")
         windTarget = nbt.getDouble(str + "windTarget")
         windVariation = nbt.getDouble(str + "windVariation")
         // NOTE: Please leave this for backwards compatibility
@@ -52,8 +52,8 @@ class WindProcess : IProcess, INBTTReady {
         }
     }
 
-    override fun writeToNBT(nbt: NBTTagCompound?, str: String?) {
-        nbt!!.setDouble(str + "windHit", windHit)
+    override fun writeToNBT(nbt: NBTTagCompound, str: String) {
+        nbt.setDouble(str + "windHit", windHit)
         nbt.setDouble(str + "windTarget", windTarget)
         nbt.setDouble(str + "windVariation", windVariation)
         nbt.setFloat(str + "windTargetFiltered", windTargetFiltered.get())

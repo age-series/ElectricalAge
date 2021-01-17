@@ -22,14 +22,14 @@ class RcRcInterpolator(tao1: Float, tao2: Float) : INBTTReady {
         c1 = value
     }
 
-    override fun readFromNBT(nbt: NBTTagCompound?, str: String?) {
-        c1 = nbt!!.getFloat(str + "c1")
+    override fun readFromNBT(nbt: NBTTagCompound, str: String) {
+        c1 = nbt.getFloat(str + "c1")
         c2 = nbt.getFloat(str + "c2")
         target = nbt.getFloat(str + "target")
     }
 
-    override fun writeToNBT(nbt: NBTTagCompound?, str: String?) {
-        nbt!!.setFloat(str + "c1", c1)
+    override fun writeToNBT(nbt: NBTTagCompound, str: String) {
+        nbt.setFloat(str + "c1", c1)
         nbt.setFloat(str + "c2", c2)
         nbt.setFloat(str + "target", target)
     }
