@@ -134,14 +134,14 @@ class ElectricalVuMeterDescriptor(name: String, objName: String, var onOffOnly: 
                 objType = ObjType.Rot
                 vumeter = obj!!.getPart("Vumeter")
                 pointer = obj!!.getPart("Pointer")
-                pinDistance = Utils.getSixNodePinDistance(vumeter)
+                pinDistance = Utils.getSixNodePinDistance(vumeter!!)
             }
             if (obj!!.getString("type") == "LedOnOff") {
                 objType = ObjType.LedOnOff
                 main = obj!!.getPart("main")
                 halo = obj!!.getPart("halo")
                 led = obj!!.getPart("Led")
-                pinDistance = Utils.getSixNodePinDistance(main)
+                pinDistance = Utils.getSixNodePinDistance(main!!)
             }
         }
         isRGB = super.name == "Multicolor LED vuMeter"

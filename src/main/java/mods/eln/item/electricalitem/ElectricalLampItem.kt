@@ -77,9 +77,9 @@ class ElectricalLampItem(name: String, var lightMin: Int, var rangeMin: Int, dis
             var lightState = getLightState(s) + 1
             if (lightState > 2) lightState = 0
             when (lightState) {
-                0 -> Utils.addChatMessage(p as EntityPlayerMP?, "Flashlight OFF")
-                1 -> Utils.addChatMessage(p as EntityPlayerMP?, "Flashlight ON")
-                2 -> Utils.addChatMessage(p as EntityPlayerMP?, "Flashlight BOOSTED")
+                0 -> Utils.addChatMessage(p as EntityPlayerMP, "Flashlight OFF")
+                1 -> Utils.addChatMessage(p as EntityPlayerMP, "Flashlight ON")
+                2 -> Utils.addChatMessage(p as EntityPlayerMP, "Flashlight BOOSTED")
                 else -> {
                 }
             }
@@ -150,7 +150,7 @@ class ElectricalLampItem(name: String, var lightMin: Int, var rangeMin: Int, dis
             1 -> drawlightstate = on
             2 -> drawlightstate = boosted
         }
-        UtilsClient.drawIcon(type, drawlightstate)
+        UtilsClient.drawIcon(type!!, drawlightstate)
         //UtilsClient.drawIcon(type, (getLight(item) != 0 && getLightState(item) != 0 ? on : off));		
         if (type == ItemRenderType.INVENTORY) {
             UtilsClient.drawEnergyBare(type, (getEnergy(item) / getEnergyMax(item)).toFloat())

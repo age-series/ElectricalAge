@@ -138,7 +138,7 @@ class ServerEventListener {
         val tempSave: Path
         val backupSave: Path
         private fun getEaWorldSaveName(w: World): String {
-            return Utils.getMapFolder() + "data/electricalAgeWorld" + w.provider.dimensionId + ".dat"
+            return Utils.mapFolder + "data/electricalAgeWorld" + w.provider.dimensionId + ".dat"
         }
 
         init {

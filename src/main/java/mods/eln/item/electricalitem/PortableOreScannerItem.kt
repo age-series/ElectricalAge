@@ -290,7 +290,7 @@ class PortableOreScannerItem(name: String?, private val obj: Obj3D,
                 GL11.glColor4f(r * 0.6f, g * 0.6f, b * 0.6f, 1f)
                 led.draw()
                 UtilsClient.enableBlend()
-                UtilsClient.drawHaloNoLightSetup(ledHalo, r, g, b, e, false)
+                UtilsClient.drawHaloNoLightSetup(ledHalo, r, g, b, e!!, false)
             }
             GL11.glColor4f(1f, 1f, 1f, 0.4f)
             when (state) {

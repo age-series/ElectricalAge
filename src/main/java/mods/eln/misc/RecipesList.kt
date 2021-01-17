@@ -5,6 +5,7 @@ import mods.eln.transparentnode.electricalfurnace.ElectricalFurnaceProcess
 import net.minecraft.item.ItemStack
 import net.minecraft.item.crafting.FurnaceRecipes
 import java.util.*
+import kotlin.collections.ArrayList
 
 class RecipesList {
     val recipes = ArrayList<Recipe>()
@@ -26,12 +27,15 @@ class RecipesList {
     }
 
     fun getRecipeFromOutput(output: ItemStack?): ArrayList<Recipe> {
+        if (output == null) return ArrayList()
         val list = ArrayList<Recipe>()
         for (r in recipes) {
             for (stack in r.outputCopy) {
-                if (Utils.areSame(stack, output)) {
-                    list.add(r)
-                    break
+                if (stack != null) {
+                    if (Utils.areSame(stack, output)) {
+                        list.add(r)
+                        break
+                    }
                 }
             }
         }
