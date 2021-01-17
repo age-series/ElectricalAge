@@ -83,7 +83,11 @@ public class ElectricalCableDescriptor extends GenericCableDescriptor {
 
         this.electricalMaximalCurrent = electricalMaximalPower / electricalNominalVoltage;
 
-        voltageLevelColor = VoltageLevelColor.fromCable(this);
+        if (this.electricalNominalVoltage > 4000.0) {
+            voltageLevelColor = VoltageLevelColor.Grid;
+        } else {
+            voltageLevelColor = VoltageLevelColor.fromCable(this);
+        }
     }
 
     public void applyTo(ElectricalLoad electricalLoad, double rsFactor) {

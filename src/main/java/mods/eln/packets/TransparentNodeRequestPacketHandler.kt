@@ -21,7 +21,7 @@ class TransparentNodeRequestPacketHandler : IMessageHandler<TransparentNodeReque
             try {
                 stringMap = node.element.waila
             } catch (e: NullPointerException) {
-                Utils.print("Attempted to get WAILA info for an invalid node!")
+                Utils.println("Attempted to get WAILA info for an invalid node!")
                 e.printStackTrace()
                 return null
             }

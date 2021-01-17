@@ -17,6 +17,7 @@ import mods.eln.sim.ElectricalLoad;
 import mods.eln.sim.IProcess;
 import mods.eln.sim.ThermalLoad;
 import mods.eln.sim.mna.component.Resistor;
+import mods.eln.sim.mna.misc.MnaConst;
 import mods.eln.sim.nbt.NbtElectricalLoad;
 import mods.eln.sim.process.destruct.VoltageStateWatchDog;
 import mods.eln.sim.process.destruct.WorldExplosion;
@@ -137,7 +138,11 @@ public class LampSupplyElement extends SixNodeElement implements IConfigurable {
 
         @Override
         public void process(double time) {
-            loadResistor.setR(1 / RpStack);
+            if (RpStack != 0) {
+                loadResistor.setR(1 / RpStack);
+            } else {
+                loadResistor.setR(MnaConst.highImpedance);
+            }
             RpStack = 0;
 
 

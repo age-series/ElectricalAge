@@ -50,6 +50,8 @@ public class Resistor extends Bipole {
     public Resistor setR(double r) {
         if (Double.isNaN(r) || Double.isInfinite(r)) {
             Utils.println("Error! Resistor cannot be set to " + r );
+            // Call stack for debugging
+            new Throwable().printStackTrace();
             return this;
         }
         if (this.r != r) {

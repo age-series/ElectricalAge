@@ -41,10 +41,9 @@ public class SoundClient {
                 float normalizedBlockFactor = blockFactor;
 
                 bandVolume -= ((trackCount - 1 - idx) / (trackCount - 1f) + 0.2) * normalizedBlockFactor;
-                Utils.print(bandVolume + " ");
+                Utils.println(bandVolume);
                 p.world.playSound(player.posX + 2 * (p.x - player.posX) / distance, player.posY + 2 * (p.y - player.posY) / distance, player.posZ + 2 * (p.z - player.posZ) / distance, p.track + "_" + idx + "x", bandVolume, p.pitch, false);
             }
-            Utils.println("");
         }
 
         ClientProxy.soundClientEventListener.currentUuid = null;

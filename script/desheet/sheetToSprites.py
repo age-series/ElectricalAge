@@ -17,11 +17,11 @@ electric_components = [
     ["Basic Motor", "Advanced Motor", "Inductor", "Toroidal Inductor", "Transformer", "3V Battery"],
     ["Piezo Element", "Speaker", "7 Segment Display", "Triple 7 Segment Display Chip", "Screen", "9V Battery"]]
 
-wires = [["", "Signal", "", "", "", ""],
+wires = [["", "signalcable", "", "", "", ""],
          ["", "", "", "", "", ""],
-         ["", "", "50V Cable", "", "Thermal Cable", "200V Cable"],
-         ["", "", "", "Signal Bus Cable", "", ""],
-         ["", "", "4kV Cable", "", "", "800V Cable"],
+         ["", "", "lowvoltagecable", "", "copperthermalcable", "mediumvoltagecable"],
+         ["", "", "", "signalbuscable", "", ""],
+         ["", "", "veryhighvoltagecable", "", "", "highvoltagecable"],
          ["", "", "", "", "", ""]]
 
 tools = [["Magnet", "Signal Finder", "Thermometer", "Voltmeter", "Multimeter", ""],
@@ -65,6 +65,9 @@ for sprite_set in source_mapping:
             y_index = int(y0/32)
             x_index = int(x0/32)
             try:
+
+                vertical_shift = 3
+
                 export_name = sprite_names[y_index][x_index]
                 if export_name != "":
                     box = (x0 + 1, y0 + 1,
@@ -72,12 +75,12 @@ for sprite_set in source_mapping:
                            (y0 + tile_size if y0 + tile_size < height else height - 1) - 1)
 
                     new_image = Image.new('RGBA', (32, 32), (0, 0, 0, 0))
-                    new_image.paste(source_image.crop(box), (1, 1))
+                    new_image.paste(source_image.crop(box), (1, 1 + vertical_shift))
 
                     if sprite_set == "wires":
                         # We need to remove the cable color palette
                         overlay = Image.new('RGBA', (4, 4), (0, 0, 0, 0))
-                        new_image.paste(overlay, (1, 1))
+                        new_image.paste(overlay, (1, 1 + vertical_shift))
 
                     new_image.save("{}/{}.png".format(sprite_set, export_name, x0, y0))
             except:

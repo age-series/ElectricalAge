@@ -28,7 +28,9 @@ class ElnConsoleCommands: ICommand {
             ElnMatrixCommand(),
             ElnManCommand(),
             ElnWailaEasyModeCommand(),
-            ElnDebugCommand()
+            ElnDebugCommand(),
+            ElnExplosionsCommand(),
+            ElnIconsCommand()
         ))
     }
 

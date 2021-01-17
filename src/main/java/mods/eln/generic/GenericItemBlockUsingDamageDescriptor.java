@@ -3,6 +3,7 @@ package mods.eln.generic;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import mods.eln.Eln;
+import mods.eln.misc.Utils;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
@@ -43,7 +44,7 @@ public class GenericItemBlockUsingDamageDescriptor {
 
     public void setDefaultIcon(String name) {
         String iconName = name.replaceAll(" ", "").toLowerCase();
-
+        //Utils.println("Icon Name: " + iconName);
         if (Eln.noSymbols &&
             getClass().getClassLoader().getResource("assets/eln/textures/blocks/" + iconName + "-ni.png") != null) {
             this.iconName = iconName + "-ni";

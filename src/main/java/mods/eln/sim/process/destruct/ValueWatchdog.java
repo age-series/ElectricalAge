@@ -41,7 +41,7 @@ public abstract class ValueWatchdog implements IProcess {
             timeout = timeoutReset;
         }
         if (timeout < 0) {
-            Utils.print("%s destroying %s",
+            Utils.println("%s destroying %s",
                 getClass().getName(),
                 destructable.describe());
             if (!Eln.debugExplosions)

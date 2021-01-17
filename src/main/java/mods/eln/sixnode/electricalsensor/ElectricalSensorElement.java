@@ -82,8 +82,10 @@ public class ElectricalSensorElement extends SixNodeElement implements IConfigur
         electricalComponentList.add(outputGateProcess);
         electricalProcessList.add(slowProcess);
 
-        slowProcessList.add(voltageWatchDog);
-        voltageWatchDog.set(aLoad).set(exp);
+        if (this.descriptor.voltageOnly) {
+            slowProcessList.add(voltageWatchDog);
+            voltageWatchDog.set(aLoad).set(exp);
+        }
     }
 
     public IInventory getInventory() {

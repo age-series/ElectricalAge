@@ -75,33 +75,17 @@ public class Utils {
     }
 
     public static void println(String str) {
-        if (!Eln.debugEnabled)
-            return;
-        System.out.println(str);
+        if (Eln.debugEnabled)
+            Eln.logger.info(str);
     }
 
     public static void println(Object str) {
-        if (!Eln.debugEnabled)
-            return;
         if (str != null)
-            System.out.println(str.toString());
+            println(str.toString());
     }
 
-    public static void print(String str) {
-        if (!Eln.debugEnabled)
-            return;
-        System.out.print(str);
-    }
-
-    public static void print(Object str) {
-        if (!Eln.debugEnabled)
-            return;
-        System.out.print(str.toString());
-    }
-
-    public static void print(String format, Object... data) {
-        if (!Eln.debugEnabled) return;
-        print(String.format(format, data));
+    public static void println(String format, Object... data) {
+        println(String.format(format, data));
     }
 
     static String floatToStr(double f, int high, int low) {
@@ -630,6 +614,7 @@ public class Utils {
         return true;
     }
 
+    // Can attest, this seems pretty broken.
     @Deprecated
     public static boolean canPutStackInInventory(ItemStack[] stackList, IInventory inventory, int[] slotsIdList) {
         int limit = inventory.getInventoryStackLimit();

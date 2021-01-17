@@ -135,7 +135,7 @@ class ElnLampAgingCommand: IConsoleCommand {
         cprint(ics, "Changes stored into the map.", indent = 1)
         cprint(ics, "")
         cprint(ics, "Parameters :", indent = 1)
-        cprint(ics, "@0:bool : Aging state (enabled/disabled).", indent = 2)
+        cprint(ics, "@0:bool : Lamp aging (enabled/disabled).", indent = 2)
         cprint(ics, "")
     }
 
@@ -170,7 +170,7 @@ class ElnBatteryAgingCommand: IConsoleCommand {
         cprint(ics, "Changes stored into the map.", indent = 1)
         cprint(ics, "")
         cprint(ics, "Parameters:", indent = 1)
-        cprint(ics, "@0:bool : Aging state (enabled/disabled).", indent = 2)
+        cprint(ics, "@0:bool : Battery aging (enabled/disabled).", indent = 2)
         cprint(ics, "")
     }
 
@@ -205,7 +205,7 @@ class ElnHeatFurnaceFuelCommand: IConsoleCommand {
         cprint(ics, "Changes stored into the map.", indent = 1)
         cprint(ics, "")
         cprint(ics, "Parameters:", indent = 1)
-        cprint(ics, "@0:bool : Aging state (enabled/disabled).", indent = 2)
+        cprint(ics, "@0:bool : Furnace fuel aging (enabled/disabled).", indent = 2)
         cprint(ics, "")
     }
 
@@ -402,7 +402,7 @@ class ElnWailaEasyModeCommand: IConsoleCommand {
         cprint(ics, "This will save to the server config file.", indent = 1)
         cprint(ics, "")
         cprint(ics, "Parameters:", indent = 1)
-        cprint(ics, "@0:bool : Aging state (enabled/disabled).", indent = 2)
+        cprint(ics, "@0:bool : Waila easy mode (enabled/disabled).", indent = 2)
         cprint(ics, "")
     }
 
@@ -439,7 +439,7 @@ class ElnDebugCommand: IConsoleCommand {
         cprint(ics, "This will save to the server config file.", indent = 1)
         cprint(ics, "")
         cprint(ics, "Parameters:", indent = 1)
-        cprint(ics, "@0:bool : Aging state (enabled/disabled).", indent = 2)
+        cprint(ics, "@0:bool : Debug state (enabled/disabled).", indent = 2)
         cprint(ics, "")
     }
 
@@ -447,6 +447,91 @@ class ElnDebugCommand: IConsoleCommand {
 
     override fun getTabCompletion(args: List<String>): List<String> {
         val options = listOf("true", "false")
+        return if (args.isEmpty() || args[0] == "") {
+            options
+        } else {
+            return options.filter {it.startsWith(args[0], ignoreCase = true)}
+        }
+    }
+}
+
+class ElnExplosionsCommand: IConsoleCommand {
+    override val name = "explosions"
+
+    override fun runCommand(ics: ICommandSender, args: List<String>) {
+        when (args.size) {
+            1 -> {
+                val explosions = getArgBool(ics, args[0]) ?: return
+                Eln.explosionEnable = explosions
+                val nonsense = false
+                Eln.config.get("gameplay", "explosion", nonsense).set(Eln.explosionEnable)
+                Eln.config.save()
+                cprint(ics, "Explosions: ${FC.DARK_GREEN}${boolToStr(explosions)}", indent = 1)
+            }
+            2 -> {
+                if (!args[0].equals("debug", ignoreCase = true)) return
+                val debugWatchdog = getArgBool(ics, args[1]) ?: return
+                val nonsense = false
+                Eln.config.get("debug", "watchdog", nonsense).set(Eln.debugExplosions)
+                Eln.config.save()
+                cprint(ics, "The debug watchdog is now ${FC.DARK_GREEN}${boolToStr(debugWatchdog)}", indent = 1)
+            }
+            else -> {
+                cprint(ics, "This command only takes one argument - true or false")
+            }
+        }
+    }
+
+    override fun getManPage(ics: ICommandSender, args: List<String>) {
+        cprint(ics, "Enables/disables explosions.", indent = 1)
+        cprint(ics, "This will save to the server config file.", indent = 1)
+        cprint(ics, "")
+        cprint(ics, "Parameters:", indent = 1)
+        cprint(ics, "@0:bool : Explosions (enabled/disabled).", indent = 2)
+        cprint(ics, "")
+    }
+
+    override fun requiredPermission() = listOf(UserPermission.IS_OPERATOR)
+
+    override fun getTabCompletion(args: List<String>): List<String> {
+        val options = listOf("true", "false")
+        return if (args.isEmpty() || args[0] == "") {
+            options
+        } else {
+            return options.filter {it.startsWith(args[0], ignoreCase = true)}
+        }
+    }
+}
+
+class ElnIconsCommand: IConsoleCommand {
+    override val name = "icons"
+
+    override fun runCommand(ics: ICommandSender, args: List<String>) {
+        if (args.size == 1) {
+            val symbols = args[0].equals("symbols", ignoreCase = true)
+            Eln.noSymbols = symbols
+            val nonsense = false
+            Eln.config.get("gameplay", "noSymbols", nonsense).set(Eln.noSymbols)
+            Eln.config.save()
+            cprint(ics, "Icons mode: ${FC.DARK_GREEN}${boolToStr(symbols)}", indent = 1)
+        } else {
+            cprint(ics, "This command only takes one argument - true or false")
+        }
+    }
+
+    override fun getManPage(ics: ICommandSender, args: List<String>) {
+        cprint(ics, "Changes the icon set", indent = 1)
+        cprint(ics, "This will save to the server config file.", indent = 1)
+        cprint(ics, "")
+        cprint(ics, "Parameters:", indent = 1)
+        cprint(ics, "@0:string : icons (symbols/items).", indent = 2)
+        cprint(ics, "")
+    }
+
+    override fun requiredPermission() = listOf(UserPermission.IS_OPERATOR)
+
+    override fun getTabCompletion(args: List<String>): List<String> {
+        val options = listOf("symbols", "items")
         return if (args.isEmpty() || args[0] == "") {
             options
         } else {

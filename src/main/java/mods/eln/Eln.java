@@ -181,6 +181,8 @@ import net.minecraftforge.common.config.Property;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.*;
 import static mods.eln.i18n.I18N.*;
@@ -196,6 +198,8 @@ public class Eln {
     public final static String UPDATE_URL = "https://github.com/jrddunbr/ElectricalAge/releases";
     public final static String SRC_URL = "https://github.com/jrddunbr/ElectricalAge";
     public final static String[] AUTHORS = {"Dolu1990", "jrddunbr", "Baughn", "Grissess", "Caeleron", "OmegaHaxors", "lambdaShade", "cm0x4D", "metc"};
+
+    public static Logger logger = LogManager.getLogger("ELN");
 
     public static final String channelName = "miaouMod";
     public static final double solarPanelBasePower = 65.0;
@@ -346,6 +350,8 @@ public class Eln {
 
     public static Double flywheelMass = 0.0;
 
+    public static boolean directPoles = false;
+
     public static SiliconWafer siliconWafer;
     public static Transistor transistor;
     public static Thermistor thermistor;
@@ -432,6 +438,8 @@ public class Eln {
             } else
                 playerUUID = p.getString();
         }
+
+        Eln.directPoles = config.get("general", "directPoles", false, "Enables direct air to ground poles - WARNING: Can cause MAJOR performance impact!").getBoolean();
 
         heatTurbinePowerFactor = config.get("balancing", "heatTurbinePowerFactor", 1).getDouble(1);
         solarPanelPowerFactor = config.get("balancing", "solarPanelPowerFactor", 1).getDouble(1);
@@ -749,11 +757,11 @@ public class Eln {
 
     private void registerFab(int id) {
         int subId;
-        {
+        /*{
             subId = 0;
             FabricatorDescriptor desc = new FabricatorDescriptor(TR_NAME(Type.NONE, "Fabricator"));
             transparentNodeItem.addDescriptor(subId + (id << 6), desc);
-        }
+        }*/
     }
 
     private void registerGridDevices(int id) {
@@ -1032,6 +1040,7 @@ public class Eln {
             computerProbeBlock.setCreativeTab(creativeTab).setBlockName(entityName);
             GameRegistry.registerBlock(computerProbeBlock, SimpleNodeItem.class, entityName);
         }
+        /*
         if (ComputerProbeEnable) {
             String name = TR_NAME(Type.TILE, "eln.ElnDeviceProbe");
             TileEntity.addMapping(DeviceProbeEntity.class, name);
@@ -1040,6 +1049,7 @@ public class Eln {
             deviceProbeBlock.setCreativeTab(creativeTab).setBlockName(name);
             GameRegistry.registerBlock(deviceProbeBlock, SimpleNodeItem.class, name);
         }
+        */
     }
 
     TestBlock testBlock;
@@ -5671,7 +5681,7 @@ public class Eln {
         }
         {
             subId = 2;
-            name = TR_NAME(Type.NONE, "Thermistor");
+            name = TR_NAME(Type.NONE, "NTC Thermistor");
             thermistor = new Thermistor(name);
             sharedItem.addElement(subId + (id << 6), thermistor);
             OreDictionary.registerOre(dictThermistor, thermistor.newItemStack());
@@ -5956,7 +5966,7 @@ public class Eln {
             'S', findItemStack("Signal Cable")
         );
 
-        addRecipe(findItemStack("Thermistor"),
+        addRecipe(findItemStack("NTC Thermistor"),
             "   ",
             "csc",
             "   ",
@@ -6481,6 +6491,13 @@ public class Eln {
                     'W', "logWood",
                     'I', oreName
                 );
+                addRecipe(findItemStack("Direct Utility Pole"),
+                    "WWW",
+                    "IWI",
+                    " WI",
+                    'W', "logWood",
+                    'I', oreName
+                );
                 poleRecipes++;
             }
         }
@@ -6529,6 +6546,14 @@ public class Eln {
                     'i', ingotType,
                     't', findItemStack("DC-DC Converter"),
                     'm', findItemStack("Advanced Machine Block"));
+                addRecipe(findItemStack("Grid Switch"),
+                    "AGA",
+                    "MRM",
+                    "AGA",
+                    'A', ingotType,
+                    'G', findItemStack("Gold Plate"),
+                    'M', findItemStack("Advanced Electrical Motor"),
+                    'R', findItemStack("Rubber"));
             }
         }
 
