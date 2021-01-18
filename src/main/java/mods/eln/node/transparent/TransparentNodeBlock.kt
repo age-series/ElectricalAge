@@ -69,7 +69,7 @@ class TransparentNodeBlock(material: Material?, tileEntityClass: Class<*>?) : No
         return true
     }
 
-    override fun addCollisionBoxesToList(world: World, x: Int, y: Int, z: Int, par5AxisAlignedBB: AxisAlignedBB, list: List<*>?, entity: Entity) {
+    override fun addCollisionBoxesToList(world: World, x: Int, y: Int, z: Int, par5AxisAlignedBB: AxisAlignedBB, list: List<*>?, entity: Entity?) {
         val tileEntity = world.getTileEntity(x, y, z)
         if (tileEntity == null || tileEntity !is TransparentNodeEntity) {
             super.addCollisionBoxesToList(world, x, y, z, par5AxisAlignedBB, list, entity)

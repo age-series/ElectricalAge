@@ -124,7 +124,7 @@ open class TransparentNodeDescriptor @JvmOverloads constructor(
             if (!wall) return I18N.tr("You can't place this block at this side")
         }
         val ghostGroup = getGhostGroupFront(front)
-        return if (ghostGroup != null && !ghostGroup.canBePloted(coord)) I18N.tr("Not enough space for this block") else null
+        return if (ghostGroup != null && !ghostGroup.canBePloted(coord!!)) I18N.tr("Not enough space for this block") else null
     }
 
     open fun getFrontFromPlace(side: Direction, entityLiving: EntityLivingBase?): Direction? {

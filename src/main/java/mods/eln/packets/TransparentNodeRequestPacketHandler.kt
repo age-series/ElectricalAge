@@ -14,7 +14,7 @@ class TransparentNodeRequestPacketHandler : IMessageHandler<TransparentNodeReque
     override fun onMessage(message: TransparentNodeRequestPacket?, ctx: MessageContext?): TransparentNodeResponsePacket? {
         var c = message!!.coord
         val ghostElem = Eln.ghostManager.getGhost(c)
-        if(ghostElem != null) c = ghostElem.observatorCoordonate
+        if(ghostElem != null) c = ghostElem.observatorCoordonate!!
         val node = NodeManager.instance!!.getNodeFromCoordonate(c) as? TransparentNode
         var stringMap: Map<String, String> = emptyMap()
         if (node != null) {
