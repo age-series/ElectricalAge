@@ -112,7 +112,7 @@ class Coordinate : INBTTReady {
         return "X : $x Y : $y Z : $z D : $dimension"
     }
 
-    fun move(dir: Direction?) {
+    fun move(dir: Direction) {
         when (dir) {
             Direction.XN -> x--
             Direction.XP -> x++
@@ -120,18 +120,16 @@ class Coordinate : INBTTReady {
             Direction.YP -> y++
             Direction.ZN -> z--
             Direction.ZP -> z++
-            else -> {
-            }
         }
     }
 
-    fun moved(direction: Direction?): Coordinate {
+    fun moved(direction: Direction): Coordinate {
         val moved = Coordinate(this)
         moved.move(direction)
         return moved
     }
 
-    var block: Block?
+    var block: Block
         get() = world().getBlock(x, y, z)
         set(b) {
             world().setBlock(x, y, z, b)

@@ -12,6 +12,8 @@ import net.minecraft.client.audio.ISound;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.lwjgl.opengl.GL11;
 
 import java.io.DataInputStream;
@@ -42,7 +44,7 @@ public class ElectricalMachineRender extends TransparentNodeElementRender {
         drawHandle = this.descriptor.newDrawHandle();
 
         if (this.descriptor.runningSound != null) {
-            addLoopedSound(new LoopedSound(this.descriptor.runningSound, coordonate(), ISound.AttenuationType.LINEAR) {
+            addLoopedSound(new LoopedSound(this.descriptor.runningSound, coordinate(), ISound.AttenuationType.LINEAR) {
                 @Override
                 public float getPitch() {
                     return powerFactor;
@@ -80,8 +82,9 @@ public class ElectricalMachineRender extends TransparentNodeElementRender {
         return false;
     }
 
+    @Nullable
     @Override
-    public GuiScreen newGuiDraw(Direction side, EntityPlayer player) {
+    public GuiScreen newGuiDraw(@NotNull Direction side, @NotNull EntityPlayer player) {
         return new ElectricalMachineGuiDraw(player, inventory, this);
     }
 

@@ -14,6 +14,7 @@ import net.minecraft.inventory.Container;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.DataInputStream;
 import java.io.IOException;
@@ -149,7 +150,8 @@ public class SixNodeEntity extends NodeBlockEntity {
         return elementRenderList[side.getInt()].newGuiDraw(side, player);
     }
 
-    public CableRenderDescriptor getCableRender(Direction side, LRDU lrdu) {
+    @Nullable
+    public CableRenderDescriptor getCableRender(@NotNull Direction side, @NotNull LRDU lrdu) {
         side = side.applyLRDU(lrdu);
         if (elementRenderList[side.getInt()] == null)
             return null;
@@ -223,6 +225,7 @@ public class SixNodeEntity extends NodeBlockEntity {
         }
     }
 
+    @NotNull
     @Override
     public String getNodeUuid() {
         return Eln.sixNodeBlock.getNodeUuid();

@@ -16,6 +16,8 @@ import mods.eln.sim.mna.component.PowerSource;
 import mods.eln.sim.nbt.NbtElectricalLoad;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -47,8 +49,9 @@ public class WindTurbineElement extends TransparentNodeElement {
         return null;
     }
 
+    @Nullable
     @Override
-    public ThermalLoad getThermalLoad(Direction side, LRDU lrdu) {
+    public ThermalLoad getThermalLoad(@NotNull Direction side, @NotNull LRDU lrdu) {
         return null;
     }
 
@@ -60,13 +63,15 @@ public class WindTurbineElement extends TransparentNodeElement {
         return 0;
     }
 
+    @NotNull
     @Override
-    public String multiMeterString(Direction side) {
+    public String multiMeterString(@NotNull Direction side) {
         return null;
     }
 
+    @NotNull
     @Override
-    public String thermoMeterString(Direction side) {
+    public String thermoMeterString(@NotNull Direction side) {
         return null;
     }
 
@@ -82,8 +87,8 @@ public class WindTurbineElement extends TransparentNodeElement {
     }
 
     @Override
-    public boolean onBlockActivated(EntityPlayer entityPlayer, Direction side, float vx, float vy, float vz) {
-        if (Utils.isPlayerUsingWrench(entityPlayer)) {
+    public boolean onBlockActivated(EntityPlayer player, Direction side, float vx, float vy, float vz) {
+        if (Utils.isPlayerUsingWrench(player)) {
             cableFront = cableFront.right();
             reconnect();
         }
@@ -117,6 +122,7 @@ public class WindTurbineElement extends TransparentNodeElement {
         Utils.println(cableFront);
     }
 
+    @NotNull
     @Override
     public Map<String, String> getWaila() {
         Map<String, String> wailaList = new HashMap<String, String>();

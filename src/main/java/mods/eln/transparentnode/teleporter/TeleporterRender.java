@@ -8,6 +8,8 @@ import mods.eln.node.transparent.TransparentNodeEntity;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.lwjgl.opengl.GL11;
 
 import java.io.DataInputStream;
@@ -231,8 +233,9 @@ public class TeleporterRender extends TransparentNodeElementRender {
     }
 
 
+    @Nullable
     @Override
-    public GuiScreen newGuiDraw(Direction side, EntityPlayer player) {
+    public GuiScreen newGuiDraw(@NotNull Direction side, @NotNull EntityPlayer player) {
 
         return new TeleporterGui(player, this);
     }

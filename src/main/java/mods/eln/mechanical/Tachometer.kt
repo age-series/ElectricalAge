@@ -9,6 +9,7 @@ import mods.eln.gui.GuiTextFieldEln
 import mods.eln.gui.IGuiObject
 import mods.eln.i18n.I18N
 import mods.eln.item.IConfigurable
+import mods.eln.misc.Coordinate
 import mods.eln.misc.Direction
 import mods.eln.misc.LRDU
 import mods.eln.misc.LRDUMask
@@ -65,36 +66,29 @@ open class TachometerElement(node: TransparentNode, desc_: TransparentNodeDescri
         slowProcessList.add(outputGateSlowProcess)
     }
 
-    override fun getElectricalLoad(side: Direction?, lrdu: LRDU?): ElectricalLoad? = outputGate
+    override fun getElectricalLoad(side: Direction, lrdu: LRDU): ElectricalLoad? = outputGate
 
-    override fun getThermalLoad(side: Direction?, lrdu: LRDU?): ThermalLoad? = null
-
-    override fun getConnectionMask(side: Direction?, lrdu: LRDU?): Int = if (side == front || side == front.inverse) {
+    override fun getConnectionMask(side: Direction, lrdu: LRDU): Int = if (side == front || side == front.inverse) {
         NodeBase.maskElectricalOutputGate
     } else {
         0
     }
 
-    override fun thermoMeterString(side: Direction?): String? = null
-
-    override fun onBlockActivated(entityPlayer: EntityPlayer?, side: Direction?, vx: Float, vy: Float,
-                                  vz: Float): Boolean = false
-
     override fun networkSerialize(stream: DataOutputStream) {
         super.networkSerialize(stream)
-        node.lrduCubeMask.getTranslate(Direction.YN).serialize(stream)
+        node!!.lrduCubeMask.getTranslate(Direction.YN).serialize(stream)
         stream.writeFloat(minRads)
         stream.writeFloat(maxRads)
     }
 
     override fun hasGui(): Boolean = true
 
-    override fun networkUnserialize(stream: DataInputStream?): Byte {
+    override fun networkUnserialize(stream: DataInputStream): Byte {
         val type = super.networkUnserialize(stream)
         when (type.toInt()) {
             SetRangeEventId -> {
-                minRads = stream?.readFloat() ?: DefaultMinRads
-                maxRads = stream?.readFloat() ?: DefaultMaxRads
+                minRads = stream.readFloat() ?: DefaultMinRads
+                maxRads = stream.readFloat() ?: DefaultMaxRads
                 needPublish()
                 return unserializeNulldId
             }
@@ -116,6 +110,10 @@ open class TachometerElement(node: TransparentNode, desc_: TransparentNodeDescri
 
     override fun getWaila(): Map<String, String> {
         return mapOf()
+    }
+
+    override fun coordonate(): Coordinate {
+        return node!!.coordinate
     }
 
     override fun readConfigTool(compound: NBTTagCompound, invoker: EntityPlayer) {
@@ -152,7 +150,7 @@ class TachometerRender(entity: TransparentNodeEntity, desc: TransparentNodeDescr
         maxRads = stream.readFloat()
     }
 
-    override fun newGuiDraw(side: Direction?, player: EntityPlayer?): GuiScreen? = TachometerGui(this)
+    override fun newGuiDraw(side: Direction, player: EntityPlayer): GuiScreen? = TachometerGui(this)
 }
 
 class TachometerGui(val render: TachometerRender) : GuiScreenEln() {

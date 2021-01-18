@@ -53,14 +53,14 @@ class ChristmasTreeDescriptor(val name: String, val obj: Obj3D): TransparentNode
     }
 }
 
-class ChristmasTreeRender(val tileEntity: TransparentNodeEntity, val descriptor: TransparentNodeDescriptor): TransparentNodeElementRender(tileEntity, descriptor) {
+class ChristmasTreeRender(override var tileEntity: TransparentNodeEntity, val descriptor: TransparentNodeDescriptor): TransparentNodeElementRender(tileEntity, descriptor) {
     var x = 0
     var powered = false
 
-    override fun networkUnserialize(stream: DataInputStream?) {
+    override fun networkUnserialize(stream: DataInputStream) {
         super.networkUnserialize(stream)
         try {
-            powered = stream!!.readBoolean()
+            powered = stream.readBoolean()
 
         } catch (e: IOException) {
             e.printStackTrace()
@@ -68,7 +68,7 @@ class ChristmasTreeRender(val tileEntity: TransparentNodeEntity, val descriptor:
     }
 
     override fun draw() {
-        (descriptor as ChristmasTreeDescriptor).draw(front, x, powered)
+        (descriptor as ChristmasTreeDescriptor).draw(front!!, x, powered)
     }
 
     override fun refresh(deltaT: Float) {

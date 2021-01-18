@@ -40,7 +40,7 @@ public class Resistor extends Bipole {
     }
 
     public double getP() {
-        return getCurrent() * getCurrent() * getR();
+        return getU() * getCurrent();
     }
 
     public double getU() {

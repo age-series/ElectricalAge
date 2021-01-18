@@ -94,7 +94,7 @@ class VerticalHubDescriptor(baseName: String, obj: Obj3D):
         }
     }
 
-    override fun getFrontFromPlace(side: Direction?, entityLiving: EntityLivingBase?): Direction = Direction.XP
+    override fun getFrontFromPlace(side: Direction, entityLiving: EntityLivingBase?): Direction = Direction.XP
 
     override fun mustHaveFloor(): Boolean = false
 }
@@ -117,7 +117,7 @@ class VerticalHubElement(node: TransparentNode, desc_: TransparentNodeDescriptor
         standingSides.clear()
         for(dir in Direction.all) {
             if(connectedSides.contains(dir)) continue
-            val test = coordonate().moved(dir)
+            val test = coordinate().moved(dir)
             if(test.block != null && test.block!!.isOpaqueCube)
                 standingSides.add(dir)
         }
@@ -149,13 +149,10 @@ class VerticalHubElement(node: TransparentNode, desc_: TransparentNodeDescriptor
         standingSides.readFromNBT(nbt, "standingSides")
     }
 
-    override fun getElectricalLoad(side: Direction?, lrdu: LRDU?): ElectricalLoad? = null
-    override fun getThermalLoad(side: Direction?, lrdu: LRDU?): ThermalLoad? = null
-    override fun getConnectionMask(side: Direction?, lrdu: LRDU?): Int = 0
+    override fun coordonate(): Coordinate {
+        return node!!.coordinate
+    }
 
-    override fun thermoMeterString(side: Direction?): String = ""
-
-    override fun onBlockActivated(entityPlayer: EntityPlayer?, side: Direction?, vx: Float, vy: Float, vz: Float): Boolean = false
     override fun onNeighborBlockChange() {
         scanStandingSides()
     }
@@ -169,7 +166,7 @@ class VerticalHubRender(entity: TransparentNodeEntity, desc: TransparentNodeDesc
     val standingSides = DirectionSet()
 
     override fun draw() {
-        front.glRotateXnRef()
+        front!!.glRotateXnRef()
         desc.draw(angle, connectedSides, standingSides)
     }
 

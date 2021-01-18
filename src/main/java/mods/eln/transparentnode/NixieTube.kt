@@ -67,13 +67,13 @@ class NixieTubeDescriptor(val name: String, val obj: Obj3D) : TransparentNodeDes
         UtilsClient.disableBlend()
     }
 
-    override fun getFrontFromPlace(side: Direction?, entityLiving: EntityLivingBase?): Direction {
-        return super.getFrontFromPlace(side, entityLiving).inverse
+    override fun getFrontFromPlace(side: Direction, entityLiving: EntityLivingBase?): Direction {
+        return super.getFrontFromPlace(side, entityLiving)!!.inverse
     }
 }
 
 class NixieTubeElement(node: TransparentNode, _descriptor: TransparentNodeDescriptor) : TransparentNodeElement(node, _descriptor) {
-    val descriptor = _descriptor as NixieTubeDescriptor
+    override val descriptor = _descriptor as NixieTubeDescriptor
 
     val digitIn = NbtElectricalGateInput("digitIn")
     val blankIn = NbtElectricalGateInput("blankIn")
@@ -109,19 +109,18 @@ class NixieTubeElement(node: TransparentNode, _descriptor: TransparentNodeDescri
         }
     }
 
-    var process: NixieTubeProcess? = null
+    var process = NixieTubeProcess()
 
     override fun initialize() {
         electricalLoadList.add(digitIn)
         electricalLoadList.add(blankIn)
         electricalLoadList.add(dotsIn)
-        process = NixieTubeProcess()
         slowProcessList.add(process)
         reconnect()
         Utils.println("NTE.initialize")
     }
 
-    override fun getElectricalLoad(side: Direction?, lrdu: LRDU?): ElectricalLoad? {
+    override fun getElectricalLoad(side: Direction, lrdu: LRDU): ElectricalLoad? {
         if(lrdu != LRDU.Down) return null
         return when(side) {
             front -> dotsIn
@@ -130,7 +129,7 @@ class NixieTubeElement(node: TransparentNode, _descriptor: TransparentNodeDescri
         }
     }
 
-    override fun getConnectionMask(side: Direction?, lrdu: LRDU?): Int {
+    override fun getConnectionMask(side: Direction, lrdu: LRDU): Int {
         if(lrdu != LRDU.Down) return 0
         return NodeBase.maskElectricalInputGate
     }
@@ -139,7 +138,7 @@ class NixieTubeElement(node: TransparentNode, _descriptor: TransparentNodeDescri
         super.networkSerialize(stream)
         //Utils.println("NTE.nS")
         try {
-            node.lrduCubeMask.getTranslate(front.down()).serialize(stream)
+            node!!.lrduCubeMask.getTranslate(front.down()).serialize(stream)
             stream.writeByte(curDigit)
             stream.writeBoolean(curBlank)
             stream.writeByte(curDots)
@@ -148,13 +147,13 @@ class NixieTubeElement(node: TransparentNode, _descriptor: TransparentNodeDescri
         }
     }
 
-    override fun getThermalLoad(side: Direction?, lrdu: LRDU?): ThermalLoad? = null
-    override fun thermoMeterString(side: Direction?): String = ""
-    override fun multiMeterString(side: Direction?): String =
+    override fun getThermalLoad(side: Direction, lrdu: LRDU): ThermalLoad? = null
+    override fun thermoMeterString(side: Direction): String = ""
+    override fun multiMeterString(side: Direction): String =
         Utils.plotVolt("N:", digitIn.bornedU) + " " +
             Utils.plotVolt("B:", blankIn.bornedU) + " " +
             Utils.plotVolt("D:", dotsIn.bornedU)
-    override fun onBlockActivated(entityPlayer: EntityPlayer?, side: Direction?, vx: Float, vy: Float, vz: Float): Boolean = false
+    override fun onBlockActivated(player: EntityPlayer, side: Direction, vx: Float, vy: Float, vz: Float): Boolean = false
 
     override fun getWaila(): MutableMap<String, String> {
         var info = HashMap<String, String>()
@@ -182,7 +181,7 @@ class NixieTubeRender(entity: TransparentNodeEntity, _descriptor: TransparentNod
 
     override fun draw() {
         preserveMatrix {
-            front.glRotateXnRef()
+            front!!.glRotateXnRef()
             descriptor.draw(digit, blank, dots)
         }
 
@@ -191,12 +190,12 @@ class NixieTubeRender(entity: TransparentNodeEntity, _descriptor: TransparentNod
                 connTypes = arrayOfNulls(4)
 
                 for (lrdu in LRDU.values()) {
-                    connTypes!!.set(lrdu.ordinal, CableRender.connectionType(tileEntity, LRDUMask(1.shl(lrdu.ordinal)), front.down()))
+                    connTypes!!.set(lrdu.ordinal, CableRender.connectionType(tileEntity, LRDUMask(1.shl(lrdu.ordinal)), front!!.down()))
                 }
             }
-            glCableTransforme(front.down())
+            glCableTransform(front!!.down())
             for(lrdu in LRDU.values()) {
-                val render = getCableRender(front.down(), lrdu)
+                val render = getCableRenderSide(front!!.down(), lrdu)
                 if (render != null) {
                     render.bindCableTexture()
                     Utils.setGlColorFromDye(connTypes!!.get(lrdu.ordinal)!!.otherdry[lrdu.toInt()])
@@ -221,7 +220,7 @@ class NixieTubeRender(entity: TransparentNodeEntity, _descriptor: TransparentNod
         connTypes = null  // Force refresh
     }
 
-    override fun getCableRender(side: Direction?, lrdu: LRDU?): CableRenderDescriptor? {
+    override fun getCableRenderSide(side: Direction, lrdu: LRDU): CableRenderDescriptor? {
         return if (connection.get(lrdu)) { Eln.instance.stdCableRenderSignal } else { null }
     }
 }

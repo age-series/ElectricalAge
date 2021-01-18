@@ -1,5 +1,6 @@
 package mods.eln.mechanical
 
+import mods.eln.misc.Coordinate
 import mods.eln.misc.Direction
 import mods.eln.misc.LRDU
 import mods.eln.misc.Obj3D
@@ -7,10 +8,8 @@ import mods.eln.node.transparent.EntityMetaTag
 import mods.eln.node.transparent.TransparentNode
 import mods.eln.node.transparent.TransparentNodeDescriptor
 import mods.eln.sim.ElectricalLoad
-import mods.eln.sim.IProcess
 import mods.eln.sim.ThermalLoad
 import net.minecraft.entity.player.EntityPlayer
-import net.minecraft.nbt.NBTTagCompound
 
 class FixedShaftDescriptor(name: String, override val obj: Obj3D) : SimpleShaftDescriptor(
     name, FixedShaftElement::class, ShaftRender::class, EntityMetaTag.Basic
@@ -50,9 +49,12 @@ class FixedShaftElement(node: TransparentNode, desc_: TransparentNodeDescriptor)
         }
     }
 
-    override fun thermoMeterString(side: Direction?): String? = null
-    override fun getThermalLoad(side: Direction?, lrdu: LRDU?): ThermalLoad? = null
-    override fun getElectricalLoad(side: Direction?, lrdu: LRDU?): ElectricalLoad? = null
-    override fun getConnectionMask(side: Direction?, lrdu: LRDU?): Int = 0
-    override fun onBlockActivated(entityPlayer: EntityPlayer?, side: Direction?, vx: Float, vy: Float, vz: Float): Boolean = false
+    override fun thermoMeterString(side: Direction): String = ""
+    override fun getThermalLoad(side: Direction, lrdu: LRDU): ThermalLoad? = null
+    override fun getElectricalLoad(side: Direction, lrdu: LRDU): ElectricalLoad? = null
+    override fun getConnectionMask(side: Direction, lrdu: LRDU): Int = 0
+    override fun onBlockActivated(player: EntityPlayer, side: Direction, vx: Float, vy: Float, vz: Float): Boolean = false
+    override fun coordonate(): Coordinate {
+        return node!!.element!!.coordinate()
+    }
 }

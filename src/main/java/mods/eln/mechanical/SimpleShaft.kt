@@ -80,6 +80,7 @@ open class ShaftRender(entity: TransparentNodeEntity, desc: TransparentNodeDescr
     val eConn = LRDUMask()
     val mask = LRDUMask()
     var connectionType: CableRenderType? = null
+
     open val cableRender: CableRenderDescriptor? = null
     var cableRefresh = true
     // Sound:
@@ -109,7 +110,7 @@ open class ShaftRender(entity: TransparentNodeEntity, desc: TransparentNodeDescr
         volumeSetting.position = 0f
         val sound = desc.sound
         if (sound != null) {
-            soundLooper = ShaftSoundLooper(sound, coordonate())
+            soundLooper = ShaftSoundLooper(sound, coordinate())
             addLoopedSound(soundLooper)
         } else {
             soundLooper = null
@@ -133,7 +134,7 @@ open class ShaftRender(entity: TransparentNodeEntity, desc: TransparentNodeDescr
      */
     fun draw(extra: () -> Unit) {
         preserveMatrix {
-            front.glRotateXnRef()
+            front!!.glRotateXnRef()
             if (front == Direction.XP || front == Direction.ZP)
                 desc.draw(angle)
             else
@@ -146,16 +147,16 @@ open class ShaftRender(entity: TransparentNodeEntity, desc: TransparentNodeDescr
             preserveMatrix {
                 if (cableRefresh) {
                     cableRefresh = false
-                    connectionType = CableRender.connectionType(tileEntity, eConn, front.down())
+                    connectionType = CableRender.connectionType(tileEntity, eConn, front!!.down())
                 }
 
-                glCableTransforme(front.down())
+                glCableTransform(front!!.down())
                 cableRender!!.bindCableTexture()
 
                 for (lrdu in LRDU.values()) {
                     Utils.setGlColorFromDye(connectionType!!.otherdry[lrdu.toInt()])
                     if (!eConn.get(lrdu)) continue
-                    if (lrdu != front.down().getLRDUGoingTo(front) && lrdu.inverse() != front.down().getLRDUGoingTo(front)) continue
+                    if (lrdu != front!!.down().getLRDUGoingTo(front!!) && lrdu.inverse() != front!!.down().getLRDUGoingTo(front!!)) continue
                     mask.set(1.shl(lrdu.ordinal))
                     CableRender.drawCable(cableRender, mask, connectionType)
                 }
@@ -221,7 +222,7 @@ abstract class SimpleShaftElement(node: TransparentNode, desc_: TransparentNodeD
         super.networkSerialize(stream)
         stream.writeFloat(shaft.rads.toFloat())
         // For cables.
-        node.lrduCubeMask.getTranslate(front.down()).serialize(stream)
+        node!!.lrduCubeMask.getTranslate(front.down()).serialize(stream)
     }
 
     override fun writeToNBT(nbt: NBTTagCompound) {
@@ -235,7 +236,7 @@ abstract class SimpleShaftElement(node: TransparentNode, desc_: TransparentNodeD
         // Utils.println(String.format("SS.rFN: %s r=%f", shaft, shaft.rads))
     }
 
-    override fun multiMeterString(side: Direction?): String {
+    override fun multiMeterString(side: Direction): String {
         return Utils.plotER(shaft.energy, shaft.rads)
     }
 }

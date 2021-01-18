@@ -1,6 +1,5 @@
 package mods.eln.simplenode.energyconverter
 
-import mods.eln.Eln
 import mods.eln.gui.GuiButtonEln
 import mods.eln.gui.GuiHelper
 import mods.eln.gui.GuiScreenEln
@@ -13,23 +12,23 @@ import kotlin.math.pow
 
 class EnergyConverterElnToOtherGui(var render: EnergyConverterElnToOtherEntity) : GuiScreenEln() {
 
-    var powerSelector: GuiVerticalTrackBar? = null
+    var resistanceSelector: GuiVerticalTrackBar? = null
     var ic2tier1: GuiButtonEln? = null
     var ic2tier2: GuiButtonEln? = null
     var ic2tier3: GuiButtonEln? = null
     var ic2tier4: GuiButtonEln? = null
     var powerEntry: GuiTextFieldEln? = null
 
-    private val maxPower = Eln.instance.ELN_CONVERTER_MAX_POWER
+    private val maxResistance = 100_000.0
 
     var ic2tierList: List<GuiButtonEln>? = null
 
     override fun initGui() {
         super.initGui()
-        powerSelector = newGuiVerticalTrackBar(6, 6 + 2, 20, 82)
-        powerSelector!!.setStepIdMax(100)
-        powerSelector!!.setEnable(true)
-        powerSelector!!.setRange(0f, 1f)
+        resistanceSelector = newGuiVerticalTrackBar(6, 6 + 2, 20, 82)
+        resistanceSelector!!.setStepIdMax(100)
+        resistanceSelector!!.setEnable(true)
+        resistanceSelector!!.setRange(0f, 1f)
         ic2tier1 = newGuiButton(30, 6, 47,"IC2 T1")
         ic2tier2 = newGuiButton(30, 28, 47,"IC2 T2")
         ic2tier3 = newGuiButton(30, 50, 47,"IC2 T3")
@@ -45,13 +44,13 @@ class EnergyConverterElnToOtherGui(var render: EnergyConverterElnToOtherEntity) 
         ic2tier4!!.setComment(0, "Set output to 2048 EU/t max")
         powerEntry = newGuiTextField(6, 96, 70)
         powerEntry!!.enabled
-        powerEntry!!.setComment(listOf("Select the maximum export power").toTypedArray())
+        powerEntry!!.setComment(listOf("Select the resistance").toTypedArray())
         syncVoltage()
     }
 
     fun syncVoltage() {
-        powerSelector!!.value = selectedPowerToSlider(render.selectorPower)
-        powerEntry!!.text = render.selectorPower.toInt().toString()
+        resistanceSelector!!.value = selectedResistanceToSlider(render.selectedResistance)
+        powerEntry!!.text = render.selectedResistance.toInt().toString()
         ic2tierList!!.forEachIndexed {
             index, button ->
             val tier = index + 1
@@ -64,24 +63,24 @@ class EnergyConverterElnToOtherGui(var render: EnergyConverterElnToOtherEntity) 
         render.hasChanges = false
     }
 
-    fun selectedPowerToSlider(selectedPower: Double): Float {
-        return log(selectedPower / 100 + 1, (maxPower / 100) + 1).toFloat()
+    fun selectedResistanceToSlider(selectedResistance: Double): Float {
+        return log(selectedResistance / 100 + 1, (maxResistance / 100) + 1).toFloat()
     }
 
-    fun sliderToSelectedPower(slider: Float): Double {
-        return 100 * (((maxPower / 100) + 1).pow(slider.toDouble()) - 1)
+    fun sliderToSelectedResistance(slider: Float): Double {
+        return 100 * (((maxResistance / 100) + 1).pow(slider.toDouble()) - 1)
     }
 
     override fun guiObjectEvent(guiObject: IGuiObject) {
         super.guiObjectEvent(guiObject)
         when {
-            guiObject === powerSelector -> {
-                render.selectorPower = sliderToSelectedPower(powerSelector!!.value)
-                render.sender.clientSendDouble(NetworkType.SET_POWER.id, render.selectorPower)
+            guiObject === resistanceSelector -> {
+                render.selectedResistance = sliderToSelectedResistance(resistanceSelector!!.value)
+                render.sender.clientSendDouble(NetworkType.SET_OHMS.id, render.selectedResistance)
             }
             guiObject === powerEntry -> {
-                render.selectorPower = powerEntry!!.text.toDoubleOrNull()?: render.selectorPower
-                render.sender.clientSendDouble(NetworkType.SET_POWER.id, render.selectorPower)
+                render.selectedResistance = powerEntry!!.text.toDoubleOrNull()?: render.selectedResistance
+                render.sender.clientSendDouble(NetworkType.SET_OHMS.id, render.selectedResistance)
             }
             guiObject === ic2tier1 ->
                 render.sender.clientSendInt(NetworkType.SET_IC2_TIER.id, 1)
@@ -97,7 +96,7 @@ class EnergyConverterElnToOtherGui(var render: EnergyConverterElnToOtherEntity) 
     override fun preDraw(f: Float, x: Int, y: Int) {
         super.preDraw(f, x, y)
         if (render.hasChanges) syncVoltage()
-        powerSelector!!.setComment(0, I18N.tr("Input power is limited to %1\$W", render.selectorPower))
+        resistanceSelector!!.setComment(0, I18N.tr("Resistance is set to %1\$W", render.selectedResistance))
     }
 
     override fun newHelper(): GuiHelper {

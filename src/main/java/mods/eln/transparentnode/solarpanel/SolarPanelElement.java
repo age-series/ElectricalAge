@@ -23,6 +23,8 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.nbt.NBTTagCompound;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.DataInputStream;
 import java.io.IOException;
@@ -102,8 +104,9 @@ public class SolarPanelElement extends TransparentNodeElement {
         return null;
     }
 
+    @Nullable
     @Override
-    public ThermalLoad getThermalLoad(Direction side, LRDU lrdu) {
+    public ThermalLoad getThermalLoad(@NotNull Direction side, @NotNull LRDU lrdu) {
         return null;
     }
 
@@ -120,13 +123,15 @@ public class SolarPanelElement extends TransparentNodeElement {
         return 0;
     }
 
+    @NotNull
     @Override
-    public String multiMeterString(Direction side) {
+    public String multiMeterString(@NotNull Direction side) {
         return Utils.plotUIP(positiveLoad.getU() - negativeLoad.getU(), positiveLoad.getCurrent());
     }
 
+    @NotNull
     @Override
-    public String thermoMeterString(Direction side) {
+    public String thermoMeterString(@NotNull Direction side) {
         return "";
     }
 
@@ -155,8 +160,8 @@ public class SolarPanelElement extends TransparentNodeElement {
     }
 
     @Override
-    public boolean onBlockActivated(EntityPlayer entityPlayer, Direction side, float vx, float vy, float vz) {
-        return descriptor.canRotate && inventory.take(entityPlayer.getCurrentEquippedItem(), this, true, false);
+    public boolean onBlockActivated(EntityPlayer player, Direction side, float vx, float vy, float vz) {
+        return descriptor.canRotate && inventory.take(player.getCurrentEquippedItem(), this, true, false);
     }
 
     @Override
@@ -222,11 +227,13 @@ public class SolarPanelElement extends TransparentNodeElement {
         return descriptor.canRotate;
     }
 
+    @Nullable
     @Override
-    public Container newContainer(Direction side, EntityPlayer player) {
+    public Container newContainer(@NotNull Direction side, @NotNull EntityPlayer player) {
         return new SolarPanelContainer(node, player, inventory.getInventory());
     }
 
+    @NotNull
     @Override
     public Map<String, String> getWaila() {
         Map<String, String> info = new HashMap<String, String>();

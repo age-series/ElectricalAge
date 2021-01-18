@@ -148,7 +148,7 @@ class VariableDcDcElement(transparentNode: TransparentNode, descriptor: Transpar
 
     val interSystemProcess = TransformerInterSystemProcess(primaryLoad, secondaryLoad, primaryVoltageSource, secondaryVoltageSource)
 
-    val inventory = TransparentNodeElementInventory(4, 64, this)
+    override val inventory = TransparentNodeElementInventory(4, 64, this)
 
     var primaryMaxCurrent = 0.0
     var secondaryMaxCurrent = 0.0
@@ -167,7 +167,7 @@ class VariableDcDcElement(transparentNode: TransparentNode, descriptor: Transpar
         val exp = WorldExplosion(this).machineExplosion()
         slowProcessList.add(primaryVoltageWatchdog.set(primaryLoad).set(exp))
         slowProcessList.add(secondaryVoltageWatchdog.set(secondaryLoad).set(exp))
-        slowProcessList.add(NodePeriodicPublishProcess(node, 1.0, .5))
+        slowProcessList.add(NodePeriodicPublishProcess(node!!, 1.0, .5))
         slowProcessList.add(VariableDcDcProcess(this))
     }
 
@@ -215,8 +215,8 @@ class VariableDcDcElement(transparentNode: TransparentNode, descriptor: Transpar
             Utils.plotVolt("UP+:", primaryLoad.u) + Utils.plotAmpere("IP+:", primaryVoltageSource.current) + Utils.plotVolt("  US+:", secondaryLoad.u) + Utils.plotAmpere("IS+:", secondaryVoltageSource.current)
     }
 
-    override fun thermoMeterString(side: Direction): String? {
-        return null
+    override fun thermoMeterString(side: Direction): String {
+        return ""
     }
 
     override fun initialize() {
@@ -270,7 +270,7 @@ class VariableDcDcElement(transparentNode: TransparentNode, descriptor: Transpar
         needPublish()
     }
 
-    override fun onBlockActivated(entityPlayer: EntityPlayer, side: Direction, vx: Float, vy: Float, vz: Float): Boolean {
+    override fun onBlockActivated(player: EntityPlayer, side: Direction, vx: Float, vy: Float, vz: Float): Boolean {
         return false
     }
 
@@ -278,16 +278,12 @@ class VariableDcDcElement(transparentNode: TransparentNode, descriptor: Transpar
         return true
     }
 
-    override fun newContainer(side: Direction, player: EntityPlayer): Container? {
+    override fun newContainer(side: Direction, player: EntityPlayer): Container {
         return VariableDcDcContainer(player, inventory)
     }
 
     override fun getLightOpacity(): Float {
         return 1.0f
-    }
-
-    override fun getInventory(): IInventory? {
-        return inventory
     }
 
     override fun onGroundedChangedByClient() {
@@ -302,15 +298,15 @@ class VariableDcDcElement(transparentNode: TransparentNode, descriptor: Transpar
             if (inventory.getStackInSlot(0) == null)
                 stream.writeByte(0)
             else
-                stream.writeByte(inventory.getStackInSlot(0).stackSize)
+                stream.writeByte(inventory.getStackInSlot(0)!!.stackSize)
             if (inventory.getStackInSlot(1) == null)
                 stream.writeByte(0)
             else
-                stream.writeByte(inventory.getStackInSlot(1).stackSize)
+                stream.writeByte(inventory.getStackInSlot(1)!!.stackSize)
             Utils.serialiseItemStack(stream, inventory.getStackInSlot(VariableDcDcContainer.ferromagneticSlotId))
             Utils.serialiseItemStack(stream, inventory.getStackInSlot(VariableDcDcContainer.primaryCableSlotId))
             Utils.serialiseItemStack(stream, inventory.getStackInSlot(VariableDcDcContainer.secondaryCableSlotId))
-            node.lrduCubeMask.getTranslate(front.down()).serialize(stream)
+            node!!.lrduCubeMask.getTranslate(front.down()).serialize(stream)
             var load = 0f
             if (primaryMaxCurrent != 0.0 && secondaryMaxCurrent != 0.0) {
                 load = Utils.limit(Math.max(primaryLoad.i / primaryMaxCurrent,
@@ -392,7 +388,7 @@ class VariableDcDcProcess(val element: VariableDcDcElement): IProcess {
 
 class VariableDcDcRender(tileEntity: TransparentNodeEntity, val descriptor: TransparentNodeDescriptor): TransparentNodeElementRender(tileEntity, descriptor) {
 
-    val inventory = TransparentNodeElementInventory(4, 64, this)
+    override val inventory = TransparentNodeElementInventory(4, 64, this)
 
     val load = SlewLimiter(0.5f)
 
@@ -415,7 +411,7 @@ class VariableDcDcRender(tileEntity: TransparentNodeEntity, val descriptor: Tran
     private var cableRenderType: CableRenderType? = null
 
     init {
-        addLoopedSound(object : LoopedSound("eln:Transformer", coordonate(), ISound.AttenuationType.LINEAR) {
+        addLoopedSound(object : LoopedSound("eln:Transformer", coordinate(), ISound.AttenuationType.LINEAR) {
             override fun getVolume(): Float {
                 return if (load.position > VariableDcDcDescriptor.MIN_LOAD_HUM)
                     0.1f * (load.position - VariableDcDcDescriptor.MIN_LOAD_HUM).toFloat() / (1 - VariableDcDcDescriptor.MIN_LOAD_HUM).toFloat()
@@ -430,12 +426,12 @@ class VariableDcDcRender(tileEntity: TransparentNodeEntity, val descriptor: Tran
 
     override fun draw() {
         GL11.glPushMatrix()
-        front.glRotateXnRef()
+        front!!.glRotateXnRef()
         (descriptor as VariableDcDcDescriptor).draw(feroPart, primaryStackSize.toInt(), secondaryStackSize.toInt(), hasCasing, doorOpen.get())
         GL11.glPopMatrix()
-        cableRenderType = drawCable(front.down(), priRender, priConn, cableRenderType)
-        cableRenderType = drawCable(front.down(), secRender, secConn, cableRenderType)
-        cableRenderType = drawCable(front.down(), Eln.instance.stdCableRenderSignal, controlConn, cableRenderType)
+        cableRenderType = drawCable(front!!.down(), priRender, priConn, cableRenderType)
+        cableRenderType = drawCable(front!!.down(), secRender, secConn, cableRenderType)
+        cableRenderType = drawCable(front!!.down(), Eln.instance.stdCableRenderSignal, controlConn, cableRenderType)
     }
 
     override fun networkUnserialize(stream: DataInputStream) {
@@ -470,11 +466,11 @@ class VariableDcDcRender(tileEntity: TransparentNodeEntity, val descriptor: Tran
             controlConn.mask = 0
             for (lrdu in LRDU.values()) {
                 if(!eConn.get(lrdu)) continue
-                if(front.down().applyLRDU(lrdu) == front.left()) {
+                if(front!!.down().applyLRDU(lrdu) == front!!.left()) {
                     priConn.set(lrdu, true)
                     continue
                 }
-                if(front.down().applyLRDU(lrdu) == front.right()) {
+                if(front!!.down().applyLRDU(lrdu) == front!!.right()) {
                     secConn.set(lrdu, true)
                     continue
                 }
@@ -491,12 +487,12 @@ class VariableDcDcRender(tileEntity: TransparentNodeEntity, val descriptor: Tran
 
     }
 
-    override fun getCableRender(side: Direction?, lrdu: LRDU): CableRenderDescriptor? {
+    override fun getCableRenderSide(side: Direction, lrdu: LRDU): CableRenderDescriptor? {
         if (lrdu == LRDU.Down) {
-            if (side == front.left()) return priRender
-            if (side == front.right()) return secRender
+            if (side == front!!.left()) return priRender
+            if (side == front!!.right()) return secRender
             if (side == front && !grounded) return priRender
-            if (side == front.back() && !grounded) return secRender
+            if (side == front!!.back() && !grounded) return secRender
         }
         return null
     }
@@ -511,7 +507,7 @@ class VariableDcDcRender(tileEntity: TransparentNodeEntity, val descriptor: Tran
         load.step(deltaT)
 
         if (hasCasing) {
-            if (!Utils.isPlayerAround(tileEntity.worldObj, coordinate.moved(front).getAxisAlignedBB(0)))
+            if (!Utils.isPlayerAround(tileEntity.worldObj, coordinate.moved(front!!).getAxisAlignedBB(0)))
                 doorOpen.target = 0f
             else
                 doorOpen.target = 1f
@@ -519,7 +515,7 @@ class VariableDcDcRender(tileEntity: TransparentNodeEntity, val descriptor: Tran
         }
     }
 
-    override fun newGuiDraw(side: Direction, player: EntityPlayer): GuiScreen? {
+    override fun newGuiDraw(side: Direction, player: EntityPlayer): GuiScreen {
         return VariableDcDcGui(player, inventory, this)
     }
 }

@@ -27,7 +27,6 @@ import mods.eln.sim.ThermalLoad
 import mods.eln.sim.mna.component.Resistor
 import mods.eln.sim.mna.misc.MnaConst
 import mods.eln.sim.nbt.NbtElectricalLoad
-import mods.eln.transparentnode.turret.TurretElement
 import net.minecraft.client.gui.GuiScreen
 import net.minecraft.client.renderer.RenderHelper
 import net.minecraft.entity.player.EntityPlayer
@@ -58,13 +57,13 @@ class FabricatorDescriptor(
         etcherZ.draw()
     }
 
-    override fun shouldUseRenderHelper(type: IItemRenderer.ItemRenderType?, item: ItemStack?, helper: IItemRenderer.ItemRendererHelper?) = true
+    override fun shouldUseRenderHelper(type: IItemRenderer.ItemRenderType, item: ItemStack, helper: IItemRenderer.ItemRendererHelper) = true
 
-    override fun handleRenderType(item: ItemStack?, type: IItemRenderer.ItemRenderType?): Boolean {
+    override fun handleRenderType(item: ItemStack, type: IItemRenderer.ItemRenderType): Boolean {
         return true
     }
 
-    override fun renderItem(type: IItemRenderer.ItemRenderType?, item: ItemStack?, vararg data: Any?) {
+    override fun renderItem(type: IItemRenderer.ItemRenderType, item: ItemStack, vararg data: Any) {
         draw()
     }
 }
@@ -78,21 +77,21 @@ class FabricatorElement(node: TransparentNode, descriptor: TransparentNodeDescri
 
     val craftingProcess = FabricatorProcess(this)
 
-    val inventory: TransparentNodeElementInventory = FabricatorInventory(FabricatorSlots.values().size, 64, this)
+    override val inventory: TransparentNodeElementInventory = FabricatorInventory(FabricatorSlots.values().size, 64, this)
 
-    override fun getElectricalLoad(side: Direction?, lrdu: LRDU?): ElectricalLoad {
+    override fun getElectricalLoad(side: Direction, lrdu: LRDU): ElectricalLoad {
         return electricalLoad
     }
 
-    override fun getThermalLoad(side: Direction?, lrdu: LRDU?): ThermalLoad? = null
+    override fun getThermalLoad(side: Direction, lrdu: LRDU): ThermalLoad? = null
 
-    override fun getConnectionMask(side: Direction?, lrdu: LRDU?): Int {
+    override fun getConnectionMask(side: Direction, lrdu: LRDU): Int {
         return NodeBase.maskElectricalPower
     }
 
-    override fun multiMeterString(side: Direction?) = ""
+    override fun multiMeterString(side: Direction) = ""
 
-    override fun thermoMeterString(side: Direction?) = ""
+    override fun thermoMeterString(side: Direction): String = ""
 
     override fun initialize() {
         electricalLoadList.add(electricalLoad)
@@ -103,28 +102,23 @@ class FabricatorElement(node: TransparentNode, descriptor: TransparentNodeDescri
         connect()
     }
 
-    override fun onBlockActivated(entityPlayer: EntityPlayer?, side: Direction?, vx: Float, vy: Float, vz: Float): Boolean {
+    override fun onBlockActivated(player: EntityPlayer, side: Direction, vx: Float, vy: Float, vz: Float): Boolean {
         return false
     }
 
     override fun hasGui() = true
 
-    override fun getInventory(): IInventory {
-        return inventory
-    }
-
     override fun newContainer(side: Direction, player: EntityPlayer): Container {
         return FabricatorContainer(this.node, player, inventory, descriptor as FabricatorDescriptor)
     }
 
-    override fun networkSerialize(stream: DataOutputStream?) {
+    override fun networkSerialize(stream: DataOutputStream) {
         super.networkSerialize(stream)
-        stream?.writeInt(operation?.nid ?: -1)
+        stream.writeInt(operation?.nid ?: -1)
     }
 
-    override fun networkUnserialize(stream: DataInputStream?): Byte {
+    override fun networkUnserialize(stream: DataInputStream): Byte {
         val packetType = super.networkUnserialize(stream)
-        if (stream == null) return unserializeNulldId
         try {
             when (packetType) {
                 FabricatorNetwork.BUTTON_CLICK.id -> {
@@ -172,7 +166,7 @@ class FabricatorProcess(val element: FabricatorElement): IProcess {
         val canOutput = if (outputSlot != null) {
             val stack = element.inventory.getStackInSlot(FabricatorSlots.OUTPUT.slotId)
             if (operation != null)
-                stack.item == operation.outputItem.item && stack.stackSize < stack.maxStackSize
+                stack!!.item == operation.outputItem.item && stack.stackSize < stack.maxStackSize
             else
                 true
         } else {
@@ -211,7 +205,7 @@ class FabricatorProcess(val element: FabricatorElement): IProcess {
                     powerConsumed -= operation.powerRequired
                     element.needPublish()
                 } else {
-                    val stackSize = element.inventory.getStackInSlot(FabricatorSlots.OUTPUT.slotId).stackSize
+                    val stackSize = element.inventory.getStackInSlot(FabricatorSlots.OUTPUT.slotId)!!.stackSize
                     if (stackSize in 0..63) {
                         val newStack = operation.outputItem.copy()
                         newStack.stackSize = stackSize + 1
@@ -229,7 +223,7 @@ class FabricatorRender(entity: TransparentNodeEntity, descriptor: TransparentNod
 
     var operationId: Int = 0
 
-    val inventory = FabricatorInventory(3, 64, this)
+    override val inventory = FabricatorInventory(3, 64, this)
 
     init {
         this.transparentNodedescriptor = descriptor as FabricatorDescriptor
@@ -243,9 +237,9 @@ class FabricatorRender(entity: TransparentNodeEntity, descriptor: TransparentNod
         return FabricatorGui(player, inventory, this)
     }
 
-    override fun networkUnserialize(stream: DataInputStream?) {
+    override fun networkUnserialize(stream: DataInputStream) {
         super.networkUnserialize(stream)
-        operationId = stream?.readInt()?: -1
+        operationId = stream.readInt()?: -1
     }
 }
 
@@ -343,15 +337,15 @@ class FabricatorInventory: TransparentNodeElementInventory {
         return FabricatorSlots.values().map{it.slotId}.toIntArray()
     }
 
-    override fun canInsertItem(slot: Int, item: ItemStack?, side: Int): Boolean {
-        if (item == null) return false
-        val itemDescriptor = GenericItemUsingDamageDescriptor.getDescriptor(item) ?: return false
+    override fun canInsertItem(slot: Int, stack: ItemStack?, side: Int): Boolean {
+        if (stack == null) return false
+        val itemDescriptor = GenericItemUsingDamageDescriptor.getDescriptor(stack) ?: return false
         if (itemDescriptor === Eln.siliconWafer && slot == FabricatorSlots.SILICON_WAFER.slotId) return true
         if (itemDescriptor === Eln.plateCopper && slot == FabricatorSlots.COPPER_PLATE.slotId) return true
         return false
     }
 
-    override fun canExtractItem(slot: Int, item: ItemStack?, side: Int): Boolean {
+    override fun canExtractItem(slot: Int, stack: ItemStack?, side: Int): Boolean {
         return slot == FabricatorSlots.OUTPUT.slotId
     }
 }

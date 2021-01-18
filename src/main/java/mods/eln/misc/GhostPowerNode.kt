@@ -18,7 +18,7 @@ class GhostPowerNode(origin: Coordinate, front: Direction, offset: Coordinate, v
         onBlockPlacedBy(coord, Direction.XN, null, null)
     }
 
-    override fun initializeFromThat(front: Direction?, entityLiving: EntityLivingBase?, itemStack: ItemStack?) {
+    override fun initializeFromThat(front: Direction, entityLiving: EntityLivingBase?, itemStack: ItemStack?) {
         connect()
     }
 

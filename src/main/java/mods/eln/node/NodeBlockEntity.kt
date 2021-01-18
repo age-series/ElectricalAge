@@ -233,7 +233,7 @@ abstract class NodeBlockEntity : TileEntity(), ITileEntitySpawnClient, INodeEnti
         UtilsClient.sendPacketToServer(bos!!)
     }
 
-    open fun getCableRender(side: Direction?, lrdu: LRDU?): CableRenderDescriptor? {
+    open fun getCableRender(side: Direction, lrdu: LRDU): CableRenderDescriptor? {
         return null
     }
 

@@ -136,7 +136,7 @@ class GeneratorRender(entity: TransparentNodeEntity, desc_: TransparentNodeDescr
         }
     }
 
-    override fun getCableRender(side: Direction, lrdu: LRDU): CableRenderDescriptor? {
+    override fun getCableRenderSide(side: Direction, lrdu: LRDU): CableRenderDescriptor? {
         if (lrdu == LRDU.Down && side == front) return Eln.instance.stdCableRender3200V
         return null
     }
@@ -262,19 +262,19 @@ class GeneratorElement(node: TransparentNode, desc_: TransparentNodeDescriptor) 
         }
     }
 
-    override fun getThermalLoad(side: Direction?, lrdu: LRDU?) = thermal
+    override fun getThermalLoad(side: Direction, lrdu: LRDU) = thermal
 
-    override fun getConnectionMask(side: Direction?, lrdu: LRDU?): Int {
+    override fun getConnectionMask(side: Direction, lrdu: LRDU): Int {
         if (lrdu == LRDU.Down && (side == front || side == front.back())) return NodeBase.maskElectricalPower
         return 0
     }
 
-    override fun multiMeterString(side: Direction?) =
+    override fun multiMeterString(side: Direction) =
         Utils.plotER(shaft.energy, shaft.rads) + Utils.plotUIP(electricalPowerSource.getU(), electricalPowerSource.getI())
 
-    override fun thermoMeterString(side: Direction?) = Utils.plotCelsius("T", thermal.getT())
+    override fun thermoMeterString(side: Direction): String = Utils.plotCelsius("T", thermal.getT())
 
-    override fun onBlockActivated(entityPlayer: EntityPlayer?, side: Direction?, vx: Float, vy: Float, vz: Float): Boolean {
+    override fun onBlockActivated(player: EntityPlayer, side: Direction, vx: Float, vy: Float, vz: Float): Boolean {
         return false
     }
 
@@ -293,5 +293,9 @@ class GeneratorElement(node: TransparentNode, desc_: TransparentNodeDescriptor) 
             info.put("Temperature", Utils.plotCelsius("", thermal.t))
         }
         return info
+    }
+
+    override fun coordonate(): Coordinate {
+        return node!!.coordinate
     }
 }

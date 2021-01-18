@@ -13,7 +13,7 @@ class GridTransformerRender(entity: TransparentNodeEntity, descriptor: Transpare
     private var load = SlewLimiter(0.5f)
 
     init {
-        addLoopedSound(object : LoopedSound("eln:Transformer", coordonate(), ISound.AttenuationType.LINEAR) {
+        addLoopedSound(object : LoopedSound("eln:Transformer", coordinate(), ISound.AttenuationType.LINEAR) {
             override fun getVolume() = Math.max(0f, (load.position - desc.minimalLoadToHum) / (1 - desc.minimalLoadToHum))
         })
     }

@@ -11,6 +11,8 @@ import mods.eln.node.transparent.TransparentNodeEntity;
 import mods.eln.sound.SoundCommand;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.DataInputStream;
 import java.io.IOException;
@@ -60,7 +62,7 @@ public class WaterTurbineRender extends TransparentNodeElementRender {
             alpha += 360;
 
         if ((int) (alpha / 45) != (int) (alphaN_1 / 45) && soundPlaying == false) {
-            Coordinate coord = coordonate();
+            Coordinate coord = coordinate();
             play(new SoundCommand(descriptor.soundName)
                 .mulVolume(descriptor.nominalVolume * (0.007f + 0.2f * (float) powerFactorFilter.get() * (float) powerFactorFilter.get()),
                     1.1f));
@@ -75,8 +77,9 @@ public class WaterTurbineRender extends TransparentNodeElementRender {
     private float water;
     private float powerFactor;
 
+    @Nullable
     @Override
-    public GuiScreen newGuiDraw(Direction side, EntityPlayer player) {
+    public GuiScreen newGuiDraw(@NotNull Direction side, @NotNull EntityPlayer player) {
 
         return new WaterTurbineGuiDraw(player, inventory, this);
     }
@@ -100,7 +103,7 @@ public class WaterTurbineRender extends TransparentNodeElementRender {
 
         waterCoord = this.descriptor.getWaterCoordonate(tileEntity.getWorldObj());
         waterCoord.setWorld(tileEntity.getWorldObj());
-        waterCoord.applyTransformation(front, coordonate());
+        waterCoord.applyTransformation(front, coordinate());
         waterCoordRight = new Coordinate(waterCoord);
         waterCoordRight.setWorld(tileEntity.getWorldObj());
         waterCoordRight.move(front.right());

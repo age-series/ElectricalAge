@@ -15,6 +15,8 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.nbt.NBTTagCompound;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.DataInputStream;
 
@@ -37,34 +39,38 @@ public class PowerInductorElement extends TransparentNodeElement {
         positiveLoad.setAsMustBeFarFromInterSystem();
     }
 
+    @Nullable
     @Override
-    public ElectricalLoad getElectricalLoad(Direction side, LRDU lrdu) {
+    public ElectricalLoad getElectricalLoad(@NotNull Direction side, @NotNull LRDU lrdu) {
         if (lrdu != LRDU.Down) return null;
         if (side == front.left()) return positiveLoad;
         if (side == front.right()) return negativeLoad;
         return null;
     }
 
+    @Nullable
     @Override
-    public ThermalLoad getThermalLoad(Direction side, LRDU lrdu) {
+    public ThermalLoad getThermalLoad(@NotNull Direction side, @NotNull LRDU lrdu) {
         return null;
     }
 
     @Override
-    public int getConnectionMask(Direction side, LRDU lrdu) {
+    public int getConnectionMask(@NotNull Direction side, @NotNull LRDU lrdu) {
         if (lrdu != LRDU.Down) return 0;
         if (side == front.left()) return node.maskElectricalPower;
         if (side == front.right()) return node.maskElectricalPower;
         return 0;
     }
 
+    @NotNull
     @Override
-    public String multiMeterString(Direction side) {
+    public String multiMeterString(@NotNull Direction side) {
         return Utils.plotAmpere("I", inductor.getCurrent());
     }
 
+    @NotNull
     @Override
-    public String thermoMeterString(Direction side) {
+    public String thermoMeterString(@NotNull Direction side) {
         return null;
     }
 
@@ -101,7 +107,7 @@ public class PowerInductorElement extends TransparentNodeElement {
     }
 
     @Override
-    public boolean onBlockActivated(EntityPlayer entityPlayer, Direction side,
+    public boolean onBlockActivated(@NotNull EntityPlayer player, @NotNull Direction side,
                                     float vx, float vy, float vz) {
 
         return false;
@@ -159,8 +165,9 @@ public class PowerInductorElement extends TransparentNodeElement {
         return true;
     }
 
+    @Nullable
     @Override
-    public Container newContainer(Direction side, EntityPlayer player) {
+    public Container newContainer(@NotNull Direction side, @NotNull EntityPlayer player) {
         return new PowerInductorContainer(player, inventory);
     }
 

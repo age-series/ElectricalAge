@@ -39,7 +39,7 @@ public class ElectricalAntennaTxRender extends TransparentNodeElementRender {
         descriptor.draw();
         GL11.glPopMatrix();
 
-        glCableTransforme(front.getInverse());
+        glCableTransform(front.getInverse());
         descriptor.cable.bindCableTexture();
 
         if (cableRefresh) {
@@ -67,7 +67,7 @@ public class ElectricalAntennaTxRender extends TransparentNodeElementRender {
     }
 
     @Override
-    public CableRenderDescriptor getCableRender(Direction side, LRDU lrdu) {
+    public CableRenderDescriptor getCableRenderSide(Direction side, LRDU lrdu) {
         if (front.getInverse() != side.applyLRDU(lrdu)) return null;
 
         if (side == front.applyLRDU(rot)) return descriptor.cable.render;

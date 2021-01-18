@@ -14,6 +14,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -50,7 +51,7 @@ public abstract class SimpleNode extends NodeBase {
     }
 
     @Override
-    public void initializeFromThat(Direction front, EntityLivingBase entityLiving, ItemStack itemStack) {
+    public void initializeFromThat(@NotNull Direction front, @Nullable EntityLivingBase entityLiving, @Nullable ItemStack itemStack) {
         setFront(front);
         initialize();
     }

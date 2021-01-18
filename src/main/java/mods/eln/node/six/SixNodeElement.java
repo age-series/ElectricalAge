@@ -20,6 +20,7 @@ import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.io.ByteArrayOutputStream;
@@ -381,7 +382,7 @@ public abstract class SixNodeElement implements GhostObserver, IPlayer, INodeEle
         }
     }
 
-    public boolean ghostBlockActivated(int UUID, EntityPlayer entityPlayer, Direction side, float vx, float vy, float vz) {
+    public boolean ghostBlockActivated(int UUID, @NotNull EntityPlayer entityPlayer, @NotNull Direction side, float vx, float vy, float vz) {
         if (UUID == sixNodeElementDescriptor.getGhostGroupUuid()) {
             sixNode.onBlockActivated(entityPlayer, this.side, vx, vy, vz);
         }

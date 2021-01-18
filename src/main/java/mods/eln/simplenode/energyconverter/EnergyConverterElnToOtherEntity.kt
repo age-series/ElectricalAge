@@ -21,9 +21,9 @@ import java.io.DataInputStream
 import java.io.IOException
 
 @InterfaceList(Optional.Interface(iface = "ic2.api.energy.tile.IEnergySource", modid = Other.modIdIc2), Optional.Interface(iface = "cofh.api.energy.IEnergyHandler", modid = Other.modIdTe), Optional.Interface(iface = "li.cil.oc.api.network.Environment", modid = Other.modIdOc))
-class EnergyConverterElnToOtherEntity : SimpleNodeEntity(), IEnergySource, Environment, IEnergyHandler {
+class EnergyConverterElnToOtherEntity : SimpleNodeEntity("ElnToOther"), IEnergySource, Environment, IEnergyHandler {
     @JvmField
-    var selectorPower = 0.0
+    var selectedResistance = 0.0
     @JvmField
     var hasChanges = false
     var ocEnergy: EnergyConverterElnToOtherFireWallOc? = null
@@ -39,7 +39,7 @@ class EnergyConverterElnToOtherEntity : SimpleNodeEntity(), IEnergySource, Envir
     override fun serverPublishUnserialize(stream: DataInputStream) {
         super.serverPublishUnserialize(stream)
         try {
-            selectorPower = stream.readDouble()
+            selectedResistance = stream.readDouble()
             ic2tier = stream.readInt()
             hasChanges = true
         } catch (e: IOException) {
@@ -47,7 +47,7 @@ class EnergyConverterElnToOtherEntity : SimpleNodeEntity(), IEnergySource, Envir
         }
     }
 
-    override val nodeUuid = EnergyConverterElnToOtherNode.nodeUuidStatic
+    override val nodeUuid: String = "ElnToOther"
 
     // ********************IC2********************
     @Optional.Method(modid = Other.modIdIc2)

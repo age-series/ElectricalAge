@@ -9,7 +9,7 @@ import net.minecraft.inventory.Container
 import java.io.DataInputStream
 
 interface INodeEntity {
-    val nodeUuid: String?
+    val nodeUuid: String
     fun serverPublishUnserialize(stream: DataInputStream)
     fun serverPacketUnserialize(stream: DataInputStream)
 

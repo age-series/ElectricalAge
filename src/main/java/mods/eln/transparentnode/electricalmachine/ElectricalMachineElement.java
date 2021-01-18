@@ -28,6 +28,8 @@ import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -85,8 +87,9 @@ public class ElectricalMachineElement extends TransparentNodeElement implements 
         return true;
     }
 
+    @Nullable
     @Override
-    public Container newContainer(Direction side, EntityPlayer player) {
+    public Container newContainer(@NotNull Direction side, @NotNull EntityPlayer player) {
         return new ElectricalMachineContainer(this.node, player, inventory, descriptor);
     }
 
@@ -95,8 +98,9 @@ public class ElectricalMachineElement extends TransparentNodeElement implements 
         return electricalLoad;
     }
 
+    @Nullable
     @Override
-    public ThermalLoad getThermalLoad(Direction side, LRDU lrdu) {
+    public ThermalLoad getThermalLoad(@NotNull Direction side, @NotNull LRDU lrdu) {
         return null;
     }
 
@@ -107,13 +111,15 @@ public class ElectricalMachineElement extends TransparentNodeElement implements 
         return NodeBase.maskElectricalPower;
     }
 
+    @NotNull
     @Override
-    public String multiMeterString(Direction side) {
+    public String multiMeterString(@NotNull Direction side) {
         return Utils.plotUIP(electricalLoad.getU(), electricalLoad.getCurrent());
     }
 
+    @NotNull
     @Override
-    public String thermoMeterString(Direction side) {
+    public String thermoMeterString(@NotNull Direction side) {
         return null;//Utils.plotCelsius("T", thermalLoad.Tc);
     }
 
@@ -147,8 +153,8 @@ public class ElectricalMachineElement extends TransparentNodeElement implements 
     }
 
     @Override
-    public boolean onBlockActivated(EntityPlayer entityPlayer, Direction side, float vx, float vy, float vz) {
-        return booterAccepter.take(entityPlayer.getCurrentEquippedItem(), this, false, true);
+    public boolean onBlockActivated(EntityPlayer player, Direction side, float vx, float vy, float vz) {
+        return booterAccepter.take(player.getCurrentEquippedItem(), this, false, true);
     }
 
     public void networkSerialize(java.io.DataOutputStream stream) {
@@ -188,6 +194,7 @@ public class ElectricalMachineElement extends TransparentNodeElement implements 
             play(descriptor.endSound);
     }
 
+    @NotNull
     @Override
     public Map<String, String> getWaila() {
         Map<String, String> info = new HashMap<String, String>();

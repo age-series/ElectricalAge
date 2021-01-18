@@ -162,14 +162,14 @@ class ClutchElement(node: TransparentNode, desc_: TransparentNodeDescriptor) : S
     override fun isInternallyConnected(a: Direction, b: Direction) = false
 
     val inv = TransparentNodeElementInventory(2, 1, this)
-    override fun getInventory() = inv
-    override fun newContainer(side: Direction?, player: EntityPlayer?) = ClutchContainer(player, inv)
+    override val inventory = inv
+    override fun newContainer(side: Direction, player: EntityPlayer) = ClutchContainer(player, inv)
     override fun hasGui() = true
 
     val inputGate = NbtElectricalGateInput("clutchIn")
     var slipping = true
-    override fun getElectricalLoad(side: Direction?, lrdu: LRDU?): ElectricalLoad? = inputGate
-    override fun getConnectionMask(side: Direction?, lrdu: LRDU?): Int = NodeBase.maskElectricalInputGate
+    override fun getElectricalLoad(side: Direction, lrdu: LRDU): ElectricalLoad = inputGate
+    override fun getConnectionMask(side: Direction, lrdu: LRDU): Int = NodeBase.maskElectricalInputGate
 
     val clutchPlateStack: ItemStack?
         get() {
@@ -178,8 +178,7 @@ class ClutchElement(node: TransparentNode, desc_: TransparentNodeDescriptor) : S
     @Suppress("UNCHECKED_CAST")
     val clutchPlateDescriptor: ClutchPlateItem?
         get() {
-            val stack = clutchPlateStack
-            if(stack == null) return null
+            val stack = clutchPlateStack ?: return null
             return (stack.item!! as GenericItemUsingDamage<GenericItemUsingDamageDescriptor>).getDescriptor(stack) as ClutchPlateItem
         }
     val clutchPinStack: ItemStack?
@@ -434,9 +433,14 @@ class ClutchElement(node: TransparentNode, desc_: TransparentNodeDescriptor) : S
         return info
     }
 
-    override fun getThermalLoad(side: Direction?, lrdu: LRDU?): ThermalLoad? = null
-    override fun thermoMeterString(side: Direction?): String? = null
-    override fun onBlockActivated(entityPlayer: EntityPlayer?, side: Direction?, vx: Float, vy: Float, vz: Float): Boolean = false
+    override fun coordonate(): Coordinate {
+        // Grissess, this is your fault.
+        return node!!.element!!.coordinate()
+    }
+
+    override fun getThermalLoad(side: Direction, lrdu: LRDU): ThermalLoad? = null
+    override fun thermoMeterString(side: Direction): String = ""
+    override fun onBlockActivated(player: EntityPlayer, side: Direction, vx: Float, vy: Float, vz: Float): Boolean = false
 }
 
 class ClutchRender(entity: TransparentNodeEntity, desc_: TransparentNodeDescriptor) : ShaftRender(entity, desc_) {
@@ -444,7 +448,7 @@ class ClutchRender(entity: TransparentNodeEntity, desc_: TransparentNodeDescript
     val connectedSides = DirectionSet()
     override val cableRender = Eln.instance.stdCableRenderSignal
     val inv = TransparentNodeElementInventory(2, 1, this)
-    override fun getInventory() = inv
+    override val inventory = inv
 
     var lRads = 0.0
     var rRads = 0.0
@@ -468,7 +472,7 @@ class ClutchRender(entity: TransparentNodeEntity, desc_: TransparentNodeDescript
 
     override fun draw() {
         preserveMatrix {
-            front.glRotateXnRef()
+            front!!.glRotateXnRef()
             val angSign = when (front) {
                 Direction.XP, Direction.ZP -> 1.0
                 else -> -1.0
@@ -479,10 +483,10 @@ class ClutchRender(entity: TransparentNodeEntity, desc_: TransparentNodeDescript
         preserveMatrix {
             if (cableRefresh) {
                 cableRefresh = false;
-                connectionType = CableRender.connectionType(tileEntity, eConn, front.down())
+                connectionType = CableRender.connectionType(tileEntity, eConn, front!!.down())
             }
 
-            glCableTransforme(front.down());
+            glCableTransform(front!!.down());
             cableRender!!.bindCableTexture();
 
             for (lrdu in LRDU.values()) {
@@ -500,7 +504,7 @@ class ClutchRender(entity: TransparentNodeEntity, desc_: TransparentNodeDescript
     }
 
     init {
-        addLoopedSound(ClutchLoopedSound(desc.slipSound, coordonate()))
+        addLoopedSound(ClutchLoopedSound(desc.slipSound, coordinate()))
         LRDU.values().forEach { eConn.set(it, true); mask.set(it, true) }
         volumeSetting.target = 0f
     }
@@ -531,7 +535,7 @@ class ClutchRender(entity: TransparentNodeEntity, desc_: TransparentNodeDescript
         //Utils.println(String.format("CR.nU: l=%f,r=%f c=%f s=%s ls=%s", lRads, rRads, clutching, slipping, lastSlipping))
     }
 
-    override fun newGuiDraw(side: Direction?, player: EntityPlayer?): GuiScreen? = ClutchGui(player, inv, this)
+    override fun newGuiDraw(side: Direction, player: EntityPlayer): GuiScreen = ClutchGui(player, inv, this)
 }
 
 class ClutchContainer(player: EntityPlayer?, inv: IInventory) : BasicContainer(

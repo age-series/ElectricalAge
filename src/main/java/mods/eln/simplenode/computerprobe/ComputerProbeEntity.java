@@ -7,9 +7,14 @@ import li.cil.oc.api.machine.Context;
 import li.cil.oc.api.network.SimpleComponent;
 import mods.eln.Other;
 import mods.eln.node.simple.SimpleNodeEntity;
+import org.jetbrains.annotations.NotNull;
 
 @Optional.Interface(iface = "li.cil.oc.api.network.SimpleComponent", modid = Other.modIdOc)
 public class ComputerProbeEntity extends SimpleNodeEntity implements SimpleComponent {
+
+    public ComputerProbeEntity() {
+        super("");
+    }
 
     @Override
     public String getComponentName() {
@@ -100,6 +105,7 @@ public class ComputerProbeEntity extends SimpleNodeEntity implements SimpleCompo
 
     //return new String[]{"writeDir", "readDir", "writeOut", "readOut", "readIn"};
 
+    @NotNull
     @Override
     public String getNodeUuid() {
         return ComputerProbeNode.getNodeUuidStatic();

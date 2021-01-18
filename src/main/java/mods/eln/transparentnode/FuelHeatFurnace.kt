@@ -76,11 +76,11 @@ class FuelHeatFurnaceDescriptor(name: String, model: Obj3D, val thermal: Thermal
         GL11.glColor3f(1f, 1f, 1f)
     }
 
-    override fun handleRenderType(item: ItemStack?, type: IItemRenderer.ItemRenderType?) = true
-    override fun shouldUseRenderHelper(type: IItemRenderer.ItemRenderType?, item: ItemStack?,
-                                       helper: IItemRenderer.ItemRendererHelper?) =
+    override fun handleRenderType(item: ItemStack, type: IItemRenderer.ItemRenderType) = true
+    override fun shouldUseRenderHelper(type: IItemRenderer.ItemRenderType, item: ItemStack,
+                                       helper: IItemRenderer.ItemRendererHelper) =
         type != IItemRenderer.ItemRenderType.INVENTORY
-    override fun renderItem(type: IItemRenderer.ItemRenderType?, item: ItemStack?, vararg data: Any?) =
+    override fun renderItem(type: IItemRenderer.ItemRenderType, item: ItemStack, vararg data: Any) =
         if (type == IItemRenderer.ItemRenderType.INVENTORY) super.renderItem(type, item, *data) else draw()
 
     override fun addInformation(itemStack: ItemStack?, entityPlayer: EntityPlayer?, list: MutableList<String>, par4: Boolean) {
@@ -158,17 +158,17 @@ class FuelHeatFurnaceElement(transparentNode: TransparentNode, descriptor: Trans
             .set(WorldExplosion(this).machineExplosion())
     }
 
-    override fun getElectricalLoad(side: Direction?, lrdu: LRDU?) = when {
+    override fun getElectricalLoad(side: Direction, lrdu: LRDU) = when {
         side != front.inverse && lrdu == LRDU.Down -> controlLoad
         else -> null
     }
 
-    override fun getThermalLoad(side: Direction?, lrdu: LRDU?) = when {
+    override fun getThermalLoad(side: Direction, lrdu: LRDU) = when {
         side == front.inverse && lrdu == LRDU.Down -> thermalLoad
         else -> null
     }
 
-    override fun getConnectionMask(side: Direction?, lrdu: LRDU?) = when (lrdu) {
+    override fun getConnectionMask(side: Direction, lrdu: LRDU) = when (lrdu) {
         LRDU.Down -> when (side) {
             front.inverse -> NodeBase.maskThermal
             else -> NodeBase.maskElectricalInputGate
@@ -178,7 +178,7 @@ class FuelHeatFurnaceElement(transparentNode: TransparentNode, descriptor: Trans
 
     override fun getFluidHandler() = tank
 
-    override fun multiMeterString(side: Direction?) = Utils.plotPower("P:", thermalLoad.power)
+    override fun multiMeterString(side: Direction) = Utils.plotPower("P:", thermalLoad.power)
 
     override fun thermoMeterString(side: Direction) = Utils.plotCelsius("T:", thermalLoad.Tc)
 
@@ -188,7 +188,7 @@ class FuelHeatFurnaceElement(transparentNode: TransparentNode, descriptor: Trans
         connect()
     }
 
-    override fun onBlockActivated(entityPlayer: EntityPlayer?, side: Direction?, vx: Float, vy: Float, vz: Float) = false
+    override fun onBlockActivated(player: EntityPlayer, side: Direction, vx: Float, vy: Float, vz: Float) = false
 
     override fun networkSerialize(stream: DataOutputStream) {
         super.networkSerialize(stream)
@@ -217,7 +217,7 @@ class FuelHeatFurnaceElement(transparentNode: TransparentNode, descriptor: Trans
             }
         }
 
-        return TransparentNodeElement.unserializeNulldId
+        return unserializeNulldId
     }
 
     override fun writeToNBT(nbt: NBTTagCompound) {
@@ -251,8 +251,6 @@ class FuelHeatFurnaceElement(transparentNode: TransparentNode, descriptor: Trans
         return info
     }
 
-    override fun getInventory() = inventory_
-
     override fun inventoryChange(inventory: IInventory?) {
         mainSwitch = mainSwitch && inventory_.getStackInSlot(FuelHeatFurnaceContainer.FuelBurnerSlot) != null
 
@@ -265,12 +263,12 @@ class FuelHeatFurnaceElement(transparentNode: TransparentNode, descriptor: Trans
         }
     }
 
-    override fun newContainer(side: Direction?, player: EntityPlayer) = FuelHeatFurnaceContainer(node, player, inventory_)
+    override fun newContainer(side: Direction, player: EntityPlayer) = FuelHeatFurnaceContainer(node, player, inventory_)
 }
 
 class FuelHeatFurnaceRender(tileEntity: TransparentNodeEntity, descriptor: TransparentNodeDescriptor) :
     TransparentNodeElementRender(tileEntity, descriptor) {
-    private val inventory = TransparentNodeElementInventory(2, 1, this)
+    override val inventory = TransparentNodeElementInventory(2, 1, this)
 
     var type: Int? = null
     var externalControlled = false
@@ -282,7 +280,7 @@ class FuelHeatFurnaceRender(tileEntity: TransparentNodeEntity, descriptor: Trans
     var heatPower = 0f
     var actualTemperature = 0f
 
-    val sound = object : LoopedSound("eln:fuelheatfurnace", coordonate()) {
+    val sound = object : LoopedSound("eln:fuelheatfurnace", coordinate()) {
         override fun getPitch() = FuelBurnerDescriptor.pitchForType(type)
         override fun getVolume() = if (heatPower > 0) 0.01f + 0.00001f * heatPower else 0f
     }
@@ -292,11 +290,11 @@ class FuelHeatFurnaceRender(tileEntity: TransparentNodeEntity, descriptor: Trans
     }
 
     override fun draw() {
-        front.glRotateXnRef()
+        front!!.glRotateXnRef()
         (transparentNodedescriptor as FuelHeatFurnaceDescriptor).draw(type, mainSwitch, heatPower != 0f)
     }
 
-    override fun newGuiDraw(side: Direction?, player: EntityPlayer) = FuelHeatFurnaceGui(player, inventory, this)
+    override fun newGuiDraw(side: Direction, player: EntityPlayer) = FuelHeatFurnaceGui(player, inventory, this)
 
     override fun networkUnserialize(stream: DataInputStream) {
         super.networkUnserialize(stream)
@@ -313,8 +311,6 @@ class FuelHeatFurnaceRender(tileEntity: TransparentNodeEntity, descriptor: Trans
             }
         }
     }
-
-    override fun getInventory() = inventory
 }
 
 class FuelHeatFurnaceContainer(val base: NodeBase?, player: EntityPlayer, inventory: IInventory) :

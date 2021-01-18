@@ -28,6 +28,8 @@ import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -100,7 +102,7 @@ public class TurretElement extends TransparentNodeElement implements IConfigurab
 
     public void shoot() {
         Coordinate lightSourceCoordinate = new Coordinate();
-        lightSourceCoordinate.copyFrom(coordonate());
+        lightSourceCoordinate.copyFrom(coordinate());
         lightSourceCoordinate.move(front);
         LightBlockEntity.addLight(lightSourceCoordinate, 25, 2);
         if (simulation.shoot()) needPublish();
@@ -124,8 +126,9 @@ public class TurretElement extends TransparentNodeElement implements IConfigurab
         return null;
     }
 
+    @Nullable
     @Override
-    public ThermalLoad getThermalLoad(Direction side, LRDU lrdu) {
+    public ThermalLoad getThermalLoad(@NotNull Direction side, @NotNull LRDU lrdu) {
         return null;
     }
 
@@ -135,13 +138,15 @@ public class TurretElement extends TransparentNodeElement implements IConfigurab
         return 0;
     }
 
+    @NotNull
     @Override
-    public String multiMeterString(Direction side) {
+    public String multiMeterString(@NotNull Direction side) {
         return Utils.plotUIP(load.getU(), load.getI());
     }
 
+    @NotNull
     @Override
-    public String thermoMeterString(Direction side) {
+    public String thermoMeterString(@NotNull Direction side) {
         return null;
     }
 
@@ -151,9 +156,9 @@ public class TurretElement extends TransparentNodeElement implements IConfigurab
     }
 
     @Override
-    public boolean onBlockActivated(EntityPlayer entityPlayer, Direction side,
+    public boolean onBlockActivated(EntityPlayer player, Direction side,
                                     float vx, float vy, float vz) {
-        return acceptingInventory.take(entityPlayer.getCurrentEquippedItem());
+        return acceptingInventory.take(player.getCurrentEquippedItem());
     }
 
     @Override
@@ -200,8 +205,9 @@ public class TurretElement extends TransparentNodeElement implements IConfigurab
         return acceptingInventory.getInventory();
     }
 
+    @Nullable
     @Override
-    public Container newContainer(Direction side, EntityPlayer player) {
+    public Container newContainer(@NotNull Direction side, @NotNull EntityPlayer player) {
         return new TurretContainer(player, acceptingInventory.getInventory());
     }
 
@@ -234,6 +240,7 @@ public class TurretElement extends TransparentNodeElement implements IConfigurab
         return unserializeNulldId;
     }
 
+    @NotNull
     @Override
     public Map<String, String> getWaila() {
         Map<String, String> info = new HashMap<String, String>();

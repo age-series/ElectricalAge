@@ -18,6 +18,8 @@ import mods.eln.sim.nbt.*;
 import mods.eln.transparentnode.electricalantennarx.ElectricalAntennaRxElement;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.DataOutputStream;
 import java.util.HashMap;
@@ -83,6 +85,7 @@ public class ElectricalAntennaTxElement extends TransparentNodeElement {
         return rxElement;
     }
 
+    @Nullable
     @Override
     public ElectricalLoad getElectricalLoad(Direction side, LRDU lrdu) {
         if (front.getInverse() != side.applyLRDU(lrdu)) return null;
@@ -93,8 +96,9 @@ public class ElectricalAntennaTxElement extends TransparentNodeElement {
         return null;
     }
 
+    @Nullable
     @Override
-    public ThermalLoad getThermalLoad(Direction side, LRDU lrdu) {
+    public ThermalLoad getThermalLoad(@NotNull Direction side, @NotNull LRDU lrdu) {
         return null;
     }
 
@@ -108,13 +112,15 @@ public class ElectricalAntennaTxElement extends TransparentNodeElement {
         return 0;
     }
 
+    @NotNull
     @Override
-    public String multiMeterString(Direction side) {
+    public String multiMeterString(@NotNull Direction side) {
         return "";
     }
 
+    @NotNull
     @Override
-    public String thermoMeterString(Direction side) {
+    public String thermoMeterString(@NotNull Direction side) {
         return "";
     }
 
@@ -134,8 +140,8 @@ public class ElectricalAntennaTxElement extends TransparentNodeElement {
     }
 
     @Override
-    public boolean onBlockActivated(EntityPlayer entityPlayer, Direction side, float vx, float vy, float vz) {
-        if (Utils.isPlayerUsingWrench(entityPlayer)) {
+    public boolean onBlockActivated(EntityPlayer player, Direction side, float vx, float vy, float vz) {
+        if (Utils.isPlayerUsingWrench(player)) {
             rot = rot.getNextClockwise();
             node.reconnect();
             return true;
@@ -195,6 +201,7 @@ public class ElectricalAntennaTxElement extends TransparentNodeElement {
         node.lrduCubeMask.getTranslate(front.getInverse()).serialize(stream);
     }
 
+    @NotNull
     @Override
     public Map<String, String> getWaila() {
         Map<String, String> info = new HashMap<String, String>();

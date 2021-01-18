@@ -31,12 +31,12 @@ abstract class GridElement(transparentNode: TransparentNode, descriptor: Transpa
     }
 
     /* Connect one GridNode to another. */
-    override fun onBlockActivated(entityPlayer: EntityPlayer, side: Direction, vx: Float, vy: Float, vz: Float): Boolean {
+    override fun onBlockActivated(player: EntityPlayer, side: Direction, vx: Float, vy: Float, vz: Float): Boolean {
         // Check if user is holding an appropriate tool.
-        val stack = entityPlayer.currentEquippedItem
+        val stack = player.currentEquippedItem
         val itemDesc = GenericItemBlockUsingDamageDescriptor.getDescriptor(stack)
         if (itemDesc is ElectricalCableDescriptor) {
-            return onTryGridConnect(entityPlayer, stack, itemDesc, side)
+            return onTryGridConnect(player, stack, itemDesc, side)
         }
         // TODO: Scissors. Break the connection without breaking the pole.
         return false
@@ -62,9 +62,9 @@ abstract class GridElement(transparentNode: TransparentNode, descriptor: Transpa
         }
         if (other == null) {
             Utils.addChatMessage(entityPlayer, "Setting starting point")
-            pending.put(uuid, Pair.of(this.coordonate(), side))
+            pending.put(uuid, Pair.of(this.coordinate(), side))
         } else {
-            val distance = other.coordonate().trueDistanceTo(this.coordonate())
+            val distance = other.coordinate().trueDistanceTo(this.coordinate())
             val cableLength = Math.ceil(distance).toInt()
             val range = Math.min(connectRange, other.connectRange)
             val stackSize = entityPlayer.totalItemsCarried(stack)
@@ -118,7 +118,7 @@ abstract class GridElement(transparentNode: TransparentNode, descriptor: Transpa
         super.onBreakElement()
         val copy = HashSet(gridLinkList)
         for (link in copy) {
-            node.dropItem(link.onBreakElement())
+            node?.dropItem(link.onBreakElement())
         }
     }
 
@@ -220,7 +220,7 @@ abstract class GridElement(transparentNode: TransparentNode, descriptor: Transpa
             stream.writeFloat(idealRenderingAngle)
             // Each wire pair should be drawn by exactly one node.
             // Check for which ones it's this one.
-            val ourLinks = gridLinkList.filter { it.a == coordonate()/* && link.connected*/ }
+            val ourLinks = gridLinkList.filter { it.a == coordinate()/* && link.connected*/ }
             // The renderer needs to know, for each catenary:
             // - Vec3 of the starting point.
             // - Vec3 of the end point.
@@ -269,9 +269,9 @@ abstract class GridElement(transparentNode: TransparentNode, descriptor: Transpa
         return Utils.plotUIP(electricalLoad?.u ?: 0.0, electricalLoad?.i ?: 0.0)
     }
 
-    override fun thermoMeterString(side: Direction): String? {
+    override fun thermoMeterString(side: Direction): String {
         val thermalLoad = getThermalLoad(side, LRDU.Up)
-        return Utils.plotCelsius("T", thermalLoad.Tc)
+        return Utils.plotCelsius("T", thermalLoad!!.Tc)
     }
 
     companion object {

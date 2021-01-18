@@ -26,6 +26,8 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.DataInputStream;
 import java.io.IOException;
@@ -96,8 +98,9 @@ public class ElectricalFurnaceElement extends TransparentNodeElement {
         return true;
     }
 
+    @Nullable
     @Override
-    public Container newContainer(Direction side, EntityPlayer player) {
+    public Container newContainer(@NotNull Direction side, @NotNull EntityPlayer player) {
         return new ElectricalFurnaceContainer(this.node, player, inventory);
     }
 
@@ -106,8 +109,9 @@ public class ElectricalFurnaceElement extends TransparentNodeElement {
         return electricalLoad;
     }
 
+    @Nullable
     @Override
-    public ThermalLoad getThermalLoad(Direction side, LRDU lrdu) {
+    public ThermalLoad getThermalLoad(@NotNull Direction side, @NotNull LRDU lrdu) {
         return null;
     }
 
@@ -118,13 +122,15 @@ public class ElectricalFurnaceElement extends TransparentNodeElement {
         return 0;
     }
 
+    @NotNull
     @Override
-    public String multiMeterString(Direction side) {
+    public String multiMeterString(@NotNull Direction side) {
         return Utils.plotUIP(electricalLoad.getU(), electricalLoad.getI());
     }
 
+    @NotNull
     @Override
-    public String thermoMeterString(Direction side) {
+    public String thermoMeterString(@NotNull Direction side) {
         return Utils.plotCelsius("T:", thermalLoad.Tc);
     }
 
@@ -182,7 +188,7 @@ public class ElectricalFurnaceElement extends TransparentNodeElement {
     }
 
     @Override
-    public boolean onBlockActivated(EntityPlayer entityPlayer, Direction side, float vx, float vy, float vz) {
+    public boolean onBlockActivated(EntityPlayer player, Direction side, float vx, float vy, float vz) {
         return false;
     }
 
@@ -261,6 +267,7 @@ public class ElectricalFurnaceElement extends TransparentNodeElement {
         return unserializeNulldId;
     }
 
+    @NotNull
     @Override
     public Map<String, String> getWaila() {
         Map<String, String> info = new HashMap<String, String>();

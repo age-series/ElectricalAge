@@ -10,7 +10,6 @@ import mods.eln.node.transparent.TransparentNode
 import mods.eln.node.transparent.TransparentNodeDescriptor
 import mods.eln.sim.IProcess
 import net.minecraft.entity.Entity
-import net.minecraft.entity.EntityLivingBase
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.util.DamageSource
 
@@ -46,7 +45,7 @@ class FlyWheelElement(node: TransparentNode, desc_: TransparentNodeDescriptor) :
             // Utils.println("FFP.sP: tick")
             val rads = shaft.rads
             if(rads < minRads) return
-            val coord = coordonate()
+            val coord = coordinate()
             val objects = coord.world().getEntitiesWithinAABB(Entity::class.java, coord.getAxisAlignedBB(1))
             //if(objects.size > 0) Utils.println("FFP.sP: within range: " + objects.size)
             for(obj in objects) {

@@ -131,9 +131,12 @@ class GridTransformerElement(node: TransparentNode, descriptor: TransparentNodeD
         stream.writeFloat((secondaryLoad.current / maxCurrent).toFloat())
     }
 
+    /*
+    // TODO : Fix this?
     override fun getLightOpacity(): Float {
         return 1.0f
     }
+     */
 }
 
 

@@ -29,7 +29,7 @@ import java.io.IOException
 import java.util.*
 
 class BatteryElement(transparentNode: TransparentNode, descriptor: TransparentNodeDescriptor) : TransparentNodeElement(transparentNode, descriptor) {
-    var descriptor: BatteryDescriptor = descriptor as BatteryDescriptor
+    override var descriptor: BatteryDescriptor = descriptor as BatteryDescriptor
     var positiveLoad = NbtElectricalLoad("positiveLoad")
     var negativeLoad = NbtElectricalLoad("negativeLoad")
     var voltageSource = VoltageSource("volSrc", positiveLoad, negativeLoad)
@@ -38,7 +38,7 @@ class BatteryElement(transparentNode: TransparentNode, descriptor: TransparentNo
     var thermalWatchdog = ThermalLoadWatchDog()
     var batteryProcess = NbtBatteryProcess(positiveLoad, negativeLoad, this.descriptor.UfCharge, 0.0, voltageSource, thermalLoad)
     var dischargeResistor = Resistor(positiveLoad, negativeLoad)
-    var batterySlowProcess = NbtBatterySlowProcess(node, batteryProcess, thermalLoad)
+    var batterySlowProcess = NbtBatterySlowProcess(node!!, batteryProcess, thermalLoad)
     var fromItemStack = false
     var fromItemstackCharge = 0.0
     var fromItemstackLife = 0.0
@@ -80,7 +80,7 @@ class BatteryElement(transparentNode: TransparentNode, descriptor: TransparentNo
             stream.writeFloat((batteryProcess.u * batteryProcess.dischargeCurrent).toFloat())
             stream.writeFloat(batteryProcess.energy.toFloat())
             stream.writeShort((batteryProcess.life * 1000).toInt())
-            node.lrduCubeMask.getTranslate(Direction.YN).serialize(stream)
+            node!!.lrduCubeMask.getTranslate(Direction.YN).serialize(stream)
         } catch (e: IOException) {
             e.printStackTrace()
         }
@@ -108,7 +108,7 @@ class BatteryElement(transparentNode: TransparentNode, descriptor: TransparentNo
         connect()
     }
 
-    override fun onBlockActivated(entityPlayer: EntityPlayer, side: Direction, vx: Float, vy: Float, vz: Float): Boolean {
+    override fun onBlockActivated(player: EntityPlayer, side: Direction, vx: Float, vy: Float, vz: Float): Boolean {
         return false
     }
 
@@ -168,7 +168,7 @@ class BatteryElement(transparentNode: TransparentNode, descriptor: TransparentNo
         electricalProcessList.add(batteryProcess)
         thermalFastProcessList.add(negativeETProcess)
         slowProcessList.add(batterySlowProcess)
-        slowProcessList.add(NodePeriodicPublishProcess(transparentNode!!, 1.0, 0.0))
+        slowProcessList.add(NodePeriodicPublishProcess(transparentNode, 1.0, 0.0))
         batteryProcess.IMax = this.descriptor.IMax
         slowProcessList.add(thermalWatchdog)
         thermalWatchdog

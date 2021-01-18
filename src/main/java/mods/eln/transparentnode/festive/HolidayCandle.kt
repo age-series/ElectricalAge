@@ -1,20 +1,12 @@
 package mods.eln.transparentnode.festive
 
 import mods.eln.misc.Direction
-import mods.eln.misc.LRDU
 import mods.eln.misc.Obj3D
 import mods.eln.misc.UtilsClient
-import mods.eln.node.NodeBase
 import mods.eln.node.transparent.*
-import mods.eln.sim.ElectricalLoad
-import mods.eln.sim.ThermalLoad
-import mods.eln.sim.mna.component.Resistor
-import mods.eln.sim.nbt.NbtElectricalLoad
-import net.minecraft.entity.player.EntityPlayer
 import org.lwjgl.opengl.GL11
 import java.io.DataInputStream
 import java.io.IOException
-
 
 class HolidayCandleDescriptor(val name: String, val obj: Obj3D): TransparentNodeDescriptor(name, FestiveElement::class.java, HolidayCandleRender::class.java) {
     private var base: Obj3D.Obj3DPart? = null
@@ -47,14 +39,14 @@ class HolidayCandleDescriptor(val name: String, val obj: Obj3D): TransparentNode
     }
 }
 
-class HolidayCandleRender(val tileEntity: TransparentNodeEntity, val descriptor: TransparentNodeDescriptor): TransparentNodeElementRender(tileEntity, descriptor) {
+class HolidayCandleRender(override var tileEntity: TransparentNodeEntity, val descriptor: TransparentNodeDescriptor): TransparentNodeElementRender(tileEntity, descriptor) {
 
     var powered = false
 
-    override fun networkUnserialize(stream: DataInputStream?) {
+    override fun networkUnserialize(stream: DataInputStream) {
         super.networkUnserialize(stream)
         try {
-            powered = stream!!.readBoolean()
+            powered = stream.readBoolean()
 
         } catch (e: IOException) {
             e.printStackTrace()
@@ -62,6 +54,6 @@ class HolidayCandleRender(val tileEntity: TransparentNodeEntity, val descriptor:
     }
 
     override fun draw() {
-        (descriptor as HolidayCandleDescriptor).draw(front, powered)
+        (descriptor as HolidayCandleDescriptor).draw(front!!, powered)
     }
 }

@@ -47,7 +47,7 @@ class ArcFurnaceDescriptor(val name: String, val obj: Obj3D): TransparentNodeDes
         }
     }
 
-    override fun shouldUseRenderHelper(type: IItemRenderer.ItemRenderType?, item: ItemStack?, helper: IItemRenderer.ItemRendererHelper?): Boolean {
+    override fun shouldUseRenderHelper(type: IItemRenderer.ItemRenderType, item: ItemStack, helper: IItemRenderer.ItemRendererHelper): Boolean {
         return false
     }
 
@@ -64,7 +64,7 @@ class ArcFurnaceElement(node: TransparentNode, descriptor: TransparentNodeDescri
         adesc = descriptor as ArcFurnaceDescriptor
     }
 
-    private val inventory = TransparentNodeElementInventory(5, 1, this)
+    override val inventory = TransparentNodeElementInventory(5, 1, this)
     //private val connectionType: CableRenderType? = null
     //private val eConn = LRDUMask()
 
@@ -88,27 +88,16 @@ class ArcFurnaceElement(node: TransparentNode, descriptor: TransparentNodeDescri
         slowProcessList.add(voltageWatchdog.set(electricalLoad).setUNominal(800.0).set(exp))
     }
 
-    override fun multiMeterString(side: Direction?): String? {
+    override fun multiMeterString(side: Direction): String {
         return Utils.plotUIP(electricalLoad.u, electricalLoad.current)
     }
 
-    override fun thermoMeterString(side: Direction?): String? {
-        return null
-    }
 
-    override fun getElectricalLoad(side: Direction?, lrdu: LRDU?): ElectricalLoad? {
+    override fun getElectricalLoad(side: Direction, lrdu: LRDU): ElectricalLoad? {
         return electricalLoad
     }
 
-    override fun getThermalLoad(side: Direction?, lrdu: LRDU?): ThermalLoad? {
-        return null
-    }
-
-    override fun onBlockActivated(entityPlayer: EntityPlayer, side: Direction?, vx: Float, vy: Float, vz: Float): Boolean {
-        return false
-    }
-
-    override fun getConnectionMask(side: Direction?, lrdu: LRDU): Int {
+    override fun getConnectionMask(side: Direction, lrdu: LRDU): Int {
         if (lrdu != LRDU.Down) return 0
         return NodeBase.maskElectricalPower
     }
@@ -117,22 +106,18 @@ class ArcFurnaceElement(node: TransparentNode, descriptor: TransparentNodeDescri
         connect()
     }
 
-    override fun getInventory(): IInventory? {
-        return inventory
-    }
-
     override fun hasGui(): Boolean {
         return true
     }
 
-    override fun newContainer(side: Direction?, player: EntityPlayer?): Container? {
+    override fun newContainer(side: Direction, player: EntityPlayer): Container {
         return ArcFurnaceContainer(node, player, inventory)
     }
 }
 
-class ArcFurnaceRender(val tileEntity: TransparentNodeEntity, descriptor: TransparentNodeDescriptor): TransparentNodeElementRender(tileEntity, descriptor) {
+class ArcFurnaceRender(override var tileEntity: TransparentNodeEntity, descriptor: TransparentNodeDescriptor): TransparentNodeElementRender(tileEntity, descriptor) {
 
-    val inventory = TransparentNodeElementInventory(5, 64, this)
+    override val inventory = TransparentNodeElementInventory(5, 64, this)
 
     var adesc: ArcFurnaceDescriptor? = null;
 
@@ -141,10 +126,10 @@ class ArcFurnaceRender(val tileEntity: TransparentNodeEntity, descriptor: Transp
     }
 
     override fun draw() {
-        adesc?.draw(front)
+        adesc?.draw(front!!)
     }
 
-    override fun newGuiDraw(side: Direction?, player: EntityPlayer?): GuiScreen? {
+    override fun newGuiDraw(side: Direction, player: EntityPlayer): GuiScreen {
         return ArcFurnaceGui(player, inventory, this)
     }
 }

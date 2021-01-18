@@ -27,7 +27,7 @@ class EnergyConverterElnToOtherNode : SimpleNode() {
     var energyBufferMax = 0.0
     var inStdVoltage = 0.0
     var inPowerMax = 0.0
-    var selectedPower = 0.0
+    var selectedOhms = 0.0
     var ic2tier = 1
 
     init {
@@ -73,10 +73,10 @@ class EnergyConverterElnToOtherNode : SimpleNode() {
                 if (energyBufferMax - energyBuffer <= 0) {
                     powerInResistor.highImpedance()
                 } else {
-                    if (selectedPower <= 0.0) {
+                    if (selectedOhms <= 10.0) {
                         powerInResistor.r = MnaConst.highImpedance
                     } else {
-                        powerInResistor.r = max(Eln.getSmallRs(), load.u * load.u / selectedPower)
+                        powerInResistor.r = max(Eln.getSmallRs(), selectedOhms)
                     }
                 }
             }
@@ -114,14 +114,18 @@ class EnergyConverterElnToOtherNode : SimpleNode() {
     override fun writeToNBT(nbt: NBTTagCompound) {
         super.writeToNBT(nbt)
         nbt.setDouble("energyBuffer", energyBuffer)
-        nbt.setDouble("selectedPower", selectedPower)
+        nbt.setDouble("selectedOhms", selectedOhms)
         nbt.setInteger("ic2tier", ic2tier)
     }
 
     override fun readFromNBT(nbt: NBTTagCompound) {
         super.readFromNBT(nbt)
         energyBuffer = nbt.getDouble("energyBuffer")
-        selectedPower = nbt.getDouble("selectedPower")
+        selectedOhms = if (nbt.hasKey("selectedOhms")) {
+            nbt.getDouble("selectedOhms")
+        } else {
+            MnaConst.highImpedance
+        }
         ic2tier = nbt.getInteger("ic2tier")
     }
 
@@ -132,7 +136,7 @@ class EnergyConverterElnToOtherNode : SimpleNode() {
     override fun publishSerialize(stream: DataOutputStream) {
         super.publishSerialize(stream)
         try {
-            stream.writeDouble(selectedPower)
+            stream.writeDouble(selectedOhms)
             stream.writeInt(ic2tier)
         } catch (e: IOException) {
             e.printStackTrace()
@@ -142,10 +146,10 @@ class EnergyConverterElnToOtherNode : SimpleNode() {
     override fun networkUnserialize(stream: DataInputStream, player: EntityPlayerMP?) {
         try {
             when (stream.readByte()) {
-                NetworkType.SET_POWER.id -> {
-                    val power = stream.readDouble()
-                    if (power in 0.0 .. 120_000.0) {
-                        selectedPower = power
+                NetworkType.SET_OHMS.id -> {
+                    val ohms = stream.readDouble()
+                    if (ohms in 10.0 .. MnaConst.highImpedance) {
+                        selectedOhms = ohms
                     }
                     needPublish()
                 }
@@ -163,7 +167,7 @@ class EnergyConverterElnToOtherNode : SimpleNode() {
         }
     }
 
-    override val nodeUuid = nodeUuidStatic
+    override val nodeUuid = "ElnToOther"
 
     companion object {
         @JvmStatic
@@ -172,7 +176,7 @@ class EnergyConverterElnToOtherNode : SimpleNode() {
 }
 
 enum class NetworkType(val id: Byte) {
-    SET_POWER(1),
+    SET_OHMS(1),
     SET_IC2_TIER(2)
 }
 

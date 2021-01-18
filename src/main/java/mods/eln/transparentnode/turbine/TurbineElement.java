@@ -20,6 +20,8 @@ import mods.eln.sim.process.destruct.ThermalLoadWatchDog;
 import mods.eln.sim.process.destruct.VoltageStateWatchDog;
 import mods.eln.sim.process.destruct.WorldExplosion;
 import net.minecraft.entity.player.EntityPlayer;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -94,8 +96,9 @@ public class TurbineElement extends TransparentNodeElement {
         return null;
     }
 
+    @Nullable
     @Override
-    public ThermalLoad getThermalLoad(Direction side, LRDU lrdu) {
+    public ThermalLoad getThermalLoad(@NotNull Direction side, @NotNull LRDU lrdu) {
         if (side == front.left()) return warmLoad;
         if (side == front.right()) return coolLoad;
         return null;
@@ -113,8 +116,9 @@ public class TurbineElement extends TransparentNodeElement {
     }
 
 
+    @NotNull
     @Override
-    public String multiMeterString(Direction side) {
+    public String multiMeterString(@NotNull Direction side) {
         if (side == front.left()) return "";
         if (side == front.right()) return "";
         if (side == front || side == front.back())
@@ -123,8 +127,9 @@ public class TurbineElement extends TransparentNodeElement {
 
     }
 
+    @NotNull
     @Override
-    public String thermoMeterString(Direction side) {
+    public String thermoMeterString(@NotNull Direction side) {
         if (side == front.left())
             return Utils.plotCelsius("T+:", warmLoad.Tc) + Utils.plotPower("P+:", warmLoad.getPower());
         if (side == front.right())
@@ -144,7 +149,7 @@ public class TurbineElement extends TransparentNodeElement {
     }
 
     @Override
-    public boolean onBlockActivated(EntityPlayer entityPlayer, Direction side, float vx, float vy, float vz) {
+    public boolean onBlockActivated(EntityPlayer player, Direction side, float vx, float vy, float vz) {
         return false;
     }
 
@@ -163,6 +168,7 @@ public class TurbineElement extends TransparentNodeElement {
         }
     }
 
+    @NotNull
     @Override
     public Map<String, String> getWaila() {
         Map<String, String> info = new HashMap<String, String>();

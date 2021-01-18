@@ -27,27 +27,27 @@ class FestiveElement(node: TransparentNode, descriptor: TransparentNodeDescripto
         slowProcessList.add(FestiveElementProcess(this))
     }
 
-    override fun thermoMeterString(side: Direction?): String {
+    override fun thermoMeterString(side: Direction): String {
         return "Not as warm as it could be"
     }
 
-    override fun multiMeterString(side: Direction?): String {
+    override fun multiMeterString(side: Direction): String {
         return "It probably works if you apply ~200v to the xmas wireless channel"
     }
 
-    override fun getElectricalLoad(side: Direction?, lrdu: LRDU?): ElectricalLoad? {
+    override fun getElectricalLoad(side: Direction, lrdu: LRDU): ElectricalLoad? {
         return null
     }
 
-    override fun onBlockActivated(entityPlayer: EntityPlayer?, side: Direction?, vx: Float, vy: Float, vz: Float): Boolean {
+    override fun onBlockActivated(player: EntityPlayer, side: Direction, vx: Float, vy: Float, vz: Float): Boolean {
         return false
     }
 
-    override fun getConnectionMask(side: Direction?, lrdu: LRDU?): Int {
+    override fun getConnectionMask(side: Direction, lrdu: LRDU): Int {
         return 0
     }
 
-    override fun getThermalLoad(side: Direction?, lrdu: LRDU?): ThermalLoad? {
+    override fun getThermalLoad(side: Direction, lrdu: LRDU): ThermalLoad? {
         return null
     }
 
@@ -55,10 +55,10 @@ class FestiveElement(node: TransparentNode, descriptor: TransparentNodeDescripto
         connect()
     }
 
-    override fun networkSerialize(stream: DataOutputStream?) {
+    override fun networkSerialize(stream: DataOutputStream) {
         super.networkSerialize(stream)
         try {
-            stream?.writeBoolean(node.lightValue > 4)
+            stream.writeBoolean(node!!.lightValue > 4)
         } catch (e: IOException) {
             e.printStackTrace()
         }
@@ -83,7 +83,7 @@ class FestiveElement(node: TransparentNode, descriptor: TransparentNodeDescripto
         }
 
         override fun process(time: Double) {
-            val lampSupplyList = findBestSupply(elem.node.coordinate)
+            val lampSupplyList = findBestSupply(elem.node!!.coordinate)
             val best = lampSupplyList?.second
             if (best != null && best.element.getChannelState(best.id)) {
                 best.element.addToRp(elem.loadResistor.r)
@@ -93,7 +93,7 @@ class FestiveElement(node: TransparentNode, descriptor: TransparentNodeDescripto
             }
             var lightDouble = 12 * (Math.abs(elem.loadResistor.u) - 180.0) / 20.0
             lightDouble *= 16
-            elem.node.lightValue = lightDouble.toInt().coerceIn(0, 15)
+            elem.node!!.lightValue = lightDouble.toInt().coerceIn(0, 15)
         }
     }
 }

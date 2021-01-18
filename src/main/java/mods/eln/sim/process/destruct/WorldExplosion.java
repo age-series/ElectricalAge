@@ -27,7 +27,7 @@ public class WorldExplosion implements IDestructable {
     }
 
     public WorldExplosion(TransparentNodeElement e) {
-        this.c = e.coordonate();
+        this.c = e.coordinate();
         this.type = e.toString();
         origine = e;
     }

@@ -21,7 +21,6 @@ import org.lwjgl.opengl.GL11
 import java.io.DataInputStream
 import java.io.DataOutputStream
 import kotlin.math.abs
-import kotlin.math.pow
 
 class GridSwitchDescriptor(
     name: String
@@ -218,11 +217,11 @@ class GridSwitchElement(node: TransparentNode, descriptor: TransparentNodeDescri
         slowProcessList.add(slowProcess)
     }
 
-    override fun getElectricalLoad(side: Direction?, lrdu: LRDU?) = null
+    override fun getElectricalLoad(side: Direction, lrdu: LRDU) = null
 
-    override fun getThermalLoad(side: Direction?, lrdu: LRDU?) = null
+    override fun getThermalLoad(side: Direction, lrdu: LRDU) = null
 
-    override fun getConnectionMask(side: Direction?, lrdu: LRDU?): Int {
+    override fun getConnectionMask(side: Direction, lrdu: LRDU): Int {
         return 0
     }
 
@@ -233,13 +232,13 @@ class GridSwitchElement(node: TransparentNode, descriptor: TransparentNodeDescri
 
     override fun initialize() {
         ghostPower = GhostPowerNode(
-            node.coordinate, front,
+            node!!.coordinate, front,
             Coordinate(-1, 0, -1, 0),
             power, NodeBase.maskElectricalPower
         )
         ghostPower!!.initialize()
         ghostControl = GhostPowerNode(
-            node.coordinate, front,
+            node!!.coordinate, front,
             Coordinate(-1, 0, 0, 0),
             control, NodeBase.maskElectricalGate
         )
@@ -285,7 +284,7 @@ class GridSwitchElement(node: TransparentNode, descriptor: TransparentNodeDescri
         stream.writeBoolean(closed)
     }
 
-    override fun getWaila(): MutableMap<String, String> {
+    override fun getWaila(): Map<String, String> {
         val info = mutableMapOf<String, String>()
         if (Eln.wailaEasyMode) {
             info["Left"] = Utils.plotUIP(grida.u, grida.i)
@@ -323,7 +322,7 @@ class GridSwitchRender(entity: TransparentNodeEntity, descriptor: TransparentNod
     }
 
     init {
-        addLoopedSound(ArcSound(desc.arcSound, coordonate()))
+        addLoopedSound(ArcSound(desc.arcSound, coordinate()))
     }
 
     override fun networkUnserialize(stream: DataInputStream) {
@@ -344,7 +343,7 @@ class GridSwitchRender(entity: TransparentNodeEntity, descriptor: TransparentNod
 
     override fun draw() {
         preserveMatrix {
-            front.glRotateXnRef()
+            front?.glRotateXnRef()
             desc.draw(interp.get() * GridSwitchDescriptor.QUARTER_TURN)
         }
         drawCables()

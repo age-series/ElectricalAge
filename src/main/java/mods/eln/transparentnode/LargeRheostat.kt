@@ -77,7 +77,7 @@ class LargeRheostatElement(node: TransparentNode, desc_: TransparentNodeDescript
     val desc = desc_ as LargeRheostatDescriptor
 
     var nominalRs = 1.0
-    private var inventory = TransparentNodeElementInventory(2, 64, this)
+    override var inventory = TransparentNodeElementInventory(2, 64, this)
 
     val aLoad = NbtElectricalLoad("aLoad")
     val bLoad = NbtElectricalLoad("bLoad")
@@ -186,9 +186,8 @@ class LargeRheostatElement(node: TransparentNode, desc_: TransparentNodeDescript
     }
 
     override fun hasGui() = true
-    override fun getInventory() = inventory
-    override fun onBlockActivated(entityPlayer: EntityPlayer?, side: Direction?, vx: Float, vy: Float, vz: Float) = false
-    override fun newContainer(side: Direction?, player: EntityPlayer?) = ResistorContainer(player, inventory)
+    override fun onBlockActivated(player: EntityPlayer, side: Direction, vx: Float, vy: Float, vz: Float) = false
+    override fun newContainer(side: Direction, player: EntityPlayer) = ResistorContainer(player, inventory)
 
     override fun getWaila(): Map<String, String> = mutableMapOf(
         Pair(I18N.tr("Resistance"), Utils.plotOhm("", resistor.r)),
@@ -200,11 +199,7 @@ class LargeRheostatElement(node: TransparentNode, desc_: TransparentNodeDescript
 class LargeRheostatRender(entity: TransparentNodeEntity, desc: TransparentNodeDescriptor) :
     TransparentNodeElementRender(entity, desc) {
     val desc = desc as LargeRheostatDescriptor
-    val inventory = TransparentNodeElementInventory(1, 64, this)
-
-    override fun getInventory(): IInventory {
-        return inventory
-    }
+    override val inventory = TransparentNodeElementInventory(1, 64, this)
 
     val baseColor = BlackBodyColor(1f, 1f, 1f)
     var color = BlackBodyTemperature(0f)
@@ -215,7 +210,7 @@ class LargeRheostatRender(entity: TransparentNodeEntity, desc: TransparentNodeDe
     }
 
     override fun draw() {
-        front.glRotateZnRef()
+        front!!.glRotateZnRef()
         // TODO: Get this thing *really* glowing.
         // glColor doesn't let me exceed 1.0, the way I'd quite like to do.
         GL11.glColor3f(color.red, color.green, color.blue)

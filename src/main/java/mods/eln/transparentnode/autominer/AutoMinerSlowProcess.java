@@ -207,7 +207,7 @@ public class AutoMinerSlowProcess implements IProcess, INBTTReady {
     private IInventory getDropInventory() {
         IInventory inventoryEntity = null;
         Coordinate outputLocation = new Coordinate(1, -1, 0, miner.world());
-        outputLocation.applyTransformation(miner.front, miner.coordonate());
+        outputLocation.applyTransformation(miner.front, miner.coordinate());
         if (outputLocation.getTileEntity() instanceof IInventory) {
             inventoryEntity = (IInventory) outputLocation.getTileEntity();
             Block inventoryBlock = miner.world().getBlock(outputLocation.x, outputLocation.y, outputLocation.z);

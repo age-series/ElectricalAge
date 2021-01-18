@@ -778,7 +778,7 @@ public class Eln {
             g.addElement(0, 1, 0);
             g.addElement(1, 1, -1);
             g.addElement(0, 1, -1);
-            descriptor.setGhostGroup(g);
+            descriptor.ghostGroup = g;
             transparentNodeItem.addDescriptor(subId + (id << 6), descriptor);
         }
         {
@@ -796,7 +796,7 @@ public class Eln {
             g.addElement(0, 1, 0);
             g.addElement(0, 2, 0);
             g.addElement(0, 3, 0);
-            descriptor.setGhostGroup(g);
+            descriptor.ghostGroup = g;
             transparentNodeItem.addDescriptor(subId + (id << 6), descriptor);
         }
         {
@@ -814,7 +814,7 @@ public class Eln {
             g.addElement(0, 1, 0);
             g.addElement(0, 2, 0);
             g.addElement(0, 3, 0);
-            descriptor.setGhostGroup(g);
+            descriptor.ghostGroup = g;
             transparentNodeItem.addDescriptor(subId + (id << 6), descriptor);
         }
         {
@@ -831,7 +831,7 @@ public class Eln {
             g.addRectangle(-1, 1, 0, 0, -1, 1);
             g.addRectangle(0, 0, 1, 8, 0, 0);
             g.removeElement(0, 0, 0);
-            descriptor.setGhostGroup(g);
+            descriptor.ghostGroup = g;
             transparentNodeItem.addDescriptor(subId + (id << 6), descriptor);
         }
         {
@@ -849,7 +849,7 @@ public class Eln {
             g.addElement(0, 1, 0);
             g.addElement(0, 2, 0);
             g.addElement(0, 3, 0);
-            descriptor.setGhostGroup(g);
+            descriptor.ghostGroup = g;
             transparentNodeItem.addDescriptor(subId + (id << 6), descriptor);
         }
         {
@@ -862,7 +862,7 @@ public class Eln {
             g.removeRectangle(1, 1, 2, 4, -1, 1);
             g.removeRectangle(0, 0, 1, 4, -2, 2);
             g.removeElement(0, 0, 0);
-            desc.setGhostGroup(g);
+            desc.ghostGroup = g;
             transparentNodeItem.addDescriptor(subId + (id << 6), desc);
         }
     }
@@ -1008,6 +1008,7 @@ public class Eln {
     public Double ELN_CONVERTER_MAX_POWER = 120_000.0;
 
     private void registerEnergyConverter() {
+        /*
         if (ElnToOtherEnergyConverterEnable) {
             String entityName = "eln.EnergyConverterElnToOtherEntity";
 
@@ -1022,7 +1023,7 @@ public class Eln {
                 elnToOtherBlockConverter.setCreativeTab(creativeTab).setBlockName(blockName);
                 GameRegistry.registerBlock(elnToOtherBlockConverter, SimpleNodeItem.class, blockName);
             }
-        }
+        }*/
     }
 
 
@@ -3130,7 +3131,7 @@ public class Eln {
                 }
             }
             g.removeElement(0, 0, 0);
-            desc.setGhostGroup(g);
+            desc.ghostGroup = g;
             transparentNodeItem.addDescriptor(subId + (id << 6), desc);
         }
     }
@@ -4518,7 +4519,7 @@ public class Eln {
             GhostGroup g = new GhostGroup();
 
             g.addRectangle(1, 1, 0, 1, -1, 1);
-            desc.setGhostGroup(g);
+            desc.ghostGroup = g;
             transparentNodeItem.addDescriptor(subId + (id << 6), desc);
         }
 
@@ -4649,7 +4650,7 @@ public class Eln {
             // g.addElement(-4, 0, -1);
             // g.addElement(-4, 0, 1);
 
-            desc.setGhostGroup(g);
+            desc.ghostGroup = g;
 
             transparentNodeItem.addDescriptor(subId + (id << 6), desc);
         }
@@ -5062,7 +5063,7 @@ public class Eln {
             ghostGroup.addElement(0, 0, -1);
             ghostGroup.removeElement(-1, -1, 0);
 
-            desc.setGhostGroup(ghostGroup);
+            desc.ghostGroup = ghostGroup;
 
             transparentNodeItem.addDescriptor(subId + (id << 6), desc);
         }

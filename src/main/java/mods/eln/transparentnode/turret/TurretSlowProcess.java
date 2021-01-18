@@ -161,7 +161,7 @@ public class TurretSlowProcess extends StateMachine {
                 }
             }
 
-            Coordinate coord = element.coordonate();
+            Coordinate coord = element.coordinate();
             AxisAlignedBB bb = coord.getAxisAlignedBB((int) element.getDescriptor().getProperties().detectionDistance);
             @SuppressWarnings("unchecked")
             List<EntityLivingBase> list = coord.world().getEntitiesWithinAABB(EntityLivingBase.class, bb);
@@ -261,7 +261,7 @@ public class TurretSlowProcess extends StateMachine {
                 if (filterClass == null || !filterClass.isAssignableFrom(target.getClass())) return new SeekingState();
             }
 
-            Coordinate coord = element.coordonate();
+            Coordinate coord = element.coordinate();
 
             double dx = (float) (target.posX - coord.x - 0.5);
             double dy = (float) (target.posY + target.getEyeHeight() - coord.y - 0.75);
@@ -358,7 +358,7 @@ public class TurretSlowProcess extends StateMachine {
             element.energyBuffer = MaximalEnergy;
         }
 
-        if (element.coordonate().getBlockExist())
+        if (element.coordinate().getBlockExist())
             super.process(time);
 
         if (actualPower == 0 || full)

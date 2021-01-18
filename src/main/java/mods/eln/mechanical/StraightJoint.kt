@@ -1,5 +1,6 @@
 package mods.eln.mechanical
 
+import mods.eln.misc.Coordinate
 import mods.eln.misc.Direction
 import mods.eln.misc.LRDU
 import mods.eln.misc.Obj3D
@@ -21,21 +22,14 @@ open class StraightJointDescriptor(baseName: String, obj: Obj3D) : SimpleShaftDe
 open class StraightJointElement(node: TransparentNode, desc_: TransparentNodeDescriptor) : SimpleShaftElement(node, desc_) {
     override val shaftMass = 0.5
 
-    override fun getElectricalLoad(side: Direction?, lrdu: LRDU?): ElectricalLoad? = null
-
-    override fun getThermalLoad(side: Direction?, lrdu: LRDU?): ThermalLoad? = null
-
-    override fun getConnectionMask(side: Direction?, lrdu: LRDU?): Int = 0
-
-    override fun thermoMeterString(side: Direction?): String? = null
-
-    override fun onBlockActivated(entityPlayer: EntityPlayer?, side: Direction?, vx: Float, vy: Float,
-                                  vz: Float): Boolean = false
-
     override fun getWaila(): Map<String, String> {
         var info = mutableMapOf<String, String>()
         info.put("Speed", Utils.plotRads("", shaft.rads))
         info.put("Energy", Utils.plotEnergy("", shaft.energy))
         return info
+    }
+
+    override fun coordonate(): Coordinate {
+        return node!!.coordinate
     }
 }

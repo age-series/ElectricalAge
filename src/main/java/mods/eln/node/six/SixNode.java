@@ -21,6 +21,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.chunk.Chunk;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -284,6 +285,7 @@ public class SixNode extends Node {
         return element.getConnectionMask(elementSide.getLRDUGoingTo(side));
     }
 
+    @NotNull
     @Override
     public String multiMeterString(Direction side) {
         SixNodeElement element = sideElementList[side.getInt()];
@@ -292,6 +294,7 @@ public class SixNode extends Node {
         return element.multiMeterString();
     }
 
+    @NotNull
     @Override
     public String thermoMeterString(Direction side) {
         SixNodeElement element = sideElementList[side.getInt()];
@@ -356,8 +359,8 @@ public class SixNode extends Node {
     }
 
     @Override
-    public void initializeFromThat(Direction front, EntityLivingBase entityLiving,
-                                   ItemStack itemStack) {
+    public void initializeFromThat(@NotNull Direction front, @Nullable EntityLivingBase entityLiving,
+                                   @Nullable ItemStack itemStack) {
         neighborBlockRead();
 
 

@@ -117,7 +117,7 @@ abstract class NodeBase {
         }
     }
 
-    fun onBlockPlacedBy(coordinate: Coordinate, front: Direction?, entityLiving: EntityLivingBase?, itemStack: ItemStack?) {
+    fun onBlockPlacedBy(coordinate: Coordinate, front: Direction, entityLiving: EntityLivingBase?, itemStack: ItemStack?) {
         this.coordinate = coordinate
         neighborBlockRead()
         NodeManager.instance!!.addNode(this)
@@ -125,8 +125,7 @@ abstract class NodeBase {
         if (itemStack != null) println("Node::constructor( meta = " + itemStack.itemDamage + ")")
     }
 
-    abstract fun initializeFromThat(front: Direction?,
-                                    entityLiving: EntityLivingBase?, itemStack: ItemStack?)
+    abstract fun initializeFromThat(front: Direction, entityLiving: EntityLivingBase?, itemStack: ItemStack?)
 
     fun getNeighbor(direction: Direction): NodeBase? {
         val position = IntArray(3)
@@ -307,11 +306,11 @@ abstract class NodeBase {
         nbt.setByte("NBWrap", neighborWrapable)
     }
 
-    open fun multiMeterString(side: Direction?): String {
+    open fun multiMeterString(side: Direction): String {
         return ""
     }
 
-    open fun thermoMeterString(side: Direction?): String {
+    open fun thermoMeterString(side: Direction): String {
         return ""
     }
 

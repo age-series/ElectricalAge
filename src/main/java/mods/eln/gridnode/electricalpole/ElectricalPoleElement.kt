@@ -161,7 +161,7 @@ class ElectricalPoleElement(node: TransparentNode, descriptor: TransparentNodeDe
 
     override fun networkSerialize(stream: DataOutputStream) {
         super.networkSerialize(stream)
-        node.lrduCubeMask.getTranslate(front.down()).serialize(stream)
+        node!!.lrduCubeMask.getTranslate(front.down()).serialize(stream)
         try {
             if (trafo != null && secondaryMaxCurrent != 0f) {
                 stream.writeFloat((trafo.secondaryLoad.i / secondaryMaxCurrent).toFloat())

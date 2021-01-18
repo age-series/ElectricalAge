@@ -25,6 +25,8 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.AxisAlignedBB;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -72,8 +74,9 @@ public class TeleporterElement extends TransparentNodeElement implements ITelepo
         return powerLoad;
     }
 
+    @Nullable
     @Override
-    public ThermalLoad getThermalLoad(Direction side, LRDU lrdu) {
+    public ThermalLoad getThermalLoad(@NotNull Direction side, @NotNull LRDU lrdu) {
 
         return null;
     }
@@ -86,14 +89,16 @@ public class TeleporterElement extends TransparentNodeElement implements ITelepo
         return node.maskElectricalPower;
     }
 
+    @NotNull
     @Override
-    public String multiMeterString(Direction side) {
+    public String multiMeterString(@NotNull Direction side) {
 
         return null;
     }
 
+    @NotNull
     @Override
-    public String thermoMeterString(Direction side) {
+    public String thermoMeterString(@NotNull Direction side) {
 
         return null;
     }
@@ -153,7 +158,7 @@ public class TeleporterElement extends TransparentNodeElement implements ITelepo
     }
 
     @Override
-    public boolean onBlockActivated(EntityPlayer entityPlayer, Direction side,
+    public boolean onBlockActivated(EntityPlayer player, Direction side,
                                     float vx, float vy, float vz) {
 
         return false;
@@ -622,6 +627,7 @@ public class TeleporterElement extends TransparentNodeElement implements ITelepo
         return name;
     }
 
+    @NotNull
     @Override
     public Map<String, String> getWaila() {
         Map<String, String> info = new HashMap<String, String>();

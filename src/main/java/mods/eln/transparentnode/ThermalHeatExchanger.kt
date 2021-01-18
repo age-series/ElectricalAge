@@ -58,9 +58,9 @@ class ThermalHeatExchangerDescriptor(
         main.draw()
     }
 
-    override fun handleRenderType(item: ItemStack?, type: IItemRenderer.ItemRenderType?) = true
-    override fun shouldUseRenderHelper(type: IItemRenderer.ItemRenderType?, item: ItemStack?, helper: IItemRenderer.ItemRendererHelper?) = true //type != IItemRenderer.ItemRenderType.INVENTORY
-    override fun renderItem(type: IItemRenderer.ItemRenderType?, item: ItemStack?, vararg data: Any?) =
+    override fun handleRenderType(item: ItemStack, type: IItemRenderer.ItemRenderType) = true
+    override fun shouldUseRenderHelper(type: IItemRenderer.ItemRenderType, item: ItemStack, helper: IItemRenderer.ItemRendererHelper) = true //type != IItemRenderer.ItemRenderType.INVENTORY
+    override fun renderItem(type: IItemRenderer.ItemRenderType, item: ItemStack, vararg data: Any) =
         draw()//if (type == IItemRenderer.ItemRenderType.INVENTORY) super.renderItem(type, item, *data) else draw()
 
     override fun addInformation(itemStack: ItemStack?, entityPlayer: EntityPlayer?, list: MutableList<String>, par4: Boolean) {
@@ -198,17 +198,17 @@ class ThermalHeatExchangerElement(
         }
     }
 
-    override fun getElectricalLoad(side: Direction?, lrdu: LRDU?) = when {
+    override fun getElectricalLoad(side: Direction, lrdu: LRDU) = when {
         side == front && lrdu == LRDU.Down -> electricalControlLoad
         else -> null
     }
 
-    override fun getThermalLoad(side: Direction?, lrdu: LRDU?) = when {
+    override fun getThermalLoad(side: Direction, lrdu: LRDU) = when {
         side == front.inverse && lrdu == LRDU.Down -> thermalLoad
         else -> null
     }
 
-    override fun getConnectionMask(side: Direction?, lrdu: LRDU?) = when (lrdu) {
+    override fun getConnectionMask(side: Direction, lrdu: LRDU) = when (lrdu) {
         LRDU.Down -> when (side) {
             front.inverse -> NodeBase.maskThermal
             front -> NodeBase.maskElectricalGate
@@ -218,7 +218,7 @@ class ThermalHeatExchangerElement(
     }
 
     // This would be thermalLoad.power but it's not accurate.
-    override fun multiMeterString(side: Direction?): String = Utils.plotPercent("Ctl:", electricalControlLoad.normalized)
+    override fun multiMeterString(side: Direction): String = Utils.plotPercent("Ctl:", electricalControlLoad.normalized)
     override fun thermoMeterString(side: Direction): String = Utils.plotCelsius("T:", thermalLoad.Tc) + " " + Utils.plotPower(joulesPerTick * 20)
 
     override fun getWaila(): Map<String, String> = mutableMapOf(
@@ -246,7 +246,7 @@ class ThermalHeatExchangerElement(
         connect()
     }
 
-    override fun onBlockActivated(entityPlayer: EntityPlayer?, side: Direction?, vx: Float, vy: Float, vz: Float) = false
+    override fun onBlockActivated(player: EntityPlayer, side: Direction, vx: Float, vy: Float, vz: Float) = false
 
     override fun getFluidHandler(): IFluidHandler {
         return tank
@@ -258,7 +258,7 @@ class ThermalHeatExchangerRender(
     descriptor: TransparentNodeDescriptor
 ): TransparentNodeElementRender(tileEntity, descriptor) {
     override fun draw() {
-        front.glRotateXnRef()
+        front!!.glRotateXnRef()
         (transparentNodedescriptor as ThermalHeatExchangerDescriptor).draw()
     }
 }

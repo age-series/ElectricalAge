@@ -17,6 +17,8 @@ import mods.eln.sim.ThermalLoad;
 import mods.eln.sim.nbt.NbtElectricalGateInputOutput;
 import mods.eln.sim.nbt.NbtElectricalGateOutputProcess;
 import net.minecraft.entity.player.EntityPlayer;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
 
@@ -47,8 +49,9 @@ public class ComputerCraftIoElement extends TransparentNodeElement implements IP
         return ioGate[side.getHorizontalIndex()];
     }
 
+    @Nullable
     @Override
-    public ThermalLoad getThermalLoad(Direction side, LRDU lrdu) {
+    public ThermalLoad getThermalLoad(@NotNull Direction side, @NotNull LRDU lrdu) {
         return null;
     }
 
@@ -60,14 +63,16 @@ public class ComputerCraftIoElement extends TransparentNodeElement implements IP
         return 0;
     }
 
+    @NotNull
     @Override
-    public String multiMeterString(Direction side) {
+    public String multiMeterString(@NotNull Direction side) {
         return null;
         //Utils.plotUIP(powerLoad.Uc, powerLoad.getCurrent());
     }
 
+    @NotNull
     @Override
-    public String thermoMeterString(Direction side) {
+    public String thermoMeterString(@NotNull Direction side) {
         return null;
     }
 
@@ -77,7 +82,7 @@ public class ComputerCraftIoElement extends TransparentNodeElement implements IP
     }
 
     @Override
-    public boolean onBlockActivated(EntityPlayer entityPlayer, Direction side, float vx, float vy, float vz) {
+    public boolean onBlockActivated(EntityPlayer player, Direction side, float vx, float vy, float vz) {
         return false;
     }
 
@@ -163,6 +168,7 @@ public class ComputerCraftIoElement extends TransparentNodeElement implements IP
         return other == this;
     }
 
+    @NotNull
     @Override
     public Map<String, String> getWaila() {
         return null;

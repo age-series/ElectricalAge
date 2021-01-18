@@ -7,6 +7,8 @@ import mods.eln.sim.ElectricalLoad;
 import mods.eln.sim.ThermalLoad;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class AutoMinerPowerNode extends GhostNode {
     private Direction front;
@@ -14,7 +16,7 @@ public class AutoMinerPowerNode extends GhostNode {
     private AutoMinerElement element;
 
     @Override
-    public void initializeFromThat(Direction front, EntityLivingBase entityLiving, ItemStack itemStack) {
+    public void initializeFromThat(@NotNull Direction front, @Nullable EntityLivingBase entityLiving, @Nullable ItemStack itemStack) {
         this.front = front;
 
         connect();

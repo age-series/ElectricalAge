@@ -10,7 +10,7 @@ import net.minecraft.entity.player.EntityPlayer
 import java.io.DataInputStream
 import java.io.IOException
 
-class BatteryRender(tileEntity: TransparentNodeEntity?, descriptor: TransparentNodeDescriptor) : TransparentNodeElementRender(tileEntity, descriptor) {
+class BatteryRender(tileEntity: TransparentNodeEntity, descriptor: TransparentNodeDescriptor) : TransparentNodeElementRender(tileEntity, descriptor) {
     var energy = 0f
     var life = 0f
     var descriptor: BatteryDescriptor = descriptor as BatteryDescriptor
@@ -20,7 +20,7 @@ class BatteryRender(tileEntity: TransparentNodeEntity?, descriptor: TransparentN
     var power = 0f
 
     override fun draw() {
-        front.glRotateXnRef()
+        front?.glRotateXnRef()
         descriptor.draw(plus, minus)
     }
 

@@ -48,27 +48,27 @@ class BasicFloodlightDescriptor(val name: String, val obj: Obj3D): TransparentNo
 }
 
 class BasicFloodlightElement(node: TransparentNode, descriptor: TransparentNodeDescriptor): TransparentNodeElement(node, descriptor) {
-    override fun thermoMeterString(side: Direction?): String {
+    override fun thermoMeterString(side: Direction): String {
         return ""
     }
 
-    override fun multiMeterString(side: Direction?): String {
+    override fun multiMeterString(side: Direction): String {
         return ""
     }
 
-    override fun getElectricalLoad(side: Direction?, lrdu: LRDU?): ElectricalLoad? {
+    override fun getElectricalLoad(side: Direction, lrdu: LRDU): ElectricalLoad? {
         return null
     }
 
-    override fun onBlockActivated(entityPlayer: EntityPlayer?, side: Direction?, vx: Float, vy: Float, vz: Float): Boolean {
+    override fun onBlockActivated(player: EntityPlayer, side: Direction, vx: Float, vy: Float, vz: Float): Boolean {
         return false
     }
 
-    override fun getConnectionMask(side: Direction?, lrdu: LRDU?): Int {
+    override fun getConnectionMask(side: Direction, lrdu: LRDU): Int {
         return 0
     }
 
-    override fun getThermalLoad(side: Direction?, lrdu: LRDU?): ThermalLoad? {
+    override fun getThermalLoad(side: Direction, lrdu: LRDU): ThermalLoad? {
         return null
     }
 
@@ -77,13 +77,13 @@ class BasicFloodlightElement(node: TransparentNode, descriptor: TransparentNodeD
     }
 }
 
-class BasicFloodlightRender(val tileEntity: TransparentNodeEntity, val descriptor: TransparentNodeDescriptor): TransparentNodeElementRender(tileEntity, descriptor) {
+class BasicFloodlightRender(override var tileEntity: TransparentNodeEntity, val descriptor: TransparentNodeDescriptor): TransparentNodeElementRender(tileEntity, descriptor) {
 
     var x: Double = 0.0
     var y: Double = 0.0
 
     override fun draw() {
-        (descriptor as BasicFloodlightDescriptor).draw(front, x, y)
+        (descriptor as BasicFloodlightDescriptor).draw(front!!, x, y)
     }
 
     override fun refresh(deltaT: Float) {
@@ -141,27 +141,27 @@ class MotorizedFloodlightElement(node: TransparentNode, descriptor: TransparentN
         val desc = descriptor as BasicFloodlightDescriptor
     }
 
-    override fun thermoMeterString(side: Direction?): String {
+    override fun thermoMeterString(side: Direction): String {
         return ""
     }
 
-    override fun multiMeterString(side: Direction?): String {
+    override fun multiMeterString(side: Direction): String {
         return ""
     }
 
-    override fun getElectricalLoad(side: Direction?, lrdu: LRDU?): ElectricalLoad? {
+    override fun getElectricalLoad(side: Direction, lrdu: LRDU): ElectricalLoad? {
         return null
     }
 
-    override fun onBlockActivated(entityPlayer: EntityPlayer?, side: Direction?, vx: Float, vy: Float, vz: Float): Boolean {
+    override fun onBlockActivated(player: EntityPlayer, side: Direction, vx: Float, vy: Float, vz: Float): Boolean {
         return false
     }
 
-    override fun getConnectionMask(side: Direction?, lrdu: LRDU?): Int {
+    override fun getConnectionMask(side: Direction, lrdu: LRDU): Int {
         return 0
     }
 
-    override fun getThermalLoad(side: Direction?, lrdu: LRDU?): ThermalLoad? {
+    override fun getThermalLoad(side: Direction, lrdu: LRDU): ThermalLoad? {
         return null
     }
 
@@ -170,13 +170,13 @@ class MotorizedFloodlightElement(node: TransparentNode, descriptor: TransparentN
     }
 }
 
-class MotorizedFloodlightRender(val tileEntity: TransparentNodeEntity, val descriptor: TransparentNodeDescriptor): TransparentNodeElementRender(tileEntity, descriptor) {
+class MotorizedFloodlightRender(override var tileEntity: TransparentNodeEntity, val descriptor: TransparentNodeDescriptor): TransparentNodeElementRender(tileEntity, descriptor) {
 
     var x: Double = 0.0
     var y: Double = 0.0
 
     override fun draw() {
-        (descriptor as BasicFloodlightDescriptor).draw(front, x, y)
+        (descriptor as BasicFloodlightDescriptor).draw(front!!, x, y)
     }
 
     override fun refresh(deltaT: Float) {

@@ -163,7 +163,7 @@ class LegacyDcDcElement(transparentNode: TransparentNode, descriptor: Transparen
 
     val interSystemProcess = TransformerInterSystemProcess(primaryLoad, secondaryLoad, primaryVoltageSource, secondaryVoltageSource)
 
-    val inventory = TransparentNodeElementInventory(4, 64, this)
+    override val inventory = TransparentNodeElementInventory(4, 64, this)
 
     var primaryMaxCurrent = 0.0
     var secondaryMaxCurrent = 0.0
@@ -183,7 +183,7 @@ class LegacyDcDcElement(transparentNode: TransparentNode, descriptor: Transparen
         val exp = WorldExplosion(this).machineExplosion()
         slowProcessList.add(primaryVoltageWatchdog.set(primaryLoad).set(exp))
         slowProcessList.add(secondaryVoltageWatchdog.set(secondaryLoad).set(exp))
-        slowProcessList.add(NodePeriodicPublishProcess(node, 1.0, .5))
+        slowProcessList.add(NodePeriodicPublishProcess(node!!, 1.0, .5))
         slowProcessList.add(LegacyDcDcProcess(this))
     }
 
@@ -229,8 +229,8 @@ class LegacyDcDcElement(transparentNode: TransparentNode, descriptor: Transparen
             Utils.plotVolt("UP+:", primaryLoad.u) + Utils.plotAmpere("IP+:", primaryVoltageSource.current) + Utils.plotVolt("  US+:", secondaryLoad.u) + Utils.plotAmpere("IS+:", secondaryVoltageSource.current)
     }
 
-    override fun thermoMeterString(side: Direction): String? {
-        return null
+    override fun thermoMeterString(side: Direction): String {
+        return ""
     }
 
     override fun initialize() {
@@ -277,7 +277,7 @@ class LegacyDcDcElement(transparentNode: TransparentNode, descriptor: Transparen
         populated = primaryCable != null && secondaryCable != null && primaryCable.stackSize >= 1 && secondaryCable.stackSize >= 1 && core != null
 
         ratioControl = if (populated) {
-            secondaryCable.stackSize.toDouble() / primaryCable.stackSize.toDouble()
+            secondaryCable!!.stackSize.toDouble() / primaryCable!!.stackSize.toDouble()
         } else {
             1.0
         }
@@ -290,7 +290,7 @@ class LegacyDcDcElement(transparentNode: TransparentNode, descriptor: Transparen
         needPublish()
     }
 
-    override fun onBlockActivated(entityPlayer: EntityPlayer, side: Direction, vx: Float, vy: Float, vz: Float): Boolean {
+    override fun onBlockActivated(player: EntityPlayer, side: Direction, vx: Float, vy: Float, vz: Float): Boolean {
         return false
     }
 
@@ -306,10 +306,6 @@ class LegacyDcDcElement(transparentNode: TransparentNode, descriptor: Transparen
         return 1.0f
     }
 
-    override fun getInventory(): IInventory? {
-        return inventory
-    }
-
     override fun onGroundedChangedByClient() {
         super.onGroundedChangedByClient()
         computeInventory()
@@ -322,15 +318,15 @@ class LegacyDcDcElement(transparentNode: TransparentNode, descriptor: Transparen
             if (inventory.getStackInSlot(0) == null)
                 stream.writeByte(0)
             else
-                stream.writeByte(inventory.getStackInSlot(0).stackSize)
+                stream.writeByte(inventory.getStackInSlot(0)!!.stackSize)
             if (inventory.getStackInSlot(1) == null)
                 stream.writeByte(0)
             else
-                stream.writeByte(inventory.getStackInSlot(1).stackSize)
+                stream.writeByte(inventory.getStackInSlot(1)!!.stackSize)
             Utils.serialiseItemStack(stream, inventory.getStackInSlot(LegacyDcDcContainer.ferromagneticSlotId))
             Utils.serialiseItemStack(stream, inventory.getStackInSlot(LegacyDcDcContainer.primaryCableSlotId))
             Utils.serialiseItemStack(stream, inventory.getStackInSlot(LegacyDcDcContainer.secondaryCableSlotId))
-            node.lrduCubeMask.getTranslate(front.down()).serialize(stream)
+            node!!.lrduCubeMask.getTranslate(front.down()).serialize(stream)
             var load = 0f
             if (primaryMaxCurrent != 0.0 && secondaryMaxCurrent != 0.0) {
                 load = Utils.limit(Math.max(primaryLoad.i / primaryMaxCurrent,
@@ -418,7 +414,7 @@ class LegacyDcDcProcess(val element: LegacyDcDcElement): IProcess {
 
 class LegacyDcDcRender(tileEntity: TransparentNodeEntity, val descriptor: TransparentNodeDescriptor): TransparentNodeElementRender(tileEntity, descriptor) {
 
-    val inventory = TransparentNodeElementInventory(4, 64, this)
+    override val inventory = TransparentNodeElementInventory(4, 64, this)
 
     val load = SlewLimiter(0.5f)
 
@@ -440,7 +436,7 @@ class LegacyDcDcRender(tileEntity: TransparentNodeEntity, val descriptor: Transp
     private var cableRenderType: CableRenderType? = null
 
     init {
-        addLoopedSound(object : LoopedSound("eln:Transformer", coordonate(), ISound.AttenuationType.LINEAR) {
+        addLoopedSound(object : LoopedSound("eln:Transformer", coordinate(), ISound.AttenuationType.LINEAR) {
             override fun getVolume(): Float {
                 return if (load.position > (descriptor as LegacyDcDcDescriptor).minimalLoadToHum)
                     0.1f * (load.position - descriptor.minimalLoadToHum) / (1 - descriptor.minimalLoadToHum)
@@ -455,11 +451,11 @@ class LegacyDcDcRender(tileEntity: TransparentNodeEntity, val descriptor: Transp
 
     override fun draw() {
         GL11.glPushMatrix()
-        front.glRotateXnRef()
+        front!!.glRotateXnRef()
         (descriptor as LegacyDcDcDescriptor).draw(feroPart, primaryStackSize.toInt(), secondaryStackSize.toInt(), hasCasing, doorOpen.get())
         GL11.glPopMatrix()
-        cableRenderType = drawCable(front.down(), priRender, priConn, cableRenderType)
-        cableRenderType = drawCable(front.down(), secRender, secConn, cableRenderType)
+        cableRenderType = drawCable(front!!.down(), priRender, priConn, cableRenderType)
+        cableRenderType = drawCable(front!!.down(), secRender, secConn, cableRenderType)
     }
 
     override fun networkUnserialize(stream: DataInputStream) {
@@ -493,11 +489,11 @@ class LegacyDcDcRender(tileEntity: TransparentNodeEntity, val descriptor: Transp
             secConn.mask = 0
             for (lrdu in LRDU.values()) {
                 if(!eConn.get(lrdu)) continue
-                if(front.down().applyLRDU(lrdu) == front.left()) {
+                if(front!!.down().applyLRDU(lrdu) == front!!.left()) {
                     priConn.set(lrdu, true)
                     continue
                 }
-                if(front.down().applyLRDU(lrdu) == front.right()) {
+                if(front!!.down().applyLRDU(lrdu) == front!!.right()) {
                     secConn.set(lrdu, true)
                     continue
                 }
@@ -514,12 +510,12 @@ class LegacyDcDcRender(tileEntity: TransparentNodeEntity, val descriptor: Transp
 
     }
 
-    override fun getCableRender(side: Direction?, lrdu: LRDU): CableRenderDescriptor? {
+    override fun getCableRenderSide(side: Direction, lrdu: LRDU): CableRenderDescriptor? {
         if (lrdu == LRDU.Down) {
-            if (side == front.left()) return priRender
-            if (side == front.right()) return secRender
+            if (side == front!!.left()) return priRender
+            if (side == front!!.right()) return secRender
             if (side == front && !grounded) return priRender
-            if (side == front.back() && !grounded) return secRender
+            if (side == front!!.back() && !grounded) return secRender
         }
         return null
     }
@@ -534,7 +530,7 @@ class LegacyDcDcRender(tileEntity: TransparentNodeEntity, val descriptor: Transp
         load.step(deltaT)
 
         if (hasCasing) {
-            if (!Utils.isPlayerAround(tileEntity.worldObj, coordinate.moved(front).getAxisAlignedBB(0)))
+            if (!Utils.isPlayerAround(tileEntity.worldObj, coordinate.moved(front!!).getAxisAlignedBB(0)))
                 doorOpen.target = 0f
             else
                 doorOpen.target = 1f

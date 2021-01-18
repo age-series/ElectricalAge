@@ -164,15 +164,13 @@ class TurbineElement(node: TransparentNode, desc_: TransparentNodeDescriptor) :
     override fun getFluidHandler() = tank
 
     override fun getElectricalLoad(side: Direction, lrdu: LRDU) = throttle
-    override fun getThermalLoad(side: Direction?, lrdu: LRDU?) = null
+    override fun getThermalLoad(side: Direction, lrdu: LRDU) = null
     override fun getConnectionMask(side: Direction, lrdu: LRDU): Int {
         if (lrdu == LRDU.Down && (side == front || side == front.back())) return NodeBase.maskElectricalGate
         return 0
     }
 
-    override fun onBlockActivated(entityPlayer: EntityPlayer?, side: Direction?, vx: Float, vy: Float, vz: Float) = false
-
-    override fun thermoMeterString(side: Direction?) = Utils.plotPercent(" Eff:", efficiency.toDouble()) + fluidRate.toString() + "mB/s"
+    override fun thermoMeterString(side: Direction): String = Utils.plotPercent(" Eff:", efficiency.toDouble()) + fluidRate.toString() + "mB/s"
 
     override fun writeToNBT(nbt: NBTTagCompound) {
         super.writeToNBT(nbt)
@@ -195,6 +193,10 @@ class TurbineElement(node: TransparentNode, desc_: TransparentNodeDescriptor) :
             info.put("Fuel usage", Utils.plotBuckets("", fluidRate / 1000.0) + "/s")
         }
         return info
+    }
+
+    override fun coordonate(): Coordinate {
+        return node!!.coordinate
     }
 
     override fun networkSerialize(stream: DataOutputStream) {

@@ -15,6 +15,8 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.lwjgl.opengl.GL11;
 
 import java.io.DataInputStream;
@@ -58,8 +60,9 @@ public class EggIncubatorRender extends TransparentNodeElementRender {
         if (alpha >= 360) alpha -= 360;
     }
 
+    @Nullable
     @Override
-    public GuiScreen newGuiDraw(Direction side, EntityPlayer player) {
+    public GuiScreen newGuiDraw(@NotNull Direction side, @NotNull EntityPlayer player) {
         return new EggIncubatorGuiDraw(player, inventory, this);
     }
 
@@ -81,8 +84,9 @@ public class EggIncubatorRender extends TransparentNodeElementRender {
         cableRenderType = null;
     }
 
+    @Nullable
     @Override
-    public CableRenderDescriptor getCableRender(Direction side, LRDU lrdu) {
+    public CableRenderDescriptor getCableRenderSide(@NotNull Direction side, @NotNull LRDU lrdu) {
         return descriptor.cable.render;
     }
 

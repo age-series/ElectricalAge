@@ -120,11 +120,11 @@ class GridLink : INBTTReady {
     }
 
     private fun links(a: GridElement, b: GridElement): Boolean {
-        if (this.a == a.coordonate()) {
-            return this.b == b.coordonate()
+        if (this.a == a.coordinate()) {
+            return this.b == b.coordinate()
         }
-        if (this.a == b.coordonate()) {
-            return this.b == a.coordonate()
+        if (this.a == b.coordinate()) {
+            return this.b == a.coordinate()
         }
         return false
     }
@@ -196,7 +196,7 @@ class GridLink : INBTTReady {
 
             // Makin' a Link. Where'd Zelda go?
             val link = GridLink(
-                    a.coordonate(), b.coordonate(), `as`, bs, cable.newItemStack(cableLength),
+                    a.coordinate(), b.coordinate(), `as`, bs, cable.newItemStack(cableLength),
                     cable.electricalRs * cableLength)
             link.connect()
         }
