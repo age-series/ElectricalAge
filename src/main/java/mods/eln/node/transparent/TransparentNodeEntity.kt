@@ -171,19 +171,19 @@ open class TransparentNodeEntity : NodeBlockEntity(), ISidedInventory {
         return sidedInventory.sizeInventory
     }
 
-    override fun getStackInSlot(var1: Int): ItemStack {
+    override fun getStackInSlot(var1: Int): ItemStack? {
         return sidedInventory.getStackInSlot(var1)
     }
 
-    override fun decrStackSize(var1: Int, var2: Int): ItemStack {
+    override fun decrStackSize(var1: Int, var2: Int): ItemStack? {
         return sidedInventory.decrStackSize(var1, var2)
     }
 
-    override fun getStackInSlotOnClosing(var1: Int): ItemStack {
+    override fun getStackInSlotOnClosing(var1: Int): ItemStack? {
         return sidedInventory.getStackInSlotOnClosing(var1)
     }
 
-    override fun setInventorySlotContents(var1: Int, var2: ItemStack) {
+    override fun setInventorySlotContents(var1: Int, var2: ItemStack?) {
         sidedInventory.setInventorySlotContents(var1, var2)
     }
 
