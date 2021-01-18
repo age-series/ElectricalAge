@@ -47,8 +47,6 @@ class EnergyConverterElnToOtherEntity : SimpleNodeEntity("ElnToOther"), IEnergyS
         }
     }
 
-    override val nodeUuid: String = "ElnToOther"
-
     // ********************IC2********************
     @Optional.Method(modid = Other.modIdIc2)
     override fun emitsEnergyTo(receiver: TileEntity, direction: ForgeDirection): Boolean {

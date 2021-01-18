@@ -29,6 +29,7 @@ import java.io.DataInputStream
 import java.io.DataOutputStream
 import java.io.IOException
 import java.util.*
+import java.util.concurrent.LinkedBlockingQueue
 
 abstract class NodeBlockEntity : TileEntity(), ITileEntitySpawnClient, INodeEntity {
     val block: NodeBlock
@@ -251,7 +252,8 @@ abstract class NodeBlockEntity : TileEntity(), ITileEntitySpawnClient, INodeEnti
 
     companion object {
         @JvmField
-        val clientList = LinkedList<NodeBlockEntity>()
+        //val clientList = LinkedList<NodeBlockEntity>()
+        val clientList = LinkedBlockingQueue<NodeBlockEntity>()
         fun getEntity(x: Int, y: Int, z: Int): NodeBlockEntity? {
             var entity: TileEntity?
             if (Minecraft.getMinecraft().theWorld.getTileEntity(x, y, z).also { entity = it } != null) {

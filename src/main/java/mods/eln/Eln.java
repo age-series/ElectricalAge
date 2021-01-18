@@ -1008,7 +1008,6 @@ public class Eln {
     public Double ELN_CONVERTER_MAX_POWER = 120_000.0;
 
     private void registerEnergyConverter() {
-        /*
         if (ElnToOtherEnergyConverterEnable) {
             String entityName = "eln.EnergyConverterElnToOtherEntity";
 
@@ -1023,7 +1022,7 @@ public class Eln {
                 elnToOtherBlockConverter.setCreativeTab(creativeTab).setBlockName(blockName);
                 GameRegistry.registerBlock(elnToOtherBlockConverter, SimpleNodeItem.class, blockName);
             }
-        }*/
+        }
     }
 
 

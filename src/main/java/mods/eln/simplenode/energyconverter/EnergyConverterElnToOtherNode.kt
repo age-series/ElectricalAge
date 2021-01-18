@@ -3,6 +3,7 @@ package mods.eln.simplenode.energyconverter
 import mods.eln.Eln
 import mods.eln.misc.Direction
 import mods.eln.misc.LRDU
+import mods.eln.node.simple.DescriptorManager.get
 import mods.eln.node.simple.SimpleNode
 import mods.eln.sim.ElectricalLoad
 import mods.eln.sim.IProcess
@@ -19,7 +20,6 @@ import kotlin.math.max
 import kotlin.math.min
 
 class EnergyConverterElnToOtherNode : SimpleNode() {
-    var descriptor: EnergyConverterElnToOtherDescriptor? = null
     var load = NbtElectricalLoad("load")
     var powerInResistor = NbtResistor("powerInResistor", load, null)
     var electricalProcess = ElectricalProcess()
@@ -32,11 +32,6 @@ class EnergyConverterElnToOtherNode : SimpleNode() {
 
     init {
         powerInResistor.r = MnaConst.highImpedance
-    }
-
-    override fun setDescriptorKey(key: String) {
-        super.setDescriptorKey(key)
-        descriptor = getDescriptor() as EnergyConverterElnToOtherDescriptor
     }
 
     override fun getSideConnectionMask(directionA: Direction, lrduA: LRDU): Int {
@@ -57,7 +52,7 @@ class EnergyConverterElnToOtherNode : SimpleNode() {
         electricalProcessList.add(electricalProcess)
         Eln.applySmallRs(load)
         load.setAsPrivate()
-        descriptor!!.applyTo(this)
+        (getDescriptor() as EnergyConverterElnToOtherDescriptor).applyTo(this)
         connect()
     }
 

@@ -214,7 +214,7 @@ fun intToPortMode(int: Int): PortMode {
     return PortMode.values().first { it.id == int}
 }
 
-class DeviceProbeEntity : SimpleNodeEntity("") {
+class DeviceProbeEntity : SimpleNodeEntity("ElnDeviceProbe") {
 
     val pinInformation = mutableListOf<ClientPinInformation>()
 
@@ -225,8 +225,6 @@ class DeviceProbeEntity : SimpleNodeEntity("") {
             pinInformation.add(pInfo)
         }
     }
-
-    override val nodeUuid: String = "ElnDeviceProbe"
 
     override fun newGuiDraw(side: Direction, player: EntityPlayer): GuiScreen {
         return DeviceProbeGui(this)

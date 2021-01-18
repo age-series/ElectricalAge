@@ -18,7 +18,7 @@ public class TestBlock extends SimpleNodeBlock {
     }
 
     @Override
-    protected SimpleNode newNode() {
+    public SimpleNode newNode() {
         return new TestNode();
     }
 }

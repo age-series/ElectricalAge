@@ -24,7 +24,7 @@ public class ComputerProbeBlock extends SimpleNodeBlock {
     }
 
     @Override
-    protected SimpleNode newNode() {
+    public SimpleNode newNode() {
         return new ComputerProbeNode();
     }
 

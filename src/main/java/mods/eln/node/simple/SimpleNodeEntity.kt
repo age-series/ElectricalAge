@@ -122,7 +122,12 @@ abstract class SimpleNodeEntity(override val nodeUuid: String) : TileEntity(), I
         return S3FPacketCustomPayload(Eln.channelName, node.publishPacket!!.toByteArray())
     }
 
-    open var sender = NodeEntityClientSender(this, nodeUuid)
+    open lateinit var sender: NodeEntityClientSender
+
+    init {
+        println("NodeUUID: $nodeUuid")
+        sender = NodeEntityClientSender(this, nodeUuid)
+    }
 
     //*********************** GUI ***************************
     override fun newContainer(side: Direction, player: EntityPlayer): Container? {

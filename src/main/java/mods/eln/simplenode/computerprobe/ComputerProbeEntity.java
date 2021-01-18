@@ -13,7 +13,7 @@ import org.jetbrains.annotations.NotNull;
 public class ComputerProbeEntity extends SimpleNodeEntity implements SimpleComponent {
 
     public ComputerProbeEntity() {
-        super("");
+        super("ElnProbe");
     }
 
     @Override
