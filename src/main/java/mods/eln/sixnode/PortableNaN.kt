@@ -111,7 +111,7 @@ class PortableNaNElement(sixNode: SixNode, side: Direction, descriptor: SixNodeD
         return Utils.plotCelsius("T", thermalLoad.Tc)
     }
 
-    override fun getWaila(): Map<String, String>? {
+    override fun getWaila(): Map<String, String> {
         val info = HashMap<String, String>()
 
         info[tr("Current")] = Utils.plotAmpere("", electricalLoad.i)

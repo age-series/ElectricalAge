@@ -108,11 +108,11 @@ class ElectricalVuMeterDescriptor(name: String, objName: String, var onOffOnly: 
             list.add(I18N.tr("Displays the value of a signal."))
     }
 
-    override fun shouldUseRenderHelper(type: IItemRenderer.ItemRenderType, item: ItemStack, helper: IItemRenderer.ItemRendererHelper?) = type != IItemRenderer.ItemRenderType.INVENTORY
+    override fun shouldUseRenderHelper(type: IItemRenderer.ItemRenderType, item: ItemStack, helper: IItemRenderer.ItemRendererHelper) = type != IItemRenderer.ItemRenderType.INVENTORY
 
     override fun handleRenderType(item: ItemStack, type: IItemRenderer.ItemRenderType) = true
 
-    override fun shouldUseRenderHelperEln(type: IItemRenderer.ItemRenderType, item: ItemStack, helper: IItemRenderer.ItemRendererHelper?) = type != IItemRenderer.ItemRenderType.INVENTORY
+    override fun shouldUseRenderHelperEln(type: IItemRenderer.ItemRenderType?, item: ItemStack?, helper: IItemRenderer.ItemRendererHelper?) = type != IItemRenderer.ItemRenderType.INVENTORY
 
     override fun renderItem(type: IItemRenderer.ItemRenderType, item: ItemStack, vararg data: Any) {
         if (type == IItemRenderer.ItemRenderType.INVENTORY) {
@@ -123,7 +123,7 @@ class ElectricalVuMeterDescriptor(name: String, objName: String, var onOffOnly: 
     }
 
     override fun getFrontFromPlace(side: Direction, player: EntityPlayer): LRDU {
-        return super.getFrontFromPlace(side, player).inverse()
+        return super.getFrontFromPlace(side, player)!!.inverse()
     }
 
     init {
@@ -148,7 +148,7 @@ class ElectricalVuMeterDescriptor(name: String, objName: String, var onOffOnly: 
         voltageLevelColor = VoltageLevelColor.SignalVoltage
     }
 
-    override fun canBePlacedOnSide(player: EntityPlayer?, side: Direction?) = true
+    override fun canBePlacedOnSide(player: EntityPlayer?, side: Direction) = true
 }
 
 
@@ -226,7 +226,7 @@ class ElectricalVuMeterRender(tileEntity: SixNodeEntity, side: Direction, descri
         super.draw()
         drawSignalPin(front, descriptor.pinDistance)
         if (side.isY) {
-            front.right().glRotateOnX()
+            front!!.right().glRotateOnX()
         }
         descriptor.draw(if (descriptor.onOffOnly) interpolator.target else interpolator.get(), tileEntity)
     }

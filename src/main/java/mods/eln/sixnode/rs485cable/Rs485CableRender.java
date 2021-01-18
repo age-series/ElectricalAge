@@ -8,6 +8,8 @@ import mods.eln.misc.UtilsClient;
 import mods.eln.node.six.SixNodeDescriptor;
 import mods.eln.node.six.SixNodeElementRender;
 import mods.eln.node.six.SixNodeEntity;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.lwjgl.opengl.GL11;
 
 public class Rs485CableRender extends SixNodeElementRender {
@@ -38,8 +40,9 @@ public class Rs485CableRender extends SixNodeElementRender {
         return true;
     }
 
+    @Nullable
     @Override
-    public CableRenderDescriptor getCableRender(LRDU lrdu) {
+    public CableRenderDescriptor getCableRender(@NotNull LRDU lrdu) {
         return descriptor.render;
     }
 }

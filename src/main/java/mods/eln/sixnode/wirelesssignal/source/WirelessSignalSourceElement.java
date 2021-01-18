@@ -20,6 +20,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.io.DataInputStream;
@@ -48,7 +49,7 @@ public class WirelessSignalSourceElement extends SixNodeElement implements IWire
 
         this.descriptor = (WirelessSignalSourceDescriptor) descriptor;
         WirelessSignalTxElement.channelRegister(this);
-        slowProcessList.add(lightningGlitchProcess = new LightningGlitchProcess(getCoordonate()));
+        slowProcessList.add(lightningGlitchProcess = new LightningGlitchProcess(getCoordinate()));
         if (this.descriptor.autoReset) {
             slowProcessList.add(autoResetProcess = new AutoResetProcess());
             autoResetProcess.reset();
@@ -77,18 +78,20 @@ public class WirelessSignalSourceElement extends SixNodeElement implements IWire
         }
     }
 
+    @org.jetbrains.annotations.Nullable
     @Override
-    public ElectricalLoad getElectricalLoad(LRDU lrdu, int mask) {
+    public ElectricalLoad getElectricalLoad(@NotNull LRDU lrdu, int mask) {
+        return null;
+    }
+
+    @org.jetbrains.annotations.Nullable
+    @Override
+    public ThermalLoad getThermalLoad(@NotNull LRDU lrdu, int mask) {
         return null;
     }
 
     @Override
-    public ThermalLoad getThermalLoad(LRDU lrdu, int mask) {
-        return null;
-    }
-
-    @Override
-    public int getConnectionMask(LRDU lrdu) {
+    public int getConnectionMask(@NotNull LRDU lrdu) {
         return 0;
     }
 
@@ -97,12 +100,13 @@ public class WirelessSignalSourceElement extends SixNodeElement implements IWire
         return null;
     }
 
+    @NotNull
     @Override
     public String thermoMeterString() {
         return null;
     }
 
-    @Nullable
+    @NotNull
     @Override
     public Map<String, String> getWaila() {
         Map<String, String> info = new HashMap<String, String>();
@@ -122,7 +126,7 @@ public class WirelessSignalSourceElement extends SixNodeElement implements IWire
     }
 
     @Override
-    public boolean onBlockActivated(EntityPlayer entityPlayer, Direction side, float vx, float vy, float vz) {
+    public boolean onBlockActivated(@NotNull EntityPlayer entityPlayer, @NotNull Direction side, float vx, float vy, float vz) {
         if (Utils.isPlayerUsingWrench(entityPlayer))
             return false;
 
@@ -146,7 +150,7 @@ public class WirelessSignalSourceElement extends SixNodeElement implements IWire
     }
 
     @Override
-    public void readFromNBT(NBTTagCompound nbt) {
+    public void readFromNBT(@NotNull NBTTagCompound nbt) {
         WirelessSignalTxElement.channelRemove(this);
 
         super.readFromNBT(nbt);
@@ -157,7 +161,7 @@ public class WirelessSignalSourceElement extends SixNodeElement implements IWire
     }
 
     @Override
-    public Coordinate getCoordonate() {
+    public Coordinate getCoordinate() {
         return sixNode.coordinate;
     }
 

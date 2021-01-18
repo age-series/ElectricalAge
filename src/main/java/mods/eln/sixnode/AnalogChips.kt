@@ -11,7 +11,6 @@ import mods.eln.node.Synchronizable
 import mods.eln.node.six.*
 import mods.eln.sim.ElectricalLoad
 import mods.eln.sim.IProcess
-import mods.eln.sim.ThermalLoad
 import mods.eln.sim.nbt.NbtElectricalGateInput
 import mods.eln.sim.nbt.NbtElectricalGateOutput
 import mods.eln.sim.nbt.NbtElectricalGateOutputProcess
@@ -59,16 +58,16 @@ open class AnalogChipDescriptor(name: String, obj: Obj3D?, functionName: String,
         top?.draw()
     }
 
-    override fun handleRenderType(item: ItemStack?, type: IItemRenderer.ItemRenderType?): Boolean = true
-    override fun shouldUseRenderHelper(type: IItemRenderer.ItemRenderType?, item: ItemStack?,
-                                       helper: IItemRenderer.ItemRendererHelper?): Boolean =
+    override fun handleRenderType(item: ItemStack, type: IItemRenderer.ItemRenderType): Boolean = true
+    override fun shouldUseRenderHelper(type: IItemRenderer.ItemRenderType, item: ItemStack,
+                                       helper: IItemRenderer.ItemRendererHelper): Boolean =
         type != IItemRenderer.ItemRenderType.INVENTORY
 
     override fun shouldUseRenderHelperEln(type: IItemRenderer.ItemRenderType?, item: ItemStack?,
                                           helper: IItemRenderer.ItemRendererHelper?): Boolean =
         type != IItemRenderer.ItemRenderType.INVENTORY
 
-    override fun renderItem(type: IItemRenderer.ItemRenderType?, item: ItemStack?, vararg data: Any?) {
+    override fun renderItem(type: IItemRenderer.ItemRenderType, item: ItemStack, vararg data: Any) {
         if (type == IItemRenderer.ItemRenderType.INVENTORY) {
             super.renderItem(type, item, *data)
         } else {
@@ -79,8 +78,8 @@ open class AnalogChipDescriptor(name: String, obj: Obj3D?, functionName: String,
         }
     }
 
-    override fun getFrontFromPlace(side: Direction?, player: EntityPlayer?): LRDU? =
-        super.getFrontFromPlace(side, player).left()
+    override fun getFrontFromPlace(side: Direction, player: EntityPlayer): LRDU? =
+        super.getFrontFromPlace(side, player)!!.left()
 
     override fun setParent(item: Item?, damage: Int) {
         super.setParent(item, damage)
@@ -107,9 +106,9 @@ open class AnalogChipElement(node: SixNode, side: Direction, sixNodeDescriptor: 
 
     init {
         electricalLoadList.add(outputPin)
-        for (i in 0..descriptor.function.inputCount - 1) {
+        for (i in 0 until descriptor.function.inputCount) {
             inputPins[i] = NbtElectricalGateInput("input$i")
-            electricalLoadList.add(inputPins[i])
+            electricalLoadList.add(inputPins[i]!!)
         }
 
         electricalComponentList.add(outputProcess)
@@ -134,7 +133,7 @@ open class AnalogChipElement(node: SixNode, side: Direction, sixNodeDescriptor: 
         else -> null
     }
 
-    override fun getConnectionMask(lrdu: LRDU?): Int = when (lrdu) {
+    override fun getConnectionMask(lrdu: LRDU): Int = when (lrdu) {
         front -> NodeBase.maskElectricalOutputGate
         front.inverse() -> if (inputPins[0] != null) NodeBase.maskElectricalInputGate else 0
         front.left() -> if (inputPins[1] != null) NodeBase.maskElectricalInputGate else 0
@@ -142,7 +141,7 @@ open class AnalogChipElement(node: SixNode, side: Direction, sixNodeDescriptor: 
         else -> 0
     }
 
-    override fun multiMeterString(): String? {
+    override fun multiMeterString(): String {
         val builder = StringBuilder()
         for (i in 1..3) {
             val pin = inputPins[i - 1]
@@ -155,9 +154,12 @@ open class AnalogChipElement(node: SixNode, side: Direction, sixNodeDescriptor: 
         return builder.toString()
     }
 
-    override fun getWaila(): MutableMap<String, String> = function.getWaila(
+    override fun getWaila(): Map<String, String> = function.getWaila(
         inputPins.map { if (it != null && it.connectedComponents.count() > 0) it.u else null }.toTypedArray(),
         outputPin.u)
+
+    override val ghostObserverCoordonate: Coordinate?
+        get() = coordinate!!
 
     override fun readFromNBT(nbt: NBTTagCompound) {
         super.readFromNBT(nbt)
@@ -168,10 +170,6 @@ open class AnalogChipElement(node: SixNode, side: Direction, sixNodeDescriptor: 
         super.writeToNBT(nbt)
         function.writeToNBT(nbt, "function")
     }
-
-    override fun getThermalLoad(lrdu: LRDU, mask: Int): ThermalLoad? = null
-    override fun thermoMeterString(): String? = null
-    override fun initialize() {}
 }
 
 open class AnalogChipRender(entity: SixNodeEntity, side: Direction, descriptor: SixNodeDescriptor) :
@@ -180,15 +178,15 @@ open class AnalogChipRender(entity: SixNodeEntity, side: Direction, descriptor: 
 
     override fun draw() {
         super.draw()
-        front.glRotateOnX()
+        front!!.glRotateOnX()
         descriptor.draw()
     }
 
-    override fun getCableRender(lrdu: LRDU?): CableRenderDescriptor? = when (lrdu) {
+    override fun getCableRender(lrdu: LRDU): CableRenderDescriptor? = when (lrdu) {
         front -> Eln.instance.signalCableDescriptor.render
-        front.inverse() -> if (descriptor.function.inputCount >= 1) Eln.instance.signalCableDescriptor.render else null
-        front.left() -> if (descriptor.function.inputCount >= 2) Eln.instance.signalCableDescriptor.render else null
-        front.right() -> if (descriptor.function.inputCount >= 3) Eln.instance.signalCableDescriptor.render else null
+        front!!.inverse() -> if (descriptor.function.inputCount >= 1) Eln.instance.signalCableDescriptor.render else null
+        front!!.left() -> if (descriptor.function.inputCount >= 2) Eln.instance.signalCableDescriptor.render else null
+        front!!.right() -> if (descriptor.function.inputCount >= 3) Eln.instance.signalCableDescriptor.render else null
         else -> null
     }
 }
@@ -281,23 +279,26 @@ class PIDRegulatorElement(node: SixNode, side: Direction, sixNodeDescriptor: Six
 
     override fun hasGui() = true
 
-    override fun networkSerialize(stream: DataOutputStream?) {
+    override fun networkSerialize(stream: DataOutputStream) {
         super.networkSerialize(stream)
         try {
             with(function as PIDRegulator) {
-                stream?.writeFloat(Kp.toFloat())
-                stream?.writeFloat(Ki.toFloat())
-                stream?.writeFloat(Kd.toFloat())
+                stream.writeFloat(Kp.toFloat())
+                stream.writeFloat(Ki.toFloat())
+                stream.writeFloat(Kd.toFloat())
             }
         } catch(e: IOException) {
             e.printStackTrace()
         }
     }
 
-    override fun networkUnserialize(stream: DataInputStream?) {
+    override val ghostObserverCoordonate: Coordinate
+        get() = coordinate!!
+
+    override fun networkUnserialize(stream: DataInputStream) {
         super.networkUnserialize(stream)
         try {
-            when (stream?.readByte()?.toInt()) {
+            when (stream.readByte().toInt()) {
                 KpParameterChangedEvent -> (function as PIDRegulator).Kp = stream.readFloat().toDouble()
                 KiParameterChangedEvent -> (function as PIDRegulator).Ki = stream.readFloat().toDouble()
                 KdParameterChangerEvent -> (function as PIDRegulator).Kd = stream.readFloat().toDouble()
@@ -338,14 +339,14 @@ class PIDRegulatorRender(entity: SixNodeEntity, side: Direction, descriptor: Six
     internal var Ki = 0f
     internal var Kd = 0f
 
-    override fun newGuiDraw(side: Direction?, player: EntityPlayer?): GuiScreen? = PIDRegulatorGui(this)
+    override fun newGuiDraw(side: Direction, player: EntityPlayer): GuiScreen = PIDRegulatorGui(this)
 
-    override fun publishUnserialize(stream: DataInputStream?) {
+    override fun publishUnserialize(stream: DataInputStream) {
         super.publishUnserialize(stream)
         try {
-            Kp = stream?.readFloat() ?: 1f
-            Ki = stream?.readFloat() ?: 0f
-            Kd = stream?.readFloat() ?: 0f
+            Kp = stream.readFloat() ?: 1f
+            Ki = stream.readFloat() ?: 0f
+            Kd = stream.readFloat() ?: 0f
         } catch (e: IOException) {
             e.printStackTrace()
         }
@@ -475,23 +476,26 @@ class AmplifierElement(node: SixNode, side: Direction, sixNodeDescriptor: SixNod
 
     override fun hasGui() = true
 
-    override fun networkSerialize(stream: DataOutputStream?) {
+    override fun networkSerialize(stream: DataOutputStream) {
         super.networkSerialize(stream)
 
         try {
             with(function as Amplifier) {
-                stream?.writeFloat(gain.toFloat())
+                stream.writeFloat(gain.toFloat())
             }
         } catch(e: IOException) {
             e.printStackTrace()
         }
     }
 
-    override fun networkUnserialize(stream: DataInputStream?) {
+    override val ghostObserverCoordonate: Coordinate
+        get() = coordinate!!
+
+    override fun networkUnserialize(stream: DataInputStream) {
         super.networkUnserialize(stream)
 
         try {
-            when (stream?.readByte()?.toInt()) {
+            when (stream.readByte().toInt()) {
                 GainChangedEvent -> (function as Amplifier).gain = stream.readFloat().toDouble()
             }
             needPublish()
@@ -519,12 +523,12 @@ class AmplifierRender(entity: SixNodeEntity, side: Direction, descriptor: SixNod
     AnalogChipRender(entity, side, descriptor) {
     internal var gain = 1f
 
-    override fun newGuiDraw(side: Direction?, player: EntityPlayer?): GuiScreen? = AmplifierGui(this)
+    override fun newGuiDraw(side: Direction, player: EntityPlayer): GuiScreen = AmplifierGui(this)
 
-    override fun publishUnserialize(stream: DataInputStream?) {
+    override fun publishUnserialize(stream: DataInputStream) {
         super.publishUnserialize(stream)
         try {
-            gain = stream?.readFloat() ?: 1f
+            gain = stream.readFloat() ?: 1f
         } catch (e: IOException) {
             e.printStackTrace()
         }
@@ -612,13 +616,13 @@ class SummingUnitElement(node: SixNode, side: Direction, sixNodeDescriptor: SixN
 
     override fun hasGui() = true
 
-    override fun networkSerialize(stream: DataOutputStream?) {
+    override fun networkSerialize(stream: DataOutputStream) {
         super.networkSerialize(stream)
 
         try {
             with(function as SummingUnit) {
                 gains.forEach {
-                    stream?.writeFloat(it.toFloat())
+                    stream.writeFloat(it.toFloat())
                 }
             }
         } catch(e: IOException) {
@@ -626,11 +630,14 @@ class SummingUnitElement(node: SixNode, side: Direction, sixNodeDescriptor: SixN
         }
     }
 
-    override fun networkUnserialize(stream: DataInputStream?) {
+    override val ghostObserverCoordonate: Coordinate
+        get() = coordinate!!
+
+    override fun networkUnserialize(stream: DataInputStream) {
         super.networkUnserialize(stream)
 
         try {
-            when (stream?.readByte()?.toInt()) {
+            when (stream.readByte().toInt()) {
                 GainChangedEvents[0] -> (function as SummingUnit).gains[0] = stream.readFloat().toDouble()
                 GainChangedEvents[1] -> (function as SummingUnit).gains[1] = stream.readFloat().toDouble()
                 GainChangedEvents[2] -> (function as SummingUnit).gains[2] = stream.readFloat().toDouble()
@@ -667,13 +674,13 @@ class SummingUnitRender(entity: SixNodeEntity, side: Direction, descriptor: SixN
     AnalogChipRender(entity, side, descriptor) {
     internal var gains = floatArrayOf(1f, 1f, 1f)
 
-    override fun newGuiDraw(side: Direction?, player: EntityPlayer?): GuiScreen? = SummingUnitGui(this)
+    override fun newGuiDraw(side: Direction, player: EntityPlayer): GuiScreen = SummingUnitGui(this)
 
-    override fun publishUnserialize(stream: DataInputStream?) {
+    override fun publishUnserialize(stream: DataInputStream) {
         super.publishUnserialize(stream)
         try {
             for (i in gains.indices) {
-                gains[i] = stream?.readFloat() ?: 1f
+                gains[i] = stream.readFloat() ?: 1f
             }
         } catch (e: IOException) {
             e.printStackTrace()
@@ -784,15 +791,18 @@ class FilterElement(node: SixNode, side: Direction, sixNodeDescriptor: SixNodeDe
 
     override fun hasGui() = true
 
-    override fun networkSerialize(stream: DataOutputStream?) {
+    override fun networkSerialize(stream: DataOutputStream) {
         super.networkSerialize(stream)
 
         try {
-            stream?.writeFloat(cutOffFrequency.toFloat())
+            stream.writeFloat(cutOffFrequency.toFloat())
         } catch(e: IOException) {
             e.printStackTrace()
         }
     }
+
+    override val ghostObserverCoordonate: Coordinate
+        get() = coordinate!!
 
     override fun networkUnserialize(stream: DataInputStream) {
         super.networkUnserialize(stream)
@@ -822,7 +832,7 @@ class FilterRender(entity: SixNodeEntity, side: Direction, descriptor: SixNodeDe
     AnalogChipRender(entity, side, descriptor) {
     internal var cutOffFrequency = Synchronizable(Eln.instance.electricalFrequency.toFloat() / 4f)
 
-    override fun newGuiDraw(side: Direction?, player: EntityPlayer?): GuiScreen? = FilterGui(this)
+    override fun newGuiDraw(side: Direction, player: EntityPlayer): GuiScreen = FilterGui(this)
 
     override fun publishUnserialize(stream: DataInputStream) {
         super.publishUnserialize(stream)

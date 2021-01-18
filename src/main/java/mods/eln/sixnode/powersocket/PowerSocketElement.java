@@ -31,6 +31,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -63,8 +65,9 @@ public class PowerSocketElement extends SixNodeElement implements IConfigurable 
         return acceptingInventory.getInventory();
     }
 
+    @Nullable
     @Override
-    public Container newContainer(Direction side, EntityPlayer player) {
+    public Container newContainer(@NotNull Direction side, @NotNull EntityPlayer player) {
         return new PowerSocketContainer(player, getInventory());
     }
 
@@ -119,8 +122,9 @@ public class PowerSocketElement extends SixNodeElement implements IConfigurable 
         return outputLoad;
     }
 
+    @Nullable
     @Override
-    public ThermalLoad getThermalLoad(LRDU lrdu, int mask) {
+    public ThermalLoad getThermalLoad(@NotNull LRDU lrdu, int mask) {
         return null;
     }
 
@@ -135,6 +139,7 @@ public class PowerSocketElement extends SixNodeElement implements IConfigurable 
         return Utils.plotUIP(outputLoad.getU(), outputLoad.getCurrent());
     }
 
+    @NotNull
     @Override
     public String thermoMeterString() {
         return null;
@@ -146,7 +151,7 @@ public class PowerSocketElement extends SixNodeElement implements IConfigurable 
     }
 
     @Override
-    protected void inventoryChanged() {
+    public void inventoryChanged() {
         super.inventoryChanged();
         sixNode.disconnect();
         setupFromInventory();
@@ -167,7 +172,7 @@ public class PowerSocketElement extends SixNodeElement implements IConfigurable 
     }
 
     @Override
-    public void readFromNBT(NBTTagCompound nbt) {
+    public void readFromNBT(@NotNull NBTTagCompound nbt) {
         super.readFromNBT(nbt);
         channel = nbt.getString("channel");
         paintColor = nbt.getInteger("color");

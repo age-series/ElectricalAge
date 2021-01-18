@@ -9,6 +9,8 @@ import mods.eln.node.six.SixNodeElementRender;
 import mods.eln.node.six.SixNodeEntity;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.lwjgl.opengl.GL11;
 
 import java.io.DataInputStream;
@@ -39,8 +41,9 @@ public class ElectricalMathRender extends SixNodeElementRender {
         ledOn[4] = true;
     }
 
+    @Nullable
     @Override
-    public GuiScreen newGuiDraw(Direction side, EntityPlayer player) {
+    public GuiScreen newGuiDraw(@NotNull Direction side, @NotNull EntityPlayer player) {
         return new ElectricalMathGui(player, inventory, this);
     }
 
@@ -108,8 +111,9 @@ public class ElectricalMathRender extends SixNodeElementRender {
         interpolator.step(deltaT);
     }
 
+    @Nullable
     @Override
-    public CableRenderDescriptor getCableRender(LRDU lrdu) {
+    public CableRenderDescriptor getCableRender(@NotNull LRDU lrdu) {
         return Eln.instance.signalCableDescriptor.render;
     }
 }

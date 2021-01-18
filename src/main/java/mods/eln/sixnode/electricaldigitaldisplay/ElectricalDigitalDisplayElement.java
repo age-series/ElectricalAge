@@ -16,6 +16,7 @@ import mods.eln.sim.nbt.NbtElectricalGateInput;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.io.DataInputStream;
@@ -55,15 +56,17 @@ public class ElectricalDigitalDisplayElement extends SixNodeElement implements I
     @Override
     public void initialize() {}
 
+    @org.jetbrains.annotations.Nullable
     @Override
-    public ElectricalLoad getElectricalLoad(LRDU lrdu, int mask) {
+    public ElectricalLoad getElectricalLoad(@NotNull LRDU lrdu, int mask) {
         if(lrdu == front) return dotsIn;
         if(lrdu == front.inverse()) return input;
         return strobeIn;
     }
 
+    @org.jetbrains.annotations.Nullable
     @Override
-    public ThermalLoad getThermalLoad(LRDU lrdu, int mask) {
+    public ThermalLoad getThermalLoad(@NotNull LRDU lrdu, int mask) {
         return null;
     }
 
@@ -72,13 +75,14 @@ public class ElectricalDigitalDisplayElement extends SixNodeElement implements I
         return "";
     }
 
+    @NotNull
     @Override
     public String thermoMeterString() {
         return "";
     }
 
     @Override
-    public int getConnectionMask(LRDU lrdu) {
+    public int getConnectionMask(@NotNull LRDU lrdu) {
         if(lrdu == front.inverse()) return NodeBase.maskElectricalInputGate;
         if(lrdu == front) return NodeBase.maskElectricalInputGate | (11 << NodeBase.maskColorShift);
         return NodeBase.maskElectricalInputGate | (1 << NodeBase.maskColorShift);
@@ -151,7 +155,7 @@ public class ElectricalDigitalDisplayElement extends SixNodeElement implements I
     }
 
     @Override
-    public void readFromNBT(NBTTagCompound nbt) {
+    public void readFromNBT(@NotNull NBTTagCompound nbt) {
         super.readFromNBT(nbt);
 
         current = nbt.getFloat("current");
@@ -160,7 +164,7 @@ public class ElectricalDigitalDisplayElement extends SixNodeElement implements I
         dye = nbt.getByte("dye");
     }
 
-    @Nullable
+    @NotNull
     @Override
     public Map<String, String> getWaila() {
         HashMap<String, String> info = new HashMap<>();

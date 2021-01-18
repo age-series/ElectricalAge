@@ -21,7 +21,7 @@ public class WorldExplosion implements IDestructable {
     }
 
     public WorldExplosion(SixNodeElement e) {
-        this.c = e.getCoordonate();
+        this.c = e.getCoordinate();
         this.type = e.toString();
         origine = e;
     }

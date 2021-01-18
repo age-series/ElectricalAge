@@ -24,6 +24,8 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -73,7 +75,7 @@ public class ElectricalCableElement extends SixNodeElement {
     }
 
     @Override
-    public void readFromNBT(NBTTagCompound nbt) {
+    public void readFromNBT(@NotNull NBTTagCompound nbt) {
         super.readFromNBT(nbt);
         byte b = nbt.getByte("color");
         color = b & 0xF;
@@ -86,13 +88,15 @@ public class ElectricalCableElement extends SixNodeElement {
         nbt.setByte("color", (byte) (color + (colorCare << 4)));
     }
 
+    @Nullable
     @Override
-    public ElectricalLoad getElectricalLoad(LRDU lrdu, int mask) {
+    public ElectricalLoad getElectricalLoad(@NotNull LRDU lrdu, int mask) {
         return electricalLoad;
     }
 
+    @Nullable
     @Override
-    public ThermalLoad getThermalLoad(LRDU lrdu, int mask) {
+    public ThermalLoad getThermalLoad(@NotNull LRDU lrdu, int mask) {
         if (!descriptor.signalWire)
             return thermalLoad;
         else
@@ -100,7 +104,7 @@ public class ElectricalCableElement extends SixNodeElement {
     }
 
     @Override
-    public int getConnectionMask(LRDU lrdu) {
+    public int getConnectionMask(@NotNull LRDU lrdu) {
         return descriptor.getNodeMask() /*+ NodeBase.maskElectricalWire*/ + (color << NodeBase.maskColorShift) + (colorCare << NodeBase.maskColorCareShift);
     }
 
@@ -112,6 +116,7 @@ public class ElectricalCableElement extends SixNodeElement {
             return Utils.plotSignal(electricalLoad.getU());
     }
 
+    @NotNull
     @Override
     public Map<String, String> getWaila() {
         Map<String, String> info = new HashMap<String, String>();
@@ -142,6 +147,7 @@ public class ElectricalCableElement extends SixNodeElement {
         return info;
     }
 
+    @NotNull
     @Override
     public String thermoMeterString() {
         if (!descriptor.signalWire)

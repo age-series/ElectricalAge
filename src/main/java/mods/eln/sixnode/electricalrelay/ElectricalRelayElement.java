@@ -21,6 +21,8 @@ import mods.eln.sixnode.electricalcable.ElectricalCableDescriptor;
 import mods.eln.sound.SoundCommand;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -77,7 +79,7 @@ public class ElectricalRelayElement extends SixNodeElement implements IConfigura
     }
 
     @Override
-    public void readFromNBT(NBTTagCompound nbt) {
+    public void readFromNBT(@NotNull NBTTagCompound nbt) {
         super.readFromNBT(nbt);
         byte value = nbt.getByte("front");
         front = LRDU.fromInt((value >> 0) & 0x3);
@@ -101,8 +103,9 @@ public class ElectricalRelayElement extends SixNodeElement implements IConfigura
         return null;
     }
 
+    @Nullable
     @Override
-    public ThermalLoad getThermalLoad(LRDU lrdu, int mask) {
+    public ThermalLoad getThermalLoad(@NotNull LRDU lrdu, int mask) {
         return null;
     }
 
@@ -119,6 +122,7 @@ public class ElectricalRelayElement extends SixNodeElement implements IConfigura
         return Utils.plotVolt("Ua:", aLoad.getU()) + Utils.plotVolt("Ub:", bLoad.getU()) + Utils.plotAmpere("I:", aLoad.getCurrent());
     }
 
+    @NotNull
     @Override
     public Map<String, String> getWaila() {
         Map<String, String> info = new HashMap<String, String>();
@@ -149,6 +153,7 @@ public class ElectricalRelayElement extends SixNodeElement implements IConfigura
         return info;
     }
 
+    @NotNull
     @Override
     public String thermoMeterString() {
         return "";
@@ -194,7 +199,7 @@ public class ElectricalRelayElement extends SixNodeElement implements IConfigura
     }
 
     @Override
-    protected void inventoryChanged() {
+    public void inventoryChanged() {
         computeElectricalLoad();
     }
 

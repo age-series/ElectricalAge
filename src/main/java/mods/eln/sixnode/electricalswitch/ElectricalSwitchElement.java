@@ -20,6 +20,8 @@ import mods.eln.sound.SoundCommand;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -67,7 +69,7 @@ public class ElectricalSwitchElement extends SixNodeElement {
     }
 
     @Override
-    public void readFromNBT(NBTTagCompound nbt) {
+    public void readFromNBT(@NotNull NBTTagCompound nbt) {
         super.readFromNBT(nbt);
         byte value = nbt.getByte("front");
         front = LRDU.fromInt((value >> 0) & 0x3);
@@ -88,8 +90,9 @@ public class ElectricalSwitchElement extends SixNodeElement {
         return null;
     }
 
+    @Nullable
     @Override
-    public ThermalLoad getThermalLoad(LRDU lrdu, int mask) {
+    public ThermalLoad getThermalLoad(@NotNull LRDU lrdu, int mask) {
         //return thermalLoad;
         return null;
     }
@@ -107,6 +110,7 @@ public class ElectricalSwitchElement extends SixNodeElement {
         return Utils.plotVolt("Ua:", aLoad.getU()) + Utils.plotVolt("Ub:", bLoad.getU()) + Utils.plotAmpere("I:", aLoad.getCurrent());
     }
 
+    @NotNull
     @Override
     public Map<String, String> getWaila() {
         Map<String, String> info = new HashMap<String, String>();
@@ -136,6 +140,7 @@ public class ElectricalSwitchElement extends SixNodeElement {
         return info;
     }
 
+    @NotNull
     @Override
     public String thermoMeterString() {
         //return Utils.plotCelsius("T:",thermalLoad.Tc);

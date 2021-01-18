@@ -19,6 +19,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.io.DataOutputStream;
@@ -56,7 +57,7 @@ public class ThermalCableElement extends SixNodeElement {
     }
 
     @Override
-    public void readFromNBT(NBTTagCompound nbt) {
+    public void readFromNBT(@NotNull NBTTagCompound nbt) {
         super.readFromNBT(nbt);
         byte b = nbt.getByte("color");
         color = b & 0xF;
@@ -74,8 +75,9 @@ public class ThermalCableElement extends SixNodeElement {
         return null;
     }
 
+    @org.jetbrains.annotations.Nullable
     @Override
-    public ThermalLoad getThermalLoad(LRDU lrdu, int mask) {
+    public ThermalLoad getThermalLoad(@NotNull LRDU lrdu, int mask) {
         return thermalLoad;
     }
 
@@ -89,7 +91,7 @@ public class ThermalCableElement extends SixNodeElement {
         return "";
     }
 
-    @Nullable
+    @NotNull
     @Override
     public Map<String, String> getWaila() {
         Map<String, String> info = new HashMap<String, String>();
@@ -99,6 +101,7 @@ public class ThermalCableElement extends SixNodeElement {
         return info;
     }
 
+    @NotNull
     @Override
     public String thermoMeterString() {
         return Utils.plotCelsius("T", thermalLoad.Tc) + Utils.plotPower("P", thermalLoad.getPower());

@@ -27,6 +27,8 @@ import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -100,7 +102,7 @@ public class ElectricalSensorElement extends SixNodeElement implements IConfigur
     }
 
     @Override
-    public void readFromNBT(NBTTagCompound nbt) {
+    public void readFromNBT(@NotNull NBTTagCompound nbt) {
         super.readFromNBT(nbt);
         byte value = nbt.getByte("front");
         front = LRDU.fromInt((value >> 0) & 0x3);
@@ -133,8 +135,9 @@ public class ElectricalSensorElement extends SixNodeElement implements IConfigur
         return null;
     }
 
+    @Nullable
     @Override
-    public ThermalLoad getThermalLoad(LRDU lrdu, int mask) {
+    public ThermalLoad getThermalLoad(@NotNull LRDU lrdu, int mask) {
         return null;
     }
 
@@ -160,6 +163,7 @@ public class ElectricalSensorElement extends SixNodeElement implements IConfigur
             return Utils.plotVolt("Uin:", aLoad.getU()) + Utils.plotVolt("Uout:", outputGate.getU());
     }
 
+    @NotNull
     @Override
     public Map<String, String> getWaila() {
         Map<String, String> info = new HashMap<String, String>();
@@ -182,6 +186,7 @@ public class ElectricalSensorElement extends SixNodeElement implements IConfigur
         return info;
     }
 
+    @NotNull
     @Override
     public String thermoMeterString() {
         return "";
@@ -210,7 +215,7 @@ public class ElectricalSensorElement extends SixNodeElement implements IConfigur
     }
 
     @Override
-    protected void inventoryChanged() {
+    public void inventoryChanged() {
         computeElectricalLoad();
         reconnect();
     }
@@ -269,8 +274,9 @@ public class ElectricalSensorElement extends SixNodeElement implements IConfigur
         return true;
     }
 
+    @Nullable
     @Override
-    public Container newContainer(Direction side, EntityPlayer player) {
+    public Container newContainer(@NotNull Direction side, @NotNull EntityPlayer player) {
         return new ElectricalSensorContainer(player, inventory.getInventory(), descriptor);
     }
 

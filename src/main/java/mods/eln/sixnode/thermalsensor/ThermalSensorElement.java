@@ -26,6 +26,8 @@ import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -81,7 +83,7 @@ public class ThermalSensorElement extends SixNodeElement implements IConfigurabl
     }
 
     @Override
-    public void readFromNBT(NBTTagCompound nbt) {
+    public void readFromNBT(@NotNull NBTTagCompound nbt) {
         super.readFromNBT(nbt);
         byte value = nbt.getByte("front");
         front = LRDU.fromInt((value >> 0) & 0x3);
@@ -106,8 +108,9 @@ public class ThermalSensorElement extends SixNodeElement implements IConfigurabl
         return null;
     }
 
+    @Nullable
     @Override
-    public ThermalLoad getThermalLoad(LRDU lrdu, int mask) {
+    public ThermalLoad getThermalLoad(@NotNull LRDU lrdu, int mask) {
         if (!descriptor.temperatureOnly) {
             if (getInventory().getStackInSlot(ThermalSensorContainer.cableSlotId) != null) {
                 if (front.left() == lrdu) return thermalLoad;
@@ -143,6 +146,7 @@ public class ThermalSensorElement extends SixNodeElement implements IConfigurabl
         return "";
     }
 
+    @NotNull
     @Override
     public Map<String, String> getWaila() {
         Map<String, String> info = new HashMap<String, String>();
@@ -161,6 +165,7 @@ public class ThermalSensorElement extends SixNodeElement implements IConfigurabl
         return info;
     }
 
+    @NotNull
     @Override
     public String thermoMeterString() {
         return Utils.plotCelsius("T :", thermalLoad.Tc);
@@ -186,7 +191,7 @@ public class ThermalSensorElement extends SixNodeElement implements IConfigurabl
     }
 
     @Override
-    protected void inventoryChanged() {
+    public void inventoryChanged() {
         sixNode.disconnect();
         computeElectricalLoad();
         sixNode.connect();
@@ -264,8 +269,9 @@ public class ThermalSensorElement extends SixNodeElement implements IConfigurabl
         return true;
     }
 
+    @Nullable
     @Override
-    public Container newContainer(Direction side, EntityPlayer player) {
+    public Container newContainer(@NotNull Direction side, @NotNull EntityPlayer player) {
         return new ThermalSensorContainer(player, inventory.getInventory(), descriptor.temperatureOnly);
     }
 

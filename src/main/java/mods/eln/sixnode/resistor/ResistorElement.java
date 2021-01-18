@@ -24,8 +24,9 @@ import mods.eln.sim.process.heater.ResistorHeatThermalLoad;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nullable;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.HashMap;
@@ -101,8 +102,9 @@ public class ResistorElement extends SixNodeElement {
         return null;
     }
 
+    @org.jetbrains.annotations.Nullable
     @Override
-    public ThermalLoad getThermalLoad(LRDU lrdu, int mask) {
+    public ThermalLoad getThermalLoad(@NotNull LRDU lrdu, int mask) {
         return thermalLoad;
     }
 
@@ -121,7 +123,7 @@ public class ResistorElement extends SixNodeElement {
             (control != null ? Utils.plotPercent("C", control.getNormalized()) : "");
     }
 
-    @Nullable
+    @NotNull
     @Override
     public Map<String, String> getWaila() {
         Map<String, String> info = new HashMap<String, String>();
@@ -134,6 +136,7 @@ public class ResistorElement extends SixNodeElement {
         return info;
     }
 
+    @NotNull
     @Override
     public String thermoMeterString() {
         return Utils.plotCelsius("T", thermalLoad.Tc);
@@ -165,8 +168,9 @@ public class ResistorElement extends SixNodeElement {
         return true;
     }
 
+    @Nullable
     @Override
-    public Container newContainer(Direction side, EntityPlayer player) {
+    public Container newContainer(@NotNull Direction side, @NotNull EntityPlayer player) {
         return new ResistorContainer(player, inventory);
     }
 }

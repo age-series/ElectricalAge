@@ -68,7 +68,7 @@ class PowerSinkDescriptor(name: String, obj: Obj3D) : SixNodeDescriptor(name, Po
         }
     }
 
-    override fun canBePlacedOnSide(player: EntityPlayer?, side: Direction?) = true
+    override fun canBePlacedOnSide(player: EntityPlayer?, side: Direction) = true
 
     init {
         voltageLevelColor = VoltageLevelColor.Neutral
@@ -76,7 +76,7 @@ class PowerSinkDescriptor(name: String, obj: Obj3D) : SixNodeDescriptor(name, Po
 }
 
 
-class PowerSinkElement(sixNode: SixNode?, side: Direction?, descriptor: SixNodeDescriptor?) : SixNodeElement(sixNode, side, descriptor), IConfigurable {
+class PowerSinkElement(sixNode: SixNode, side: Direction, descriptor: SixNodeDescriptor) : SixNodeElement(sixNode, side, descriptor), IConfigurable {
     var electricalLoad = NbtElectricalLoad("electricalLoad")
     var currentSource = CurrentSource("currSrc", electricalLoad, null)
 
@@ -200,14 +200,14 @@ class PowerSinkGui(var render: PowerSinkRender) : GuiScreenEln() {
     }
 }
 
-class PowerSinkRender(tileEntity: SixNodeEntity?, side: Direction?, descriptor: SixNodeDescriptor) : SixNodeElementRender(tileEntity, side, descriptor) {
+class PowerSinkRender(tileEntity: SixNodeEntity, side: Direction, descriptor: SixNodeDescriptor) : SixNodeElementRender(tileEntity, side, descriptor) {
     var descriptor: CurrentSourceDescriptor = descriptor as CurrentSourceDescriptor
     var voltage = 0.0
     @JvmField
     var current = 0.0
     override fun draw() {
         super.draw()
-        front.glRotateOnX()
+        front!!.glRotateOnX()
         descriptor.draw()
     }
 

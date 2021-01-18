@@ -20,6 +20,7 @@ import mods.eln.sixnode.wirelesssignal.WirelessUtils;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.io.ByteArrayOutputStream;
@@ -104,7 +105,7 @@ public class ModbusRtuElement extends SixNodeElement implements IModbusSlave {
             if (sleepTimer < 0) {
                 sleepTimer += Utils.rand(1.2, 2);
 
-                IWirelessSignalSpot spot = WirelessUtils.buildSpot(getCoordonate(), null, 0);
+                IWirelessSignalSpot spot = WirelessUtils.buildSpot(getCoordinate(), null, 0);
                 WirelessUtils.getTx(spot, txSet, txStrength);
             }
 
@@ -122,8 +123,9 @@ public class ModbusRtuElement extends SixNodeElement implements IModbusSlave {
         return ioGate[lrdu.toInt()];
     }
 
+    @org.jetbrains.annotations.Nullable
     @Override
-    public ThermalLoad getThermalLoad(LRDU lrdu, int mask) {
+    public ThermalLoad getThermalLoad(@NotNull LRDU lrdu, int mask) {
         return null;
     }
 
@@ -137,7 +139,7 @@ public class ModbusRtuElement extends SixNodeElement implements IModbusSlave {
         return null; // Utils.plotUIP(powerLoad.Uc, powerLoad.getCurrent());
     }
 
-    @Nullable
+    @NotNull
     @Override
     public Map<String, String> getWaila() {
         Map<String, String> info = new HashMap<String, String>();
@@ -150,6 +152,7 @@ public class ModbusRtuElement extends SixNodeElement implements IModbusSlave {
         return info;
     }
 
+    @NotNull
     @Override
     public String thermoMeterString() {
         return null;
@@ -479,7 +482,7 @@ public class ModbusRtuElement extends SixNodeElement implements IModbusSlave {
     }
 
     @Override
-    public void readFromNBT(NBTTagCompound nbt) {
+    public void readFromNBT(@NotNull NBTTagCompound nbt) {
         super.readFromNBT(nbt);
         station = nbt.getInteger("station");
         name = nbt.getString("name");

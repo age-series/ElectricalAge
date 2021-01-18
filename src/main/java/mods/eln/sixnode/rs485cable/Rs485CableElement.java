@@ -9,6 +9,8 @@ import mods.eln.node.six.SixNodeElement;
 import mods.eln.sim.ElectricalLoad;
 import mods.eln.sim.ThermalLoad;
 import net.minecraft.entity.player.EntityPlayer;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class Rs485CableElement extends SixNodeElement {
 
@@ -24,8 +26,9 @@ public class Rs485CableElement extends SixNodeElement {
         return null;
     }
 
+    @Nullable
     @Override
-    public ThermalLoad getThermalLoad(LRDU lrdu, int mask) {
+    public ThermalLoad getThermalLoad(@NotNull LRDU lrdu, int mask) {
         return null;
     }
 
@@ -39,6 +42,7 @@ public class Rs485CableElement extends SixNodeElement {
         return null;
     }
 
+    @NotNull
     @Override
     public String thermoMeterString() {
         return null;

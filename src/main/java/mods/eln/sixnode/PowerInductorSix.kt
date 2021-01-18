@@ -100,7 +100,7 @@ class PowerInductorSixDescriptor(name: String,
     }
 
     override fun getFrontFromPlace(side: Direction, player: EntityPlayer): LRDU {
-        return super.getFrontFromPlace(side, player).left()
+        return super.getFrontFromPlace(side, player)!!.left()
     }
 
     init {
@@ -113,13 +113,13 @@ class PowerInductorSixDescriptor(name: String,
 }
 
 
-class PowerInductorSixElement(SixNode: SixNode?, side: Direction?, descriptor: SixNodeDescriptor) : SixNodeElement(SixNode, side, descriptor), IConfigurable {
+class PowerInductorSixElement(SixNode: SixNode, side: Direction, descriptor: SixNodeDescriptor) : SixNodeElement(SixNode, side, descriptor), IConfigurable {
     var descriptor: PowerInductorSixDescriptor = descriptor as PowerInductorSixDescriptor
     var positiveLoad = NbtElectricalLoad("positiveLoad")
     var negativeLoad = NbtElectricalLoad("negativeLoad")
     var inductor = Inductor("inductor", positiveLoad, negativeLoad)
     var fromNbt = false
-    var inventory = SixNodeElementInventory(2, 64, this)
+    override var inventory = SixNodeElementInventory(2, 64, this)
 
     override fun getElectricalLoad(lrdu: LRDU, mask: Int): ElectricalLoad? {
         if (lrdu == front.right()) return positiveLoad
@@ -178,10 +178,6 @@ class PowerInductorSixElement(SixNode: SixNode?, side: Direction?, descriptor: S
     override fun readFromNBT(nbt: NBTTagCompound) {
         super.readFromNBT(nbt)
         fromNbt = true
-    }
-
-    override fun getInventory(): IInventory {
-        return inventory
     }
 
     override fun hasGui(): Boolean {
@@ -263,14 +259,14 @@ class PowerInductorSixElement(SixNode: SixNode?, side: Direction?, descriptor: S
 }
 
 
-class PowerInductorSixRender(tileEntity: SixNodeEntity?, side: Direction?, descriptor: SixNodeDescriptor) : SixNodeElementRender(tileEntity, side, descriptor) {
+class PowerInductorSixRender(tileEntity: SixNodeEntity, side: Direction, descriptor: SixNodeDescriptor) : SixNodeElementRender(tileEntity, side, descriptor) {
     @JvmField
     var descriptor: PowerInductorSixDescriptor = descriptor as PowerInductorSixDescriptor
 
-    @JvmField
-    var inventory = SixNodeElementInventory(2, 64, this)
+    override var inventory = SixNodeElementInventory(2, 64, this)
+
     override fun draw() {
-        front.left().glRotateOnX()
+        front!!.left().glRotateOnX()
         descriptor.draw()
     }
 

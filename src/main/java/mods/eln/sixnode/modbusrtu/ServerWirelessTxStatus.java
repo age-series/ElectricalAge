@@ -45,7 +45,7 @@ public class ServerWirelessTxStatus extends WirelessTxStatus implements IWireles
     }
 
     @Override
-    public Coordinate getCoordonate() {
+    public Coordinate getCoordinate() {
         return coordinate;
     }
 

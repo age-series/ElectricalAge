@@ -19,6 +19,8 @@ import mods.eln.sim.nbt.NbtElectricalGateOutputProcess;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -55,8 +57,9 @@ public class ElectricalEntitySensorElement extends SixNodeElement {
         return null;
     }
 
+    @Nullable
     @Override
-    public ThermalLoad getThermalLoad(LRDU lrdu, int mask) {
+    public ThermalLoad getThermalLoad(@NotNull LRDU lrdu, int mask) {
         return null;
     }
 
@@ -71,6 +74,7 @@ public class ElectricalEntitySensorElement extends SixNodeElement {
         return Utils.plotVolt("U:", outputGate.getU()) + Utils.plotAmpere("I:", outputGate.getCurrent());
     }
 
+    @NotNull
     @Override
     public Map<String, String> getWaila() {
         Map<String, String> info = new HashMap<String, String>();
@@ -81,6 +85,7 @@ public class ElectricalEntitySensorElement extends SixNodeElement {
         return info;
     }
 
+    @NotNull
     @Override
     public String thermoMeterString() {
         return "";
@@ -109,13 +114,14 @@ public class ElectricalEntitySensorElement extends SixNodeElement {
             return null;
     }
 
+    @Nullable
     @Override
-    public Container newContainer(Direction side, EntityPlayer player) {
+    public Container newContainer(@NotNull Direction side, @NotNull EntityPlayer player) {
         return new ElectricalEntitySensorContainer(player, inventory.getInventory());
     }
 
     @Override
-    protected void inventoryChanged() {
+    public void inventoryChanged() {
         super.inventoryChanged();
         needPublish();
     }

@@ -11,6 +11,7 @@ import mods.eln.sim.ThermalLoad;
 import mods.eln.sixnode.wirelesssignal.IWirelessSignalSpot;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.util.Map;
@@ -38,8 +39,9 @@ public class WirelessSignalRepeaterElement extends SixNodeElement {
         return null;
     }
 
+    @org.jetbrains.annotations.Nullable
     @Override
-    public ThermalLoad getThermalLoad(LRDU lrdu, int mask) {
+    public ThermalLoad getThermalLoad(@NotNull LRDU lrdu, int mask) {
         return null;
     }
 
@@ -53,12 +55,13 @@ public class WirelessSignalRepeaterElement extends SixNodeElement {
         return null;
     }
 
-    @Nullable
+    @NotNull
     @Override
     public Map<String, String> getWaila() {
         return null;
     }
 
+    @NotNull
     @Override
     public String thermoMeterString() {
         return null;
@@ -93,7 +96,7 @@ public class WirelessSignalRepeaterElement extends SixNodeElement {
     }
 
     @Override
-    public void readFromNBT(NBTTagCompound nbt) {
+    public void readFromNBT(@NotNull NBTTagCompound nbt) {
         super.readFromNBT(nbt);
         fromNbt = true;
     }

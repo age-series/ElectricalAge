@@ -11,6 +11,8 @@ import mods.eln.node.six.SixNodeDescriptor;
 import mods.eln.node.six.SixNodeElementRender;
 import mods.eln.node.six.SixNodeEntity;
 import net.minecraft.client.Minecraft;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.DataInputStream;
 import java.io.IOException;
@@ -85,8 +87,9 @@ public class ThermalCableRender extends SixNodeElementRender {
         }
     }
 
+    @Nullable
     @Override
-    public CableRenderDescriptor getCableRender(LRDU lrdu) {
+    public CableRenderDescriptor getCableRender(@NotNull LRDU lrdu) {
         return cableDesciptor.render;
     }
 

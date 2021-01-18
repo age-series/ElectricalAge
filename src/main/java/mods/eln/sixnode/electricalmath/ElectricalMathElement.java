@@ -25,6 +25,8 @@ import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -153,8 +155,9 @@ public class ElectricalMathElement extends SixNodeElement implements IConfigurab
         return null;
     }
 
+    @Nullable
     @Override
-    public ThermalLoad getThermalLoad(LRDU lrdu, int mask) {
+    public ThermalLoad getThermalLoad(@NotNull LRDU lrdu, int mask) {
         return null;
     }
 
@@ -172,6 +175,7 @@ public class ElectricalMathElement extends SixNodeElement implements IConfigurab
         return Utils.plotVolt("Uout:", gateOutput.getU()) + Utils.plotAmpere("Iout:", gateOutput.getCurrent());
     }
 
+    @NotNull
     @Override
     public Map<String, String> getWaila() {
         Map<String, String> info = new HashMap<String, String>();
@@ -184,6 +188,7 @@ public class ElectricalMathElement extends SixNodeElement implements IConfigurab
         return info;
     }
 
+    @NotNull
     @Override
     public String thermoMeterString() {
         return null;
@@ -195,7 +200,7 @@ public class ElectricalMathElement extends SixNodeElement implements IConfigurab
     }
 
     @Override
-    protected void inventoryChanged() {
+    public void inventoryChanged() {
         super.inventoryChanged();
         checkRedstone();
     }
@@ -220,8 +225,9 @@ public class ElectricalMathElement extends SixNodeElement implements IConfigurab
         return true;
     }
 
+    @Nullable
     @Override
-    public Container newContainer(Direction side, EntityPlayer player) {
+    public Container newContainer(@NotNull Direction side, @NotNull EntityPlayer player) {
         return new ElectricalMathContainer(sixNode, player, inventory);
     }
 
@@ -233,7 +239,7 @@ public class ElectricalMathElement extends SixNodeElement implements IConfigurab
     }
 
     @Override
-    public void readFromNBT(NBTTagCompound nbt) {
+    public void readFromNBT(@NotNull NBTTagCompound nbt) {
         super.readFromNBT(nbt);
         expression = nbt.getString("expression");
         preProcessEquation(expression);

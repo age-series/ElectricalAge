@@ -75,7 +75,7 @@ class FestiveElement(node: TransparentNode, descriptor: TransparentNodeDescripto
                 return bestChanHand // we good!
             }
             val list = LampSupplyElement.channelMap[elem.powerChannel]?.filterNotNull() ?: return null
-            val map = list.map { Pair(it.element.sixNode.coordinate.trueDistanceTo(here), it) }
+            val map = list.map { Pair(it.element.sixNode!!.coordinate.trueDistanceTo(here), it) }
             val sortedBy = map.sortedBy { it.first }
             val chanHand = sortedBy.first()
             bestChannelHandle = chanHand

@@ -21,6 +21,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.io.DataInputStream;
@@ -47,7 +48,7 @@ public class WirelessSignalTxElement extends SixNodeElement implements IWireless
     public WirelessSignalTxElement(SixNode sixNode, Direction side, SixNodeDescriptor descriptor) {
         super(sixNode, side, descriptor);
         electricalLoadList.add(inputGate);
-        slowProcessList.add(lightningGlitchProcess = new LightningGlitchProcess(getCoordonate()));
+        slowProcessList.add(lightningGlitchProcess = new LightningGlitchProcess(getCoordinate()));
         this.descriptor = (WirelessSignalTxDescriptor) descriptor;
         channelRegister(this);
     }
@@ -109,8 +110,9 @@ public class WirelessSignalTxElement extends SixNodeElement implements IWireless
         return null;
     }
 
+    @org.jetbrains.annotations.Nullable
     @Override
-    public ThermalLoad getThermalLoad(LRDU lrdu, int mask) {
+    public ThermalLoad getThermalLoad(@NotNull LRDU lrdu, int mask) {
         return null;
     }
 
@@ -125,7 +127,7 @@ public class WirelessSignalTxElement extends SixNodeElement implements IWireless
         return inputGate.plot("Input gate");
     }
 
-    @Nullable
+    @NotNull
     @Override
     public Map<String, String> getWaila() {
         Map<String, String> info = new HashMap<String, String>();
@@ -134,6 +136,7 @@ public class WirelessSignalTxElement extends SixNodeElement implements IWireless
         return info;
     }
 
+    @NotNull
     @Override
     public String thermoMeterString() {
         return null;
@@ -166,7 +169,7 @@ public class WirelessSignalTxElement extends SixNodeElement implements IWireless
     }
 
     @Override
-    public void readFromNBT(NBTTagCompound nbt) {
+    public void readFromNBT(@NotNull NBTTagCompound nbt) {
         channelRemove(this);
 
         super.readFromNBT(nbt);
@@ -176,7 +179,7 @@ public class WirelessSignalTxElement extends SixNodeElement implements IWireless
     }
 
     @Override
-    public Coordinate getCoordonate() {
+    public Coordinate getCoordinate() {
         return sixNode.coordinate;
     }
 

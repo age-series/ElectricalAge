@@ -22,7 +22,7 @@ class ElectricalFireDetectorRender(tileEntity: SixNodeEntity, side: Direction, d
     var firePresent = false
     var ledOn = false
 
-    val inventory: SixNodeElementInventory?
+    override val inventory: SixNodeElementInventory?
 
     init {
         if (this.descriptor.batteryPowered) {
@@ -41,7 +41,7 @@ class ElectricalFireDetectorRender(tileEntity: SixNodeEntity, side: Direction, d
         super.draw()
 
         if (!descriptor.batteryPowered) {
-            drawSignalPin(front.right(), descriptor.pinDistance)
+            drawSignalPin(front!!.right(), descriptor.pinDistance)
         }
 
         descriptor.draw(ledOn)

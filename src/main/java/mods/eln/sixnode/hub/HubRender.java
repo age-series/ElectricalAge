@@ -2,6 +2,7 @@ package mods.eln.sixnode.hub;
 
 import mods.eln.cable.CableRenderDescriptor;
 import mods.eln.misc.Direction;
+import mods.eln.misc.LRDU;
 import mods.eln.misc.Utils;
 import mods.eln.node.six.SixNodeDescriptor;
 import mods.eln.node.six.SixNodeElementInventory;
@@ -11,6 +12,8 @@ import mods.eln.sixnode.electricalcable.ElectricalCableDescriptor;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.DataInputStream;
 import java.io.IOException;
@@ -61,12 +64,14 @@ public class HubRender extends SixNodeElementRender {
         }
     }
 
-    public CableRenderDescriptor getCableRender(mods.eln.misc.LRDU lrdu) {
+    @Nullable
+    public CableRenderDescriptor getCableRender(LRDU lrdu) {
         return cableRender[lrdu.toInt()];
     }
 
+    @Nullable
     @Override
-    public GuiScreen newGuiDraw(Direction side, EntityPlayer player) {
+    public GuiScreen newGuiDraw(@NotNull Direction side, @NotNull EntityPlayer player) {
         return new HubGui(player, inventory, this);
     }
 }

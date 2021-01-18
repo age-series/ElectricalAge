@@ -4,7 +4,6 @@ import mods.eln.Eln
 import mods.eln.generic.GenericItemUsingDamageDescriptor
 import mods.eln.i18n.I18N
 import mods.eln.item.ElectricalFuseDescriptor
-import mods.eln.item.GenericItemUsingDamageDescriptorUpgrade
 import mods.eln.misc.*
 import mods.eln.node.NodeBase
 import mods.eln.node.six.*
@@ -40,17 +39,17 @@ class ElectricalFuseHolderDescriptor(name: String, obj: Obj3D) :
         Data.addWiring(newItemStack())
     }
 
-    override fun handleRenderType(item: ItemStack?, type: IItemRenderer.ItemRenderType?) = true
+    override fun handleRenderType(item: ItemStack, type: IItemRenderer.ItemRenderType) = true
 
-    override fun shouldUseRenderHelper(type: IItemRenderer.ItemRenderType?, item: ItemStack?,
-                                       helper: IItemRenderer.ItemRendererHelper?) =
+    override fun shouldUseRenderHelper(type: IItemRenderer.ItemRenderType, item: ItemStack,
+                                       helper: IItemRenderer.ItemRendererHelper) =
         type != IItemRenderer.ItemRenderType.INVENTORY
 
     override fun shouldUseRenderHelperEln(type: IItemRenderer.ItemRenderType?, item: ItemStack?,
                                           helper: IItemRenderer.ItemRendererHelper?) =
         type != IItemRenderer.ItemRenderType.INVENTORY
 
-    override fun renderItem(type: IItemRenderer.ItemRenderType?, item: ItemStack?, vararg data: Any?) {
+    override fun renderItem(type: IItemRenderer.ItemRenderType, item: ItemStack, vararg data: Any) {
         if (type == IItemRenderer.ItemRenderType.INVENTORY) {
             super.renderItem(type, item, *data)
         } else {
@@ -79,7 +78,7 @@ class ElectricalFuseHolderDescriptor(name: String, obj: Obj3D) :
     }
 
     override fun getFrontFromPlace(side: Direction, player: EntityPlayer) =
-        super.getFrontFromPlace(side, player).inverse()
+        super.getFrontFromPlace(side, player)!!.inverse()
 }
 
 class ElectricalFuseHolderElement(sixNode: SixNode, side: Direction, descriptor: SixNodeDescriptor) :
@@ -122,36 +121,32 @@ class ElectricalFuseHolderElement(sixNode: SixNode, side: Direction, descriptor:
         electricalProcessList.add(fuseProcess)
     }
 
-    override fun readFromNBT(nbt: NBTTagCompound?) {
+    override fun readFromNBT(nbt: NBTTagCompound) {
         super.readFromNBT(nbt)
-        if (nbt != null) {
-            front = LRDU.readFromNBT(nbt, "front")
+        front = LRDU.readFromNBT(nbt, "front")
 
-            val fuseCompound = nbt.getTag("fuse") as? NBTTagCompound
-            if (fuseCompound != null) {
-                val fuseStack = ItemStack.loadItemStackFromNBT(fuseCompound)
-                if (fuseStack != null) {
-                    installedFuse = GenericItemUsingDamageDescriptor.getDescriptor(fuseStack) as? ElectricalFuseDescriptor
-                }
+        val fuseCompound = nbt.getTag("fuse") as? NBTTagCompound
+        if (fuseCompound != null) {
+            val fuseStack = ItemStack.loadItemStackFromNBT(fuseCompound)
+            if (fuseStack != null) {
+                installedFuse = GenericItemUsingDamageDescriptor.getDescriptor(fuseStack) as? ElectricalFuseDescriptor
             }
-
-            T = nbt.getDouble("T")
         }
+
+        T = nbt.getDouble("T")
     }
 
-    override fun writeToNBT(nbt: NBTTagCompound?) {
+    override fun writeToNBT(nbt: NBTTagCompound) {
         super.writeToNBT(nbt)
-        if (nbt != null) {
-            front.writeToNBT(nbt, "front")
+        front.writeToNBT(nbt, "front")
 
-            if (installedFuse != null) {
-                val fuseCompaound = NBTTagCompound()
-                installedFuse!!.newItemStack().writeToNBT(fuseCompaound)
-                nbt.setTag("fuse", fuseCompaound)
-            }
-
-            nbt.setDouble("T", T)
+        if (installedFuse != null) {
+            val fuseCompaound = NBTTagCompound()
+            installedFuse!!.newItemStack().writeToNBT(fuseCompaound)
+            nbt.setTag("fuse", fuseCompaound)
         }
+
+        nbt.setDouble("T", T)
     }
 
     override fun getElectricalLoad(lrdu: LRDU, mask: Int): ElectricalLoad? = when (lrdu) {
@@ -162,7 +157,7 @@ class ElectricalFuseHolderElement(sixNode: SixNode, side: Direction, descriptor:
 
     override fun getThermalLoad(lrdu: LRDU, mask: Int): ThermalLoad? = null
 
-    override fun getConnectionMask(lrdu: LRDU?): Int = when (lrdu) {
+    override fun getConnectionMask(lrdu: LRDU): Int = when (lrdu) {
         front -> NodeBase.maskElectricalAll
         front.inverse() -> NodeBase.maskElectricalAll
         else -> 0
@@ -174,16 +169,12 @@ class ElectricalFuseHolderElement(sixNode: SixNode, side: Direction, descriptor:
         return mutableMapOf(Pair(I18N.tr("Current"), Utils.plotAmpere("", Math.abs(aLoad.current))))
     }
 
-    override fun thermoMeterString(): String? = null
-
-    override fun networkSerialize(stream: DataOutputStream?) {
+    override fun networkSerialize(stream: DataOutputStream) {
         super.networkSerialize(stream)
-        if (stream != null) {
-            try {
-                Utils.serialiseItemStack(stream, installedFuse?.newItemStack())
-            } catch (e: IOException) {
-                e.printStackTrace()
-            }
+        try {
+            Utils.serialiseItemStack(stream, installedFuse?.newItemStack())
+        } catch (e: IOException) {
+            e.printStackTrace()
         }
     }
 
@@ -201,11 +192,11 @@ class ElectricalFuseHolderElement(sixNode: SixNode, side: Direction, descriptor:
         refreshSwitchResistor()
     }
 
-    override fun onBlockActivated(entityPlayer: EntityPlayer?, side: Direction?, vx: Float, vy: Float, vz: Float): Boolean {
+    override fun onBlockActivated(entityPlayer: EntityPlayer, side: Direction, vx: Float, vy: Float, vz: Float): Boolean {
         if (onBlockActivatedRotate(entityPlayer)) return true
 
         var takenOutFuse: ElectricalFuseDescriptor? = null
-        val itemStack = entityPlayer?.currentEquippedItem
+        val itemStack = entityPlayer.currentEquippedItem
         val fuseDescriptor = itemStack?.let { GenericItemUsingDamageDescriptor.getDescriptor(it) } as? ElectricalFuseDescriptor
         if (itemStack != null) {
             if (fuseDescriptor != null && itemStack.stackSize > 0) {
@@ -222,7 +213,7 @@ class ElectricalFuseHolderElement(sixNode: SixNode, side: Direction, descriptor:
 
         // What do we do with the fuse just taken out?
         takenOutFuse?.let {
-            sixNode.dropItem(it.newItemStack())
+            sixNode!!.dropItem(it.newItemStack())
         }
 
         return takenOutFuse != null || fuseDescriptor != null
@@ -235,14 +226,12 @@ class ElectricalFuseHolderRender(tileEntity: SixNodeEntity, side: Direction, des
     private var installedFuse: ElectricalFuseDescriptor? = null
 
     override fun draw() {
-        front.right().glRotateOnX()
+        front!!.right().glRotateOnX()
         descriptor.draw(installedFuse)
     }
 
-    override fun publishUnserialize(stream: DataInputStream?) {
+    override fun publishUnserialize(stream: DataInputStream) {
         super.publishUnserialize(stream)
-        if (stream != null) {
-            installedFuse = GenericItemUsingDamageDescriptor.getDescriptor(Utils.unserialiseItemStack(stream)) as? ElectricalFuseDescriptor
-        }
+        installedFuse = GenericItemUsingDamageDescriptor.getDescriptor(Utils.unserialiseItemStack(stream)) as? ElectricalFuseDescriptor
     }
 }

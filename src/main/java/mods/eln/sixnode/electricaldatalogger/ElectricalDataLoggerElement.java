@@ -21,6 +21,8 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
@@ -89,7 +91,7 @@ public class ElectricalDataLoggerElement extends SixNodeElement implements IConf
     }
 
     @Override
-    public void readFromNBT(NBTTagCompound nbt) {
+    public void readFromNBT(@NotNull NBTTagCompound nbt) {
         super.readFromNBT(nbt);
         byte value = nbt.getByte("front");
         front = LRDU.fromInt((value >> 0) & 0x3);
@@ -121,8 +123,9 @@ public class ElectricalDataLoggerElement extends SixNodeElement implements IConf
         return null;
     }
 
+    @Nullable
     @Override
-    public ThermalLoad getThermalLoad(LRDU lrdu, int mask) {
+    public ThermalLoad getThermalLoad(@NotNull LRDU lrdu, int mask) {
         return null;
     }
 
@@ -137,6 +140,7 @@ public class ElectricalDataLoggerElement extends SixNodeElement implements IConf
         return inputGate.plot("In: ");
     }
 
+    @NotNull
     @Override
     public Map<String, String> getWaila() {
         Map<String, String> info = new HashMap<String, String>();
@@ -144,6 +148,7 @@ public class ElectricalDataLoggerElement extends SixNodeElement implements IConf
         return info;
     }
 
+    @NotNull
     @Override
     public String thermoMeterString() {
         return "";
@@ -170,7 +175,7 @@ public class ElectricalDataLoggerElement extends SixNodeElement implements IConf
     }
 
     @Override
-    protected void inventoryChanged() {
+    public void inventoryChanged() {
         computeElectricalLoad();
     }
 
@@ -245,8 +250,9 @@ public class ElectricalDataLoggerElement extends SixNodeElement implements IConf
         return true;
     }
 
+    @Nullable
     @Override
-    public Container newContainer(Direction side, EntityPlayer player) {
+    public Container newContainer(@NotNull Direction side, @NotNull EntityPlayer player) {
         return new ElectricalDataLoggerContainer(player, inventory);
     }
 

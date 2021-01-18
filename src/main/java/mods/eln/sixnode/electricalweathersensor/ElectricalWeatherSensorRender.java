@@ -7,6 +7,8 @@ import mods.eln.misc.LRDU;
 import mods.eln.node.six.SixNodeDescriptor;
 import mods.eln.node.six.SixNodeElementRender;
 import mods.eln.node.six.SixNodeEntity;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class ElectricalWeatherSensorRender extends SixNodeElementRender {
 
@@ -25,8 +27,9 @@ public class ElectricalWeatherSensorRender extends SixNodeElementRender {
         descriptor.draw();
     }
 
+    @Nullable
     @Override
-    public CableRenderDescriptor getCableRender(LRDU lrdu) {
+    public CableRenderDescriptor getCableRender(@NotNull LRDU lrdu) {
         return Eln.instance.signalCableDescriptor.render;
     }
 }

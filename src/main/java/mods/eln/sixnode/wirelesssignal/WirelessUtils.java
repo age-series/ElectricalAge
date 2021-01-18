@@ -29,7 +29,7 @@ public class WirelessUtils {
             for (List<IWirelessSignalTx> txs : from.getTx().values()) {
                 for (IWirelessSignalTx tx : txs) {
                     if (isRoot)
-                        strength = tx.getRange() - getVirtualDistance(tx.getCoordonate(), from.getCoordonate(), tx.getCoordonate().trueDistanceTo(from.getCoordonate()));
+                        strength = tx.getRange() - getVirtualDistance(tx.getCoordinate(), from.getCoordonate(), tx.getCoordinate().trueDistanceTo(from.getCoordonate()));
                     addTo(tx, strength, txSet, txStrength);
                 }
             }
@@ -60,7 +60,7 @@ public class WirelessUtils {
                 }
 
                 for (IWirelessSignalTx tx : txs) {
-                    double temp = tx.getCoordonate().trueDistanceTo(from.getCoordonate());
+                    double temp = tx.getCoordinate().trueDistanceTo(from.getCoordonate());
                     if (temp < bestScore) {
                         bestScore = temp;
                         best = tx;
@@ -79,7 +79,7 @@ public class WirelessUtils {
                     IWirelessSignalTx tx = (IWirelessSignalTx) best;
 
                     if (isRoot)
-                        strength = tx.getRange() - getVirtualDistance(tx.getCoordonate(), from.getCoordonate(), tx.getCoordonate().trueDistanceTo(from.getCoordonate()));
+                        strength = tx.getRange() - getVirtualDistance(tx.getCoordinate(), from.getCoordonate(), tx.getCoordinate().trueDistanceTo(from.getCoordonate()));
                     addTo(tx, strength, txSet, txStrength);
                     txs.remove(best);
                 }
@@ -122,7 +122,7 @@ public class WirelessUtils {
             List<IWirelessSignalTx> sameChannelTx = WirelessSignalTxElement.channelMap.get(channel);
             if (sameChannelTx != null) {
                 for (IWirelessSignalTx tx : sameChannelTx) {
-                    if (isInRange(tx.getCoordonate(), c, tx.getRange())) {
+                    if (isInRange(tx.getCoordinate(), c, tx.getRange())) {
                         inRangeTx.add(tx);
                     }
                 }
@@ -134,7 +134,7 @@ public class WirelessUtils {
                 ArrayList<IWirelessSignalTx> inRangeTx = new ArrayList<IWirelessSignalTx>();
 
                 for (IWirelessSignalTx tx : entryTxs.getValue()) {
-                    if (isInRange(tx.getCoordonate(), c, tx.getRange())) {
+                    if (isInRange(tx.getCoordinate(), c, tx.getRange())) {
                         inRangeTx.add(tx);
                     }
                 }

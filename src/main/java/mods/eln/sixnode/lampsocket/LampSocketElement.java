@@ -27,6 +27,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -84,7 +86,7 @@ public class LampSocketElement extends SixNodeElement implements IConfigurable {
     }
 
     @Override
-    public void readFromNBT(NBTTagCompound nbt) {
+    public void readFromNBT(@NotNull NBTTagCompound nbt) {
         super.readFromNBT(nbt);
         byte value = nbt.getByte("front");
         front = LRDU.fromInt((value >> 0) & 0x3);
@@ -162,7 +164,7 @@ public class LampSocketElement extends SixNodeElement implements IConfigurable {
     }
 
     @Override
-    protected void inventoryChanged() {
+    public void inventoryChanged() {
         computeElectricalLoad();
         reconnect();
     }
@@ -172,8 +174,9 @@ public class LampSocketElement extends SixNodeElement implements IConfigurable {
         return true;
     }
 
+    @Nullable
     @Override
-    public Container newContainer(Direction side, EntityPlayer player) {
+    public Container newContainer(@NotNull Direction side, @NotNull EntityPlayer player) {
         return new LampSocketContainer(player, acceptingInventory.getInventory(), socketDescriptor);
     }
 
@@ -190,8 +193,9 @@ public class LampSocketElement extends SixNodeElement implements IConfigurable {
         return null;
     }
 
+    @Nullable
     @Override
-    public ThermalLoad getThermalLoad(LRDU lrdu, int mask) {
+    public ThermalLoad getThermalLoad(@NotNull LRDU lrdu, int mask) {
         return null;
     }
 
@@ -212,6 +216,7 @@ public class LampSocketElement extends SixNodeElement implements IConfigurable {
         return Utils.plotVolt("U:", positiveLoad.getU()) + Utils.plotAmpere("I:", lampResistor.getCurrent());
     }
 
+    @NotNull
     @Override
     public Map<String, String> getWaila() {
         Map<String, String> info = new HashMap<String, String>();
@@ -235,6 +240,7 @@ public class LampSocketElement extends SixNodeElement implements IConfigurable {
         return info;
     }
 
+    @NotNull
     @Override
     public String thermoMeterString() {
         return null;

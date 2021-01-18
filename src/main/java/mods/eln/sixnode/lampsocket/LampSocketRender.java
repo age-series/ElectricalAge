@@ -18,6 +18,8 @@ import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.EnumSkyBlock;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.lwjgl.opengl.GL11;
 
 import java.io.ByteArrayOutputStream;
@@ -59,8 +61,9 @@ public class LampSocketRender extends SixNodeElementRender {
         lampSocketDescriptor = (LampSocketDescriptor) descriptor;
     }
 
+    @Nullable
     @Override
-    public GuiScreen newGuiDraw(Direction side, EntityPlayer player) {
+    public GuiScreen newGuiDraw(@NotNull Direction side, @NotNull EntityPlayer player) {
         return new LampSocketGuiDraw(player, inventory, this);
     }
 
@@ -183,8 +186,9 @@ public class LampSocketRender extends SixNodeElementRender {
         this.grounded = grounded;
     }
 
+    @Nullable
     @Override
-    public CableRenderDescriptor getCableRender(LRDU lrdu) {
+    public CableRenderDescriptor getCableRender(@NotNull LRDU lrdu) {
         if (cable == null
             || (lrdu == front && !descriptor.cableFront)
             || (lrdu == front.left() && !descriptor.cableLeft)

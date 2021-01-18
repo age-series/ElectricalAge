@@ -352,7 +352,7 @@ public class ComputerProbeNode extends SimpleNode implements IPeripheral {
         double value;
 
         @Override
-        public Coordinate getCoordonate() {
+        public Coordinate getCoordinate() {
             return coordinate;
         }
 

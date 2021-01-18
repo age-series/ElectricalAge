@@ -22,6 +22,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.io.DataInputStream;
@@ -72,8 +73,9 @@ public class WirelessSignalRxElement extends SixNodeElement implements IConfigur
         return null;
     }
 
+    @org.jetbrains.annotations.Nullable
     @Override
-    public ThermalLoad getThermalLoad(LRDU lrdu, int mask) {
+    public ThermalLoad getThermalLoad(@NotNull LRDU lrdu, int mask) {
         return null;
     }
 
@@ -88,7 +90,7 @@ public class WirelessSignalRxElement extends SixNodeElement implements IConfigur
         return outputGate.plot("Output gate");
     }
 
-    @Nullable
+    @NotNull
     @Override
     public Map<String, String> getWaila() {
         Map<String, String> info = new HashMap<String, String>();
@@ -97,6 +99,7 @@ public class WirelessSignalRxElement extends SixNodeElement implements IConfigur
         return info;
     }
 
+    @NotNull
     @Override
     public String thermoMeterString() {
         return null;
@@ -123,7 +126,7 @@ public class WirelessSignalRxElement extends SixNodeElement implements IConfigur
     }
 
     @Override
-    public void readFromNBT(NBTTagCompound nbt) {
+    public void readFromNBT(@NotNull NBTTagCompound nbt) {
         super.readFromNBT(nbt);
         channel = nbt.getString("channel");
         connection = nbt.getBoolean("connection");
@@ -132,7 +135,7 @@ public class WirelessSignalRxElement extends SixNodeElement implements IConfigur
     }
 
     @Override
-    public Coordinate getCoordonate() {
+    public Coordinate getCoordinate() {
         return sixNode.coordinate;
     }
 

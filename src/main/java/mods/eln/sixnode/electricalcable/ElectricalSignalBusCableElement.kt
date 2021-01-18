@@ -55,10 +55,10 @@ class ElectricalSignalBusCableElement(sixNode: SixNode?, side: Direction?, descr
         return t
     }
 
-    override fun newConnectionAt(connection: NodeConnection, isA: Boolean) {
+    override fun newConnectionAt(connection: NodeConnection?, isA: Boolean) {
         if (!isA) return  // Only run for one of the connection attempts between two ESBCEs; choose A arbitrarily.
         println("ESBCE.nCA:")
-        val other = connection.N2
+        val other = connection!!.N2
         println("\tother is: $other")
         if (other is SixNode) {
             println("\tother is SixNode")

@@ -110,7 +110,7 @@ class PowerCapacitorSixDescriptor(name: String,
     }
 
     override fun getFrontFromPlace(side: Direction, player: EntityPlayer): LRDU {
-        return super.getFrontFromPlace(side, player).left()
+        return super.getFrontFromPlace(side, player)!!.left()
     }
 
     init {
@@ -121,9 +121,9 @@ class PowerCapacitorSixDescriptor(name: String,
     }
 }
 
-class PowerCapacitorSixElement(SixNode: SixNode?, side: Direction?, descriptor: SixNodeDescriptor) : SixNodeElement(SixNode, side, descriptor), IConfigurable {
+class PowerCapacitorSixElement(SixNode: SixNode, side: Direction, descriptor: SixNodeDescriptor) : SixNodeElement(SixNode, side, descriptor), IConfigurable {
     var descriptor: PowerCapacitorSixDescriptor = descriptor as PowerCapacitorSixDescriptor
-    var inventory = SixNodeElementInventory(2, 64, this)
+    override var inventory = SixNodeElementInventory(2, 64, this)
     var positiveLoad = NbtElectricalLoad("positiveLoad")
     var negativeLoad = NbtElectricalLoad("negativeLoad")
     var capacitor = Capacitor(positiveLoad, negativeLoad)
@@ -222,10 +222,6 @@ class PowerCapacitorSixElement(SixNode: SixNode?, side: Direction?, descriptor: 
         fromNbt = true
     }
 
-    override fun getInventory(): IInventory {
-        return inventory
-    }
-
     override fun hasGui(): Boolean {
         return true
     }
@@ -290,13 +286,13 @@ class PowerCapacitorSixElement(SixNode: SixNode?, side: Direction?, descriptor: 
     }
 }
 
-class PowerCapacitorSixRender(tileEntity: SixNodeEntity?, side: Direction?, descriptor: SixNodeDescriptor) : SixNodeElementRender(tileEntity, side, descriptor) {
+class PowerCapacitorSixRender(tileEntity: SixNodeEntity, side: Direction, descriptor: SixNodeDescriptor) : SixNodeElementRender(tileEntity, side, descriptor) {
     var descriptor: PowerCapacitorSixDescriptor = descriptor as PowerCapacitorSixDescriptor
-    var inventory = SixNodeElementInventory(2, 64, this)
+    override var inventory = SixNodeElementInventory(2, 64, this)
 
     override fun draw() {
         GL11.glRotatef(90f, 1f, 0f, 0f)
-        front.glRotateOnX()
+        front!!.glRotateOnX()
         descriptor.draw()
     }
 

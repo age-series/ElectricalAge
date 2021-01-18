@@ -15,7 +15,7 @@ abstract class NodeBlock(material: Material?, tileEntityClass: Class<*>, blockIt
 
     var blockItemNbr: Int
     var tileEntityClass: Class<*>
-    override fun getBlockHardness(par1World: World, par2: Int, par3: Int, par4: Int): Float {
+    override fun getBlockHardness(world: World, x: Int, y: Int, z: Int): Float {
         return 1.0f
     }
 

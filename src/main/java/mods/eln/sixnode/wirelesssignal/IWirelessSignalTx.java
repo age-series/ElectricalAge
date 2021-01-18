@@ -4,7 +4,7 @@ import mods.eln.misc.Coordinate;
 
 public interface IWirelessSignalTx {
 
-    public Coordinate getCoordonate();
+    public Coordinate getCoordinate();
 
     public int getRange();
 

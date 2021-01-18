@@ -10,6 +10,8 @@ import mods.eln.sim.ElectricalLoad;
 import mods.eln.sim.ThermalLoad;
 import mods.eln.sim.mna.component.Inductor;
 import mods.eln.sim.nbt.NbtElectricalLoad;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class SignalInductorElement extends SixNodeElement {
 
@@ -34,8 +36,9 @@ public class SignalInductorElement extends SixNodeElement {
         return null;
     }
 
+    @Nullable
     @Override
-    public ThermalLoad getThermalLoad(LRDU lrdu, int mask) {
+    public ThermalLoad getThermalLoad(@NotNull LRDU lrdu, int mask) {
         return null;
     }
 
@@ -51,6 +54,7 @@ public class SignalInductorElement extends SixNodeElement {
         return Utils.plotAmpere("I", inductor.getCurrent());
     }
 
+    @NotNull
     @Override
     public String thermoMeterString() {
         return "";

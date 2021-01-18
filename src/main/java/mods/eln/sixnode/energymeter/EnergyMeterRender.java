@@ -14,6 +14,8 @@ import mods.eln.sixnode.energymeter.EnergyMeterElement.Mod;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.lwjgl.opengl.GL11;
 
 import java.io.DataInputStream;
@@ -91,8 +93,9 @@ public class EnergyMeterRender extends SixNodeElementRender {
         serverPowerIdTimer += deltaT;
     }
 
+    @Nullable
     @Override
-    public CableRenderDescriptor getCableRender(LRDU lrdu) {
+    public CableRenderDescriptor getCableRender(@NotNull LRDU lrdu) {
         return cableRender;
     }
 
@@ -124,8 +127,9 @@ public class EnergyMeterRender extends SixNodeElementRender {
         }
     }
 
+    @Nullable
     @Override
-    public GuiScreen newGuiDraw(Direction side, EntityPlayer player) {
+    public GuiScreen newGuiDraw(@NotNull Direction side, @NotNull EntityPlayer player) {
         return new EnergyMeterGui(player, inventory, this);
     }
 

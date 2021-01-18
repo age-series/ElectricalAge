@@ -20,6 +20,8 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -41,7 +43,7 @@ public class ElectricalSourceElement extends SixNodeElement implements IConfigur
     }
 
     @Override
-    public void readFromNBT(NBTTagCompound nbt) {
+    public void readFromNBT(@NotNull NBTTagCompound nbt) {
         super.readFromNBT(nbt);
         voltageSource.setU(nbt.getDouble("voltage"));
     }
@@ -61,8 +63,9 @@ public class ElectricalSourceElement extends SixNodeElement implements IConfigur
         return electricalLoad;
     }
 
+    @Nullable
     @Override
-    public ThermalLoad getThermalLoad(LRDU lrdu, int mask) {
+    public ThermalLoad getThermalLoad(@NotNull LRDU lrdu, int mask) {
         return null;
     }
 
@@ -80,6 +83,7 @@ public class ElectricalSourceElement extends SixNodeElement implements IConfigur
         return Utils.plotUIP(electricalLoad.getU(), voltageSource.getI());
     }
 
+    @NotNull
     @Override
     public Map<String, String> getWaila() {
         Map<String, String> info = new HashMap<String, String>();
@@ -91,6 +95,7 @@ public class ElectricalSourceElement extends SixNodeElement implements IConfigur
         return info;
     }
 
+    @NotNull
     @Override
     public String thermoMeterString() {
         return "";

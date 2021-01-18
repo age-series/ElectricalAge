@@ -40,7 +40,7 @@ class LampSocketProcess(var lamp: LampSocketElement) : IProcess, INBTTReady /*,L
         }
         val list = LampSupplyElement.channelMap[lamp.channel]?.filterNotNull() ?: return null
         val chanHand = list
-            .map { Pair(it.element.sixNode.coordinate.trueDistanceTo(here), it) }
+            .map { Pair(it.element.sixNode!!.coordinate.trueDistanceTo(here), it) }
             .filter { it.first < it.second.element.range }
             .minBy { it.first }
         bestChannelHandle = chanHand
@@ -52,13 +52,13 @@ class LampSocketProcess(var lamp: LampSocketElement) : IProcess, INBTTReady /*,L
         if (randTarget > Math.random()) {
             var exit = false
             val vv = Vec3.createVectorHelper(1.0, 0.0, 0.0)
-            val vp = Vec3.createVectorHelper(lamp.sixNode.coordinate.x + 0.5, lamp.sixNode.coordinate.y + 0.5, lamp.sixNode.coordinate.z + 0.5)
+            val vp = Vec3.createVectorHelper(lamp.sixNode!!.coordinate.x + 0.5, lamp.sixNode!!.coordinate.y + 0.5, lamp.sixNode!!.coordinate.z + 0.5)
             vv.rotateAroundZ((alphaZ * Math.PI / 180.0).toFloat())
             vv.rotateAroundY(((Math.random() - 0.5) * 2 * Math.PI / 4).toFloat())
             vv.rotateAroundZ(((Math.random() - 0.5) * 2 * Math.PI / 4).toFloat())
             lamp.front.rotateOnXnLeft(vv)
             lamp.side.rotateFromXN(vv)
-            val c = Coordinate(lamp.sixNode.coordinate)
+            val c = Coordinate(lamp.sixNode!!.coordinate)
             for (idx in 0 until lamp.socketDescriptor.range + actualLight) { // newCoord.move(lamp.side.getInverse());
                 vp.xCoord += vv.xCoord
                 vp.yCoord += vv.yCoord
@@ -77,14 +77,14 @@ class LampSocketProcess(var lamp: LampSocketElement) : IProcess, INBTTReady /*,L
                 }
             }
             if (!exit && c.block !== Blocks.air)
-                c.block?.updateTick(c.world(), c.x, c.y, c.z, c.world().rand)
+                c.block.updateTick(c.world(), c.x, c.y, c.z, c.world().rand)
         }
     }
 
     override fun process(time: Double) {
         var newLight: Int
-        val lampStack = lamp.inventory.getStackInSlot(0)
-        val cableStack = lamp.inventory.getStackInSlot(LampSocketContainer.cableSlotId)
+        val lampStack = lamp.inventory!!.getStackInSlot(0)
+        val cableStack = lamp.inventory!!.getStackInSlot(LampSocketContainer.cableSlotId)
         // LampDescriptor? is *important* here. Otherwise, NPE.
         val lampDescriptor = (lampStack?.item as? GenericItemUsingDamage<*>)?.getDescriptor(lampStack) as? LampDescriptor
         if (cableStack == null || lampStack == null) {
@@ -99,7 +99,7 @@ class LampSocketProcess(var lamp: LampSocketElement) : IProcess, INBTTReady /*,L
              */
             if (lamp.poweredByLampSupply) {
                 // Powered by a lamp supply.
-                val lampSupplyList = findBestSupply(lamp.sixNode.coordinate)
+                val lampSupplyList = findBestSupply(lamp.sixNode!!.coordinate)
                 val bestLampSupply = lampSupplyList?.second
                 if (bestLampSupply != null && lampDescriptor != null && bestLampSupply.element.getChannelState(bestLampSupply.id)) {
                     bestLampSupply.element.addToRp(lampDescriptor.r)
@@ -178,14 +178,14 @@ class LampSocketProcess(var lamp: LampSocketElement) : IProcess, INBTTReady /*,L
                 lampDescriptor.setLifeInTag(lampStack, lampDescriptor.getLifeInTag(lampStack) - lifeLost)
             }
             if (lampDescriptor.getLifeInTag(lampStack) <= 0.0) {
-                lamp.inventory.setInventorySlotContents(0, null)
+                lamp.inventory!!.setInventorySlotContents(0, null)
                 newLight = 0
             }
         } else {
             newLight = 0
         }
 
-        if (lamp.coordonate.blockExist && lampDescriptor != null && lampDescriptor.vegetableGrowRate != 0.0) {
+        if (lamp.coordinate!!.blockExist && lampDescriptor != null && lampDescriptor.vegetableGrowRate != 0.0) {
             updateNearbyBlocks(lampDescriptor.vegetableGrowRate, lampDescriptor.nominalLight, newLight, time)
         }
 
@@ -212,11 +212,11 @@ class LampSocketProcess(var lamp: LampSocketElement) : IProcess, INBTTReady /*,L
         var exit = false
         if (!lbCoord.blockExist) return
         val vv = Vec3.createVectorHelper(1.0, 0.0, 0.0)
-        val vp = Utils.getVec05(lamp.sixNode.coordinate)
+        val vp = Utils.getVec05(lamp.sixNode!!.coordinate)
         rotateAroundZ(vv, (alphaZ * Math.PI / 180.0).toFloat())
         lamp.front.rotateOnXnLeft(vv)
         lamp.side.rotateFromXN(vv)
-        val newCoord = Coordinate(lamp.sixNode.coordinate)
+        val newCoord = Coordinate(lamp.sixNode!!.coordinate)
         for (idx in 0 until lamp.socketDescriptor.range) { // newCoord.move(lamp.side.getInverse());
             vp.xCoord += vv.xCoord
             vp.yCoord += vv.yCoord
@@ -236,7 +236,7 @@ class LampSocketProcess(var lamp: LampSocketElement) : IProcess, INBTTReady /*,L
         }
         if (!exit) {
             var count = 0
-            while (newCoord != lamp.sixNode.coordinate) {
+            while (newCoord != lamp.sixNode!!.coordinate) {
                 val block = newCoord.block
                 if (block === Blocks.air || block === Eln.lightBlock) {
                     count++
@@ -262,11 +262,11 @@ class LampSocketProcess(var lamp: LampSocketElement) : IProcess, INBTTReady /*,L
         val oldLight = light
         val same = coord == oldLbCoord
         light = value
-        if (!same && oldLbCoord == lamp.sixNode.coordinate) {
-            lamp.sixNode.recalculateLightValue()
+        if (!same && oldLbCoord == lamp.sixNode!!.coordinate) {
+            lamp.sixNode!!.recalculateLightValue()
         }
-        if (lbCoord == lamp.sixNode.coordinate) {
-            if (light != oldLight || !same) lamp.sixNode.recalculateLightValue()
+        if (lbCoord == lamp.sixNode!!.coordinate) {
+            if (light != oldLight || !same) lamp.sixNode!!.recalculateLightValue()
         } else {
             LightBlockEntity.addLight(lbCoord, light, 5)
         }
@@ -298,13 +298,13 @@ class LampSocketProcess(var lamp: LampSocketElement) : IProcess, INBTTReady /*,L
     }
 
     val blockLight: Int
-        get() = if (lbCoord == lamp.sixNode.coordinate) {
+        get() = if (lbCoord == lamp.sixNode!!.coordinate) {
             light
         } else {
             0
         }
 
     init {
-        lbCoord = Coordinate(lamp.sixNode.coordinate)
+        lbCoord = Coordinate(lamp.sixNode!!.coordinate)
     }
 }

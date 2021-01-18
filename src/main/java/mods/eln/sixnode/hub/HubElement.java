@@ -22,6 +22,8 @@ import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -47,7 +49,7 @@ public class HubElement extends SixNodeElement {
     }
 
     @Override
-    public void readFromNBT(NBTTagCompound nbt) {
+    public void readFromNBT(@NotNull NBTTagCompound nbt) {
         super.readFromNBT(nbt);
         for (int idx = 0; idx < 6; idx++) {
             connectionGrid[idx] = nbt.getBoolean("connectionGrid" + idx);
@@ -74,8 +76,9 @@ public class HubElement extends SixNodeElement {
         return null;
     }
 
+    @Nullable
     @Override
-    public ThermalLoad getThermalLoad(LRDU lrdu, int mask) {
+    public ThermalLoad getThermalLoad(@NotNull LRDU lrdu, int mask) {
         return null;
     }
 
@@ -93,11 +96,13 @@ public class HubElement extends SixNodeElement {
         // Utils.plotAmpere("I:", electricalLoad.getCurrent());
     }
 
+    @NotNull
     @Override
     public Map<String, String> getWaila() {
         return null;
     }
 
+    @NotNull
     @Override
     public String thermoMeterString() {
         return "";
@@ -128,7 +133,7 @@ public class HubElement extends SixNodeElement {
     }
 
     @Override
-    protected void inventoryChanged() {
+    public void inventoryChanged() {
         super.inventoryChanged();
         sixNode.disconnect();
         setup();
@@ -211,8 +216,9 @@ public class HubElement extends SixNodeElement {
         return true;
     }
 
+    @Nullable
     @Override
-    public Container newContainer(Direction side, EntityPlayer player) {
+    public Container newContainer(@NotNull Direction side, @NotNull EntityPlayer player) {
         return new HubContainer(player, inventory);
     }
 

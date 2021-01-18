@@ -8,12 +8,10 @@ import mods.eln.gui.IGuiObject
 import mods.eln.i18n.I18N
 import mods.eln.i18n.I18N.tr
 import mods.eln.misc.*
-import mods.eln.node.Node
 import mods.eln.node.NodeBase
 import mods.eln.node.six.*
 import mods.eln.sim.ElectricalLoad
 import mods.eln.sim.IProcess
-import mods.eln.sim.ThermalLoad
 import mods.eln.sim.nbt.NbtElectricalGateInput
 import mods.eln.sim.nbt.NbtElectricalGateOutput
 import mods.eln.sim.nbt.NbtElectricalGateOutputProcess
@@ -58,16 +56,16 @@ open class LogicGateDescriptor(name: String, obj: Obj3D?, functionName: String, 
         top?.draw()
     }
 
-    override fun handleRenderType(item: ItemStack?, type: IItemRenderer.ItemRenderType?): Boolean = true
-    override fun shouldUseRenderHelper(type: IItemRenderer.ItemRenderType?, item: ItemStack?,
-                                       helper: IItemRenderer.ItemRendererHelper?): Boolean =
+    override fun handleRenderType(item: ItemStack, type: IItemRenderer.ItemRenderType): Boolean = true
+    override fun shouldUseRenderHelper(type: IItemRenderer.ItemRenderType, item: ItemStack,
+                                       helper: IItemRenderer.ItemRendererHelper): Boolean =
         type != IItemRenderer.ItemRenderType.INVENTORY
 
     override fun shouldUseRenderHelperEln(type: IItemRenderer.ItemRenderType?, item: ItemStack?,
                                           helper: IItemRenderer.ItemRendererHelper?): Boolean =
         type != IItemRenderer.ItemRenderType.INVENTORY
 
-    override fun renderItem(type: IItemRenderer.ItemRenderType?, item: ItemStack?, vararg data: Any?) {
+    override fun renderItem(type: IItemRenderer.ItemRenderType, item: ItemStack, vararg data: Any) {
         if (type == IItemRenderer.ItemRenderType.INVENTORY) {
             super.renderItem(type, item, *data)
         } else {
@@ -78,8 +76,8 @@ open class LogicGateDescriptor(name: String, obj: Obj3D?, functionName: String, 
         }
     }
 
-    override fun getFrontFromPlace(side: Direction?, player: EntityPlayer?): LRDU? =
-        super.getFrontFromPlace(side, player).left()
+    override fun getFrontFromPlace(side: Direction, player: EntityPlayer): LRDU? =
+        super.getFrontFromPlace(side, player)!!.left()
 
     override fun setParent(item: Item?, damage: Int) {
         super.setParent(item, damage)
@@ -109,7 +107,7 @@ open class LogicGateElement(node: SixNode, side: Direction, sixNodeDescriptor: S
         electricalLoadList.add(outputPin)
         for (i in 0..descriptor.function.inputCount - 1) {
             inputPins[i] = NbtElectricalGateInput("input$i")
-            electricalLoadList.add(inputPins[i])
+            electricalLoadList.add(inputPins[i]!!)
         }
 
         electricalComponentList.add(outputProcess)
@@ -135,7 +133,7 @@ open class LogicGateElement(node: SixNode, side: Direction, sixNodeDescriptor: S
         else -> null
     }
 
-    override fun getConnectionMask(lrdu: LRDU?): Int = when (lrdu) {
+    override fun getConnectionMask(lrdu: LRDU): Int = when (lrdu) {
         front -> NodeBase.maskElectricalOutputGate;
         front.inverse() -> if (inputPins[0] != null) NodeBase.maskElectricalInputGate else 0
         front.left() -> if (inputPins[1] != null) NodeBase.maskElectricalInputGate else 0
@@ -143,7 +141,7 @@ open class LogicGateElement(node: SixNode, side: Direction, sixNodeDescriptor: S
         else -> 0
     }
 
-    override fun multiMeterString(): String? {
+    override fun multiMeterString(): String {
         val builder = StringBuilder()
         for (i in 1..3) {
             val pin = inputPins[i - 1]
@@ -169,10 +167,6 @@ open class LogicGateElement(node: SixNode, side: Direction, sixNodeDescriptor: S
         super.writeToNBT(nbt)
         function.writeToNBT(nbt, "function")
     }
-
-    override fun getThermalLoad(lrdu: LRDU, mask: Int): ThermalLoad? = null
-    override fun thermoMeterString(): String? = null
-    override fun initialize() {}
 }
 
 open class LogicGateRender(entity: SixNodeEntity, side: Direction, descriptor: SixNodeDescriptor) :
@@ -181,15 +175,15 @@ open class LogicGateRender(entity: SixNodeEntity, side: Direction, descriptor: S
 
     override fun draw() {
         super.draw()
-        front.glRotateOnX()
+        front!!.glRotateOnX()
         descriptor.draw()
     }
 
-    override fun getCableRender(lrdu: LRDU?): CableRenderDescriptor? = when (lrdu) {
+    override fun getCableRender(lrdu: LRDU): CableRenderDescriptor? = when (lrdu) {
         front -> Eln.instance.signalCableDescriptor.render
-        front.inverse() -> if (descriptor.function.inputCount >= 1) Eln.instance.signalCableDescriptor.render else null
-        front.left() -> if (descriptor.function.inputCount >= 2) Eln.instance.signalCableDescriptor.render else null
-        front.right() -> if (descriptor.function.inputCount >= 3) Eln.instance.signalCableDescriptor.render else null
+        front!!.inverse() -> if (descriptor.function.inputCount >= 1) Eln.instance.signalCableDescriptor.render else null
+        front!!.left() -> if (descriptor.function.inputCount >= 2) Eln.instance.signalCableDescriptor.render else null
+        front!!.right() -> if (descriptor.function.inputCount >= 3) Eln.instance.signalCableDescriptor.render else null
         else -> null
     }
 }
@@ -408,7 +402,7 @@ class PalElement(node: SixNode, side: Direction, descriptor: SixNodeDescriptor) 
 
     override fun hasGui(): Boolean = true
 
-    override fun networkSerialize(stream: DataOutputStream?) {
+    override fun networkSerialize(stream: DataOutputStream) {
         super.networkSerialize(stream)
         try {
             (function as Pal).truthTable.forEach { stream?.writeBoolean(it) }
@@ -417,7 +411,7 @@ class PalElement(node: SixNode, side: Direction, descriptor: SixNodeDescriptor) 
         }
     }
 
-    override fun networkUnserialize(stream: DataInputStream?) {
+    override fun networkUnserialize(stream: DataInputStream) {
         super.networkUnserialize(stream)
         try {
             when (stream?.readByte()?.toInt()) {
@@ -440,11 +434,11 @@ class PalRender(entity: SixNodeEntity, side: Direction, descriptor: SixNodeDescr
     LogicGateRender(entity, side, descriptor) {
     val truthTable = Array(8, { false })
 
-    override fun newGuiDraw(side: Direction?, player: EntityPlayer?): GuiScreen? {
+    override fun newGuiDraw(side: Direction, player: EntityPlayer): GuiScreen? {
         return PalGui(this)
     }
 
-    override fun publishUnserialize(stream: DataInputStream?) {
+    override fun publishUnserialize(stream: DataInputStream) {
         super.publishUnserialize(stream)
         try {
             for (i in 0..7) {

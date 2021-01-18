@@ -4,7 +4,6 @@ import mods.eln.cable.CableRenderDescriptor
 import mods.eln.gui.*
 import mods.eln.i18n.I18N.tr
 import mods.eln.misc.*
-import mods.eln.node.Node
 import mods.eln.node.NodeBase
 import mods.eln.node.NodePeriodicPublishProcess
 import mods.eln.node.published
@@ -73,8 +72,8 @@ class EmergencyLampDescriptor(name: String, val cable: ElectricalCableDescriptor
         }
     }
 
-    override fun getFrontFromPlace(side: Direction?, player: EntityPlayer?)
-        = super.getFrontFromPlace(side, player).inverse()
+    override fun getFrontFromPlace(side: Direction, player: EntityPlayer)
+        = super.getFrontFromPlace(side, player)!!.inverse()
 
     override fun addInformation(itemStack: ItemStack?, entityPlayer: EntityPlayer?, list: MutableList<String>,
                                 par4: Boolean) {
@@ -115,7 +114,7 @@ class EmergencyLampElement(sixNode: SixNode, side: Direction, descriptor: SixNod
             var closestDistance = 10000f
 
             LampSupplyElement.channelMap[channel]?.forEach {
-                val distance = it.element.sixNode.coordinate.trueDistanceTo(sixNode.coordinate).toFloat()
+                val distance = it.element.sixNode!!.coordinate.trueDistanceTo(sixNode.coordinate).toFloat()
                 if (distance < closestDistance && distance <= it.element.range) {
                     closestDistance = distance
                     closestPowerSupply = it
@@ -163,7 +162,7 @@ class EmergencyLampElement(sixNode: SixNode, side: Direction, descriptor: SixNod
         electricalLoadList.add(load)
         electricalComponentList.add(chargingResistor)
         slowProcessList.add(process)
-        slowProcessList.add(NodePeriodicPublishProcess(sixNode, 2.0, 0.5))
+        slowProcessList.add(NodePeriodicPublishProcess(sixNode!!, 2.0, 0.5))
         slowProcessList.add(VoltageStateWatchDog().set(load).setUNominal(desc.cable.electricalNominalVoltage)
             .set(WorldExplosion(this).cableExplosion()))
     }
@@ -181,7 +180,7 @@ class EmergencyLampElement(sixNode: SixNode, side: Direction, descriptor: SixNod
         append(Utils.plotAmpere("I:", load.i))
         append(Utils.plotPercent("Charge:", charge / (sixNodeElementDescriptor as EmergencyLampDescriptor).batteryCapacity))
     }
-    override fun thermoMeterString() = ""
+    override fun thermoMeterString(): String = ""
     override fun getWaila() = mapOf(
         "State" to when {
             on -> "On"
@@ -240,7 +239,7 @@ class EmergencyLampRender(entity: SixNodeEntity, side: Direction, descriptor: Si
 
     override fun draw() {
         super.draw()
-        front.glRotateOnX()
+        front!!.glRotateOnX()
         desc.draw(side == Direction.YP, on, front == LRDU.Up)
     }
 
@@ -253,11 +252,11 @@ class EmergencyLampRender(entity: SixNodeEntity, side: Direction, descriptor: Si
         isConnectedToLampSupply = stream.readBoolean()
     }
 
-    override fun newGuiDraw(side: Direction?, player: EntityPlayer?) = EmergencyLampGui(this)
+    override fun newGuiDraw(side: Direction, player: EntityPlayer) = EmergencyLampGui(this)
 
-    override fun getCableRender(lrdu: LRDU?): CableRenderDescriptor? = if (poweredByCable) when {
+    override fun getCableRender(lrdu: LRDU): CableRenderDescriptor? = if (poweredByCable) when {
         side == Direction.YP -> desc.cable.render
-        lrdu == front.left() || lrdu == front.right() -> desc.cable.render
+        lrdu == front!!.left() || lrdu == front!!.right() -> desc.cable.render
         else -> null
     } else null
 }

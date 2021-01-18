@@ -19,6 +19,8 @@ import mods.eln.sim.process.destruct.ThermalLoadWatchDog;
 import mods.eln.sim.process.destruct.WorldExplosion;
 import mods.eln.sim.process.heater.DiodeHeatThermalLoad;
 import net.minecraft.nbt.NBTTagCompound;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -56,7 +58,7 @@ public class DiodeElement extends SixNodeElement {
     }
 
     @Override
-    public void readFromNBT(NBTTagCompound nbt) {
+    public void readFromNBT(@NotNull NBTTagCompound nbt) {
         super.readFromNBT(nbt);
         byte value = nbt.getByte("front");
         front = LRDU.fromInt((value >> 0) & 0x3);
@@ -68,20 +70,22 @@ public class DiodeElement extends SixNodeElement {
         nbt.setByte("front", (byte) (front.toInt() << 0));
     }
 
+    @Nullable
     @Override
-    public ElectricalLoad getElectricalLoad(LRDU lrdu, int mask) {
+    public ElectricalLoad getElectricalLoad(@NotNull LRDU lrdu, int mask) {
         if (front == lrdu) return anodeLoad;
         if (front.inverse() == lrdu) return catodeLoad;
         return null;
     }
 
+    @Nullable
     @Override
-    public ThermalLoad getThermalLoad(LRDU lrdu, int mask) {
+    public ThermalLoad getThermalLoad(@NotNull LRDU lrdu, int mask) {
         return thermalLoad;
     }
 
     @Override
-    public int getConnectionMask(LRDU lrdu) {
+    public int getConnectionMask(@NotNull LRDU lrdu) {
         if (front == lrdu) return descriptor.cable.getNodeMask();
         if (front.inverse() == lrdu) return descriptor.cable.getNodeMask();
         return 0;
@@ -92,6 +96,7 @@ public class DiodeElement extends SixNodeElement {
         return Utils.plotVolt("U+:", anodeLoad.getU()) + Utils.plotVolt("U-:", catodeLoad.getU()) + Utils.plotAmpere("I:", anodeLoad.getCurrent());
     }
 
+    @NotNull
     @Override
     public Map<String, String> getWaila() {
         Map<String, String> info = new HashMap<String, String>();
@@ -103,6 +108,7 @@ public class DiodeElement extends SixNodeElement {
         return info;
     }
 
+    @NotNull
     @Override
     public String thermoMeterString() {
         return Utils.plotCelsius("T:", thermalLoad.Tc);

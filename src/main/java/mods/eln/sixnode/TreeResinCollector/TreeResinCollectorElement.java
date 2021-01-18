@@ -17,6 +17,8 @@ import mods.eln.sim.ThermalLoad;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -41,8 +43,9 @@ public class TreeResinCollectorElement extends SixNodeElement {
         return null;
     }
 
+    @Nullable
     @Override
-    public ThermalLoad getThermalLoad(LRDU lrdu, int mask) {
+    public ThermalLoad getThermalLoad(@NotNull LRDU lrdu, int mask) {
         return null;
     }
 
@@ -56,6 +59,7 @@ public class TreeResinCollectorElement extends SixNodeElement {
         return null;
     }
 
+    @NotNull
     @Override
     public String thermoMeterString() {
         return null;
@@ -148,7 +152,7 @@ public class TreeResinCollectorElement extends SixNodeElement {
     }
 
     @Override
-    public void readFromNBT(NBTTagCompound nbt) {
+    public void readFromNBT(@NotNull NBTTagCompound nbt) {
         super.readFromNBT(nbt);
         timeFromLastActivated = nbt.getDouble("timeFromLastActivated");
     }
@@ -176,7 +180,7 @@ public class TreeResinCollectorElement extends SixNodeElement {
     public void networkSerialize(DataOutputStream stream) {
         super.networkSerialize(stream);
         try {
-            if (getCoordonate().getBlockExist())
+            if (getCoordinate().getBlockExist())
                 stream.writeFloat((float) getProduct(getProductPerSecond()));
             else
                 stream.writeFloat(0);
