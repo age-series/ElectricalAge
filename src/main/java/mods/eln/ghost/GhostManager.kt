@@ -135,7 +135,7 @@ class GhostManager(par1Str: String?) : WorldSavedData(par1Str) {
     }
 
     @JvmOverloads
-    fun createGhost(coordinate: Coordinate, observerCoordinate: Coordinate?, UUID: Int, block: Block? = Eln.ghostBlock, meta: Int = GhostBlock.tCube) {
+    fun createGhost(coordinate: Coordinate, observerCoordinate: Coordinate, UUID: Int, block: Block? = Eln.ghostBlock, meta: Int = GhostBlock.tCube) {
         var coordinate = coordinate
         coordinate.world().setBlockToAir(coordinate.x, coordinate.y, coordinate.z)
         if (coordinate.world().setBlock(coordinate.x, coordinate.y, coordinate.z, block, meta, 3)) {

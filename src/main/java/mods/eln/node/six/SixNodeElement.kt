@@ -310,11 +310,11 @@ abstract class SixNodeElement(sixNode: SixNode, @JvmField var side: Direction, d
         return true
     }
 
-    open fun getWaila(): Map<String, String> {
-            val wailaList: MutableMap<String, String> = HashMap()
-            wailaList["Info"] = multiMeterString()
-            return wailaList
-        }
+    open fun getWaila(): Map<String, String>? {
+        val wailaList: MutableMap<String, String> = HashMap()
+        wailaList["Info"] = multiMeterString()
+        return wailaList
+    }
 
     init {
         itemStackDamageId = sixNode.sideElementIdList[side.int]

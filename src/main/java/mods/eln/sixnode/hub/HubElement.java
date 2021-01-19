@@ -90,16 +90,10 @@ public class HubElement extends SixNodeElement {
         return 0;
     }
 
-    @Override
-    public String multiMeterString() {
-        return "";// Utils.plotVolt("U:", electricalLoad.Uc) +
-        // Utils.plotAmpere("I:", electricalLoad.getCurrent());
-    }
-
     @NotNull
     @Override
-    public Map<String, String> getWaila() {
-        return null;
+    public String multiMeterString() {
+        return "";
     }
 
     @NotNull

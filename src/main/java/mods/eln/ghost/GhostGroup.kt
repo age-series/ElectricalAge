@@ -63,7 +63,7 @@ class GhostGroup {
         return true
     }
 
-    fun plot(coordinate: Coordinate, observerCoordinate: Coordinate?, UUID: Int): Boolean {
+    fun plot(coordinate: Coordinate, observerCoordinate: Coordinate, UUID: Int): Boolean {
         if (!canBePloted(coordinate.world(), coordinate.x, coordinate.y, coordinate.z)) return false
         for (element in elementList) {
             val offsetCoordinate = coordinate.newWithOffset(element.x, element.y, element.z)

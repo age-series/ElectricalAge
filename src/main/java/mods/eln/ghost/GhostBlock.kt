@@ -61,7 +61,7 @@ class GhostBlock : Block(Material.iron) {
         }
     }
 
-    override fun collisionRayTrace(world: World, x: Int, y: Int, z: Int, startVec: Vec3, endVec: Vec3): MovingObjectPosition {
+    override fun collisionRayTrace(world: World, x: Int, y: Int, z: Int, startVec: Vec3, endVec: Vec3): MovingObjectPosition? {
         val meta = world.getBlockMetadata(x, y, z)
         when (meta) {
             tFloor -> maxY = 0.0625

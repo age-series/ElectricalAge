@@ -14,7 +14,7 @@ class GhostElement : INBTTReady {
     var uUID = 0
 
     constructor() {}
-    constructor(elementCoordinate: Coordinate?, observatorCoordinate: Coordinate?, UUID: Int) {
+    constructor(elementCoordinate: Coordinate, observatorCoordinate: Coordinate, UUID: Int) {
         this.elementCoordinate = elementCoordinate
         observatorCoordonate = observatorCoordinate
         uUID = UUID
