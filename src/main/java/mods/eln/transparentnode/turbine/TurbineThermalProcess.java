@@ -33,6 +33,6 @@ public class TurbineThermalProcess implements IProcess {
         double Pout = E / time;
         double Pin = descriptor.PoutToPin.getValue(Pout) / efficiency;
         turbine.warmLoad.movePowerTo(-Pin);
-        turbine.coolLoad.movePowerTo(Pin * (1 - efficiency));
+        turbine.coolLoad.movePowerTo(Pin);
     }
 }
