@@ -235,9 +235,9 @@ abstract class GridElement(transparentNode: TransparentNode, descriptor: Transpa
                 // It's always the "a" side doing this.
                 val offset = link.b.subtract(link.a)
                 for (i in 0..1) {
-                    val start = getCablePoint(ourSide, i)
+                    val start = getRenderCablePoint(ourSide, i)
                     start.rotateAroundY(Math.toRadians(idealRenderingAngle.toDouble()).toFloat())
-                    var end = target.getCablePoint(theirSide, i)
+                    var end = target.getRenderCablePoint(theirSide, i)
                     end.rotateAroundY(Math.toRadians(target.idealRenderingAngle.toDouble()).toFloat())
                     end = end.addVector(offset.x.toDouble(), offset.y.toDouble(), offset.z.toDouble())
                     writeVec(stream, start)
@@ -256,6 +256,11 @@ abstract class GridElement(transparentNode: TransparentNode, descriptor: Transpa
         val bb = part.boundingBox()
         return bb.centre()
     }
+
+    protected open fun getRenderCablePoint(side: Direction, i: Int): Vec3 =
+        getCablePoint(side, i).addVector(
+            desc.renderOffset.xCoord, desc.renderOffset.yCoord, desc.renderOffset.zCoord
+        )
 
     @Throws(IOException::class)
     private fun writeVec(stream: DataOutputStream, sp: Vec3) {

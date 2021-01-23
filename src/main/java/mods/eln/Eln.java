@@ -174,6 +174,7 @@ import net.minecraft.launchwrapper.Launch;
 import net.minecraft.launchwrapper.LogWrapper;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.Vec3;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
@@ -792,6 +793,9 @@ public class Eln {
                     Kind.OVERHEAD,
                     40,
                     51200);
+            descriptor.setRenderOffset(
+                Vec3.createVectorHelper(0.0, -0.1, 0.0)
+            );
             GhostGroup g = new GhostGroup();
             g.addElement(0, 1, 0);
             g.addElement(0, 2, 0);

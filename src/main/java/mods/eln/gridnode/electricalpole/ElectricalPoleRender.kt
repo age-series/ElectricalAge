@@ -5,10 +5,13 @@ import mods.eln.cable.CableRenderType
 import mods.eln.gridnode.GridRender
 import mods.eln.misc.LRDUMask
 import mods.eln.misc.SlewLimiter
+import mods.eln.misc.preserveMatrix
 import mods.eln.node.transparent.TransparentNodeDescriptor
 import mods.eln.node.transparent.TransparentNodeEntity
 import mods.eln.sound.LoopedSound
 import net.minecraft.client.audio.ISound
+import net.minecraft.util.Vec3
+import org.lwjgl.opengl.GL11
 
 import java.io.DataInputStream
 import java.io.IOException
