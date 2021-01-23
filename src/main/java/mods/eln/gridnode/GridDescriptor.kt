@@ -7,6 +7,7 @@ import mods.eln.misc.preserveMatrix
 import mods.eln.node.transparent.TransparentNodeDescriptor
 import mods.eln.sixnode.electricalcable.ElectricalCableDescriptor
 import net.minecraft.item.ItemStack
+import net.minecraft.util.Vec3
 import net.minecraftforge.client.IItemRenderer
 import org.lwjgl.opengl.GL11
 
@@ -17,6 +18,8 @@ import org.lwjgl.opengl.GL11.*
 open class GridDescriptor(name: String, protected val obj: Obj3D, ElementClass: Class<*>, RenderClass: Class<*>, val cableTexture: String, val cableDescriptor: ElectricalCableDescriptor, val connectRange: Int) : TransparentNodeDescriptor(name, ElementClass, RenderClass) {
     val plus = ArrayList<Obj3D.Obj3DPart>()
     val gnd = ArrayList<Obj3D.Obj3DPart>()
+
+    var renderOffset: Vec3 = Vec3.createVectorHelper(0.0, 0.0, 0.0)
 
     protected var static_parts = ArrayList<Obj3D.Obj3DPart>()
     protected var rotating_parts = ArrayList<Obj3D.Obj3DPart>()
@@ -37,17 +40,19 @@ open class GridDescriptor(name: String, protected val obj: Obj3D, ElementClass: 
     }
 
     fun draw(idealRenderingAngle: Float) {
-        // The utility pole draws without a foot, and thus needs to be lowered slightly.
-        if (name in listOf("Utility Pole"))
-            glTranslated(0.0, -0.1, 0.0)
         preserveMatrix {
-            glRotatef(idealRenderingAngle, 0f, 1f, 0f)
-            for (part in rotating_parts) {
+            glTranslated(
+                renderOffset.xCoord, renderOffset.yCoord, renderOffset.zCoord
+            )
+            preserveMatrix {
+                glRotatef(idealRenderingAngle, 0f, 1f, 0f)
+                for (part in rotating_parts) {
+                    part.draw()
+                }
+            }
+            for (part in static_parts) {
                 part.draw()
             }
-        }
-        for (part in static_parts) {
-            part.draw()
         }
     }
 

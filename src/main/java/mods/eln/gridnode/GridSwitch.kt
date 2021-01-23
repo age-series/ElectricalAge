@@ -48,7 +48,9 @@ class GridSwitchDescriptor(
     var separationMin = 0.01
     var maxVolume = 5.0
     var nominalGridP = 8000
-    var renderOffset = Vec3.createVectorHelper(2.5, -0.5, 1.5)
+    init {
+        renderOffset = Vec3.createVectorHelper(2.5, -0.5, 1.5)
+    }
     companion object {
         // val QUARTER_TURN = PI / 2  // WHY does OpenGL use degrees?!
         val QUARTER_TURN = 90.0
@@ -255,7 +257,7 @@ class GridSwitchElement(node: TransparentNode, descriptor: TransparentNodeDescri
         else -> null
     }
 
-    override fun getCablePoint(side: Direction, i: Int): Vec3 {
+    override fun getRenderCablePoint(side: Direction, i: Int): Vec3 {
         assert(i in 0..1) { "Index out of bounds" }
         val idx = when(side) {
             front.left() -> 0
