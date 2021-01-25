@@ -40,6 +40,7 @@ import mods.eln.item.regulator.IRegulatorDescriptor;
 import mods.eln.item.regulator.RegulatorAnalogDescriptor;
 import mods.eln.item.regulator.RegulatorOnOffDescriptor;
 import mods.eln.mechanical.*;
+import mods.eln.metrics.MetricsSubsystem;
 import mods.eln.misc.*;
 import mods.eln.misc.SeriesFunction;
 import mods.eln.node.NodeBlockEntity;
@@ -365,6 +366,11 @@ public class Eln {
     public static String dictNibbleMemory;
     public static String dictALU;
 
+    public static String metricsDimension;
+    public static int prometheusPort;
+    public static boolean cloudwatchEnable;
+    public static boolean prometheusEnable;
+
     public static Configuration config;
 
     @EventHandler
@@ -528,6 +534,19 @@ public class Eln {
         Eln.maxSoundDistance = config.get("debug", "maxSoundDistance", 16.0, "Set this lower if you have clipping sounds in spaces with many sound sources (generators)").getDouble();
 
         Eln.flywheelMass = Math.min(Math.max(config.get("balancing", "flywheelMass", 50.0, "How heavy is *your* flywheel?").getDouble(), 1.0), 1000.0);
+
+        /*
+         *
+         * Metrics configuration
+         *
+         *
+         */
+
+        Eln.metricsDimension = config.get("metrics", "config_dimension", "Server").getString();
+        Eln.prometheusPort = config.get("metrics", "prometheus_port", 3424).getInt();
+
+        Eln.cloudwatchEnable = config.get("metrics", "cloudwatch_enable", false, "Enable logging to AWS Cloudwatch. Account requried.").getBoolean();
+        Eln.prometheusEnable = config.get("metrics", "prometheus_enable", false, "Enable Prometheus Logging Node").getBoolean();
 
         config.save();
 

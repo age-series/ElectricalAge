@@ -1,4 +1,5 @@
 buildscript {
+    ext.prometheus_version = "0.1.0"
     repositories {
         mavenCentral()
         maven {
@@ -15,6 +16,7 @@ buildscript {
         classpath 'net.minecraftforge.gradle:ForgeGradle:1.2-SNAPSHOT'
         classpath 'de.undercouch:gradle-download-task:1.2'
         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.6'
+        classpath "io.spring.gradle:dependency-management-plugin:1.0.9.RELEASE"
     }
 }
 
@@ -28,8 +30,16 @@ apply plugin: 'de.undercouch.download'
 apply plugin: 'java'
 apply plugin: 'com.jfrog.bintray'
 apply plugin: 'maven-publish'
+apply plugin: "io.spring.dependency-management"
 
 apply from: 'gradle.properties'
+
+dependencyManagement {
+    imports {
+        mavenBom 'com.amazonaws:aws-java-sdk-bom:1.11.942'
+    }
+}
+
 
 group = GROUP
 archivesBaseName = ARCHIVE_NAME
@@ -91,6 +101,10 @@ dependencies {
     shade "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
     compile "mcp.mobius.waila:Waila:1.5.11-RC2-NONEI_1.7.10:dev"
     compile "com.fazecast:jSerialComm:2.6.2"
+    shade 'com.amazonaws:aws-java-sdk-cloudwatch'
+    shade group: 'io.prometheus', name: 'simpleclient', version: prometheus_version
+    shade group: 'io.prometheus', name: 'simpleclient_httpserver', version: prometheus_version
+    shade group: 'io.prometheus', name: 'simpleclient_hotspot', version: prometheus_version
 }
 
 jar {

@@ -4,6 +4,9 @@ import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.Phase;
 import cpw.mods.fml.common.gameevent.TickEvent.ServerTickEvent;
+import mods.eln.Eln;
+import mods.eln.metrics.SimpleMetric;
+import mods.eln.metrics.UnitTypes;
 import mods.eln.misc.Utils;
 import mods.eln.sim.mna.RootSystem;
 import mods.eln.sim.mna.component.Component;
@@ -30,6 +33,43 @@ public class Simulator /* ,IPacketHandler */ {
     private ArrayList<ThermalConnection> thermalFastConnectionList, thermalSlowConnectionList;
     private ArrayList<ThermalLoad> thermalFastLoadList, thermalSlowLoadList;
     private Set<IDestructable> destructableSet;
+
+    /*
+
+    Metrics Stuff!
+
+     */
+
+    private final String sim = "sim";
+    
+    private final SimpleMetric metricAverageTickTime =
+        new SimpleMetric("avg_tick_time", sim, "average_tick_time", UnitTypes.TICKS);
+    private final SimpleMetric metricElectricalNanoseconds =
+        new SimpleMetric("electric_sim_time", sim, "electric_sim_time", UnitTypes.NANOSECONDS);
+    private final SimpleMetric metricThermalFastNanoseconds =
+        new SimpleMetric("thermal_fast", sim, "thermal_fast", UnitTypes.NANOSECONDS);
+    private final SimpleMetric metricThermalSlowNanoseconds =
+        new SimpleMetric("thermal_slow", sim, "thermal_slow", UnitTypes.NANOSECONDS);
+    private final SimpleMetric metricSlowProcessNanoseconds =
+        new SimpleMetric("slow_process", sim, "Slow Process time", UnitTypes.NANOSECONDS);
+    private final SimpleMetric metricSubSystemCount =
+        new SimpleMetric("subsystem_count", sim, "Number of subsystems", UnitTypes.NO_UNITS);
+    private final SimpleMetric metricElectricalProcessCount =
+        new SimpleMetric("electric_process_count", sim, "electric_process_count", UnitTypes.NO_UNITS);
+    private final SimpleMetric metricThermalFastLoadCount =
+        new SimpleMetric("thermal_fast_load_count", sim, "thermal_fast_load_count", UnitTypes.NO_UNITS);
+    private final SimpleMetric metricThermalFastConnectionCount =
+        new SimpleMetric("thermal_fast_connection_count", sim, "thermal_fast_connection_count", UnitTypes.NO_UNITS);
+    private final SimpleMetric metricThermalFastProcessCount =
+        new SimpleMetric("thermal_fast_process_count", sim, "thermal_fast_process_count", UnitTypes.NO_UNITS);
+    private final SimpleMetric metricThermalSlowLoadCount =
+        new SimpleMetric("thermal_slow_load_count", sim, "thermal_slow_load_count", UnitTypes.NO_UNITS);
+    private final SimpleMetric metricThermalSlowConnectionCount =
+        new SimpleMetric("thermal_slow_connection_count", sim, "thermal_slow_connection_count", UnitTypes.NO_UNITS);
+    private final SimpleMetric metricThermalSlowProcessCount =
+        new SimpleMetric("thermal_slow_process_count", sim, "thermal_slow_process_count", UnitTypes.NO_UNITS);
+    private final SimpleMetric metricSlowProcessListCount =
+        new SimpleMetric("slow_process_count", sim, "slow_process_count", UnitTypes.NO_UNITS);
 
     boolean run;
 
@@ -365,14 +405,9 @@ public class Simulator /* ,IPacketHandler */ {
         if (process != null) thermalSlowProcessList.removeAll(process);
     }
 
-    // private ArrayList<Double> conectionSerialConductance = new ArrayList<Double>();
-
-    public boolean pleaseCrash = false;
-
     @SubscribeEvent
     public void tick(ServerTickEvent event) {
         if (event.phase != Phase.START) return;
-        if (pleaseCrash) throw new StackOverflowError();
         long stackStart;
 
         long startTime = System.nanoTime();
@@ -441,7 +476,6 @@ public class Simulator /* ,IPacketHandler */ {
         destructableSet.clear();
 
         slowNsStack += System.nanoTime() - stackStart;
-        avgTickTime += 1.0 / 20 * ((int) (System.nanoTime() - startTime) / 1000);
 
 		/*stackStart = System.nanoTime();
 		for (int idx = 0; idx < 100; idx++) {
@@ -468,6 +502,12 @@ public class Simulator /* ,IPacketHandler */ {
 		
 		Utils.println((System.nanoTime() - stackStart) / 1000);*/
 
+        for(IProcess o : slowPostProcessList) {
+            o.process(1 / 20.0);
+        }
+
+        avgTickTime += 1.0 / 20 * (int)((System.nanoTime() - startTime) / 1000);
+
         if (++printTimeCounter == 20) {
             printTimeCounter = 0;
             electricalNsStack /= 20;
@@ -475,18 +515,38 @@ public class Simulator /* ,IPacketHandler */ {
             thermalSlowNsStack /= 20;
             slowNsStack /= 20;
 
-            Utils.println("ticks " + new DecimalFormat("#").format((int) avgTickTime) + " us" + "  E " + electricalNsStack / 1000 + "  TF " + thermalFastNsStack / 1000 + "  TS " + thermalSlowNsStack / 1000 + "  S " + slowNsStack / 1000
+            if (Eln.debugEnabled) {
+                Utils.println("ticks " + new DecimalFormat("#").format((int) avgTickTime) + " us" + "  E " + electricalNsStack / 1000 + "  TF " + thermalFastNsStack / 1000 + "  TS " + thermalSlowNsStack / 1000 + "  S " + slowNsStack / 1000
 
-                + "    " + mna.getSubSystemCount() + " SS"
-                + "    " + electricalProcessList.size() + " EP"
-                + "    " + thermalFastLoadList.size() + " TFL"
-                + "    " + thermalFastConnectionList.size() + " TFC"
-                + "    " + thermalFastProcessList.size() + " TFP"
-                + "    " + thermalSlowLoadList.size() + " TSL"
-                + "    " + thermalSlowConnectionList.size() + " TSC"
-                + "    " + thermalSlowProcessList.size() + " TSP"
-                + "    " + slowProcessList.size() + " SP"
-            );
+                    + "    " + mna.getSubSystemCount() + " SS"
+                    + "    " + electricalProcessList.size() + " EP"
+                    + "    " + thermalFastLoadList.size() + " TFL"
+                    + "    " + thermalFastConnectionList.size() + " TFC"
+                    + "    " + thermalFastProcessList.size() + " TFP"
+                    + "    " + thermalSlowLoadList.size() + " TSL"
+                    + "    " + thermalSlowConnectionList.size() + " TSC"
+                    + "    " + thermalSlowProcessList.size() + " TSP"
+                    + "    " + slowProcessList.size() + " SP"
+                );
+            }
+
+            metricAverageTickTime.putMetric(avgTickTime);
+            metricElectricalNanoseconds.putMetric(electricalNsStack);
+            metricThermalFastNanoseconds.putMetric(thermalFastNsStack);
+            metricThermalSlowNanoseconds.putMetric(thermalSlowNsStack);
+            metricSlowProcessNanoseconds.putMetric(slowNsStack);
+
+            metricSubSystemCount.putMetric(mna.getSubSystemCount());
+            metricElectricalProcessCount.putMetric(electricalProcessList.size());
+            metricThermalFastLoadCount.putMetric(thermalFastLoadList.size());
+            metricThermalFastConnectionCount.putMetric(thermalFastConnectionList.size());
+            metricThermalFastProcessCount.putMetric(thermalFastProcessList.size());
+            metricThermalSlowLoadCount.putMetric(thermalSlowLoadList.size());
+            metricThermalSlowConnectionCount.putMetric(thermalSlowConnectionList.size());
+            metricThermalSlowProcessCount.putMetric(thermalSlowProcessList.size());
+            metricSlowProcessListCount.putMetric(slowProcessList.size());
+
+            // TODO: Metrics for pre and post slow process.
 
             avgTickTime = 0;
 
@@ -494,10 +554,6 @@ public class Simulator /* ,IPacketHandler */ {
             thermalFastNsStack = 0;
             slowNsStack = 0;
             thermalSlowNsStack = 0;
-        }
-
-        for(IProcess o : slowPostProcessList) {
-            o.process(1 / 20.0);
         }
     }
 
