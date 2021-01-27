@@ -55,17 +55,6 @@ public class TreeResinCollectorElement extends SixNodeElement {
     }
 
     @Override
-    public String multiMeterString() {
-        return null;
-    }
-
-    @NotNull
-    @Override
-    public String thermoMeterString() {
-        return null;
-    }
-
-    @Override
     public void initialize() {
     }
 
