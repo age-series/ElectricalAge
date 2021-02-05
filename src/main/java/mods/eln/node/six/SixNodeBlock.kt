@@ -78,7 +78,7 @@ class SixNodeBlock  // public static ArrayList<Integer> repertoriedItemStackId =
     }
 
     // @SideOnly(Side.CLIENT)
-    override fun getSubBlocks(par1: Item, tab: CreativeTabs, subItems: List<*>?) {
+    override fun getSubBlocks(par1: Item, tab: CreativeTabs?, subItems: List<*>?) {
         /*
 		 * for (Integer id : repertoriedItemStackId) { subItems.add(new ItemStack(this, 1, id)); }
 		 */
