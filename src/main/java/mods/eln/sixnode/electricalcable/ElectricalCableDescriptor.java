@@ -45,34 +45,41 @@ public class ElectricalCableDescriptor extends GenericCableDescriptor {
         this.thermalWarmLimit = 100;
         this.thermalCoolLimit = -100;
 
+        this.thermalWarmLimit = Eln.cableWarmLimit;
+        this.thermalCoolLimit = -10;
+
+        Eln.simulator.checkThermalLoad(thermalRs, thermalRp, thermalC);
+
+        if (signalWire) {
+            setPhysicalConstantLikeNormalCable(
+                Eln.SVU,
+                Eln.SVP,
+                0.02 / 50 * Eln.gateOutputCurrent / Eln.SVII,
+                Eln.SVU * 1.3,
+                Eln.SVP * 1.2,
+                0.5
+            );
+        }
     }
 
     public void setPhysicalConstantLikeNormalCable(
         double electricalNominalVoltage, double electricalNominalPower, double electricalNominalPowerDropFactor,
         double electricalMaximalVoltage, double electricalMaximalPower,
-        double electricalOverVoltageStartPowerLost,
-        double thermalWarmLimit, double thermalCoolLimit,
-        double thermalNominalHeatTime, double thermalConductivityTao) {
+        double electricalOverVoltageStartPowerLost) {
         this.electricalNominalVoltage = electricalNominalVoltage;
         this.electricalNominalPower = electricalNominalPower;
         this.electricalNominalPowerDropFactor = electricalNominalPowerDropFactor;
-
-        this.thermalWarmLimit = thermalWarmLimit;
-        this.thermalCoolLimit = thermalCoolLimit;
         this.electricalMaximalVoltage = electricalMaximalVoltage;
-
         electricalRp = MnaConst.highImpedance;
         double electricalNorminalI = electricalNominalPower / electricalNominalVoltage;
         electricalRs = (electricalNominalPower * electricalNominalPowerDropFactor) / electricalNorminalI / electricalNorminalI / 2;
-        //electricalC = Eln.simulator.getMinimalElectricalC(electricalNominalRs, electricalRp);
+        Utils.println("Cable Resistance for the " + name + ": " + electricalRs);
 
         electricalNominalPower = electricalMaximalPower / electricalNominalVoltage;
         double thermalMaximalPowerDissipated = electricalNominalPower * electricalNominalPower * electricalRs * 2;
-        thermalC = thermalMaximalPowerDissipated * thermalNominalHeatTime / (thermalWarmLimit);
-        thermalRp = thermalWarmLimit / thermalMaximalPowerDissipated;
-        thermalRs = thermalConductivityTao / thermalC / 2;
-
-        Eln.simulator.checkThermalLoad(thermalRs, thermalRp, thermalC);
+        thermalC = thermalMaximalPowerDissipated * Eln.cableHeatingTime / (this.thermalWarmLimit);
+        thermalRp = this.thermalWarmLimit / thermalMaximalPowerDissipated;
+        thermalRs = 0.5 / thermalC / 2;
 
         electricalRsPerCelcius = 0;
 
@@ -120,17 +127,7 @@ public class ElectricalCableDescriptor extends GenericCableDescriptor {
             Collections.addAll(list, tr("A signal is electrical information\nwhich must be between 0V and %1$", Utils.plotVolt(Eln.SVU)).split("\n"));
             list.add(tr("Not adapted to transport power."));
 
-			/*String lol = "";
-			for (int idx = 0; idx < 15; idx++) {
-				if (idx < 10) {
-					lol += "\u00a7" + idx + "" +  idx;
-				} else {
-					lol += "\u00a7" + "abcdef".charAt(idx - 10) + "abcdef".charAt(idx - 10);
-				}
-			}
-			list.add(lol);*/
         } else {
-            //list.add("Low resistor => low power lost");
             list.add(tr("Nominal Ratings:"));
             list.add("  " + tr("Voltage: %1$V", Utils.plotValue(electricalNominalVoltage)));
             list.add("  " + tr("Current: %1$A", Utils.plotValue(electricalNominalPower / electricalNominalVoltage)));

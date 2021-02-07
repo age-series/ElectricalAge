@@ -48,10 +48,10 @@ public class Resistor extends Bipole {
     }
 
     public Resistor setR(double r) {
-        if (Double.isNaN(r) || Double.isInfinite(r)) {
+        if (Double.isNaN(r) || Double.isInfinite(r) || r > MnaConst.ultraImpedance || r < MnaConst.noImpedance) {
             Utils.println("Error! Resistor cannot be set to " + r );
             // Call stack for debugging
-            //new Throwable().printStackTrace();
+            new Throwable().printStackTrace();
             return this;
         }
         if (this.r != r) {

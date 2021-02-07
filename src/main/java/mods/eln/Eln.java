@@ -40,7 +40,6 @@ import mods.eln.item.regulator.IRegulatorDescriptor;
 import mods.eln.item.regulator.RegulatorAnalogDescriptor;
 import mods.eln.item.regulator.RegulatorOnOffDescriptor;
 import mods.eln.mechanical.*;
-import mods.eln.metrics.MetricsSubsystem;
 import mods.eln.misc.*;
 import mods.eln.misc.SeriesFunction;
 import mods.eln.node.NodeBlockEntity;
@@ -62,9 +61,6 @@ import mods.eln.sim.ThermalLoadInitializer;
 import mods.eln.sim.ThermalLoadInitializerByPowerDrop;
 import mods.eln.sim.mna.component.Resistor;
 import mods.eln.sim.nbt.NbtElectricalLoad;
-import mods.eln.simplenode.DeviceProbeBlock;
-import mods.eln.simplenode.DeviceProbeEntity;
-import mods.eln.simplenode.DeviceProbeNode;
 import mods.eln.simplenode.computerprobe.ComputerProbeBlock;
 import mods.eln.simplenode.computerprobe.ComputerProbeEntity;
 import mods.eln.simplenode.computerprobe.ComputerProbeNode;
@@ -1300,259 +1296,119 @@ public class Eln {
     private void registerElectricalCable(int id) {
         int subId;
         String name;
-
         ElectricalCableDescriptor desc;
         {
             subId = 0;
-
             name = TR_NAME(Type.NONE, "Signal Cable");
-
-            stdCableRenderSignal = new CableRenderDescriptor("eln",
-                "sprites/cable.png", 0.95f, 0.95f);
-
-            desc = new ElectricalCableDescriptor(name, stdCableRenderSignal,
-                "For signal transmission.", true);
-
+            stdCableRenderSignal = new CableRenderDescriptor("eln", "sprites/cable.png", 0.95f, 0.95f);
+            desc = new ElectricalCableDescriptor(name, stdCableRenderSignal, "For signal transmission.", true);
             signalCableDescriptor = desc;
-
-            desc.setPhysicalConstantLikeNormalCable(SVU, SVP, 0.02 / 50
-                    * gateOutputCurrent / SVII,// electricalNominalVoltage,
-                // electricalNominalPower,
-                // electricalNominalPowerDrop,
-                SVU * 1.3, SVP * 1.2,// electricalMaximalVoltage,
-                // electricalMaximalPower,
-                0.5,// electricalOverVoltageStartPowerLost,
-                cableWarmLimit, -100,// thermalWarmLimit, thermalCoolLimit,
-                cableHeatingTime, 1// thermalNominalHeatTime,
-                // thermalConductivityTao
-            );
-
             sixNodeItem.addDescriptor(subId + (id << 6), desc);
-            // GameRegistry.registerCustomItemStack(name, desc.newItemStack(1));
-
         }
-
         {
             subId = 4;
-
             name = TR_NAME(Type.NONE, "Low Voltage Cable");
-
-            stdCableRender50V = new CableRenderDescriptor("eln",
-                "sprites/cable.png", 1.95f, 0.95f);
-
-            desc = new ElectricalCableDescriptor(name, stdCableRender50V,
-                "For low voltage with high current.", false);
-
+            stdCableRender50V = new CableRenderDescriptor("eln", "sprites/cable.png", 1.95f, 0.95f);
+            desc = new ElectricalCableDescriptor(name, stdCableRender50V, "For low voltage with high current.", false);
             lowVoltageCableDescriptor = desc;
-
-            desc.setPhysicalConstantLikeNormalCable(LVU, LVP(), 0.2 / 20,// electricalNominalVoltage,
-                // electricalNominalPower,
-                // electricalNominalPowerDrop,
-                LVU * 1.3, LVP() * 1.2,// electricalMaximalVoltage,
-                // electricalMaximalPower,
-                20,// electricalOverVoltageStartPowerLost,
-                cableWarmLimit, -100,// thermalWarmLimit, thermalCoolLimit,
-                cableHeatingTime, cableThermalConductionTao// thermalNominalHeatTime,
-                // thermalConductivityTao
-            );
-
-            sixNodeItem.addDescriptor(subId + (id << 6), desc);
-
-            desc = new ElectricalCableDescriptor(name, stdCableRender50V,
-                "For low voltage with high current.", false);
-
             desc.setPhysicalConstantLikeNormalCable(
-                LVU, LVP() / 4, 0.2 / 20,// electricalNominalVoltage,
-                // electricalNominalPower,
-                // electricalNominalPowerDrop,
-                LVU * 1.3, LVP() * 1.2,// electricalMaximalVoltage,
-                // electricalMaximalPower,
-                20,// electricalOverVoltageStartPowerLost,
-                cableWarmLimit, -100,// thermalWarmLimit, thermalCoolLimit,
-                cableHeatingTime, cableThermalConductionTao// thermalNominalHeatTime,
-                // thermalConductivityTao
+                LVU,
+                LVP(),
+                0.2 / 20,
+                LVU * 1.3,
+                LVP() * 1.2,
+                20
             );
-
+            sixNodeItem.addDescriptor(subId + (id << 6), desc);
         }
-
         {
             subId = 8;
-
             name = TR_NAME(Type.NONE, "Medium Voltage Cable");
-
-            stdCableRender200V = new CableRenderDescriptor("eln",
-                "sprites/cable.png", 2.95f, 0.95f);
-
-            desc = new ElectricalCableDescriptor(name, stdCableRender200V,
-                "miaou", false);
-
+            stdCableRender200V = new CableRenderDescriptor("eln","sprites/cable.png", 2.95f, 0.95f);
+            desc = new ElectricalCableDescriptor(name, stdCableRender200V,"For medium voltage with medium current", false);
             meduimVoltageCableDescriptor = desc;
-
-            desc.setPhysicalConstantLikeNormalCable(MVU, MVP(), 0.10 / 20,// electricalNominalVoltage,
-                // electricalNominalPower,
-                // electricalNominalPowerDrop,
-                MVU * 1.3, MVP() * 1.2,// electricalMaximalVoltage,
-                // electricalMaximalPower,
-                30,// electricalOverVoltageStartPowerLost,
-                cableWarmLimit, -100,// thermalWarmLimit, thermalCoolLimit,
-                cableHeatingTime, cableThermalConductionTao// thermalNominalHeatTime,
-                // thermalConductivityTao
+            desc.setPhysicalConstantLikeNormalCable(
+                MVU,
+                MVP(),
+                0.10 / 20,
+                MVU * 1.3,
+                MVP() * 1.2,
+                30
             );
-
             sixNodeItem.addDescriptor(subId + (id << 6), desc);
-
         }
         {
             subId = 12;
-
-            // highVoltageCableId = subId;
             name = TR_NAME(Type.NONE, "High Voltage Cable");
-
-            stdCableRender800V = new CableRenderDescriptor("eln",
-                "sprites/cable.png", 3.95f, 1.95f);
-
-            desc = new ElectricalCableDescriptor(name, stdCableRender800V,
-                "miaou2", false);
-
+            stdCableRender800V = new CableRenderDescriptor("eln","sprites/cable.png", 3.95f, 1.95f);
+            desc = new ElectricalCableDescriptor(name, stdCableRender800V,"For high voltage with some current", false);
             highVoltageCableDescriptor = desc;
-
-            desc.setPhysicalConstantLikeNormalCable(HVU, HVP(), 0.025 * 5 / 4 / 20,// electricalNominalVoltage,
-                // electricalNominalPower,
-                // electricalNominalPowerDrop,
-                HVU * 1.3, HVP() * 1.2,// electricalMaximalVoltage,
-                // electricalMaximalPower,
-                40,// electricalOverVoltageStartPowerLost,
-                cableWarmLimit, -100,// thermalWarmLimit, thermalCoolLimit,
-                cableHeatingTime, cableThermalConductionTao// thermalNominalHeatTime,
-                // thermalConductivityTao
+            desc.setPhysicalConstantLikeNormalCable(
+                HVU,
+                HVP(),
+                0.025 * 5 / 4 / 20,
+                HVU * 1.3,
+                HVP() * 1.2,
+                40
             );
-
             sixNodeItem.addDescriptor(subId + (id << 6), desc);
-
         }
-
-
         {
             subId = 16;
-
-            // highVoltageCableId = subId;
             name = TR_NAME(Type.NONE, "Very High Voltage Cable");
-
-            stdCableRender3200V = new CableRenderDescriptor("eln",
-                "sprites/cableVHV.png", 3.95f, 1.95f);
-
-            desc = new ElectricalCableDescriptor(name, stdCableRender3200V,
-                "miaou2", false);
-
+            stdCableRender3200V = new CableRenderDescriptor("eln", "sprites/cableVHV.png", 3.95f, 1.95f);
+            desc = new ElectricalCableDescriptor(name, stdCableRender3200V, "For very high voltage with low current", false);
             veryHighVoltageCableDescriptor = desc;
-
-            desc.setPhysicalConstantLikeNormalCable(VVU, VVP(), 0.025 * 5 / 4 / 20 / 8,// electricalNominalVoltage,
-                // electricalNominalPower,
-                // electricalNominalPowerDrop,
-                VVU * 1.3, VVP() * 1.2,// electricalMaximalVoltage,
-                // electricalMaximalPower,
-                40,// electricalOverVoltageStartPowerLost,
-                cableWarmLimit, -100,// thermalWarmLimit, thermalCoolLimit,
-                cableHeatingTime, cableThermalConductionTao// thermalNominalHeatTime,
-                // thermalConductivityTao
+            desc.setPhysicalConstantLikeNormalCable(
+                VVU,
+                VVP(),
+                0.025 * 5 / 4 / 20 / 8,
+                VVU * 1.3,
+                VVP() * 1.2,
+                40
             );
-
             sixNodeItem.addDescriptor(subId + (id << 6), desc);
-
         }
-
         {
             subId = 24;
-
             name = TR_NAME(Type.NONE, "Creative Cable");
-
-            stdCableRenderCreative = new CableRenderDescriptor("eln",
-                "sprites/cablecreative.png", 8.0f, 4.0f);
-
-            desc = new ElectricalCableDescriptor(name, stdCableRenderCreative,
-                "Experience the power of Microresistance", false);
-
+            stdCableRenderCreative = new CableRenderDescriptor("eln", "sprites/cablecreative.png", 8.0f, 4.0f);
+            desc = new ElectricalCableDescriptor(name, stdCableRenderCreative, "Unlimited Power!!!", false);
             creativeCableDescriptor = desc;
-
-            desc.setPhysicalConstantLikeNormalCable(VVU * 16, VVU * 16 * VVP(), 1e-9, //what!?
-                VVU * 16 * 1.3, VVU * 16 * VVP() * 1.2,
-                40,// electricalOverVoltageStartPowerLost,
-                cableWarmLimit, -100,// thermalWarmLimit, thermalCoolLimit,
-                cableHeatingTime, cableThermalConductionTao// thermalNominalHeatTime,
-                // thermalConductivityTao
+            desc.setPhysicalConstantLikeNormalCable(
+                VVU * 16,
+                VVU * 16 * VVP(),
+                1e-9, //what!?
+                VVU * 16 * 1.3,
+                VVU * 16 * VVP() * 1.2,
+                40
             );
             sixNodeItem.addDescriptor(subId + (id << 6), desc);
         }
-
         {
             subId = 20;
-
             name = TR_NAME(Type.NONE, "Signal Bus Cable");
-
-            stdCableRenderSignalBus = new CableRenderDescriptor("eln",
-                "sprites/cable.png", 3.95f, 3.95f);
-
-            desc = new ElectricalCableDescriptor(name, stdCableRenderSignalBus,
-                "For transmitting many signals.", true);
-
+            stdCableRenderSignalBus = new CableRenderDescriptor("eln", "sprites/cable.png", 3.95f, 3.95f);
+            desc = new ElectricalCableDescriptor(name, stdCableRenderSignalBus, "For transmitting many signals.", true);
             signalBusCableDescriptor = desc;
-
-            desc.setPhysicalConstantLikeNormalCable(SVU, SVP, 0.02 / 50
-                    * gateOutputCurrent / SVII,// electricalNominalVoltage,
-                // electricalNominalPower,
-                // electricalNominalPowerDrop,
-                SVU * 1.3, SVP * 1.2,// electricalMaximalVoltage,
-                // electricalMaximalPower,
-                0.5,// electricalOverVoltageStartPowerLost,
-                cableWarmLimit, -100,// thermalWarmLimit, thermalCoolLimit,
-                cableHeatingTime, 1// thermalNominalHeatTime,
-                // thermalConductivityTao
-            );
-
             desc.ElementClass = ElectricalSignalBusCableElement.class;
-
             sixNodeItem.addDescriptor(subId + (id << 6), desc);
-            // GameRegistry.registerCustomItemStack(name, desc.newItemStack(1));
-
         }
     }
 
     private void registerThermalCable(int id) {
         int subId;
         String name;
-
-        {
-            subId = 0;
-
-            name = "Removed from mod Copper Thermal Cable";
-
-            ThermalCableDescriptor desc = new ThermalCableDescriptor(name,
-                1000 - 20, -200, // thermalWarmLimit, thermalCoolLimit,
-                500, 2000, // thermalStdT, thermalStdPower,
-                2, 400, 0.1,// thermalStdDrop, thermalStdLost, thermalTao,
-                new CableRenderDescriptor("eln",
-                    "sprites/tex_thermalcablebase.png", 4, 4),
-                "Miaou !");// description
-
-            desc.addToData(false);
-            desc.setDefaultIcon("empty-texture");
-            sixNodeItem.addWithoutRegistry(subId + (id << 6), desc);
-
-        }
-
         {
             subId = 1;
-
             name = TR_NAME(Type.NONE, "Copper Thermal Cable");
-
             ThermalCableDescriptor desc = new ThermalCableDescriptor(name,
-                1000 - 20, -200, // thermalWarmLimit, thermalCoolLimit,
-                500, 2000, // thermalStdT, thermalStdPower,
-                2, 10, 0.1,// thermalStdDrop, thermalStdLost, thermalTao,
+                1000 - 20, -200,
+                500, 2000,
+                2, 10, 0.1,
                 new CableRenderDescriptor("eln",
                     "sprites/tex_thermalcablebase.png", 4, 4),
-                "Miaou !");// description
-
+                "Miaou !");
             sixNodeItem.addDescriptor(subId + (id << 6), desc);
         }
     }

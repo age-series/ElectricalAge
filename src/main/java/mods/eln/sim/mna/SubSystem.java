@@ -1,5 +1,7 @@
 package mods.eln.sim.mna;
 
+import mods.eln.metrics.SimpleMetric;
+import mods.eln.metrics.UnitTypes;
 import mods.eln.misc.Profiler;
 import mods.eln.misc.Utils;
 import mods.eln.sim.mna.component.*;
@@ -18,6 +20,10 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class SubSystem {
+
+    List<Long> inverseTimesNanoseconds = new ArrayList<>();
+    int numberSingularMatrices = 0;
+
     public ArrayList<Component> component = new ArrayList<Component>();
     public List<State> states = new ArrayList<State>();
     public LinkedList<IDestructor> breakDestructor = new LinkedList<IDestructor>();
@@ -32,7 +38,6 @@ public class SubSystem {
 
     int stateCount;
     RealMatrix A;
-    //RealMatrix I;
     boolean singularMatrix;
 
     double[][] AInvdata;
@@ -81,16 +86,6 @@ public class SubSystem {
         invalidate();
     }
 
-	/*public void removeAll() {
-		for (Component c : component) {
-			c.disconnectFromSubSystem();
-		}
-		for (State s : states) {
-			s.disconnectFromSubSystem();
-		}	
-		invalidate();
-	}*/
-
     public void removeProcess(ISubSystemProcessI p) {
         processI.remove(p);
         invalidate();
@@ -112,20 +107,13 @@ public class SubSystem {
         processI.add(p);
     }
 
-    //double[][] getDataRef()
-
     public void generateMatrix() {
         stateCount = states.size();
 
         Profiler p = new Profiler();
-        p.add("Inversse with " + stateCount + " state : ");
+        p.add("Inverse with " + stateCount + " state : ");
 
         A = MatrixUtils.createRealMatrix(stateCount, stateCount);
-        //Adata = ((Array2DRowRealMatrix) A).getDataRef();
-        // X = MatrixUtils.createRealMatrix(stateCount, 1); Xdata =
-        // ((Array2DRowRealMatrix)X).getDataRef();
-        //I = MatrixUtils.createRealMatrix(stateCount, 1);
-        //Idata = ((Array2DRowRealMatrix) I).getDataRef();
         Idata = new double[stateCount];
         XtempData = new double[stateCount];
         {
@@ -139,19 +127,15 @@ public class SubSystem {
             c.applyTo(this);
         }
 
-        //	org.apache.commons.math3.linear.
-
         try {
-            //FieldLUDecomposition QRDecomposition  LUDecomposition RRQRDecomposition
             RealMatrix Ainv = new QRDecomposition(A).getSolver().getInverse();
             AInvdata = Ainv.getData();
             singularMatrix = false;
         } catch (Exception e) {
             singularMatrix = true;
             if (stateCount > 1) {
-                int idx = 0;
-                idx++;
                 Utils.println("//////////SingularMatrix////////////");
+                numberSingularMatrices++;
             }
         }
 
@@ -161,7 +145,8 @@ public class SubSystem {
         matrixValid = true;
 
         p.stop();
-        Utils.println(p);
+        inverseTimesNanoseconds.add(p.timeNanoseconds());
+        //Utils.println(p);
     }
 
     public void addToA(State a, State b, double v) {
@@ -188,9 +173,28 @@ public class SubSystem {
 	 * }
 	 */
 
+    public SubSystemMetrics sendMetrics() {
+        double inversionTimeAverage = 0.0, inverseTimeMaximum = 0.0;
+        int singularCount = numberSingularMatrices;
+        int inversionCount = 0;
+        numberSingularMatrices = 0;
+        inversionCount = inverseTimesNanoseconds.size();
+        long max = 0, sum = 0;
+        for (Long x: inverseTimesNanoseconds) {
+            if (x > max) max = x;
+            sum += x;
+        }
+        if (inverseTimesNanoseconds.size() != 0) {
+            inversionTimeAverage = (double)sum / inverseTimesNanoseconds.size();
+        }
+        inverseTimesNanoseconds.clear();
+        return new SubSystemMetrics(inversionTimeAverage, inverseTimeMaximum, inversionCount, singularCount);
+    }
+
     public void step() {
         stepCalc();
         stepFlush();
+        sendMetrics();
     }
 
     public void stepCalc() {

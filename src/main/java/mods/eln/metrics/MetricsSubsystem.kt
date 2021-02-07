@@ -18,18 +18,23 @@ object MetricsSubsystem {
         }
 
         metricThread = Thread {
-            // Wait a tick for data. We don't need to be exactly on the tick, but it's not worth going faster really.
-            Thread.sleep(50)
+            while(true) {
+                // Wait a tick for data. We don't need to be exactly on the tick, but it's not worth going faster really.
+                Thread.sleep(50)
 
-            while (true) {
-                val metric = metricsIngested.remove()?: break
-                metricSinks.forEach {
-                    try {
-                        it.putMetric(metric.value, metric.unit, metric.metricName, metric.namespace, metric.description)
-                    } catch (e: Exception) {
-                        Utils.println("The ${it.javaClass.name} metric subsystem failed. $e")
+                var count = 0
+                while (true) {
+                    val metric = metricsIngested.poll()?: break
+                    count++;
+                    metricSinks.forEach {
+                        try {
+                            it.putMetric(metric.value, metric.unit, metric.metricName, metric.namespace, metric.description)
+                        } catch (e: Exception) {
+                            Utils.println("The ${it.javaClass.name} metric subsystem failed. $e")
+                        }
                     }
                 }
+                //println("Moved the metrics, did $count")
             }
         }
         metricThread.start()

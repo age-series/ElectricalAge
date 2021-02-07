@@ -1,5 +1,7 @@
 package mods.eln.sim.mna;
 
+import mods.eln.metrics.SimpleMetric;
+import mods.eln.metrics.UnitTypes;
 import mods.eln.misc.Profiler;
 import mods.eln.misc.Utils;
 import mods.eln.sim.ElectricalLoad;
@@ -12,6 +14,7 @@ import mods.eln.sim.mna.state.VoltageState;
 import java.util.*;
 
 public class RootSystem {
+    List<SubSystemMetrics> subSystemMetricsList = new ArrayList<>();
 
     double dt;
     int interSystemOverSampling;
@@ -259,13 +262,6 @@ public class RootSystem {
                 p.rootSystemPreStepProcess();
             }
         }
-		
-	/*	for (SubSystem s : systems) {
-			for (State state : s.states) {
-				Utils.print(state.state + " ");
-			}
-		}
-		Utils.println("");*/
 
         profiler.add("stepCalc");
         for (SubSystem s : systems) {
@@ -275,6 +271,12 @@ public class RootSystem {
         for (SubSystem s : systems) {
             s.stepFlush();
         }
+        profiler.add("stepMetricCollect");
+        for (SubSystem s : systems) {
+            subSystemMetricsList.add(s.sendMetrics());
+        }
+        profiler.add("stepMetricSumMax");
+        SubSystemMetricsAggregator.INSTANCE.aggregateMetrics(subSystemMetricsList);
         profiler.add("simProcessFlush");
         for (ISubSystemProcessFlush p : processF) {
             p.simProcessFlush();

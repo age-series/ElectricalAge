@@ -28,6 +28,10 @@ class Profiler {
         }
         return str
     }
+
+    fun timeNanoseconds(): Long {
+        return list.last.nano - list.first.nano
+    }
 }
 
 data class ProfilerData(var name: String?, var nano: Long)
