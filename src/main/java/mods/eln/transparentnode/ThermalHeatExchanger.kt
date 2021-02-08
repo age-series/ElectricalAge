@@ -104,27 +104,29 @@ class ThermalHeatExchangerElement(
     val tankMap = mapOf(Pair(INPUT_SIDE, TankData(FluidTank(1000))), Pair(OUTPUT_SIDE, TankData(FluidTank(1000))))
     private val tank = ElementSidedFluidHandler(tankMap)
     private val thermalWatchdog = ThermalLoadWatchDog()
-    private val fluidRegulatorProcess = IProcess {
-        val inputFluid = tank.getFluidType(INPUT_SIDE)
-        var joulesPerMb = 0.0
-        if (thermalPairs.isNotEmpty() && tank.getFluidAmount(INPUT_SIDE) > 0 && inputFluid != null) {
+    private val fluidRegulatorProcess = object: IProcess {
+        override fun process(time: Double) {
+            val inputFluid = tank.getFluidType(INPUT_SIDE)
+            var joulesPerMb = 0.0
+            if (thermalPairs.isNotEmpty() && tank.getFluidAmount(INPUT_SIDE) > 0 && inputFluid != null) {
 
-            thermalPairs.filter { it.input.id == inputFluid.id || (it.reversible && it.output.id == inputFluid.id) }.forEach {
-                if (it.input.id == inputFluid.id) {
-                    // Normal Forwards conversion
-                    inputMbPerTick = moveFluidProcess(it.output, it.maxMbInputPerTick, it.ratio, it.minTemp, it.maxTemp)
-                    outputMbPerTick = (inputMbPerTick * it.ratio).toInt()
-                    joulesPerMb = it.joulesPerMb
-                } else {
-                    // Reversed conversion
-                    inputMbPerTick = moveFluidProcess(it.input, it.maxMbInputPerTick, it.ratio, it.minTemp, it.maxTemp)
-                    outputMbPerTick = (inputMbPerTick * it.ratio).toInt()
-                    joulesPerMb = -it.joulesPerMb
+                thermalPairs.filter { it.input.id == inputFluid.id || (it.reversible && it.output.id == inputFluid.id) }.forEach {
+                    if (it.input.id == inputFluid.id) {
+                        // Normal Forwards conversion
+                        inputMbPerTick = moveFluidProcess(it.output, it.maxMbInputPerTick, it.ratio, it.minTemp, it.maxTemp)
+                        outputMbPerTick = (inputMbPerTick * it.ratio).toInt()
+                        joulesPerMb = it.joulesPerMb
+                    } else {
+                        // Reversed conversion
+                        inputMbPerTick = moveFluidProcess(it.input, it.maxMbInputPerTick, it.ratio, it.minTemp, it.maxTemp)
+                        outputMbPerTick = (inputMbPerTick * it.ratio).toInt()
+                        joulesPerMb = -it.joulesPerMb
+                    }
                 }
-            }
 
+            }
+            joulesPerTick = outputMbPerTick * joulesPerMb
         }
-        joulesPerTick = outputMbPerTick * joulesPerMb
     }
 
     fun moveFluidProcess(outputFluid: Fluid, maxMbInputPerTick: Int, ratio: Double, minTemp: Double?, maxTemp: Double?): Int {
@@ -160,11 +162,13 @@ class ThermalHeatExchangerElement(
         return 0
     }
 
-    private val thermalRegulatorProcess = IProcess { time ->
-        //Yes, it's magic number time. 1.25 is a rough estimate of the "what the fuck" measure I got from thermal power.
-        val heatPower = joulesPerTick / (Eln.instance.thermalFrequency / Eln.instance.electricalFrequency) * 1.25 / time
-        thermalLoad.movePowerTo(heatPower)
-        //thermalLoad.PcTemp += heatPower
+    private val thermalRegulatorProcess = object: IProcess {
+        override fun process(time: Double) {
+            //Yes, it's magic number time. 1.25 is a rough estimate of the "what the fuck" measure I got from thermal power.
+            val heatPower = joulesPerTick / (Eln.instance.thermalFrequency / Eln.instance.electricalFrequency) * 1.25 / time
+            thermalLoad.movePowerTo(heatPower)
+            //thermalLoad.PcTemp += heatPower
+        }
     }
 
     init {

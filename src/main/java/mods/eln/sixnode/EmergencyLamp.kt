@@ -108,48 +108,50 @@ class EmergencyLampElement(sixNode: SixNode, side: Direction, descriptor: SixNod
     var channel by published("Default channel")
     var isConnectedToLampSupply by published(false)
 
-    val process = IProcess { deltaT ->
-        if (!poweredByCable) {
-            var closestPowerSupply: LampSupplyElement.PowerSupplyChannelHandle? = null
-            var closestDistance = 10000f
+    val process = object: IProcess {
+        override fun process(time: Double) {
+            if (!poweredByCable) {
+                var closestPowerSupply: LampSupplyElement.PowerSupplyChannelHandle? = null
+                var closestDistance = 10000f
 
-            LampSupplyElement.channelMap[channel]?.forEach {
-                val distance = it.element.sixNode!!.coordinate.trueDistanceTo(sixNode.coordinate).toFloat()
-                if (distance < closestDistance && distance <= it.element.range) {
-                    closestDistance = distance
-                    closestPowerSupply = it
+                LampSupplyElement.channelMap[channel]?.forEach {
+                    val distance = it.element.sixNode!!.coordinate.trueDistanceTo(sixNode.coordinate).toFloat()
+                    if (distance < closestDistance && distance <= it.element.range) {
+                        closestDistance = distance
+                        closestPowerSupply = it
+                    }
                 }
-            }
 
-            if (closestPowerSupply != null) {
-                isConnectedToLampSupply = true
-                if (closestPowerSupply!!.element.getChannelState(closestPowerSupply!!.id)) {
-                    closestPowerSupply!!.element.addToRp(chargingResistor.r)
-                    load.state = closestPowerSupply!!.element.powerLoad.state
+                if (closestPowerSupply != null) {
+                    isConnectedToLampSupply = true
+                    if (closestPowerSupply!!.element.getChannelState(closestPowerSupply!!.id)) {
+                        closestPowerSupply!!.element.addToRp(chargingResistor.r)
+                        load.state = closestPowerSupply!!.element.powerLoad.state
+                    } else {
+                        load.state = 0.0
+                    }
                 } else {
+                    isConnectedToLampSupply = false
                     load.state = 0.0
                 }
-            } else {
-                isConnectedToLampSupply = false
-                load.state = 0.0
             }
-        }
 
-        if (chargingResistor.u > 0.5 * desc.cable.electricalNominalVoltage) {
-            on = false
-            if (charge < desc.batteryCapacity) {
-                chargingResistor.state = true
-                charge = Math.min(charge + chargingResistor.p * deltaT, desc.batteryCapacity)
-            } else {
-                chargingResistor .state = false
-            }
-        } else {
-            chargingResistor.state = false
-            if (charge > 0) {
-                on = true
-                charge = Math.max(charge - desc.consumption * deltaT, 0.0)
-            } else {
+            if (chargingResistor.u > 0.5 * desc.cable.electricalNominalVoltage) {
                 on = false
+                if (charge < desc.batteryCapacity) {
+                    chargingResistor.state = true
+                    charge = Math.min(charge + chargingResistor.p * time, desc.batteryCapacity)
+                } else {
+                    chargingResistor .state = false
+                }
+            } else {
+                chargingResistor.state = false
+                if (charge > 0) {
+                    on = true
+                    charge = Math.max(charge - desc.consumption * time, 0.0)
+                } else {
+                    on = false
+                }
             }
         }
     }

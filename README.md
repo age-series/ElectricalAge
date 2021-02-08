@@ -4,13 +4,13 @@
 
 Electrical Age (ELN) is a Minecraft Mod offering the ability to perform large-scale in-game electrical simulations.
 
-Look at the official project website [electrical-age.net](https://electrical-age.net/) and [the Wiki](http://wiki.electrical-age.net/) to get general information.
+Look at the official project website [electrical-age.net](https://electrical-age.net/) and [the Wiki](http://wiki.electrical-age.net/) to get general information. More dedicated documentation on the way soon!
 
-This is a fork of Electrical Age, maintained by Jared Dunbar (jrddunbr) and Graham Nothup (Grissess), with the intent to add features and push for active development, which is incorporated back into the main distribution as they see fit.
+This is a fork of Electrical Age maintained by Jared Dunbar (jrddunbr), with the intent to add features and push for active development. It includes all the features from the [upstream Electrical Age repository](https://github.com/Electrical-Age/ElectricalAge/).
 
 ## How to get started
 
-**ElectricalAge is Minecraft 1.7.10 compatible only. Forge is needed.**
+**ElectricalAge is Minecraft 1.7.10 compatible only. Forge build 1614 is needed.**
 
 1. Visit the [releases](https://github.com/jrddunbr/ElectricalAge/releases) page on GitHub for the latest stable build.
 
@@ -18,18 +18,26 @@ This is a fork of Electrical Age, maintained by Jared Dunbar (jrddunbr) and Grah
 
 3. Launch, and have fun!
 
-4. Download the [test world](https://eln.ja13.org/worlds/latest.zip).
-
 ### Building from source
 
-You can compile and launch the current development version.
-[Download](https://github.com/jrddunbr/ElectricalAge/archive/base.zip) or clone the `base` branch. Then build and launch using Gradle:
+You can compile and launch the current development version. Click in the upper right of this page to clone with Git, or download the zip. Then, build and launch using Gradle:
+
+#### Linux/Mac
 
 ```bash
-$ git clone https://github.com/jrddunbr/ElectricalAge.git
-$ cd ElectricalAge
-$ ./gradlew setupDecompWorkspace
-$ ./gradlew runClient
+git clone https://github.com/jrddunbr/ElectricalAge.git
+cd ElectricalAge
+./gradlew setupDecompWorkspace
+./gradlew runClient
+```
+
+#### Windows
+
+```powershell
+git clone https://github.com/jrddunbr/ElectricalAge.git
+cd ElectricalAge
+gradlew.exe setupDecompWorkspace
+gradlew.exe runClient
 ```
 
 ## Contributing

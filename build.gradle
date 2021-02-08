@@ -14,8 +14,7 @@ buildscript {
     }
     dependencies {
         classpath 'net.minecraftforge.gradle:ForgeGradle:1.2-SNAPSHOT'
-        classpath 'de.undercouch:gradle-download-task:1.2'
-        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.6'
+        // Used for AWS CloudWatch dependency
         classpath "io.spring.gradle:dependency-management-plugin:1.0.9.RELEASE"
     }
 }
@@ -26,10 +25,9 @@ plugins {
 }
 
 apply plugin: 'forge'
-apply plugin: 'de.undercouch.download'
 apply plugin: 'java'
-apply plugin: 'com.jfrog.bintray'
 apply plugin: 'maven-publish'
+// Used for AWS CloudWatch dependency
 apply plugin: "io.spring.dependency-management"
 
 apply from: 'gradle.properties'
@@ -75,6 +73,9 @@ minecraft {
     replace "@BUILD_DATE@", BUILD_DATE
     replace "@JAVA_VERSION@", JAVA_VERSION
     replace "@GIT_REVISION@", GIT_REVISION
+
+    replaceIn "Eln.java"
+    replace "@VERSION@", project.version
 }
 
 configurations {
@@ -97,11 +98,22 @@ repositories {
 }
 
 dependencies {
-    external files("libs/commons-math3-3.3.jar")
+    // Kotlin
     shade "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
+
+    // Used for MNA matrix decompositions
+    external files("libs/commons-math3-3.3.jar")
+
+    // Waila Support
     compile "mcp.mobius.waila:Waila:1.5.11-RC2-NONEI_1.7.10:dev"
+
+    // Serial Support (for communicating with local devices)
     compile "com.fazecast:jSerialComm:2.6.2"
+
+    // AWS CloudWatch support (for metrics)
     shade 'com.amazonaws:aws-java-sdk-cloudwatch'
+
+    // Prometheus support (for metrics)
     shade group: 'io.prometheus', name: 'simpleclient', version: prometheus_version
     shade group: 'io.prometheus', name: 'simpleclient_httpserver', version: prometheus_version
     shade group: 'io.prometheus', name: 'simpleclient_hotspot', version: prometheus_version
@@ -164,7 +176,6 @@ jar {
     // Copy sprites
     from('src/main/resources/assets/eln/sprites') {
         include '**/*.png'
-        include '**/*.xcf'
         into 'assets/eln/sprites'
     }
 
@@ -226,29 +237,6 @@ task buildAndCopyJar(dependsOn: 'build', type: Copy) {
     include("*.jar")
 }
 
-import de.undercouch.gradle.tasks.download.Download
-
-// Download the tutorial map as a zip file to the local 'run/saves' folder
-task downloadTutoMap(type: Download) {
-    group = 'ELN'
-    description = 'Download the tutorial map as a zip file to the local \'run/saves\' folder.'
-
-    src(MAPURL)
-    dest(new File(minecraft.runDir + "/saves", MAPURL.substring(MAPURL.lastIndexOf("/") + 1, MAPURL.length())))
-    overwrite true
-}
-
-// Unzip the local tutorial map after downloading it. Overwrite the map content if already exist
-task unzipTutoMap(dependsOn: downloadTutoMap, type: Copy) {
-    group = 'ELN'
-    description = 'Unzip the local tutorial map after downloading it.'
-
-    outputs.upToDateWhen { false } // Force to run this task
-
-    from zipTree(downloadTutoMap.dest)
-    into(minecraft.runDir + "/saves")
-}
-
 // Update the master language file
 task updateMasterLanguageFile(type: JavaExec, dependsOn: 'classes') {
     group = 'ELN'
@@ -263,52 +251,5 @@ task updateMasterLanguageFile(type: JavaExec, dependsOn: 'classes') {
 // It has been causing more harm in merge requests and other jank than good.
 // Please be pedantic about making further edits to the language file.
 // jar.dependsOn(updateMasterLanguageFile)
-
-publishing {
-    publications {
-        mod(MavenPublication) {
-            from components.java
-            groupId GROUP
-            artifactId ARCHIVE_NAME
-            version project.version
-        }
-    }
-}
-
-bintrayUpload {}.dependsOn(build)
-
-bintray {
-    user = System.getenv('BINTRAY_USER')
-    key = System.getenv('BINTRAY_KEY')
-    publications = ['mod']
-    pkg {
-        repo = 'eln'
-        name = 'ElectricalAge'
-        userOrg = 'electrical-age'
-        licenses = ['LGPL V3.0', 'CC BY-NC-SA 3.0']
-        vcsUrl = 'https://github.com/Electrical-Age/ElectricalAge.git'
-        version {
-            name = project.version
-        }
-    }
-}
-
-curseforge {
-  // Put this in ~/.gradle/gradle.properties, absolutely not in the repository.
-  apiKey = project.hasProperty('curseForgeApiKey') ? project.curseForgeApiKey : ""
-  project {
-    id = '253045'
-    changelogType = 'markdown'
-    changelog = file('changelog.md')
-    releaseType = 'release'
-    addGameVersion "1.7.10"
-    mainArtifact(jar) {
-      displayName = "Electrical Age $project.version"
-    }
-    // addArtifact(sourcesJar) {
-    //     displayName = "Electrical Age $project.version Sources"
-    // }
-  }
-}
 
 idea { module { inheritOutputDirs = true } }

@@ -65,22 +65,24 @@ class ScannerElement(sixNode: SixNode, side: Direction, descriptor: SixNodeDescr
 
     var mode = ScanMode.SIMPLE
 
-    val updater = IProcess {
-        val appliedLRDU = side.applyLRDU(front)
-        val scannedCoord = Coordinate(coordinate!!).apply {
-            move(appliedLRDU)
+    val updater = object: IProcess {
+        override fun process(time: Double) {
+            val appliedLRDU = side.applyLRDU(front)
+            val scannedCoord = Coordinate(coordinate!!).apply {
+                move(appliedLRDU)
+            }
+            val targetSide: ForgeDirection = appliedLRDU.inverse.toForge()
+            val te = scannedCoord.tileEntity
+            // TODO: Throttling.
+            var out: Double? = null
+            if (te != null) {
+                out = scanTileEntity(te, targetSide)
+            }
+            if (out == null) {
+                out = scanBlock(scannedCoord, targetSide)
+            }
+            outputProcess.outputNormalized = out
         }
-        val targetSide: ForgeDirection = appliedLRDU.inverse.toForge()
-        val te = scannedCoord.tileEntity
-        // TODO: Throttling.
-        var out: Double? = null
-        if (te != null) {
-            out = scanTileEntity(te, targetSide)
-        }
-        if (out == null) {
-            out = scanBlock(scannedCoord, targetSide)
-        }
-        outputProcess.outputNormalized = out
     }
 
     init {
