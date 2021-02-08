@@ -1,8 +1,8 @@
 package mods.eln.transparentnode.turbine;
 
 import mods.eln.sim.IProcess;
-import mods.eln.sim.mna.SubSystem.Th;
-import mods.eln.sim.mna.misc.IRootSystemPreStepProcess;
+import mods.eln.sim.electrical.mna.SubSystem.Th;
+import mods.eln.sim.electrical.mna.misc.IRootSystemPreStepProcess;
 
 
 public class TurbineElectricalProcess implements IProcess, IRootSystemPreStepProcess {

@@ -2,8 +2,8 @@ package mods.eln.misc
 
 import mods.eln.node.GhostNode
 import mods.eln.node.NodeBase
-import mods.eln.sim.ElectricalLoad
-import mods.eln.sim.ThermalLoad
+import mods.eln.sim.electrical.ElectricalLoad
+import mods.eln.sim.thermal.ThermalLoad
 import net.minecraft.entity.EntityLivingBase
 import net.minecraft.item.ItemStack
 

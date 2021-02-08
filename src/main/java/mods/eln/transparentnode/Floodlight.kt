@@ -4,8 +4,8 @@ import mods.eln.misc.Direction
 import mods.eln.misc.LRDU
 import mods.eln.misc.Obj3D
 import mods.eln.node.transparent.*
-import mods.eln.sim.ElectricalLoad
-import mods.eln.sim.ThermalLoad
+import mods.eln.sim.electrical.ElectricalLoad
+import mods.eln.sim.thermal.ThermalLoad
 import net.minecraft.entity.player.EntityPlayer
 import org.lwjgl.opengl.GL11
 

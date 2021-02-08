@@ -21,12 +21,12 @@ import mods.eln.node.transparent.TransparentNodeElement
 import mods.eln.node.transparent.TransparentNodeElementInventory
 import mods.eln.node.transparent.TransparentNodeElementRender
 import mods.eln.node.transparent.TransparentNodeEntity
-import mods.eln.sim.ElectricalLoad
+import mods.eln.sim.electrical.ElectricalLoad
 import mods.eln.sim.IProcess
-import mods.eln.sim.ThermalLoad
-import mods.eln.sim.mna.component.Resistor
-import mods.eln.sim.mna.misc.MnaConst
-import mods.eln.sim.nbt.NbtElectricalLoad
+import mods.eln.sim.thermal.ThermalLoad
+import mods.eln.sim.electrical.mna.component.Resistor
+import mods.eln.sim.electrical.ElectricalConstants
+import mods.eln.sim.electrical.nbt.NbtElectricalLoad
 import net.minecraft.client.gui.GuiScreen
 import net.minecraft.client.renderer.RenderHelper
 import net.minecraft.entity.player.EntityPlayer
@@ -97,7 +97,7 @@ class FabricatorElement(node: TransparentNode, descriptor: TransparentNodeDescri
         electricalLoadList.add(electricalLoad)
         electricalComponentList.add(resistorLoad)
         electricalLoad.rs = Eln.getSmallRs()
-        resistorLoad.r = MnaConst.highImpedance
+        resistorLoad.r = ElectricalConstants.HIGH_IMPEDANCE
         slowProcessList.add(craftingProcess)
         connect()
     }
@@ -184,12 +184,12 @@ class FabricatorProcess(val element: FabricatorElement): IProcess {
             val power = time * element.resistorLoad.p
             powerConsumed += power
             if (powerConsumed > operation.powerRequired * 2) {
-                element.resistorLoad.r = MnaConst.highImpedance
+                element.resistorLoad.r = ElectricalConstants.HIGH_IMPEDANCE
             } else {
                 element.resistorLoad.r = 40.0 // This is 200 * 200 / 1000 (volts^2 / watts), prevents current spikes
             }
         } else {
-            element.resistorLoad.r = MnaConst.highImpedance
+            element.resistorLoad.r = ElectricalConstants.HIGH_IMPEDANCE
         }
 
         if (operation?.outputItem != null && operation.powerRequired <= powerConsumed) {

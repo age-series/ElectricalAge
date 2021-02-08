@@ -8,8 +8,8 @@ import mods.eln.misc.Utils.mustDropItem
 import mods.eln.misc.Utils.newNbtTagCompund
 import mods.eln.misc.Utils.println
 import mods.eln.node.Node
-import mods.eln.sim.ElectricalLoad
-import mods.eln.sim.ThermalLoad
+import mods.eln.sim.electrical.ElectricalLoad
+import mods.eln.sim.thermal.ThermalLoad
 import net.minecraft.entity.EntityLivingBase
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.entity.player.EntityPlayerMP

@@ -8,9 +8,9 @@ import mods.eln.misc.Obj3D.Obj3DPart;
 import mods.eln.misc.Utils;
 import mods.eln.misc.VoltageLevelColor;
 import mods.eln.node.transparent.TransparentNodeDescriptor;
-import mods.eln.sim.ElectricalLoad;
-import mods.eln.sim.PhysicalConstant;
-import mods.eln.sim.ThermalLoad;
+import mods.eln.sim.electrical.ElectricalLoad;
+import mods.eln.sim.thermal.ThermalConstants;
+import mods.eln.sim.thermal.ThermalLoad;
 import mods.eln.wiki.Data;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -29,7 +29,7 @@ public class TurbineDescriptor extends TransparentNodeDescriptor {
                              double thermalC, double DeltaTForInput,
                              double powerOutPerDeltaU, String soundFile) {
         super(name, TurbineElement.class, TurbineRender.class);
-        double nominalEff = Math.abs(1 - (0 + PhysicalConstant.Tref) / (nominalDeltaT + PhysicalConstant.Tref));
+        double nominalEff = Math.abs(1 - (0 + ThermalConstants.AMBIENT_TEMPERATURE_KELVIN) / (nominalDeltaT + ThermalConstants.AMBIENT_TEMPERATURE_KELVIN));
         this.TtoU = TtoU;
         this.PoutToPin = PoutToPin;
         this.nominalDeltaT = nominalDeltaT;

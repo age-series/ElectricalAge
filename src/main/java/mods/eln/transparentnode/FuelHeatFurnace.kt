@@ -15,11 +15,11 @@ import mods.eln.misc.*
 import mods.eln.node.*
 import mods.eln.node.transparent.*
 import mods.eln.sim.RegulatorProcess
-import mods.eln.sim.ThermalLoadInitializerByPowerDrop
-import mods.eln.sim.nbt.NbtElectricalGateInput
-import mods.eln.sim.nbt.NbtThermalLoad
-import mods.eln.sim.process.destruct.ThermalLoadWatchDog
-import mods.eln.sim.process.destruct.WorldExplosion
+import mods.eln.sim.thermal.ThermalLoadInitializerByPowerDrop
+import mods.eln.sim.electrical.nbt.NbtElectricalGateInput
+import mods.eln.sim.thermal.nbt.NbtThermalLoad
+import mods.eln.sim.watchdogs.ThermalLoadWatchDog
+import mods.eln.sim.watchdogs.WorldExplosion
 import mods.eln.sound.LoopedSound
 import mods.eln.wiki.Data
 import net.minecraft.client.gui.GuiButton

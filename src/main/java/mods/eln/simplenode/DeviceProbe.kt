@@ -10,10 +10,10 @@ import mods.eln.misc.LRDU
 import mods.eln.node.simple.SimpleNode
 import mods.eln.node.simple.SimpleNodeBlock
 import mods.eln.node.simple.SimpleNodeEntity
-import mods.eln.sim.ElectricalLoad
-import mods.eln.sim.ThermalLoad
-import mods.eln.sim.nbt.NbtElectricalGateInputOutput
-import mods.eln.sim.nbt.NbtElectricalGateOutputProcess
+import mods.eln.sim.electrical.ElectricalLoad
+import mods.eln.sim.thermal.ThermalLoad
+import mods.eln.sim.electrical.nbt.NbtElectricalGateInputOutput
+import mods.eln.sim.electrical.nbt.NbtElectricalGateOutputProcess
 import net.minecraft.block.material.Material
 import net.minecraft.client.gui.GuiScreen
 import net.minecraft.client.renderer.texture.IIconRegister
@@ -130,11 +130,11 @@ class DeviceProbeNode: SimpleNode() {
 }
 
 data class ServerPinInformation(
-    var electricalLoadPin: NbtElectricalGateInputOutput,
-    var electricalProcess: NbtElectricalGateOutputProcess,
-    var arduinoPin: Int?,
-    var direction: DirectionalMode,
-    var portMode: PortMode
+        var electricalLoadPin: NbtElectricalGateInputOutput,
+        var electricalProcess: NbtElectricalGateOutputProcess,
+        var arduinoPin: Int?,
+        var direction: DirectionalMode,
+        var portMode: PortMode
     ): INBTTReady {
 
     override fun readFromNBT(nbt: NBTTagCompound, str: String) {

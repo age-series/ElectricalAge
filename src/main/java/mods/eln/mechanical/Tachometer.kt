@@ -19,11 +19,10 @@ import mods.eln.node.transparent.EntityMetaTag
 import mods.eln.node.transparent.TransparentNode
 import mods.eln.node.transparent.TransparentNodeDescriptor
 import mods.eln.node.transparent.TransparentNodeEntity
-import mods.eln.sim.ElectricalLoad
+import mods.eln.sim.electrical.ElectricalLoad
 import mods.eln.sim.IProcess
-import mods.eln.sim.ThermalLoad
-import mods.eln.sim.nbt.NbtElectricalGateOutput
-import mods.eln.sim.nbt.NbtElectricalGateOutputProcess
+import mods.eln.sim.electrical.nbt.NbtElectricalGateOutput
+import mods.eln.sim.electrical.nbt.NbtElectricalGateOutputProcess
 import mods.eln.sixnode.electricaldatalogger.DataLogs
 import net.minecraft.client.gui.GuiButton
 import net.minecraft.client.gui.GuiScreen

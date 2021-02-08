@@ -3,8 +3,8 @@ package mods.eln.node
 import mods.eln.Eln
 import mods.eln.misc.Direction
 import mods.eln.misc.LRDU
-import mods.eln.sim.ElectricalConnection
-import mods.eln.sim.ThermalConnection
+import mods.eln.sim.electrical.ElectricalConnection
+import mods.eln.sim.thermal.ThermalConnection
 import java.util.*
 
 class NodeConnection(var N1: NodeBase, var dir1: Direction, var lrdu1: LRDU, var N2: NodeBase, var dir2: Direction, var lrdu2: LRDU) {

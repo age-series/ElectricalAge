@@ -1,8 +1,8 @@
 package mods.eln.sixnode.modbusrtu;
 
 import mods.eln.misc.Utils;
-import mods.eln.sim.nbt.NbtElectricalGateInputOutput;
-import mods.eln.sim.nbt.NbtElectricalGateOutputProcess;
+import mods.eln.sim.electrical.nbt.NbtElectricalGateInputOutput;
+import mods.eln.sim.electrical.nbt.NbtElectricalGateOutputProcess;
 
 public class modbusAnalogIoSlot extends ModbusSlot {
 

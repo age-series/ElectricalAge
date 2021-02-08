@@ -9,9 +9,9 @@ import mods.eln.node.NodeBase
 import mods.eln.node.NodeConnection
 import mods.eln.node.six.SixNode
 import mods.eln.node.six.SixNodeDescriptor
-import mods.eln.sim.ElectricalConnection
-import mods.eln.sim.ElectricalLoad
-import mods.eln.sim.nbt.NbtElectricalLoad
+import mods.eln.sim.electrical.ElectricalConnection
+import mods.eln.sim.electrical.ElectricalLoad
+import mods.eln.sim.electrical.nbt.NbtElectricalLoad
 import net.minecraft.util.EnumChatFormatting
 import java.util.*
 

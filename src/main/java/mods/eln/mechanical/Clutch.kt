@@ -13,12 +13,12 @@ import mods.eln.i18n.I18N.tr
 import mods.eln.misc.*
 import mods.eln.node.NodeBase
 import mods.eln.node.transparent.*
-import mods.eln.sim.ElectricalLoad
+import mods.eln.sim.electrical.ElectricalLoad
 import mods.eln.sim.IProcess
-import mods.eln.sim.ThermalLoad
-import mods.eln.sim.nbt.NbtElectricalGateInput
-import mods.eln.sim.process.destruct.DelayedDestruction
-import mods.eln.sim.process.destruct.WorldExplosion
+import mods.eln.sim.thermal.ThermalLoad
+import mods.eln.sim.electrical.nbt.NbtElectricalGateInput
+import mods.eln.sim.watchdogs.DelayedDestruction
+import mods.eln.sim.watchdogs.WorldExplosion
 import mods.eln.sound.LoopedSound
 import mods.eln.sound.SoundCommand
 import net.minecraft.client.gui.GuiScreen

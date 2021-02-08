@@ -13,14 +13,14 @@ import mods.eln.node.six.SixNode;
 import mods.eln.node.six.SixNodeDescriptor;
 import mods.eln.node.six.SixNodeElement;
 import mods.eln.node.six.SixNodeElementInventory;
-import mods.eln.sim.ElectricalLoad;
+import mods.eln.sim.electrical.ElectricalLoad;
 import mods.eln.sim.IProcess;
-import mods.eln.sim.ThermalLoad;
-import mods.eln.sim.mna.component.Resistor;
-import mods.eln.sim.mna.misc.MnaConst;
-import mods.eln.sim.nbt.NbtElectricalLoad;
-import mods.eln.sim.process.destruct.VoltageStateWatchDog;
-import mods.eln.sim.process.destruct.WorldExplosion;
+import mods.eln.sim.thermal.ThermalLoad;
+import mods.eln.sim.electrical.mna.component.Resistor;
+import mods.eln.sim.electrical.ElectricalConstants;
+import mods.eln.sim.electrical.nbt.NbtElectricalLoad;
+import mods.eln.sim.watchdogs.VoltageStateWatchDog;
+import mods.eln.sim.watchdogs.WorldExplosion;
 import mods.eln.sixnode.electricalcable.ElectricalCableDescriptor;
 import mods.eln.sixnode.wirelesssignal.IWirelessSignalSpot;
 import mods.eln.sixnode.wirelesssignal.IWirelessSignalTx;
@@ -144,7 +144,7 @@ public class LampSupplyElement extends SixNodeElement implements IConfigurable {
             if (RpStack != 0) {
                 loadResistor.setR(1 / RpStack);
             } else {
-                loadResistor.setR(MnaConst.highImpedance);
+                loadResistor.setR(ElectricalConstants.HIGH_IMPEDANCE);
             }
             RpStack = 0;
 

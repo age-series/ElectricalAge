@@ -6,8 +6,8 @@ import mods.eln.misc.Direction
 import mods.eln.misc.INBTTReady
 import mods.eln.misc.UserError
 import mods.eln.node.NodeManager
-import mods.eln.sim.ElectricalConnection
-import mods.eln.sim.mna.misc.MnaConst
+import mods.eln.sim.electrical.ElectricalConnection
+import mods.eln.sim.electrical.ElectricalConstants
 import mods.eln.sixnode.electricalcable.ElectricalCableDescriptor
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
@@ -31,7 +31,7 @@ class GridLink : INBTTReady {
     private var ae = Optional.empty<GridElement>()
     private var be = Optional.empty<GridElement>()
     private var ab: ElectricalConnection? = null
-    private var rs = MnaConst.highImpedance
+    private var rs = ElectricalConstants.HIGH_IMPEDANCE
 
     constructor(a: Coordinate, b: Coordinate, `as`: Direction, bs: Direction, cable: ItemStack, rs: Double) {
         this.rs = rs

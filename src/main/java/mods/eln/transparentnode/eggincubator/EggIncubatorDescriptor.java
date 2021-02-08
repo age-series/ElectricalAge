@@ -5,9 +5,9 @@ import mods.eln.misc.Obj3D.Obj3DPart;
 import mods.eln.misc.UtilsClient;
 import mods.eln.misc.VoltageLevelColor;
 import mods.eln.node.transparent.TransparentNodeDescriptor;
-import mods.eln.sim.mna.component.Resistor;
-import mods.eln.sim.mna.misc.MnaConst;
-import mods.eln.sim.nbt.NbtElectricalLoad;
+import mods.eln.sim.electrical.mna.component.Resistor;
+import mods.eln.sim.electrical.ElectricalConstants;
+import mods.eln.sim.electrical.nbt.NbtElectricalLoad;
 import mods.eln.sixnode.electricalcable.ElectricalCableDescriptor;
 import mods.eln.wiki.Data;
 import net.minecraft.entity.item.EntityItem;
@@ -106,7 +106,7 @@ public class EggIncubatorDescriptor extends TransparentNodeDescriptor {
         if (enable)
             powerLoad.setR(Rp);
         else
-            powerLoad.setR(MnaConst.highImpedance);
+            powerLoad.setR(ElectricalConstants.HIGH_IMPEDANCE);
     }
 
     @Override

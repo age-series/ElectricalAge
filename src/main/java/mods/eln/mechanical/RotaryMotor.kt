@@ -17,7 +17,7 @@ import mods.eln.node.transparent.TransparentNode
 import mods.eln.node.transparent.TransparentNodeDescriptor
 import mods.eln.node.transparent.TransparentNodeEntity
 import mods.eln.sim.IProcess
-import mods.eln.sim.nbt.NbtElectricalGateInput
+import mods.eln.sim.electrical.nbt.NbtElectricalGateInput
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound

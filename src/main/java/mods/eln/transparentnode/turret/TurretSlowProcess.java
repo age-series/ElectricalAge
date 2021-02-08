@@ -7,7 +7,7 @@ import mods.eln.generic.GenericItemUsingDamageDescriptor;
 import mods.eln.item.EntitySensorFilterDescriptor;
 import mods.eln.misc.Coordinate;
 import mods.eln.misc.Utils;
-import mods.eln.sim.process.destruct.WorldExplosion;
+import mods.eln.sim.watchdogs.WorldExplosion;
 import mods.eln.sound.SoundCommand;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityLivingBase;

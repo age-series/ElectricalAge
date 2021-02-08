@@ -26,11 +26,11 @@ import mods.eln.node.six.SixNodeElement
 import mods.eln.node.six.SixNodeElementInventory
 import mods.eln.node.six.SixNodeElementRender
 import mods.eln.node.six.SixNodeEntity
-import mods.eln.sim.ElectricalLoad
-import mods.eln.sim.ThermalLoad
-import mods.eln.sim.mna.component.Inductor
-import mods.eln.sim.mna.misc.MnaConst
-import mods.eln.sim.nbt.NbtElectricalLoad
+import mods.eln.sim.electrical.ElectricalLoad
+import mods.eln.sim.thermal.ThermalLoad
+import mods.eln.sim.electrical.mna.component.Inductor
+import mods.eln.sim.electrical.ElectricalConstants
+import mods.eln.sim.electrical.nbt.NbtElectricalLoad
 import mods.eln.wiki.Data
 import net.minecraft.client.gui.GuiScreen
 import net.minecraft.entity.player.EntityPlayer
@@ -62,7 +62,7 @@ class PowerInductorSixDescriptor(name: String,
     }
 
     fun getRsValue(inventory: IInventory): Double {
-        val core = inventory.getStackInSlot(PowerInductorSixContainer.coreId) ?: return MnaConst.highImpedance
+        val core = inventory.getStackInSlot(PowerInductorSixContainer.coreId) ?: return ElectricalConstants.HIGH_IMPEDANCE
         val coreDescriptor = GenericItemUsingDamageDescriptor.getDescriptor(core) as FerromagneticCoreDescriptor
         val coreFactor = coreDescriptor.cableMultiplicator
         return Eln.instance.lowVoltageCableDescriptor.electricalRs * coreFactor

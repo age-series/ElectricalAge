@@ -2,18 +2,16 @@ package mods.eln.sixnode.wirelesssignal.repeater;
 
 import mods.eln.misc.Direction;
 import mods.eln.misc.LRDU;
-import mods.eln.node.NodeBase;
 import mods.eln.node.six.SixNode;
 import mods.eln.node.six.SixNodeDescriptor;
 import mods.eln.node.six.SixNodeElement;
-import mods.eln.sim.ElectricalLoad;
-import mods.eln.sim.ThermalLoad;
+import mods.eln.sim.electrical.ElectricalLoad;
+import mods.eln.sim.thermal.ThermalLoad;
 import mods.eln.sixnode.wirelesssignal.IWirelessSignalSpot;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nullable;
 import java.util.Map;
 
 public class WirelessSignalRepeaterElement extends SixNodeElement {

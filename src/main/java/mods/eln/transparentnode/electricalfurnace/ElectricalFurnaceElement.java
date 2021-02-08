@@ -13,13 +13,17 @@ import mods.eln.node.transparent.TransparentNode;
 import mods.eln.node.transparent.TransparentNodeDescriptor;
 import mods.eln.node.transparent.TransparentNodeElement;
 import mods.eln.node.transparent.TransparentNodeElementInventory;
-import mods.eln.sim.*;
-import mods.eln.sim.mna.component.ResistorSwitch;
-import mods.eln.sim.mna.misc.MnaConst;
-import mods.eln.sim.nbt.NbtElectricalLoad;
-import mods.eln.sim.nbt.NbtThermalLoad;
-import mods.eln.sim.process.destruct.VoltageStateWatchDog;
-import mods.eln.sim.process.destruct.WorldExplosion;
+import mods.eln.sim.electrical.ElectricalLoad;
+import mods.eln.sim.electrical.mna.component.ResistorSwitch;
+import mods.eln.sim.electrical.ElectricalConstants;
+import mods.eln.sim.electrical.nbt.NbtElectricalLoad;
+import mods.eln.sim.electrical.heater.ElectricalResistorHeatThermalLoad;
+import mods.eln.sim.electrical.heater.RegulatorThermalLoadToElectricalResistor;
+import mods.eln.sim.thermal.ThermalLoad;
+import mods.eln.sim.thermal.ThermalResistor;
+import mods.eln.sim.thermal.nbt.NbtThermalLoad;
+import mods.eln.sim.watchdogs.VoltageStateWatchDog;
+import mods.eln.sim.watchdogs.WorldExplosion;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
@@ -148,7 +152,7 @@ public class ElectricalFurnaceElement extends TransparentNodeElement {
         slowRefreshProcess.process(0.05);
 
         Eln.instance.lowVoltageCableDescriptor.applyTo(electricalLoad);
-        //electricalLoad.setRs(MnaConst.highImpedance);
+        //electricalLoad.setRs(ElectricalConstants.highImpedance);
 
 
         //	ItemStack stack = new ItemStack(Item.coal);
@@ -170,7 +174,7 @@ public class ElectricalFurnaceElement extends TransparentNodeElement {
         heatingCorpResistor.setState(powerOn);
         itemStack = inventory.getStackInSlot(heatingCorpSlotId);
         if (itemStack == null) {
-            thermalRegulator.setRmin(MnaConst.highImpedance);
+            thermalRegulator.setRmin(ElectricalConstants.HIGH_IMPEDANCE);
             voltageWatchdog.setUNominal(100000);
         } else {
             HeatingCorpElement element = ((GenericItemUsingDamage<HeatingCorpElement>) itemStack.getItem()).getDescriptor(itemStack);

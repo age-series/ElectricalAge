@@ -9,11 +9,11 @@ import mods.eln.misc.*
 import mods.eln.node.NodeBase
 import mods.eln.node.Synchronizable
 import mods.eln.node.six.*
-import mods.eln.sim.ElectricalLoad
+import mods.eln.sim.electrical.ElectricalLoad
 import mods.eln.sim.IProcess
-import mods.eln.sim.nbt.NbtElectricalGateInput
-import mods.eln.sim.nbt.NbtElectricalGateOutput
-import mods.eln.sim.nbt.NbtElectricalGateOutputProcess
+import mods.eln.sim.electrical.nbt.NbtElectricalGateInput
+import mods.eln.sim.electrical.nbt.NbtElectricalGateOutput
+import mods.eln.sim.electrical.nbt.NbtElectricalGateOutputProcess
 import mods.eln.sixnode.SummingUnitElement.Companion.GainChangedEvents
 import mods.eln.solver.Equation
 import mods.eln.solver.IValue

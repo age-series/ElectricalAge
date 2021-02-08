@@ -10,11 +10,11 @@ import mods.eln.i18n.I18N.tr
 import mods.eln.misc.*
 import mods.eln.node.NodeBase
 import mods.eln.node.six.*
-import mods.eln.sim.ElectricalLoad
+import mods.eln.sim.electrical.ElectricalLoad
 import mods.eln.sim.IProcess
-import mods.eln.sim.nbt.NbtElectricalGateInput
-import mods.eln.sim.nbt.NbtElectricalGateOutput
-import mods.eln.sim.nbt.NbtElectricalGateOutputProcess
+import mods.eln.sim.electrical.nbt.NbtElectricalGateInput
+import mods.eln.sim.electrical.nbt.NbtElectricalGateOutput
+import mods.eln.sim.electrical.nbt.NbtElectricalGateOutputProcess
 import mods.eln.sixnode.AnalogFunction
 import mods.eln.wiki.Data
 import net.minecraft.client.gui.GuiButton

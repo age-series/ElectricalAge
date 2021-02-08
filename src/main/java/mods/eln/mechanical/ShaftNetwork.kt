@@ -8,9 +8,9 @@ import mods.eln.misc.Direction
 import mods.eln.misc.INBTTReady
 import mods.eln.misc.Utils
 import mods.eln.node.NodeManager
-import mods.eln.sim.process.destruct.DelayedDestruction
-import mods.eln.sim.process.destruct.ShaftSpeedWatchdog
-import mods.eln.sim.process.destruct.WorldExplosion
+import mods.eln.sim.watchdogs.DelayedDestruction
+import mods.eln.sim.watchdogs.ShaftSpeedWatchdog
+import mods.eln.sim.watchdogs.WorldExplosion
 import net.minecraft.nbt.NBTTagCompound
 import java.util.*
 

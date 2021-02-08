@@ -3,14 +3,13 @@ package mods.eln.simplenode.energyconverter
 import mods.eln.Eln
 import mods.eln.misc.Direction
 import mods.eln.misc.LRDU
-import mods.eln.node.simple.DescriptorManager.get
 import mods.eln.node.simple.SimpleNode
-import mods.eln.sim.ElectricalLoad
+import mods.eln.sim.electrical.ElectricalLoad
 import mods.eln.sim.IProcess
-import mods.eln.sim.ThermalLoad
-import mods.eln.sim.mna.misc.MnaConst
-import mods.eln.sim.nbt.NbtElectricalLoad
-import mods.eln.sim.nbt.NbtResistor
+import mods.eln.sim.thermal.ThermalLoad
+import mods.eln.sim.electrical.ElectricalConstants
+import mods.eln.sim.electrical.nbt.NbtElectricalLoad
+import mods.eln.sim.electrical.nbt.NbtResistor
 import net.minecraft.entity.player.EntityPlayerMP
 import net.minecraft.nbt.NBTTagCompound
 import java.io.DataInputStream
@@ -31,7 +30,7 @@ class EnergyConverterElnToOtherNode : SimpleNode() {
     var ic2tier = 1
 
     init {
-        powerInResistor.r = MnaConst.highImpedance
+        powerInResistor.r = ElectricalConstants.HIGH_IMPEDANCE
     }
 
     override fun getSideConnectionMask(directionA: Direction, lrduA: LRDU): Int {
@@ -69,7 +68,7 @@ class EnergyConverterElnToOtherNode : SimpleNode() {
                     powerInResistor.highImpedance()
                 } else {
                     if (selectedOhms <= 10.0) {
-                        powerInResistor.r = MnaConst.highImpedance
+                        powerInResistor.r = ElectricalConstants.HIGH_IMPEDANCE
                     } else {
                         powerInResistor.r = max(Eln.getSmallRs(), selectedOhms)
                     }
@@ -119,7 +118,7 @@ class EnergyConverterElnToOtherNode : SimpleNode() {
         selectedOhms = if (nbt.hasKey("selectedOhms")) {
             nbt.getDouble("selectedOhms")
         } else {
-            MnaConst.highImpedance
+            ElectricalConstants.HIGH_IMPEDANCE
         }
         ic2tier = nbt.getInteger("ic2tier")
     }
@@ -143,7 +142,7 @@ class EnergyConverterElnToOtherNode : SimpleNode() {
             when (stream.readByte()) {
                 NetworkType.SET_OHMS.id -> {
                     val ohms = stream.readDouble()
-                    if (ohms in 10.0 .. MnaConst.highImpedance) {
+                    if (ohms in 10.0 .. ElectricalConstants.HIGH_IMPEDANCE) {
                         selectedOhms = ohms
                     }
                     needPublish()

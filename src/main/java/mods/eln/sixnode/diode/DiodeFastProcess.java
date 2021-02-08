@@ -1,7 +1,7 @@
 package mods.eln.sixnode.diode;
 
-import mods.eln.sim.mna.component.VoltageSource;
-import mods.eln.sim.mna.misc.IRootSystemPreStepProcess;
+import mods.eln.sim.electrical.mna.component.VoltageSource;
+import mods.eln.sim.electrical.mna.misc.IRootSystemPreStepProcess;
 
 public class DiodeFastProcess implements IRootSystemPreStepProcess {
 

@@ -4,7 +4,7 @@ import mods.eln.Eln;
 import mods.eln.misc.IFunction;
 import mods.eln.misc.VoltageLevelColor;
 import mods.eln.node.transparent.TransparentNodeDescriptor;
-import mods.eln.sim.ThermalLoad;
+import mods.eln.sim.thermal.ThermalLoad;
 import mods.eln.wiki.Data;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;

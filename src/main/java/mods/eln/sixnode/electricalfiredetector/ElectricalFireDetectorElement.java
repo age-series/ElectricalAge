@@ -1,7 +1,6 @@
 package mods.eln.sixnode.electricalfiredetector;
 
 import mods.eln.Eln;
-import mods.eln.i18n.I18N;
 import mods.eln.item.electricalitem.BatteryItem;
 import mods.eln.misc.Direction;
 import mods.eln.misc.LRDU;
@@ -12,10 +11,10 @@ import mods.eln.node.six.SixNode;
 import mods.eln.node.six.SixNodeDescriptor;
 import mods.eln.node.six.SixNodeElement;
 import mods.eln.node.six.SixNodeElementInventory;
-import mods.eln.sim.ElectricalLoad;
-import mods.eln.sim.ThermalLoad;
-import mods.eln.sim.nbt.NbtElectricalGateOutput;
-import mods.eln.sim.nbt.NbtElectricalGateOutputProcess;
+import mods.eln.sim.electrical.ElectricalLoad;
+import mods.eln.sim.thermal.ThermalLoad;
+import mods.eln.sim.electrical.nbt.NbtElectricalGateOutput;
+import mods.eln.sim.electrical.nbt.NbtElectricalGateOutputProcess;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;

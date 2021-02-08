@@ -9,13 +9,13 @@ import mods.eln.node.six.SixNode;
 import mods.eln.node.six.SixNodeDescriptor;
 import mods.eln.node.six.SixNodeElement;
 import mods.eln.node.six.SixNodeElementInventory;
-import mods.eln.sim.ElectricalLoad;
-import mods.eln.sim.ThermalLoad;
-import mods.eln.sim.mna.component.Component;
-import mods.eln.sim.mna.component.Resistor;
-import mods.eln.sim.nbt.NbtElectricalLoad;
-import mods.eln.sim.process.destruct.VoltageStateWatchDog;
-import mods.eln.sim.process.destruct.WorldExplosion;
+import mods.eln.sim.electrical.ElectricalLoad;
+import mods.eln.sim.thermal.ThermalLoad;
+import mods.eln.sim.electrical.mna.component.Component;
+import mods.eln.sim.electrical.mna.component.Resistor;
+import mods.eln.sim.electrical.nbt.NbtElectricalLoad;
+import mods.eln.sim.watchdogs.VoltageStateWatchDog;
+import mods.eln.sim.watchdogs.WorldExplosion;
 import mods.eln.sixnode.electricalcable.ElectricalCableDescriptor;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
@@ -28,7 +28,6 @@ import org.jetbrains.annotations.Nullable;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.util.Map;
 
 public class HubElement extends SixNodeElement {
 

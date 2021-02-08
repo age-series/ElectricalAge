@@ -6,10 +6,10 @@ import mods.eln.misc.Utils;
 import mods.eln.node.six.SixNode;
 import mods.eln.node.six.SixNodeDescriptor;
 import mods.eln.node.six.SixNodeElement;
-import mods.eln.sim.ElectricalLoad;
-import mods.eln.sim.ThermalLoad;
-import mods.eln.sim.mna.component.Inductor;
-import mods.eln.sim.nbt.NbtElectricalLoad;
+import mods.eln.sim.electrical.ElectricalLoad;
+import mods.eln.sim.thermal.ThermalLoad;
+import mods.eln.sim.electrical.mna.component.Inductor;
+import mods.eln.sim.electrical.nbt.NbtElectricalLoad;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

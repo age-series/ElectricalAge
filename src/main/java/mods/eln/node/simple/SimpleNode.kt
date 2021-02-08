@@ -7,10 +7,10 @@ import mods.eln.misc.INBTTReady
 import mods.eln.node.NodeBase
 import mods.eln.node.simple.DescriptorManager.get
 import mods.eln.sim.IProcess
-import mods.eln.sim.ThermalConnection
-import mods.eln.sim.mna.component.Component
-import mods.eln.sim.mna.state.State
-import mods.eln.sim.nbt.NbtThermalLoad
+import mods.eln.sim.thermal.ThermalConnection
+import mods.eln.sim.electrical.mna.component.Component
+import mods.eln.sim.electrical.mna.state.State
+import mods.eln.sim.thermal.nbt.NbtThermalLoad
 import net.minecraft.entity.EntityLivingBase
 import net.minecraft.entity.player.EntityPlayerMP
 import net.minecraft.item.ItemStack

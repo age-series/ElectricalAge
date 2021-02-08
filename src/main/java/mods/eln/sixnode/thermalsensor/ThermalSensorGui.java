@@ -1,7 +1,7 @@
 package mods.eln.sixnode.thermalsensor;
 
 import mods.eln.gui.*;
-import mods.eln.sim.PhysicalConstant;
+import mods.eln.sim.thermal.ThermalConstants;
 import mods.eln.sixnode.electricalsensor.ElectricalSensorElement;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.entity.player.EntityPlayer;
@@ -64,7 +64,7 @@ public class ThermalSensorGui extends GuiContainerEln {
             try {
                 lowVoltage = NumberFormat.getInstance().parse(lowValue.getText()).floatValue();
                 highVoltage = NumberFormat.getInstance().parse(highValue.getText()).floatValue();
-                render.clientSetFloat(ElectricalSensorElement.setValueId, lowVoltage - (float) PhysicalConstant.Tamb, highVoltage - (float) PhysicalConstant.Tamb);
+                render.clientSetFloat(ElectricalSensorElement.setValueId, lowVoltage - (float) ThermalConstants.AMBIENT_TEMPERATURE_CELSIUS, highVoltage - (float) ThermalConstants.AMBIENT_TEMPERATURE_CELSIUS);
             } catch (ParseException e) {
             }
         } else if (object == temperatureType) {

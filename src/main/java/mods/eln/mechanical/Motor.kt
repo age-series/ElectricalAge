@@ -8,18 +8,18 @@ import mods.eln.node.transparent.EntityMetaTag
 import mods.eln.node.transparent.TransparentNode
 import mods.eln.node.transparent.TransparentNodeDescriptor
 import mods.eln.node.transparent.TransparentNodeEntity
-import mods.eln.sim.ElectricalLoad
+import mods.eln.sim.electrical.ElectricalLoad
 import mods.eln.sim.IProcess
-import mods.eln.sim.ThermalLoadInitializer
-import mods.eln.sim.mna.component.Resistor
-import mods.eln.sim.mna.component.VoltageSource
-import mods.eln.sim.mna.misc.IRootSystemPreStepProcess
-import mods.eln.sim.mna.misc.MnaConst
-import mods.eln.sim.nbt.NbtElectricalLoad
-import mods.eln.sim.nbt.NbtThermalLoad
-import mods.eln.sim.process.destruct.ThermalLoadWatchDog
-import mods.eln.sim.process.destruct.WorldExplosion
-import mods.eln.sim.process.heater.ElectricalLoadHeatThermalLoad
+import mods.eln.sim.thermal.ThermalLoadInitializer
+import mods.eln.sim.electrical.mna.component.Resistor
+import mods.eln.sim.electrical.mna.component.VoltageSource
+import mods.eln.sim.electrical.mna.misc.IRootSystemPreStepProcess
+import mods.eln.sim.electrical.ElectricalConstants
+import mods.eln.sim.electrical.nbt.NbtElectricalLoad
+import mods.eln.sim.thermal.nbt.NbtThermalLoad
+import mods.eln.sim.watchdogs.ThermalLoadWatchDog
+import mods.eln.sim.watchdogs.WorldExplosion
+import mods.eln.sim.electrical.heater.ElectricalLoadHeatThermalLoad
 import mods.eln.sixnode.electricalcable.ElectricalCableDescriptor
 import mods.eln.sound.LoopedSound
 import net.minecraft.entity.player.EntityPlayer
@@ -213,7 +213,7 @@ class MotorElement(node: TransparentNode, desc_: TransparentNodeDescriptor) :
             val th = wireLoad.subSystem.getTh(wireLoad, powerSource)
             if (th.U.isNaN()) {
                 th.U = noTorqueU
-                th.R = MnaConst.highImpedance
+                th.R = ElectricalConstants.HIGH_IMPEDANCE
             }
             var U: Double
             if(noTorqueU < th.U) {

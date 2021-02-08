@@ -10,18 +10,18 @@ import mods.eln.node.NodePeriodicPublishProcess
 import mods.eln.node.transparent.TransparentNode
 import mods.eln.node.transparent.TransparentNodeDescriptor
 import mods.eln.node.transparent.TransparentNodeElement
-import mods.eln.sim.ElectricalLoad
-import mods.eln.sim.ThermalLoad
-import mods.eln.sim.mna.component.Resistor
-import mods.eln.sim.mna.component.VoltageSource
-import mods.eln.sim.mna.misc.MnaConst
-import mods.eln.sim.nbt.NbtBatteryProcess
-import mods.eln.sim.nbt.NbtBatterySlowProcess
-import mods.eln.sim.nbt.NbtElectricalLoad
-import mods.eln.sim.nbt.NbtThermalLoad
-import mods.eln.sim.process.destruct.ThermalLoadWatchDog
-import mods.eln.sim.process.destruct.WorldExplosion
-import mods.eln.sim.process.heater.ElectricalLoadHeatThermalLoad
+import mods.eln.sim.electrical.ElectricalLoad
+import mods.eln.sim.thermal.ThermalLoad
+import mods.eln.sim.electrical.mna.component.Resistor
+import mods.eln.sim.electrical.mna.component.VoltageSource
+import mods.eln.sim.electrical.ElectricalConstants
+import mods.eln.sim.electrical.nbt.NbtBatteryProcess
+import mods.eln.sim.electrical.nbt.NbtBatterySlowProcess
+import mods.eln.sim.electrical.nbt.NbtElectricalLoad
+import mods.eln.sim.thermal.nbt.NbtThermalLoad
+import mods.eln.sim.watchdogs.ThermalLoadWatchDog
+import mods.eln.sim.watchdogs.WorldExplosion
+import mods.eln.sim.electrical.heater.ElectricalLoadHeatThermalLoad
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.nbt.NBTTagCompound
 import java.io.DataOutputStream
@@ -93,7 +93,7 @@ class BatteryElement(transparentNode: TransparentNode, descriptor: TransparentNo
         descriptor.applyTo(batterySlowProcess)
         positiveLoad.rs = descriptor.electricalRs
         negativeLoad.rs = descriptor.electricalRs
-        dischargeResistor.r = MnaConst.highImpedance
+        dischargeResistor.r = ElectricalConstants.HIGH_IMPEDANCE
         if (fromItemStack) {
             println("Loading from item stack")
             batteryProcess.life = fromItemstackLife

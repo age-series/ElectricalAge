@@ -15,10 +15,10 @@ import mods.eln.misc.Utils.updateSkylight
 import mods.eln.node.ISixNodeCache
 import mods.eln.node.Node
 import mods.eln.node.NodeConnection
-import mods.eln.sim.ElectricalConnection
-import mods.eln.sim.ElectricalLoad
-import mods.eln.sim.ThermalConnection
-import mods.eln.sim.ThermalLoad
+import mods.eln.sim.electrical.ElectricalConnection
+import mods.eln.sim.electrical.ElectricalLoad
+import mods.eln.sim.thermal.ThermalConnection
+import mods.eln.sim.thermal.ThermalLoad
 import net.minecraft.block.Block
 import net.minecraft.entity.EntityLivingBase
 import net.minecraft.entity.player.EntityPlayer

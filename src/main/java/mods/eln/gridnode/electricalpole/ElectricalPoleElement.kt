@@ -10,16 +10,16 @@ import mods.eln.node.NodeBase
 import mods.eln.node.NodePeriodicPublishProcess
 import mods.eln.node.transparent.TransparentNode
 import mods.eln.node.transparent.TransparentNodeDescriptor
-import mods.eln.sim.ElectricalLoad
-import mods.eln.sim.ThermalLoad
-import mods.eln.sim.mna.component.VoltageSource
-import mods.eln.sim.mna.process.TransformerInterSystemProcess
-import mods.eln.sim.nbt.NbtElectricalLoad
-import mods.eln.sim.nbt.NbtThermalLoad
-import mods.eln.sim.process.destruct.ThermalLoadWatchDog
-import mods.eln.sim.process.destruct.VoltageStateWatchDog
-import mods.eln.sim.process.destruct.WorldExplosion
-import mods.eln.sim.process.heater.ElectricalLoadHeatThermalLoad
+import mods.eln.sim.electrical.ElectricalLoad
+import mods.eln.sim.thermal.ThermalLoad
+import mods.eln.sim.electrical.mna.component.VoltageSource
+import mods.eln.sim.electrical.mna.process.TransformerInterSystemProcess
+import mods.eln.sim.electrical.nbt.NbtElectricalLoad
+import mods.eln.sim.thermal.nbt.NbtThermalLoad
+import mods.eln.sim.watchdogs.ThermalLoadWatchDog
+import mods.eln.sim.watchdogs.VoltageStateWatchDog
+import mods.eln.sim.watchdogs.WorldExplosion
+import mods.eln.sim.electrical.heater.ElectricalLoadHeatThermalLoad
 
 import java.io.DataOutputStream
 import java.io.IOException

@@ -2,7 +2,7 @@ package mods.eln.item;
 
 import mods.eln.misc.Obj3D;
 import mods.eln.misc.Obj3D.Obj3DPart;
-import mods.eln.sim.ElectricalLoad;
+import mods.eln.sim.electrical.ElectricalLoad;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 

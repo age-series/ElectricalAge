@@ -6,11 +6,11 @@ import mods.eln.misc.LRDU
 import mods.eln.node.transparent.TransparentNode
 import mods.eln.node.transparent.TransparentNodeDescriptor
 import mods.eln.node.transparent.TransparentNodeElement
-import mods.eln.sim.ElectricalLoad
+import mods.eln.sim.electrical.ElectricalLoad
 import mods.eln.sim.IProcess
-import mods.eln.sim.ThermalLoad
-import mods.eln.sim.mna.component.Resistor
-import mods.eln.sim.nbt.NbtElectricalLoad
+import mods.eln.sim.thermal.ThermalLoad
+import mods.eln.sim.electrical.mna.component.Resistor
+import mods.eln.sim.electrical.nbt.NbtElectricalLoad
 import mods.eln.sixnode.lampsupply.LampSupplyElement
 import net.minecraft.entity.player.EntityPlayer
 import java.io.DataOutputStream

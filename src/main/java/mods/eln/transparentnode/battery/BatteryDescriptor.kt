@@ -8,12 +8,12 @@ import mods.eln.misc.Obj3D.Obj3DPart
 import mods.eln.misc.Utils
 import mods.eln.misc.VoltageLevelColor
 import mods.eln.node.transparent.TransparentNodeDescriptor
-import mods.eln.sim.BatteryProcess
-import mods.eln.sim.BatterySlowProcess
-import mods.eln.sim.ElectricalLoad
+import mods.eln.sim.electrical.process.BatteryProcess
+import mods.eln.sim.electrical.process.BatterySlowProcess
+import mods.eln.sim.electrical.ElectricalLoad
 import mods.eln.sim.Simulator
-import mods.eln.sim.ThermalLoad
-import mods.eln.sim.mna.component.Resistor
+import mods.eln.sim.thermal.ThermalLoad
+import mods.eln.sim.electrical.mna.component.Resistor
 import mods.eln.wiki.Data
 import net.minecraft.entity.item.EntityItem
 import net.minecraft.entity.player.EntityPlayer

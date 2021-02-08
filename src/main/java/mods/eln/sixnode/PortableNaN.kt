@@ -10,11 +10,11 @@ import mods.eln.misc.Utils
 import mods.eln.misc.UtilsClient
 import mods.eln.node.NodeBase
 import mods.eln.node.six.*
-import mods.eln.sim.ElectricalLoad
-import mods.eln.sim.ThermalLoad
-import mods.eln.sim.mna.component.Resistor
-import mods.eln.sim.nbt.NbtElectricalLoad
-import mods.eln.sim.nbt.NbtThermalLoad
+import mods.eln.sim.electrical.ElectricalLoad
+import mods.eln.sim.thermal.ThermalLoad
+import mods.eln.sim.electrical.mna.component.Resistor
+import mods.eln.sim.electrical.nbt.NbtElectricalLoad
+import mods.eln.sim.thermal.nbt.NbtThermalLoad
 import mods.eln.sixnode.genericcable.GenericCableDescriptor
 import net.minecraft.client.Minecraft
 import net.minecraft.entity.player.EntityPlayer

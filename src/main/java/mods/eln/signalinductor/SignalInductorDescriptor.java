@@ -1,8 +1,8 @@
 package mods.eln.signalinductor;
 
 import mods.eln.node.six.SixNodeDescriptor;
-import mods.eln.sim.ElectricalLoad;
-import mods.eln.sim.mna.component.Inductor;
+import mods.eln.sim.electrical.ElectricalLoad;
+import mods.eln.sim.electrical.mna.component.Inductor;
 import mods.eln.sixnode.electricalcable.ElectricalCableDescriptor;
 import net.minecraft.item.Item;
 

@@ -5,7 +5,7 @@ import mods.eln.item.FerromagneticCoreDescriptor;
 import mods.eln.misc.Obj3D;
 import mods.eln.misc.IFunction;
 import mods.eln.node.transparent.TransparentNodeDescriptor;
-import mods.eln.sim.mna.misc.MnaConst;
+import mods.eln.sim.electrical.ElectricalConstants;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 
@@ -46,7 +46,7 @@ public class PowerInductorDescriptor extends TransparentNodeDescriptor {
     public double getRsValue(IInventory inventory) {
         ItemStack core = inventory.getStackInSlot(PowerInductorContainer.coreId);
 
-        if (core == null) return MnaConst.highImpedance;
+        if (core == null) return ElectricalConstants.HIGH_IMPEDANCE;
         FerromagneticCoreDescriptor coreDescriptor = (FerromagneticCoreDescriptor) FerromagneticCoreDescriptor.getDescriptor(core);
 
         double coreFactor = coreDescriptor.cableMultiplicator;

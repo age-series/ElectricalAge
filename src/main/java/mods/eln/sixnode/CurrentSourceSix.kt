@@ -18,10 +18,10 @@ import mods.eln.node.six.SixNodeDescriptor
 import mods.eln.node.six.SixNodeElement
 import mods.eln.node.six.SixNodeElementRender
 import mods.eln.node.six.SixNodeEntity
-import mods.eln.sim.ElectricalLoad
-import mods.eln.sim.ThermalLoad
-import mods.eln.sim.mna.component.CurrentSource
-import mods.eln.sim.nbt.NbtElectricalLoad
+import mods.eln.sim.electrical.ElectricalLoad
+import mods.eln.sim.thermal.ThermalLoad
+import mods.eln.sim.electrical.mna.component.CurrentSource
+import mods.eln.sim.electrical.nbt.NbtElectricalLoad
 import net.minecraft.client.gui.GuiScreen
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.ItemStack

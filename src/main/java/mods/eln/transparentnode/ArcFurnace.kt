@@ -10,12 +10,11 @@ import mods.eln.misc.*
 import mods.eln.misc.Obj3D.Obj3DPart
 import mods.eln.node.NodeBase
 import mods.eln.node.transparent.*
-import mods.eln.sim.ElectricalLoad
-import mods.eln.sim.ThermalLoad
-import mods.eln.sim.mna.component.Resistor
-import mods.eln.sim.nbt.NbtElectricalLoad
-import mods.eln.sim.process.destruct.VoltageStateWatchDog
-import mods.eln.sim.process.destruct.WorldExplosion
+import mods.eln.sim.electrical.ElectricalLoad
+import mods.eln.sim.electrical.mna.component.Resistor
+import mods.eln.sim.electrical.nbt.NbtElectricalLoad
+import mods.eln.sim.watchdogs.VoltageStateWatchDog
+import mods.eln.sim.watchdogs.WorldExplosion
 import net.minecraft.client.gui.GuiScreen
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.inventory.Container

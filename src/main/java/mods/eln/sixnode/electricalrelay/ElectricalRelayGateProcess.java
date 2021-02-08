@@ -1,7 +1,7 @@
 package mods.eln.sixnode.electricalrelay;
 
-import mods.eln.sim.NodeElectricalGateInputHysteresisProcess;
-import mods.eln.sim.nbt.NbtElectricalGateInput;
+import mods.eln.sim.electrical.nbt.NodeElectricalGateInputHysteresisProcess;
+import mods.eln.sim.electrical.nbt.NbtElectricalGateInput;
 
 public class ElectricalRelayGateProcess extends NodeElectricalGateInputHysteresisProcess {
 

@@ -14,8 +14,8 @@ import net.minecraft.nbt.NBTTagCompound
 import mods.eln.sound.SoundCommand
 import mods.eln.GuiHandler
 import mods.eln.misc.LRDU
-import mods.eln.sim.ThermalLoad
-import mods.eln.sim.ElectricalLoad
+import mods.eln.sim.thermal.ThermalLoad
+import mods.eln.sim.electrical.ElectricalLoad
 import mods.eln.node.six.SixNode
 import mods.eln.sim.IProcess
 import mods.eln.misc.INBTTReady
@@ -30,8 +30,8 @@ import net.minecraft.init.Blocks
 import mods.eln.ghost.GhostBlock
 import mods.eln.misc.Direction
 import mods.eln.misc.Utils
-import mods.eln.sim.ElectricalConnection
-import mods.eln.sim.ThermalConnection
+import mods.eln.sim.electrical.ElectricalConnection
+import mods.eln.sim.thermal.ThermalConnection
 import net.minecraft.block.Block
 import net.minecraft.entity.Entity
 import java.io.ByteArrayOutputStream

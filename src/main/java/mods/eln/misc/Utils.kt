@@ -5,7 +5,7 @@ import net.minecraft.entity.EntityLivingBase
 import net.minecraft.util.MathHelper
 import net.minecraft.item.ItemStack
 import net.minecraft.tileentity.TileEntityFurnace
-import mods.eln.sim.PhysicalConstant
+import mods.eln.sim.thermal.ThermalConstants
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.inventory.IInventory
 import net.minecraft.nbt.NBTTagList
@@ -223,7 +223,7 @@ object Utils {
     fun plotCelsius(header: String, value: Double): String {
         var header = header
         var value = value
-        value += PhysicalConstant.Tref - PhysicalConstant.TCelsius
+        value += ThermalConstants.AMBIENT_TEMPERATURE_KELVIN - ThermalConstants.CELSIUS_FROM_KELVIN
         if (header != "") header += " "
         return header + plotValue(value, "\u00B0C ")
     }

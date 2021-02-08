@@ -17,11 +17,11 @@ import mods.eln.node.transparent.TransparentNodeElement
 import mods.eln.node.transparent.TransparentNodeElementRender
 import mods.eln.node.transparent.TransparentNodeEntity
 import mods.eln.sim.IProcess
-import mods.eln.sim.ThermalLoadInitializerByPowerDrop
-import mods.eln.sim.nbt.NbtElectricalGateInput
-import mods.eln.sim.nbt.NbtThermalLoad
-import mods.eln.sim.process.destruct.ThermalLoadWatchDog
-import mods.eln.sim.process.destruct.WorldExplosion
+import mods.eln.sim.thermal.ThermalLoadInitializerByPowerDrop
+import mods.eln.sim.electrical.nbt.NbtElectricalGateInput
+import mods.eln.sim.thermal.nbt.NbtThermalLoad
+import mods.eln.sim.watchdogs.ThermalLoadWatchDog
+import mods.eln.sim.watchdogs.WorldExplosion
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound

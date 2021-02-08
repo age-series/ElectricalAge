@@ -1,8 +1,8 @@
 package mods.eln.transparentnode.heatfurnace;
 
 import mods.eln.Eln;
-import mods.eln.sim.FurnaceProcess;
-import mods.eln.sim.RegulatorFurnaceProcess;
+import mods.eln.sim.thermal.process.FurnaceProcess;
+import mods.eln.sim.thermal.process.RegulatorFurnaceProcess;
 
 public class HeatFurnaceThermalProcess extends RegulatorFurnaceProcess {
 

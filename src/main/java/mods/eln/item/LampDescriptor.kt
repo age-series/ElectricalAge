@@ -5,7 +5,7 @@ import mods.eln.i18n.I18N
 import mods.eln.misc.IConfigSharing
 import mods.eln.misc.Utils
 import mods.eln.misc.VoltageLevelColor
-import mods.eln.sim.mna.component.Resistor
+import mods.eln.sim.electrical.mna.component.Resistor
 import mods.eln.sixnode.lampsocket.LampSocketType
 import mods.eln.wiki.Data
 import net.minecraft.entity.player.EntityPlayer

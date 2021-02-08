@@ -9,17 +9,17 @@ import mods.eln.misc.*
 import mods.eln.misc.SeriesFunction
 import mods.eln.node.NodeBase
 import mods.eln.node.transparent.*
-import mods.eln.sim.ElectricalLoad
+import mods.eln.sim.electrical.ElectricalLoad
 import mods.eln.sim.IProcess
-import mods.eln.sim.ThermalLoad
-import mods.eln.sim.mna.component.Resistor
-import mods.eln.sim.mna.misc.MnaConst
-import mods.eln.sim.nbt.NbtElectricalGateInput
-import mods.eln.sim.nbt.NbtElectricalLoad
-import mods.eln.sim.nbt.NbtThermalLoad
-import mods.eln.sim.process.destruct.ThermalLoadWatchDog
-import mods.eln.sim.process.destruct.WorldExplosion
-import mods.eln.sim.process.heater.ResistorHeatThermalLoad
+import mods.eln.sim.thermal.ThermalLoad
+import mods.eln.sim.electrical.mna.component.Resistor
+import mods.eln.sim.electrical.ElectricalConstants
+import mods.eln.sim.electrical.nbt.NbtElectricalGateInput
+import mods.eln.sim.electrical.nbt.NbtElectricalLoad
+import mods.eln.sim.thermal.nbt.NbtThermalLoad
+import mods.eln.sim.watchdogs.ThermalLoadWatchDog
+import mods.eln.sim.watchdogs.WorldExplosion
+import mods.eln.sim.electrical.heater.ResistorHeatThermalLoad
 import mods.eln.sixnode.electricalcable.ElectricalCableDescriptor
 import mods.eln.sixnode.resistor.ResistorContainer
 import mods.eln.transparentnode.thermaldissipatorpassive.ThermalDissipatorPassiveDescriptor
@@ -173,8 +173,8 @@ class LargeRheostatElement(node: TransparentNode, desc_: TransparentNodeDescript
 
     override fun initialize() {
         desc.dissipator.applyTo(thermalLoad)
-        aLoad.rs = MnaConst.noImpedance
-        bLoad.rs = MnaConst.noImpedance
+        aLoad.rs = ElectricalConstants.NO_IMPEDANCE
+        bLoad.rs = ElectricalConstants.NO_IMPEDANCE
         setupPhysical()
         connect()
     }
