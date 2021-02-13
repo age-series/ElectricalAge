@@ -12,12 +12,14 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import scala.Console;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.HashMap;
 
+import static mods.eln.i18n.I18N.getCurrentLanguage;
 import static mods.eln.i18n.I18N.tr;
 
 public class TutorialSignElement extends SixNodeElement {
@@ -35,8 +37,7 @@ public class TutorialSignElement extends SixNodeElement {
     public static String getText(String balise) {
         if (baliseMap == null) {
             baliseMap = new HashMap<String, String>();
-
-		/*
+            /*
 			try {
 				File fXmlFile = Utils.getMapFile("EA/tutorialSign.xml");
 				DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
@@ -53,49 +54,52 @@ public class TutorialSignElement extends SixNodeElement {
 				int i = 0;
 			} catch (Exception e) {
 			}
-*/
+            */
             //optional, but recommended
             //read this - http://stackoverflow.com/questions/13786607/normalization-in-dom-parsing-with-java-how-does-it-work
             //doc.getDocumentElement().normalize();
-
-            try {
-                String file = Utils.readMapFile("EA/tutorialSign.txt");
-                String ret;
-                if (file.contains("\r\n"))
-                    ret = "\r\n";
-                else
-                    ret = "\n";
-
-                file = file.replaceAll("#" + ret, "#");
-                file = file.replaceAll(ret + "#", "#");
-
-                String[] split = file.split("#");
-
-                boolean first = true;
-                int counter = 0;
-                String baliseTag = "";
-
-                for (String str : split) {
-                    if (first) {
-                        first = false;
-                        continue;
-                    }
-                    if (counter == 0) {
-                        baliseTag = str;
-                    }
-                    if (counter == 1) {
-                        baliseMap.put(baliseTag, str);
-                    }
-
-                    counter = (counter + 1) & 1;
-                }
-            } catch (IOException e) {
-                //	e.printStackTrace();
-            }
+            String localizedPath = "EA/tutorialSign/" + getCurrentLanguage() + ".txt"; //localized file path
+            String defaultPath = "EA/tutorialSign/en_US.txt"; //if the localized file is not found, then load the default file (en_US)
+            String oldPath = "EA/tutorialSign.txt"; //for compatibility
+            if(Utils.mapFileExists(localizedPath))
+                loadMapFromPath(localizedPath);
+            else if(Utils.mapFileExists(defaultPath))
+                loadMapFromPath(defaultPath);
+            else
+                loadMapFromPath(oldPath);
         }
         String text = baliseMap.get(balise);
         if (text == null) return tr("No text associated to this beacon");
         return text;
+    }
+
+    private static void loadMapFromPath(String path) {
+        try {
+            String file = Utils.readMapFile(path);
+            String ret;
+            if (file.contains("\r\n"))
+                ret = "\r\n";
+            else
+                ret = "\n";
+
+            file = file.replaceAll("#" + ret, "#");
+            file = file.replaceAll(ret + "#", "#");
+
+            String[] split = file.split("#");
+
+            boolean add = false;
+            String baliseTag = "";
+
+            for (String str : split) {
+                if (add)
+                    baliseMap.put(baliseTag, str);
+                else
+                    baliseTag = str;
+                add = !add;
+            }
+        } catch (IOException e) {
+            //	e.printStackTrace();
+        }
     }
 
     public TutorialSignElement(SixNode sixNode, Direction side, SixNodeDescriptor descriptor) {
