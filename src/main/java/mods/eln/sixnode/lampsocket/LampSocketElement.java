@@ -13,6 +13,7 @@ import mods.eln.node.six.SixNode;
 import mods.eln.node.six.SixNodeDescriptor;
 import mods.eln.node.six.SixNodeElement;
 import mods.eln.node.six.SixNodeElementInventory;
+import mods.eln.sim.electrical.ElectricalConstants;
 import mods.eln.sim.electrical.ElectricalLoad;
 import mods.eln.entity.EnemyRemover;
 import mods.eln.sim.thermal.ThermalLoad;
@@ -272,24 +273,17 @@ public class LampSocketElement extends SixNodeElement implements IConfigurable {
     public void computeElectricalLoad() {
         ItemStack lamp = acceptingInventory.getInventory().getStackInSlot(LampSocketContainer.lampSlotId);
         ItemStack cable = acceptingInventory.getInventory().getStackInSlot(LampSocketContainer.cableSlotId);
-
         ElectricalCableDescriptor cableDescriptor = (ElectricalCableDescriptor) Eln.sixNodeItem.getDescriptor(cable);
-
-        if (cableDescriptor == null) {
-            positiveLoad.highImpedance();
-            //negativeLoad.highImpedance();
-        } else {
-            cableDescriptor.applyTo(positiveLoad);
-            //cableDescriptor.applyTo(negativeLoad, grounded,5);
-        }
-
         lampDescriptor = (LampDescriptor) Utils.getItemObject(lamp);
 
-        if (lampDescriptor == null) {
-            lampResistor.setR(Double.POSITIVE_INFINITY);
-        } else {
+        if (cableDescriptor == null)
+            positiveLoad.highImpedance();
+        else
+            cableDescriptor.applyTo(positiveLoad);
+        if (lampDescriptor == null)
+            lampResistor.setR(ElectricalConstants.HIGH_IMPEDANCE);
+        else
             lampDescriptor.applyTo(lampResistor);
-        }
     }
 
     @Override
