@@ -15,9 +15,9 @@ import org.lwjgl.opengl.GL11
 import net.minecraft.world.World
 import cpw.mods.fml.common.FMLCommonHandler
 import cpw.mods.fml.relauncher.Side
+import jdk.nashorn.internal.runtime.Debug
 import net.minecraftforge.common.DimensionManager
 import net.minecraft.entity.item.EntityItem
-import java.io.IOException
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.client.Minecraft
 import net.minecraft.world.EnumSkyBlock
@@ -43,16 +43,12 @@ import net.minecraft.util.ChatComponentText
 import net.minecraft.world.IBlockAccess
 import kotlin.jvm.JvmOverloads
 import net.minecraft.item.crafting.FurnaceRecipes
-import java.io.FileInputStream
 import mods.eln.misc.Obj3D.Obj3DPart
 import net.minecraft.block.Block
 import net.minecraft.entity.Entity
 import net.minecraft.item.Item
 import net.minecraft.world.chunk.Chunk
-import java.io.ByteArrayOutputStream
-import java.io.DataInputStream
-import java.io.DataOutputStream
-import java.io.File
+import java.io.*
 import java.lang.ClassNotFoundException
 import java.lang.Exception
 import java.lang.IllegalArgumentException
@@ -1213,6 +1209,11 @@ object Utils {
         fis.read(data)
         fis.close()
         return String(data, Charset.defaultCharset())
+    }
+
+    @JvmStatic
+    fun mapFileExists(path: String): Boolean {
+        return getMapFile(path).exists();
     }
 
     @JvmStatic
