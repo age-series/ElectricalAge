@@ -12,8 +12,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import scala.Console;
-
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -58,15 +56,18 @@ public class TutorialSignElement extends SixNodeElement {
             //optional, but recommended
             //read this - http://stackoverflow.com/questions/13786607/normalization-in-dom-parsing-with-java-how-does-it-work
             //doc.getDocumentElement().normalize();
-            String localizedPath = "EA/tutorialSign/" + getCurrentLanguage() + ".txt"; //localized file path
-            String defaultPath = "EA/tutorialSign/en_US.txt"; //if the localized file is not found, then load the default file (en_US)
+            String localizedPath = "EA/tutorialSign/" + getCurrentLanguage() + ".lang"; //localized file path
+            String defaultPath = "EA/tutorialSign/en_US.lang"; //if the localized file is not found, then load the default file (en_US)
             String oldPath = "EA/tutorialSign.txt"; //for compatibility
             if(Utils.mapFileExists(localizedPath))
                 loadMapFromPath(localizedPath);
-            else if(Utils.mapFileExists(defaultPath))
+            else if(Utils.mapFileExists(defaultPath)) {
+                Utils.println(getCurrentLanguage() + " translation is missing. The default en_US translation will be used.");
                 loadMapFromPath(defaultPath);
-            else
+            } else {
+                Utils.println("Default en_US translation is missing. Old .txt translation will be used.");
                 loadMapFromPath(oldPath);
+            }
         }
         String text = baliseMap.get(balise);
         if (text == null) return tr("No text associated to this beacon");
@@ -98,7 +99,7 @@ public class TutorialSignElement extends SixNodeElement {
                 add = !add;
             }
         } catch (IOException e) {
-            //	e.printStackTrace();
+            Utils.println(e);
         }
     }
 

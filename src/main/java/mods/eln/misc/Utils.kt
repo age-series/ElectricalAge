@@ -15,7 +15,6 @@ import org.lwjgl.opengl.GL11
 import net.minecraft.world.World
 import cpw.mods.fml.common.FMLCommonHandler
 import cpw.mods.fml.relauncher.Side
-import jdk.nashorn.internal.runtime.Debug
 import net.minecraftforge.common.DimensionManager
 import net.minecraft.entity.item.EntityItem
 import net.minecraft.tileentity.TileEntity
@@ -48,7 +47,12 @@ import net.minecraft.block.Block
 import net.minecraft.entity.Entity
 import net.minecraft.item.Item
 import net.minecraft.world.chunk.Chunk
-import java.io.*
+import java.io.ByteArrayOutputStream
+import java.io.DataInputStream
+import java.io.DataOutputStream
+import java.io.IOException
+import java.io.FileInputStream
+import java.io.File
 import java.lang.ClassNotFoundException
 import java.lang.Exception
 import java.lang.IllegalArgumentException
