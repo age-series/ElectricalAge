@@ -18,9 +18,6 @@ public class RootSystem {
     int interSystemOverSampling;
 
     public ArrayList<SubSystem> systems = new ArrayList<SubSystem>();
-
-    //public HashMap<Component, IDestructor> componentDestructor = new HashMap<Component, IDestructor>();
-
     public Set<Component> addComponents = new HashSet<Component>();
     public HashSet<State> addStates = new HashSet<State>();
 
@@ -49,10 +46,6 @@ public class RootSystem {
 
     public void removeComponent(Component c) {
         SubSystem system = c.getSubSystem();
-        /*if (c.isAbstracted()) {
-			int i = 0;
-			i++;
-		}*/
         if (system != null) {
             breakSystems(system);
         }
@@ -79,8 +72,6 @@ public class RootSystem {
 
     public void generate() {
         if (!addComponents.isEmpty() || !addStates.isEmpty()) {
-            //generateBreak();
-            //generateBreakLine();
             Profiler p = new Profiler();
             p.add("*** Generate ***");
             generateLine();
@@ -103,7 +94,7 @@ public class RootSystem {
         List<Component> sc = s.getConnectedComponentsNotAbstracted();
         if (sc.size() != 2) return false;
         for (Component c : sc) {
-            if (false == c instanceof Resistor) {
+            if (!(c instanceof Resistor)) {
                 return false;
             }
         }
@@ -116,7 +107,6 @@ public class RootSystem {
 
     private void generateLine() {
         Set<State> stateScope = new HashSet<State>();
-        //HashSet<Resistor> resistorScope = new HashSet<Resistor>();
         for (State s : addStates) {
             if (isValidForLine(s)) {
                 stateScope.add(s);
@@ -141,7 +131,7 @@ public class RootSystem {
                     sNext = rPtr.aPin;
                 else if (sPtr != rPtr.bPin) sNext = rPtr.bPin;
 
-                if (sNext == null || sNext == sRoot || stateScope.contains(sNext) == false) break;
+                if (sNext == null || sNext == sRoot || !stateScope.contains(sNext)) break;
 
                 sPtr = sNext;
             }
@@ -150,7 +140,6 @@ public class RootSystem {
             LinkedList<Resistor> lineResistors = new LinkedList<Resistor>();
 
             lineResistors.add(rPtr);
-            //rPtr.lineReversDir = rPtr.aPin == sPtr;
             while (true) {
                 lineStates.add(sPtr);
                 stateScope.remove(sPtr);
@@ -161,7 +150,6 @@ public class RootSystem {
                     }
                 }
                 lineResistors.add(rPtr);
-                //rPtr.lineReversDir = sPtr == rPtr.bPin;
 
                 State sNext = null;
 
@@ -169,7 +157,7 @@ public class RootSystem {
                     sNext = rPtr.aPin;
                 else if (sPtr != rPtr.bPin) sNext = rPtr.bPin;
 
-                if (sNext == null || stateScope.contains(sNext) == false) break;
+                if (sNext == null || !stateScope.contains(sNext)) break;
 
                 sPtr = sNext;
             }
@@ -179,24 +167,9 @@ public class RootSystem {
                 lineStates.pop();
             }
 
-            //stateScope.removeAll(lineStates);
             Line.newLine(this, lineResistors, lineStates);
         }
     }
-
-/*	private void generateBreak() {
-		for (Component c : (HashSet<Component>) addComponents.clone()) {
-			for (State s : c.getConnectedStates()) {
-				if (s == null) continue;
-				if (s.getSubSystem() != null) {
-					breakSystem(s.getSubSystem());
-				}
-				if (s.isAbstracted()) {
-					s.abstractedBy.breakAbstraction(this);
-				}
-			}
-		}
-	}*/
 
     private void generateSystems() {
         LinkedList<State> firstState = new LinkedList<State>();
@@ -222,12 +195,6 @@ public class RootSystem {
         Iterator<Component> ic = addComponents.iterator();
         while (ic.hasNext()) {
             Component c = ic.next();
-            /*
-            if (!c.canBeReplacedByInterSystem()) {
-                Utils.println("ELN generateInterSystems ERROR");
-            }
-            */
-
             Resistor r;
             try {
                 r = (Resistor) c;
@@ -279,16 +246,8 @@ public class RootSystem {
         for (ISubSystemProcessFlush p : processF) {
             p.simProcessFlush();
         }
-		
-	/*	for (SubSystem s : systems) {
-			for (State state : s.states) {
-				Utils.print(state.state + " ");
-			}
-		}
-		Utils.println("");*/
 
         profiler.stop();
-        //Utils.println(profiler);
     }
 
     private void buildSubSystem(State root) {
@@ -317,7 +276,7 @@ public class RootSystem {
             stateSet.add(sExplored);
 
             for (Component c : sExplored.getConnectedComponentsNotAbstracted()) {
-                if (privateSystem == false && roots.size() + stateSet.size() > maxSubSystemSize && c.canBeReplacedByInterSystem()) {
+                if (!privateSystem && roots.size() + stateSet.size() > maxSubSystemSize && c.canBeReplacedByInterSystem()) {
                     continue;
                 }
                 if (componentSet.contains(c)) continue;
@@ -342,36 +301,8 @@ public class RootSystem {
                     roots.addLast(sNext);
                 }
             }
-            //roots = rootsNext;
         }
-    }/*
-		
-		private void buildSubSystem(State root,boolean withInterSystem, Set<Component> componentSet, Set<State> stateSet) {
-		if (stateSet.size() > maxSubSystemSize) {
-			return;
-		}
-		if (stateSet.contains(root) || findSubSystemWith(root) != null) return;
-		stateSet.add(root);
-		for (Component c : root.getConnectedComponents()) {
-			if (withInterSystem == false && c.canBeReplacedByInterSystem()) continue;
-			if (componentSet.contains(c)) continue;
-			boolean noGo = false;
-			for (State s : c.getConnectedStates()) {
-				if (s == null) continue;
-				if (s.getSubSystem() != null) {
-					noGo = true;
-					break;
-				}
-			}
-			if (noGo) continue;
-			componentSet.add(c);
-			for (State s : c.getConnectedStates()) {
-				if (s == null) continue;
-				buildSubSystem(s, withInterSystem, componentSet, stateSet);
-			}
-		}
-		}
-		*/
+    }
 
     private SubSystem findSubSystemWith(State state) {
         for (SubSystem s : systems) {
@@ -453,7 +384,7 @@ public class RootSystem {
         processPre.remove(p);
     }
 
-    public boolean isRegistred(ElectricalLoad load) {
+    public boolean isRegistered(ElectricalLoad load) {
         return load.getSubSystem() != null || addStates.contains(load);
     }
 }

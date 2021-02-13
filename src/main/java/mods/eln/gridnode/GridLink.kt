@@ -76,7 +76,7 @@ class GridLink : INBTTReady {
         }
         assert(ab == null)
         ab = ElectricalConnection(aLoad, bLoad)
-        Eln.simulator.addElectricalComponent(ab)
+        Eln.simulator.addElectricalComponent(ab!!)
         ab!!.r = rs
 
         // Add link to link lists.
@@ -110,7 +110,7 @@ class GridLink : INBTTReady {
         val a = getElementFromCoordinate(this.a)
         val b = getElementFromCoordinate(this.b)
 
-        Eln.simulator.removeElectricalComponent(ab)
+        Eln.simulator.removeElectricalComponent(ab!!)
         ab = null
 
         a?.let { updateElement(it) }

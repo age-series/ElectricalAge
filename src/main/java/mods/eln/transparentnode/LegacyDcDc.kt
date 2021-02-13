@@ -189,12 +189,12 @@ class LegacyDcDcElement(transparentNode: TransparentNode, descriptor: Transparen
 
     override fun disconnectJob() {
         super.disconnectJob()
-        Eln.simulator.mna.removeProcess(interSystemProcess)
+        Eln.simulator.mna!!.removeProcess(interSystemProcess)
 
     }
 
     override fun connectJob() {
-        Eln.simulator.mna.addProcess(interSystemProcess)
+        Eln.simulator.mna!!.addProcess(interSystemProcess)
         super.connectJob()
     }
 

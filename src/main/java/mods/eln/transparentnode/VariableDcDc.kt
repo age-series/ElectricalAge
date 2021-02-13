@@ -173,12 +173,12 @@ class VariableDcDcElement(transparentNode: TransparentNode, descriptor: Transpar
 
     override fun disconnectJob() {
         super.disconnectJob()
-        Eln.simulator.mna.removeProcess(interSystemProcess)
+        Eln.simulator.mna!!.removeProcess(interSystemProcess)
 
     }
 
     override fun connectJob() {
-        Eln.simulator.mna.addProcess(interSystemProcess)
+        Eln.simulator.mna!!.addProcess(interSystemProcess)
         super.connectJob()
     }
 

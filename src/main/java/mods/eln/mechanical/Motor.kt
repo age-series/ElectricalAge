@@ -265,12 +265,12 @@ class MotorElement(node: TransparentNode, desc_: TransparentNodeDescriptor) :
 
     override fun connectJob() {
         super.connectJob()
-        Eln.simulator.mna.addProcess(electricalProcess)
+        Eln.simulator.mna!!.addProcess(electricalProcess)
     }
 
     override fun disconnectJob() {
         super.disconnectJob()
-        Eln.simulator.mna.removeProcess(electricalProcess)
+        Eln.simulator.mna!!.removeProcess(electricalProcess)
     }
 
     override fun getElectricalLoad(side: Direction, lrdu: LRDU): ElectricalLoad? {

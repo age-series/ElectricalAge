@@ -191,7 +191,7 @@ public class ReplicatoCableAI extends EntityAIBase implements ITimeRemoverObserv
         @Override
         public void process(double time) {
             if (timeRemover.isArmed() == false) return;
-            if (Eln.simulator.isRegistred(cableLoad) == false) {
+            if (Eln.simulator.isRegistered(cableLoad) == false) {
                 timeRemover.shot();
             }
         }

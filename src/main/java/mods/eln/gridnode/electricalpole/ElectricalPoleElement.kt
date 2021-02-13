@@ -108,13 +108,13 @@ class ElectricalPoleElement(node: TransparentNode, descriptor: TransparentNodeDe
     override fun disconnectJob() {
         super.disconnectJob()
         trafo?.apply {
-            Eln.simulator.mna.removeProcess(interSystemProcess)
+            Eln.simulator.mna!!.removeProcess(interSystemProcess)
         }
     }
 
     override fun connectJob() {
         trafo?.apply {
-            Eln.simulator.mna.addProcess(interSystemProcess)
+            Eln.simulator.mna!!.addProcess(interSystemProcess)
         }
         super.connectJob()
     }

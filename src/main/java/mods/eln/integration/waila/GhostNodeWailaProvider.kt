@@ -36,7 +36,7 @@ class GhostNodeWailaProvider(private val transparentNodeProvider: TransparentNod
         override fun getNBTData() = accessor.nbtData
         override fun getTileEntity() = accessor.tileEntity
         override fun getWorld(): World {
-            Utils.println("Debugging WAILA, getWorld: $coord ${coord.x} ${coord.y} ${coord.z} ${coord.dimension} ${coord.world()}")
+            //Utils.println("Debugging WAILA, getWorld: $coord ${coord.x} ${coord.y} ${coord.z} ${coord.dimension} ${coord.world()}")
             return coord.world()
         }
         override fun getBlock() = accessor.block

@@ -186,7 +186,7 @@ public class SubSystem {
             inversionTimeAverage = (double)sum / inverseTimesNanoseconds.size();
         }
         inverseTimesNanoseconds.clear();
-        return new SubSystemMetrics(inversionTimeAverage, inverseTimeMaximum, inversionCount, singularCount);
+        return new SubSystemMetrics(componentSize(), inversionTimeAverage, inverseTimeMaximum, inversionCount, singularCount);
     }
 
     public void step() {

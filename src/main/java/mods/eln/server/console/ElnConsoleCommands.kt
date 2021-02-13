@@ -305,9 +305,9 @@ class ElnMatrixCommand: IConsoleCommand {
         cprint(ics, FC.BRIGHT_YELLOW + "Dumping all circuits. This will take a moment on large worlds...")
         println("Dumping all circuits. This will take a moment on large worlds...")
         var dumpSubSystems = ""
-        val ssc = Eln.simulator.mna.systems.size
+        val ssc = Eln.simulator.mna!!.systems.size
         var ct = 0
-        for (s in Eln.simulator.mna.systems) {
+        for (s in Eln.simulator.mna!!.systems) {
             ct += s.component.size
             dumpSubSystems += """
                     $s
