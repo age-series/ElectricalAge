@@ -10,8 +10,8 @@ import net.minecraft.world.WorldSavedData
 import java.util.*
 
 class NodeManager(par1Str: String?) : WorldSavedData(par1Str) {
-    val nodeArray: HashMap<Coordinate, NodeBase>
-    val nodes: ArrayList<NodeBase>
+    val nodeArray: HashMap<Coordinate, NodeBase> = HashMap()
+    val nodes: ArrayList<NodeBase> = ArrayList()
     val nodeList: Collection<NodeBase>
         get() = nodeArray.values
 
@@ -90,7 +90,7 @@ class NodeManager(par1Str: String?) : WorldSavedData(par1Str) {
         nodesCopy.addAll(nodes)
         for (node in nodesCopy) {
             try {
-                if (node.mustBeSaved() == false) continue
+                if (!node.mustBeSaved()) continue
                 if (dim != Int.MIN_VALUE && node.coordinate.dimension != dim) continue
                 val nbtNode = NBTTagCompound()
                 nbtNode.setString("tag", node.nodeUuid)
@@ -131,8 +131,6 @@ class NodeManager(par1Str: String?) : WorldSavedData(par1Str) {
 
     // private ArrayList<Node> nodeArray = new ArrayList<Node>();
     init {
-        nodeArray = HashMap()
-        nodes = ArrayList()
         instance = this
     }
 }
