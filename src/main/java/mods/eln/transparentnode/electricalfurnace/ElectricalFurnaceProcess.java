@@ -27,7 +27,7 @@ public class ElectricalFurnaceProcess implements IProcess {
 
     @Override
     public void process(double time) {
-        ItemStack itemStack = inventory.getStackInSlot(furnace.thermalIsolatorSlotId);
+        ItemStack itemStack = inventory.getStackInSlot(ElectricalFurnaceElement.thermalIsolatorSlotId);
 
         if (itemStack == null) {
             furnace.descriptor.refreshTo(furnace.thermalLoad, 1);
@@ -62,15 +62,8 @@ public class ElectricalFurnaceProcess implements IProcess {
         }
 
         if (furnace.autoShutDown) {
-            if (smeltInProcess) {
-                furnace.setPowerOn(true);
-            } else {
-                furnace.setPowerOn(false);
-            }
+            furnace.setPowerOn(smeltInProcess);
         }
-        int i = 0;
-        i++;
-        //Utils.println("FT : " + furnace.thermalLoad.Tc);
     }
 
     double getPower() {
@@ -82,12 +75,11 @@ public class ElectricalFurnaceProcess implements IProcess {
         if (!smeltInProcess) {
             smeltInProcess = false;
             energyNeeded = 1.0;
-            energyCounter = 0.0;
         } else {
             smeltInProcess = true;
             energyNeeded = energyNeededPerSmelt;
-            energyCounter = 0.0;
         }
+        energyCounter = 0.0;
     }
 
     /**
@@ -144,7 +136,6 @@ public class ElectricalFurnaceProcess implements IProcess {
     public double processStatePerSecond() {
         if (!smeltInProcess) return 0;
         double power = getPower() + 0.1;
-        double ret = power / (energyNeeded);
-        return ret;
+        return power / (energyNeeded);
     }
 }

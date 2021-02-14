@@ -49,7 +49,7 @@ public class ElectricalFurnaceElement extends TransparentNodeElement {
     public static final int thermalRegulatorSlotId = 4;
 
     NbtElectricalLoad electricalLoad = new NbtElectricalLoad("electricalLoad");
-    ResistorSwitch heatingCorpResistor = new ResistorSwitch("heatResistor", electricalLoad, ElectricalLoad.groundLoad);
+    ResistorSwitch heatingCorpResistor = new ResistorSwitch("heatResistor", electricalLoad, null);
 
     NbtThermalLoad thermalLoad = new NbtThermalLoad("thermalLoad");
     ThermalResistor smeltResistor = new ThermalResistor(thermalLoad, ThermalLoad.externalLoad);

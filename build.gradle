@@ -108,7 +108,7 @@ dependencies {
     compile "mcp.mobius.waila:Waila:1.5.11-RC2-NONEI_1.7.10:dev"
 
     // Serial Support (for communicating with local devices)
-    compile "com.fazecast:jSerialComm:2.6.2"
+    shade "com.fazecast:jSerialComm:2.6.2"
 
     // AWS CloudWatch support (for metrics)
     shade 'com.amazonaws:aws-java-sdk-cloudwatch'

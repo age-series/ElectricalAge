@@ -469,7 +469,7 @@ public class Obj3D {
                             }
                             fg.face.add(new Face(verticeId, uvId, new Normal(verticeId[0], verticeId[1], verticeId[2])));
                         } else {
-                            Utils.println("obj assert vertexNbr != 3");
+                            Utils.println("obj " + filePath + " assert vertexNbr != 3");
                         }
                     } else if (words[0].equals("mtllib")) {
                         mtlName = words[1];
@@ -517,7 +517,8 @@ public class Obj3D {
             final String txtPath = filePath.replace(".obj", ".txt").replace(".OBJ", ".txt");
             BufferedReader bufferedReader = getResourceAsStream("model/" + txtPath, reload);
             if (bufferedReader == null) {
-                Utils.println(String.format(" - failed to load txt '%s'", txtPath));
+                // Not really super important.
+                //Utils.println(String.format(" - failed to load txt '%s'", txtPath));
             } else {
                 String line;
                 int lineNumber = 0;
