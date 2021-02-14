@@ -83,8 +83,12 @@ public class TutorialSignElement extends SixNodeElement {
             else
                 ret = "\n";
 
+            file = file.trim();
             file = file.replaceAll("#" + ret, "#");
             file = file.replaceAll(ret + "#", "#");
+
+            if(file.charAt(0) == '#')
+                file = file.substring(1);
 
             String[] split = file.split("#");
 
