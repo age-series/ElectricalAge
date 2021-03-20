@@ -1,10 +1,13 @@
 package mods.eln.metrics
-
+/*
 import com.amazonaws.services.cloudwatch.AmazonCloudWatchClientBuilder
 import com.amazonaws.services.cloudwatch.model.Dimension
 import com.amazonaws.services.cloudwatch.model.MetricDatum
 import com.amazonaws.services.cloudwatch.model.PutMetricDataRequest
 import mods.eln.Eln
+
+
+TODO: This code is broken due to an import. Give up?
 
 
 object CloudwatchMetricsImpl: IMetricsAbstraction {
@@ -26,3 +29,4 @@ object CloudwatchMetricsImpl: IMetricsAbstraction {
         cw.putMetricData(request)
     }
 }
+*/

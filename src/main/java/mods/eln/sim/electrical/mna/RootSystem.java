@@ -237,7 +237,7 @@ public class RootSystem {
         for (SubSystem s : systems) {
             s.stepFlush();
         }
-        if (Eln.prometheusEnable || Eln.cloudwatchEnable) {
+        if (Eln.prometheusEnable) {
             profiler.add("stepMetricCollect");
             for (SubSystem s : systems) {
                 subSystemMetricsList.add(s.sendMetrics());

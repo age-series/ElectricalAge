@@ -1,4 +1,4 @@
-package mods.eln.hardware
+/*package mods.eln.hardware
 
 import com.fazecast.jSerialComm.SerialPort
 import java.io.BufferedWriter
@@ -143,3 +143,4 @@ data class Packet(val opcode: Char, val data: String) {
         return "$opcode${data.length}$data"
     }
 }
+*/

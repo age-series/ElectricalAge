@@ -14,8 +14,6 @@ buildscript {
     }
     dependencies {
         classpath 'net.minecraftforge.gradle:ForgeGradle:1.2-SNAPSHOT'
-        // Used for AWS CloudWatch dependency
-        classpath "io.spring.gradle:dependency-management-plugin:1.0.9.RELEASE"
     }
 }
 
@@ -27,17 +25,8 @@ plugins {
 apply plugin: 'forge'
 apply plugin: 'java'
 apply plugin: 'maven-publish'
-// Used for AWS CloudWatch dependency
-apply plugin: "io.spring.dependency-management"
 
 apply from: 'gradle.properties'
-
-dependencyManagement {
-    imports {
-        mavenBom 'com.amazonaws:aws-java-sdk-bom:1.11.942'
-    }
-}
-
 
 group = GROUP
 archivesBaseName = ARCHIVE_NAME
@@ -106,12 +95,6 @@ dependencies {
 
     // Waila Support
     compile "mcp.mobius.waila:Waila:1.5.11-RC2-NONEI_1.7.10:dev"
-
-    // Serial Support (for communicating with local devices)
-    shade "com.fazecast:jSerialComm:2.6.2"
-
-    // AWS CloudWatch support (for metrics)
-    shade 'com.amazonaws:aws-java-sdk-cloudwatch'
 
     // Prometheus support (for metrics)
     shade group: 'io.prometheus', name: 'simpleclient', version: prometheus_version

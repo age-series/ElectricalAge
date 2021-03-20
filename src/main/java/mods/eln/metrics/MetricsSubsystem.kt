@@ -13,9 +13,6 @@ object MetricsSubsystem {
         if (Eln.prometheusEnable) {
             metricSinks.add(PrometheusMetricsImpl)
         }
-        if (Eln.cloudwatchEnable) {
-            metricSinks.add(CloudwatchMetricsImpl)
-        }
 
         metricThread = Thread {
             while(true) {
@@ -37,7 +34,7 @@ object MetricsSubsystem {
                 //println("Moved the metrics, did $count")
             }
         }
-        if (Eln.prometheusEnable || Eln.cloudwatchEnable)
+        if (Eln.prometheusEnable)
             metricThread.start()
     }
 
@@ -57,7 +54,7 @@ object MetricsSubsystem {
      * Simple thing to just put data directly in (for use by simplistic abstractions)
      */
     fun putMetric(metricData: MetricData) {
-        if (Eln.prometheusEnable || Eln.cloudwatchEnable)
+        if (Eln.prometheusEnable)
             metricsIngested.add(metricData)
     }
 }
