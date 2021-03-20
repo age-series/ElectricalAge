@@ -1,5 +1,6 @@
 package mods.eln.sim.electrical.mna;
 
+import mods.eln.Eln;
 import mods.eln.misc.Profiler;
 import mods.eln.misc.Utils;
 import mods.eln.sim.electrical.ElectricalLoad;
@@ -236,12 +237,14 @@ public class RootSystem {
         for (SubSystem s : systems) {
             s.stepFlush();
         }
-        profiler.add("stepMetricCollect");
-        for (SubSystem s : systems) {
-            subSystemMetricsList.add(s.sendMetrics());
+        if (Eln.prometheusEnable || Eln.cloudwatchEnable) {
+            profiler.add("stepMetricCollect");
+            for (SubSystem s : systems) {
+                subSystemMetricsList.add(s.sendMetrics());
+            }
+            profiler.add("stepMetricSumMax");
+            SubSystemMetricsAggregator.INSTANCE.aggregateMetrics(subSystemMetricsList);
         }
-        profiler.add("stepMetricSumMax");
-        SubSystemMetricsAggregator.INSTANCE.aggregateMetrics(subSystemMetricsList);
         profiler.add("simProcessFlush");
         for (ISubSystemProcessFlush p : processF) {
             p.simProcessFlush();

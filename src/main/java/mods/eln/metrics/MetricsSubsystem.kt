@@ -37,7 +37,8 @@ object MetricsSubsystem {
                 //println("Moved the metrics, did $count")
             }
         }
-        metricThread.start()
+        if (Eln.prometheusEnable || Eln.cloudwatchEnable)
+            metricThread.start()
     }
 
     /**
@@ -56,7 +57,8 @@ object MetricsSubsystem {
      * Simple thing to just put data directly in (for use by simplistic abstractions)
      */
     fun putMetric(metricData: MetricData) {
-        metricsIngested.add(metricData)
+        if (Eln.prometheusEnable || Eln.cloudwatchEnable)
+            metricsIngested.add(metricData)
     }
 }
 
