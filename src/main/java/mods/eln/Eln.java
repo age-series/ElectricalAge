@@ -446,7 +446,7 @@ public class Eln {
                 playerUUID = p.getString();
         }
 
-        Eln.directPoles = config.get("general", "directPoles", false, "Enables direct air to ground poles - WARNING: Can cause MAJOR performance impact!").getBoolean();
+        Eln.directPoles = config.get("general", "directPoles", true, "Enables direct air to ground poles").getBoolean();
 
         heatTurbinePowerFactor = config.get("balancing", "heatTurbinePowerFactor", 1).getDouble(1);
         solarPanelPowerFactor = config.get("balancing", "solarPanelPowerFactor", 1).getDouble(1);
