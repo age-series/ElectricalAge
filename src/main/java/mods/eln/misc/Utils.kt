@@ -168,13 +168,13 @@ object Utils {
             valueAbs < 0.0001 ->
                 "0"
             valueAbs < 0.000999 ->
-                String.format("%1.2fµ", value * 10000)
+                String.format("%1.2fµ", value * 10_000)
             valueAbs < 0.00999 ->
-                String.format("%1.2fm", value * 1000)
+                String.format("%1.2fm", value * 1_000)
             valueAbs < 0.0999 ->
-                String.format("%2.1fm", value * 1000)
+                String.format("%2.1fm", value * 1_000)
             valueAbs < 0.999 ->
-                String.format("%3.0fm", value * 1000)
+                String.format("%3.0fm", value * 1_000)
             valueAbs < 9.99 ->
                 String.format("%1.2f", value)
             valueAbs < 99.9 ->
@@ -182,11 +182,17 @@ object Utils {
             valueAbs < 999 ->
                 String.format("%3.0f", value)
             valueAbs < 9999 ->
-                String.format("%1.2fk", value / 1000.0)
+                String.format("%1.2fk", value / 1_000.0)
             valueAbs < 99999 ->
-                String.format("%2.1fk", value / 1000.0)
-            else -> // if(value < 1000000)
-                String.format("%3.0fk", value / 1000.0)
+                String.format("%2.1fk", value / 1_000.0)
+            valueAbs < 999999 ->
+                String.format("%3.0fK", value / 1_000.0)
+            valueAbs < 9999999 ->
+                String.format("%1.2fM", value / 1_000_000.0)
+            valueAbs < 99999999 ->
+                String.format("%2.1fM", value / 1_000_000.0)
+            else ->
+                String.format("%3.0fM", value / 1_000_000.0)
         }
     }
 
