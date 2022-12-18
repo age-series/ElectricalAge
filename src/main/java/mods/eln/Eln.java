@@ -341,6 +341,7 @@ public class Eln {
     public static boolean noVoltageBackground = false;
 
     public static double maxSoundDistance = 16;
+    public static int soundChannels = 200;
     public static double cablePowerFactor;
 
     public static boolean allowSwingingLamps = true;
@@ -526,6 +527,7 @@ public class Eln {
         Eln.noVoltageBackground = config.get("general", "noVoltageBackground", false, "Disable colored background to items").getBoolean();
 
         Eln.maxSoundDistance = config.get("debug", "maxSoundDistance", 16.0, "Set this lower if you have clipping sounds in spaces with many sound sources (generators)").getDouble();
+        Eln.soundChannels = config.get("debug", "soundChannels", 200, "Change the number of sound channels. Set to -1 to use default").getInt(200);
 
         Eln.flywheelMass = Math.min(Math.max(config.get("balancing", "flywheelMass", 50.0, "How heavy is *your* flywheel?").getDouble(), 1.0), 1000.0);
 
