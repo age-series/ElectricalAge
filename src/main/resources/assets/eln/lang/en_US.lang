@@ -1135,7 +1135,7 @@ Utility_Pole_w/DC-DC_Converter.name=T1 Utility Pole with Transformer
 # some other stuff
 
 Portable_NaN.name=Portable NaN (DEV ITEM)
-Old_800v_Arc_Furnace.name=800V Arc Furnace
+Old_800V_Arc_Furnace.name=800V Arc Furnace
 Christmas_Tree.name=Christmas Tree
 Holiday_Candle.name=Holiday Candle
 String_Lights.name=String Lights
