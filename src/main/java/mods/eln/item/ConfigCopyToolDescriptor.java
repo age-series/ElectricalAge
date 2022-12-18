@@ -89,12 +89,15 @@ public class ConfigCopyToolDescriptor extends GenericItemUsingDamageDescriptor {
 
     public static void writeCableType(NBTTagCompound compound, String name, ItemStack stack) {
         if(stack != null) {
+            Eln.logger.info("CCT Copy: " + name + "Amt: " + stack.stackSize);
             compound.setInteger(name + "Amt", stack.stackSize);
         }
         GenericItemBlockUsingDamageDescriptor desc = GenericItemBlockUsingDamageDescriptor.getDescriptor(stack);
         if(desc != null) {
+            Eln.logger.info("CCT Copy: " + name + "Type: " + desc.parentItemDamage);
             compound.setInteger(name + "Type", desc.parentItemDamage);
         } else {
+            Eln.logger.info("CCT Copy: " + name + "Type: -1");
             compound.setInteger(name + "Type", -1);
         }
     }
@@ -141,12 +144,15 @@ public class ConfigCopyToolDescriptor extends GenericItemUsingDamageDescriptor {
 
     public static void writeGenDescriptor(NBTTagCompound compound, String name, ItemStack stack) {
         if(stack != null) {
+            Eln.logger.info("CCT Copy: " + name + "Amt: " + stack.stackSize);
             compound.setInteger(name + "Amt", stack.stackSize);
         }
         GenericItemUsingDamageDescriptor desc = GenericItemUsingDamageDescriptor.getDescriptor(stack);
         if(desc != null) {
+            Eln.logger.info("CCT Copy: " + name + " " + desc.name);
             compound.setString(name, desc.name);
         } else {
+            Eln.logger.info("CCT Copy: " + name + " Invalid Descriptor");
             compound.setString(name, GenericItemUsingDamageDescriptor.INVALID_NAME);
         }
     }
@@ -192,9 +198,12 @@ public class ConfigCopyToolDescriptor extends GenericItemUsingDamageDescriptor {
 
     public static void writeVanillaStack(NBTTagCompound compound, String name, ItemStack stack) {
         if(stack == null) {
+            Eln.logger.info("CCT Copy: " + name + "Amt: 0");
             compound.setInteger(name, -1);
             compound.setInteger(name + "Amt", 0);
         } else {
+            Eln.logger.info("CCT Copy: " + name + " " + Item.getIdFromItem(stack.getItem()));
+            Eln.logger.info("CCT Copy: " + name + "Amt: " + stack.stackSize);
             compound.setInteger(name, Item.getIdFromItem(stack.getItem()));
             compound.setInteger(name + "Amt", stack.stackSize);
         }
