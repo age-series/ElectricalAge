@@ -7,6 +7,7 @@ import mods.eln.gui.GuiTextFieldEln
 import mods.eln.gui.GuiVerticalTrackBar
 import mods.eln.gui.IGuiObject
 import mods.eln.i18n.I18N
+import mods.eln.misc.Utils
 import kotlin.math.log
 import kotlin.math.pow
 
@@ -96,7 +97,7 @@ class EnergyConverterElnToOtherGui(var render: EnergyConverterElnToOtherEntity) 
     override fun preDraw(f: Float, x: Int, y: Int) {
         super.preDraw(f, x, y)
         if (render.hasChanges) syncVoltage()
-        resistanceSelector!!.setComment(0, I18N.tr("Resistance is set to %1\$W", render.selectedResistance))
+        resistanceSelector!!.setComment(0, Utils.plotOhm(render.selectedResistance))
     }
 
     override fun newHelper(): GuiHelper {

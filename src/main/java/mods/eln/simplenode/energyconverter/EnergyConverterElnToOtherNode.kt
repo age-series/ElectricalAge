@@ -68,7 +68,7 @@ class EnergyConverterElnToOtherNode : SimpleNode() {
                 if (energyBufferMax - energyBuffer <= 0) {
                     powerInResistor.highImpedance()
                 } else {
-                    if (selectedOhms <= 10.0) {
+                    if (selectedOhms < 10.0) {
                         powerInResistor.r = MnaConst.highImpedance
                     } else {
                         powerInResistor.r = max(Eln.getSmallRs(), selectedOhms)
