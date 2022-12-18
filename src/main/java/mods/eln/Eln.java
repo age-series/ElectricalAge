@@ -76,6 +76,7 @@ import mods.eln.sixnode.*;
 import mods.eln.sixnode.TreeResinCollector.TreeResinCollectorDescriptor;
 import mods.eln.sixnode.batterycharger.BatteryChargerDescriptor;
 import mods.eln.sixnode.CurrentSourceDescriptor;
+import mods.eln.sixnode.currentcable.CurrentCableDescriptor;
 import mods.eln.sixnode.diode.DiodeDescriptor;
 import mods.eln.sixnode.electricalalarm.ElectricalAlarmDescriptor;
 import mods.eln.sixnode.electricalbreaker.ElectricalBreakerDescriptor;
@@ -283,6 +284,10 @@ public class Eln {
     public ElectricalCableDescriptor lowVoltageCableDescriptor;
     public ElectricalCableDescriptor meduimVoltageCableDescriptor;
     public ElectricalCableDescriptor signalBusCableDescriptor;
+
+    public CurrentCableDescriptor lowCurrentCableDescriptor;
+    public CurrentCableDescriptor mediumCurrentCableDescriptor;
+    public CurrentCableDescriptor highCurrentCableDescriptor;
 
     public static PortableNaNDescriptor portableNaNDescriptor = null;
     public static CableRenderDescriptor stdPortableNaN = null;
@@ -630,6 +635,7 @@ public class Eln {
         registerGround(2);
         registerElectricalSource(3);
         registerElectricalCable(32);
+        registerCurrentCables(33);
         registerThermalCable(48);
         registerLampSocket(64);
         registerLampSupply(65);
@@ -1247,6 +1253,10 @@ public class Eln {
     public CableRenderDescriptor stdCableRender3200V;
     public CableRenderDescriptor stdCableRenderCreative;
 
+    public CableRenderDescriptor lowCurrentCableRender;
+    public CableRenderDescriptor mediumCurrentCableRender;
+    public CableRenderDescriptor highCurrentCableRender;
+
     public static final double gateOutputCurrent = 0.100;
     public static final double SVU = 50, SVII = gateOutputCurrent / 50,
         SVUinv = 1.0 / SVU;
@@ -1499,6 +1509,41 @@ public class Eln {
 
         }
     }
+
+
+    private void registerCurrentCables(int id) {
+        int subId;
+        String name;
+        CurrentCableDescriptor desc;
+        {
+            subId = 0;
+            name = TR_NAME(Type.NONE, "Low Current Cable");
+            lowCurrentCableRender = new CableRenderDescriptor("eln", "sprites/currentcable.png", 1.9f, 0.9f);
+            desc = new CurrentCableDescriptor(name, lowCurrentCableRender, "Current based electrical cable");
+            desc.setPhysicalConstantLikeNormalCable(5.0);
+            lowCurrentCableDescriptor = desc;
+            sixNodeItem.addDescriptor(subId + (id << 6), desc);
+        }
+        {
+            subId = 1;
+            name = TR_NAME(Type.NONE, "Medium Current Cable");
+            mediumCurrentCableRender = new CableRenderDescriptor("eln", "sprites/currentcable.png", 2.9f, 1.9f);
+            desc = new CurrentCableDescriptor(name, mediumCurrentCableRender, "Current based electrical cable");
+            desc.setPhysicalConstantLikeNormalCable(20.0);
+            mediumCurrentCableDescriptor = desc;
+            sixNodeItem.addDescriptor(subId + (id << 6), desc);
+        }
+        {
+            subId = 2;
+            name = TR_NAME(Type.NONE, "High Current Cable");
+            highCurrentCableRender = new CableRenderDescriptor("eln", "sprites/currentcable.png", 3.9f, 1.9f);
+            desc = new CurrentCableDescriptor(name, highCurrentCableRender, "Current based electrical cable");
+            desc.setPhysicalConstantLikeNormalCable(100.0);
+            highCurrentCableDescriptor = desc;
+            sixNodeItem.addDescriptor(subId + (id << 6), desc);
+        }
+    }
+
 
     private void registerThermalCable(int id) {
         int subId;
