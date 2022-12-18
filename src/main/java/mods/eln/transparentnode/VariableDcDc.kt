@@ -356,17 +356,17 @@ class VariableDcDcElement(transparentNode: TransparentNode, descriptor: Transpar
             reconnect()
             needPublish()
         }
-        if (ConfigCopyToolDescriptor.readCableType(compound, "primary", inventory, VariableDcDcContainer.primaryCableSlotId, invoker))
+        if (ConfigCopyToolDescriptor.readGenDescriptor(compound, "primary", inventory, VariableDcDcContainer.primaryCableSlotId, invoker))
             inventoryChange(inventory)
-        if (ConfigCopyToolDescriptor.readCableType(compound, "secondary", inventory, VariableDcDcContainer.secondaryCableSlotId, invoker))
+        if (ConfigCopyToolDescriptor.readGenDescriptor(compound, "secondary", inventory, VariableDcDcContainer.secondaryCableSlotId, invoker))
             inventoryChange(inventory)
         if (ConfigCopyToolDescriptor.readGenDescriptor(compound, "core", inventory, VariableDcDcContainer.ferromagneticSlotId, invoker))
             inventoryChange(inventory)
     }
 
     override fun writeConfigTool(compound: NBTTagCompound, invoker: EntityPlayer) {
-        ConfigCopyToolDescriptor.writeCableType(compound, "primary", inventory.getStackInSlot(VariableDcDcContainer.primaryCableSlotId))
-        ConfigCopyToolDescriptor.writeCableType(compound, "secondary", inventory.getStackInSlot(VariableDcDcContainer.secondaryCableSlotId))
+        ConfigCopyToolDescriptor.writeGenDescriptor(compound, "primary", inventory.getStackInSlot(VariableDcDcContainer.primaryCableSlotId))
+        ConfigCopyToolDescriptor.writeGenDescriptor(compound, "secondary", inventory.getStackInSlot(VariableDcDcContainer.secondaryCableSlotId))
         ConfigCopyToolDescriptor.writeGenDescriptor(compound, "core", inventory.getStackInSlot(VariableDcDcContainer.ferromagneticSlotId))
     }
 }
