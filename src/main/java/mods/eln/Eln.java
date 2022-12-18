@@ -3284,8 +3284,7 @@ public class Eln {
                 arcFurnaceRecipes);
 
             transparentNodeItem.addDescriptor(subId + (id << 6), desc);
-            desc.setRunningSound("eln:arc_furnace");
-
+            desc.setRunningSound("eln:Arcfurnace_loop");
         }
         /*
 

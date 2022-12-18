@@ -35,6 +35,15 @@
             }
         ]
     },
+    "Arcfurnace_loop": {
+        "category": "block",
+        "sounds": [
+            {
+                "name": "Arcfurnace_loop",
+                "stream": false
+            }
+        ]
+    },
     "wind_turbine": {
         "category": "block",
         "sounds": [
