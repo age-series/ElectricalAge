@@ -5789,7 +5789,7 @@ public class Eln {
             'R', "itemRubber"
             );
 
-        addRecipe(meduimVoltageCableDescriptor.newItemStack(1), //Meduim Voltage Cable (Medium Voltage Cable)
+        addRecipe(meduimVoltageCableDescriptor.newItemStack(2), //Meduim Voltage Cable (Medium Voltage Cable)
             "R",
             "C",
             'C', lowVoltageCableDescriptor.newItemStack(1),
@@ -5803,7 +5803,7 @@ public class Eln {
             'R', "itemRubber"
         );
 
-        addRecipe(highVoltageCableDescriptor.newItemStack(1), //High Voltage Cable
+        addRecipe(highVoltageCableDescriptor.newItemStack(2), //High Voltage Cable
             "R",
             "C",
             'C', meduimVoltageCableDescriptor.newItemStack(1),
