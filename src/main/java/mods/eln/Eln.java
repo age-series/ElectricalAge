@@ -5782,17 +5782,41 @@ public class Eln {
             'C', findItemStack("Copper Cable"),
             'R', "itemRubber");
 
+        addRecipe(lowCurrentCableDescriptor.newItemStack(4),
+            "RC ",
+            "   ",
+            "   ",
+            'C', findItemStack("Copper Cable"),
+            'R', "itemRubber"
+            );
+
         addRecipe(meduimVoltageCableDescriptor.newItemStack(1), //Meduim Voltage Cable (Medium Voltage Cable)
             "R",
             "C",
             'C', lowVoltageCableDescriptor.newItemStack(1),
             'R', "itemRubber");
 
+        addRecipe(mediumCurrentCableDescriptor.newItemStack(4),
+            "RC ",
+            "RC ",
+            "   ",
+            'C', findItemStack("Copper Cable"),
+            'R', "itemRubber"
+        );
+
         addRecipe(highVoltageCableDescriptor.newItemStack(1), //High Voltage Cable
             "R",
             "C",
             'C', meduimVoltageCableDescriptor.newItemStack(1),
             'R', "itemRubber");
+
+        addRecipe(highCurrentCableDescriptor.newItemStack(4),
+            "RC ",
+            "RC ",
+            "RC ",
+            'C', "ingotCopper",
+            'R', "itemRubber"
+        );
 
         addRecipe(signalCableDescriptor.newItemStack(12), //Signal Wire
             "RRR",
