@@ -5,8 +5,8 @@ import net.minecraft.util.ResourceLocation;
 
 public class CableRenderDescriptor {
 
-    float width, height, widthDiv2;
-    float widthPixel, heightPixel;
+    public float width, height, widthDiv2;
+    public float widthPixel, heightPixel;
 
     public CableRenderDescriptor(String modName, String cableTexture, float width, float height) {
         this.widthPixel = width;

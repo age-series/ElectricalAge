@@ -148,6 +148,10 @@ abstract class TransparentNodeElementRender(@JvmField open var tileEntity: Trans
     }
 
     fun drawCable(side: Direction, render: CableRenderDescriptor?, connection: LRDUMask, renderPreProcess: CableRenderType?): CableRenderType? {
+        return this.drawCable(side, render, connection, renderPreProcess, false)
+    }
+
+    fun drawCable(side: Direction, render: CableRenderDescriptor?, connection: LRDUMask, renderPreProcess: CableRenderType?, drawBottom: Boolean): CableRenderType? {
         var renderPreProcess = renderPreProcess
         if (render == null) return renderPreProcess
         if (renderPreProcess == null) renderPreProcess = CableRender.connectionType(tileEntity, connection, side)
@@ -158,7 +162,7 @@ abstract class TransparentNodeElementRender(@JvmField open var tileEntity: Trans
             setGlColorFromDye(renderPreProcess!!.otherdry[lrdu.toInt()])
             if (!connection[lrdu]) continue
             maskTempDraw.set(1 shl lrdu.toInt())
-            CableRender.drawCable(render, maskTempDraw, renderPreProcess)
+            CableRender.drawCable(render, maskTempDraw, renderPreProcess, render.widthDiv2 / 2f, drawBottom)
         }
         GL11.glPopMatrix()
         GL11.glColor3f(1f, 1f, 1f)
