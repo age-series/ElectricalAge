@@ -19,6 +19,7 @@ import mods.eln.client.ClientKeyHandler;
 import mods.eln.client.SoundLoader;
 import mods.eln.entity.ReplicatorEntity;
 import mods.eln.entity.ReplicatorPopProcess;
+import mods.eln.entity.carts.EntityElectricMinecart;
 import mods.eln.eventhandlers.ElnFMLEventsHandler;
 import mods.eln.eventhandlers.ElnForgeEventsHandler;
 import mods.eln.generic.*;
@@ -688,6 +689,7 @@ public class Eln {
         //registerFloodlight(68);
         registerFestive(69);
         registerFab(70);
+        registerOverheadWires(71);
 
 
         //ITEM REGISTRATION
@@ -719,6 +721,7 @@ public class Eln {
         registerFuelBurnerItem(124);
         registerPortableNaN(); // 125
         registerBasicItems(126);
+        registerElectricMinecartItems(127);
 
         OreDictionary.registerOre("blockAluminum", arcClayBlock);
         OreDictionary.registerOre("blockSteel", arcMetalBlock);
@@ -771,6 +774,16 @@ public class Eln {
             FabricatorDescriptor desc = new FabricatorDescriptor(TR_NAME(Type.NONE, "Fabricator"));
             transparentNodeItem.addDescriptor(subId + (id << 6), desc);
         }*/
+    }
+
+    private void registerOverheadWires(int id) {
+        int subId;
+        {
+            subId = 0;
+            OverheadLinesDescriptor desc = new OverheadLinesDescriptor("Overhead Lines",
+                obj.getObj("OverheadGantry"));
+            transparentNodeItem.addDescriptor(subId + (id << 6), desc);
+        }
     }
 
     private void registerGridDevices(int id) {
@@ -906,6 +919,7 @@ public class Eln {
 
         //
         registerReplicator();
+        registerElectricMinecart();
         //
 
         recipeEnergyConverter();
@@ -5752,6 +5766,17 @@ public class Eln {
         }
     }
 
+    private void registerElectricMinecartItems(int id) {
+        int subId;
+        String name;
+        {
+            subId = 0;
+            name = TR_NAME(Type.NONE, "Electric Minecart");
+            ElectricMinecartItem minecartItem = new ElectricMinecartItem(name);
+            sharedItem.addElement(subId + (id << 6), minecartItem);
+        }
+    }
+
     public DataLogsPrintDescriptor dataLogsPrintDescriptor;
 
     private void recipeGround() {
@@ -8519,6 +8544,14 @@ public class Eln {
         // Add mob spawn
         // EntityRegistry.addSpawn(ReplicatorEntity.class, 1, 1, 2, EnumCreatureType.monster, BiomeGenBase.plains);
 
+    }
+
+    private int electricMinecartId = -1;
+
+    private void registerElectricMinecart() {
+        electricMinecartId = EntityRegistry.findGlobalUniqueEntityId();
+        Utils.println("Electric Minecrart registered at " + electricMinecartId);
+        EntityRegistry.registerGlobalEntityID(EntityElectricMinecart.class, TR_NAME(Type.ENTITY, "ElectricMinecart"), electricMinecartId);
     }
 
     // Registers WIP items.
