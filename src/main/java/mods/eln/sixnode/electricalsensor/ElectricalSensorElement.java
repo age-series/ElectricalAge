@@ -20,8 +20,10 @@ import mods.eln.sim.nbt.NbtElectricalGateOutputProcess;
 import mods.eln.sim.nbt.NbtElectricalLoad;
 import mods.eln.sim.process.destruct.VoltageStateWatchDog;
 import mods.eln.sim.process.destruct.WorldExplosion;
+import mods.eln.sixnode.currentcable.CurrentCableDescriptor;
 import mods.eln.sixnode.electricalcable.ElectricalCableDescriptor;
 import mods.eln.sixnode.electricaldatalogger.DataLogs;
+import mods.eln.sixnode.genericcable.GenericCableDescriptor;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
@@ -50,7 +52,7 @@ public class ElectricalSensorElement extends SixNodeElement implements IConfigur
     public Resistor resistor;
 
     private AutoAcceptInventoryProxy inventory = (new AutoAcceptInventoryProxy(new SixNodeElementInventory(1, 64, this)))
-        .acceptIfEmpty(0, ElectricalCableDescriptor.class);
+        .acceptIfEmpty(0, ElectricalCableDescriptor.class, CurrentCableDescriptor.class);
 
     static final byte dirNone = 0, dirAB = 1, dirBA = 2;
     byte dirType = dirNone;
@@ -224,7 +226,7 @@ public class ElectricalSensorElement extends SixNodeElement implements IConfigur
         //if (!descriptor.voltageOnly)
         {
             ItemStack cable = getInventory().getStackInSlot(ElectricalSensorContainer.cableSlotId);
-            ElectricalCableDescriptor cableDescriptor = (ElectricalCableDescriptor) Eln.sixNodeItem.getDescriptor(cable);
+            GenericCableDescriptor cableDescriptor = (GenericCableDescriptor) Eln.sixNodeItem.getDescriptor(cable);
 
             if (cableDescriptor == null) {
                 if (resistor != null) resistor.highImpedance();
