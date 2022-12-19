@@ -18,6 +18,7 @@ import mods.eln.sim.ThermalLoad;
 import mods.eln.sim.nbt.NbtElectricalGateOutputProcess;
 import mods.eln.sim.nbt.NbtElectricalLoad;
 import mods.eln.sim.nbt.NbtThermalLoad;
+import mods.eln.sixnode.currentcable.CurrentCableDescriptor;
 import mods.eln.sixnode.electricalcable.ElectricalCableDescriptor;
 import mods.eln.sixnode.electricaldatalogger.DataLogs;
 import mods.eln.sixnode.thermalcable.ThermalCableDescriptor;
@@ -64,7 +65,7 @@ public class ThermalSensorElement extends SixNodeElement implements IConfigurabl
 
         if (this.descriptor.temperatureOnly) {
             inventory = (new AutoAcceptInventoryProxy(new SixNodeElementInventory(1, 64, this)))
-                .acceptIfEmpty(0, ThermalCableDescriptor.class, ElectricalCableDescriptor.class);
+                .acceptIfEmpty(0, ThermalCableDescriptor.class, ElectricalCableDescriptor.class, CurrentCableDescriptor.class);
         } else {
             inventory = (new AutoAcceptInventoryProxy(new SixNodeElementInventory(1, 64, this)))
                 .acceptIfEmpty(0, ThermalCableDescriptor.class);
@@ -211,6 +212,11 @@ public class ThermalSensorElement extends SixNodeElement implements IConfigurabl
             cableDescriptor.applyTo(thermalLoad);
             thermalLoad.Rp = 1000000000.0;
             thermalLoad.setAsSlow();
+        } else if (descriptor.getClass() == CurrentCableDescriptor.class) {
+            CurrentCableDescriptor cableDescriptor = (CurrentCableDescriptor) Eln.sixNodeItem.getDescriptor(cable);
+            cableDescriptor.applyTo(thermalLoad);
+            thermalLoad.Rp = 1000000000.0;
+            thermalLoad.setAsSlow();
         } else {
             thermalLoad.setHighImpedance();
         }
@@ -223,7 +229,7 @@ public class ThermalSensorElement extends SixNodeElement implements IConfigurabl
 
     boolean isItemElectricalCable() {
         SixNodeDescriptor descriptor = Eln.sixNodeItem.getDescriptor(getInventory().getStackInSlot(ThermalSensorContainer.cableSlotId));
-        return descriptor != null && descriptor.getClass() == ElectricalCableDescriptor.class;
+        return descriptor != null && (descriptor.getClass() == ElectricalCableDescriptor.class || descriptor.getClass() == CurrentCableDescriptor.class);
     }
 
     @Override
