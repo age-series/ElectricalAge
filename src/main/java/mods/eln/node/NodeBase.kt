@@ -148,18 +148,18 @@ abstract class NodeBase {
         if (!entityPlayer.worldObj.isRemote && entityPlayer.currentEquippedItem != null) {
             val equipped = entityPlayer.currentEquippedItem
             if (Eln.multiMeterElement.checkSameItemStack(equipped)) {
-                val str = multiMeterString(side)
+                val str = multiMeterString(side).orEmpty()
                 addChatMessage(entityPlayer, str)
                 return true
             }
             if (Eln.thermometerElement.checkSameItemStack(equipped)) {
-                val str = thermoMeterString(side)
+                val str = thermoMeterString(side).orEmpty()
                 addChatMessage(entityPlayer, str)
                 return true
             }
             if (Eln.allMeterElement.checkSameItemStack(equipped)) {
-                val str1 = multiMeterString(side)
-                val str2 = thermoMeterString(side)
+                val str1 = multiMeterString(side).orEmpty()
+                val str2 = thermoMeterString(side).orEmpty()
                 var str = ""
                 str += str1
                 str += str2
@@ -306,12 +306,12 @@ abstract class NodeBase {
         nbt.setByte("NBWrap", neighborWrapable)
     }
 
-    open fun multiMeterString(side: Direction): String {
-        return ""
+    open fun multiMeterString(side: Direction): String? {
+        return null
     }
 
-    open fun thermoMeterString(side: Direction): String {
-        return ""
+    open fun thermoMeterString(side: Direction): String? {
+        return null
     }
 
     open fun readConfigTool(side: Direction?, tag: NBTTagCompound?, invoker: EntityPlayer?): Boolean {
