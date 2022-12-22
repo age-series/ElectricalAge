@@ -1,4 +1,4 @@
-package mods.eln.transparentnode
+package mods.eln.transparentnode.railroad
 
 import mods.eln.Eln
 import mods.eln.cable.CableRenderDescriptor
@@ -37,12 +37,14 @@ class OverheadLinesDescriptor(name: String, private val obj3D: Obj3D?): Transpar
 
 class OverheadLinesElement(node: TransparentNode?,
                            transparentNodeDescriptor: TransparentNodeDescriptor
-): TransparentNodeElement(node, transparentNodeDescriptor) {
+): GenericRailroadPowerElement(node, transparentNodeDescriptor) {
 
     val electricalLoad = NbtElectricalLoad("electricalLoad")
 
     override fun initialize() {
         Eln.applySmallRs(electricalLoad)
+        electricalLoad.setCanBeSimplifiedByLine(true)
+        electricalLoadList.add(electricalLoad)
         connect()
     }
 
@@ -68,6 +70,21 @@ class OverheadLinesElement(node: TransparentNode?,
         info[I18N.tr("Voltage")] = plotVolt("", electricalLoad.u)
         if (Eln.wailaEasyMode) {
             info[I18N.tr("Power")] = plotPower("", electricalLoad.i * electricalLoad.u)
+        }
+        val ss = electricalLoad.subSystem
+        if (ss != null) {
+            val subSystemSize = electricalLoad.subSystem.component.size
+            var textColor = ""
+            textColor = if (subSystemSize <= 8) {
+                "§a"
+            } else if (subSystemSize <= 15) {
+                "§6"
+            } else {
+                "§c"
+            }
+            info[I18N.tr("Subsystem Matrix Size")] = textColor + subSystemSize
+        } else {
+            info[I18N.tr("Subsystem Matrix Size")] = "§cnull SubSystem"
         }
         return info
     }

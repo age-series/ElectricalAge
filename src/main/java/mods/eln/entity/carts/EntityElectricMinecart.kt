@@ -1,28 +1,19 @@
 package mods.eln.entity.carts
 
-import mods.eln.Eln
 import mods.eln.misc.Coordinate
 import mods.eln.node.NodeManager
-import mods.eln.sim.mna.component.Resistor
-import mods.eln.sim.mna.misc.MnaConst
-import mods.eln.transparentnode.OverheadLinesElement
+import mods.eln.transparentnode.railroad.GenericRailroadPowerElement
+import mods.eln.transparentnode.railroad.OverheadLinesElement
+import mods.eln.transparentnode.railroad.UnderTrackPowerElement
 import net.minecraft.block.Block
 import net.minecraft.entity.item.EntityMinecart
 import net.minecraft.init.Blocks
-import net.minecraft.util.DamageSource
 import net.minecraft.world.World
 
 class EntityElectricMinecart(world: World, x: Double, y: Double, z: Double): EntityMinecart(world, x, y, z) {
 
-    private var lastOverheadWires: OverheadLinesElement? = null
-    private var lastRunState = false
-
+    private var lastPowerElement: GenericRailroadPowerElement? = null
     private val locomotiveResistance = 500.0
-    val resistor = Resistor()
-
-    init {
-        resistor.r = locomotiveResistance
-    }
 
     override fun func_145821_a(
         blockX: Int,
@@ -34,50 +25,37 @@ class EntityElectricMinecart(world: World, x: Double, y: Double, z: Double): Ent
         direction: Int
     ) {
         super.func_145821_a(blockX, blockY, blockZ, speed + 1, drag, block, direction)
-        val overheadWires = getOverheadWires(Coordinate(posX.toInt(), posY.toInt(), posZ.toInt(), worldObj)) ?: return
-        // TODO: Configure isRunning to act as the cart needs more battery power in an internal buffer
-        // Allow the cart to move when there is power in the buffer
-        // Control the cart ... somehow. Just turn it on full bore? lol
-        takeOverheadPower(overheadWires, true)
+
+        val cartCoordinate = Coordinate(posX.toInt(), posY.toInt(), posZ.toInt(), worldObj)
+        val overheadWires = getOverheadWires(cartCoordinate)
+        val underTrackWires = getUnderTrackWires(cartCoordinate)
+
+        /**
+         * Minecarts don't trigger an event in this class when they are removed in creative mode
+         * This means we need to use the actual element of the Overhead Lines or Under Track Power classes to handle
+         * the resistors and that no MNA elements can be owned by this class.
+         *
+         * The Replicator does this by registering a process that will remove the resistor from the simulator thread
+         * periodically and registers that apart from the entity (ish) although it probably isn't tested well and
+         * theoretically a creative mode removed replicator could be buggy or something
+         *
+         * Anyhow. Best way to implement this is to ask for the nearest wires (prefer the under track ones) and then
+         * pull power from that and save that. Might be able to make some generics here but I think that there
+         * may need to be differing code for sending the under power track rendering as opposed to the over track ones.
+         * This is because I want to render a wire _above_ the block if there's a track there. Presumably by rendering
+         * a simple quad over the top of the rails by a small distance and detecting the rail rendering for the rail
+         * above the device to make sure that we 'follow' the track with the custom renderer.
+         *
+         * This will have to be raw OpenGL code, similar to how the CableRender class works. It's probably not going
+         * to be super fun but it does help that the code will be 2D quads (rendered in 3D space/orientation).
+         *
+         * Some various textures may be required but I'm hoping I can sorta follow the cable render by rendering a quad
+         * in each direction and possibly also a center quad that is always rendered - and making it render diagonally
+         * in 3D space if the rail is going up or something. Turns should also be detectable. Might need to do something
+         * for mods that add tracks or have a default of just rendering the center square (2x2 pixels in MC) as wire.
+         */
     }
 
-    private fun attachResistor(overheadWires: OverheadLinesElement) {
-        if (overheadWires != lastOverheadWires)
-            detachResistor()
-            lastOverheadWires = overheadWires
-            resistor.connectTo(overheadWires.electricalLoad, null)
-            overheadWires.reconnect()
-            overheadWires.needPublish()
-    }
-
-    private fun detachResistor() {
-        if (resistor.subSystem != null)
-            resistor.subSystem.removeComponent(resistor)
-            resistor.dirty()
-        updateLastWire()
-        lastOverheadWires = null
-    }
-
-    private fun updateLastWire() {
-        lastOverheadWires?.reconnect()
-        lastOverheadWires?.needPublish()
-    }
-
-    override fun killMinecart(p_94095_1_: DamageSource?) {
-        super.killMinecart(p_94095_1_)
-        detachResistor()
-    }
-
-    private fun takeOverheadPower(overheadWires: OverheadLinesElement, isRunning: Boolean) {
-        Eln.logger.info("Voltage over the cart is ${overheadWires.electricalLoad.u}")
-
-        if (isRunning != lastRunState) {
-            resistor.r = if (isRunning) locomotiveResistance else MnaConst.highImpedance
-            resistor.dirty()
-        }
-
-        attachResistor(overheadWires)
-    }
 
     private fun getOverheadWires(coordinate: Coordinate): OverheadLinesElement? {
         // Pass coordinate of tracks and check vertically the next 3-4 blocks
@@ -86,13 +64,19 @@ class EntityElectricMinecart(world: World, x: Double, y: Double, z: Double): Ent
             coordinate.y
             val node = NodeManager.instance!!.getTransparentNodeFromCoordinate(coordinate)
             if (node is OverheadLinesElement) {
-                Eln.logger.info("Cart is under an overhead wire")
                 return node
             }
             coordinate.y++
         }
-        Eln.logger.info("Cart is not under an overhead wire")
-        detachResistor()
+        return null
+    }
+
+    private fun getUnderTrackWires(coordinate: Coordinate): UnderTrackPowerElement? {
+        coordinate.y -= 1 // check the block below the cart
+        val node = NodeManager.instance!!.getTransparentNodeFromCoordinate(coordinate)
+        if (node is UnderTrackPowerElement) {
+            return node
+        }
         return null
     }
 

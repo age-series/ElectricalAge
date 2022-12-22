@@ -62,9 +62,6 @@ import mods.eln.sim.ThermalLoadInitializer;
 import mods.eln.sim.ThermalLoadInitializerByPowerDrop;
 import mods.eln.sim.mna.component.Resistor;
 import mods.eln.sim.nbt.NbtElectricalLoad;
-import mods.eln.simplenode.DeviceProbeBlock;
-import mods.eln.simplenode.DeviceProbeEntity;
-import mods.eln.simplenode.DeviceProbeNode;
 import mods.eln.simplenode.computerprobe.ComputerProbeBlock;
 import mods.eln.simplenode.computerprobe.ComputerProbeEntity;
 import mods.eln.simplenode.computerprobe.ComputerProbeNode;
@@ -145,6 +142,8 @@ import mods.eln.transparentnode.festive.StringLightsDescriptor;
 import mods.eln.transparentnode.heatfurnace.HeatFurnaceDescriptor;
 import mods.eln.transparentnode.powercapacitor.PowerCapacitorDescriptor;
 import mods.eln.transparentnode.powerinductor.PowerInductorDescriptor;
+import mods.eln.transparentnode.railroad.OverheadLinesDescriptor;
+import mods.eln.transparentnode.railroad.UnderTrackPowerDescriptor;
 import mods.eln.transparentnode.solarpanel.SolarPanelDescriptor;
 import mods.eln.transparentnode.teleporter.TeleporterDescriptor;
 import mods.eln.transparentnode.teleporter.TeleporterElement;
@@ -781,6 +780,12 @@ public class Eln {
         {
             subId = 0;
             OverheadLinesDescriptor desc = new OverheadLinesDescriptor("Overhead Lines",
+                obj.getObj("OverheadGantry"));
+            transparentNodeItem.addDescriptor(subId + (id << 6), desc);
+        }
+        {
+            subId = 1;
+            UnderTrackPowerDescriptor desc = new UnderTrackPowerDescriptor("Under Track Power",
                 obj.getObj("OverheadGantry"));
             transparentNodeItem.addDescriptor(subId + (id << 6), desc);
         }
