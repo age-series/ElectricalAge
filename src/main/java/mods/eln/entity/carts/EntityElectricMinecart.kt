@@ -1,19 +1,80 @@
 package mods.eln.entity.carts
 
+import mods.eln.Eln
 import mods.eln.misc.Coordinate
+import mods.eln.misc.Utils
 import mods.eln.node.NodeManager
-import mods.eln.transparentnode.railroad.GenericRailroadPowerElement
+import mods.eln.sim.mna.misc.MnaConst
 import mods.eln.transparentnode.railroad.OverheadLinesElement
+import mods.eln.transparentnode.railroad.PoweredMinecartSimulationSingleton
+import mods.eln.transparentnode.railroad.RailroadPowerInterface
 import mods.eln.transparentnode.railroad.UnderTrackPowerElement
 import net.minecraft.block.Block
 import net.minecraft.entity.item.EntityMinecart
+import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.init.Blocks
+import net.minecraft.server.MinecraftServer
 import net.minecraft.world.World
+import kotlin.math.abs
+import kotlin.math.sign
 
 class EntityElectricMinecart(world: World, x: Double, y: Double, z: Double): EntityMinecart(world, x, y, z) {
 
-    private var lastPowerElement: GenericRailroadPowerElement? = null
-    private val locomotiveResistance = 500.0
+    private var lastPowerElement: RailroadPowerInterface? = null
+    private val locomotiveMaximumResistance = 200.0
+    var energyBufferTargetJoules = 10_000.0
+    var energyBufferJoules = 0.0
+
+    var count = 0
+
+    override fun onUpdate() {
+        super.onUpdate()
+        val cartCoordinate = Coordinate(posX.toInt(), posY.toInt(), posZ.toInt(), worldObj)
+        val overheadWires = getOverheadWires(cartCoordinate)
+        val underTrackWires = getUnderTrackWires(cartCoordinate)
+
+        when (val oldPowerElement = lastPowerElement) {
+            overheadWires, underTrackWires, null -> {
+                // references existing overhead wires or under track wires, or nothing
+            }
+            else -> {
+                // references old overhead wires or under track wires that are not the current ones
+                energyBufferJoules += PoweredMinecartSimulationSingleton.cartCollectEnergy(this)
+                Eln.logger.info("Deregister cart from $oldPowerElement")
+                oldPowerElement.deregisterCart(this)
+            }
+        }
+
+        val currentElement: RailroadPowerInterface? = underTrackWires ?: overheadWires
+
+        if (currentElement != null) {
+            if (currentElement != lastPowerElement) {
+                Eln.logger.info("Register cart to $currentElement")
+                currentElement.registerCart(this)
+            }
+
+            if (energyBufferJoules < energyBufferTargetJoules) {
+                PoweredMinecartSimulationSingleton.powerCart(this, locomotiveMaximumResistance, 0.1)
+            } else {
+                PoweredMinecartSimulationSingleton.powerCart(this, MnaConst.highImpedance, 1.0)
+            }
+            energyBufferJoules += PoweredMinecartSimulationSingleton.cartCollectEnergy(this)
+        }
+
+        if (count > 20) count = 0
+        if (count == 0) {
+            MinecraftServer.getServer().entityWorld.playerEntities.forEach {it ->
+                val player = it as EntityPlayer
+                Utils.addChatMessage(player, "Cart Energy: ${Utils.plotEnergy(energyBufferJoules)}")
+            }
+        }
+        count++
+
+        lastPowerElement = currentElement
+    }
+
+    var pushX: Double = 0.0
+    var pushZ: Double = 0.0
 
     override fun func_145821_a(
         blockX: Int,
@@ -25,37 +86,34 @@ class EntityElectricMinecart(world: World, x: Double, y: Double, z: Double): Ent
         direction: Int
     ) {
         super.func_145821_a(blockX, blockY, blockZ, speed + 1, drag, block, direction)
+        if (energyBufferJoules > 0) {
+            val maxEnergy = 40.0
+            var energyAvailable = maxEnergy
+            if (energyBufferJoules < maxEnergy) {
+                energyAvailable = energyBufferJoules
+            }
 
-        val cartCoordinate = Coordinate(posX.toInt(), posY.toInt(), posZ.toInt(), worldObj)
-        val overheadWires = getOverheadWires(cartCoordinate)
-        val underTrackWires = getUnderTrackWires(cartCoordinate)
+            val startingThreshold = 0.0005
 
-        /**
-         * Minecarts don't trigger an event in this class when they are removed in creative mode
-         * This means we need to use the actual element of the Overhead Lines or Under Track Power classes to handle
-         * the resistors and that no MNA elements can be owned by this class.
-         *
-         * The Replicator does this by registering a process that will remove the resistor from the simulator thread
-         * periodically and registers that apart from the entity (ish) although it probably isn't tested well and
-         * theoretically a creative mode removed replicator could be buggy or something
-         *
-         * Anyhow. Best way to implement this is to ask for the nearest wires (prefer the under track ones) and then
-         * pull power from that and save that. Might be able to make some generics here but I think that there
-         * may need to be differing code for sending the under power track rendering as opposed to the over track ones.
-         * This is because I want to render a wire _above_ the block if there's a track there. Presumably by rendering
-         * a simple quad over the top of the rails by a small distance and detecting the rail rendering for the rail
-         * above the device to make sure that we 'follow' the track with the custom renderer.
-         *
-         * This will have to be raw OpenGL code, similar to how the CableRender class works. It's probably not going
-         * to be super fun but it does help that the code will be 2D quads (rendered in 3D space/orientation).
-         *
-         * Some various textures may be required but I'm hoping I can sorta follow the cable render by rendering a quad
-         * in each direction and possibly also a center quad that is always rendered - and making it render diagonally
-         * in 3D space if the rail is going up or something. Turns should also be detectable. Might need to do something
-         * for mods that add tracks or have a default of just rendering the center square (2x2 pixels in MC) as wire.
-         */
+            if (abs(motionX) >= startingThreshold || abs(motionZ) >= startingThreshold) {
+                if (abs(motionX) < 0.5 && abs(motionZ) < 0.5) {
+                    pushX = motionX.sign * 0.05 * (energyAvailable / maxEnergy)
+                    pushZ = motionZ.sign * 0.05 * (energyAvailable / maxEnergy)
+                    energyBufferJoules -= energyAvailable
+                }
+            }
+        }
+
+        Eln.logger.info("Push: ($pushX, $pushZ)")
+
+        motionX += pushX
+        motionZ += pushZ
+
+        Eln.logger.info("Speed: ($motionX, $motionZ)")
+
+        pushX = 0.0
+        pushZ = 0.0
     }
-
 
     private fun getOverheadWires(coordinate: Coordinate): OverheadLinesElement? {
         // Pass coordinate of tracks and check vertically the next 3-4 blocks
@@ -81,10 +139,14 @@ class EntityElectricMinecart(world: World, x: Double, y: Double, z: Double): Ent
     }
 
     override fun getMinecartType(): Int {
-        return 2
+        return -1
     }
 
     override fun func_145817_o(): Block? {
+        return Blocks.iron_block
+    }
+
+    override fun func_145820_n(): Block? {
         return Blocks.iron_block
     }
 }

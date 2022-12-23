@@ -2,6 +2,7 @@ package mods.eln.transparentnode.railroad
 
 import mods.eln.Eln
 import mods.eln.cable.CableRenderDescriptor
+import mods.eln.entity.carts.EntityElectricMinecart
 import mods.eln.i18n.I18N
 import mods.eln.misc.Coordinate
 import mods.eln.misc.Direction
@@ -14,7 +15,10 @@ import mods.eln.misc.Utils.plotVolt
 import mods.eln.node.NodeBase
 import mods.eln.node.transparent.*
 import mods.eln.sim.ElectricalLoad
+import mods.eln.sim.mna.component.Resistor
+import mods.eln.sim.mna.misc.MnaConst
 import mods.eln.sim.nbt.NbtElectricalLoad
+import mods.eln.transparentnode.railroad.PoweredMinecartSimulationSingleton.poweredMinecartSimulationData
 import java.io.DataInputStream
 import java.io.DataOutputStream
 import java.io.IOException
@@ -37,14 +41,17 @@ class OverheadLinesDescriptor(name: String, private val obj3D: Obj3D?): Transpar
 
 class OverheadLinesElement(node: TransparentNode?,
                            transparentNodeDescriptor: TransparentNodeDescriptor
-): GenericRailroadPowerElement(node, transparentNodeDescriptor) {
+): TransparentNodeElement(node, transparentNodeDescriptor), RailroadPowerInterface {
 
     val electricalLoad = NbtElectricalLoad("electricalLoad")
 
-    override fun initialize() {
+    init {
         Eln.applySmallRs(electricalLoad)
         electricalLoad.setCanBeSimplifiedByLine(true)
         electricalLoadList.add(electricalLoad)
+    }
+
+    override fun initialize() {
         connect()
     }
 
@@ -87,6 +94,36 @@ class OverheadLinesElement(node: TransparentNode?,
             info[I18N.tr("Subsystem Matrix Size")] = "§cnull SubSystem"
         }
         return info
+    }
+
+    override fun registerCart(cart: EntityElectricMinecart) {
+        if (cart !in poweredMinecartSimulationData.map { it.minecart }) {
+            val resistor = Resistor()
+            resistor.connectTo(electricalLoad, null)
+            resistor.r = MnaConst.highImpedance
+            electricalComponentList.add(resistor)
+            val rrsp = RailroadResistorSlowProcess(this, cart, 0.05)
+            Eln.simulator.addSlowProcess(rrsp)
+            poweredMinecartSimulationData.add(PoweredMinecartSimulationData(cart, resistor, rrsp, this))
+            this.electricalLoad.subSystem.invalidate()
+            this.needPublish()
+        }
+    }
+
+    override fun deregisterCart(cart: EntityElectricMinecart) {
+        val search = poweredMinecartSimulationData.filter { it.minecart == cart }
+        if (search.isNotEmpty()) {
+            search.forEach {
+                if (it.owningElement == this) {
+                    electricalComponentList.remove(it.resistor)
+                    it.resistor.breakConnection()
+                    this.electricalLoad.subSystem.invalidate()
+                    Eln.simulator.removeSlowProcess(it.slowProcess)
+                    poweredMinecartSimulationData.remove(it)
+                    this.needPublish()
+                }
+            }
+        }
     }
 }
 

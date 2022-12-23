@@ -783,12 +783,14 @@ public class Eln {
                 obj.getObj("OverheadGantry"));
             transparentNodeItem.addDescriptor(subId + (id << 6), desc);
         }
+        /*
         {
             subId = 1;
             UnderTrackPowerDescriptor desc = new UnderTrackPowerDescriptor("Under Track Power",
                 obj.getObj("OverheadGantry"));
             transparentNodeItem.addDescriptor(subId + (id << 6), desc);
         }
+         */
     }
 
     private void registerGridDevices(int id) {
