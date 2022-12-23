@@ -244,8 +244,8 @@ class DcDcElement(transparentNode: TransparentNode, descriptor: TransparentNodeD
         val secondaryCable = inventory.getStackInSlot(DcDcContainer.secondaryCableSlotId)
         val core = inventory.getStackInSlot(DcDcContainer.ferromagneticSlotId)
 
-        primaryVoltageWatchdog.setUNominal(12800.0)
-        secondaryVoltageWatchdog.setUNominal(12800.0)
+        primaryVoltageWatchdog.setUNominal(120_000.0)
+        secondaryVoltageWatchdog.setUNominal(120_000.0)
 
         primaryMaxCurrent = 5.0
         secondaryMaxCurrent = 5.0
