@@ -73,7 +73,7 @@ class ElectricalLampItem(name: String, var lightMin: Int, var rangeMin: Int, dis
     }
 
     override fun onItemRightClick(s: ItemStack, w: World, p: EntityPlayer): ItemStack {
-        if (!w.isRemote) {
+        if (!w.isRemote && getEnergy(s) > 0) {
             var lightState = getLightState(s) + 1
             if (lightState > 2) lightState = 0
             when (lightState) {
@@ -165,7 +165,12 @@ class ElectricalLampItem(name: String, var lightMin: Int, var rangeMin: Int, dis
             1 -> power = dischargeMin * time
             2 -> power = dischargeMax * time
         }
-        if (energy > power) setEnergy(stack, energy - power) else setEnergy(stack, 0.0)
+        if (energy > power) {
+			setEnergy(stack, energy - power)
+		} else {
+			setEnergy(stack, 0.0)
+			setLightState(stack, 0)
+		}
     }
 
     init {
