@@ -230,13 +230,12 @@ public class LampSupplyElement extends SixNodeElement implements IConfigurable {
     @NotNull
     @Override
     public Map<String, String> getWaila() {
-        Map<String, String> info = new HashMap<String, String>();
+        Map<String, String> info = new LinkedHashMap<String, String>();
         for (int i = 0; i < 3; ++i) {
             Entry e = entries.get(i);
-            if (!e.powerChannel.isEmpty()) {
-                info.put(I18N.tr("Channel") + " " + (i + 1), e.powerChannel + " = " +
-                    (channelStates[i] ? "\u00A7aON" : "\u00A7cOFF"));
-            }
+            if (e.powerChannel.isEmpty()) continue;
+            info.put(I18N.tr("Channel") + " " + (i + 1), e.powerChannel + " = " +
+                (channelStates[i] ? "\u00A7aON" : "\u00A7cOFF"));
         }
         info.put(I18N.tr("Total power"), Utils.plotPower("", powerLoad.getU() * powerLoad.getI()));
         if (Eln.wailaEasyMode) {
