@@ -30,8 +30,8 @@ class GridTransformerElement(node: TransparentNode, descriptor: TransparentNodeD
     internal var maxCurrent = desc.cableDescriptor.electricalMaximalCurrent.toFloat()
 
     // Primary is the T2 coupling, secondary is the lower-voltage T1 coupling.
-    internal val secondaryVoltage = desc.cableDescriptor.electricalNominalVoltage * 16
-    internal val primaryVoltage = secondaryVoltage * 4
+    internal val primaryVoltage = 120_000.0
+    internal val secondaryVoltage = primaryVoltage / 4
 
     internal val explosion = WorldExplosion(this).machineExplosion()
 
