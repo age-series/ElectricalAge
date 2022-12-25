@@ -1,6 +1,7 @@
 package mods.eln.misc
 
 import mods.eln.Eln
+import mods.eln.sixnode.currentcable.CurrentCableDescriptor
 import mods.eln.sixnode.electricalcable.ElectricalCableDescriptor
 import net.minecraft.util.ResourceLocation
 import net.minecraftforge.client.IItemRenderer.ItemRenderType
@@ -40,6 +41,8 @@ enum class VoltageLevelColor(private val voltageLevel: String?) {
                 HighVoltage
             } else if (voltage <= 2 * Eln.VVU) {
                 VeryHighVoltage
+            } else if (voltage <= 2 * Eln.CCU) {
+                Neutral
             } else {
                 None
             }
@@ -53,6 +56,15 @@ enum class VoltageLevelColor(private val voltageLevel: String?) {
                 } else {
                     fromVoltage(descriptor.electricalNominalVoltage)
                 }
+            } else {
+                None
+            }
+        }
+
+        @JvmStatic
+        fun fromCable(descriptor: CurrentCableDescriptor?): VoltageLevelColor {
+            return if (descriptor != null) {
+                Neutral
             } else {
                 None
             }

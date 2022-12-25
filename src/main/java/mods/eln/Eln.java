@@ -1264,6 +1264,7 @@ public class Eln {
     public static final double MVU = 200;
     public static final double HVU = 800;
     public static final double VVU = 3200;
+    public static final double CCU = 120000;
 
     public static final double SVP = gateOutputCurrent * SVU;
 
