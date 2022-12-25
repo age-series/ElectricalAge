@@ -1520,7 +1520,7 @@ public class Eln {
             name = TR_NAME(Type.NONE, "Low Current Cable");
             lowCurrentCableRender = new CableRenderDescriptor("eln", "sprites/currentcable.png", 1.9f, 0.9f);
             desc = new CurrentCableDescriptor(name, lowCurrentCableRender, "Current based electrical cable");
-            desc.setPhysicalConstantLikeNormalCable(5.0);
+            desc.setPhysicalConstantLikeNormalCable(5.0 * cablePowerFactor);
             lowCurrentCableDescriptor = desc;
             sixNodeItem.addDescriptor(subId + (id << 6), desc);
         }
@@ -1529,7 +1529,7 @@ public class Eln {
             name = TR_NAME(Type.NONE, "Medium Current Cable");
             mediumCurrentCableRender = new CableRenderDescriptor("eln", "sprites/currentcable.png", 2.9f, 1.9f);
             desc = new CurrentCableDescriptor(name, mediumCurrentCableRender, "Current based electrical cable");
-            desc.setPhysicalConstantLikeNormalCable(20.0);
+            desc.setPhysicalConstantLikeNormalCable(20.0 * cablePowerFactor);
             mediumCurrentCableDescriptor = desc;
             sixNodeItem.addDescriptor(subId + (id << 6), desc);
         }
@@ -1538,7 +1538,7 @@ public class Eln {
             name = TR_NAME(Type.NONE, "High Current Cable");
             highCurrentCableRender = new CableRenderDescriptor("eln", "sprites/currentcable.png", 3.9f, 1.9f);
             desc = new CurrentCableDescriptor(name, highCurrentCableRender, "Current based electrical cable");
-            desc.setPhysicalConstantLikeNormalCable(100.0);
+            desc.setPhysicalConstantLikeNormalCable(100.0 * cablePowerFactor);
             highCurrentCableDescriptor = desc;
             sixNodeItem.addDescriptor(subId + (id << 6), desc);
         }
