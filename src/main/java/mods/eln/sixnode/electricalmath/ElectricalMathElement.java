@@ -1,5 +1,6 @@
 package mods.eln.sixnode.electricalmath;
 
+import mods.eln.Eln;
 import mods.eln.i18n.I18N;
 import mods.eln.item.ConfigCopyToolDescriptor;
 import mods.eln.item.IConfigurable;
@@ -7,16 +8,19 @@ import mods.eln.misc.Direction;
 import mods.eln.misc.LRDU;
 import mods.eln.misc.Utils;
 import mods.eln.node.Node;
+import mods.eln.node.NodeConnection;
 import mods.eln.node.six.SixNode;
 import mods.eln.node.six.SixNodeDescriptor;
 import mods.eln.node.six.SixNodeElement;
 import mods.eln.node.six.SixNodeElementInventory;
+import mods.eln.sim.ElectricalConnection;
 import mods.eln.sim.ElectricalLoad;
 import mods.eln.sim.IProcess;
 import mods.eln.sim.ThermalLoad;
 import mods.eln.sim.nbt.NbtElectricalGateInput;
 import mods.eln.sim.nbt.NbtElectricalGateOutput;
 import mods.eln.sim.nbt.NbtElectricalGateOutputProcess;
+import mods.eln.sixnode.electricalcable.ElectricalSignalBusCableElement;
 import mods.eln.solver.Equation;
 import mods.eln.solver.ISymbole;
 import net.minecraft.entity.player.EntityPlayer;
@@ -50,7 +54,22 @@ public class ElectricalMathElement extends SixNodeElement implements IConfigurab
 
     boolean firstBoot = true;
 
-    boolean sideConnectionEnable[] = new boolean[3];
+    /**
+     *
+     * Use an integer to represent if the side is connected and where is connected.
+     * <Pre>
+     * 0 is the unconnected.
+     * Positive connected.
+     * <Pre>
+     *     The positive value is a int value that contains all colors connected,
+     *     each 1 bit is the color connected to it;
+     *
+     *     Ex: The int value 21 represents the junction of Black (0), Dark_Green(2), Dark_Red(4) connected at same time.
+     *      so, 21 = (1 << 0) + (1 << 2) + (1 << 4).
+     *     Also: The int value 0 is used to represent the Black in a signalBusCable, or a signalCable.
+     * </Pre>
+     */
+    int sideConnectionEnable[] = new int[3];
     String expression = "";
     Equation equation;
     boolean equationIsValid;
@@ -86,6 +105,7 @@ public class ElectricalMathElement extends SixNodeElement implements IConfigurab
                 NbtElectricalGateInput nbtBustInput = new NbtElectricalGateInput(("gate" + signature));
                 busSide[i] = nbtBustInput;
                 symboleList.add(new GateInputSymbol(signature, nbtBustInput));
+                electricalLoadList.add(nbtBustInput);
             }
         }
 
@@ -137,26 +157,20 @@ public class ElectricalMathElement extends SixNodeElement implements IConfigurab
         equation.preProcess(expression);
 
         for (int idx = 0; idx < 3; idx++) {
-            sideConnectionEnable[idx] = equation.isSymboleUsed(symboleList.get(idx));
-        }
-
-        for (int idx = 0; idx < 3; idx++) {
-            boolean isUsing = false;
+            int colorCode = 0;
 
             //Default A,B,C Symbols
-            if (equation.isSymboleUsed(symboleList.get(idx))){
-                isUsing =true;
-            } else {
-                //SignalBust Symbols, A0, A1, A2, B4, C12...
-                for (int i = 3; i <= 0xF + 3; i++) {
-                    if (equation.isSymboleUsed(symboleList.get(i + (idx * 16)))) {
-                        isUsing = true;
-                        break;
-                    }
+            if (equation.isSymboleUsed(symboleList.get(idx)))
+                colorCode = 1;
+
+            //SignalBust Symbols, A0, A1, A2, B4, C12...
+            for (int i = 3; i <= 0xF + 3; i++) {
+                if (equation.isSymboleUsed(symboleList.get(i + (idx * 16)))) {
+                    colorCode |= (1 << (i-3));
                 }
             }
 
-            sideConnectionEnable[idx] = isUsing;
+            sideConnectionEnable[idx] = colorCode;
         }
 
         this.expression = expression;
@@ -181,12 +195,35 @@ public class ElectricalMathElement extends SixNodeElement implements IConfigurab
         }
     }
 
+
+
+    @Override
+    public void newConnectionAt(@Nullable NodeConnection connection, boolean isA) {
+        SixNodeElement e1 = ((SixNode) connection.getN1()).getElement(connection.getDir1().applyLRDU(connection.getLrdu1()));
+        SixNodeElement e2 = ((SixNode) connection.getN2()).getElement(connection.getDir2().applyLRDU(connection.getLrdu2()));
+
+        ElectricalSignalBusCableElement cable = null;
+        if (e1 instanceof ElectricalSignalBusCableElement)
+            cable = (ElectricalSignalBusCableElement) e1;
+        if (e2 instanceof ElectricalSignalBusCableElement)
+            cable = (ElectricalSignalBusCableElement) e2;
+
+        if (cable != null){
+            NbtElectricalGateInput[] nbtElectricalGateInputs = this.gateBusInput[0];
+            for (int i = 0; i < nbtElectricalGateInputs.length; i++) {
+                ElectricalConnection c1 = new ElectricalConnection(cable.getColoredElectricalLoads()[i], nbtElectricalGateInputs[i]);
+                Eln.simulator.addElectricalComponent(c1);
+                connection.addConnection(c1);
+            }
+        }
+    }
+
     @Override
     public ElectricalLoad getElectricalLoad(LRDU lrdu, int mask) {
         if (lrdu == front) return gateOutput;
-        if (lrdu == front.left() && sideConnectionEnable[2]) return gateInput[2];
-        if (lrdu == front.inverse() && sideConnectionEnable[1]) return gateInput[1];
-        if (lrdu == front.right() && sideConnectionEnable[0]) return gateInput[0];
+        if (lrdu == front.left() && sideConnectionEnable[2] == 1) return gateInput[2];
+        if (lrdu == front.inverse() && sideConnectionEnable[1] == 1) return gateInput[1];
+        if (lrdu == front.right() && sideConnectionEnable[0] == 1) return gateInput[0];
         return null;
     }
 
@@ -199,9 +236,9 @@ public class ElectricalMathElement extends SixNodeElement implements IConfigurab
     @Override
     public int getConnectionMask(LRDU lrdu) {
         if (lrdu == front) return Node.maskElectricalOutputGate;
-        if (lrdu == front.left() && sideConnectionEnable[2]) return Node.maskElectricalInputGate;
-        if (lrdu == front.inverse() && sideConnectionEnable[1]) return Node.maskElectricalInputGate;
-        if (lrdu == front.right() && sideConnectionEnable[0]) return Node.maskElectricalInputGate;
+        if (lrdu == front.left() && sideConnectionEnable[2] != -0) return Node.maskElectricalInputGate;
+        if (lrdu == front.inverse() && sideConnectionEnable[1] != -0) return Node.maskElectricalInputGate;
+        if (lrdu == front.right() && sideConnectionEnable[0] != -0) return Node.maskElectricalInputGate;
         return 0;
     }
 
