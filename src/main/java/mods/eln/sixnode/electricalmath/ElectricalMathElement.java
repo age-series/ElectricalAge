@@ -33,6 +33,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class ElectricalMathElement extends SixNodeElement implements IConfigurable {
@@ -41,6 +42,7 @@ public class ElectricalMathElement extends SixNodeElement implements IConfigurab
     NbtElectricalGateOutputProcess gateOutputProcess = new NbtElectricalGateOutputProcess("gateOutputProcess", gateOutput);
 
     NbtElectricalGateInput[] gateInput = new NbtElectricalGateInput[]{new NbtElectricalGateInput("gateA"), new NbtElectricalGateInput("gateB"), new NbtElectricalGateInput("gateC")};
+    NbtElectricalGateInput[][] gateBusInput = new NbtElectricalGateInput[3][16];
 
     ArrayList<ISymbole> symboleList = new ArrayList<ISymbole>();
 
@@ -74,6 +76,19 @@ public class ElectricalMathElement extends SixNodeElement implements IConfigurab
         symboleList.add(new GateInputSymbol("A", gateInput[0]));
         symboleList.add(new GateInputSymbol("B", gateInput[1]));
         symboleList.add(new GateInputSymbol("C", gateInput[2]));
+
+        for (int j = 0; j < gateBusInput.length; j++) {
+            NbtElectricalGateInput[] busSide = gateBusInput[j];
+
+            for (int i = 0; i <= 0xF; i++) {
+                String signature = String.valueOf((char) (65 + j)) + i;
+
+                NbtElectricalGateInput nbtBustInput = new NbtElectricalGateInput(("gate" + signature));
+                busSide[i] = nbtBustInput;
+                symboleList.add(new GateInputSymbol(signature, nbtBustInput));
+            }
+        }
+
         symboleList.add(new DayTime());
     }
 
@@ -124,6 +139,26 @@ public class ElectricalMathElement extends SixNodeElement implements IConfigurab
         for (int idx = 0; idx < 3; idx++) {
             sideConnectionEnable[idx] = equation.isSymboleUsed(symboleList.get(idx));
         }
+
+        for (int idx = 0; idx < 3; idx++) {
+            boolean isUsing = false;
+
+            //Default A,B,C Symbols
+            if (equation.isSymboleUsed(symboleList.get(idx))){
+                isUsing =true;
+            } else {
+                //SignalBust Symbols, A0, A1, A2, B4, C12...
+                for (int i = 3; i <= 0xF + 3; i++) {
+                    if (equation.isSymboleUsed(symboleList.get(i + (idx * 16)))) {
+                        isUsing = true;
+                        break;
+                    }
+                }
+            }
+
+            sideConnectionEnable[idx] = isUsing;
+        }
+
         this.expression = expression;
 
         redstoneRequired = 0;
