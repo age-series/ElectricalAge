@@ -104,12 +104,12 @@ class EntityElectricMinecart(world: World, x: Double, y: Double, z: Double): Ent
             }
         }
 
-        Eln.logger.info("Push: ($pushX, $pushZ)")
+        //Eln.logger.info("Push: ($pushX, $pushZ)")
 
         motionX += pushX
         motionZ += pushZ
 
-        Eln.logger.info("Speed: ($motionX, $motionZ)")
+        //Eln.logger.info("Speed: ($motionX, $motionZ)")
 
         pushX = 0.0
         pushZ = 0.0

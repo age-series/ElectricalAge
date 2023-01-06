@@ -14,6 +14,7 @@ import mods.eln.misc.Utils.plotPower
 import mods.eln.misc.Utils.plotVolt
 import mods.eln.node.NodeBase
 import mods.eln.node.transparent.*
+import mods.eln.sim.ElectricalConnection
 import mods.eln.sim.ElectricalLoad
 import mods.eln.sim.mna.component.Resistor
 import mods.eln.sim.mna.misc.MnaConst
@@ -22,6 +23,7 @@ import mods.eln.transparentnode.railroad.PoweredMinecartSimulationSingleton.powe
 import java.io.DataInputStream
 import java.io.DataOutputStream
 import java.io.IOException
+import java.util.NoSuchElementException
 
 class OverheadLinesDescriptor(name: String, private val obj3D: Obj3D?): TransparentNodeDescriptor(name, OverheadLinesElement::class.java,
     OverheadLinesRender::class.java
@@ -55,12 +57,22 @@ class OverheadLinesElement(node: TransparentNode?,
         connect()
     }
 
+    private val actualSides = listOf(Direction.XN, Direction.ZN, Direction.XP, Direction.ZP)
+
     override fun getConnectionMask(side: Direction, lrdu: LRDU): Int {
-        return NodeBase.maskElectricalPower
+        return if (side in actualSides && (lrdu == LRDU.Down)) {
+            NodeBase.maskElectricalPower
+        } else {
+            0
+        }
     }
 
-    override fun getElectricalLoad(side: Direction, lrdu: LRDU): ElectricalLoad {
-        return electricalLoad
+    override fun getElectricalLoad(side: Direction, lrdu: LRDU): ElectricalLoad? {
+        return if (side in actualSides && (lrdu == LRDU.Down)) {
+            electricalLoad
+        } else {
+            null
+        }
     }
 
     override fun networkSerialize(stream: DataOutputStream) {
@@ -81,8 +93,7 @@ class OverheadLinesElement(node: TransparentNode?,
         val ss = electricalLoad.subSystem
         if (ss != null) {
             val subSystemSize = electricalLoad.subSystem.component.size
-            var textColor = ""
-            textColor = if (subSystemSize <= 8) {
+            val textColor: String = if (subSystemSize <= 8) {
                 "§a"
             } else if (subSystemSize <= 15) {
                 "§6"
@@ -96,16 +107,24 @@ class OverheadLinesElement(node: TransparentNode?,
         return info
     }
 
+    class MinecartResistor: Resistor()
+
     override fun registerCart(cart: EntityElectricMinecart) {
         if (cart !in poweredMinecartSimulationData.map { it.minecart }) {
-            val resistor = Resistor()
-            resistor.connectTo(electricalLoad, null)
+            val resistor = MinecartResistor()
+            val resistorLoad = ElectricalLoad()
+            resistorLoad.setAsPrivate()
+            val connection = ElectricalConnection(electricalLoad, resistorLoad)
+            resistor.connectTo(resistorLoad, null)
             resistor.r = MnaConst.highImpedance
-            electricalComponentList.add(resistor)
+            resistorLoad.rs = MnaConst.noImpedance
+            connection.r = MnaConst.noImpedance
+            Eln.simulator.addElectricalLoad(resistorLoad)
+            Eln.simulator.addElectricalComponent(connection)
+            Eln.simulator.addElectricalComponent(resistor)
             val rrsp = RailroadResistorSlowProcess(this, cart, 0.05)
             Eln.simulator.addSlowProcess(rrsp)
-            poweredMinecartSimulationData.add(PoweredMinecartSimulationData(cart, resistor, rrsp, this))
-            this.electricalLoad.subSystem.invalidate()
+            poweredMinecartSimulationData.add(PoweredMinecartSimulationData(cart, resistor, resistorLoad, connection, rrsp, this))
             this.needPublish()
         }
     }
@@ -115,9 +134,11 @@ class OverheadLinesElement(node: TransparentNode?,
         if (search.isNotEmpty()) {
             search.forEach {
                 if (it.owningElement == this) {
-                    electricalComponentList.remove(it.resistor)
+                    Eln.simulator.removeElectricalComponent(it.resistor)
+                    Eln.simulator.removeElectricalComponent(it.electricalConnection)
+                    Eln.simulator.removeElectricalLoad(it.resistorElectricalLoad)
                     it.resistor.breakConnection()
-                    this.electricalLoad.subSystem.invalidate()
+                    it.electricalConnection.breakConnection()
                     Eln.simulator.removeSlowProcess(it.slowProcess)
                     poweredMinecartSimulationData.remove(it)
                     this.needPublish()
