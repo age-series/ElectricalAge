@@ -37,7 +37,6 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class ElectricalMathElement extends SixNodeElement implements IConfigurable {
@@ -45,8 +44,7 @@ public class ElectricalMathElement extends SixNodeElement implements IConfigurab
     NbtElectricalGateOutput gateOutput = new NbtElectricalGateOutput("gateOutput");
     NbtElectricalGateOutputProcess gateOutputProcess = new NbtElectricalGateOutputProcess("gateOutputProcess", gateOutput);
 
-    NbtElectricalGateInput[] gateInput = new NbtElectricalGateInput[]{new NbtElectricalGateInput("gateA"), new NbtElectricalGateInput("gateB"), new NbtElectricalGateInput("gateC")};
-    NbtElectricalGateInput[][] gateBusInput = new NbtElectricalGateInput[3][16];
+    final NbtElectricalGateInput[][] gateInput = new NbtElectricalGateInput[3][16];
 
     ArrayList<ISymbole> symboleList = new ArrayList<ISymbole>();
 
@@ -83,31 +81,33 @@ public class ElectricalMathElement extends SixNodeElement implements IConfigurab
 
     public ElectricalMathElement(SixNode sixNode, Direction side, SixNodeDescriptor descriptor) {
         super(sixNode, side, descriptor);
-        electricalLoadList.add(gateOutput);
-        electricalLoadList.add(gateInput[0]);
-        electricalLoadList.add(gateInput[1]);
-        electricalLoadList.add(gateInput[2]);
 
-        electricalComponentList.add(gateOutputProcess);
-
-        electricalProcessList.add(electricalProcess);
-
-        symboleList.add(new GateInputSymbol("A", gateInput[0]));
-        symboleList.add(new GateInputSymbol("B", gateInput[1]));
-        symboleList.add(new GateInputSymbol("C", gateInput[2]));
-
-        for (int j = 0; j < gateBusInput.length; j++) {
-            NbtElectricalGateInput[] busSide = gateBusInput[j];
+        for (int j = 0; j < gateInput.length; j++) {
+            NbtElectricalGateInput[] busSide = gateInput[j];
 
             for (int i = 0; i <= 0xF; i++) {
                 String signature = String.valueOf((char) (65 + j)) + i;
 
                 NbtElectricalGateInput nbtBustInput = new NbtElectricalGateInput(("gate" + signature));
-                busSide[i] = nbtBustInput;
+
                 symboleList.add(new GateInputSymbol(signature, nbtBustInput));
                 electricalLoadList.add(nbtBustInput);
+                busSide[i] = nbtBustInput;
             }
         }
+
+        electricalLoadList.add(gateOutput);
+        electricalLoadList.add(gateInput[0][0]);
+        electricalLoadList.add(gateInput[1][0]);
+        electricalLoadList.add(gateInput[2][0]);
+
+        electricalComponentList.add(gateOutputProcess);
+
+        electricalProcessList.add(electricalProcess);
+
+        symboleList.add(new GateInputSymbol("A", gateInput[0][0]));
+        symboleList.add(new GateInputSymbol("B", gateInput[1][0]));
+        symboleList.add(new GateInputSymbol("C", gateInput[2][0]));
 
         symboleList.add(new DayTime());
     }
@@ -197,33 +197,47 @@ public class ElectricalMathElement extends SixNodeElement implements IConfigurab
 
 
 
+    //todo rewrite that to be more clean, and don't do irrelevant connection between cable and processor.
     @Override
     public void newConnectionAt(@Nullable NodeConnection connection, boolean isA) {
         SixNodeElement e1 = ((SixNode) connection.getN1()).getElement(connection.getDir1().applyLRDU(connection.getLrdu1()));
         SixNodeElement e2 = ((SixNode) connection.getN2()).getElement(connection.getDir2().applyLRDU(connection.getLrdu2()));
 
         ElectricalSignalBusCableElement cable = null;
-        if (e1 instanceof ElectricalSignalBusCableElement)
+        LRDU lrdu = null;
+
+        if (e1 instanceof ElectricalSignalBusCableElement) {
             cable = (ElectricalSignalBusCableElement) e1;
-        if (e2 instanceof ElectricalSignalBusCableElement)
+            lrdu = this.side.getLRDUGoingTo(connection.getDir2());
+        }
+        if (e2 instanceof ElectricalSignalBusCableElement) {
             cable = (ElectricalSignalBusCableElement) e2;
+            lrdu = this.side.getLRDUGoingTo(connection.getDir1());
+        }
 
         if (cable != null){
-            NbtElectricalGateInput[] nbtElectricalGateInputs = this.gateBusInput[0];
+            NbtElectricalGateInput[] nbtElectricalGateInputs = null;
+
+            if (lrdu == front.left()) nbtElectricalGateInputs = this.gateInput[2];
+            else if (lrdu == front.inverse() ) nbtElectricalGateInputs = this.gateInput[1];
+            else if (lrdu == front.right() ) nbtElectricalGateInputs = this.gateInput[0];
+            else return;
+
             for (int i = 0; i < nbtElectricalGateInputs.length; i++) {
                 ElectricalConnection c1 = new ElectricalConnection(cable.getColoredElectricalLoads()[i], nbtElectricalGateInputs[i]);
                 Eln.simulator.addElectricalComponent(c1);
                 connection.addConnection(c1);
             }
+
         }
     }
 
     @Override
     public ElectricalLoad getElectricalLoad(LRDU lrdu, int mask) {
         if (lrdu == front) return gateOutput;
-        if (lrdu == front.left() && sideConnectionEnable[2] == 1) return gateInput[2];
-        if (lrdu == front.inverse() && sideConnectionEnable[1] == 1) return gateInput[1];
-        if (lrdu == front.right() && sideConnectionEnable[0] == 1) return gateInput[0];
+        if (lrdu == front.left() && sideConnectionEnable[2] == 1) return gateInput[2][0];
+        if (lrdu == front.inverse() && sideConnectionEnable[1] == 1) return gateInput[1][0];
+        if (lrdu == front.right() && sideConnectionEnable[0] == 1) return gateInput[0][0];
         return null;
     }
 
@@ -247,15 +261,17 @@ public class ElectricalMathElement extends SixNodeElement implements IConfigurab
         return Utils.plotVolt("Uout:", gateOutput.getU()) + Utils.plotAmpere("Iout:", gateOutput.getCurrent());
     }
 
+
+    //todo rewrite that to show all inputs connected.
     @NotNull
     @Override
     public Map<String, String> getWaila() {
         Map<String, String> info = new HashMap<String, String>();
         info.put(I18N.tr("Equation"), expression);
         info.put(I18N.tr("Input voltages"),
-            Utils.plotVolt("\u00A7c", gateInput[0].getU()) +
-                Utils.plotVolt("\u00A7a", gateInput[1].getU()) +
-                Utils.plotVolt("\u00A79", gateInput[2].getU()));
+            Utils.plotVolt("\u00A7c", gateInput[0][0].getU()) +
+                Utils.plotVolt("\u00A7a", gateInput[1][0].getU()) +
+                Utils.plotVolt("\u00A79", gateInput[2][0].getU()));
         info.put(I18N.tr("Output voltage"), Utils.plotVolt("", gateOutput.getU()));
         return info;
     }
