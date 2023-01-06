@@ -42,9 +42,9 @@ import java.util.Map;
 public class ElectricalMathElement extends SixNodeElement implements IConfigurable {
 
     NbtElectricalGateOutput gateOutput = new NbtElectricalGateOutput("gateOutput");
-    NbtElectricalGateOutputProcess gateOutputProcess = new NbtElectricalGateOutputProcess("gateOutputProcess", gateOutput);
-
     final NbtElectricalGateInput[][] gateInput = new NbtElectricalGateInput[3][16];
+
+    NbtElectricalGateOutputProcess gateOutputProcess = new NbtElectricalGateOutputProcess("gateOutputProcess", gateOutput);
 
     ArrayList<ISymbole> symboleList = new ArrayList<ISymbole>();
 
@@ -160,13 +160,13 @@ public class ElectricalMathElement extends SixNodeElement implements IConfigurab
             int colorCode = 0;
 
             //Default A,B,C Symbols
-            if (equation.isSymboleUsed(symboleList.get(idx)))
+            if (equation.isSymboleUsed(symboleList.get(idx + 48)))
                 colorCode = 1;
 
             //SignalBust Symbols, A0, A1, A2, B4, C12...
-            for (int i = 3; i <= 0xF + 3; i++) {
-                if (equation.isSymboleUsed(symboleList.get(i + (idx * 16)))) {
-                    colorCode |= (1 << (i-3));
+            for (int i = 0; i <= 0xF; i++) {
+                if (equation.isSymboleUsed(symboleList.get(i + (idx*16) ))) {
+                    colorCode |= (1 << i);
                 }
             }
 
@@ -195,8 +195,6 @@ public class ElectricalMathElement extends SixNodeElement implements IConfigurab
         }
     }
 
-
-
     //todo rewrite that to be more clean, and don't do irrelevant connection between cable and processor.
     @Override
     public void newConnectionAt(@Nullable NodeConnection connection, boolean isA) {
@@ -218,6 +216,7 @@ public class ElectricalMathElement extends SixNodeElement implements IConfigurab
         if (cable != null){
             NbtElectricalGateInput[] nbtElectricalGateInputs = null;
 
+            //if (lrdu == front) nbtElectricalGateInputs = this.gateOutput;
             if (lrdu == front.left()) nbtElectricalGateInputs = this.gateInput[2];
             else if (lrdu == front.inverse() ) nbtElectricalGateInputs = this.gateInput[1];
             else if (lrdu == front.right() ) nbtElectricalGateInputs = this.gateInput[0];
@@ -250,9 +249,9 @@ public class ElectricalMathElement extends SixNodeElement implements IConfigurab
     @Override
     public int getConnectionMask(LRDU lrdu) {
         if (lrdu == front) return Node.maskElectricalOutputGate;
-        if (lrdu == front.left() && sideConnectionEnable[2] != -0) return Node.maskElectricalInputGate;
-        if (lrdu == front.inverse() && sideConnectionEnable[1] != -0) return Node.maskElectricalInputGate;
-        if (lrdu == front.right() && sideConnectionEnable[0] != -0) return Node.maskElectricalInputGate;
+        if (lrdu == front.left() && sideConnectionEnable[2] != 0) return Node.maskElectricalInputGate;
+        if (lrdu == front.inverse() && sideConnectionEnable[1] != 0) return Node.maskElectricalInputGate;
+        if (lrdu == front.right() && sideConnectionEnable[0] != 0) return Node.maskElectricalInputGate;
         return 0;
     }
 
