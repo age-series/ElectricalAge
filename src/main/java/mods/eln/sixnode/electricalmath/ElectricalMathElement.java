@@ -67,7 +67,7 @@ public class ElectricalMathElement extends SixNodeElement implements IConfigurab
      *     Also: The int value 0 is used to represent the Black in a signalBusCable, or a signalCable.
      * </Pre>
      */
-    int sideConnectionEnable[] = new int[3];
+    int sideConnectionMask[] = new int[3];
     String expression = "";
     Equation equation;
     boolean equationIsValid;
@@ -170,7 +170,7 @@ public class ElectricalMathElement extends SixNodeElement implements IConfigurab
                 }
             }
 
-            sideConnectionEnable[idx] = colorCode;
+            sideConnectionMask[idx] = colorCode;
         }
 
         this.expression = expression;
@@ -214,18 +214,22 @@ public class ElectricalMathElement extends SixNodeElement implements IConfigurab
         }
 
         if (cable != null){
-            NbtElectricalGateInput[] nbtElectricalGateInputs = null;
+            int gateSide;
 
             //if (lrdu == front) nbtElectricalGateInputs = this.gateOutput;
-            if (lrdu == front.left()) nbtElectricalGateInputs = this.gateInput[2];
-            else if (lrdu == front.inverse() ) nbtElectricalGateInputs = this.gateInput[1];
-            else if (lrdu == front.right() ) nbtElectricalGateInputs = this.gateInput[0];
+            if (lrdu == front.left()) gateSide = 2;
+            else if (lrdu == front.inverse() ) gateSide = 1;
+            else if (lrdu == front.right() ) gateSide = 0;
             else return;
 
-            for (int i = 0; i < nbtElectricalGateInputs.length; i++) {
-                ElectricalConnection c1 = new ElectricalConnection(cable.getColoredElectricalLoads()[i], nbtElectricalGateInputs[i]);
-                Eln.simulator.addElectricalComponent(c1);
-                connection.addConnection(c1);
+            NbtElectricalGateInput[] nbtElectricalGateInputs = gateInput[gateSide];
+            int mask = sideConnectionMask[gateSide];
+            for (int i = 0; i <= 0xF; i++) {
+                if ((mask | (1 << i)) != 0){
+                    ElectricalConnection c1 = new ElectricalConnection(cable.getColoredElectricalLoads()[i], nbtElectricalGateInputs[i]);
+                    Eln.simulator.addElectricalComponent(c1);
+                    connection.addConnection(c1);
+                }
             }
 
         }
@@ -234,9 +238,9 @@ public class ElectricalMathElement extends SixNodeElement implements IConfigurab
     @Override
     public ElectricalLoad getElectricalLoad(LRDU lrdu, int mask) {
         if (lrdu == front) return gateOutput;
-        if (lrdu == front.left() && sideConnectionEnable[2] == 1) return gateInput[2][0];
-        if (lrdu == front.inverse() && sideConnectionEnable[1] == 1) return gateInput[1][0];
-        if (lrdu == front.right() && sideConnectionEnable[0] == 1) return gateInput[0][0];
+        if (lrdu == front.left() && sideConnectionMask[2] == 1) return gateInput[2][0];
+        if (lrdu == front.inverse() && sideConnectionMask[1] == 1) return gateInput[1][0];
+        if (lrdu == front.right() && sideConnectionMask[0] == 1) return gateInput[0][0];
         return null;
     }
 
@@ -249,9 +253,9 @@ public class ElectricalMathElement extends SixNodeElement implements IConfigurab
     @Override
     public int getConnectionMask(LRDU lrdu) {
         if (lrdu == front) return Node.maskElectricalOutputGate;
-        if (lrdu == front.left() && sideConnectionEnable[2] != 0) return Node.maskElectricalInputGate;
-        if (lrdu == front.inverse() && sideConnectionEnable[1] != 0) return Node.maskElectricalInputGate;
-        if (lrdu == front.right() && sideConnectionEnable[0] != 0) return Node.maskElectricalInputGate;
+        if (lrdu == front.left() && sideConnectionMask[2] != 0) return Node.maskElectricalInputGate;
+        if (lrdu == front.inverse() && sideConnectionMask[1] != 0) return Node.maskElectricalInputGate;
+        if (lrdu == front.right() && sideConnectionMask[0] != 0) return Node.maskElectricalInputGate;
         return 0;
     }
 
