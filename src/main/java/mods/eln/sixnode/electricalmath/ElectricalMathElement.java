@@ -29,6 +29,7 @@ import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumChatFormatting;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -36,6 +37,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -195,7 +197,6 @@ public class ElectricalMathElement extends SixNodeElement implements IConfigurab
         }
     }
 
-    //todo rewrite that to be more clean, and don't do irrelevant connection between cable and processor.
     @Override
     public void newConnectionAt(@Nullable NodeConnection connection, boolean isA) {
         SixNodeElement e1 = ((SixNode) connection.getN1()).getElement(connection.getDir1().applyLRDU(connection.getLrdu1()));
@@ -225,6 +226,8 @@ public class ElectricalMathElement extends SixNodeElement implements IConfigurab
             NbtElectricalGateInput[] nbtElectricalGateInputs = gateInput[gateSide];
             int mask = sideConnectionMask[gateSide];
             for (int i = 0; i <= 0xF; i++) {
+                if (mask == 0) break;
+
                 if ((mask | (1 << i)) != 0){
                     ElectricalConnection c1 = new ElectricalConnection(cable.getColoredElectricalLoads()[i], nbtElectricalGateInputs[i]);
                     Eln.simulator.addElectricalComponent(c1);
@@ -265,16 +268,37 @@ public class ElectricalMathElement extends SixNodeElement implements IConfigurab
     }
 
 
-    //todo rewrite that to show all inputs connected.
     @NotNull
     @Override
     public Map<String, String> getWaila() {
         Map<String, String> info = new HashMap<String, String>();
         info.put(I18N.tr("Equation"), expression);
+
+        for (int idx = 0; idx<3; idx++) {
+            int mask = sideConnectionMask[idx];
+            StringBuilder st = new StringBuilder();
+
+            for (int i = 0; i <= 0xF; i++) {
+                if (mask == 0) break;
+
+                if ((mask & (1 << i)) != 0){
+                    st.append(ElectricalSignalBusCableElement.Companion.getWool_to_chat()[15 - i].toString())
+                        .append(Utils.plotVolt(gateInput[idx][i].getU()));
+                }
+            }
+
+            if (st.length() != 0)
+                info.put(String.valueOf(((char) (65 + idx))), st.toString());
+        }
+
+        /*
         info.put(I18N.tr("Input voltages"),
             Utils.plotVolt("\u00A7c", gateInput[0][0].getU()) +
                 Utils.plotVolt("\u00A7a", gateInput[1][0].getU()) +
                 Utils.plotVolt("\u00A79", gateInput[2][0].getU()));
+
+         */
+
         info.put(I18N.tr("Output voltage"), Utils.plotVolt("", gateOutput.getU()));
         return info;
     }

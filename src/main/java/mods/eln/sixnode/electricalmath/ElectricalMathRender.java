@@ -3,10 +3,7 @@ package mods.eln.sixnode.electricalmath;
 import mods.eln.Eln;
 import mods.eln.cable.CableRenderDescriptor;
 import mods.eln.misc.*;
-import mods.eln.node.six.SixNodeDescriptor;
-import mods.eln.node.six.SixNodeElementInventory;
-import mods.eln.node.six.SixNodeElementRender;
-import mods.eln.node.six.SixNodeEntity;
+import mods.eln.node.six.*;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import org.jetbrains.annotations.NotNull;
@@ -114,6 +111,14 @@ public class ElectricalMathRender extends SixNodeElementRender {
     @Nullable
     @Override
     public CableRenderDescriptor getCableRender(@NotNull LRDU lrdu) {
+        if (lrdu == front) return Eln.instance.signalCableDescriptor.render;
+
+        ElectricalMathElement element = (ElectricalMathElement) ((SixNode) this.tileEntity.getNode()).getElement(this.side);
+        for (int i : element.sideConnectionMask) {
+            if (lrdu == front.left()) return i > 1 ? Eln.instance.highVoltageCableDescriptor.render : Eln.instance.signalCableDescriptor.render;
+            else if (lrdu == front.inverse() ) return i > 1 ? Eln.instance.highVoltageCableDescriptor.render : Eln.instance.signalCableDescriptor.render;
+            else if (lrdu == front.right() ) return i > 1 ? Eln.instance.highVoltageCableDescriptor.render : Eln.instance.signalCableDescriptor.render;
+        }
         return Eln.instance.signalCableDescriptor.render;
     }
 }
