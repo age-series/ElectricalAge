@@ -15,6 +15,8 @@ import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.init.Blocks
 import net.minecraft.server.MinecraftServer
 import net.minecraft.world.World
+import net.minecraftforge.common.MinecraftForge
+import net.minecraftforge.event.entity.minecart.MinecartInteractEvent
 import kotlin.math.abs
 import kotlin.math.sign
 
@@ -116,9 +118,9 @@ class EntityElectricMinecart(world: World, x: Double, y: Double, z: Double): Ent
     }
 
     private fun getOverheadWires(coordinate: Coordinate): OverheadLinesElement? {
-        // Pass coordinate of tracks and check vertically the next 3-4 blocks
+        // Pass coordinate of tracks and check vertically the next 3 blocks (4 up looks visually weird)
         val originalY = coordinate.y
-        while (coordinate.y <= (originalY + 4)) {
+        while (coordinate.y <= (originalY + 3)) {
             coordinate.y
             val node = NodeManager.instance!!.getTransparentNodeFromCoordinate(coordinate)
             if (node is OverheadLinesElement) {

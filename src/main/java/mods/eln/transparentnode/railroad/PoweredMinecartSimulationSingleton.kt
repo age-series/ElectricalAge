@@ -32,10 +32,13 @@ object PoweredMinecartSimulationSingleton {
         if (cartData.resistor.r != resistance)
             if (cartData.owningElement is TransparentNodeElement)
                 cartData.owningElement.needPublish()
-        cartData.resistor.r = resistance
+        // Don't draw power from the overhead lines if the voltage is too low
+        if (cartData.resistorElectricalLoad.u < 700.0) {
+            cartData.resistor.r = MnaConst.highImpedance
+        } else {
+            cartData.resistor.r = resistance
+        }
         cartData.slowProcess.timeLeft = time
-
-        Eln.logger.info(cartData.resistor.subSystem)
     }
 
     /**

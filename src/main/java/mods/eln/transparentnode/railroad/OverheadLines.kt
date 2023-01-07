@@ -23,7 +23,6 @@ import mods.eln.transparentnode.railroad.PoweredMinecartSimulationSingleton.powe
 import java.io.DataInputStream
 import java.io.DataOutputStream
 import java.io.IOException
-import java.util.NoSuchElementException
 
 class OverheadLinesDescriptor(name: String, private val obj3D: Obj3D?): TransparentNodeDescriptor(name, OverheadLinesElement::class.java,
     OverheadLinesRender::class.java
