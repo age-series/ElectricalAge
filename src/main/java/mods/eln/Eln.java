@@ -90,7 +90,7 @@ import mods.eln.sixnode.electricalfiredetector.ElectricalFireDetectorDescriptor;
 import mods.eln.sixnode.electricalgatesource.ElectricalGateSourceDescriptor;
 import mods.eln.sixnode.electricalgatesource.ElectricalGateSourceRenderObj;
 import mods.eln.sixnode.electricallightsensor.ElectricalLightSensorDescriptor;
-import mods.eln.sixnode.electricalmath.ElectricalMathDescriptor;
+import mods.eln.sixnode.electricalmath.*;
 import mods.eln.sixnode.electricalredstoneinput.ElectricalRedstoneInputDescriptor;
 import mods.eln.sixnode.electricalredstoneoutput.ElectricalRedstoneOutputDescriptor;
 import mods.eln.sixnode.electricalrelay.ElectricalRelayDescriptor;
@@ -2670,8 +2670,26 @@ public class Eln {
 
             name = TR_NAME(Type.NONE, "Signal Processor");
 
-            desc = new ElectricalMathDescriptor(name,
-                obj.getObj("PLC"));
+            desc = new ElectricalMathDescriptor(
+                name,
+                obj.getObj("PLC"),
+                ElectricalMathElement.class,
+                ElectricalMathRender.class
+                );
+            sixNodeItem.addDescriptor(subId + (id << 6), desc);
+        }
+        {
+            ElectricalMathDescriptor desc;
+            subId = 8;
+
+            name = TR_NAME(Type.NONE, "Advanced Signal Processor");
+
+            desc = new ElectricalMathDescriptor(
+                name,
+                obj.getObj("APLC"),
+                AdvancedElectricalMathElement.class,
+                AdvancedElectricalMathRender.class
+                );
             sixNodeItem.addDescriptor(subId + (id << 6), desc);
         }
 

@@ -32,8 +32,8 @@ public class ElectricalMathDescriptor extends SixNodeDescriptor implements IPlug
 
     static final boolean[] ledDefault = {true, false, true, false, true, true, true, false};
 
-    public ElectricalMathDescriptor(String name, Obj3D obj) {
-        super(name, ElectricalMathElement.class, ElectricalMathRender.class);
+    public ElectricalMathDescriptor(String name, Obj3D obj, Class<?> elementClass, Class<?> renderClass) {
+        super(name, elementClass, renderClass);
         this.obj = obj;
         if (obj != null) {
             main = obj.getPart("main");

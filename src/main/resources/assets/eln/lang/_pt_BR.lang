@@ -190,6 +190,7 @@ magenta_brush.name=Pincel Magenta
 simple_lamp_socket.name=Soquete Simples para Lâmpada
 high_power_transmitter_antenna.name=Antena transmissora de Alta Potência
 signal_processor.name=Processador de Sinal
+advanced_signal_processor.name=Processador de Sinal Avançado
 orange_brush.name=Pincel Laranja
 pink_brush.name=Pincel Rosa
 wireless_signal_transmitter.name=Transmissor de Sinal Wireless

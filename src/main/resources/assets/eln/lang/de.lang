@@ -200,6 +200,7 @@ Signal_Button.name=Signaltaster
 Signal_Cable.name=Signalkabel
 Signal_Diode.name=Signaldiode
 Signal_Processor.name=Signalverabeitungseinheit
+advanced_signal_processor.name=Fortschrittlicher Signalverabeitungseinheit
 Signal_Relay.name=Signalrelais
 Signal_Source.name=Signalquelle
 Signal_Switch.name=Signalschalter

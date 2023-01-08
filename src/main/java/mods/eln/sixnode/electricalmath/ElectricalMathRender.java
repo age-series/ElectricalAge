@@ -18,6 +18,8 @@ public class ElectricalMathRender extends SixNodeElementRender {
     ElectricalMathDescriptor descriptor;
     Coordinate coord;
     PhysicalInterpolator interpolator;
+    /** only a scape to don't draw the PLC Pins **/
+    boolean isDrawingPins = true;
 
     SixNodeElementInventory inventory = new SixNodeElementInventory(1, 64, this);
 
@@ -59,7 +61,11 @@ public class ElectricalMathRender extends SixNodeElementRender {
     @Override
     public void draw() {
         super.draw();
+        if (isDrawingPins)
+            drawPins();
+    }
 
+    public void drawPins(){
         float[] pinDistances = null;
         if (side.isY()) {
             pinDistances = front.rotate4PinDistances(descriptor.pinDistance);
@@ -111,14 +117,6 @@ public class ElectricalMathRender extends SixNodeElementRender {
     @Nullable
     @Override
     public CableRenderDescriptor getCableRender(@NotNull LRDU lrdu) {
-        if (lrdu == front) return Eln.instance.signalCableDescriptor.render;
-
-        ElectricalMathElement element = (ElectricalMathElement) ((SixNode) this.tileEntity.getNode()).getElement(this.side);
-        for (int i : element.sideConnectionMask) {
-            if (lrdu == front.left()) return i > 1 ? Eln.instance.highVoltageCableDescriptor.render : Eln.instance.signalCableDescriptor.render;
-            else if (lrdu == front.inverse() ) return i > 1 ? Eln.instance.highVoltageCableDescriptor.render : Eln.instance.signalCableDescriptor.render;
-            else if (lrdu == front.right() ) return i > 1 ? Eln.instance.highVoltageCableDescriptor.render : Eln.instance.signalCableDescriptor.render;
-        }
         return Eln.instance.signalCableDescriptor.render;
     }
 }
