@@ -12,6 +12,7 @@ import mods.eln.node.six.SixNodeDescriptor;
 import mods.eln.node.six.SixNodeElement;
 import mods.eln.sim.ElectricalConnection;
 import mods.eln.sim.ElectricalLoad;
+import mods.eln.sim.IProcess;
 import mods.eln.sim.mna.component.Resistor;
 import mods.eln.sim.mna.misc.MnaConst;
 import mods.eln.sim.nbt.NbtElectricalGateInput;
@@ -19,19 +20,65 @@ import mods.eln.sim.nbt.NbtElectricalLoad;
 import mods.eln.sim.process.destruct.VoltageStateWatchDog;
 import mods.eln.sim.process.destruct.WorldExplosion;
 import mods.eln.sixnode.electricalcable.ElectricalSignalBusCableElement;
+import mods.eln.solver.ISymbole;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
 public class AdvancedElectricalMathElement extends ElectricalMathElement {
 
+    class APLCProcess implements IProcess {
+
+        @Override
+        public void process(double time) {
+            lastU = powerLoad.getU();
+            double vDelta = lastU - NOMINAL_V;
+            boolean oldPower = isPowered;
+
+            if (lastU <= MIN_V){
+                gateOutputProcess.setU(0);
+                isPowered = false;
+            }
+            else if (Math.abs(vDelta) >= 10){
+                if (vDelta > 0){
+                    gateOutputProcess.setU(gateOutputProcess.getU() * (1+ (Math.pow(Math.abs(lastU - NOMINAL_V), 1.1))/lastU));
+                } else {
+                    gateOutputProcess.setU(gateOutputProcess.getU() * (1- (Math.pow(Math.abs(lastU - NOMINAL_V), 1.1))/lastU));
+                }
+                isPowered = true;
+            }
+
+            if (oldPower != isPowered) {
+                redstoneReady = isPowered;
+                needPublish();
+            }
+            updatePowerUse();
+        }
+    }
+
+    private static final double wattsStandBy = 10f;
+    private static final double wattsPerRedstone = 5f;
+    private static final double wattsPerVoltageOutPut = 3.125f;
+
     final NbtElectricalGateInput[][] gateInput = new NbtElectricalGateInput[2][16];
     final NbtElectricalLoad powerLoad = new NbtElectricalLoad("powerLoad");
     final Resistor powerResistor = new Resistor(powerLoad, null);
+
+    boolean isPowered = true;
+    double lastU;
+    double powerNeeded = 0;
+
     VoltageStateWatchDog voltageWatchdog = new VoltageStateWatchDog();
+    APLCProcess process = new APLCProcess();
+
+    //todo TRANSFER TO THE DESCRIPTORCLASS;
+    private static final double NOMINAL_V = 50f;
+    private static final double MIN_V = 30f;
 
     /**
      *
@@ -55,36 +102,18 @@ public class AdvancedElectricalMathElement extends ElectricalMathElement {
 
         electricalLoadList.add(powerLoad);
         electricalComponentList.add(powerResistor);
+        electricalProcessList.add(process);
+
         powerLoad.setRs(MnaConst.noImpedance);
-        powerResistor.setR(2500f / 120f);
 
-        slowProcessList.add(time -> voltageWatchdog.set(powerLoad).setUNominal(50).set(new WorldExplosion(this).machineExplosion()));
+        VoltageStateWatchDog watchDog = new VoltageStateWatchDog();
+        watchDog.set(powerLoad);
+        watchDog.setUNominal(NOMINAL_V);
+        watchDog.setUMaxMin(70);
+        watchDog.set(new WorldExplosion(this).cableExplosion());
+        slowProcessList.add(watchDog);
 
-        for (int j = 0; j < gateInput.length; j++) {
-            NbtElectricalGateInput[] busSide = gateInput[j];
-
-            for (int i = 0; i <= 0xF; i++) {
-                String signature = String.valueOf((char) (65 + j)) + i;
-
-                NbtElectricalGateInput nbtBustInput = new NbtElectricalGateInput(("gate" + signature));
-
-                symboleList.add(new GateInputSymbol(signature, nbtBustInput));
-                electricalLoadList.add(nbtBustInput);
-                busSide[i] = nbtBustInput;
-            }
-        }
-    }
-
-    @Override
-    public void networkSerialize(DataOutputStream stream) {
-        super.networkSerialize(stream);
-        try {
-            stream.writeInt(sideConnectionMask[0]);
-            stream.writeInt(sideConnectionMask[1]);
-        } catch (Exception e){
-            e.printStackTrace();
-        }
-
+        clearAndAddSymbols();
     }
 
     @Override
@@ -94,19 +123,44 @@ public class AdvancedElectricalMathElement extends ElectricalMathElement {
         for (int idx = 0; idx < 2; idx++) {
             int colorCode = 0;
 
-            //Default A,B,C Symbols
+            //Default A,B Symbols
             if (equation.isSymboleUsed(symboleList.get(idx)))
                 colorCode = 1;
 
-            //SignalBust Symbols, A0, A1, A2, B4, C12...
+            //SignalBust Symbols, A0, A1, B2, B4,...
             for (int i = 0; i <= 0xF; i++) {
-                if (equation.isSymboleUsed(symboleList.get(i + (idx*16) + 4))) {
+                if (equation.isSymboleUsed(symboleList.get(i + (idx*16) + 3))) {
                     colorCode |= (1 << i);
                 }
             }
 
             sideConnectionMask[idx] = colorCode;
         }
+
+        powerNeeded = 0;
+        powerNeeded += wattsStandBy;
+        powerNeeded += redstoneRequired * wattsPerRedstone;
+        redstoneReady = true;
+        isPowered = true;
+    }
+
+    void updatePowerUse(){
+        if (isPowered) {
+            powerResistor.setR((lastU * lastU) / powerNeeded);
+        } else {
+            powerResistor.setR(MnaConst.highImpedance);
+        }
+
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream(64);
+        DataOutputStream stream = new DataOutputStream(outputStream);
+
+        this.preparePacketForClient(stream);
+        try {
+            stream.writeBoolean(isPowered);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        this.sendPacketToAllClient(outputStream);
     }
 
     @Override
@@ -166,6 +220,44 @@ public class AdvancedElectricalMathElement extends ElectricalMathElement {
         if (lrdu == front.right() && sideConnectionMask[0] != 0) return Node.maskElectricalInputGate;
         return 0;
     }
+
+    @Override
+    public void networkSerialize(DataOutputStream stream) {
+        super.networkSerialize(stream);
+        try {
+            stream.writeInt(sideConnectionMask[0]);
+            stream.writeInt(sideConnectionMask[1]);
+            stream.writeBoolean(isPowered);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+
+    }
+
+    private void clearAndAddSymbols(){
+        symboleList.clear();
+
+        for (int j = 0; j < gateInput.length; j++) {
+            NbtElectricalGateInput[] busSide = gateInput[j];
+
+            for (int i = 0; i <= 0xF; i++) {
+                String signature = String.valueOf((char) (65 + j)) + i;
+
+                NbtElectricalGateInput nbtBustInput = new NbtElectricalGateInput(("gate" + signature));
+
+                symboleList.add(new GateInputSymbol(signature, nbtBustInput));
+                electricalLoadList.add(nbtBustInput);
+                busSide[i] = nbtBustInput;
+            }
+        }
+
+        symboleList.addAll(0, Arrays.asList(
+            new GateInputSymbol("A", gateInput[0][0]),
+            new GateInputSymbol("B", gateInput[1][0]),
+            new DayTime())
+        );
+    }
+
 
     public String[] getConnectionsVoltage(){
         String[] s = new String[2];

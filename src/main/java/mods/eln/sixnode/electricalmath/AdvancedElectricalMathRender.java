@@ -5,8 +5,6 @@ import mods.eln.cable.CableRenderDescriptor;
 import mods.eln.misc.Direction;
 import mods.eln.misc.LRDU;
 import mods.eln.misc.UtilsClient;
-import mods.eln.node.Node;
-import mods.eln.node.six.SixNode;
 import mods.eln.node.six.SixNodeDescriptor;
 import mods.eln.node.six.SixNodeEntity;
 import org.jetbrains.annotations.NotNull;
@@ -14,12 +12,14 @@ import org.jetbrains.annotations.Nullable;
 import org.lwjgl.opengl.GL11;
 
 import java.io.DataInputStream;
+import java.io.IOException;
 import java.util.Arrays;
 
 
 public class AdvancedElectricalMathRender extends ElectricalMathRender{
 
     int[] sideConnectionMask = new int[2];
+    boolean isPowered = false;
 
     public AdvancedElectricalMathRender(SixNodeEntity tileEntity, Direction side, SixNodeDescriptor descriptor) {
         super(tileEntity, side, descriptor);
@@ -68,14 +68,38 @@ public class AdvancedElectricalMathRender extends ElectricalMathRender{
     }
 
     @Override
+    public void refresh(float deltaT) {
+        if (isPowered) {
+            super.refresh(deltaT);
+        }
+    }
+
+    private void switchLedsPower(boolean isOn){
+        if (isOn) {
+            ledOn[0] = true;
+            ledOn[4] = true;
+        } else {
+            Arrays.fill(ledOn, false);
+        }
+    }
+
+    @Override
     public void publishUnserialize(DataInputStream stream) {
         super.publishUnserialize(stream);
         try {
             sideConnectionMask[0] = stream.readInt();
             sideConnectionMask[1] = stream.readInt();
+            isPowered = stream.readBoolean();
         }catch (Exception e){
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void serverPacketUnserialize(@Nullable DataInputStream stream) throws IOException {
+        super.serverPacketUnserialize(stream);
+        isPowered = stream.readBoolean();
+        switchLedsPower(isPowered);
     }
 
     //todo rewrite that, all sides is relative from A side.
