@@ -6,9 +6,11 @@ import mods.eln.misc.Direction;
 import mods.eln.misc.LRDU;
 import mods.eln.misc.Utils;
 import mods.eln.node.Node;
+import mods.eln.node.NodeConnection;
 import mods.eln.node.six.SixNode;
 import mods.eln.node.six.SixNodeDescriptor;
 import mods.eln.node.six.SixNodeElement;
+import mods.eln.sim.ElectricalConnection;
 import mods.eln.sim.ElectricalLoad;
 import mods.eln.sim.mna.component.Resistor;
 import mods.eln.sim.mna.misc.MnaConst;
@@ -18,7 +20,9 @@ import mods.eln.sim.process.destruct.VoltageStateWatchDog;
 import mods.eln.sim.process.destruct.WorldExplosion;
 import mods.eln.sixnode.electricalcable.ElectricalSignalBusCableElement;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
+import java.io.DataOutputStream;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -72,6 +76,18 @@ public class AdvancedElectricalMathElement extends ElectricalMathElement {
     }
 
     @Override
+    public void networkSerialize(DataOutputStream stream) {
+        super.networkSerialize(stream);
+        try {
+            stream.writeInt(sideConnectionMask[0]);
+            stream.writeInt(sideConnectionMask[1]);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+
+    }
+
+    @Override
     void preProcessEquation(String expression) {
         super.preProcessEquation(expression);
 
@@ -93,7 +109,6 @@ public class AdvancedElectricalMathElement extends ElectricalMathElement {
         }
     }
 
-    /*
     @Override
     public void newConnectionAt(@Nullable NodeConnection connection, boolean isA) {
         SixNodeElement e1 = ((SixNode) connection.getN1()).getElement(connection.getDir1().applyLRDU(connection.getLrdu1()));
@@ -133,8 +148,6 @@ public class AdvancedElectricalMathElement extends ElectricalMathElement {
 
         }
     }
-
-     */
 
     @Override
     public ElectricalLoad getElectricalLoad(LRDU lrdu, int mask) {

@@ -341,6 +341,14 @@ public class CableRender {
         return connectionTypeBuild;
     }
 
+    public static CableRenderType connectionType(SixNodeElementRender element, Direction side, float[] centerOffSet){
+        CableRenderType renderType = connectionType(element, side);
+        for (int i = 0; i < renderType.startAt.length; i++) {
+            renderType.startAt[i] += centerOffSet[i];
+        }
+        return renderType;
+    }
+
     public static void drawCable(CableRenderDescriptor cable, LRDUMask connection, CableRenderType connectionType) {
         drawCable(cable, connection, connectionType, cable.widthDiv2 / 2f);
     }

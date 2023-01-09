@@ -18,8 +18,6 @@ public class ElectricalMathRender extends SixNodeElementRender {
     ElectricalMathDescriptor descriptor;
     Coordinate coord;
     PhysicalInterpolator interpolator;
-    /** only a scape to don't draw the PLC Pins **/
-    boolean isDrawingPins = true;
 
     SixNodeElementInventory inventory = new SixNodeElementInventory(1, 64, this);
 
@@ -61,8 +59,7 @@ public class ElectricalMathRender extends SixNodeElementRender {
     @Override
     public void draw() {
         super.draw();
-        if (isDrawingPins)
-            drawPins();
+        drawPins();
     }
 
     public void drawPins(){

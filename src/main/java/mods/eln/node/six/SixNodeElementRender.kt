@@ -69,6 +69,7 @@ abstract class SixNodeElementRender(@JvmField open var tileEntity: SixNodeEntity
 
     var needRedraw = false
     open fun newConnectionType(connectionType: CableRenderType?) {}
+
     open fun drawCables() {
         for (idx in 0..3) {
             val render = getCableRender(fromInt(idx))
@@ -80,6 +81,25 @@ abstract class SixNodeElementRender(@JvmField open var tileEntity: SixNodeEntity
                 cableListReady[idx] = true
             }
         }
+    }
+
+    open fun drawOffCenter(faces: Array<LRDU>?, floats: FloatArray){
+        if (needRedraw) {
+            needRedraw = false
+            connectionType = CableRender.connectionType(this, side, floats)
+            newConnectionType(connectionType)
+            if (drawCableAuto()) {
+                drawCables()
+            }
+        }
+        for (idx in 0..3) {
+            setGlColorFromDye(connectionType!!.otherdry[idx])
+            if (cableListReady[idx]) {
+                bindTexture(getCableRender(fromInt(idx))!!.cableTexture)
+                GL11.glCallList(cableList[idx])
+            }
+        }
+        GL11.glColor3f(1f, 1f, 1f)
     }
 
     open fun draw() {
