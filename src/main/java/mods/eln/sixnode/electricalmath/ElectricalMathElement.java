@@ -77,7 +77,7 @@ public class ElectricalMathElement extends SixNodeElement implements IConfigurab
         symboleList.add(new DayTime());
     }
 
-    class GateInputSymbol implements ISymbole {
+    static class GateInputSymbol implements ISymbole {
         private String name;
         private NbtElectricalGateInput gate;
 

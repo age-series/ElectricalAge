@@ -3,7 +3,10 @@ package mods.eln.sixnode.electricalmath;
 import mods.eln.Eln;
 import mods.eln.cable.CableRenderDescriptor;
 import mods.eln.misc.*;
-import mods.eln.node.six.*;
+import mods.eln.node.six.SixNodeDescriptor;
+import mods.eln.node.six.SixNodeElementInventory;
+import mods.eln.node.six.SixNodeElementRender;
+import mods.eln.node.six.SixNodeEntity;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import org.jetbrains.annotations.NotNull;
@@ -59,10 +62,7 @@ public class ElectricalMathRender extends SixNodeElementRender {
     @Override
     public void draw() {
         super.draw();
-        drawPins();
-    }
 
-    public void drawPins(){
         float[] pinDistances = null;
         if (side.isY()) {
             pinDistances = front.rotate4PinDistances(descriptor.pinDistance);

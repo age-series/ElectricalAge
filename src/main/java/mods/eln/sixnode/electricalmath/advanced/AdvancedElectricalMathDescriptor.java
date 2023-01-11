@@ -1,15 +1,14 @@
-package mods.eln.sixnode.electricalmath;
+package mods.eln.sixnode.electricalmath.advanced;
 
 import mods.eln.gui.GuiLabel;
 import mods.eln.misc.Obj3D;
 import mods.eln.misc.Obj3D.Obj3DPart;
 import mods.eln.misc.Utils;
-import mods.eln.misc.UtilsClient;
 import mods.eln.misc.VoltageLevelColor;
 import mods.eln.node.six.SixNodeDescriptor;
 import mods.eln.wiki.Data;
 import mods.eln.wiki.GuiVerticalExtender;
-import mods.eln.wiki.ItemDefault.IPlugIn;
+import mods.eln.wiki.ItemDefault;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -20,20 +19,16 @@ import java.util.List;
 
 import static mods.eln.i18n.I18N.tr;
 
-public class ElectricalMathDescriptor extends SixNodeDescriptor implements IPlugIn {
-
-    public float[] pinDistance;
+public class AdvancedElectricalMathDescriptor extends SixNodeDescriptor implements ItemDefault.IPlugIn {
 
     Obj3D obj;
     Obj3DPart main, door;
-    Obj3DPart led[] = new Obj3DPart[8];
-
+    Led[] advanced_leds = new Led[8];
+    public float[] pinDistance;
     float alphaOff;
 
-    static final boolean[] ledDefault = {true, false, true, false, true, true, true, false};
-
-    public ElectricalMathDescriptor(String name, Obj3D obj) {
-        super(name, ElectricalMathElement.class, ElectricalMathRender.class);
+    public AdvancedElectricalMathDescriptor(String name, Obj3D obj) {
+        super(name, AdvancedElectricalMathElement.class, AdvancedElectricalMathRender.class);
         this.obj = obj;
         if (obj != null) {
             main = obj.getPart("main");
@@ -42,10 +37,11 @@ public class ElectricalMathDescriptor extends SixNodeDescriptor implements IPlug
                 alphaOff = door.getFloat("alphaOff");
             }
             for (int idx = 0; idx < 8; idx++) {
-                led[idx] = obj.getPart("led" + idx);
+                advanced_leds[idx] = new Led(obj.getPart("led" + idx));
             }
 
             pinDistance = Utils.getSixNodePinDistance(main);
+            pinDistance[2] -= 1;
         }
 
         voltageLevelColor = VoltageLevelColor.SignalVoltage;
@@ -57,25 +53,15 @@ public class ElectricalMathDescriptor extends SixNodeDescriptor implements IPlug
         Data.addSignal(newItemStack());
     }
 
-    void draw(float open, boolean ledOn[]) {
+    void draw(float open) {
         if (main != null) main.draw();
         if (door != null) door.draw((1f - open) * alphaOff, 0f, 1f, 0f);
 
-        for (int idx = 0; idx < 8; idx++) {
-            if (ledOn[idx]) {
-                if ((idx & 3) == 0)
-                    GL11.glColor3f(0.8f, 0f, 0f);
-                else
-                    GL11.glColor3f(0f, 0.8f, 0f);
-                UtilsClient.drawLight(led[idx]);
-            } else {
-                GL11.glColor3f(0.3f, 0.3f, 0.3f);
-                led[idx].draw();
-            }
+        for (Led advancedLed : advanced_leds) {
+            advancedLed.draw();
         }
     }
 
-    @Override
     public boolean shouldUseRenderHelper(ItemRenderType type, ItemStack item, ItemRendererHelper helper) {
         return type != ItemRenderType.INVENTORY;
     }
@@ -97,14 +83,14 @@ public class ElectricalMathDescriptor extends SixNodeDescriptor implements IPlug
         } else {
             GL11.glTranslatef(-0.3f, -0.1f, 0f);
             GL11.glRotatef(90, 1, 0, 0);
-            draw(0.7f, ledDefault);
+            draw(0.7f);
         }
     }
 
     @Override
     public void addInformation(ItemStack itemStack, EntityPlayer entityPlayer, List list, boolean par4) {
         super.addInformation(itemStack, entityPlayer, list, par4);
-        Collections.addAll(list, tr("Calculates an output signal from\n3 inputs (A, B, C) using an equation.").split("\n"));
+        Collections.addAll(list, tr("Calculates 16 output signal from\n32 inputs signal (A0, A1 ... A15, B0, B1 ... B15)\n using connections with signal bus cables.").split("\n"));
     }
 
     @Override
@@ -153,17 +139,6 @@ public class ElectricalMathDescriptor extends SixNodeDescriptor implements IPlug
         y += 9;
 
         y += 9;
-//		list.add(new OperatorMapperFunc("sin", 1, Sin.class));
-//		list.add(new OperatorMapperFunc("cos", 1, Cos.class));
-//		list.add(new OperatorMapperFunc("abs", 1, Abs.class));
-//		list.add(new OperatorMapperFunc("ramp", 1, Ramp.class));
-//		list.add(new OperatorMapperFunc("integrate", 2, Integrator.class));
-//		list.add(new OperatorMapperFunc("integrate", 3, IntegratorMinMax.class));
-//		list.add(new OperatorMapperFunc("derivate", 1, Derivator.class));
-//		list.add(new OperatorMapperFunc("pid", 5, Pid.class));
-//		list.add(new OperatorMapperFunc("batteryCharge", 1, BatteryCharge.class));
-//		list.add(new OperatorMapperFunc("rs", 2, Rs.class));
-//		list.add(new OperatorMapperFunc("rc", 2, RC.class));
         return y;
     }
 
