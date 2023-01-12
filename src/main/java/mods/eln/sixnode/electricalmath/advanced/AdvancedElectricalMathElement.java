@@ -73,7 +73,7 @@ public class AdvancedElectricalMathElement extends SixNodeElement implements ICo
     class APLC_GateProcess implements IProcess {
         @Override
         public void process(double time) {
-            double vDelta = lastU - NOMINAL_V;
+            double vDelta = lastU - nominalU;
             lastU = powerLoad.getU();
             boolean lastPowered = isPowered;
             short lastStatus = isOverORUnderVoltage;
@@ -86,10 +86,10 @@ public class AdvancedElectricalMathElement extends SixNodeElement implements ICo
                 double mult = 1;
                 if (Math.abs(vDelta) >= 10) {
                     if (vDelta > 0) {
-                        mult = 1 + (Math.pow(Math.abs(lastU - NOMINAL_V), 1.28)) / NOMINAL_V;
+                        mult = 1 + (Math.pow(Math.abs(lastU - nominalU), 1.28)) / nominalU;
                         isOverORUnderVoltage = 1;
                     } else {
-                        mult = 1 - (Math.pow(Math.abs(lastU - NOMINAL_V), 1.2)) / NOMINAL_V;
+                        mult = 1 - (Math.pow(Math.abs(lastU - nominalU), 1.2)) / nominalU;
                         isOverORUnderVoltage = -1;
                     }
                 } else {
@@ -97,7 +97,7 @@ public class AdvancedElectricalMathElement extends SixNodeElement implements ICo
                 }
 
                 for (Gate gate : gates) {
-                    gate.updateValue(mult);
+                    gate.updateValue(mult, time);
                 }
             }
 
@@ -128,7 +128,9 @@ public class AdvancedElectricalMathElement extends SixNodeElement implements ICo
     //power
     public static final double wattsStandBy = 10f;
     public static final double wattsPerRedstone = 5f;
-    public static final double wattsPerVoltageOutPut = 3.125f;
+    public static final double wattsPerVoltageOutPut = 7.5f;
+    public static final double nominalU = Eln.instance.lowVoltageCableDescriptor.electricalNominalVoltage;
+    public static final double MIN_V = 30f;
 
     //sim and connections
     /**
@@ -171,8 +173,6 @@ public class AdvancedElectricalMathElement extends SixNodeElement implements ICo
      * -1 to under voltage
      */
     short isOverORUnderVoltage = 0;
-    private static final double NOMINAL_V = Eln.instance.lowVoltageCableDescriptor.electricalNominalVoltage;
-    private static final double MIN_V = Eln.instance.lowVoltageCableDescriptor.electricalNominalVoltage * 0.8f;
 
     public AdvancedElectricalMathElement(SixNode sixNode, Direction side, SixNodeDescriptor descriptor) {
         super(sixNode, side, descriptor);
@@ -183,7 +183,7 @@ public class AdvancedElectricalMathElement extends SixNodeElement implements ICo
         powerLoad.setRs(MnaConst.noImpedance);
         powerResistor.setR(MnaConst.highImpedance);
 
-        slowProcessList.add(new VoltageStateWatchDog().set(powerLoad).setUNominal(NOMINAL_V).setUMaxMin(70).set(new WorldExplosion(this).cableExplosion()));
+        slowProcessList.add(new VoltageStateWatchDog().set(powerLoad).setUNominal(nominalU).setUMaxMin(70).set(new WorldExplosion(this).cableExplosion()));
         electricalProcessList.add(process);
 
         initOutput();
@@ -203,7 +203,7 @@ public class AdvancedElectricalMathElement extends SixNodeElement implements ICo
         if (expression.equals("")) {
             if (selectedGate != null) {
                 gates.remove(selectedGate);
-                selectedGate.updateValue(0);
+                selectedGate.updateValue(0,1/20f);
                 selectedGate.pushOutput();
                 flushConnectionMask();
             }
@@ -236,13 +236,18 @@ public class AdvancedElectricalMathElement extends SixNodeElement implements ICo
             powerNeeded += wattsPerVoltageOutPut;
             powerNeeded += gate.powerToOperate;
         }
+        reconnect();
     }
 
     private void updatePowerUse(){
+        if (lastU <= 0.5){
+            powerResistor.setR(MnaConst.highImpedance);
+            return;
+        }
         if (isPowered) {
             powerResistor.setR((lastU * lastU) / powerNeeded);
         } else {
-            powerResistor.setR(MnaConst.highImpedance);
+            powerResistor.setR((lastU * lastU) / wattsStandBy);
         }
     }
 
@@ -278,7 +283,7 @@ public class AdvancedElectricalMathElement extends SixNodeElement implements ICo
             for (int i = 0; i <= 0xF; i++) {
                 if (mask == 0) break;
 
-                if ((mask | (1 << i)) != 0){
+                if ((mask & (1 << i)) != 0){
                     ElectricalConnection c1 = new ElectricalConnection(cable.getColoredElectricalLoads()[i], nbtLoad[i]);
                     Eln.simulator.addElectricalComponent(c1);
                     connection.addConnection(c1);

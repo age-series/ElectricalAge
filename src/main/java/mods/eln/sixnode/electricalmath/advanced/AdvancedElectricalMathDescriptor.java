@@ -1,5 +1,6 @@
 package mods.eln.sixnode.electricalmath.advanced;
 
+import mods.eln.Eln;
 import mods.eln.gui.GuiLabel;
 import mods.eln.misc.Obj3D;
 import mods.eln.misc.Obj3D.Obj3DPart;
@@ -12,12 +13,18 @@ import mods.eln.wiki.ItemDefault;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import org.jetbrains.annotations.NotNull;
 import org.lwjgl.opengl.GL11;
 
 import java.util.Collections;
 import java.util.List;
 
 import static mods.eln.i18n.I18N.tr;
+import static mods.eln.sixnode.electricalmath.advanced.AdvancedElectricalMathElement.nominalU;
+import static mods.eln.sixnode.electricalmath.advanced.AdvancedElectricalMathElement.wattsStandBy;
+import static mods.eln.sixnode.electricalmath.advanced.AdvancedElectricalMathElement.wattsPerRedstone;
+import static mods.eln.sixnode.electricalmath.advanced.AdvancedElectricalMathElement.wattsPerVoltageOutPut;
+
 
 public class AdvancedElectricalMathDescriptor extends SixNodeDescriptor implements ItemDefault.IPlugIn {
 
@@ -43,7 +50,6 @@ public class AdvancedElectricalMathDescriptor extends SixNodeDescriptor implemen
             pinDistance = Utils.getSixNodePinDistance(main);
             pinDistance[2] -= 1;
         }
-
         voltageLevelColor = VoltageLevelColor.SignalVoltage;
     }
 
@@ -77,7 +83,7 @@ public class AdvancedElectricalMathDescriptor extends SixNodeDescriptor implemen
     }
 
     @Override
-    public void renderItem(ItemRenderType type, ItemStack item, Object... data) {
+    public void renderItem(@NotNull ItemRenderType type, @NotNull ItemStack item, @NotNull Object... data) {
         if (type == ItemRenderType.INVENTORY) {
             super.renderItem(type, item, data);
         } else {
@@ -88,9 +94,15 @@ public class AdvancedElectricalMathDescriptor extends SixNodeDescriptor implemen
     }
 
     @Override
-    public void addInformation(ItemStack itemStack, EntityPlayer entityPlayer, List list, boolean par4) {
+    public void addInformation(ItemStack itemStack, EntityPlayer entityPlayer, List<String> list, boolean par4) {
         super.addInformation(itemStack, entityPlayer, list, par4);
-        Collections.addAll(list, tr("Calculates 16 output signal from\n32 inputs signal (A0, A1 ... A15, B0, B1 ... B15)\n using connections with signal bus cables.").split("\n"));
+        list.add("Calculates 16 output signal from");
+        list.add("32 inputs signal (A0, A1 ... A15, B0, B1 ... B15)");
+        list.add("using connections with signal bus cables.");
+        list.add("Nominal voltage: " + Utils.plotValue(nominalU) + "~10V");
+        list.add(Utils.plotPower("StandBy power:", wattsStandBy));
+        list.add(Utils.plotPower("Power per operation:", wattsPerRedstone));
+        list.add(Utils.plotPower("Power per output:", wattsPerVoltageOutPut));
     }
 
     @Override

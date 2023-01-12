@@ -104,7 +104,7 @@ public class Gate {
         this.process.setOutputNormalized(value);
     }
 
-    public void updateValue(double mult){
-        value = equation.getValue() * mult;
+    public void updateValue(double mult,double dt){
+        value = equation.getValue(dt) * mult;
     }
 }

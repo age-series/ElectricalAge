@@ -15,6 +15,7 @@ import org.lwjgl.opengl.GL11;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 
@@ -43,8 +44,8 @@ public class AdvancedElectricalMathRender extends SixNodeElementRender {
 
     @Override
     public void draw() {
-        float[] pinDistances;
-        pinDistances = side.isY() ? front.rotate4PinDistances(descriptor.pinDistance) :  descriptor.pinDistance;
+        float[] pins = Arrays.copyOf(descriptor.pinDistance,4);
+        pins = side.isY() ? front.rotate4PinDistances(pins) :  pins;
 
         float busWidth = Eln.instance.signalBusCableDescriptor.render.width * 12;
         float busHeight = Eln.instance.signalBusCableDescriptor.render.height * 12;
@@ -54,22 +55,22 @@ public class AdvancedElectricalMathRender extends SixNodeElementRender {
 
         if (UtilsClient.distanceFromClientPlayer(tileEntity) < 15) {
             GL11.glColor3f(0, 0, 0);
-            UtilsClient.drawConnectionPinSixNode(front, pinDistances, busWidth, busHeight);
+            UtilsClient.drawConnectionPinSixNode(front, pins, busWidth, busHeight);
             GL11.glColor3f(0, 0, 0);
-            UtilsClient.drawConnectionPinSixNode(front.inverse(), pinDistances, powerWidth, powerHeight);
+            UtilsClient.drawConnectionPinSixNode(front.inverse(), pins, powerWidth, powerHeight);
             GL11.glColor3f(1, 0, 0);
-            UtilsClient.drawConnectionPinSixNode(front.right(), pinDistances, busWidth, busHeight);
+            UtilsClient.drawConnectionPinSixNode(front.right(), pins, busWidth, busHeight);
             GL11.glColor3f(0, 0, 1);
-            UtilsClient.drawConnectionPinSixNode(front.left(), pinDistances, busWidth, busHeight);
+            UtilsClient.drawConnectionPinSixNode(front.left(), pins, busWidth, busHeight);
             GL11.glColor3f(1, 1, 1);
         }
 
         //draw Cables offCenter
         {
-            for (int i = 0; i < pinDistances.length; i++) {
-                pinDistances[i] /= 16;
+            for (int i = 0; i < pins.length; i++) {
+                pins[i] /= 16f;
             }
-            drawOffCenter(null, pinDistances);
+            drawOffCenter(null, pins);
         }
 
         if (side.isY()) {
