@@ -60,7 +60,7 @@ public class AdvancedElectricalMathRender extends SixNodeElementRender {
             UtilsClient.drawConnectionPinSixNode(front.inverse(), pins, powerWidth, powerHeight);
             GL11.glColor3f(1, 0, 0);
             UtilsClient.drawConnectionPinSixNode(front.right(), pins, busWidth, busHeight);
-            GL11.glColor3f(0, 0, 1);
+            GL11.glColor3f(0, 1, 0);
             UtilsClient.drawConnectionPinSixNode(front.left(), pins, busWidth, busHeight);
             GL11.glColor3f(1, 1, 1);
         }
