@@ -249,7 +249,7 @@ class MotorElement(node: TransparentNode, desc_: TransparentNodeDescriptor) :
                 E = E * 10.0
             }
             maybePublishP(E / time)
-            E = E - defaultDrag * Math.max(shaft.rads, 10.0)
+            E = E - defaultDrag * Math.max(shaft.rads, 1.0)
             shaft.energy += E * desc.efficiency
             thermal.movePowerTo(E * (1 - desc.efficiency))
         }

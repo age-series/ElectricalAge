@@ -15,7 +15,7 @@ import net.minecraft.nbt.NBTTagCompound
 import java.util.*
 
 // Speed above which shafts will (by default) explode.
-val absoluteMaximumShaftSpeed = 1000.0
+val absoluteMaximumShaftSpeed = 250.0
 // "Standard" drag, in J/t per rad.
 val defaultDrag = 0.02
 // Energy lost due to merging, proportional to *square* of delta speed ("friction")
@@ -23,7 +23,7 @@ val energyLostPerDeltaRad = 0.05
 
 // Would merging these two networks cause an explosion?
 fun wouldExplode(a: ShaftNetwork, b: ShaftNetwork): Boolean {
-    return Math.abs(a.rads - b.rads) > (250.0 - 0.1 * Math.max(a.rads, b.rads))
+    return Math.abs(a.rads - b.rads) > (50.0 - 0.1 * Math.max(a.rads, b.rads))
 }
 
 

@@ -228,7 +228,7 @@ class GeneratorElement(node: TransparentNode, desc_: TransparentNodeDescriptor) 
                 E *= 0.75  // Not a very efficient motor.
             maybePublishE(E / time)
             // The Math.max makes the shaft harder to spin up without an auxilliary power source.
-            E += defaultDrag * Math.max(shaft.rads, 10.0)
+            E += defaultDrag * Math.max(shaft.rads, 1.0)
             shaft.energy -= (E * desc.generationEfficiency)
             thermal.movePowerTo(E * (1 - desc.generationEfficiency))
         }

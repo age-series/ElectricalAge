@@ -48,7 +48,7 @@ open class TachometerElement(node: TransparentNode, desc_: TransparentNodeDescri
         val SetRangeEventId = 1
 
         val DefaultMinRads = 0.0f
-        val DefaultMaxRads = 1000f
+        val DefaultMaxRads = 2500f
     }
 
     override val shaftMass = 0.5

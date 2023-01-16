@@ -3067,7 +3067,7 @@ public class Eln {
 
         {
             subId = 10;
-            float nominalRads = 800, nominalU = 3200;
+            float nominalRads = 200, nominalU = 3200;
             float nominalP = 4000;
             GeneratorDescriptor desc = new GeneratorDescriptor(
                 TR_NAME(Type.NONE, "Generator"),
@@ -3130,7 +3130,7 @@ public class Eln {
         {
             subId = 16;
 
-            float nominalRads = 800, nominalU = 3200;
+            float nominalRads = 200, nominalU = 3200;
             float nominalP = 1200;
 
             MotorDescriptor desc = new MotorDescriptor(

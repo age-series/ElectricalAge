@@ -28,8 +28,8 @@ class FlyWheelElement(node: TransparentNode, desc_: TransparentNodeDescriptor) :
         val yTolerance = 1.0
         val xzTolerance = 0.5
         val minRads = 5.0
-        val velocityF = LinearFunction(0f, 0f, 1000f, 10f)
-        val damageF = LinearFunction(5f, 1f, 1000f, 10f)
+        val velocityF = LinearFunction(0f, 0f, 250f, 10f)
+        val damageF = LinearFunction(5f, 1f, 250f, 10f)
 
         var timer = 0.0
 
