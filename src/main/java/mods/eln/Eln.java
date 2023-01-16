@@ -3184,6 +3184,18 @@ public class Eln {
             desc.ghostGroup = g;
             transparentNodeItem.addDescriptor(subId + (id << 6), desc);
         }
+        {
+            subId = 20;
+            /*
+                Humans generate roughly 75-100 watts of power over time based on Wikipedia, peaking at 1,000 watts
+                for short periods of time if they are _really_ in shape (and using legs). Let's say 200 watts is good?
+             */
+            CrankableShaftDescriptor desc = new CrankableShaftDescriptor(
+                TR_NAME(Type.NONE, "Crank Shaft"),
+                obj.getObj("StraightJoint"),
+                20.0f, 200.0f);
+            transparentNodeItem.addDescriptor(subId + (id << 6), desc);
+        }
     }
 
     public ArrayList<ItemStack> furnaceList = new ArrayList<ItemStack>();

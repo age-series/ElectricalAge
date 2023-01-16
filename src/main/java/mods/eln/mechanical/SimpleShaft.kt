@@ -92,6 +92,9 @@ open class ShaftRender(entity: TransparentNodeEntity, desc: TransparentNodeDescr
             if (this.sample == "eln:FuelGenerator") {
                 return (rads / 250.0).toFloat()
             }
+            if (this.sample == "eln:generator") {
+                return Math.max(0.05, rads / absoluteMaximumShaftSpeed).toFloat() * 2.0f
+            }
             return Math.max(0.05, rads / absoluteMaximumShaftSpeed).toFloat()
         }
         override fun getVolume(): Float {
