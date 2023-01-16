@@ -176,7 +176,7 @@ abstract class TransparentNodeElement(@JvmField open var node: TransparentNode?,
             if (!node!!.isBlockOpaque(Direction.YP)) needDestroy = true
         }
         if (transparentNodeDescriptor.mustHaveWallFrontInverse()) {
-            if (!node!!.isBlockOpaque(front!!.inverse)) needDestroy = true
+            if (!node!!.isBlockOpaque(front.inverse)) needDestroy = true
         }
         if (transparentNodeDescriptor.mustHaveWall()) {
             var wall = false
@@ -296,7 +296,7 @@ abstract class TransparentNodeElement(@JvmField open var node: TransparentNode?,
         for (process in thermalFastProcessList) {
             if (process is INBTTReady) (process as INBTTReady).writeToNBT(nbt, "")
         }
-        nbt.setByte("others", (front!!.int + if (grounded) 8 else 0).toByte())
+        nbt.setByte("others", (front.int + if (grounded) 8 else 0).toByte())
     }
 
     override fun reconnect() {

@@ -87,8 +87,8 @@ open class TachometerElement(node: TransparentNode, desc_: TransparentNodeDescri
         val type = super.networkUnserialize(stream)
         when (type.toInt()) {
             SetRangeEventId -> {
-                minRads = stream.readFloat() ?: DefaultMinRads
-                maxRads = stream.readFloat() ?: DefaultMaxRads
+                minRads = stream.readFloat()
+                maxRads = stream.readFloat()
                 needPublish()
                 return unserializeNulldId
             }

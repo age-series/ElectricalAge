@@ -294,7 +294,7 @@ class SchmittTrigger : LogicFunction() {
     }
 
     override fun readFromNBT(nbt: NBTTagCompound, str: String) {
-        state = nbt.getBoolean(str + "state") ?: false
+        state = nbt.getBoolean(str + "state")
     }
 
     override fun writeToNBT(nbt: NBTTagCompound, str: String) {
@@ -325,8 +325,8 @@ class Oscillator : LogicFunction() {
     )
 
     override fun readFromNBT(nbt: NBTTagCompound, str: String) {
-        ramp = nbt.getDouble(str + "ramp") ?: 0.0
-        state = nbt.getBoolean(str + "state") ?: false
+        ramp = nbt.getDouble(str + "ramp")
+        state = nbt.getBoolean(str + "state")
     }
 
     override fun writeToNBT(nbt: NBTTagCompound, str: String) {
@@ -405,7 +405,7 @@ class PalElement(node: SixNode, side: Direction, descriptor: SixNodeDescriptor) 
     override fun networkSerialize(stream: DataOutputStream) {
         super.networkSerialize(stream)
         try {
-            (function as Pal).truthTable.forEach { stream?.writeBoolean(it) }
+            (function as Pal).truthTable.forEach { stream.writeBoolean(it) }
         } catch (e: IOException) {
             e.printStackTrace()
         }
@@ -414,7 +414,7 @@ class PalElement(node: SixNode, side: Direction, descriptor: SixNodeDescriptor) 
     override fun networkUnserialize(stream: DataInputStream) {
         super.networkUnserialize(stream)
         try {
-            when (stream?.readByte()?.toInt()) {
+            when (stream.readByte().toInt()) {
                 TruthTablePositionClickedEvent -> {
                     val position = stream.readInt()
                     if (position in 0..7) {
@@ -442,7 +442,7 @@ class PalRender(entity: SixNodeEntity, side: Direction, descriptor: SixNodeDescr
         super.publishUnserialize(stream)
         try {
             for (i in 0..7) {
-                truthTable[i] = stream?.readBoolean() ?: false
+                truthTable[i] = stream.readBoolean()
             }
         } catch (e: IOException) {
             e.printStackTrace()
@@ -513,7 +513,7 @@ class Pal : LogicFunction() {
             ((inputs[2] ?: false) xor (inputs[1] ?: false)) * 1]
 
     override fun readFromNBT(nbt: NBTTagCompound, str: String) {
-        truthTable.fromInt(nbt.getInteger(str + "truthTable") ?: 0)
+        truthTable.fromInt(nbt.getInteger(str + "truthTable"))
     }
 
     override fun writeToNBT(nbt: NBTTagCompound, str: String) {

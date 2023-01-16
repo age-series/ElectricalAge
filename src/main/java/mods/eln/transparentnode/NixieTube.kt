@@ -25,7 +25,7 @@ class NixieTubeDescriptor(val name: String, val obj: Obj3D) : TransparentNodeDes
     val base = obj.getPart("base")
     val tube = obj.getPart("tube")
 
-    val pinDistance = Utils.getSixNodePinDistance(base)!!
+    val pinDistance = Utils.getSixNodePinDistance(base)
 
     init {
         voltageLevelColor = VoltageLevelColor.Neutral

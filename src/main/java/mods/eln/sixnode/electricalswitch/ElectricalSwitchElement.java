@@ -119,23 +119,7 @@ public class ElectricalSwitchElement extends SixNodeElement {
         if (Eln.wailaEasyMode) {
             info.put(I18N.tr("Voltages"), Utils.plotVolt("", aLoad.getU()) + Utils.plotVolt(" ", bLoad.getU()));
         }
-
-        try {
-            int subSystemSize = switchResistor.getSubSystem().component.size();
-            String textColor = "";
-            if (subSystemSize <= 8) {
-                textColor = "§a";
-            } else if (subSystemSize <= 15) {
-                textColor = "§6";
-            } else {
-                textColor = "§c";
-            }
-            info.put(I18N.tr("Subsystem Matrix Size: "), textColor + subSystemSize);
-
-
-        } catch (Exception e) {
-            info.put(I18N.tr("Subsystem Matrix Size: "), "§cNot part of a subsystem!?");
-        }
+        info.put(I18N.tr("Subsystem Matrix Size"), Utils.renderSubSystemWaila(switchResistor.getSubSystem()));
 
         return info;
     }

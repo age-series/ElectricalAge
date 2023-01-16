@@ -45,6 +45,7 @@ class TransparentNodeBlock(material: Material?, tileEntityClass: Class<*>?) : No
                 }
             }
         }
+        @Suppress("DEPRECATION")
         return super.removedByPlayer(world, entityPlayer, x, y, z)
     }
 

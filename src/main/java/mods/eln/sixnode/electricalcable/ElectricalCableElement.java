@@ -129,21 +129,7 @@ public class ElectricalCableElement extends SixNodeElement {
                 info.put(I18N.tr("Voltage"), Utils.plotVolt("", electricalLoad.getU()));
             }
         }
-        SubSystem ss = electricalLoad.getSubSystem();
-        if(ss != null) {
-            int subSystemSize = electricalLoad.getSubSystem().component.size();
-            String textColor = "";
-            if (subSystemSize <= 8) {
-                textColor = "§a";
-            } else if (subSystemSize <= 15) {
-                textColor = "§6";
-            } else {
-                textColor = "§c";
-            }
-            info.put(I18N.tr("Subsystem Matrix Size"), textColor + subSystemSize);
-        } else {
-            info.put(I18N.tr("Subsystem Matrix Size"), "§cnull SubSystem");
-        }
+        info.put(I18N.tr("Subsystem Matrix Size"), Utils.renderSubSystemWaila(electricalLoad.getSubSystem()));
         return info;
     }
 

@@ -16,6 +16,7 @@ import mods.eln.misc.Utils.plotPower
 import mods.eln.misc.Utils.plotUIP
 import mods.eln.misc.Utils.plotValue
 import mods.eln.misc.Utils.plotVolt
+import mods.eln.misc.Utils.renderSubSystemWaila
 import mods.eln.misc.Utils.setGlColorFromDye
 import mods.eln.misc.UtilsClient.bindTexture
 import mods.eln.misc.VoltageLevelColor
@@ -188,21 +189,7 @@ open class CurrentCableElement(sixNode: SixNode?, side: Direction?, descriptor: 
         if (Eln.wailaEasyMode) {
             info[I18N.tr("Voltage")] = plotVolt("", electricalLoad.u)
         }
-        val ss = electricalLoad.subSystem
-        if (ss != null) {
-            val subSystemSize = electricalLoad.subSystem.component.size
-            var textColor = ""
-            textColor = if (subSystemSize <= 8) {
-                "§a"
-            } else if (subSystemSize <= 15) {
-                "§6"
-            } else {
-                "§c"
-            }
-            info[I18N.tr("Subsystem Matrix Size")] = textColor + subSystemSize
-        } else {
-            info[I18N.tr("Subsystem Matrix Size")] = "§cnull SubSystem"
-        }
+        info[I18N.tr("Subsystem Matrix Size")] = renderSubSystemWaila(electricalLoad.subSystem)
         return info
     }
 
@@ -237,7 +224,6 @@ open class CurrentCableElement(sixNode: SixNode?, side: Direction?, descriptor: 
             addChatMessage(entityPlayer, "Wire color care $colorCare")
             sixNode!!.reconnect()
         } else if (currentItemStack != null) {
-            val item = currentItemStack.item
             val gen = getDescriptor(currentItemStack)
             if (gen is BrushDescriptor) {
                 val brush = gen

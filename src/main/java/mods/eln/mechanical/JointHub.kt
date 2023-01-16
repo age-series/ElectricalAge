@@ -68,12 +68,12 @@ class JointHubElement(node: TransparentNode, desc_: TransparentNodeDescriptor) :
     override val shaftConnectivity: Array<Direction>
         get() = arrayOf(Direction.XP, Direction.ZP, Direction.XN, Direction.ZN)
 
-    override fun connectedOnSide(direction: Direction, _net: ShaftNetwork) {
+    override fun connectedOnSide(direction: Direction, net: ShaftNetwork) {
         connectedSides.add(direction)
         needPublish()
     }
 
-    override fun disconnectedOnSide(direction: Direction, _net: ShaftNetwork?) {
+    override fun disconnectedOnSide(direction: Direction, net: ShaftNetwork?) {
         connectedSides.remove(direction)
         needPublish()
     }

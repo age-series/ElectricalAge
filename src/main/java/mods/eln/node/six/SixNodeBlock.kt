@@ -162,7 +162,7 @@ class SixNodeBlock  // public static ArrayList<Integer> repertoriedItemStackId =
         return false
     }
 
-    override fun onBlockPlacedBy(world: World, x: Int, y: Int, z: Int, direction: Direction?, entityLiving: EntityLivingBase?, metadata: Int): Boolean {
+    override fun onBlockPlacedBy(world: World, x: Int, y: Int, z: Int, front: Direction?, entityLiving: EntityLivingBase?, metadata: Int): Boolean {
         return true
     }
 
@@ -191,6 +191,7 @@ class SixNodeBlock  // public static ArrayList<Integer> repertoriedItemStackId =
             return false
         }
         if (false == sixNode.playerAskToBreakSubBlock(entityPlayer as EntityPlayerMP, fromIntMinecraftSide(MOP.sideHit)!!)) return false
+        @Suppress("DEPRECATION")
         return if (sixNode.ifSideRemain) true else super.removedByPlayer(world, entityPlayer, x, y, z)
     }
 
@@ -207,7 +208,7 @@ class SixNodeBlock  // public static ArrayList<Integer> repertoriedItemStackId =
         super.breakBlock(world, x, y, z, par5, par6)
     }
 
-    override fun onNeighborBlockChange(world: World, x: Int, y: Int, z: Int, par5: Block) {
+    override fun onNeighborBlockChange(world: World, x: Int, y: Int, z: Int, b: Block) {
         val tileEntity = world.getTileEntity(x, y, z) as SixNodeEntity
         val sixNode = tileEntity.node as SixNode? ?: return
         for (direction in Direction.values()) {
@@ -220,7 +221,7 @@ class SixNodeBlock  // public static ArrayList<Integer> repertoriedItemStackId =
         if (!sixNode.ifSideRemain) {
             world.setBlockToAir(x, y, z)
         } else {
-            super.onNeighborBlockChange(world, x, y, z, par5)
+            super.onNeighborBlockChange(world, x, y, z, b)
         }
     }
 

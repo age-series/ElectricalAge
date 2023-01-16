@@ -140,20 +140,7 @@ class BatteryElement(transparentNode: TransparentNode, descriptor: TransparentNo
             info[I18N.tr("Current")] = Utils.plotAmpere("", batteryProcess.dischargeCurrent)
             info[I18N.tr("Temperature")] = Utils.plotCelsius("", thermalLoad.Tc)
         }
-        val subSystemSize = positiveLoad.subSystem.component.size
-        var textColor = ""
-        textColor = when {
-            subSystemSize <= 8 -> {
-                "§a"
-            }
-            subSystemSize <= 15 -> {
-                "§6"
-            }
-            else -> {
-                "§c"
-            }
-        }
-        info[I18N.tr("Subsystem Matrix Size")] = textColor + subSystemSize
+        info[I18N.tr("Subsystem Matrix Size")] = Utils.renderSubSystemWaila(positiveLoad.subSystem)
         return info
     }
 

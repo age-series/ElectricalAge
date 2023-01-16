@@ -26,6 +26,7 @@ import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.util.AxisAlignedBB
 import mods.eln.generic.GenericItemUsingDamage
 import mods.eln.generic.GenericItemBlockUsingDamage
+import mods.eln.i18n.I18N
 import net.minecraft.creativetab.CreativeTabs
 import net.minecraftforge.oredict.OreDictionary
 import net.minecraft.util.Vec3
@@ -45,6 +46,7 @@ import kotlin.jvm.JvmOverloads
 import net.minecraft.item.crafting.FurnaceRecipes
 import java.io.FileInputStream
 import mods.eln.misc.Obj3D.Obj3DPart
+import mods.eln.sim.mna.SubSystem
 import net.minecraft.block.Block
 import net.minecraft.entity.Entity
 import net.minecraft.item.Item
@@ -1286,5 +1288,41 @@ object Utils {
             if (block == null) return 0f
             return if (block.isOpaqueCube) 1f else 0f
         }
+    }
+
+    @JvmStatic
+    fun renderSubSystemWaila(subSystem: SubSystem?): String {
+        return if (subSystem != null) {
+            val subSystemSize = subSystem.component.size
+            val textColor: String = if (subSystemSize <= 8) {
+                "§a"
+            } else if (subSystemSize <= 15) {
+                "§6"
+            } else {
+                "§c"
+            }
+            textColor + subSystemSize
+        } else {
+            "§cnull SubSystem"
+        }
+    }
+
+    @JvmStatic
+    fun renderDoubleSubsystemWaila(subSystemA: SubSystem?, subSystemB: SubSystem?): String {
+        val leftSubSystemSize = subSystemA?.component?.size?: -1
+        val rightSubSystemSize = subSystemB?.component?.size?: -1
+        val textColorLeft = when {
+            leftSubSystemSize <= 0 -> "null"
+            leftSubSystemSize <= 8 -> "§a"
+            leftSubSystemSize <= 15 -> "§6"
+            else -> "§c"
+        }
+        val textColorRight = when {
+            rightSubSystemSize <= 0 -> "null"
+            rightSubSystemSize <= 8 -> "§a"
+            rightSubSystemSize <= 15 -> "§6"
+            else -> "§c"
+        }
+        return "$textColorLeft$leftSubSystemSize §r| $textColorRight$rightSubSystemSize"
     }
 }

@@ -18,7 +18,6 @@ import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.util.MathHelper
-import net.minecraft.util.ResourceLocation
 import net.minecraft.world.World
 import net.minecraftforge.client.IItemRenderer.ItemRenderType
 import net.minecraftforge.client.IItemRenderer.ItemRendererHelper
@@ -110,40 +109,40 @@ class PortableOreScannerItem(name: String?, private val obj: Obj3D,
     }
 
     override fun getEnergy(stack: ItemStack): Double {
-        return getNbt(stack)!!.getDouble("e")
+        return getNbt(stack).getDouble("e")
     }
 
     override fun setEnergy(stack: ItemStack, value: Double) {
-        getNbt(stack)!!.setDouble("e", value)
+        getNbt(stack).setDouble("e", value)
     }
 
     private fun getState(stack: ItemStack): State {
-        return State.from(getNbt(stack)!!.getByte("s")) ?: State.Idle
+        return State.from(getNbt(stack).getByte("s")) ?: State.Idle
     }
 
     private fun setState(stack: ItemStack, value: State) {
-        getNbt(stack)!!.setByte("s", value.serialized)
+        getNbt(stack).setByte("s", value.serialized)
     }
 
     fun getCounter(stack: ItemStack?): Short {
-        return getNbt(stack!!)!!.getShort("c")
+        return getNbt(stack!!).getShort("c")
     }
 
     fun setCounter(stack: ItemStack?, value: Short) {
-        getNbt(stack!!)!!.setShort("c", value)
+        getNbt(stack!!).setShort("c", value)
     }
 
     fun getDamage(stack: ItemStack?): Byte {
-        return getNbt(stack!!)!!.getByte("d")
+        return getNbt(stack!!).getByte("d")
     }
 
     fun setDamage(stack: ItemStack?, value: Byte) {
-        getNbt(stack!!)!!.setByte("d", value)
+        getNbt(stack!!).setByte("d", value)
     }
 
-    override fun onDroppedByPlayer(stack: ItemStack, player: EntityPlayer?): Boolean {
-        setState(stack, State.Idle)
-        return super.onDroppedByPlayer(stack, player)
+    override fun onDroppedByPlayer(item: ItemStack, player: EntityPlayer?): Boolean {
+        setState(item, State.Idle)
+        return super.onDroppedByPlayer(item, player)
     }
 
     override fun getEnergyMax(stack: ItemStack): Double {
@@ -309,7 +308,7 @@ class PortableOreScannerItem(name: String?, private val obj: Obj3D,
             if (state == State.Idle) breakLevel = Math.min(breakLevel, screenDamage.size - 1)
             for (idx in 0 until breakLevel) {
                 if (idx == screenDamage.size) break
-                screenDamage[Math.min(screenDamage.size - 1, breakLevel - 1) - idx]!!.draw()
+                screenDamage[Math.min(screenDamage.size - 1, breakLevel - 1) - idx].draw()
             }
             UtilsClient.disableBlend()
             UtilsClient.enableLight()
@@ -426,7 +425,7 @@ class PortableOreScannerItem(name: String?, private val obj: Obj3D,
                         dToStack = if (d + dBest < viewRange) dBest else {
                             viewRange - d
                         }
-                        stackGreen += blockKeyFactor!![blockKey.toInt()] * dToStack
+                        stackGreen += blockKeyFactor[blockKey.toInt()] * dToStack
                         val b = Block.getBlockById((blockKey and 0xFFFU).toInt())
                         if (b !== Blocks.air && b !== Eln.lightBlock) {
                             stackRed += if (b.isOpaqueCube) 0.2f * dToStack else 0.1f * dToStack
@@ -441,8 +440,6 @@ class PortableOreScannerItem(name: String?, private val obj: Obj3D,
                     screenBlue[screenY][screenX] = stackBlue - stackGreen * 0f
                 }
             }
-            val end = System.nanoTime()
-            //Utils.println("Generate : " + (end - start)/1000 + "us");
         }
 
         fun noiseRand(): Float {
@@ -451,47 +448,20 @@ class PortableOreScannerItem(name: String?, private val obj: Obj3D,
 
         @JvmOverloads
         fun draw(redFactor: Float = 1f, greenFactor: Float = 1f, blueFactor: Float = 1f) {
-            val start = System.nanoTime()
             UtilsClient.disableLight()
             UtilsClient.disableTexture()
-            //GL11.glShadeModel(GL11.GL_SMOOTH);
             for (screenY in 0 until resHeight) {
                 GL11.glBegin(GL11.GL_QUAD_STRIP)
                 for (screenX in 0 until resWidth + 1) {
-
-                    //s = screen[screenY][screenX]; GL11.glColor3f(s >= 0 ? s : 0, 0, s < 0.1 ? -s + 0.1f : 0);
-                    //Color c = Color.getHSBColor(Math.max(0, Math.min(1, s)), 1, 1);
-                    //	GL11.glColor3ub((byte)c.getRed(), (byte)c.getGreen(), (byte)c.getBlue());
                     if (screenX != resWidth) GL11.glColor3f(screenRed[screenY][screenX] * redFactor + noiseRand(), screenGreen[screenY][screenX] * greenFactor + noiseRand(), screenBlue[screenY][screenX] * blueFactor + noiseRand())
                     GL11.glVertex3f(screenX.toFloat(), screenY.toFloat(), 0f)
                     GL11.glVertex3f(screenX.toFloat(), (screenY + 1).toFloat(), 0f)
-
-                    /*-GL11.glColor3f(screen[screenY][screenX], 0, 0);
-					GL11.glVertex3f(screenX, screenY, 0);
-					GL11.glColor3f(screen[screenY + 1][screenX], 0, 0);
-					GL11.glVertex3f(screenX, screenY + 1, 0);
-					GL11.glColor3f(screen[screenY + 1][screenX + 1], 0, 0);
-					GL11.glVertex3i(screenX + 1, screenY + 1, 0);
-					GL11.glColor3f(screen[screenY][screenX], 0, 0);
-					GL11.glVertex3f(screenX, screenY, 0);
-					GL11.glColor3f(screen[screenY + 1][screenX + 1], 0, 0);
-					GL11.glVertex3i(screenX + 1, screenY + 1, 0);
-					GL11.glColor3f(screen[screenY][screenX + 1], 0, 0);
-					GL11.glVertex3f(screenX + 1, screenY, 0);-*
-
-					/ *GL11.glColor3f(screen[screenY + 1][screenX + 1], 0, 0);
-					GL11.glVertex3i(screenX + 1, screenY + 1, 0);
-					GL11.glColor3f(screen[screenY][screenX + 1], 0, 0);
-					GL11.glVertex3i(screenX + 1, screenY, 0);*/
                 }
                 GL11.glEnd()
             }
             UtilsClient.enableTexture()
             UtilsClient.enableLight()
             GL11.glColor3f(1f, 1f, 1f)
-            //GL11.glShadeModel(GL11.GL_FLAT);
-            val end = System.nanoTime()
-            //Utils.println("Draw : " + (end - start)/1000 + "us");
         }
 
         init {

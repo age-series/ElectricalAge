@@ -61,11 +61,11 @@ class ElectricalLampItem(name: String, var lightMin: Int, var rangeMin: Int, dis
     }
 
     public override fun getLightState(stack: ItemStack): Int {
-        return getNbt(stack)!!.getInteger("LightState")
+        return getNbt(stack).getInteger("LightState")
     }
 
     fun setLightState(stack: ItemStack?, value: Int) {
-        getNbt(stack!!)!!.setInteger("LightState", value)
+        getNbt(stack!!).setInteger("LightState", value)
     }
 
     fun getLightLevel(stack: ItemStack): Int {
@@ -112,11 +112,11 @@ class ElectricalLampItem(name: String, var lightMin: Int, var rangeMin: Int, dis
 	}
 */
     override fun getEnergy(stack: ItemStack): Double {
-        return getNbt(stack)!!.getDouble("energy")
+        return getNbt(stack).getDouble("energy")
     }
 
     override fun setEnergy(stack: ItemStack, value: Double) {
-        getNbt(stack)!!.setDouble("energy", value)
+        getNbt(stack).setDouble("energy", value)
     }
 
     override fun getEnergyMax(stack: ItemStack): Double {

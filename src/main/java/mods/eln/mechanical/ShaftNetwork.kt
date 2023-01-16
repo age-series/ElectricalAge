@@ -319,7 +319,7 @@ class StaticShaftNetwork() : ShaftNetwork() {
 
     override var rads
         get() = fixedRads
-        set(s) {}
+        set(_) {}
 
     // XXX This shouldn't matter...
     override val mass: Double

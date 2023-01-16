@@ -154,7 +154,7 @@ abstract class GridRender(tileEntity: TransparentNodeEntity, descriptor: Transpa
         }
 
         private fun translate(start: Array<Vec3>, delta: Vec3): Array<Vec3> {
-            return start.mapIndexed { i, vec3 -> vec3.addVector(delta.xCoord, delta.yCoord, delta.zCoord) }.toTypedArray()
+            return start.mapIndexed { _, vec3 -> vec3.addVector(delta.xCoord, delta.yCoord, delta.zCoord) }.toTypedArray()
         }
 
         private fun spread(a: Vec3, b: Vec3): Array<Vec3> {

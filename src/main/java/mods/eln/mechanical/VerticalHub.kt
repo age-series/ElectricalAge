@@ -118,7 +118,7 @@ class VerticalHubElement(node: TransparentNode, desc_: TransparentNodeDescriptor
         for(dir in Direction.all) {
             if(connectedSides.contains(dir)) continue
             val test = coordinate().moved(dir)
-            if(test.block != null && test.block!!.isOpaqueCube)
+            if(test.block.isOpaqueCube)
                 standingSides.add(dir)
         }
     }

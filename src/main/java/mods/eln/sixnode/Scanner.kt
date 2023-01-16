@@ -90,7 +90,7 @@ class ScannerElement(sixNode: SixNode, side: Direction, descriptor: SixNodeDescr
     }
 
     private fun scanBlock(scannedCoord: Coordinate, targetSide: ForgeDirection): Double {
-        val block = scannedCoord.block?: return 1.0/3.0
+        val block = scannedCoord.block
         return when {
             block.hasComparatorInputOverride() ->
                 block.getComparatorInputOverride(scannedCoord.world(), scannedCoord.x, scannedCoord.y, scannedCoord.z, targetSide.ordinal) / 15.0

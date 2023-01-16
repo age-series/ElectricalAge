@@ -252,8 +252,8 @@ class LampSocketProcess(var lamp: LampSocketElement) : IProcess, INBTTReady /*,L
     }
 
     private fun isOpaque(coord: Coordinate): Boolean {
-        val block = coord.block?: return false
-        return !(block === Blocks.air) && (block.isOpaqueCube && !(block === Blocks.farmland))
+        val block = coord.block
+        return block !== Blocks.air && (block.isOpaqueCube && block !== Blocks.farmland)
     }
 
     fun setLightAt(coord: Coordinate, value: Int) {

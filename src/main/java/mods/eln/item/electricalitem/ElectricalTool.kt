@@ -55,11 +55,11 @@ open class ElectricalTool(name: String, var strengthOn: Float, var strengthOff: 
     }
 
     fun getPowerOn(stack: ItemStack?): Boolean {
-        return getNbt(stack!!)!!.getBoolean("powerOn")
+        return getNbt(stack!!).getBoolean("powerOn")
     }
 
     fun setPowerOn(stack: ItemStack?, value: Boolean) {
-        getNbt(stack!!)!!.setBoolean("powerOn", value)
+        getNbt(stack!!).setBoolean("powerOn", value)
     }
 
     override fun addInformation(itemStack: ItemStack?, entityPlayer: EntityPlayer?, list: MutableList<String>, par4: Boolean) {
@@ -69,11 +69,11 @@ open class ElectricalTool(name: String, var strengthOn: Float, var strengthOff: 
     }
 
     override fun getEnergy(stack: ItemStack): Double {
-        return getNbt(stack)!!.getDouble("energy")
+        return getNbt(stack).getDouble("energy")
     }
 
     override fun setEnergy(stack: ItemStack, value: Double) {
-        getNbt(stack)!!.setDouble("energy", value)
+        getNbt(stack).setDouble("energy", value)
     }
 
     override fun getEnergyMax(stack: ItemStack): Double {

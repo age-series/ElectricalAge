@@ -62,15 +62,15 @@ class ClutchPlateItem(
         if(itemStack != null) {
             val wear = getWear(itemStack)
             if(wear < 0.2) {
-                list?.add(tr("Condition:") + " " + tr("New"))
+                list.add(tr("Condition:") + " " + tr("New"))
             } else if(wear < 0.5) {
-                list?.add(tr("Condition:") + " " + tr("Good"))
+                list.add(tr("Condition:") + " " + tr("Good"))
             } else if(wear < 0.8) {
-                list?.add(tr("Condition:") + " " + tr("Used"))
+                list.add(tr("Condition:") + " " + tr("Used"))
             } else if(wear < 0.9) {
-                list?.add(tr("Condition:") + " " + tr("End of life"))
+                list.add(tr("Condition:") + " " + tr("End of life"))
             } else {
-                list?.add(tr("Condition:") + " " + tr("Bad"))
+                list.add(tr("Condition:") + " " + tr("Bad"))
             }
         }
     }

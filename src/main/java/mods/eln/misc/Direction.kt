@@ -72,7 +72,6 @@ enum class Direction(var int: Int) {
             YP -> 0
             ZN -> 2
             ZP -> 3
-            else -> 0
         }
     /*public CoordinateTuple ApplyToCoordinates(CoordinateTuple coordinates) {
 		CoordinateTuple ret = new CoordinateTuple(coordinates);
@@ -203,8 +202,6 @@ enum class Direction(var int: Int) {
                 GL11.glTexCoord2f((x + 1) * spriteDim, (y + 1) * spriteDim)
                 GL11.glVertex3f(0.5f, -0.5f, 0.5f)
             }
-            else -> {
-            }
         }
     }
 
@@ -272,8 +269,6 @@ enum class Direction(var int: Int) {
             YP -> GL11.glRotatef(90f, 0f, 0f, -1f)
             ZN -> GL11.glRotatef(270f, 0f, 1f, 0f)
             ZP -> GL11.glRotatef(90f, 0f, 1f, 0f)
-            else -> {
-            }
         }
     }
 
@@ -291,8 +286,6 @@ enum class Direction(var int: Int) {
             YP -> GL11.glRotatef(90f, 0f, 0f, 1f)
             ZN -> GL11.glRotatef(270f, 0f, -1f, 0f)
             ZP -> GL11.glRotatef(90f, 0f, -1f, 0f)
-            else -> {
-            }
         }
     }
 
@@ -312,8 +305,6 @@ enum class Direction(var int: Int) {
             ZN -> {
             }
             ZP -> GL11.glRotatef(180f, 0f, 1f, 0f)
-            else -> {
-            }
         }
     }
 
@@ -328,8 +319,6 @@ enum class Direction(var int: Int) {
             YP -> y++
             ZN -> z--
             ZP -> z++
-            else -> {
-            }
         }
         return coordinate.world().getTileEntity(x, y, z)
     }
@@ -367,8 +356,6 @@ enum class Direction(var int: Int) {
                 p[0] = z
                 p[2] = -x
             }
-            else -> {
-            }
         }
     }
 
@@ -400,8 +387,6 @@ enum class Direction(var int: Int) {
             ZP -> {
                 p[0] = z
                 p[2] = -x
-            }
-            else -> {
             }
         }
     }
@@ -435,8 +420,6 @@ enum class Direction(var int: Int) {
                 p.xCoord = z
                 p.zCoord = -x
             }
-            else -> {
-            }
         }
     }
 
@@ -469,8 +452,6 @@ enum class Direction(var int: Int) {
                 p.x = z
                 p.z = -x
             }
-            else -> {
-            }
         }
     }
 
@@ -482,8 +463,6 @@ enum class Direction(var int: Int) {
             YP -> GL11.glTranslatef(0f, v, 0f)
             ZN -> GL11.glTranslatef(0f, 0f, -v)
             ZP -> GL11.glTranslatef(0f, 0f, v)
-            else -> {
-            }
         }
     }
 
@@ -495,7 +474,6 @@ enum class Direction(var int: Int) {
             ZP -> ForgeDirection.SOUTH
             YP -> ForgeDirection.UP
             XN -> ForgeDirection.WEST
-            else -> ForgeDirection.UNKNOWN
         }
     }
 
@@ -514,8 +492,6 @@ enum class Direction(var int: Int) {
             ZN -> {
             }
             ZP -> GL11.glRotatef(-180f, 0f, 1f, 0f)
-            else -> {
-            }
         }
     }
 

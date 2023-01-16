@@ -3,6 +3,7 @@ package mods.eln.sixnode
 import mods.eln.Eln
 import mods.eln.cable.CableRender
 import mods.eln.cable.CableRenderDescriptor
+import mods.eln.i18n.I18N
 import mods.eln.i18n.I18N.tr
 import mods.eln.misc.Direction
 import mods.eln.misc.LRDU
@@ -119,23 +120,7 @@ class PortableNaNElement(sixNode: SixNode, side: Direction, descriptor: SixNodeD
         if (Eln.wailaEasyMode) {
             info[tr("Voltage")] = Utils.plotVolt("", electricalLoad.u)
         }
-        try {
-            val subSystemSize = electricalLoad.subSystem!!.componentSize()
-            var textColor = ""
-            if (subSystemSize <= 8) {
-                textColor = "§a"
-            } else if (subSystemSize <= 15) {
-                textColor = "§6"
-            } else {
-                textColor = "§c"
-            }
-            info[tr("Subsystem Matrix Size: ")] = textColor + subSystemSize
-
-
-        } catch (e: Exception) {
-            info[tr("Subsystem Matrix Size: ")] = "§cNot part of a subsystem!?"
-        }
-
+        info[tr("Subsystem Matrix Size")] = Utils.renderSubSystemWaila(electricalLoad.subSystem)
         return info
     }
 }

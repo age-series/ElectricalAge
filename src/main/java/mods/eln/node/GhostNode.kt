@@ -7,5 +7,5 @@ abstract class GhostNode : NodeBase() {
         return false
     }
 
-    override val nodeUuid = Eln.ghostBlock.nodeUuid!!
+    override val nodeUuid = Eln.ghostBlock.nodeUuid
 }

@@ -3,7 +3,6 @@ package mods.eln.simplenode.energyconverter
 import mods.eln.Eln
 import mods.eln.misc.Direction
 import mods.eln.misc.LRDU
-import mods.eln.node.simple.DescriptorManager.get
 import mods.eln.node.simple.SimpleNode
 import mods.eln.sim.ElectricalLoad
 import mods.eln.sim.IProcess
@@ -34,15 +33,15 @@ class EnergyConverterElnToOtherNode : SimpleNode() {
         powerInResistor.r = MnaConst.highImpedance
     }
 
-    override fun getSideConnectionMask(directionA: Direction, lrduA: LRDU): Int {
+    override fun getSideConnectionMask(side: Direction, lrdu: LRDU): Int {
         return maskElectricalPower
     }
 
-    override fun getThermalLoad(directionA: Direction, lrduA: LRDU, mask: Int): ThermalLoad? {
+    override fun getThermalLoad(side: Direction, lrdu: LRDU, mask: Int): ThermalLoad? {
         return null
     }
 
-    override fun getElectricalLoad(directionB: Direction, lrduB: LRDU, mask: Int): ElectricalLoad {
+    override fun getElectricalLoad(side: Direction, lrdu: LRDU, mask: Int): ElectricalLoad {
         return load
     }
 

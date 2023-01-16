@@ -75,7 +75,7 @@ class ServerEventListener {
             } catch (ex2: Exception) {
                 ex2.printStackTrace()
                 println("Failed to read backup save!")
-                val storage = forWorld(e.world)
+                forWorld(e.world)
             }
         }
     }

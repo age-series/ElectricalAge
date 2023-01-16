@@ -344,9 +344,9 @@ class PIDRegulatorRender(entity: SixNodeEntity, side: Direction, descriptor: Six
     override fun publishUnserialize(stream: DataInputStream) {
         super.publishUnserialize(stream)
         try {
-            Kp = stream.readFloat() ?: 1f
-            Ki = stream.readFloat() ?: 0f
-            Kd = stream.readFloat() ?: 0f
+            Kp = stream.readFloat()
+            Ki = stream.readFloat()
+            Kd = stream.readFloat()
         } catch (e: IOException) {
             e.printStackTrace()
         }
@@ -430,7 +430,7 @@ open class VoltageControlledSawtoothOscillator : AnalogFunction() {
     }
 
     override fun readFromNBT(nbt: NBTTagCompound, str: String) {
-        out = nbt.getDouble("out") ?: 0.0
+        out = nbt.getDouble("out")
     }
 
     override fun writeToNBT(nbt: NBTTagCompound, str: String) {
@@ -453,7 +453,7 @@ class Amplifier : AnalogFunction() {
     override fun process(inputs: Array<Double?>, deltaTime: Double) = gain * (inputs[0] ?: 0.0)
 
     override fun readFromNBT(nbt: NBTTagCompound, str: String) {
-        gain = nbt.getDouble("gain") ?: 1.0
+        gain = nbt.getDouble("gain")
     }
 
     override fun writeToNBT(nbt: NBTTagCompound, str: String) {
@@ -528,7 +528,7 @@ class AmplifierRender(entity: SixNodeEntity, side: Direction, descriptor: SixNod
     override fun publishUnserialize(stream: DataInputStream) {
         super.publishUnserialize(stream)
         try {
-            gain = stream.readFloat() ?: 1f
+            gain = stream.readFloat()
         } catch (e: IOException) {
             e.printStackTrace()
         }
@@ -590,7 +590,7 @@ class SummingUnit : AnalogFunction() {
 
     override fun readFromNBT(nbt: NBTTagCompound, str: String) {
         for (i in gains.indices) {
-            gains[i] = nbt.getDouble("gain$i") ?: 1.0
+            gains[i] = nbt.getDouble("gain$i")
         }
     }
 
@@ -680,7 +680,7 @@ class SummingUnitRender(entity: SixNodeEntity, side: Direction, descriptor: SixN
         super.publishUnserialize(stream)
         try {
             for (i in gains.indices) {
-                gains[i] = stream.readFloat() ?: 1f
+                gains[i] = stream.readFloat()
             }
         } catch (e: IOException) {
             e.printStackTrace()
@@ -737,8 +737,8 @@ class SampleAndHold : AnalogFunction() {
     }
 
     override fun readFromNBT(nbt: NBTTagCompound, str: String) {
-        clock = nbt.getBoolean("clock") ?: false
-        value = nbt.getDouble("value") ?: 0.0
+        clock = nbt.getBoolean("clock")
+        value = nbt.getDouble("value")
     }
 
     override fun writeToNBT(nbt: NBTTagCompound, str: String) {

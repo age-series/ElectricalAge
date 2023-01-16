@@ -9,6 +9,7 @@ import mods.eln.generic.GenericItemUsingDamageSlot
 import mods.eln.gui.GuiContainerEln
 import mods.eln.gui.GuiHelperContainer
 import mods.eln.gui.ISlotSkin
+import mods.eln.i18n.I18N
 import mods.eln.i18n.I18N.tr
 import mods.eln.item.*
 import mods.eln.misc.*
@@ -326,27 +327,7 @@ class VariableDcDcElement(transparentNode: TransparentNode, descriptor: Transpar
         info["Voltages"] = "\u00A7a" + Utils.plotVolt("", primaryLoad.u) + " " +
             "\u00A7e" + Utils.plotVolt("", secondaryLoad.u)
         info["Control Voltage"] = Utils.plotVolt(control.u)
-        try {
-            val leftSubSystemSize = primaryLoad.subSystem.component.size
-            val rightSubSystemSize = secondaryLoad.subSystem.component.size
-            val textColorLeft = when {
-                leftSubSystemSize <= 8 -> "§a"
-                leftSubSystemSize <= 15 -> "§6"
-                else -> "§c"
-            }
-            val textColorRight = when {
-                rightSubSystemSize <= 8 -> "§a"
-                rightSubSystemSize <= 15 -> "§6"
-                else -> "§c"
-            }
-            info[tr("Subsystem Matrix Size: ")] = "$textColorLeft$leftSubSystemSize §r| $textColorRight$rightSubSystemSize"
-        } catch (e: Exception) {
-            if (populated) {
-                info[tr("Subsystem Matrix Size: ")] = "§cNot part of a subsystem!?"
-            } else {
-                info[tr("Subsystem Matrix Size: ")] = "Not part of a subsystem"
-            }
-        }
+        info[tr("Subsystem Matrix Size: ")] = Utils.renderDoubleSubsystemWaila(primaryLoad.subSystem, secondaryLoad.subSystem)
         return info
     }
 

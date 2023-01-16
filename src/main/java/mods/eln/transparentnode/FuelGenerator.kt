@@ -211,8 +211,8 @@ class FuelGeneratorElement(transparentNode: TransparentNode, descriptor_: Transp
 
     override fun readFromNBT(nbt: NBTTagCompound) {
         super.readFromNBT(nbt)
-        tankLevel = nbt.getDouble("tankLevel") ?: 0.0
-        on = nbt.getBoolean("on") ?: false
+        tankLevel = nbt.getDouble("tankLevel")
+        on = nbt.getBoolean("on")
     }
 
     override fun writeToNBT(nbt: NBTTagCompound) {

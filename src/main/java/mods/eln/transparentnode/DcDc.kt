@@ -342,27 +342,7 @@ class DcDcElement(transparentNode: TransparentNode, descriptor: TransparentNodeD
             info["Voltages"] = "\u00A7a" + Utils.plotVolt("", primaryLoad.u) + " " +
                 "\u00A7e" + Utils.plotVolt("", secondaryLoad.u)
         }
-        try {
-            val leftSubSystemSize = primaryLoad.subSystem.component.size
-            val rightSubSystemSize = secondaryLoad.subSystem.component.size
-            val textColorLeft = when {
-                leftSubSystemSize <= 8 -> "§a"
-                leftSubSystemSize <= 15 -> "§6"
-                else -> "§c"
-            }
-            val textColorRight = when {
-                rightSubSystemSize <= 8 -> "§a"
-                rightSubSystemSize <= 15 -> "§6"
-                else -> "§c"
-            }
-            info[I18N.tr("Subsystem Matrix Size: ")] = "$textColorLeft$leftSubSystemSize §r| $textColorRight$rightSubSystemSize"
-        } catch (e: Exception) {
-            if (populated) {
-                info[I18N.tr("Subsystem Matrix Size: ")] = "§cNot part of a subsystem!?"
-            } else {
-                info[I18N.tr("Subsystem Matrix Size: ")] = "Not part of a subsystem"
-            }
-        }
+        info[I18N.tr("Subsystem Matrix Size: ")] = Utils.renderDoubleSubsystemWaila(primaryLoad.subSystem, secondaryLoad.subSystem)
         return info
     }
 
