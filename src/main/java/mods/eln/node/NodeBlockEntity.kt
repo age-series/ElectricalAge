@@ -97,6 +97,8 @@ abstract class NodeBlockEntity : TileEntity(), ITileEntitySpawnClient, INodeEnti
     }
 
     override fun newGuiDraw(side: Direction, player: EntityPlayer): GuiScreen? {
+        // Debugging tip: If the GUI isn't working, but you can see it trying to open in the client debug log,
+        // check that you have the renderer (client) class set correctly in the descriptor
         return null
     }
 
