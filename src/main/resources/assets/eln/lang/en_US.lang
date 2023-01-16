@@ -245,6 +245,7 @@ Signal_Button.name=Signal Button
 Signal_Cable.name=Signal Cable
 Signal_Diode.name=Signal Diode
 Signal_Processor.name=Signal Processor
+Advanced_Signal_Processor.name=Advanced Signal Processor
 Signal_Relay.name=Signal Relay
 Signal_Source.name=Signal Source
 Signal_Switch.name=Signal Switch
