@@ -766,11 +766,11 @@ public class Eln {
 
     private void registerFab(int id) {
         int subId;
-        /*{
+        {
             subId = 0;
             FabricatorDescriptor desc = new FabricatorDescriptor(TR_NAME(Type.NONE, "Fabricator"));
             transparentNodeItem.addDescriptor(subId + (id << 6), desc);
-        }*/
+        }
     }
 
     private void registerGridDevices(int id) {
@@ -8583,7 +8583,7 @@ public class Eln {
         instance.lowVoltageCableDescriptor.applyTo(r);
     }
 
-    static ItemStack findItemStack(String name, int stackSize) {
+    public static ItemStack findItemStack(String name, int stackSize) {
         ItemStack stack = GameRegistry.findItemStack("Eln", name, stackSize);
         if (stack == null) {
             stack = dictionnaryOreFromMod.get(name);

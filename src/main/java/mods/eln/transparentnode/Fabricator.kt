@@ -2,25 +2,12 @@ package mods.eln.transparentnode
 
 import mods.eln.Eln
 import mods.eln.generic.GenericItemUsingDamageDescriptor
-import mods.eln.gui.GuiButtonEln
-import mods.eln.gui.GuiContainerEln
-import mods.eln.gui.GuiHelperContainer
-import mods.eln.gui.IGuiObject
+import mods.eln.gui.*
 import mods.eln.gui.ISlotSkin.SlotSkin
-import mods.eln.gui.SlotWithSkin
-import mods.eln.misc.BasicContainer
-import mods.eln.misc.Direction
-import mods.eln.misc.LRDU
-import mods.eln.misc.Utils
-import mods.eln.misc.UtilsClient
+import mods.eln.misc.*
 import mods.eln.node.INodeContainer
 import mods.eln.node.NodeBase
-import mods.eln.node.transparent.TransparentNode
-import mods.eln.node.transparent.TransparentNodeDescriptor
-import mods.eln.node.transparent.TransparentNodeElement
-import mods.eln.node.transparent.TransparentNodeElementInventory
-import mods.eln.node.transparent.TransparentNodeElementRender
-import mods.eln.node.transparent.TransparentNodeEntity
+import mods.eln.node.transparent.*
 import mods.eln.sim.ElectricalLoad
 import mods.eln.sim.IProcess
 import mods.eln.sim.ThermalLoad
@@ -34,25 +21,27 @@ import net.minecraft.inventory.Container
 import net.minecraft.inventory.IInventory
 import net.minecraft.inventory.Slot
 import net.minecraft.item.ItemStack
+import net.minecraft.nbt.NBTTagCompound
 import net.minecraftforge.client.IItemRenderer
 import org.lwjgl.opengl.GL11
 import java.io.DataInputStream
 import java.io.DataOutputStream
 import java.io.IOException
 
-
 class FabricatorDescriptor(
     name: String
 ): TransparentNodeDescriptor(name, FabricatorElement::class.java, FabricatorRender::class.java) {
 
-    val fabricatorModel = Eln.obj.getObj("fabricator")
-    val body = fabricatorModel.getPart("Cube.002_Cube.013")
-    val etcherX = fabricatorModel.getPart("Cube.003_Cube.012")
-    val etcherZ = fabricatorModel.getPart("Cube.001_Cube.010")
+    private val fabricatorModel: Obj3D = Eln.obj.getObj("fabricator")
+    private val body: Obj3D.Obj3DPart = fabricatorModel.getPart("Cube.002_Cube.013")
+    private val etcherX: Obj3D.Obj3DPart = fabricatorModel.getPart("Cube.003_Cube.012")
+    private val etcherZ: Obj3D.Obj3DPart = fabricatorModel.getPart("Cube.001_Cube.010")
 
-    fun draw() {
+    fun draw(isRunning: Boolean = false) {
         GL11.glTranslated(-0.5, -0.5, 0.5)
         body.draw()
+        if (isRunning)
+            GL11.glTranslated(0.3 * Math.random() - 0.15, -0.1 * Math.random(), 0.0)
         etcherX.draw()
         etcherZ.draw()
     }
@@ -66,6 +55,12 @@ class FabricatorDescriptor(
     override fun renderItem(type: IItemRenderer.ItemRenderType, item: ItemStack, vararg data: Any) {
         draw()
     }
+
+    override fun addInformation(itemStack: ItemStack?, entityPlayer: EntityPlayer?, list: MutableList<String>?, par4: Boolean) {
+        super.addInformation(itemStack, entityPlayer, list, par4)
+        list?.addAll("The Fabricator creates chips\nfrom silicon and copper plates".split("\n"))
+        list?.add("Nominal Ohms: ${Utils.plotOhm(40.0)}")
+    }
 }
 
 class FabricatorElement(node: TransparentNode, descriptor: TransparentNodeDescriptor): TransparentNodeElement(node, descriptor) {
@@ -75,23 +70,27 @@ class FabricatorElement(node: TransparentNode, descriptor: TransparentNodeDescri
     val electricalLoad = NbtElectricalLoad("load")
     val resistorLoad = Resistor(electricalLoad, null)
 
-    val craftingProcess = FabricatorProcess(this)
+    private val craftingProcess = FabricatorProcess(this)
 
     override val inventory: TransparentNodeElementInventory = FabricatorInventory(FabricatorSlots.values().size, 64, this)
 
-    override fun getElectricalLoad(side: Direction, lrdu: LRDU): ElectricalLoad {
-        return electricalLoad
+    override fun getElectricalLoad(side: Direction, lrdu: LRDU): ElectricalLoad? {
+        return if (side == Direction.ZN && lrdu == LRDU.Down) electricalLoad else null
     }
 
     override fun getThermalLoad(side: Direction, lrdu: LRDU): ThermalLoad? = null
 
     override fun getConnectionMask(side: Direction, lrdu: LRDU): Int {
-        return NodeBase.maskElectricalPower
+        return if (side == Direction.ZN && lrdu == LRDU.Down) NodeBase.maskElectricalPower else 0
     }
 
-    override fun multiMeterString(side: Direction) = ""
+    override fun multiMeterString(side: Direction) = Utils.plotUIP(resistorLoad.u, resistorLoad.i, resistorLoad.r)
 
     override fun thermoMeterString(side: Direction): String = ""
+
+    override fun getWaila(): Map<String, String> {
+        return mapOf(Pair("Operation", operation?.opName?: "None"))
+    }
 
     override fun initialize() {
         electricalLoadList.add(electricalLoad)
@@ -115,6 +114,7 @@ class FabricatorElement(node: TransparentNode, descriptor: TransparentNodeDescri
     override fun networkSerialize(stream: DataOutputStream) {
         super.networkSerialize(stream)
         stream.writeInt(operation?.nid ?: -1)
+        stream.writeBoolean(resistorLoad.p > 1.0)
     }
 
     override fun networkUnserialize(stream: DataInputStream): Byte {
@@ -122,9 +122,12 @@ class FabricatorElement(node: TransparentNode, descriptor: TransparentNodeDescri
         try {
             when (packetType) {
                 FabricatorNetwork.BUTTON_CLICK.id -> {
-                    val thing = FabricatorOperation.values().filter { stream.readInt() == it.nid }
+                    val op: Int = stream.readInt()
+                    val thing = FabricatorOperation.values().filter { op == it.nid }
                     if (thing.isNotEmpty()) {
                         operation = thing.first()
+                        // Restart the crafting process entirely
+                        craftingProcess.powerConsumed = 0.0
                         needPublish()
                         Utils.println("Function is now ${operation?.opName}")
                     }
@@ -135,23 +138,51 @@ class FabricatorElement(node: TransparentNode, descriptor: TransparentNodeDescri
         }
         return unserializeNulldId
     }
+
+    override fun readFromNBT(nbt: NBTTagCompound) {
+        super.readFromNBT(nbt)
+        val id = nbt.getInteger("operation")
+        operation = FabricatorOperation.values().firstOrNull { it.nid == id }
+        craftingProcess.powerConsumed = nbt.getDouble("powerConsumed")
+    }
+
+    override fun writeToNBT(nbt: NBTTagCompound) {
+        super.writeToNBT(nbt)
+        if (operation != null)
+            nbt.setInteger("operation", operation?.nid?: 0)
+        nbt.setDouble("powerConsumed", craftingProcess.powerConsumed)
+    }
 }
 
 enum class FabricatorNetwork(val id: Byte) {
     BUTTON_CLICK(0)
 }
 
-enum class FabricatorOperation(val nid: Int, val opName: String, val outputItem: ItemStack, val powerRequired: Double, val yieldPercentage: Double) {
-    TRANSISTOR(0, "Transistor", Eln.transistor.newItemStack(1), 2_000.0, 1.0),
-    D_FLIP_FLOP(1, "D Flip Flop", Eln.transistor.newItemStack(1), 4_000.0, 1.0),
-    JK_FLIP_FLOP(2, "JK Flip Flop", Eln.transistor.newItemStack(1), 4_000.0, 1.0),
-    SR_FLIP_FLOP(3, "SR Flip Flop", Eln.transistor.newItemStack(1), 4_000.0, 1.0),
-    ALU(4, "8 Bit ALU", Eln.alu.newItemStack(1), 10_000.0, 0.5)
+enum class FabricatorOperation(val nid: Int, val opName: String, val outputItem: ItemStack, val perSheet: Int, val yieldPercentage: Double) {
+    // Digital Chips
+    TRANSISTOR(0, "Transistor", Eln.transistor.newItemStack(1), 16, 1.0),
+    D_FLIP_FLOP(1, "D Flip Flop", Eln.findItemStack("D Flip Flop Chip", 1), 4, 1.0),
+    JK_FLIP_FLOP(2, "JK Flip Flop", Eln.findItemStack("JK Flip Flop Chip", 1), 4, 1.0),
+    ALU(3, "8 Bit ALU", Eln.alu.newItemStack(1), 2, 0.5),
+    PAL_CHIP(4, "PAL Chip", Eln.findItemStack("PAL Chip", 1), 4, 1.0),
+    OSCILLATOR_CHIP(5, "Oscillator Chip", Eln.findItemStack("Oscillator Chip", 1), 4, 1.0),
+
+    // Analog Chips
+    OP_AMP(6, "OpAmp", Eln.findItemStack("OpAmp", 1), 4, 1.0),
+    PID_REGULATOR(7, "PID Regulator", Eln.findItemStack("PID Regulator", 1), 4, 1.0),
+    VCO_SAW(8, "Voltage controlled sawtooth oscillator", Eln.findItemStack("Voltage controlled sawtooth oscillator", 1), 4, 1.0),
+    VCO_SIM(9, "Voltage controlled sine oscillator", Eln.findItemStack("Voltage controlled sine oscillator", 1), 4, 1.0),
+    AMPLIFIER(10, "Amplifier", Eln.findItemStack("Amplifier", 1), 4, 1.0),
+    VCA(11, "Voltage controlled amplifier", Eln.findItemStack("Voltage controlled amplifier", 1), 4, 1.0),
+    SUM(12, "Configurable summing unit", Eln.findItemStack("Configurable summing unit", 1), 4, 1.0),
+    SAH(13, "Sample and hold", Eln.findItemStack("Sample and hold", 1), 4, 1.0),
+    LPF(14, "Lowpass filter", Eln.findItemStack("Lowpass filter", 1), 4, 1.0),
 }
 
 class FabricatorProcess(val element: FabricatorElement): IProcess {
 
     var powerConsumed = 0.0
+    private val powerRequired = 4_000.0
 
     override fun process(time: Double) {
         val operation = element.operation
@@ -166,7 +197,7 @@ class FabricatorProcess(val element: FabricatorElement): IProcess {
         val canOutput = if (outputSlot != null) {
             val stack = element.inventory.getStackInSlot(FabricatorSlots.OUTPUT.slotId)
             if (operation != null)
-                stack!!.item == operation.outputItem.item && stack.stackSize < stack.maxStackSize
+                stack!!.item == operation.outputItem.item && stack.stackSize + operation.perSheet < stack.maxStackSize
             else
                 true
         } else {
@@ -183,7 +214,7 @@ class FabricatorProcess(val element: FabricatorElement): IProcess {
         if (canOutput && hasInputs && operation != null) {
             val power = time * element.resistorLoad.p
             powerConsumed += power
-            if (powerConsumed > operation.powerRequired * 2) {
+            if (powerConsumed > powerRequired * 2) {
                 element.resistorLoad.r = MnaConst.highImpedance
             } else {
                 element.resistorLoad.r = 40.0 // This is 200 * 200 / 1000 (volts^2 / watts), prevents current spikes
@@ -192,7 +223,7 @@ class FabricatorProcess(val element: FabricatorElement): IProcess {
             element.resistorLoad.r = MnaConst.highImpedance
         }
 
-        if (operation?.outputItem != null && operation.powerRequired <= powerConsumed) {
+        if (operation?.outputItem != null && powerRequired <= powerConsumed) {
             // Operation completed. Results!
 
             element.inventory.decrStackSize(FabricatorSlots.COPPER_PLATE.slotId, 1)
@@ -200,17 +231,17 @@ class FabricatorProcess(val element: FabricatorElement): IProcess {
             if (Math.random() <= operation.yieldPercentage) {
                 if (element.inventory.getStackInSlot(FabricatorSlots.OUTPUT.slotId) == null) {
                     val newStack = operation.outputItem.copy()
-                    newStack.stackSize = 1
+                    newStack.stackSize = operation.perSheet
                     element.inventory.setInventorySlotContents(FabricatorSlots.OUTPUT.slotId, newStack)
-                    powerConsumed -= operation.powerRequired
+                    powerConsumed -= powerRequired
                     element.needPublish()
                 } else {
                     val stackSize = element.inventory.getStackInSlot(FabricatorSlots.OUTPUT.slotId)!!.stackSize
                     if (stackSize in 0..63) {
                         val newStack = operation.outputItem.copy()
-                        newStack.stackSize = stackSize + 1
+                        newStack.stackSize = stackSize + operation.perSheet
                         element.inventory.setInventorySlotContents(FabricatorSlots.OUTPUT.slotId, newStack)
-                        powerConsumed -= operation.powerRequired
+                        powerConsumed -= powerRequired
                         element.needPublish()
                     }
                 }
@@ -222,6 +253,7 @@ class FabricatorProcess(val element: FabricatorElement): IProcess {
 class FabricatorRender(entity: TransparentNodeEntity, descriptor: TransparentNodeDescriptor) : TransparentNodeElementRender(entity, descriptor) {
 
     var operationId: Int = 0
+    private var isRunning = false
 
     override val inventory = FabricatorInventory(3, 64, this)
 
@@ -230,7 +262,7 @@ class FabricatorRender(entity: TransparentNodeEntity, descriptor: TransparentNod
     }
 
     override fun draw() {
-        (this.transparentNodedescriptor as FabricatorDescriptor).draw()
+        (this.transparentNodedescriptor as FabricatorDescriptor).draw(isRunning)
     }
 
     override fun newGuiDraw(side: Direction, player: EntityPlayer): GuiScreen {
@@ -239,16 +271,17 @@ class FabricatorRender(entity: TransparentNodeEntity, descriptor: TransparentNod
 
     override fun networkUnserialize(stream: DataInputStream) {
         super.networkUnserialize(stream)
-        operationId = stream.readInt()?: -1
+        operationId = stream.readInt()
+        isRunning = stream.readBoolean()
     }
 }
 
-const val slotSize = 16;
+const val slotSize = 16
 const val buttonWidth = 20
 
 class FabricatorGui(player: EntityPlayer, inventory: IInventory, val render: FabricatorRender): GuiContainerEln(FabricatorContainer(null, player, inventory, render.transparentNodedescriptor as FabricatorDescriptor)) {
 
-    val buttonsArray = mutableListOf<GuiButtonEln>()
+    private val buttonsArray = mutableListOf<GuiButtonEln>()
 
     override fun newHelper() = GuiHelperContainer(this, 176, 164, 8, 80)
 
@@ -272,7 +305,7 @@ class FabricatorGui(player: EntityPlayer, inventory: IInventory, val render: Fab
             val column: Int = idx / 3
             val row: Int = idx % 3
 
-            UtilsClient.drawItemStack(operation.outputItem, 6 + slotSize * 3 + 4 + this.guiLeft + 2 + (22 * column), 6 + (22 * idx) + this.guiTop + 2 + (22 * row), null, true)
+            UtilsClient.drawItemStack(operation.outputItem, 6 + slotSize * 3 + 4 + this.guiLeft + 2 + (22 * column), 6 + this.guiTop + 2 + (22 * row), null, true)
             RenderHelper.disableStandardItemLighting()
         }
 
