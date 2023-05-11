@@ -96,7 +96,15 @@ class ElnAgingCommand: IConsoleCommand {
         return if (args.isEmpty() || args[0] == "") {
             options
         } else {
-            return options.filter {it.startsWith(args[0], ignoreCase = true)}
+            val returnList: List<String>
+            try {
+                // Sorting the list can cause the game to crash... so let's try to handle the situation
+                returnList = options.filter {it.startsWith(args[0], ignoreCase = true)}
+                return returnList
+            } catch (ex: java.lang.Exception) {
+                ex.printStackTrace()
+            }
+            return listOf()
         }
     }
 }
