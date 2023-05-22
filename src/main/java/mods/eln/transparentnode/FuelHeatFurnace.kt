@@ -104,7 +104,7 @@ class FuelHeatFurnaceElement(transparentNode: TransparentNode, descriptor: Trans
 
     private val tank = PreciseElementFluidHandler(25)
 
-    private val inventory_ = TransparentNodeElementInventory(2, 1, this)
+    override val inventory = TransparentNodeElementInventory(2, 1, this)
 
     private var externalControlled by published(false)
     private var mainSwitch by published(false)
@@ -118,7 +118,7 @@ class FuelHeatFurnaceElement(transparentNode: TransparentNode, descriptor: Trans
     private val controlProcess = object : RegulatorProcess("controller") {
         override fun process(time: Double) {
             val nominalPower = if (mainSwitch)
-                FuelBurnerDescriptor.getDescriptor(inventory_.getStackInSlot(FuelHeatFurnaceContainer.FuelBurnerSlot))?.producedHeatPower ?: 0.0
+                FuelBurnerDescriptor.getDescriptor(inventory.getStackInSlot(FuelHeatFurnaceContainer.FuelBurnerSlot))?.producedHeatPower ?: 0.0
             else
                 0.0
 
@@ -184,7 +184,7 @@ class FuelHeatFurnaceElement(transparentNode: TransparentNode, descriptor: Trans
 
     override fun initialize() {
         (descriptor as FuelHeatFurnaceDescriptor).thermal.applyTo(thermalLoad)
-        inventoryChange(inventory_)
+        inventoryChange(inventory)
         connect()
     }
 
@@ -198,14 +198,14 @@ class FuelHeatFurnaceElement(transparentNode: TransparentNode, descriptor: Trans
         stream.writeFloat(setTemperature.toFloat())
         stream.writeFloat(actualHeatPower.toFloat())
         stream.writeFloat(thermalLoad.Tc.toFloat())
-        stream.writeInt(FuelBurnerDescriptor.getDescriptor(inventory_.getStackInSlot(FuelHeatFurnaceContainer.FuelBurnerSlot))?.type ?: -1)
+        stream.writeInt(FuelBurnerDescriptor.getDescriptor(inventory.getStackInSlot(FuelHeatFurnaceContainer.FuelBurnerSlot))?.type ?: -1)
     }
 
     override fun networkUnserialize(stream: DataInputStream): Byte {
         when (super.networkUnserialize(stream)) {
             ExternalControlledToggleEvent -> {
                 externalControlled = !externalControlled
-                inventoryChange(inventory_)
+                inventoryChange(inventory)
             }
             MainSwitchToggleEvent -> mainSwitch = !mainSwitch
             SetManualControlValueEvent -> {
@@ -252,9 +252,9 @@ class FuelHeatFurnaceElement(transparentNode: TransparentNode, descriptor: Trans
     }
 
     override fun inventoryChange(inventory: IInventory?) {
-        mainSwitch = mainSwitch && inventory_.getStackInSlot(FuelHeatFurnaceContainer.FuelBurnerSlot) != null
+        mainSwitch = mainSwitch && inventory?.getStackInSlot(FuelHeatFurnaceContainer.FuelBurnerSlot) != null
 
-        val regulatorStack = inventory_.getStackInSlot(FuelHeatFurnaceContainer.RegulatorSlot)
+        val regulatorStack = inventory?.getStackInSlot(FuelHeatFurnaceContainer.RegulatorSlot)
         if (regulatorStack != null && !externalControlled) {
             val regulator = Utils.getItemObject(regulatorStack) as IRegulatorDescriptor
             regulator.applyTo(controlProcess, 500.0, 20.0, 0.2, 0.1)
@@ -263,7 +263,7 @@ class FuelHeatFurnaceElement(transparentNode: TransparentNode, descriptor: Trans
         }
     }
 
-    override fun newContainer(side: Direction, player: EntityPlayer) = FuelHeatFurnaceContainer(node, player, inventory_)
+    override fun newContainer(side: Direction, player: EntityPlayer) = FuelHeatFurnaceContainer(node, player, inventory)
 }
 
 class FuelHeatFurnaceRender(tileEntity: TransparentNodeEntity, descriptor: TransparentNodeDescriptor) :
