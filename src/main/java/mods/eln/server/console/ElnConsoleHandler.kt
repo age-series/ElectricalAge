@@ -96,8 +96,15 @@ class ElnConsoleCommands: ICommand {
 
     // What the heck was Mojang thinking here?
     override fun compareTo(other: Any?): Int {
-        if (other !is String) throw Exception()
-        return "eln2".compareTo(other)
+        val isString = other !is String
+        if (isString) {
+            println("CompareTo is not String: ${other?.javaClass?.name}")
+        }
+        if (other is String) {
+            return "eln2".compareTo(other)
+        } else {
+            return "eln2".compareTo(other.toString())
+        }
     }
 
     override fun getCommandName() = "eln"
