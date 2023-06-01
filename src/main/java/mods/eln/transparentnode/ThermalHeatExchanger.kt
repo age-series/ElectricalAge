@@ -86,6 +86,7 @@ class ThermalHeatExchangerElement(
     companion object {
         val ic2hotcoolant: Fluid? = FluidRegistry.getFluid("ic2hotcoolant")
         val ic2coolant: Fluid? = FluidRegistry.getFluid("ic2coolant")
+        val ic2hotwater: Fluid? = FluidRegistry.getFluid("ic2hotwater")
         // Use 'steam' but fall back on 'ic2steam'. Or, just die.
         val steam: Fluid? = FluidRegistry.getFluid("steam")?: FluidRegistry.getFluid("ic2steam")
         val INPUT_SIDE = ForgeDirection.DOWN
@@ -181,6 +182,15 @@ class ThermalHeatExchangerElement(
             //println("IC2 Coolant Enabled in Thermal Heat Exchanger")
             thermalPairs.add(ThermalPairing(ic2coolant, ic2hotcoolant, -640.0 / 7.0, 9, 1.0, false, minTemp = 300.0))
             thermalPairs.add(ThermalPairing(ic2hotcoolant, ic2coolant, 640.0 / 7.0, 9, 1.0, false))
+        }
+
+        if (ic2hotwater != null) {
+            thermalPairs.add(ThermalPairing(ic2hotwater,FluidRegistry.WATER,
+                1 / 0.45 / 2, //Joules per mB
+                36, //max mB input rate
+                1.0, //ratio
+                false,//reversible?
+                maxTemp = 76.85))
         }
 
         if (steam != null) {
