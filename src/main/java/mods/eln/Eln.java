@@ -1,6 +1,5 @@
 package mods.eln;
 
-import com.sun.org.apache.xalan.internal.xsltc.compiler.util.Util;
 import cpw.mods.fml.common.*;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
@@ -24,7 +23,8 @@ import mods.eln.entity.ReplicatorEntity;
 import mods.eln.entity.ReplicatorPopProcess;
 import mods.eln.eventhandlers.ElnFMLEventsHandler;
 import mods.eln.eventhandlers.ElnForgeEventsHandler;
-import mods.eln.fluid.ElnItemBlock;
+import mods.eln.fluid.ElnFluidRegistry;
+import mods.eln.fluid.FluidRegistrationKt;
 import mods.eln.generic.*;
 import mods.eln.generic.genericArmorItem.ArmourType;
 import mods.eln.ghost.GhostBlock;
@@ -45,7 +45,6 @@ import mods.eln.item.regulator.RegulatorAnalogDescriptor;
 import mods.eln.item.regulator.RegulatorOnOffDescriptor;
 import mods.eln.mechanical.*;
 import mods.eln.misc.*;
-import mods.eln.misc.SeriesFunction;
 import mods.eln.node.NodeBlockEntity;
 import mods.eln.node.NodeManager;
 import mods.eln.node.NodeManagerNbt;
@@ -76,7 +75,6 @@ import mods.eln.simplenode.test.TestBlock;
 import mods.eln.sixnode.*;
 import mods.eln.sixnode.TreeResinCollector.TreeResinCollectorDescriptor;
 import mods.eln.sixnode.batterycharger.BatteryChargerDescriptor;
-import mods.eln.sixnode.CurrentSourceDescriptor;
 import mods.eln.sixnode.currentcable.CurrentCableDescriptor;
 import mods.eln.sixnode.diode.DiodeDescriptor;
 import mods.eln.sixnode.electricalalarm.ElectricalAlarmDescriptor;
@@ -99,7 +97,6 @@ import mods.eln.sixnode.electricalsensor.ElectricalSensorDescriptor;
 import mods.eln.sixnode.electricalsource.ElectricalSourceDescriptor;
 import mods.eln.sixnode.electricalswitch.ElectricalSwitchDescriptor;
 import mods.eln.sixnode.electricaltimeout.ElectricalTimeoutDescriptor;
-import mods.eln.sixnode.ElectricalVuMeterDescriptor;
 import mods.eln.sixnode.electricalwatch.ElectricalWatchDescriptor;
 import mods.eln.sixnode.electricalweathersensor.ElectricalWeatherSensorDescriptor;
 import mods.eln.sixnode.electricalwindsensor.ElectricalWindSensorDescriptor;
@@ -112,8 +109,6 @@ import mods.eln.sixnode.lampsupply.LampSupplyElement;
 import mods.eln.sixnode.logicgate.*;
 import mods.eln.sixnode.modbusrtu.ModbusRtuDescriptor;
 import mods.eln.sixnode.modbusrtu.ModbusTcpServer;
-import mods.eln.sixnode.PowerCapacitorSixDescriptor;
-import mods.eln.sixnode.PowerInductorSixDescriptor;
 import mods.eln.sixnode.powersocket.PowerSocketDescriptor;
 import mods.eln.sixnode.resistor.ResistorDescriptor;
 import mods.eln.sixnode.thermalcable.ThermalCableDescriptor;
@@ -132,8 +127,6 @@ import mods.eln.transparentnode.*;
 import mods.eln.transparentnode.autominer.AutoMinerDescriptor;
 import mods.eln.transparentnode.battery.BatteryDescriptor;
 import mods.eln.transparentnode.computercraftio.PeripheralHandler;
-import mods.eln.transparentnode.DcDcDescriptor;
-import mods.eln.transparentnode.LegacyDcDcDescriptor;
 import mods.eln.transparentnode.eggincubator.EggIncubatorDescriptor;
 import mods.eln.transparentnode.electricalantennarx.ElectricalAntennaRxDescriptor;
 import mods.eln.transparentnode.electricalantennatx.ElectricalAntennaTxDescriptor;
@@ -148,12 +141,12 @@ import mods.eln.transparentnode.powerinductor.PowerInductorDescriptor;
 import mods.eln.transparentnode.solarpanel.SolarPanelDescriptor;
 import mods.eln.transparentnode.teleporter.TeleporterDescriptor;
 import mods.eln.transparentnode.teleporter.TeleporterElement;
-import mods.eln.transparentnode.themralheatexchanger.*;
+import mods.eln.transparentnode.themralheatexchanger.ThermalHeatExchangerDescriptor;
+import mods.eln.transparentnode.themralheatpump.ThermalHeatPumpDescriptor;
 import mods.eln.transparentnode.thermaldissipatoractive.ThermalDissipatorActiveDescriptor;
 import mods.eln.transparentnode.thermaldissipatorpassive.ThermalDissipatorPassiveDescriptor;
 import mods.eln.transparentnode.turbine.TurbineDescriptor;
 import mods.eln.transparentnode.turret.TurretDescriptor;
-import mods.eln.transparentnode.VariableDcDcDescriptor;
 import mods.eln.transparentnode.waterturbine.WaterTurbineDescriptor;
 import mods.eln.transparentnode.windturbine.WindTurbineDescriptor;
 import mods.eln.wiki.Data;
@@ -178,29 +171,19 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.WorldServer;
-import net.minecraftforge.client.event.TextureStitchEvent.Post;
+import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
-import net.minecraftforge.fluids.*;
+import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import mods.eln.fluid.BlockElnFluid;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidRegistry;
-import mods.eln.fluid.BucketHandler;
-import mods.eln.fluid.ElnFluidRegistry;
-
-import cpw.mods.fml.common.Mod;
-
-import cpw.mods.fml.common.event.FMLInitializationEvent;
 
 import java.util.*;
+
 import static mods.eln.i18n.I18N.*;
 
 @SuppressWarnings({"SameParameterValue", "PointlessArithmeticExpression"})
@@ -416,10 +399,8 @@ public class Eln {
         Utils.println(Version.print());
 
         Side side = FMLCommonHandler.instance().getEffectiveSide();
-        if (side == Side.CLIENT) {
+        if (side == Side.CLIENT)
             MinecraftForge.EVENT_BUS.register(new SoundLoader());
-            //register client side events here
-        }
 
         config = new Configuration(event.getSuggestedConfigurationFile());
         config.load();
@@ -1022,13 +1003,12 @@ public class Eln {
         if (isDevelopmentRun()) {
             Achievements.init();
         }
+
         //fluid registry
-        registerElnFluid("hotwater",Material.water,4644607, 1000, 1000, 0, 333, false, true);
-        registerElnFluid("coldwater",Material.water,4644607, 1000, 1000, 0, 288, false, true);
+        FluidRegistrationKt.registerElnFluids();
 
         MinecraftForge.EVENT_BUS.register(new ElnForgeEventsHandler());
         FMLCommonHandler.instance().bus().register(new ElnFMLEventsHandler());
-        MinecraftForge.EVENT_BUS.register(this); //events here will now be listened to
 
         FMLInterModComms.sendMessage("Waila", "register", "mods.eln.integration.waila.WailaIntegration.callbackRegister");
 
@@ -1094,35 +1074,9 @@ public class Eln {
          */
     }
 
-    private static Map<ElnFluidRegistry, Fluid> fluids = new EnumMap(ElnFluidRegistry.class);
-    private static Map<ElnFluidRegistry, Block> fluidBlocks = new EnumMap(ElnFluidRegistry.class);
+    public static Map<ElnFluidRegistry, Fluid> fluids = new EnumMap(ElnFluidRegistry.class);
+    public static Map<ElnFluidRegistry, Block> fluidBlocks = new EnumMap(ElnFluidRegistry.class);
 
-    private static void registerElnFluid(String fluidname, Material material, int color, int density, int viscosity, int luminosity, int temperature, boolean isGaseous, boolean isBucketable) {
-
-        Fluid fluid = new Fluid(fluidname).setDensity(density).setViscosity(viscosity).setLuminosity(luminosity).setTemperature(temperature).setGaseous(isGaseous);
-        if (!FluidRegistry.registerFluid(fluid)){ fluid = FluidRegistry.getFluid(fluidname);}
-        Block fluidblock;
-        if (!fluid.canBePlacedInWorld()) {
-            fluidblock = new BlockElnFluid(fluid, material, color);
-            fluid.setBlock(fluidblock);
-            // fluid.setUnlocalizedName(fluidblock.getUnlocalizedName().substring(5));
-
-            //Ideally this system will be replaced with a list which will grow in size as fluids are registered
-            //It's necessary because minecraft is badly coded and needs to assign its icons in a much later event
-            fluids.put(ElnFluidRegistry.valueOf(fluidname), fluid);
-            fluidBlocks.put(ElnFluidRegistry.valueOf(fluidname), fluidblock);
-
-            if(isBucketable) {
-                ItemBucket FluidBucket = new ItemBucket(fluidblock);
-                FluidBucket.setUnlocalizedName(fluidblock.getUnlocalizedName().substring(5) + "bucket").setContainerItem(Items.bucket);
-                FluidBucket.setTextureName(MODID + ":" + FluidBucket.getUnlocalizedName().substring(5));
-                GameRegistry.registerItem(FluidBucket, FluidBucket.getUnlocalizedName().substring(5));
-                FluidContainerRegistry.registerFluidContainer(fluid, new ItemStack(FluidBucket), new ItemStack(Items.bucket));
-                BucketHandler.INSTANCE.buckets.put(fluidblock, FluidBucket);
-                MinecraftForge.EVENT_BUS.register(BucketHandler.INSTANCE);
-            }
-        }
-    }
 
     private void checkRecipe() {
         Utils.println("No recipe for ");
@@ -2205,6 +2159,25 @@ public class Eln {
                 obj.getObj("LargeRheostat"),
                 1000, -100,// double warmLimit,double coolLimit,
                 4000, 800,// double nominalP,double nominalT,
+                10, 1// double nominalTao,double nominalConnectionDrop
+            );
+            LargeRheostatDescriptor desc = new LargeRheostatDescriptor(
+                name, dissipator, veryHighVoltageCableDescriptor, SeriesFunction.newE12(0)
+            );
+
+            transparentNodeItem.addDescriptor(subId + (id << 6), desc);
+        }
+
+        {
+            subId = 40;
+
+            name = TR_NAME(Type.NONE, "Resistive Heater");
+
+            ThermalDissipatorPassiveDescriptor dissipator = new ThermalDissipatorPassiveDescriptor(
+                name,
+                obj.getObj("LargeRheostat"),
+                1000, -100,// double warmLimit,double coolLimit,
+                1, 1,// double nominalP,double nominalT,
                 10, 1// double nominalTao,double nominalConnectionDrop
             );
             LargeRheostatDescriptor desc = new LargeRheostatDescriptor(
@@ -4787,6 +4760,14 @@ public class Eln {
             );
             transparentNodeItem.addDescriptor(subId + (id << 6), desc);
         }
+        {
+            subId = 3;
+            name = TR_NAME(Type.NONE, "Thermal Heat Pump");
+            ThermalHeatPumpDescriptor desc = new ThermalHeatPumpDescriptor(
+                name, new ThermalLoadInitializerByPowerDrop(780, -100, 10, 2)
+            );
+            transparentNodeItem.addDescriptor(subId + (id << 6), desc);
+        }
     }
 
     private void registerTurret(int id) {
@@ -6116,6 +6097,14 @@ public class Eln {
             'R', findItemStack("Rheostat"),
             'C', findItemStack("Copper Thermal Cable"),
             'D', findItemStack("Small Passive Thermal Dissipator")
+        );
+
+        addRecipe(findItemStack("Resistive Heater"),
+            "   ",
+            "   ",
+            "CRC",
+            'R', findItemStack("Rheostat"),
+            'C', findItemStack("Copper Thermal Cable")
         );
     }
 
@@ -8670,9 +8659,9 @@ public class Eln {
 
     @SubscribeEvent
     @SideOnly(Side.CLIENT)
-    public void textureHook(Post event) {
+    public void textureHook(TextureStitchEvent.Post event) {
         if (event.map.getTextureType() == 0)
-        for (ElnFluidRegistry name : fluidBlocks.keySet()) {
+        for (ElnFluidRegistry name : fluids.keySet()) {
             Block block = (Block)fluidBlocks.get(name);
             Fluid fluid = (Fluid)fluids.get(name);
             fluid.setIcons(block.getBlockTextureFromSide(1), block.getBlockTextureFromSide(2));
