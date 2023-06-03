@@ -337,10 +337,10 @@ tile.arc_clay_block.name=Arc Clay Block
 tile.arc_metal_block.name=Arc Metal Block
 tile.eln.ElnProbe.name=Eln Computer Probe
 tile.eln.EnergyConverter.name=Energy Exporter
-tile.hotwater.name=Hot Water
-item.hotwaterbucket.name=Bucket of Hot Water
-tile.coldwater.name=Cold Water
-item.coldwaterbucket.name=Bucket of Cold Water
+hotwater.name=Hot Water
+item.hot_water_bucket.name=Hot Water Bucket
+coldwater.name=Cold Water
+item.cold_water_bucket.name=Cold Water Bucket
 
 # ./src/main/java/mods/eln/i18n/I18N.java
 You_have_%1$_lives_left=You have %1$ lives left
