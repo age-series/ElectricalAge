@@ -293,9 +293,9 @@ tile.eln.ElnProbe.name=Eln Computer Probe
 tile.eln.EnergyConverterElnToOtherHVUBlock.name=800V Electrical Age to other energy exporter
 tile.eln.EnergyConverterElnToOtherLVUBlock.name=50V Electrical Age to other energy exporter
 tile.eln.EnergyConverterElnToOtherMVUBlock.name=200V Electrical Age to other energy exporter
-hotwater.name=Hot Water
+tile.hotwater.name=Hot Water
 item.hotwaterbucket.name=Bucket of Hot Water
-coldwater.name=Cold Water
+tile.coldwater.name=Cold Water
 item.coldwaterbucket.name=Bucket of Cold Water
 
 # ./src/main/java/mods/eln/i18n/I18N.java
