@@ -1,6 +1,6 @@
 package mods.eln.fluid;
 
 public enum ElnFluidRegistry {
-    hotwater,
-    coldwater
+    fluidhotwater,
+    fluidcoldwater
 }

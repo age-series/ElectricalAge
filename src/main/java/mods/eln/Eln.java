@@ -1,5 +1,6 @@
 package mods.eln;
 
+import com.sun.org.apache.xalan.internal.xsltc.compiler.util.Util;
 import cpw.mods.fml.common.*;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
@@ -176,10 +177,8 @@ import net.minecraft.launchwrapper.LogWrapper;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Vec3;
-import net.minecraft.world.IBlockAccess;
-import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
-import net.minecraftforge.client.event.TextureStitchEvent;
+import net.minecraftforge.client.event.TextureStitchEvent.Post;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
@@ -417,8 +416,10 @@ public class Eln {
         Utils.println(Version.print());
 
         Side side = FMLCommonHandler.instance().getEffectiveSide();
-        if (side == Side.CLIENT)
+        if (side == Side.CLIENT) {
             MinecraftForge.EVENT_BUS.register(new SoundLoader());
+            //register client side events here
+        }
 
         config = new Configuration(event.getSuggestedConfigurationFile());
         config.load();
@@ -1027,6 +1028,7 @@ public class Eln {
 
         MinecraftForge.EVENT_BUS.register(new ElnForgeEventsHandler());
         FMLCommonHandler.instance().bus().register(new ElnFMLEventsHandler());
+        MinecraftForge.EVENT_BUS.register(this); //events here will now be listened to
 
         FMLInterModComms.sendMessage("Waila", "register", "mods.eln.integration.waila.WailaIntegration.callbackRegister");
 
@@ -1095,25 +1097,29 @@ public class Eln {
     private static Map<ElnFluidRegistry, Fluid> fluids = new EnumMap(ElnFluidRegistry.class);
     private static Map<ElnFluidRegistry, Block> fluidBlocks = new EnumMap(ElnFluidRegistry.class);
 
-    private static void registerElnFluid(String internalName, Material material, int color, int density, int viscosity, int luminosity, int temperature, boolean isGaseous, boolean isBucketable) {
-        String fluidName = "eln" + internalName.toLowerCase();
-        Fluid fluid = new Fluid(fluidName).setDensity(density).setViscosity(viscosity).setLuminosity(luminosity).setTemperature(temperature).setGaseous(isGaseous);
-        if (!FluidRegistry.registerFluid(fluid)) fluid = FluidRegistry.getFluid(fluidName);
+    private static void registerElnFluid(String fluidname, Material material, int color, int density, int viscosity, int luminosity, int temperature, boolean isGaseous, boolean isBucketable) {
+        fluidname = "fluid" + fluidname;
+        String blockname = fluidname;
+        fluidname = fluidname.substring("fluid".length()).toLowerCase(Locale.ENGLISH);
+
+        Fluid fluid = new Fluid(fluidname).setDensity(density).setViscosity(viscosity).setLuminosity(luminosity).setTemperature(temperature).setGaseous(isGaseous);
+        if (!FluidRegistry.registerFluid(fluid)){ fluid = FluidRegistry.getFluid(fluidname);}
         Block fluidblock;
         if (!fluid.canBePlacedInWorld()) {
-            fluidblock = new BlockElnFluid(internalName, fluid, material, color);
+            fluidblock = new BlockElnFluid(blockname, fluid, material, color);
             fluid.setBlock(fluidblock);
-            fluid.setUnlocalizedName(fluidblock.getUnlocalizedName());
+            fluid.setUnlocalizedName(fluidblock.getUnlocalizedName().substring(5));
+            //because it's client-side only, set fluid icons later.
 
             //this sucks, but this is how IC2 does it, so this is how we're doing it. Please refactor.
             //Originally I wanted it to be a list with K,V values but Java doesn't really support that as well as C# does
             //Honestly i'm still not convinced this even works, but it's impossible to debug, so not much I can do there
-            fluids.put(ElnFluidRegistry.valueOf(internalName), fluid);
-            fluidBlocks.put(ElnFluidRegistry.valueOf(internalName), fluidblock);
+            fluids.put(ElnFluidRegistry.valueOf(blockname), fluid);
+            fluidBlocks.put(ElnFluidRegistry.valueOf(blockname), fluidblock);
 
             if(isBucketable) {
                 ItemBucket FluidBucket = new ItemBucket(fluidblock);
-                FluidBucket.setUnlocalizedName(fluidblock.getUnlocalizedName() + "bucket").setContainerItem(Items.bucket);
+                FluidBucket.setUnlocalizedName(fluidblock.getUnlocalizedName().substring(5) + "bucket").setContainerItem(Items.bucket);
                 FluidBucket.setTextureName(MODID + ":" + FluidBucket.getUnlocalizedName().substring(5));
                 GameRegistry.registerItem(FluidBucket, FluidBucket.getUnlocalizedName());
                 FluidContainerRegistry.registerFluidContainer(fluid, new ItemStack(FluidBucket), new ItemStack(Items.bucket));
@@ -2204,25 +2210,6 @@ public class Eln {
                 obj.getObj("LargeRheostat"),
                 1000, -100,// double warmLimit,double coolLimit,
                 4000, 800,// double nominalP,double nominalT,
-                10, 1// double nominalTao,double nominalConnectionDrop
-            );
-            LargeRheostatDescriptor desc = new LargeRheostatDescriptor(
-                name, dissipator, veryHighVoltageCableDescriptor, SeriesFunction.newE12(0)
-            );
-
-            transparentNodeItem.addDescriptor(subId + (id << 6), desc);
-        }
-
-        {
-            subId = 40;
-
-            name = TR_NAME(Type.NONE, "Resistive Heater");
-
-            ThermalDissipatorPassiveDescriptor dissipator = new ThermalDissipatorPassiveDescriptor(
-                name,
-                obj.getObj("LargeRheostat"),
-                1000, -100,// double warmLimit,double coolLimit,
-                1, 1,// double nominalP,double nominalT,
                 10, 1// double nominalTao,double nominalConnectionDrop
             );
             LargeRheostatDescriptor desc = new LargeRheostatDescriptor(
@@ -4805,14 +4792,6 @@ public class Eln {
             );
             transparentNodeItem.addDescriptor(subId + (id << 6), desc);
         }
-        {
-            subId = 3;
-            name = TR_NAME(Type.NONE, "Thermal Heat Pump");
-            ThermalHeatPumpDescriptor desc = new ThermalHeatPumpDescriptor(
-                name, new ThermalLoadInitializerByPowerDrop(780, -100, 10, 2)
-            );
-            transparentNodeItem.addDescriptor(subId + (id << 6), desc);
-        }
     }
 
     private void registerTurret(int id) {
@@ -6142,14 +6121,6 @@ public class Eln {
             'R', findItemStack("Rheostat"),
             'C', findItemStack("Copper Thermal Cable"),
             'D', findItemStack("Small Passive Thermal Dissipator")
-        );
-
-        addRecipe(findItemStack("Resistive Heater"),
-            "   ",
-            "   ",
-            "CRC",
-            'R', findItemStack("Rheostat"),
-            'C', findItemStack("Copper Thermal Cable")
         );
     }
 
@@ -8704,9 +8675,9 @@ public class Eln {
 
     @SubscribeEvent
     @SideOnly(Side.CLIENT)
-    public void textureHook(TextureStitchEvent.Post event) {
+    public void textureHook(Post event) {
         if (event.map.getTextureType() == 0)
-        for (ElnFluidRegistry name : fluids.keySet()) {
+        for (ElnFluidRegistry name : fluidBlocks.keySet()) {
             Block block = (Block)fluidBlocks.get(name);
             Fluid fluid = (Fluid)fluids.get(name);
             fluid.setIcons(block.getBlockTextureFromSide(1), block.getBlockTextureFromSide(2));

@@ -4,8 +4,12 @@ package mods.eln.fluid;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+
+import java.util.Locale;
 import java.util.Map;
 import java.util.Random;
+
+import mods.eln.Eln;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
@@ -35,9 +39,7 @@ public class BlockElnFluid extends BlockFluidClassic
     {
         super(fluid, material);
 
-        if (!fluid.getName().startsWith("eln")) throw new RuntimeException("Invalid fluid name: " + fluid.getName());
-
-        setBlockName(internalName);
+        setBlockName(fluidName);
         GameRegistry.registerBlock(this, ItemBlock.class, internalName);
         this.fluid = fluid;
         this.color = color;
@@ -58,10 +60,11 @@ public class BlockElnFluid extends BlockFluidClassic
     @SideOnly(Side.CLIENT)
     public void registerBlockIcons(IIconRegister iconRegister)
     {
-        String name = this.fluidName.substring("eln".length());
+        String name = this.fluidName; if(name.startsWith("eln")){name = name.substring("eln".length());}
+        String domain = Eln.MODID.toLowerCase(Locale.ENGLISH) + ":fluids/";
         this.fluidIcon = new IIcon[] {
-            iconRegister.registerIcon("eln:" + "fluids/" + name + "_still"),
-            iconRegister.registerIcon("eln:" + "fluids/" + name + "_flow") };
+            iconRegister.registerIcon(domain + name + "_still"),
+            iconRegister.registerIcon(domain + name + "_flow") };
     }
 
     /*public void updateTick(World world, int x, int y, int z, Random random)
@@ -129,10 +132,10 @@ public class BlockElnFluid extends BlockFluidClassic
         return (side != 0) && (side != 1) ? this.fluidIcon[1] : this.fluidIcon[0];
     }
 
-    public String getUnlocalizedName()
-    {
-        return super.getUnlocalizedName().substring(5);
-    }
+    //public String getUnlocalizedName()
+    //{
+    //    return super.getUnlocalizedName().substring(5);
+    //}
 
     public int getColor() {
         return this.color;
