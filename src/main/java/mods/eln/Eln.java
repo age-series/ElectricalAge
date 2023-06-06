@@ -1098,24 +1098,20 @@ public class Eln {
     private static Map<ElnFluidRegistry, Block> fluidBlocks = new EnumMap(ElnFluidRegistry.class);
 
     private static void registerElnFluid(String fluidname, Material material, int color, int density, int viscosity, int luminosity, int temperature, boolean isGaseous, boolean isBucketable) {
-        fluidname = "fluid" + fluidname;
-        String blockname = fluidname;
-        fluidname = fluidname.substring("fluid".length()).toLowerCase(Locale.ENGLISH);
 
         Fluid fluid = new Fluid(fluidname).setDensity(density).setViscosity(viscosity).setLuminosity(luminosity).setTemperature(temperature).setGaseous(isGaseous);
         if (!FluidRegistry.registerFluid(fluid)){ fluid = FluidRegistry.getFluid(fluidname);}
         Block fluidblock;
         if (!fluid.canBePlacedInWorld()) {
-            fluidblock = new BlockElnFluid(blockname, fluid, material, color);
+            fluidblock = new BlockElnFluid(fluidname, fluid, material, color);
             fluid.setBlock(fluidblock);
-            fluid.setUnlocalizedName(fluidblock.getUnlocalizedName().substring(5));
-            //because it's client-side only, set fluid icons later.
+            // fluid.setUnlocalizedName(fluidblock.getUnlocalizedName().substring(5));
 
             //this sucks, but this is how IC2 does it, so this is how we're doing it. Please refactor.
             //Originally I wanted it to be a list with K,V values but Java doesn't really support that as well as C# does
-            //Honestly i'm still not convinced this even works, but it's impossible to debug, so not much I can do there
-            fluids.put(ElnFluidRegistry.valueOf(blockname), fluid);
-            fluidBlocks.put(ElnFluidRegistry.valueOf(blockname), fluidblock);
+            //It does work, even though it's not exactly an elegant solution.
+            fluids.put(ElnFluidRegistry.valueOf(fluidname), fluid);
+            fluidBlocks.put(ElnFluidRegistry.valueOf(fluidname), fluidblock);
 
             if(isBucketable) {
                 ItemBucket FluidBucket = new ItemBucket(fluidblock);
