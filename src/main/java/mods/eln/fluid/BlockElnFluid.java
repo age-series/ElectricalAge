@@ -35,12 +35,12 @@ public class BlockElnFluid extends BlockFluidClassic
     protected Fluid fluid;
     private final int color;
 
-    public BlockElnFluid(String internalName, Fluid fluid, Material material, int color)
+    public BlockElnFluid(String fluidBlockName, Fluid fluid, Material material, int color)
     {
         super(fluid, material);
 
-        setBlockName(fluidName);
-        GameRegistry.registerBlock(this, ItemBlock.class, internalName);
+        setBlockName(fluidBlockName);
+        GameRegistry.registerBlock(this, ElnItemBlock.class, "Eln." + fluidBlockName);
         this.fluid = fluid;
         this.color = color;
 
