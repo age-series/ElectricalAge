@@ -28,6 +28,8 @@ import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraft.item.ItemBlock;
 
+import static scala.Console.print;
+
 public class BlockElnFluid extends BlockFluidClassic
 {
     @SideOnly(Side.CLIENT)
@@ -35,10 +37,10 @@ public class BlockElnFluid extends BlockFluidClassic
     protected Fluid fluid;
     private final int color;
 
-    public BlockElnFluid(String fluidBlockName, Fluid fluid, Material material, int color)
+    public BlockElnFluid(Fluid fluid, Material material, int color)
     {
         super(fluid, material);
-
+        String fluidBlockName = fluid.getUnlocalizedName().substring(6);
         setBlockName(fluidBlockName);
         GameRegistry.registerBlock(this, ElnItemBlock.class, "Eln." + fluidBlockName);
         this.fluid = fluid;
@@ -54,17 +56,25 @@ public class BlockElnFluid extends BlockFluidClassic
             this.displacements.put(Blocks.flowing_lava, Boolean.valueOf(false));
         }
 
+        /*String prefix = Block.blockRegistry.getNameForObject(this);
+        prefix = prefix.substring(0, prefix.indexOf(":") + 1) + "fluids/";
+        print("The fluid texture name of this block is: " + prefix + this.fluidName + "_still");*/
+
+        //The fluid texture name of this block is:
+        // Eln:fluids/hotwater_still
+
 
     }
 
     @SideOnly(Side.CLIENT)
     public void registerBlockIcons(IIconRegister iconRegister)
     {
-        String name = this.fluidName; if(name.startsWith("eln")){name = name.substring("eln".length());}
-        String domain = Eln.MODID.toLowerCase(Locale.ENGLISH) + ":fluids/";
-        this.fluidIcon = new IIcon[] {
-            iconRegister.registerIcon(domain + name + "_still"),
-            iconRegister.registerIcon(domain + name + "_flow") };
+        String prefix = Block.blockRegistry.getNameForObject(this);
+        prefix = prefix.substring(0, prefix.indexOf(":") + 1) + "fluids/";
+        this.fluidIcon = new IIcon[]{
+            iconRegister.registerIcon(prefix + this.fluidName + "_still"),
+            iconRegister.registerIcon(prefix + this.fluidName + "_flow")
+        };
     }
 
     /*public void updateTick(World world, int x, int y, int z, Random random)
