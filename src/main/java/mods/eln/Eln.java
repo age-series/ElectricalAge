@@ -24,6 +24,7 @@ import mods.eln.entity.ReplicatorEntity;
 import mods.eln.entity.ReplicatorPopProcess;
 import mods.eln.eventhandlers.ElnFMLEventsHandler;
 import mods.eln.eventhandlers.ElnForgeEventsHandler;
+import mods.eln.fluid.ElnItemBlock;
 import mods.eln.generic.*;
 import mods.eln.generic.genericArmorItem.ArmourType;
 import mods.eln.ghost.GhostBlock;
@@ -148,7 +149,6 @@ import mods.eln.transparentnode.solarpanel.SolarPanelDescriptor;
 import mods.eln.transparentnode.teleporter.TeleporterDescriptor;
 import mods.eln.transparentnode.teleporter.TeleporterElement;
 import mods.eln.transparentnode.themralheatexchanger.*;
-import mods.eln.transparentnode.themralheatpump.*;
 import mods.eln.transparentnode.thermaldissipatoractive.ThermalDissipatorActiveDescriptor;
 import mods.eln.transparentnode.thermaldissipatorpassive.ThermalDissipatorPassiveDescriptor;
 import mods.eln.transparentnode.turbine.TurbineDescriptor;
@@ -1103,13 +1103,12 @@ public class Eln {
         if (!FluidRegistry.registerFluid(fluid)){ fluid = FluidRegistry.getFluid(fluidname);}
         Block fluidblock;
         if (!fluid.canBePlacedInWorld()) {
-            fluidblock = new BlockElnFluid(fluidname, fluid, material, color);
+            fluidblock = new BlockElnFluid(fluid, material, color);
             fluid.setBlock(fluidblock);
             // fluid.setUnlocalizedName(fluidblock.getUnlocalizedName().substring(5));
 
-            //this sucks, but this is how IC2 does it, so this is how we're doing it. Please refactor.
-            //Originally I wanted it to be a list with K,V values but Java doesn't really support that as well as C# does
-            //It does work, even though it's not exactly an elegant solution.
+            //Ideally this system will be replaced with a list which will grow in size as fluids are registered
+            //It's necessary because minecraft is badly coded and needs to assign its icons in a much later event
             fluids.put(ElnFluidRegistry.valueOf(fluidname), fluid);
             fluidBlocks.put(ElnFluidRegistry.valueOf(fluidname), fluidblock);
 
@@ -1117,7 +1116,7 @@ public class Eln {
                 ItemBucket FluidBucket = new ItemBucket(fluidblock);
                 FluidBucket.setUnlocalizedName(fluidblock.getUnlocalizedName().substring(5) + "bucket").setContainerItem(Items.bucket);
                 FluidBucket.setTextureName(MODID + ":" + FluidBucket.getUnlocalizedName().substring(5));
-                GameRegistry.registerItem(FluidBucket, FluidBucket.getUnlocalizedName());
+                GameRegistry.registerItem(FluidBucket, FluidBucket.getUnlocalizedName().substring(5));
                 FluidContainerRegistry.registerFluidContainer(fluid, new ItemStack(FluidBucket), new ItemStack(Items.bucket));
                 BucketHandler.INSTANCE.buckets.put(fluidblock, FluidBucket);
                 MinecraftForge.EVENT_BUS.register(BucketHandler.INSTANCE);
