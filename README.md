@@ -8,6 +8,10 @@ Look at the official project website [electrical-age.net](https://electrical-age
 
 This is a fork of Electrical Age, maintained by Jared Dunbar (jrddunbr) and Graham Nothup (Grissess), with the intent to add features and push for active development, which is incorporated back into the main distribution as they see fit.
 
+# PLEASE NOTE
+
+We only upload our mod to the [GitHub releases page](https://github.com/age-series/ElectricalAge), the [Modrinth page](https://modrinth.com/mod/electrical-age-jrddunbr-edition), and the [CurseForge page](https://legacy.curseforge.com/minecraft/mc-mods/electrical-age-eln). If you download this from anywhere else, it's a bad idea. You can verfy the jar is still intact by using PGP to verify the jar's PGP signature that is generated for the most recent releases and shared on GitHub.
+
 ## How to get started
 
 **ElectricalAge is Minecraft 1.7.10 compatible only. Forge is needed.**
