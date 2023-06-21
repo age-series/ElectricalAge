@@ -20,7 +20,7 @@ fun registerElnFluids() {
         if (!fluid.canBePlacedInWorld()) {
             fluidBlock = BlockElnFluid(it.name, fluid, it.material, it.color)
             fluid.setBlock(fluidBlock)
-            fluid.setUnlocalizedName(fluidBlock.unlocalizedName)
+            fluid.setUnlocalizedName(fluidBlock.unlocalizedName.substring(5))
             fluids[ElnFluidRegistry.valueOf(it.name)] = fluid
             fluidBlocks[ElnFluidRegistry.valueOf(it.name)] = fluidBlock
             if (it.isBucketable) {
