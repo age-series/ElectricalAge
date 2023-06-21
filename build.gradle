@@ -86,6 +86,10 @@ repositories {
         name = "mobiusstrip"
         url = "http://default.mobiusstrip.eu/maven/"
     }
+    maven {
+        name = "MineTweaker3"
+        url = "http://maven.blamejared.com/"
+    }
 }
 
 dependencies {
@@ -93,6 +97,8 @@ dependencies {
     shade "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
     compile "mcp.mobius.waila:Waila:1.5.11-RC2-NONEI_1.7.10:dev"
     compile "com.fazecast:jSerialComm:2.6.2"
+    compile "MineTweaker3:MineTweaker3-MC1710-Main:1.7.10-3.0.13.43"
+    //compile name: 'MineTweaker3', version: '1.7.10-3.0.10B', classifier: 'Dev', ext: 'jar'
 }
 
 jar {
