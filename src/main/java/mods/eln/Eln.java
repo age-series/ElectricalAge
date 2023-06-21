@@ -142,7 +142,6 @@ import mods.eln.transparentnode.solarpanel.SolarPanelDescriptor;
 import mods.eln.transparentnode.teleporter.TeleporterDescriptor;
 import mods.eln.transparentnode.teleporter.TeleporterElement;
 import mods.eln.transparentnode.themralheatexchanger.ThermalHeatExchangerDescriptor;
-import mods.eln.transparentnode.themralheatpump.ThermalHeatPumpDescriptor;
 import mods.eln.transparentnode.thermaldissipatoractive.ThermalDissipatorActiveDescriptor;
 import mods.eln.transparentnode.thermaldissipatorpassive.ThermalDissipatorPassiveDescriptor;
 import mods.eln.transparentnode.turbine.TurbineDescriptor;
@@ -1009,6 +1008,7 @@ public class Eln {
 
         MinecraftForge.EVENT_BUS.register(new ElnForgeEventsHandler());
         FMLCommonHandler.instance().bus().register(new ElnFMLEventsHandler());
+        MinecraftForge.EVENT_BUS.register(this); //events here will now be listened to
 
         FMLInterModComms.sendMessage("Waila", "register", "mods.eln.integration.waila.WailaIntegration.callbackRegister");
 
@@ -2159,25 +2159,6 @@ public class Eln {
                 obj.getObj("LargeRheostat"),
                 1000, -100,// double warmLimit,double coolLimit,
                 4000, 800,// double nominalP,double nominalT,
-                10, 1// double nominalTao,double nominalConnectionDrop
-            );
-            LargeRheostatDescriptor desc = new LargeRheostatDescriptor(
-                name, dissipator, veryHighVoltageCableDescriptor, SeriesFunction.newE12(0)
-            );
-
-            transparentNodeItem.addDescriptor(subId + (id << 6), desc);
-        }
-
-        {
-            subId = 40;
-
-            name = TR_NAME(Type.NONE, "Resistive Heater");
-
-            ThermalDissipatorPassiveDescriptor dissipator = new ThermalDissipatorPassiveDescriptor(
-                name,
-                obj.getObj("LargeRheostat"),
-                1000, -100,// double warmLimit,double coolLimit,
-                1, 1,// double nominalP,double nominalT,
                 10, 1// double nominalTao,double nominalConnectionDrop
             );
             LargeRheostatDescriptor desc = new LargeRheostatDescriptor(
@@ -4760,14 +4741,6 @@ public class Eln {
             );
             transparentNodeItem.addDescriptor(subId + (id << 6), desc);
         }
-        {
-            subId = 3;
-            name = TR_NAME(Type.NONE, "Thermal Heat Pump");
-            ThermalHeatPumpDescriptor desc = new ThermalHeatPumpDescriptor(
-                name, new ThermalLoadInitializerByPowerDrop(780, -100, 10, 2)
-            );
-            transparentNodeItem.addDescriptor(subId + (id << 6), desc);
-        }
     }
 
     private void registerTurret(int id) {
@@ -6097,14 +6070,6 @@ public class Eln {
             'R', findItemStack("Rheostat"),
             'C', findItemStack("Copper Thermal Cable"),
             'D', findItemStack("Small Passive Thermal Dissipator")
-        );
-
-        addRecipe(findItemStack("Resistive Heater"),
-            "   ",
-            "   ",
-            "CRC",
-            'R', findItemStack("Rheostat"),
-            'C', findItemStack("Copper Thermal Cable")
         );
     }
 
