@@ -337,9 +337,11 @@ tile.arc_clay_block.name=Arc Clay Block
 tile.arc_metal_block.name=Arc Metal Block
 tile.eln.ElnProbe.name=Eln Computer Probe
 tile.eln.EnergyConverter.name=Energy Exporter
-hotwater.name=Hot Water
+tile.hot_water.name=Hot Water
+fluid.hot_water=Hot Water
 item.hot_water_bucket.name=Hot Water Bucket
-coldwater.name=Cold Water
+tile.cold_water.name=Cold Water
+fluid.cold_water=Cold Water
 item.cold_water_bucket.name=Cold Water Bucket
 
 # ./src/main/java/mods/eln/i18n/I18N.java
