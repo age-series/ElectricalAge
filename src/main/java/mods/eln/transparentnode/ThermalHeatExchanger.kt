@@ -86,6 +86,8 @@ class ThermalHeatExchangerElement(
     companion object {
         val ic2hotcoolant: Fluid? = FluidRegistry.getFluid("ic2hotcoolant")
         val ic2coolant: Fluid? = FluidRegistry.getFluid("ic2coolant")
+        val hotwater: Fluid? = FluidRegistry.getFluid("hot_water")
+        val coldwater: Fluid? = FluidRegistry.getFluid("cold_water")
         val ic2hotwater: Fluid? = FluidRegistry.getFluid("ic2hotwater")
         // Use 'steam' but fall back on 'ic2steam'. Or, just die.
         val steam: Fluid? = FluidRegistry.getFluid("steam")?: FluidRegistry.getFluid("ic2steam")
@@ -190,6 +192,7 @@ class ThermalHeatExchangerElement(
                 36, //max mB input rate
                 1.0, //ratio
                 false,//reversible?
+                minTemp = 26.85,
                 maxTemp = 76.85))
         }
 
