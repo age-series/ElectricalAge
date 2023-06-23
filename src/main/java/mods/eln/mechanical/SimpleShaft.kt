@@ -98,7 +98,7 @@ open class ShaftRender(entity: TransparentNodeEntity, desc: TransparentNodeDescr
                 return Math.max(0.05, rads / absoluteMaximumShaftSpeed).toFloat() * 2.0f
             }
             if (this.sample == "eln:plate_machine") {
-                return Math.max(0.2, rads / 5.0).toFloat()
+                return Math.max(0.2, (rads / absoluteMaximumShaftSpeed) * 2).toFloat()
             }
             return Math.max(0.05, rads / absoluteMaximumShaftSpeed).toFloat()
         }

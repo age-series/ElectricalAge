@@ -525,7 +525,6 @@ object Utils {
 
     // Can attest, this seems pretty broken.
     @JvmStatic
-    @Deprecated("")
     fun canPutStackInInventory(stackList: Array<ItemStack>, inventory: IInventory, slotsIdList: IntArray): Boolean {
         val limit = inventory.inventoryStackLimit
         val outputStack = arrayOfNulls<ItemStack>(slotsIdList.size)
@@ -567,7 +566,6 @@ object Utils {
     }
 
     @JvmStatic
-    @Deprecated("")
     fun tryPutStackInInventory(stackList: Array<ItemStack>, inventory: IInventory, slotsIdList: IntArray): Boolean {
         val limit = inventory.inventoryStackLimit
         for (stack in stackList) {
