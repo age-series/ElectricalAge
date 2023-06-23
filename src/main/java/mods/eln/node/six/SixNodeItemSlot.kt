@@ -10,7 +10,7 @@ class SixNodeItemSlot(
     inventory: IInventory?, slot: Int,
     x: Int, y: Int,
     var stackLimit: Int,
-    var descriptorClassList: Array<Class<*>>, skin: SlotSkin, comment: Array<String>
+    var descriptorClassList: Array<Class<*>>, skin: SlotSkin?, comment: Array<String?>?
 ) : SlotWithSkinAndComment(inventory, slot, x, y, skin, comment) {
     /**
      * Check if the stack is a valid item for this slot. Always true beside for the armor slots.

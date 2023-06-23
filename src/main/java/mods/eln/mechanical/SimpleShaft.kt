@@ -36,20 +36,18 @@ abstract class SimpleShaftDescriptor(name: String, elm: KClass<out TransparentNo
         for (part in static) {
             part.draw()
         }
-        if(rotating.isNotEmpty()) {
-            preserveMatrix {
-                assert(rotating.isNotEmpty())
-                val bb = rotating[0].boundingBox()
-                val centre = bb.centre()
-                val ox = centre.xCoord
-                val oy = centre.yCoord
-                val oz = centre.zCoord
-                GL11.glTranslated(ox, oy, oz)
-                GL11.glRotatef(((angle * 360) / 2.0 / Math.PI).toFloat(), 0f, 0f, 1f)
-                GL11.glTranslated(-ox, -oy, -oz)
-                for (part in rotating) {
-                    part.draw()
-                }
+        preserveMatrix {
+            assert(rotating.size > 0)
+            val bb = rotating[0].boundingBox()
+            val centre = bb.centre()
+            val ox = centre.xCoord
+            val oy = centre.yCoord
+            val oz = centre.zCoord
+            GL11.glTranslated(ox, oy, oz)
+            GL11.glRotatef(((angle * 360).toDouble() / 2.0 / Math.PI).toFloat(), 0f, 0f, 1f)
+            GL11.glTranslated(-ox, -oy, -oz)
+            for (part in rotating) {
+                part.draw()
             }
         }
     }
@@ -97,9 +95,6 @@ open class ShaftRender(entity: TransparentNodeEntity, desc: TransparentNodeDescr
             if (this.sample == "eln:generator") {
                 return Math.max(0.05, rads / absoluteMaximumShaftSpeed).toFloat() * 2.0f
             }
-            if (this.sample == "eln:plate_machine") {
-                return Math.max(0.2, rads / 5.0).toFloat()
-            }
             return Math.max(0.05, rads / absoluteMaximumShaftSpeed).toFloat()
         }
         override fun getVolume(): Float {
@@ -108,10 +103,6 @@ open class ShaftRender(entity: TransparentNodeEntity, desc: TransparentNodeDescr
                     return 0.0f
                 }
                 return 1.0f
-            }
-            if (this.sample == "eln:plate_machine") {
-                val maxVolume = 0.5f
-                return volumeSetting.position * if (rads > maxVolume) maxVolume else rads.toFloat()
             }
             return volumeSetting.position
         }
