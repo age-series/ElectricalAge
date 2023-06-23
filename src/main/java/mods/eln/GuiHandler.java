@@ -64,7 +64,6 @@ public class GuiHandler implements IGuiHandler {
             INodeEntity nodeEntity = getNodeEntity(world, x, y, z);
             if (nodeEntity == null) return null;
             Direction side = Direction.fromInt(id - nodeBaseOpen);
-            Utils.println(String.format("Opening GUI at %d,%d,%d", x, y, z));
             return nodeEntity.newGuiDraw(side, player);
         }
 

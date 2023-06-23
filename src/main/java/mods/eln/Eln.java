@@ -3200,14 +3200,6 @@ public class Eln {
                 20.0f, 200.0f);
             transparentNodeItem.addDescriptor(subId + (id << 6), desc);
         }
-        {
-            subId = 21;
-            RollingShaftMachineDescriptor desc = new RollingShaftMachineDescriptor(
-                TR_NAME(Type.NONE, "Rolling Shaft Machine"),
-                obj.getObj("platemachinea")
-            );
-            transparentNodeItem.addDescriptor(subId + (id << 6), desc);
-        }
     }
 
     public ArrayList<ItemStack> furnaceList = new ArrayList<ItemStack>();
