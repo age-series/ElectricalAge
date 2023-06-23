@@ -1,13 +1,14 @@
 package mods.eln.mechanical
 
+import mods.eln.Eln
 import mods.eln.gui.GuiContainerEln
 import mods.eln.gui.HelperStdContainer
 import mods.eln.gui.ISlotSkin.SlotSkin
-import mods.eln.gui.SlotWithSkin
 import mods.eln.gui.SlotWithSkinAndComment
 import mods.eln.misc.*
 import mods.eln.misc.Direction.Companion.fromIntMinecraftSide
 import mods.eln.node.transparent.*
+import mods.eln.sim.StackMachineProcess
 import net.minecraft.client.gui.GuiScreen
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.inventory.Container
@@ -23,6 +24,8 @@ class RollingShaftMachineDescriptor (name: String, override val obj: Obj3D) :
     private val reverseRotating = arrayOf(obj.getPart("rot2"))
 
     override val sound = "eln:plate_machine"
+
+
 
     override fun draw(angle: Double) {
         super.draw(angle)
@@ -45,7 +48,8 @@ class RollingShaftMachineDescriptor (name: String, override val obj: Obj3D) :
 class RollingShaftMachineElement(node: TransparentNode, desc: TransparentNodeDescriptor) :
     SimpleShaftElement(node, desc) {
     val desc = desc as RollingShaftMachineDescriptor
-    val inv = RollingShaftMachineInventory(4, 64, this)
+    // change size to 4 when adding roller slots
+    val inv = RollingShaftMachineInventory(2, 64, this)
     override val inventory = inv
 
     override fun onBlockActivated(player: EntityPlayer, side: Direction, vx: Float, vy: Float, vz: Float): Boolean {
@@ -56,6 +60,8 @@ class RollingShaftMachineElement(node: TransparentNode, desc: TransparentNodeDes
         val info = mutableMapOf<String, String>()
         info["Energy"] = Utils.plotEnergy("", shaft.energy)
         info["Speed"] = Utils.plotRads("", shaft.rads)
+        info["Process State"] = Utils.plotPercent("", operationalProcess.getProcessState())
+        info["Can Process"] = if (operationalProcess.canSmelt()) "Yes" else "No"
         return info
     }
 
@@ -68,12 +74,33 @@ class RollingShaftMachineElement(node: TransparentNode, desc: TransparentNodeDes
     override fun newContainer(side: Direction, player: EntityPlayer): Container {
         return RollingShaftMachineContainer(player, inv)
     }
+
+    private val maximumRate = 4000.0
+
+    private val energyProcess = {
+        if (maximumRate > shaft.energy) {
+            shaft.energy
+        } else {
+            maximumRate
+        }
+    }
+
+    private val energyConsumer = { usedEnergy: Double ->
+        shaft.energy -= usedEnergy
+    }
+
+    private val operationalProcess = StackMachineProcess(
+        inv, 0, 1, 1, Eln.instance.plateMachineRecipes, energyProcess, energyConsumer)
+
+    init {
+        slowProcessList.add(operationalProcess)
+    }
 }
 
 class RollingShaftMachineRender(entity: TransparentNodeEntity, desc: TransparentNodeDescriptor): ShaftRender(entity, desc) {
     val desc = desc as RollingShaftMachineDescriptor
-
-    val inv = RollingShaftMachineInventory(4, 64, this)
+    // change size to 4 when adding roller slots
+    val inv = RollingShaftMachineInventory(2, 64, this)
     override val inventory = inv
 
     override fun newGuiDraw(side: Direction, player: EntityPlayer): GuiScreen {
@@ -86,9 +113,9 @@ const val cellOffset = 20
 class RollingShaftMachineContainer(player: EntityPlayer?, inv: IInventory) : BasicContainer(
     player, inv, arrayOf(
         SlotWithSkinAndComment(inv, 0, 8 + cellOffset, 12, SlotSkin.medium, arrayOf("Input Slot")),
-        SlotWithSkinAndComment(inv, 1, 8 + cellOffset, 12 + cellOffset * 2, SlotSkin.big, arrayOf("Output Slot")),
-        SlotWithSkinAndComment(inv, 2, 8, 12 + cellOffset, SlotSkin.none, arrayOf("Roller Slot")),
-        SlotWithSkinAndComment(inv, 3, 8 + cellOffset * 2, 12 + cellOffset, SlotSkin.none, arrayOf("Roller Slot"))
+        SlotWithSkinAndComment(inv, 1, 8 + cellOffset, 12 + cellOffset * 2, SlotSkin.big, arrayOf("Output Slot"))//,
+        //SlotWithSkinAndComment(inv, 2, 8, 12 + cellOffset, SlotSkin.none, arrayOf("Roller Slot")),
+        //SlotWithSkinAndComment(inv, 3, 8 + cellOffset * 2, 12 + cellOffset, SlotSkin.none, arrayOf("Roller Slot"))
     )
 )
 
