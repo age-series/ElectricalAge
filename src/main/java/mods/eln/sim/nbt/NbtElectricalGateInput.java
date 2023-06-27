@@ -29,7 +29,7 @@ public class NbtElectricalGateInput extends NbtElectricalLoad {
         return norm;
     }
 
-    public double getBornedU() {
+    public double getSignalU() {
         double U = this.getU();
         if (U < 0.0) U = 0.0;
         if (U > Eln.SVU) U = Eln.SVU;

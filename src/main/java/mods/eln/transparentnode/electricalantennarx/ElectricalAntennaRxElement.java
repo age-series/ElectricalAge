@@ -38,7 +38,7 @@ public class ElectricalAntennaRxElement extends TransparentNodeElement {
     ElectricalAntennaRxDescriptor descriptor;
 
     public double getSignal() {
-        return signalIn.getBornedU();
+        return signalIn.getSignalU();
     }
 
     public void setPowerOut(double power) {

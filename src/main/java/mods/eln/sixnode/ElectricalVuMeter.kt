@@ -188,7 +188,7 @@ class ElectricalVuMeterElement(sixNode: SixNode, side: Direction, descriptor: Si
     override fun getWaila(): Map<String, String> {
         val info: MutableMap<String, String> = HashMap()
         if (descriptor.isRGB)
-            info[I18N.tr("Input")] = Utils.plotVolt(inputGate.bornedU)
+            info[I18N.tr("Input")] = Utils.plotVolt(inputGate.signalU)
         else
             info[I18N.tr("Input")] = if (inputGate.stateHigh()) I18N.tr("ON") else I18N.tr("OFF")
         return info
