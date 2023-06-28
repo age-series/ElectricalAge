@@ -16,7 +16,7 @@ import net.minecraft.util.DamageSource;
 import java.util.List;
 import java.util.Random;
 
-public class ReplicatoCableAI extends EntityAIBase implements ITimeRemoverObserver {
+public class ReplicatorCableAI extends EntityAIBase implements ITimeRemoverObserver {
 
     ReplicatorEntity entity;
 
@@ -36,7 +36,7 @@ public class ReplicatoCableAI extends EntityAIBase implements ITimeRemoverObserv
 
     PreSimCheck preSimCheck;
 
-    public ReplicatoCableAI(ReplicatorEntity entity) {
+    public ReplicatorCableAI(ReplicatorEntity entity) {
         load.setAsPrivate();
         this.entity = entity;
         Eln.instance.highVoltageCableDescriptor.applyTo(load);
@@ -46,7 +46,7 @@ public class ReplicatoCableAI extends EntityAIBase implements ITimeRemoverObserv
 
     @Override
     public boolean shouldExecute() {
-        //Utils.println("LookingForCableAi");
+        assert NodeManager.instance != null;
         List<NodeBase> nodes = NodeManager.instance.getNodes();
         if (nodes.isEmpty()) return false;
         for (int idx = 0; idx < lookingPerUpdate; idx++) {
@@ -55,46 +55,41 @@ public class ReplicatoCableAI extends EntityAIBase implements ITimeRemoverObserv
 
             if (distance > 15) continue;
 
-            if (node instanceof SixNode == false) continue;
+            if (!(node instanceof SixNode)) continue;
 
             SixNode sixNode = (SixNode) node;
 
             for (SixNodeElement e : sixNode.sideElementList) {
                 if (e == null) continue;
 
-                if (e instanceof ElectricalCableElement == false) continue;
+                if (!(e instanceof ElectricalCableElement)) continue;
 
                 ElectricalCableElement cable = (ElectricalCableElement) e;
 
-                if (isElectricalCableInterresting(cable) == false) continue;
-
+                if (!isElectricalCableInteresting(cable)) continue;
 
                 PathEntity path = entity.getNavigator().getPathToXYZ(node.coordinate.x, node.coordinate.y, node.coordinate.z);
 
-                if (path == null/* || path.isFinished() == false*/) continue;
+                if (path == null) continue;
 
                 entity.getNavigator().setPath(path, 1);
                 cableCoordinate = node.coordinate;
-                //Utils.println("LookingForCableAi done");
                 moveTimeOut = moveTimeOutReset;
                 resistorLoad.highImpedance();
                 resetTimeout = resetTimeoutReset * (0.8 + Math.random() * 0.4);
                 return true;
             }
         }
-        //ADD isElectricalCableInterresting !
         return false;
     }
 
     @Override
     public boolean continueExecuting() {
-        //Utils.println("Continue");
         return cableCoordinate != null;
     }
 
     @Override
     public void updateTask() {
-        //Utils.println("update");
         moveTimeOut -= 0.05;
         resetTimeout -= 0.05;
         ElectricalCableElement cable;
@@ -111,7 +106,6 @@ public class ReplicatoCableAI extends EntityAIBase implements ITimeRemoverObserv
             this.entity.getNavigator().tryMoveToXYZ(cableCoordinate.x, cableCoordinate.y, cableCoordinate.z, 1);
         }
         if (distance < 2) {
-            //Utils.println("replicator on cable !");
             double u = cable.electricalLoad.getVoltage();
             double nextRp = Math.pow(u / Eln.LVU, -0.3) * u * u / (50);
             if (resistorLoad.getResistance() < 0.8 * nextRp) {
@@ -133,16 +127,14 @@ public class ReplicatoCableAI extends EntityAIBase implements ITimeRemoverObserv
         }
     }
 
-    boolean isElectricalCableInterresting(ElectricalCableElement c) {
-        if (c.descriptor.signalWire || c.electricalLoad.getVoltage() < 30) {
-            return false;
-        }
-        return true;
+    boolean isElectricalCableInteresting(ElectricalCableElement c) {
+        return !c.descriptor.signalWire && !(c.electricalLoad.getVoltage() < 30);
     }
 
     ElectricalCableElement getCable() {
         if (cableCoordinate == null) return null;
 
+        assert NodeManager.instance != null;
         NodeBase node = NodeManager.instance.getNodeFromCoordonate(cableCoordinate);
 
         if (node == null) return null;
@@ -154,18 +146,11 @@ public class ReplicatoCableAI extends EntityAIBase implements ITimeRemoverObserv
 
                 if (e instanceof ElectricalCableElement) {
                     ElectricalCableElement cable = (ElectricalCableElement) e;
-                    if (isElectricalCableInterresting(cable)) return cable;
+                    if (isElectricalCableInteresting(cable)) return cable;
                 }
             }
         }
         return null;
-    }
-
-    @Override
-    public void startExecuting() {
-        //Utils.println("START REPLICATOOOOOR");
-
-        //Utils.println(this.entity.getNavigator().tryMoveToXYZ(-2470, 56, -50, 1));
     }
 
     @Override
@@ -188,8 +173,8 @@ public class ReplicatoCableAI extends EntityAIBase implements ITimeRemoverObserv
     class PreSimCheck implements IProcess {
         @Override
         public void process(double time) {
-            if (timeRemover.isArmed() == false) return;
-            if (Eln.simulator.isRegistred(cableLoad) == false) {
+            if (!timeRemover.isArmed()) return;
+            if (!Eln.simulator.isRegistred(cableLoad)) {
                 timeRemover.shot();
             }
         }
