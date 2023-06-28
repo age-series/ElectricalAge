@@ -30,6 +30,13 @@ apply plugin: 'maven-publish'
 
 apply from: 'gradle.properties'
 
+// This should probably be enabled someday, but it's rather noisy currently...
+//allprojects {
+//    tasks.withType(JavaCompile) {
+//        options.compilerArgs << "-Xlint:deprecation" << "-Xlint:unchecked"
+//    }
+//}
+
 group = GROUP
 archivesBaseName = ARCHIVE_NAME
 version = MAJORVERSION + "." + MINORVERSION + "." + REVISION
@@ -102,8 +109,8 @@ dependencies {
     compileOnly "mcp.mobius.waila:Waila:1.5.11-RC2-NONEI_1.7.10:dev"
     compileOnly "com.fazecast:jSerialComm:2.6.2"
     compileOnly "ic2:IC2Classic:1.2.1.8:dev"
-    compileOnly "cofh:CoFHCore:1.7.10R3.0.4:dev"
-    compileOnly "cofh:CoFHLib:1.7.10R3.0.3:dev"
+    implementation "cofh:CoFHCore:1.7.10R3.0.4:dev"
+    implementation "cofh:CoFHLib:1.7.10R3.0.3:dev"
     compileOnly "li.cil.oc:OpenComputers:MC1.7.10-1.7.2.1204:dev"
     compileOnly "dan200.computercraft:ComputerCraft:1.75"
 }
