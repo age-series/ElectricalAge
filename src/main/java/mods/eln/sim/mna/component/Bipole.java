@@ -6,8 +6,7 @@ public abstract class Bipole extends Component {
 
     public State aPin, bPin;
 
-    public Bipole() {
-    }
+    public Bipole() {}
 
     public Bipole(State aPin, State bPin) {
         connectTo(aPin, bPin);

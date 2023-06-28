@@ -21,15 +21,11 @@ public class ElectricalConnection extends InterSystem {
     @Override
     public void onAddToRootSystem() {
         this.connectTo(L1, L2);
-    /*	((ElectricalLoad) aPin).electricalConnections.add(this);
-		((ElectricalLoad) bPin).electricalConnections.add(this);*/
         notifyRsChange();
     }
 
     @Override
-    public void onRemovefromRootSystem() {
+    public void onRemoveFromRootSystem() {
         this.breakConnection();
-	/*	((ElectricalLoad) aPin).electricalConnections.remove(this);
-		((ElectricalLoad) bPin).electricalConnections.remove(this);*/
     }
 }

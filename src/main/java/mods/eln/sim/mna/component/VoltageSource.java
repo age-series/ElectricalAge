@@ -13,7 +13,7 @@ public class VoltageSource extends Bipole implements ISubSystemProcessI, INBTTRe
     String name;
 
     double u = 0;
-    private CurrentState currentState = new CurrentState();
+    private final CurrentState currentState = new CurrentState();
 
     public VoltageSource(String name) {
         this.name = name;

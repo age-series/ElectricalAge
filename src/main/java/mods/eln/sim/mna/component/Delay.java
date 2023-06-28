@@ -27,18 +27,6 @@ public class Delay extends Bipole implements ISubSystemProcessI {
         s.addToA(bPin, bPin, conductance);
     }
 
-	/*@Override
-    public void simProcessI(SubSystem s) {
-		double aPinI = 2 * s.getX(bPin) * conductance + oldIb;
-		double bPinI = 2 * s.getX(aPin) * conductance + oldIa;
-		
-		s.addToI(aPin, aPinI);
-		s.addToI(bPin, bPinI);
-		
-		oldIa = -aPinI;
-		oldIb = -bPinI;
-	}*/
-
     @Override
     public void simProcessI(SubSystem s) {
         double iA = aPin.state * conductance + oldIa;

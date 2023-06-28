@@ -14,18 +14,8 @@ public class Resistor extends Bipole {
         super(aPin, bPin);
     }
 
-    //public SubSystem interSystemA, interSystemB;
-
-/*	public Line line = null;
-    public boolean lineReversDir;
-	public boolean isInLine() {
-		
-		return line != null;
-	}*/
-
     private double r = MnaConst.highImpedance, rInv = 1 / MnaConst.highImpedance;
 
-    //public boolean usedAsInterSystem = false;
 
     public double getRInv() {
         return rInv;
@@ -74,21 +64,6 @@ public class Resistor extends Bipole {
         setR(MnaConst.pullDown);
         return this;
     }
-	
-	/*@Override
-	public void dirty() {
-		if (line != null) {
-			line.recalculateR();
-		}
-		if (usedAsInterSystem) {
-			aPin.getSubSystem().breakSystem();
-			if (aPin.getSubSystem() != bPin.getSubSystem()) {
-				bPin.getSubSystem().breakSystem();
-			}
-		}
-		
-		super.dirty();
-	}*/
 
     boolean canBridge() {
         return false;
@@ -105,11 +80,5 @@ public class Resistor extends Bipole {
     @Override
     public double getCurrent() {
         return getU() * rInv;
-		/*if(line == null)
-			return getU() * rInv;
-		else if (lineReversDir)
-			return -line.getCurrent();
-		else
-			return line.getCurrent();*/
     }
 }

@@ -9,8 +9,7 @@ public class Capacitor extends Bipole implements ISubSystemProcessI {
     private double c = 0;
     double cdt;
 
-    public Capacitor() {
-    }
+    public Capacitor() {}
 
     public Capacitor(State aPin, State bPin) {
         connectTo(aPin, bPin);

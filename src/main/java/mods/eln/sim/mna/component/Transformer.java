@@ -7,8 +7,7 @@ import mods.eln.sim.mna.state.State;
 
 public class Transformer extends Bipole {
 
-    public Transformer() {
-    }
+    public Transformer() {}
 
     public CurrentState aCurrentState = new CurrentState();
     public CurrentState bCurrentState = new CurrentState();
@@ -27,7 +26,8 @@ public class Transformer extends Bipole {
         return ratio;
     }
 
-    private double r = MnaConst.highImpedance, rInv = 1 / MnaConst.highImpedance;
+    private final double r = MnaConst.highImpedance;
+    private final double rInv = 1 / MnaConst.highImpedance;
 
     @Override
     public void quitSubSystem() {
@@ -59,10 +59,8 @@ public class Transformer extends Bipole {
         s.addToA(bCurrentState, bCurrentState, ratio);
     }
 
-
     @Override
     public double getCurrent() {
         return 0;
-
     }
 }

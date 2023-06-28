@@ -14,7 +14,7 @@ public class Inductor extends Bipole implements ISubSystemProcessI, INBTTReady {
     private double l = 0;
     double ldt;
 
-    private CurrentState currentState = new CurrentState();
+    private final CurrentState currentState = new CurrentState();
 
     public Inductor(String name) {
         this.name = name;

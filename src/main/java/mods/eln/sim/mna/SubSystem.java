@@ -32,7 +32,6 @@ public class SubSystem {
 
     int stateCount;
     RealMatrix A;
-    //RealMatrix I;
     boolean singularMatrix;
 
     double[][] AInvdata;
@@ -81,16 +80,6 @@ public class SubSystem {
         invalidate();
     }
 
-	/*public void removeAll() {
-		for (Component c : component) {
-			c.disconnectFromSubSystem();
-		}
-		for (State s : states) {
-			s.disconnectFromSubSystem();
-		}	
-		invalidate();
-	}*/
-
     public void removeProcess(ISubSystemProcessI p) {
         processI.remove(p);
         invalidate();
@@ -112,8 +101,6 @@ public class SubSystem {
         processI.add(p);
     }
 
-    //double[][] getDataRef()
-
     public void generateMatrix() {
         stateCount = states.size();
 
@@ -121,11 +108,6 @@ public class SubSystem {
         p.add("Inversse with " + stateCount + " state : ");
 
         A = MatrixUtils.createRealMatrix(stateCount, stateCount);
-        //Adata = ((Array2DRowRealMatrix) A).getDataRef();
-        // X = MatrixUtils.createRealMatrix(stateCount, 1); Xdata =
-        // ((Array2DRowRealMatrix)X).getDataRef();
-        //I = MatrixUtils.createRealMatrix(stateCount, 1);
-        //Idata = ((Array2DRowRealMatrix) I).getDataRef();
         Idata = new double[stateCount];
         XtempData = new double[stateCount];
         {
@@ -168,25 +150,12 @@ public class SubSystem {
         if (a == null || b == null)
             return;
         A.addToEntry(a.getId(), b.getId(), v);
-        //Adata[a.getId()][b.getId()] += v;
     }
 
     public void addToI(State s, double v) {
         if (s == null) return;
         Idata[s.getId()] = v;
-        //Idata[s.getId()][0] += v;
     }
-
-	/*
-	 * public void pushX(){
-	 * 
-	 * }
-	 */
-	/*
-	 * public void popX(){
-	 * 
-	 * }
-	 */
 
     public void step() {
         stepCalc();
@@ -194,22 +163,17 @@ public class SubSystem {
     }
 
     public void stepCalc() {
-        //Profiler profiler = new Profiler();
-        //profiler.add("generateMatrix");
         if (!matrixValid) {
             generateMatrix();
         }
 
         if (!singularMatrix) {
-            //profiler.add("generateMatrix");
             for (int y = 0; y < stateCount; y++) {
                 Idata[y] = 0;
             }
-            //profiler.add("generateMatrix");
             for (ISubSystemProcessI p : processI) {
                 p.simProcessI(this);
             }
-            //profiler.add("generateMatrix");
 
             for (int idx2 = 0; idx2 < stateCount; idx2++) {
                 double stack = 0;
@@ -218,14 +182,10 @@ public class SubSystem {
                 }
                 XtempData[idx2] = stack;
             }
-            //Xtemp = Ainv.multiply(I);
         }
-        //profiler.stop();
-        //Utils.println(profiler);
     }
 
     public double solve(State pin) {
-        //Profiler profiler = new Profiler();
         if (!matrixValid) {
             generateMatrix();
         }
@@ -248,11 +208,9 @@ public class SubSystem {
         return 0;
     }
 
-    //RealMatrix Xtemp;
     public void stepFlush() {
         if (!singularMatrix) {
             for (int idx = 0; idx < stateCount; idx++) {
-                //statesTab[idx].state = Xtemp.getEntry(idx, 0);
                 statesTab[idx].state = XtempData[idx];
 
             }
@@ -378,7 +336,6 @@ public class SubSystem {
 
         double Rth = (otherU - originalU) / (originalI - otherI);
         double Uth;
-        //if(Double.isInfinite(d.Rth)) d.Rth = Double.MAX_VALUE;
         if (Rth > 10000000000000000000.0 || Rth < 0) {
             Uth = 0;
             Rth = 10000000000000000000.0;
@@ -408,7 +365,6 @@ public class SubSystem {
             if (c != null)
                 str += c.toString();
         }
-        //str = component.size() + "components";
         return str;
     }
 

@@ -1,9 +1,9 @@
 package mods.eln.sim;
 
 public interface TemperatureWatchdogDescriptor {
-    public double getUmax();
+    double getUmax();
 
-    public double getUmin();
+    double getUmin();
 
-    public double getBreakPropPerVoltOverflow();
+    double getBreakPropPerVoltOverflow();
 }

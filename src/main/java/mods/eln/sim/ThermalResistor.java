@@ -5,7 +5,6 @@ public class ThermalResistor implements IProcess {
     ThermalLoad a, b;
 
     protected double R, Rinv;
-    //double P = 0;
 
     public ThermalResistor(ThermalLoad a, ThermalLoad b) {
         this.a = a;
@@ -32,10 +31,6 @@ public class ThermalResistor implements IProcess {
     public double getR() {
         return R;
     }
-    /*
-	public double getU() {
-		return P * R;
-	}*/
 
     public void highImpedance() {
         setR(1000000000.0);
