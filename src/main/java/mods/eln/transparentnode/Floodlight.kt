@@ -138,7 +138,7 @@ class MotorizedFloodlightDescriptor(val name: String, val obj: Obj3D): Transpare
 
 class MotorizedFloodlightElement(node: TransparentNode, descriptor: TransparentNodeDescriptor): TransparentNodeElement(node, descriptor) {
     init {
-        val desc = descriptor as BasicFloodlightDescriptor
+        // val desc = descriptor as BasicFloodlightDescriptor
     }
 
     override fun thermoMeterString(side: Direction): String {

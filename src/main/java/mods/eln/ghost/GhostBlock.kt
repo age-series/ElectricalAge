@@ -1,3 +1,4 @@
+@file:Suppress("NAME_SHADOWING")
 package mods.eln.ghost
 
 import cpw.mods.fml.relauncher.Side
@@ -27,7 +28,7 @@ class GhostBlock : Block(Material.iron) {
     }
 
     override fun addCollisionBoxesToList(world: World, x: Int, y: Int, z: Int, par5AxisAlignedBB: AxisAlignedBB, list: MutableList<*>, entity: Entity?) {
-        var list = list as MutableList<AxisAlignedBB?>
+        @Suppress("UNCHECKED_CAST") var list = list as MutableList<AxisAlignedBB?>
         val meta = world.getBlockMetadata(x, y, z)
         when (meta) {
             tFloor -> {

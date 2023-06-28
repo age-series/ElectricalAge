@@ -1,3 +1,4 @@
+@file:Suppress("NAME_SHADOWING")
 package mods.eln.misc
 
 import mods.eln.Eln
@@ -1222,7 +1223,7 @@ object Utils {
     }
 
     @JvmStatic
-    fun generateHeightMap(chunk: Chunk?) {}
+    fun generateHeightMap(@Suppress("UNUSED_PARAMETER") chunk: Chunk?) {}
 
     @JvmStatic
     fun getSixNodePinDistance(obj: Obj3DPart): FloatArray {
@@ -1241,9 +1242,9 @@ object Utils {
         return isWrench(stack)
     }
 
-    fun isClassLoaded(name: String?): Boolean {
+    fun isClassLoaded(@Suppress("UNUSED_PARAMETER") name: String?): Boolean {
         try {
-            val cc = Class.forName(name)
+            // val cc = Class.forName(name)
             return true
         } catch (e: ClassNotFoundException) {
         }

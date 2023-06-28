@@ -225,7 +225,6 @@ class PortableOreScannerItem(name: String?, private val obj: Obj3D,
             val render = oRender as RenderStorage
             render.generate(e!!.worldObj, e.posX, Utils.getHeadPosY(e), e.posZ, e.rotationYaw * Math.PI.toFloat() / 180.0f, e.rotationPitch * Math.PI.toFloat() / 180.0f)
             val scale = 1f / resWidth * 0.50f
-            val p = 1 / 64f
             GL11.glTranslatef(0.90668f, 0.163f, -0.25078f)
             GL11.glRotatef(270f, 1f, 0f, 0f)
             GL11.glRotatef(270f, 0f, 0f, 1f)

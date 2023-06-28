@@ -155,7 +155,7 @@ class ThermalHeatExchangerElement(
         //println("predictedInputMb: $predictedInputMb")
         if (predictedInputMb > 0) {
             val movedInputMb = tank.drain(INPUT_SIDE, predictedInputMb, true)?.amount?: 0
-            val movedOutputMb = tank.fill(OUTPUT_SIDE, FluidStack(outputFluid, (movedInputMb * ratio).toInt()), true)
+            //val movedOutputMb = tank.fill(OUTPUT_SIDE, FluidStack(outputFluid, (movedInputMb * ratio).toInt()), true)
             //println("movedInputMb: $movedInputMb")
             //println("movedOutputMb: $movedOutputMb")
             return movedInputMb

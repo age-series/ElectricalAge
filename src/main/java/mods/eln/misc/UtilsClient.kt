@@ -1,3 +1,4 @@
+@file:Suppress("NAME_SHADOWING")
 package mods.eln.misc
 
 import cpw.mods.fml.common.network.internal.FMLProxyPacket
@@ -47,7 +48,7 @@ object UtilsClient {
         private set
     val whiteTexture = ResourceLocation("eln", "sprites/cable.png")
     val portableBatteryOverlayResource = ResourceLocation("eln", "sprites/portablebatteryoverlay.png")
-    fun distanceFromClientPlayer(world: World?, xCoord: Int, yCoord: Int, zCoord: Int): Float {
+    fun distanceFromClientPlayer(@Suppress("UNUSED_PARAMETER") world: World?, xCoord: Int, yCoord: Int, zCoord: Int): Float {
         val player = Minecraft.getMinecraft().thePlayer
         return Math.sqrt((xCoord - player.posX) * (xCoord - player.posX) + (yCoord - player.posY) * (yCoord - player.posY) + (zCoord - player.posZ) * (zCoord - player.posZ)).toFloat()
     }
@@ -99,7 +100,7 @@ object UtilsClient {
     }
 
     @JvmStatic
-    fun drawHaloNoLightSetup(halo: Obj3DPart?, distance: Float) {
+    fun drawHaloNoLightSetup(halo: Obj3DPart?, @Suppress("UNUSED_PARAMETER") distance: Float) {
         if (halo == null) return
         halo.faceGroup[0].bindTexture()
         enableBilinear()
@@ -457,7 +458,7 @@ object UtilsClient {
     }
 
     @JvmStatic
-    fun drawItemStack(par1ItemStack: ItemStack?, x: Int, y: Int, par4Str: String?, gui: Boolean) {
+    fun drawItemStack(par1ItemStack: ItemStack?, x: Int, y: Int, @Suppress("UNUSED_PARAMETER") par4Str: String?, gui: Boolean) {
         // Block b = Block.getBlockFromItem(par1ItemStack.getItem());
         // b.rend
         // ForgeHooksClient.renderInventoryItem(new RenderBlocks(),Minecraft.getMinecraft().getTextureManager(),par1ItemStack,false,0,x,y);

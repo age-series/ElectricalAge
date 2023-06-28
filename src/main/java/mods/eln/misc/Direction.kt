@@ -1,3 +1,4 @@
+@file:Suppress("NAME_SHADOWING")
 package mods.eln.misc
 
 import mods.eln.misc.Utils.isTheClass

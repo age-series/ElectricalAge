@@ -51,7 +51,7 @@ class PacketHandler {
         }
     }
 
-    private fun packetNewClient(manager: NetworkManager, player: EntityPlayer) {
+    private fun packetNewClient(@Suppress("UNUSED_PARAMETER") manager: NetworkManager, player: EntityPlayer) {
         val bos = ByteArrayOutputStream(64)
         val stream = DataOutputStream(bos)
         try {
@@ -65,7 +65,7 @@ class PacketHandler {
         sendPacketToClient(bos, (player as EntityPlayerMP))
     }
 
-    private fun packetServerInfo(stream: DataInputStream, manager: NetworkManager, player: EntityPlayer) {
+    private fun packetServerInfo(stream: DataInputStream, @Suppress("UNUSED_PARAMETER") manager: NetworkManager, @Suppress("UNUSED_PARAMETER") player: EntityPlayer) {
         for (c in Eln.instance.configShared) {
             try {
                 c.deserialize(stream)
@@ -75,7 +75,7 @@ class PacketHandler {
         }
     }
 
-    private fun packetDestroyUuid(stream: DataInputStream, manager: NetworkManager, player: EntityPlayer) {
+    private fun packetDestroyUuid(stream: DataInputStream, @Suppress("UNUSED_PARAMETER") manager: NetworkManager, @Suppress("UNUSED_PARAMETER") player: EntityPlayer) {
         try {
             ClientProxy.uuidManager.kill(stream.readInt())
         } catch (e: IOException) {
@@ -83,7 +83,7 @@ class PacketHandler {
         }
     }
 
-    fun packetPlaySound(stream: DataInputStream, manager: NetworkManager, player: EntityPlayer) {
+    fun packetPlaySound(stream: DataInputStream, @Suppress("UNUSED_PARAMETER") manager: NetworkManager, player: EntityPlayer) {
         try {
             if (stream.readByte().toInt() != player.dimension) return
             SoundClient.play(SoundCommand.fromStream(stream, player.worldObj))
@@ -92,7 +92,7 @@ class PacketHandler {
         }
     }
 
-    fun packetOpenLocalGui(stream: DataInputStream, manager: NetworkManager, player: EntityPlayer) {
+    fun packetOpenLocalGui(stream: DataInputStream, @Suppress("UNUSED_PARAMETER") manager: NetworkManager, player: EntityPlayer) {
         try {
             player.openGui(Eln.instance, stream.readInt(),
                 player.worldObj, stream.readInt(), stream.readInt(),
@@ -102,7 +102,7 @@ class PacketHandler {
         }
     }
 
-    fun packetForNode(stream: DataInputStream, manager: NetworkManager, player: EntityPlayer?) {
+    fun packetForNode(stream: DataInputStream, @Suppress("UNUSED_PARAMETER") manager: NetworkManager, player: EntityPlayer?) {
         try {
             val coordinate = Coordinate(stream.readInt(), stream.readInt(), stream.readInt(), stream.readByte().toInt())
             val node = NodeManager.instance!!.getNodeFromCoordonate(coordinate)
@@ -116,7 +116,7 @@ class PacketHandler {
         }
     }
 
-    fun packetForClientNode(stream: DataInputStream, manager: NetworkManager, player: EntityPlayer) {
+    fun packetForClientNode(stream: DataInputStream, @Suppress("UNUSED_PARAMETER") manager: NetworkManager, player: EntityPlayer) {
         try {
             val x = stream.readInt()
             val y = stream.readInt()
@@ -145,7 +145,7 @@ class PacketHandler {
         }
     }
 
-    fun packetNodeSingleSerialized(stream: DataInputStream, manager: NetworkManager, player: EntityPlayer) {
+    fun packetNodeSingleSerialized(stream: DataInputStream, @Suppress("UNUSED_PARAMETER") manager: NetworkManager, player: EntityPlayer) {
         try {
             val x: Int = stream.readInt()
             val y: Int = stream.readInt()
@@ -174,7 +174,7 @@ class PacketHandler {
         }
     }
 
-    fun packetPlayerKey(stream: DataInputStream, manager: NetworkManager, player: EntityPlayer?) {
+    fun packetPlayerKey(stream: DataInputStream, @Suppress("UNUSED_PARAMETER") manager: NetworkManager, player: EntityPlayer?) {
         val playerMP = player as EntityPlayerMP?
         val id: Byte
         try {

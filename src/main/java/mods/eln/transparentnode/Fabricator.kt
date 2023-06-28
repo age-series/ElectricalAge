@@ -337,7 +337,7 @@ class FabricatorContainer(
     override val refreshRateDivider = 1
 
     companion object {
-        private fun getSlot(inventory: IInventory, descriptor: FabricatorDescriptor): Array<Slot> {
+        private fun getSlot(inventory: IInventory, @Suppress("UNUSED_PARAMETER") descriptor: FabricatorDescriptor): Array<Slot> {
             return FabricatorSlots.values().mapIndexed { index, _ ->
                 when (index) {
                     FabricatorSlots.OUTPUT.slotId -> {

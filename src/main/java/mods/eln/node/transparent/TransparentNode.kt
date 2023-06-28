@@ -160,7 +160,7 @@ class TransparentNode : Node() {
         return if (element == null) false else element!!.hasGui()
     }
 
-    fun getInventory(side: Direction?): IInventory? {
+    fun getInventory(@Suppress("UNUSED_PARAMETER") side: Direction?): IInventory? {
         return if (element == null) null else element!!.inventory
     }
 

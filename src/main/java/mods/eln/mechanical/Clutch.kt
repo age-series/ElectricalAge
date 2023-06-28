@@ -50,11 +50,11 @@ class ClutchPlateItem(
         return stack.tagCompound.getDouble("wear")
     }
 
-    fun maxStaticEnergyF(stack: ItemStack): IFunction =
+    fun maxStaticEnergyF(@Suppress("UNUSED_PARAMETER") stack: ItemStack): IFunction =
         LinearFunction(0f, maxEF, 1f, minEF)
-    fun dynamicMaxTransferF(stack: ItemStack): IFunction =
+    fun dynamicMaxTransferF(@Suppress("UNUSED_PARAMETER") stack: ItemStack): IFunction =
         LinearFunction(0f, maxDTF, 1f, minDTF)
-    fun slipWearF(stack: ItemStack): IFunction =
+    fun slipWearF(@Suppress("UNUSED_PARAMETER") stack: ItemStack): IFunction =
         LinearFunction(0f, 0f, 1000f, wearSpeed)
 
     override fun addInformation(itemStack: ItemStack?, entityPlayer: EntityPlayer?, list: MutableList<String>, par4: Boolean) {

@@ -1,3 +1,4 @@
+@file:Suppress("NAME_SHADOWING")
 package mods.eln.node
 
 import mods.eln.misc.Utils.println

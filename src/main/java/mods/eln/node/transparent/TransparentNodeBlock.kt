@@ -75,7 +75,7 @@ class TransparentNodeBlock(material: Material?, tileEntityClass: Class<*>?) : No
         if (tileEntity == null || tileEntity !is TransparentNodeEntity) {
             super.addCollisionBoxesToList(world, x, y, z, par5AxisAlignedBB, list, entity)
         } else {
-            tileEntity.addCollisionBoxesToList(par5AxisAlignedBB, list as MutableList<AxisAlignedBB?>, null)
+            @Suppress("UNCHECKED_CAST") tileEntity.addCollisionBoxesToList(par5AxisAlignedBB, list as MutableList<AxisAlignedBB?>, null)
         }
     }
 

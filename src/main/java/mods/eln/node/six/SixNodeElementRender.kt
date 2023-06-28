@@ -140,7 +140,7 @@ abstract class SixNodeElementRender(@JvmField open var tileEntity: SixNodeEntity
         glListReady = false
     }
 
-    fun singleUnserialize(stream: DataInputStream?) {}
+    fun singleUnserialize(@Suppress("UNUSED_PARAMETER") stream: DataInputStream?) {}
     private var uuid = 0
     fun getUuid(): Int {
         if (uuid == 0) {

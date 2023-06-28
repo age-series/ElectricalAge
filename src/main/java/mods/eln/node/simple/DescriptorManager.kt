@@ -12,6 +12,6 @@ object DescriptorManager {
 
     @JvmStatic
     operator fun <T> get(key: Any?): T? {
-        return if (key == null) null else map[key] as T?
+        @Suppress("UNCHECKED_CAST") return if (key == null) null else map[key] as T?
     }
 }

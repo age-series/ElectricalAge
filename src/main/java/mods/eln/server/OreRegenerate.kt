@@ -75,8 +75,8 @@ class ChunkRef(var x: Int, var z: Int, var worldId: Int) {
         return x * z + (worldId shl 20)
     }
 
-    override fun equals(o: Any?): Boolean {
-        if (o !is ChunkRef) return false
-        return o.x == x && o.z == z && o.worldId == worldId
+    override fun equals(other: Any?): Boolean {
+        if (other !is ChunkRef) return false
+        return other.x == x && other.z == z && other.worldId == worldId
     }
 }

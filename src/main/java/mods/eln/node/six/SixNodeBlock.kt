@@ -195,9 +195,9 @@ class SixNodeBlock  // public static ArrayList<Integer> repertoriedItemStackId =
         return if (sixNode.ifSideRemain) true else super.removedByPlayer(world, entityPlayer, x, y, z)
     }
 
-    override fun breakBlock(world: World, x: Int, y: Int, z: Int, par5: Block, par6: Int) {
-        if (world.isRemote == false) {
-            val tileEntity = world.getTileEntity(x, y, z) as SixNodeEntity
+    override fun breakBlock(par1World: World, x: Int, y: Int, z: Int, par5: Block, par6: Int) {
+        if (!par1World.isRemote) {
+            val tileEntity = par1World.getTileEntity(x, y, z) as SixNodeEntity
             val sixNode = tileEntity.node as SixNode? ?: return
             for (direction in Direction.values()) {
                 if (sixNode.getSideEnable(direction)) {
@@ -205,7 +205,7 @@ class SixNodeBlock  // public static ArrayList<Integer> repertoriedItemStackId =
                 }
             }
         }
-        super.breakBlock(world, x, y, z, par5, par6)
+        super.breakBlock(par1World, x, y, z, par5, par6)
     }
 
     override fun onNeighborBlockChange(world: World, x: Int, y: Int, z: Int, b: Block) {

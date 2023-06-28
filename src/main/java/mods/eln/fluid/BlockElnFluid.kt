@@ -11,7 +11,6 @@ import net.minecraft.util.IIcon
 import net.minecraftforge.fluids.BlockFluidClassic
 import net.minecraftforge.fluids.Fluid
 import net.minecraftforge.fluids.FluidRegistry
-import java.lang.Boolean
 import kotlin.Array
 import kotlin.Int
 import kotlin.String
@@ -31,12 +30,12 @@ class BlockElnFluid(
         setBlockName(internalName)
         GameRegistry.registerBlock(this, ItemBlock::class.java, internalName)
         if (density <= FluidRegistry.WATER.density) {
-            displacements[Blocks.water] = Boolean.valueOf(false)
-            displacements[Blocks.flowing_water] = Boolean.valueOf(false)
+            displacements[Blocks.water] = false
+            displacements[Blocks.flowing_water] = false
         }
         if (density <= FluidRegistry.LAVA.density) {
-            displacements[Blocks.lava] = Boolean.valueOf(false)
-            displacements[Blocks.flowing_lava] = Boolean.valueOf(false)
+            displacements[Blocks.lava] = false
+            displacements[Blocks.flowing_lava] = false
         }
     }
 

@@ -144,7 +144,7 @@ abstract class NodeBlockEntity : TileEntity(), ITileEntitySpawnClient, INodeEnti
         return 4096.0 * 4 * 4
     }
 
-    fun onBlockPlacedBy(front: Direction?, entityLiving: EntityLivingBase?, metadata: Int) {}
+    @Suppress("UNUSED_PARAMETER") fun onBlockPlacedBy(front: Direction?, entityLiving: EntityLivingBase?, metadata: Int) {}
     override fun canUpdate(): Boolean {
         return true
     }
@@ -244,7 +244,7 @@ abstract class NodeBlockEntity : TileEntity(), ITileEntitySpawnClient, INodeEnti
         return 0
     }
 
-    fun canConnectRedstone(xn: Direction?): Boolean {
+    fun canConnectRedstone(@Suppress("UNUSED_PARAMETER") xn: Direction?): Boolean {
         return if (worldObj.isRemote) redstone else {
             if (node == null) false else node!!.canConnectRedstone()
         }

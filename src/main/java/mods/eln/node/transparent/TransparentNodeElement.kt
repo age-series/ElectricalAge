@@ -93,7 +93,7 @@ abstract class TransparentNodeElement(@JvmField open var node: TransparentNode?,
         needPublish()
     }
 
-    fun networkUnserialize(stream: DataInputStream, player: EntityPlayerMP?): Byte {
+    fun networkUnserialize(stream: DataInputStream, @Suppress("UNUSED_PARAMETER") player: EntityPlayerMP?): Byte {
         return networkUnserialize(stream)
     }
 
@@ -167,7 +167,7 @@ abstract class TransparentNodeElement(@JvmField open var node: TransparentNode?,
         checkCanStay(false)
     }
 
-    fun checkCanStay(onCreate: Boolean) {
+    fun checkCanStay(@Suppress("UNUSED_PARAMETER") onCreate: Boolean) {
         var needDestroy = false
         if (transparentNodeDescriptor.mustHaveFloor()) {
             if (!node!!.isBlockOpaque(Direction.YN)) needDestroy = true
@@ -237,7 +237,7 @@ abstract class TransparentNodeElement(@JvmField open var node: TransparentNode?,
         }
     }
 
-    fun initializeFromThat(front: Direction, entityLiving: EntityLivingBase?, itemStackNbt: NBTTagCompound?) {
+    fun initializeFromThat(front: Direction, @Suppress("UNUSED_PARAMETER") entityLiving: EntityLivingBase?, itemStackNbt: NBTTagCompound?) {
         this.front = front
         readItemStackNBT(itemStackNbt)
         initialize()

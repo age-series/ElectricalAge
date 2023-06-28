@@ -67,7 +67,7 @@ class EnergyConverterElnToOtherFireWallOc(var e: EnergyConverterElnToOtherEntity
         }
     }
 
-    fun writeToNBT(nbt: NBTTagCompound?) {
+    fun writeToNBT(@Suppress("UNUSED_PARAMETER") nbt: NBTTagCompound?) {
         // See readFromNBT() regarding host check.
         if (node != null) {
             val nodeNbt = NBTTagCompound()

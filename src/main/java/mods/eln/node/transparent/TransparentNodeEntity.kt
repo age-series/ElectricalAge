@@ -87,7 +87,7 @@ open class TransparentNodeEntity : NodeBlockEntity(), ISidedInventory {
         return if (elementRender == null) super.cameraDrawOptimisation() else elementRender!!.cameraDrawOptimisation()
     }
 
-    fun getDamageValue(world: World, x: Int, y: Int, z: Int): Int {
+    @Suppress("UNUSED_PARAMETER") fun getDamageValue(world: World, x: Int, y: Int, z: Int): Int {
         return if (world.isRemote) {
             elementRenderId.toInt()
         } else 0

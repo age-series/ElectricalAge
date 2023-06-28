@@ -163,7 +163,7 @@ class ArcFurnaceContainer(val node: NodeBase?, player: EntityPlayer?, inventory:
         )
     ))
 
-class ArcFurnaceGui(player: EntityPlayer?, inventory: IInventory, render: ArcFurnaceRender): GuiContainerEln(ArcFurnaceContainer(null, player, inventory)) {
+class ArcFurnaceGui(player: EntityPlayer?, inventory: IInventory, @Suppress("UNUSED_PARAMETER") render: ArcFurnaceRender): GuiContainerEln(ArcFurnaceContainer(null, player, inventory)) {
     override fun newHelper(): GuiHelperContainer {
             return GuiHelperContainer(this, 176, 166, 50, 84)
     }

@@ -100,7 +100,6 @@ class PacketSerial {
                                 if (length == packetData.length - 2) {
                                     val p = Packet(opcode, packetData.substring(2))
                                     instance.fromDevice.add(p)
-                                    packetData = ""
                                     // We've had a successful packet decode.
                                     // This is a reasonable spot to pause the packet stream, for this tick.
                                     // I'm setting this to 5ms so that stuff has time to settle in the sim.

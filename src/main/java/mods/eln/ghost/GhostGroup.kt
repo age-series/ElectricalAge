@@ -134,7 +134,7 @@ class GhostGroup {
         return other
     }
 
-    fun newRotate(dir: Direction?, front: LRDU?): GhostGroup {
+    fun newRotate(dir: Direction?, @Suppress("UNUSED_PARAMETER")front: LRDU?): GhostGroup {
         return newRotate(dir)
     }
 

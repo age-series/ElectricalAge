@@ -34,7 +34,7 @@ class EnergyConverterElnToOtherBlock(private val descriptor: EnergyConverterElnT
         return sideIcon!!
     }
 
-    fun getElnIcon(side: Int): IIcon? {
+    fun getElnIcon(@Suppress("UNUSED_PARAMETER") side: Int): IIcon? {
         return sideIcon
     }
 

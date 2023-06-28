@@ -157,12 +157,12 @@ abstract class GridElement(transparentNode: TransparentNode, descriptor: Transpa
     abstract fun getGridElectricalLoad(side: Direction): ElectricalLoad?
 
     // TODO: This should check if the wire isn't passing through blocks.
-    private fun validLOS(other: GridElement): Boolean {
+    private fun validLOS(@Suppress("UNUSED_PARAMETER") other: GridElement): Boolean {
         return true
     }
 
     // Return false if connecting grid elements that can't connect.
-    protected fun canConnect(other: GridElement): Boolean {
+    protected fun canConnect(@Suppress("UNUSED_PARAMETER") other: GridElement): Boolean {
         return true
     }
 

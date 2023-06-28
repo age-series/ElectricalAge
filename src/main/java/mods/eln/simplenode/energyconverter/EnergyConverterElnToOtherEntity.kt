@@ -73,7 +73,7 @@ class EnergyConverterElnToOtherEntity : SimpleNodeEntity("ElnToOther"), IEnergyS
 
     @Optional.Method(modid = Other.modIdIc2)
     override fun getSourceTier(): Int {
-        val node = node as EnergyConverterElnToOtherNode
+        // val node = node as EnergyConverterElnToOtherNode
         return 5
     }
 

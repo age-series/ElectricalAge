@@ -1,3 +1,4 @@
+@file:Suppress("NAME_SHADOWING")
 package mods.eln.node.six
 
 import mods.eln.Eln
@@ -135,7 +136,7 @@ class SixNodeEntity : NodeBlockEntity() {
         super.destructor()
     }
 
-    fun getDamageValue(world: World, x: Int, y: Int, z: Int): Int {
+    fun getDamageValue(world: World, @Suppress("UNUSED_PARAMETER") x: Int, @Suppress("UNUSED_PARAMETER") y: Int, @Suppress("UNUSED_PARAMETER") z: Int): Int {
         if (world.isRemote) {
             for (idx in 0..5) {
                 if (elementRenderList[idx] != null) {
@@ -146,7 +147,7 @@ class SixNodeEntity : NodeBlockEntity() {
         return 0
     }
 
-    fun hasVolume(world: World?, x: Int, y: Int, z: Int): Boolean {
+    fun hasVolume(@Suppress("UNUSED_PARAMETER") world: World?, @Suppress("UNUSED_PARAMETER") x: Int, @Suppress("UNUSED_PARAMETER") y: Int, @Suppress("UNUSED_PARAMETER") z: Int): Boolean {
         return if (worldObj.isRemote) {
             for (e in elementRenderList) {
                 if (e != null && e.sixNodeDescriptor.hasVolume()) return true
