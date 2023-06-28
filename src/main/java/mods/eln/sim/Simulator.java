@@ -463,7 +463,7 @@ public class Simulator /* ,IPacketHandler */ {
         // Compute heat transferred over each thermal connection:
         for (ThermalConnection c : connectionList) {
             double i;
-            i = (c.L2.Tc - c.L1.Tc) / ((c.L2.Rs + c.L1.Rs));
+            i = (c.L2.temperatureCelsius - c.L1.temperatureCelsius) / ((c.L2.Rs + c.L1.Rs));
             c.L1.PcTemp += i;
             c.L2.PcTemp -= i;
 
@@ -476,9 +476,9 @@ public class Simulator /* ,IPacketHandler */ {
             }
         }
         for (ThermalLoad load : loadList) {
-            load.PcTemp -= load.Tc / load.Rp;
+            load.PcTemp -= load.temperatureCelsius / load.Rp;
 
-            load.Tc += load.PcTemp * dt / load.C;
+            load.temperatureCelsius += load.PcTemp * dt / load.C;
 
             load.Pc = load.PcTemp;
             load.Prs = load.PrsTemp;

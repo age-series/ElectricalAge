@@ -74,7 +74,7 @@ public class ElectricalMachineElement extends TransparentNodeElement implements 
         slowProcessList.add(new NodePeriodicPublishProcess(transparentNode, 2, 1));
 
         WorldExplosion exp = new WorldExplosion(this).machineExplosion();
-        slowProcessList.add(voltageWatchdog.set(electricalLoad).setUNominal(this.descriptor.nominalU).set(exp));
+        slowProcessList.add(voltageWatchdog.setVoltageState(electricalLoad).setNominalVoltage(this.descriptor.nominalU).set(exp));
     }
 
     @Override
@@ -114,7 +114,7 @@ public class ElectricalMachineElement extends TransparentNodeElement implements 
     @NotNull
     @Override
     public String multiMeterString(@NotNull Direction side) {
-        return Utils.plotUIP(electricalLoad.getU(), electricalLoad.getCurrent());
+        return Utils.plotUIP(electricalLoad.getVoltage(), electricalLoad.getCurrent());
     }
 
     @NotNull
@@ -159,8 +159,8 @@ public class ElectricalMachineElement extends TransparentNodeElement implements 
 
     public void networkSerialize(java.io.DataOutputStream stream) {
         super.networkSerialize(stream);
-        double fPower = electricalResistor.getP() / descriptor.nominalP;
-        if (electricalResistor.getP() < 11) fPower = 0.0;
+        double fPower = electricalResistor.getPower() / descriptor.nominalP;
+        if (electricalResistor.getPower() < 11) fPower = 0.0;
         if (fPower > 1.9) fPower = 1.9;
         try {
             stream.writeByte((int) (fPower * 64));
@@ -169,7 +169,7 @@ public class ElectricalMachineElement extends TransparentNodeElement implements 
             stream.writeFloat((float) slowRefreshProcess.processState());
             stream.writeFloat((float) slowRefreshProcess.processStatePerSecond());
             node.lrduCubeMask.getTranslate(front.down()).serialize(stream);
-            stream.writeFloat((float) (electricalLoad.getU() / descriptor.nominalU));
+            stream.writeFloat((float) (electricalLoad.getVoltage() / descriptor.nominalU));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -199,9 +199,9 @@ public class ElectricalMachineElement extends TransparentNodeElement implements 
     public Map<String, String> getWaila() {
         Map<String, String> info = new HashMap<String, String>();
         info.put(I18N.tr("Power consumption"), Utils.plotPower("", slowRefreshProcess.getPower()));
-        info.put(I18N.tr("Voltage"), Utils.plotVolt("", electricalLoad.getU()));
+        info.put(I18N.tr("Voltage"), Utils.plotVolt("", electricalLoad.getVoltage()));
         if (Eln.wailaEasyMode) {
-            info.put(I18N.tr("Power provided"), Utils.plotPower("", electricalLoad.getI() * electricalLoad.getU()));
+            info.put(I18N.tr("Power provided"), Utils.plotPower("", electricalLoad.getCurrent() * electricalLoad.getVoltage()));
         }
         return info;
     }

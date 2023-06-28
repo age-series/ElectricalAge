@@ -56,8 +56,8 @@ public class ResistorElement extends SixNodeElement {
 
         electricalLoadList.add(aLoad);
         electricalLoadList.add(bLoad);
-        aLoad.setRs(MnaConst.noImpedance);
-        bLoad.setRs(MnaConst.noImpedance);
+        aLoad.setSerialResistance(MnaConst.noImpedance);
+        bLoad.setSerialResistance(MnaConst.noImpedance);
         electricalComponentList.add(r);
         if (this.descriptor.isRheostat) {
             control = new NbtElectricalGateInput("control");
@@ -73,7 +73,7 @@ public class ResistorElement extends SixNodeElement {
         thermalLoad.set(thermalRs, thermalRp, thermalC);
         slowProcessList.add(thermalWatchdog);
         thermalWatchdog
-            .set(thermalLoad)
+            .setThermalLoad(thermalLoad)
             .setLimit(this.descriptor.thermalWarmLimit, this.descriptor.thermalCoolLimit)
             .set(new WorldExplosion(this).cableExplosion());
 
@@ -117,9 +117,9 @@ public class ResistorElement extends SixNodeElement {
 
     @Override
     public String multiMeterString() {
-        double u = -Math.abs(aLoad.getU() - bLoad.getU());
-        double i = Math.abs(r.getI());
-        return Utils.plotOhm(Utils.plotUIP(u, i), r.getR()) +
+        double u = -Math.abs(aLoad.getVoltage() - bLoad.getVoltage());
+        double i = Math.abs(r.getCurrent());
+        return Utils.plotOhm(Utils.plotUIP(u, i), r.getResistance()) +
             (control != null ? Utils.plotPercent("C", control.getNormalized()) : "");
     }
 
@@ -127,10 +127,10 @@ public class ResistorElement extends SixNodeElement {
     @Override
     public Map<String, String> getWaila() {
         Map<String, String> info = new HashMap<String, String>();
-        info.put(I18N.tr("Resistance"), Utils.plotValue(r.getR(), "\u2126"));
-        info.put(I18N.tr("Voltage drop"), Utils.plotVolt("", Math.abs(r.getU())));
+        info.put(I18N.tr("Resistance"), Utils.plotValue(r.getResistance(), "\u2126"));
+        info.put(I18N.tr("Voltage drop"), Utils.plotVolt("", Math.abs(r.getVoltage())));
         if (Eln.wailaEasyMode) {
-            info.put(I18N.tr("Current"), Utils.plotAmpere("", Math.abs(r.getI())));
+            info.put(I18N.tr("Current"), Utils.plotAmpere("", Math.abs(r.getCurrent())));
 
         }
         return info;
@@ -139,7 +139,7 @@ public class ResistorElement extends SixNodeElement {
     @NotNull
     @Override
     public String thermoMeterString() {
-        return Utils.plotCelsius("T", thermalLoad.Tc);
+        return Utils.plotCelsius("T", thermalLoad.temperatureCelsius);
     }
 
     @Override

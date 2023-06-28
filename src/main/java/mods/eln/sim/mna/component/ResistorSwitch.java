@@ -12,7 +12,7 @@ public class ResistorSwitch extends Resistor implements INBTTReady {
 
     boolean state = false;
 
-    protected double baseR = 1;
+    protected double baseResistance = 1;
 
     public ResistorSwitch(String name, State aPin, State bPin) {
         super(aPin, bPin);
@@ -21,13 +21,13 @@ public class ResistorSwitch extends Resistor implements INBTTReady {
 
     public void setState(boolean state) {
         this.state = state;
-        setR(baseR);
+        setResistance(baseResistance);
     }
 
     @Override
-    public Resistor setR(double r) {
-        baseR = r;
-        return super.setR(state ? r : (ultraImpedance ? MnaConst.ultraImpedance : MnaConst.highImpedance));
+    public Resistor setResistance(double resistance) {
+        baseResistance = resistance;
+        return super.setResistance(state ? resistance : (ultraImpedance ? MnaConst.ultraImpedance : MnaConst.highImpedance));
     }
 
     public boolean getState() {
@@ -37,8 +37,8 @@ public class ResistorSwitch extends Resistor implements INBTTReady {
     @Override
     public void readFromNBT(NBTTagCompound nbt, String str) {
         str += name;
-        setR(nbt.getDouble(str + "R"));
-        if (Double.isNaN(baseR) || baseR == 0) {
+        setResistance(nbt.getDouble(str + "R"));
+        if (Double.isNaN(baseResistance) || baseResistance == 0) {
             if (ultraImpedance) ultraImpedance();
             else highImpedance();
         }
@@ -48,7 +48,7 @@ public class ResistorSwitch extends Resistor implements INBTTReady {
     @Override
     public void writeToNBT(NBTTagCompound nbt, String str) {
         str += name;
-        nbt.setDouble(str + "R", baseR);
+        nbt.setDouble(str + "R", baseResistance);
         nbt.setBoolean(str + "State", getState());
     }
 

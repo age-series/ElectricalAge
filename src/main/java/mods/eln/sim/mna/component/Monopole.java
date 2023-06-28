@@ -9,7 +9,7 @@ public abstract class Monopole extends Component {
 
     public Monopole connectTo(VoltageState pin) {
         this.pin = pin;
-        if (pin != null) pin.add(this);
+        if (pin != null) pin.addComponent(this);
         return this;
     }
 

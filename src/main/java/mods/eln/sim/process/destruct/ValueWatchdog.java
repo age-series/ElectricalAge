@@ -6,8 +6,7 @@ import mods.eln.sim.IProcess;
 
 public abstract class ValueWatchdog implements IProcess {
 
-    IDestructable destructable;
-    double perOverflowStrenght = 1;
+    IDestructable destructible;
     double min;
     double max;
 
@@ -15,6 +14,7 @@ public abstract class ValueWatchdog implements IProcess {
 
     double timeout = 0;
     boolean boot = true;
+    // TODO: Rename. Hysteresis?
     boolean joker = true;
 
     double rand = Utils.rand(0.5, 1.5);
@@ -43,19 +43,20 @@ public abstract class ValueWatchdog implements IProcess {
         if (timeout < 0) {
             Utils.println("%s destroying %s",
                 getClass().getName(),
-                destructable.describe());
+                destructible.describe());
             if (!Eln.debugExplosions)
-                destructable.destructImpl();
+                destructible.destructImpl();
         }
     }
 
     public ValueWatchdog set(IDestructable d) {
-        this.destructable = d;
+        this.destructible = d;
         return this;
     }
 
     abstract double getValue();
 
+    // TODO: Refactor
     public void disable() {
         this.max = 100000000;
         this.min = -max;

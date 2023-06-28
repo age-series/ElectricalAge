@@ -120,8 +120,8 @@ class WindTurbineSlowProcess implements IProcess, INBTTReady {
 
         P = d.PfW.getValue(wind);
 
-        turbine.powerSource.setP(P);
-        turbine.powerSource.setUmax(d.maxVoltage);
+        turbine.powerSource.setPower(P);
+        turbine.powerSource.setMaximumVoltage(d.maxVoltage);
 
         counter++;
         if (counter % 20 == 0) {

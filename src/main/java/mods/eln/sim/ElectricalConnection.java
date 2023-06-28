@@ -14,8 +14,8 @@ public class ElectricalConnection extends InterSystem {
     }
 
     public void notifyRsChange() {
-        double R = ((ElectricalLoad) aPin).getRs() + ((ElectricalLoad) bPin).getRs();
-        setR(R);
+        double resistance = ((ElectricalLoad) aPin).getSerialResistance() + ((ElectricalLoad) bPin).getSerialResistance();
+        setResistance(resistance);
     }
 
     @Override

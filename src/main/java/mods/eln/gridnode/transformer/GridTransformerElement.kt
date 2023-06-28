@@ -36,14 +36,14 @@ class GridTransformerElement(node: TransparentNode, descriptor: TransparentNodeD
     internal val explosion = WorldExplosion(this).machineExplosion()
 
     internal var voltagePrimaryWatchdog = VoltageStateWatchDog().apply {
-        setUNominal(primaryVoltage)
-        set(primaryLoad)
+        setNominalVoltage(primaryVoltage)
+        setVoltageState(primaryLoad)
         set(explosion)
         slowProcessList.add(this)
     }
     internal var voltageSecondaryWatchdog = VoltageStateWatchDog().apply {
-        setUNominal(secondaryVoltage)
-        set(secondaryLoad)
+        setNominalVoltage(secondaryVoltage)
+        setVoltageState(secondaryLoad)
         set(explosion)
         slowProcessList.add(this)
     }
@@ -56,7 +56,7 @@ class GridTransformerElement(node: TransparentNode, descriptor: TransparentNodeD
     }
     internal val thermalWatchdog = ThermalLoadWatchDog().apply {
         setLimit(desc.cableDescriptor.thermalWarmLimit, desc.cableDescriptor.thermalCoolLimit)
-        set(thermalLoad)
+        setThermalLoad(thermalLoad)
         set(explosion)
         slowProcessList.add(this)
     }
@@ -118,12 +118,12 @@ class GridTransformerElement(node: TransparentNode, descriptor: TransparentNodeD
 
     override fun multiMeterString(side: Direction): String {
         if (side == front.up())
-            return Utils.plotVolt("UP+:", primaryLoad.u) + Utils.plotAmpere("IP+:", primaryLoad.current)
+            return Utils.plotVolt("UP+:", primaryLoad.voltage) + Utils.plotAmpere("IP+:", primaryLoad.current)
         if (side == front.left())
-            return Utils.plotVolt("US+:", secondaryLoad.u) + Utils.plotAmpere("IS+:", secondaryLoad.current)
+            return Utils.plotVolt("US+:", secondaryLoad.voltage) + Utils.plotAmpere("IS+:", secondaryLoad.current)
 
-        return (Utils.plotVolt("UP+:", primaryLoad.u) + Utils.plotAmpere("IP+:", primaryLoad.current)
-            + Utils.plotVolt("  US+:", secondaryLoad.u) + Utils.plotAmpere("IS+:", secondaryLoad.current))
+        return (Utils.plotVolt("UP+:", primaryLoad.voltage) + Utils.plotAmpere("IP+:", primaryLoad.current)
+            + Utils.plotVolt("  US+:", secondaryLoad.voltage) + Utils.plotAmpere("IS+:", secondaryLoad.current))
     }
 
     override fun networkSerialize(stream: DataOutputStream) {

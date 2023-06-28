@@ -103,9 +103,6 @@ public class RootSystem {
         return true;
     }
 
-    private void generateBreakLine() {
-    }
-
     private void generateLine() {
         Set<State> stateScope = new HashSet<State>();
         for (State s : addStates) {
@@ -325,10 +322,10 @@ public class RootSystem {
         s.addState(n1 = new VoltageState());
         s.addState(n2 = new VoltageState());
 
-        s.addComponent((u1 = new VoltageSource("")).setU(1).connectTo(n1, null));
+        s.addComponent((u1 = new VoltageSource("")).setVoltage(1).connectTo(n1, null));
 
-        s.addComponent((r1 = new Resistor()).setR(10).connectTo(n1, n2));
-        s.addComponent((r2 = new Resistor()).setR(20).connectTo(n2, null));
+        s.addComponent((r1 = new Resistor()).setResistance(10).connectTo(n1, n2));
+        s.addComponent((r2 = new Resistor()).setResistance(20).connectTo(n2, null));
 
         VoltageState n11, n12;
         VoltageSource u11;
@@ -337,20 +334,20 @@ public class RootSystem {
         s.addState(n11 = new VoltageState());
         s.addState(n12 = new VoltageState());
 
-        s.addComponent((u11 = new VoltageSource("")).setU(1).connectTo(n11, null));
+        s.addComponent((u11 = new VoltageSource("")).setVoltage(1).connectTo(n11, null));
 
-        s.addComponent((r11 = new Resistor()).setR(10).connectTo(n11, n12));
-        s.addComponent((r12 = new Resistor()).setR(30).connectTo(n12, null));
+        s.addComponent((r11 = new Resistor()).setResistance(10).connectTo(n11, n12));
+        s.addComponent((r12 = new Resistor()).setResistance(30).connectTo(n12, null));
 
         InterSystem i01;
 
-        s.addComponent((i01 = new InterSystem()).setR(10).connectTo(n2, n12));
+        s.addComponent((i01 = new InterSystem()).setResistance(10).connectTo(n2, n12));
 
         for (int i = 0; i < 50; i++) {
             s.step();
         }
 
-        s.addComponent((r13 = new Resistor()).setR(30).connectTo(n12, null));
+        s.addComponent((r13 = new Resistor()).setResistance(30).connectTo(n12, null));
 
         for (int i = 0; i < 50; i++) {
             s.step();

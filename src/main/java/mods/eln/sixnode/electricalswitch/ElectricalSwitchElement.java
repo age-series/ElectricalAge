@@ -60,8 +60,8 @@ public class ElectricalSwitchElement extends SixNodeElement {
         slowProcessList.add(voltageWatchDogB);
 
         //currentWatchDog.set(switchResistor).setIAbsMax(this.descriptor.maximalPower/this.descriptor.nominalVoltage).set(exp);
-        voltageWatchDogA.set(aLoad).setUNominalMirror(this.descriptor.nominalVoltage).set(exp);
-        voltageWatchDogB.set(bLoad).setUNominalMirror(this.descriptor.nominalVoltage).set(exp);
+        voltageWatchDogA.setVoltageState(aLoad).setNominalVoltage(this.descriptor.nominalVoltage).set(exp);
+        voltageWatchDogB.setVoltageState(bLoad).setNominalVoltage(this.descriptor.nominalVoltage).set(exp);
     }
 
     public static boolean canBePlacedOnSide(Direction side, int type) {
@@ -107,7 +107,7 @@ public class ElectricalSwitchElement extends SixNodeElement {
 
     @Override
     public String multiMeterString() {
-        return Utils.plotVolt("Ua:", aLoad.getU()) + Utils.plotVolt("Ub:", bLoad.getU()) + Utils.plotAmpere("I:", aLoad.getCurrent());
+        return Utils.plotVolt("Ua:", aLoad.getVoltage()) + Utils.plotVolt("Ub:", bLoad.getVoltage()) + Utils.plotAmpere("I:", aLoad.getCurrent());
     }
 
     @NotNull
@@ -117,7 +117,7 @@ public class ElectricalSwitchElement extends SixNodeElement {
         info.put(I18N.tr("Position"), switchState ? I18N.tr("Closed") : I18N.tr("Open"));
         info.put(I18N.tr("Current"), Utils.plotAmpere("", aLoad.getCurrent()));
         if (Eln.wailaEasyMode) {
-            info.put(I18N.tr("Voltages"), Utils.plotVolt("", aLoad.getU()) + Utils.plotVolt(" ", bLoad.getU()));
+            info.put(I18N.tr("Voltages"), Utils.plotVolt("", aLoad.getVoltage()) + Utils.plotVolt(" ", bLoad.getVoltage()));
         }
         info.put(I18N.tr("Subsystem Matrix Size"), Utils.renderSubSystemWaila(switchResistor.getSubSystem()));
 
@@ -136,8 +136,8 @@ public class ElectricalSwitchElement extends SixNodeElement {
         super.networkSerialize(stream);
         try {
             stream.writeBoolean(switchState);
-            stream.writeShort((short) (aLoad.getU() * NodeBase.networkSerializeUFactor));
-            stream.writeShort((short) (bLoad.getU() * NodeBase.networkSerializeUFactor));
+            stream.writeShort((short) (aLoad.getVoltage() * NodeBase.networkSerializeUFactor));
+            stream.writeShort((short) (bLoad.getVoltage() * NodeBase.networkSerializeUFactor));
             stream.writeShort((short) (aLoad.getCurrent() * NodeBase.networkSerializeIFactor));
             //stream.writeShort((short)(thermalLoad.Tc * NodeBase.networkSerializeTFactor));
             stream.writeShort(0);
@@ -159,7 +159,7 @@ public class ElectricalSwitchElement extends SixNodeElement {
         descriptor.applyTo(aLoad);
         descriptor.applyTo(bLoad);
 
-        switchResistor.setR(descriptor.electricalRs);
+        switchResistor.setResistance(descriptor.electricalRs);
 
         setSwitchState(switchState);
     }

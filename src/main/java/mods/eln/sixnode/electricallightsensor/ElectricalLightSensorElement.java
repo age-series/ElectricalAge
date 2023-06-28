@@ -60,7 +60,7 @@ public class ElectricalLightSensorElement extends SixNodeElement {
 
     @Override
     public String multiMeterString() {
-        return Utils.plotVolt("U:", outputGate.getU()) + Utils.plotAmpere("I:", outputGate.getCurrent());
+        return Utils.plotVolt("U:", outputGate.getVoltage()) + Utils.plotAmpere("I:", outputGate.getCurrent());
     }
 
     @NotNull
@@ -69,7 +69,7 @@ public class ElectricalLightSensorElement extends SixNodeElement {
         Map<String, String> info = new HashMap<String, String>();
         info.put(I18N.tr("Light level"), Utils.plotValue(slowProcess.light));
         if (Eln.wailaEasyMode) {
-            info.put(I18N.tr("Output voltage"), Utils.plotVolt("", outputGate.getU()));
+            info.put(I18N.tr("Output voltage"), Utils.plotVolt("", outputGate.getVoltage()));
         }
         return info;
     }

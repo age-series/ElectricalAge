@@ -15,8 +15,8 @@ fun main(args: Array<String>) {
     //val cs = CurrentSource("current", n1, null)
     val r1 = Resistor(n1, null)
 
-    r1.r = 10.0
-    vs.u = 1.0
+    r1.resistance = 10.0
+    vs.voltage = 1.0
     //cs.current = 1.0
 
     s.addState(n1)
@@ -28,7 +28,7 @@ fun main(args: Array<String>) {
     s.step()
     s.step()
 
-    println(s.A.data.contentDeepToString())
-    println(s.Idata.contentToString())
-    println(s.XtempData.contentToString())
+    println(s.A.data!!.contentDeepToString())
+    println(s.Idata!!.contentToString())
+    println(s.XtempData!!.contentToString())
 }

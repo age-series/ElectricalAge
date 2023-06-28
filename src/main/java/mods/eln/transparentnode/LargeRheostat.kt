@@ -81,7 +81,7 @@ class LargeRheostatElement(node: TransparentNode, desc_: TransparentNodeDescript
 
     val aLoad = NbtElectricalLoad("aLoad")
     val bLoad = NbtElectricalLoad("bLoad")
-    val resistor = Resistor(aLoad, bLoad).apply { setR(nominalRs) }
+    val resistor = Resistor(aLoad, bLoad).apply { setResistance(nominalRs) }
 
     val control = NbtElectricalGateInput("control")
     val controlProcess = ControlProcess()
@@ -102,7 +102,7 @@ class LargeRheostatElement(node: TransparentNode, desc_: TransparentNodeDescript
         thermalLoadList.add(thermalLoad)
         thermalFastProcessList.add(heater)
         slowProcessList.add(thermalWatchdog)
-        thermalWatchdog.set(thermalLoad).setTMax(desc.dissipator.warmLimit)
+        thermalWatchdog.setThermalLoad(thermalLoad).setMaximumTemperature(desc.dissipator.warmLimit)
             .set(WorldExplosion(this).machineExplosion())
     }
 
@@ -113,12 +113,12 @@ class LargeRheostatElement(node: TransparentNode, desc_: TransparentNodeDescript
         override fun process(time: Double) {
             val desiredRs = (control.normalized + 0.01) / 1.01 * nominalRs
             if (desiredRs > lastC * 1.01 || desiredRs < lastC * 0.99) {
-                resistor.r = desiredRs
+                resistor.resistance = desiredRs
                 lastC = desiredRs
                 needPublish()
             }
-            if (thermalLoad.Tc > lastH * 1.05 || thermalLoad.Tc < lastH * 0.95) {
-                lastH = thermalLoad.Tc
+            if (thermalLoad.temperatureCelsius > lastH * 1.05 || thermalLoad.temperatureCelsius < lastH * 0.95) {
+                lastH = thermalLoad.temperatureCelsius
                 needPublish()
             }
         }
@@ -163,25 +163,25 @@ class LargeRheostatElement(node: TransparentNode, desc_: TransparentNodeDescript
     }
 
     override fun multiMeterString(side: Direction): String {
-        val u = -Math.abs(aLoad.u - bLoad.u)
-        val i = Math.abs(resistor.i)
-        return Utils.plotOhm(Utils.plotUIP(u, i), resistor.r) + Utils.plotPercent("C", control.normalized)
+        val u = -Math.abs(aLoad.voltage - bLoad.voltage)
+        val i = Math.abs(resistor.current)
+        return Utils.plotOhm(Utils.plotUIP(u, i), resistor.resistance) + Utils.plotPercent("C", control.normalized)
     }
 
     override fun thermoMeterString(side: Direction) =
-        Utils.plotCelsius("T: ", thermalLoad.Tc) + Utils.plotPower("P: ", thermalLoad.power)
+        Utils.plotCelsius("T: ", thermalLoad.temperatureCelsius) + Utils.plotPower("P: ", thermalLoad.power)
 
     override fun initialize() {
         desc.dissipator.applyTo(thermalLoad)
-        aLoad.rs = MnaConst.noImpedance
-        bLoad.rs = MnaConst.noImpedance
+        aLoad.serialResistance = MnaConst.noImpedance
+        bLoad.serialResistance = MnaConst.noImpedance
         setupPhysical()
         connect()
     }
 
     override fun networkSerialize(stream: DataOutputStream) {
         super.networkSerialize(stream)
-        stream.writeFloat(thermalLoad.Tc.toFloat())
+        stream.writeFloat(thermalLoad.temperatureCelsius.toFloat())
         stream.writeFloat(control.normalized.toFloat())
     }
 
@@ -190,9 +190,9 @@ class LargeRheostatElement(node: TransparentNode, desc_: TransparentNodeDescript
     override fun newContainer(side: Direction, player: EntityPlayer) = ResistorContainer(player, inventory)
 
     override fun getWaila(): Map<String, String> = mutableMapOf(
-        Pair(I18N.tr("Resistance"), Utils.plotOhm("", resistor.r)),
-        Pair(I18N.tr("Temperature"), Utils.plotCelsius("", thermalLoad.t)),
-        Pair(I18N.tr("Power loss"), Utils.plotPower("", resistor.p))
+        Pair(I18N.tr("Resistance"), Utils.plotOhm("", resistor.resistance)),
+        Pair(I18N.tr("Temperature"), Utils.plotCelsius("", thermalLoad.temperature)),
+        Pair(I18N.tr("Power loss"), Utils.plotPower("", resistor.power))
     )
 }
 

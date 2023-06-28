@@ -6,7 +6,7 @@ import mods.eln.sim.mna.misc.IDestructor;
 import mods.eln.sim.mna.misc.IRootSystemPreStepProcess;
 import mods.eln.sim.mna.state.State;
 import mods.eln.sim.mna.state.VoltageState;
-import mods.eln.sim.mna.SubSystem.Th;
+import mods.eln.sim.mna.SubSystem.Thevenin;
 
 public class InterSystemAbstraction implements IAbstractor, IDestructor, IRootSystemPreStepProcess {
 
@@ -67,13 +67,13 @@ public class InterSystemAbstraction implements IAbstractor, IDestructor, IRootSy
     }
 
     void calibrate() {
-        double u = (aState.state + bState.state) / 2;
-        aNewDelay.setU(u);
-        bNewDelay.setU(u);
+        double voltage = (aState.state + bState.state) / 2;
+        aNewDelay.setVoltage(voltage);
+        bNewDelay.setVoltage(voltage);
 
-        double r = interSystemResistor.getR() / 2;
-        aNewResistor.setR(r);
-        bNewResistor.setR(r);
+        double resistance = interSystemResistor.getResistance() / 2;
+        aNewResistor.setResistance(resistance);
+        bNewResistor.setResistance(resistance);
     }
 
     @Override
@@ -106,15 +106,15 @@ public class InterSystemAbstraction implements IAbstractor, IDestructor, IRootSy
 
     @Override
     public void rootSystemPreStepProcess() {
-        Th a = aNewDelay.getSubSystem().getTh(aState,aNewDelay);
-        Th b = bNewDelay.getSubSystem().getTh(bState,bNewDelay);
+        Thevenin a = aNewDelay.getSubSystem().getTh(aState,aNewDelay);
+        Thevenin b = bNewDelay.getSubSystem().getTh(bState,bNewDelay);
 
-        double U = (a.U - b.U) * b.R / (a.R + b.R) + b.U;
-        if (Double.isNaN(U)) {
-            U = 0;
+        double voltage = (a.voltage - b.voltage) * b.resistance / (a.resistance + b.resistance) + b.voltage;
+        if (Double.isNaN(voltage)) {
+            voltage = 0;
         }
 
-        aNewDelay.setU(U);
-        bNewDelay.setU(U);
+        aNewDelay.setVoltage(voltage);
+        bNewDelay.setVoltage(voltage);
     }
 }

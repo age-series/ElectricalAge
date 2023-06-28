@@ -60,7 +60,7 @@ public class TeleporterElement extends TransparentNodeElement implements ITelepo
         teleporterList.add(this);
 
         WorldExplosion exp = new WorldExplosion(this).machineExplosion();
-        slowProcessList.add(voltageWatchdog.set(powerLoad).setUNominal(this.descriptor.cable.electricalNominalVoltage).set(exp));
+        slowProcessList.add(voltageWatchdog.setVoltageState(powerLoad).setNominalVoltage(this.descriptor.cable.electricalNominalVoltage).set(exp));
 
     }
 
@@ -246,7 +246,7 @@ public class TeleporterElement extends TransparentNodeElement implements ITelepo
                     descriptor.ghostDoorOpen.newRotate(front).plot(node.coordinate, node.coordinate, descriptor.getGhostGroupUuid());
                     break;
                 case StateCharge:
-                    powerResistor.setR(Math.pow(descriptor.cable.electricalNominalVoltage, 2) / powerCharge);
+                    powerResistor.setResistance(Math.pow(descriptor.cable.electricalNominalVoltage, 2) / powerCharge);
                     publisher.reconfigure(0.4, 0);
                     break;
                 case StateReserved:
@@ -265,7 +265,7 @@ public class TeleporterElement extends TransparentNodeElement implements ITelepo
     @Override
     public boolean reservate() {
         if (state != StateIdle) return false;
-        if (powerLoad.getU() < descriptor.cable.electricalNominalVoltage * 0.8) return false;
+        if (powerLoad.getVoltage() < descriptor.cable.electricalNominalVoltage * 0.8) return false;
 
         setState(StateReserved);
         imMaster = false;
@@ -331,7 +331,7 @@ public class TeleporterElement extends TransparentNodeElement implements ITelepo
 
             if (++blinkCounter >= 9) {
                 blinkCounter = 0;
-                if ((powerLoad.getU() / descriptor.cable.electricalNominalVoltage - 0.5) * 3 > Math.random())
+                if ((powerLoad.getVoltage() / descriptor.cable.electricalNominalVoltage - 0.5) * 3 > Math.random())
                     LightBlockEntity.addLight(lightCoordinate, 12, 11);
             }
             switch (state) {
@@ -362,7 +362,7 @@ public class TeleporterElement extends TransparentNodeElement implements ITelepo
                             sendIdToAllClient(eventMultipleoTargetFind);
                             break;
                         }
-                        if (powerLoad.getU() < descriptor.cable.electricalNominalVoltage * 0.8) {
+                        if (powerLoad.getVoltage() < descriptor.cable.electricalNominalVoltage * 0.8) {
                             break;
                         }
                         ITeleporter target = getTarget(targetNameCopy);
@@ -428,7 +428,7 @@ public class TeleporterElement extends TransparentNodeElement implements ITelepo
                         setState(StateOpen);
                         break;
                     }
-                    if (powerLoad.getU() < descriptor.cable.electricalNominalVoltage * 0.8) {
+                    if (powerLoad.getVoltage() < descriptor.cable.electricalNominalVoltage * 0.8) {
                         sendIdToAllClient(eventInstablePowerSupply);
                         AxisAlignedBB bb = descriptor.getBB(node.coordinate, front);
                         List list = node.coordinate.world().getEntitiesWithinAABB(Entity.class, bb);
@@ -464,7 +464,7 @@ public class TeleporterElement extends TransparentNodeElement implements ITelepo
                         //
                         // energyTarget *= 1.0 + Math.pow(distance / 250.0, 0.5);
 
-                        energyHit += powerResistor.getP() * time;
+                        energyHit += powerResistor.getPower() * time;
                         processRatio = (float) (energyHit / energyTarget);
 
                         if (energyHit >= energyTarget) {
@@ -602,7 +602,7 @@ public class TeleporterElement extends TransparentNodeElement implements ITelepo
                 (doorState ? 0x1 : 0x0)
             );
             stream.writeFloat(processRatio);
-            stream.writeFloat((float) powerLoad.getU());
+            stream.writeFloat((float) powerLoad.getVoltage());
             stream.writeFloat((float) energyHit);
             stream.writeFloat((float) energyTarget);
             // stream.writeFloat((float) energyHit);

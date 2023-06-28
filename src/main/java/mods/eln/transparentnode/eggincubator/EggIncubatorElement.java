@@ -54,7 +54,7 @@ public class EggIncubatorElement extends TransparentNodeElement {
         this.descriptor = (EggIncubatorDescriptor) descriptor;
 
         WorldExplosion exp = new WorldExplosion(this).machineExplosion();
-        slowProcessList.add(voltageWatchdog.set(powerLoad).setUNominal(this.descriptor.nominalVoltage).set(exp));
+        slowProcessList.add(voltageWatchdog.setVoltageState(powerLoad).setNominalVoltage(this.descriptor.nominalVoltage).set(exp));
     }
 
     class EggIncubatorProcess implements IProcess, INBTTReady {
@@ -71,7 +71,7 @@ public class EggIncubatorElement extends TransparentNodeElement {
 
         @Override
         public void process(double time) {
-            energy -= powerResistor.getP() * time;
+            energy -= powerResistor.getPower() * time;
             if (inventory.getStackInSlot(EggIncubatorContainer.EggSlotId) != null) {
                 descriptor.setState(powerResistor, true);
                 if (energy <= 0) {
@@ -94,7 +94,7 @@ public class EggIncubatorElement extends TransparentNodeElement {
                 descriptor.setState(powerResistor, false);
                 resetEnergy();
             }
-            if (Math.abs(powerLoad.getU() - lastVoltagePublish) / descriptor.nominalVoltage > 0.1) needPublish();
+            if (Math.abs(powerLoad.getVoltage() - lastVoltagePublish) / descriptor.nominalVoltage > 0.1) needPublish();
         }
 
         @Override
@@ -131,7 +131,7 @@ public class EggIncubatorElement extends TransparentNodeElement {
     @NotNull
     @Override
     public String multiMeterString(@NotNull Direction side) {
-        return Utils.plotUIP(powerLoad.getU(), powerLoad.getCurrent());
+        return Utils.plotUIP(powerLoad.getVoltage(), powerLoad.getCurrent());
     }
 
     @NotNull
@@ -184,11 +184,11 @@ public class EggIncubatorElement extends TransparentNodeElement {
 
             node.lrduCubeMask.getTranslate(front.down()).serialize(stream);
 
-            stream.writeFloat((float) powerLoad.getU());
+            stream.writeFloat((float) powerLoad.getVoltage());
         } catch (IOException e) {
             e.printStackTrace();
         }
-        lastVoltagePublish = powerLoad.getU();
+        lastVoltagePublish = powerLoad.getVoltage();
     }
 
     @NotNull
@@ -198,7 +198,7 @@ public class EggIncubatorElement extends TransparentNodeElement {
         info.put(I18N.tr("Has egg"), inventory.getStackInSlot(EggIncubatorContainer.EggSlotId) != null ?
             I18N.tr("Yes") : I18N.tr("No"));
         if (Eln.wailaEasyMode) {
-            info.put(I18N.tr("Power consumption"), Utils.plotPower("", powerResistor.getP()));
+            info.put(I18N.tr("Power consumption"), Utils.plotPower("", powerResistor.getPower()));
         }
         return info;
     }

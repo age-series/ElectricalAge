@@ -11,16 +11,14 @@ public class ElectricalLoad extends VoltageStateLineReady {
 
     public static final State groundLoad = null;
 
-    private double Rs = MnaConst.highImpedance;
+    private double serialResistance = MnaConst.highImpedance;
 
     public ElectricalLoad() {
     }
 
-    //public VoltageState state = new VoltageState();
-
-    public void setRs(double Rs) {
-        if (this.Rs != Rs) {
-            this.Rs = Rs;
+    public void setSerialResistance(double serialResistance) {
+        if (this.serialResistance != serialResistance) {
+            this.serialResistance = serialResistance;
             for (Component c : getConnectedComponents()) {
                 if (c instanceof ElectricalConnection) {
                     ((ElectricalConnection) c).notifyRsChange();
@@ -29,25 +27,20 @@ public class ElectricalLoad extends VoltageStateLineReady {
         }
     }
 
-    public double getRs() {
-        return Rs;
+    public double getSerialResistance() {
+        return serialResistance;
     }
 
     public void highImpedance() {
-        setRs(MnaConst.highImpedance);
-    }
-//	ArrayList<ElectricalConnection> electricalConnections = new ArrayList<ElectricalConnection>(4);
-
-    public double getI() {
-        double i = 0;
-        for (Component c : getConnectedComponents()) {
-            if (c instanceof Bipole && (!(c instanceof Line)))
-                i += Math.abs(((Bipole) c).getCurrent());
-        }
-        return i * 0.5;
+        setSerialResistance(MnaConst.highImpedance);
     }
 
     public double getCurrent() {
-        return getI();
+        double current = 0;
+        for (Component c : getConnectedComponents()) {
+            if (c instanceof Bipole && (!(c instanceof Line)))
+                current += Math.abs(((Bipole) c).getCurrent());
+        }
+        return current * 0.5;
     }
 }

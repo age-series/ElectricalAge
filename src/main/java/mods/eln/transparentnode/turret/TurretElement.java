@@ -141,7 +141,7 @@ public class TurretElement extends TransparentNodeElement implements IConfigurab
     @NotNull
     @Override
     public String multiMeterString(@NotNull Direction side) {
-        return Utils.plotUIP(load.getU(), load.getI());
+        return Utils.plotUIP(load.getVoltage(), load.getCurrent());
     }
 
     @NotNull

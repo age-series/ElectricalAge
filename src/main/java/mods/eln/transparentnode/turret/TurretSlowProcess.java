@@ -41,7 +41,7 @@ public class TurretSlowProcess extends StateMachine {
 
         @Override
         public State state(double time) {
-            if (element.load.getU() >= element.getDescriptor().getProperties().minimalVoltage *
+            if (element.load.getVoltage() >= element.getDescriptor().getProperties().minimalVoltage *
                 (1.0 + element.getDescriptor().getProperties().minimalVoltageHysteresisFactor)) {
                 return new ActiveState();
             } else {
@@ -70,10 +70,10 @@ public class TurretSlowProcess extends StateMachine {
         @Override
         public State state(double time) {
             super.state(time);
-            if (element.load.getU() < element.getDescriptor().getProperties().minimalVoltage *
+            if (element.load.getVoltage() < element.getDescriptor().getProperties().minimalVoltage *
                 (1.0 - element.getDescriptor().getProperties().minimalVoltageHysteresisFactor))
                 return new WaitState();
-            else if (element.load.getU() > element.getDescriptor().getProperties().maximalVoltage)
+            else if (element.load.getVoltage() > element.getDescriptor().getProperties().maximalVoltage)
                 return new DamageState();
             else
                 return this;
@@ -351,7 +351,7 @@ public class TurretSlowProcess extends StateMachine {
     @Override
     public void process(double time) {
         double MaximalEnergy = element.getDescriptor().getProperties().impulseEnergy;
-        element.energyBuffer += element.powerResistor.getP() * time;
+        element.energyBuffer += element.powerResistor.getPower() * time;
         boolean full = element.energyBuffer > MaximalEnergy;
 
         if (full) {
@@ -364,6 +364,6 @@ public class TurretSlowProcess extends StateMachine {
         if (actualPower == 0 || full)
             element.powerResistor.highImpedance();
         else
-            element.powerResistor.setR(element.load.getU() * element.load.getU() / actualPower);
+            element.powerResistor.setResistance(element.load.getVoltage() * element.load.getVoltage() / actualPower);
     }
 }

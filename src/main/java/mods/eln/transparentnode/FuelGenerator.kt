@@ -146,7 +146,7 @@ class FuelGeneratorElement(transparentNode: TransparentNode, descriptor_: Transp
         else -> 0
     }
 
-    override fun multiMeterString(side: Direction) = Utils.plotVolt("U+:", positiveLoad.u) +
+    override fun multiMeterString(side: Direction) = Utils.plotVolt("U+:", positiveLoad.voltage) +
         Utils.plotAmpere("I+:", positiveLoad.current) +
         Utils.plotPercent("Fuel level:", tankLevel)
 
@@ -155,8 +155,8 @@ class FuelGeneratorElement(transparentNode: TransparentNode, descriptor_: Transp
 
     override fun initialize() {
         descriptor.cable.applyTo(positiveLoad)
-        powerSource.setUmax(descriptor.maxVoltage)
-        powerSource.setImax(descriptor.nominalPower * 5 / descriptor.maxVoltage)
+        powerSource.setMaximumVoltage(descriptor.maxVoltage)
+        powerSource.setMaximumCurrent(descriptor.nominalPower * 5 / descriptor.maxVoltage)
         connect()
     }
 
@@ -164,7 +164,7 @@ class FuelGeneratorElement(transparentNode: TransparentNode, descriptor_: Transp
         super.networkSerialize(stream)
         node!!.lrduCubeMask.getTranslate(Direction.YN).serialize(stream)
         stream.writeBoolean(on)
-        stream.writeFloat((positiveLoad.u / descriptor.maxVoltage).toFloat())
+        stream.writeFloat((positiveLoad.voltage / descriptor.maxVoltage).toFloat())
     }
 
     override fun onBlockActivated(player: EntityPlayer, side: Direction, vx: Float, vy: Float, vz: Float): Boolean {
@@ -224,8 +224,8 @@ class FuelGeneratorElement(transparentNode: TransparentNode, descriptor_: Transp
     override fun getWaila(): Map<String, String> = mutableMapOf(
         Pair(I18N.tr("State"), if (on) I18N.tr("ON") else I18N.tr("OFF")),
         Pair(I18N.tr("Fuel level"), Utils.plotPercent("", tankLevel)),
-        Pair(I18N.tr("Generated power"), Utils.plotPower("", powerSource.effectiveP)),
-        Pair(I18N.tr("Voltage"), Utils.plotVolt("", powerSource.u))
+        Pair(I18N.tr("Generated power"), Utils.plotPower("", powerSource.effectivePower)),
+        Pair(I18N.tr("Voltage"), Utils.plotVolt("", powerSource.voltage))
     )
 }
 
@@ -275,7 +275,7 @@ class FuelGeneratorRender(tileEntity: TransparentNodeEntity, descriptor: Transpa
 class FuelGeneratorSlowProcess(internal val generator: FuelGeneratorElement) : IProcess {
     override fun process(time: Double) {
         if (generator.on) {
-            val power = Math.max(generator.powerSource.effectiveP,
+            val power = Math.max(generator.powerSource.effectivePower,
                 generator.descriptor.nominalPower * FuelGeneratorDescriptor.MinimalLoadFractionOfNominalPower)
             generator.tankLevel = Math.max(0.0, generator.tankLevel - time *
                 FuelGeneratorDescriptor.EfficiencyFactorVsLoadFactor(power / generator.descriptor.nominalPower) *
@@ -287,16 +287,16 @@ class FuelGeneratorSlowProcess(internal val generator: FuelGeneratorElement) : I
 
             if (generator.voltageGracePeriod > 0) {
                 generator.voltageGracePeriod -= time;
-            } else if (generator.positiveLoad.u <
+            } else if (generator.positiveLoad.voltage <
                 FuelGeneratorDescriptor.GeneratorBailOutVoltageRatio * generator.descriptor.maxVoltage) {
                 generator.on = false;
             }
         }
 
         if (generator.on) {
-            generator.powerSource.p = generator.descriptor.nominalPower
+            generator.powerSource.power = generator.descriptor.nominalPower
         } else {
-            generator.powerSource.p = 0.0
+            generator.powerSource.power = 0.0
         }
     }
 }

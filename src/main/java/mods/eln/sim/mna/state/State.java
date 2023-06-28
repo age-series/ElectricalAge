@@ -29,7 +29,7 @@ public class State {
         this.id = id;
     }
 
-    public void addedTo(SubSystem s) {
+    public void setSubsystem(SubSystem s) {
         this.subSystem = s;
     }
 
@@ -55,12 +55,11 @@ public class State {
         return list;
     }
 
-    public void add(Component c) {
+    public void addComponent(Component c) {
         components.add(c);
-        //System.out.println("ADD " + c + " To " +  this);
     }
 
-    public void remove(Component c) {
+    public void removeComponent(Component c) {
         components.remove(c);
     }
 

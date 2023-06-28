@@ -3,7 +3,7 @@ package mods.eln.sim.mna.process;
 import mods.eln.sim.mna.component.VoltageSource;
 import mods.eln.sim.mna.misc.IRootSystemPreStepProcess;
 import mods.eln.sim.mna.state.State;
-import mods.eln.sim.mna.SubSystem.Th;
+import mods.eln.sim.mna.SubSystem.Thevenin;
 
 public class TransformerInterSystemProcess implements IRootSystemPreStepProcess {
     State aState, bState;
@@ -20,16 +20,16 @@ public class TransformerInterSystemProcess implements IRootSystemPreStepProcess 
 
     @Override
     public void rootSystemPreStepProcess() {
-        Th a = aVoltgeSource.getSubSystem().getTh(aState, aVoltgeSource);
-        Th b = bVoltgeSource.getSubSystem().getTh(bState, bVoltgeSource);
+        Thevenin a = aVoltgeSource.getSubSystem().getTh(aState, aVoltgeSource);
+        Thevenin b = bVoltgeSource.getSubSystem().getTh(bState, bVoltgeSource);
 
-        double aU = (a.U * b.R + ratio * b.U * a.R) / (b.R + ratio * ratio * a.R);
-        if (Double.isNaN(aU)) {
-            aU = 0;
+        double voltage = (a.voltage * b.resistance + ratio * b.voltage * a.resistance) / (b.resistance + ratio * ratio * a.resistance);
+        if (Double.isNaN(voltage)) {
+            voltage = 0;
         }
 
-        aVoltgeSource.setU(aU);
-        bVoltgeSource.setU(aU * ratio);
+        aVoltgeSource.setVoltage(voltage);
+        bVoltgeSource.setVoltage(voltage * ratio);
     }
 
     public void setRatio(double ratio) {

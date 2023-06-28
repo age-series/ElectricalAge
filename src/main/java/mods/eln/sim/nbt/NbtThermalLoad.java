@@ -19,13 +19,13 @@ public class NbtThermalLoad extends ThermalLoad implements INBTTReady {
     }
 
     public void readFromNBT(NBTTagCompound nbttagcompound, String str) {
-        Tc = nbttagcompound.getFloat(str + name + "Tc");
-        if (Double.isNaN(Tc)) Tc = 0;
-        if (Tc == Float.NEGATIVE_INFINITY) Tc = 0;
-        if (Tc == Float.POSITIVE_INFINITY) Tc = 0;
+        temperatureCelsius = nbttagcompound.getFloat(str + name + "Tc");
+        if (Double.isNaN(temperatureCelsius)) temperatureCelsius = 0;
+        if (temperatureCelsius == Float.NEGATIVE_INFINITY) temperatureCelsius = 0;
+        if (temperatureCelsius == Float.POSITIVE_INFINITY) temperatureCelsius = 0;
     }
 
     public void writeToNBT(NBTTagCompound nbttagcompound, String str) {
-        nbttagcompound.setFloat(str + name + "Tc", (float) Tc);
+        nbttagcompound.setFloat(str + name + "Tc", (float) temperatureCelsius);
     }
 }

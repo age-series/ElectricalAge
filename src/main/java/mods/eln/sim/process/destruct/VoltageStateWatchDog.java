@@ -8,29 +8,15 @@ public class VoltageStateWatchDog extends ValueWatchdog {
 
     @Override
     double getValue() {
-        return state.getU();
+        return state.getVoltage();
     }
 
-    public VoltageStateWatchDog set(VoltageState state) {
+    public VoltageStateWatchDog setVoltageState(VoltageState state) {
         this.state = state;
         return this;
     }
 
-    public VoltageStateWatchDog setUNominal(double uNominal) {
-        this.max = uNominal * 1.3;
-        this.min = -uNominal * 1.3;
-        this.timeoutReset = uNominal * 0.05 * 5;
-        return this;
-    }
-
-    public VoltageStateWatchDog setUNominalMirror(double uNominal) {
-        this.max = uNominal * 1.3;
-        this.min = -max;
-        this.timeoutReset = uNominal * 0.05 * 5;
-        return this;
-    }
-
-    public VoltageStateWatchDog setUMaxMin(double uNominal) {
+    public VoltageStateWatchDog setNominalVoltage(double uNominal) {
         this.max = uNominal * 1.3;
         this.min = -uNominal * 1.3;
         this.timeoutReset = uNominal * 0.05 * 5;

@@ -102,15 +102,15 @@ class CurrentSourceElement(sixNode: SixNode, side: Direction, descriptor: SixNod
     }
 
     override fun multiMeterString(): String {
-        return Utils.plotUIP(electricalLoad.u, currentSource.current)
+        return Utils.plotUIP(electricalLoad.voltage, currentSource.current)
     }
 
     override fun getWaila(): Map<String, String> {
         val info: MutableMap<String, String> = HashMap()
-        info[I18N.tr("Voltage")] = Utils.plotVolt("", electricalLoad.u)
+        info[I18N.tr("Voltage")] = Utils.plotVolt("", electricalLoad.voltage)
         info[I18N.tr("Current")] = Utils.plotAmpere("", electricalLoad.current)
         if (Eln.wailaEasyMode) {
-            info[I18N.tr("Power")] = Utils.plotPower("", electricalLoad.u * electricalLoad.i)
+            info[I18N.tr("Power")] = Utils.plotPower("", electricalLoad.voltage * electricalLoad.current)
         }
         return info
     }

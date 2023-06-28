@@ -30,7 +30,7 @@ class EnergyConverterElnToOtherNode : SimpleNode() {
     var ic2tier = 1
 
     init {
-        powerInResistor.r = MnaConst.highImpedance
+        powerInResistor.resistance = MnaConst.highImpedance
     }
 
     override fun getSideConnectionMask(side: Direction, lrdu: LRDU): Int {
@@ -58,7 +58,7 @@ class EnergyConverterElnToOtherNode : SimpleNode() {
     inner class ElectricalProcess : IProcess {
         var timeout = 0.0
         override fun process(time: Double) {
-            var power = powerInResistor.p
+            var power = powerInResistor.power
             if (!power.isFinite()) power = 0.0
             energyBuffer += power * time
             timeout -= time
@@ -68,9 +68,9 @@ class EnergyConverterElnToOtherNode : SimpleNode() {
                     powerInResistor.highImpedance()
                 } else {
                     if (selectedOhms < 10.0) {
-                        powerInResistor.r = MnaConst.highImpedance
+                        powerInResistor.resistance = MnaConst.highImpedance
                     } else {
-                        powerInResistor.r = max(Eln.getSmallRs(), selectedOhms)
+                        powerInResistor.resistance = max(Eln.getSmallRs(), selectedOhms)
                     }
                 }
             }

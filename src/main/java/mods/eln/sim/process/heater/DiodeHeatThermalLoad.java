@@ -6,22 +6,22 @@ import mods.eln.sim.mna.component.Resistor;
 
 public class DiodeHeatThermalLoad implements IProcess {
 
-    Resistor r;
+    Resistor resistor;
     ThermalLoad load;
-    double lastR;
+    double lastResistance;
 
     public DiodeHeatThermalLoad(Resistor r, ThermalLoad load) {
-        this.r = r;
+        this.resistor = r;
         this.load = load;
-        lastR = r.getR();
+        lastResistance = r.getResistance();
     }
 
     @Override
     public void process(double time) {
-        if (r.getR() == lastR) {
-            load.movePowerTo(r.getP());
+        if (resistor.getResistance() == lastResistance) {
+            load.movePowerTo(resistor.getPower());
         } else {
-            lastR = r.getR();
+            lastResistance = resistor.getResistance();
         }
     }
 }

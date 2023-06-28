@@ -111,12 +111,12 @@ public class ElectricalSwitchDescriptor extends SixNodeDescriptor {
     }
 
     public void applyTo(ElectricalLoad load) {
-        load.setRs(electricalRs);
+        load.setSerialResistance(electricalRs);
     }
 
     public void applyTo(Resistor resistor, boolean state) {
         if (state) {
-            resistor.setR(electricalRs);
+            resistor.setResistance(electricalRs);
         } else {
             resistor.highImpedance();
         }

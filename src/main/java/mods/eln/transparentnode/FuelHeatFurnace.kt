@@ -86,7 +86,7 @@ class FuelHeatFurnaceDescriptor(name: String, model: Obj3D, val thermal: Thermal
     override fun addInformation(itemStack: ItemStack?, entityPlayer: EntityPlayer?, list: MutableList<String>, par4: Boolean) {
         super.addInformation(itemStack, entityPlayer, list, par4)
         list.add(I18N.tr("Generates heat when supplied with fuel."))
-        list.add(Utils.plotCelsius(I18N.tr("  Max. temperature: "), thermal.warmLimit))
+        list.add(Utils.plotCelsius(I18N.tr("  Max. temperature: "), thermal.maximumTemperature))
     }
 }
 
@@ -124,7 +124,7 @@ class FuelHeatFurnaceElement(transparentNode: TransparentNode, descriptor: Trans
 
             when {
                 externalControlled -> {
-                    setCmd(controlLoad.u / Eln.SVU)
+                    setCmd(controlLoad.voltage / Eln.SVU)
                 }
                 else -> {
                     setCmd(manualControl)
@@ -137,7 +137,7 @@ class FuelHeatFurnaceElement(transparentNode: TransparentNode, descriptor: Trans
             thermalLoad.PcTemp += actualHeatPower
         }
 
-        override fun getHit() = thermalLoad.Tc
+        override fun getHit() = thermalLoad.temperatureCelsius
         override fun setCmd(cmd: Double) {
             heaterControlValue = Math.max(0.0, cmd)
         }
@@ -154,7 +154,7 @@ class FuelHeatFurnaceElement(transparentNode: TransparentNode, descriptor: Trans
 
         tank.setFilter(FuelRegistry.fluidListToFluids(FuelRegistry.gasolineList + FuelRegistry.dieselList))
 
-        thermalWatchdog.set(thermalLoad).setLimit((descriptor as FuelHeatFurnaceDescriptor).thermal)
+        thermalWatchdog.setThermalLoad(thermalLoad).setLimit((descriptor as FuelHeatFurnaceDescriptor).thermal)
             .set(WorldExplosion(this).machineExplosion())
     }
 
@@ -180,10 +180,10 @@ class FuelHeatFurnaceElement(transparentNode: TransparentNode, descriptor: Trans
 
     override fun multiMeterString(side: Direction) = Utils.plotPower("P:", thermalLoad.power)
 
-    override fun thermoMeterString(side: Direction) = Utils.plotCelsius("T:", thermalLoad.Tc)
+    override fun thermoMeterString(side: Direction) = Utils.plotCelsius("T:", thermalLoad.temperatureCelsius)
 
     override fun initialize() {
-        (descriptor as FuelHeatFurnaceDescriptor).thermal.applyTo(thermalLoad)
+        (descriptor as FuelHeatFurnaceDescriptor).thermal.applyToThermalLoad(thermalLoad)
         inventoryChange(inventory)
         connect()
     }
@@ -197,7 +197,7 @@ class FuelHeatFurnaceElement(transparentNode: TransparentNode, descriptor: Trans
         stream.writeFloat(heaterControlValue.toFloat())
         stream.writeFloat(setTemperature.toFloat())
         stream.writeFloat(actualHeatPower.toFloat())
-        stream.writeFloat(thermalLoad.Tc.toFloat())
+        stream.writeFloat(thermalLoad.temperatureCelsius.toFloat())
         stream.writeInt(FuelBurnerDescriptor.getDescriptor(inventory.getStackInSlot(FuelHeatFurnaceContainer.FuelBurnerSlot))?.type ?: -1)
     }
 
@@ -246,7 +246,7 @@ class FuelHeatFurnaceElement(transparentNode: TransparentNode, descriptor: Trans
 
     override fun getWaila(): MutableMap<String, String> {
         val info = HashMap<String, String>()
-        info.put(I18N.tr("Temperature"), Utils.plotCelsius("", thermalLoad.Tc))
+        info.put(I18N.tr("Temperature"), Utils.plotCelsius("", thermalLoad.temperatureCelsius))
         info.put(I18N.tr("Power"), Utils.plotPower("", actualHeatPower))
         return info
     }

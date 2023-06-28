@@ -11,7 +11,6 @@ import mods.eln.misc.Obj3D.Obj3DPart
 import mods.eln.node.NodeBase
 import mods.eln.node.transparent.*
 import mods.eln.sim.ElectricalLoad
-import mods.eln.sim.ThermalLoad
 import mods.eln.sim.mna.component.Resistor
 import mods.eln.sim.nbt.NbtElectricalLoad
 import mods.eln.sim.process.destruct.VoltageStateWatchDog
@@ -85,11 +84,11 @@ class ArcFurnaceElement(node: TransparentNode, descriptor: TransparentNodeDescri
         electricalLoadList.add(electricalLoad)
         electricalComponentList.add(electricalResistor)
         val exp = WorldExplosion(this).machineExplosion()
-        slowProcessList.add(voltageWatchdog.set(electricalLoad).setUNominal(800.0).set(exp))
+        slowProcessList.add(voltageWatchdog.setVoltageState(electricalLoad).setNominalVoltage(800.0).set(exp))
     }
 
     override fun multiMeterString(side: Direction): String {
-        return Utils.plotUIP(electricalLoad.u, electricalLoad.current)
+        return Utils.plotUIP(electricalLoad.voltage, electricalLoad.current)
     }
 
 

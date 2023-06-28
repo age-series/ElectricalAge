@@ -191,7 +191,7 @@ public class DataLogs implements INBTTReady {
 
         switch (unitType) {
             case celsiusType:
-                str = Utils.plotCelsius("", factor * (maxValue - minValue) + minValue - PhysicalConstant.Tamb);
+                str = Utils.plotCelsius("", factor * (maxValue - minValue) + minValue - PhysicalConstant.ambientTemperatureCelsius);
                 break;
             case voltageType:
                 str = Utils.plotVolt("", factor * (maxValue - minValue) + minValue);

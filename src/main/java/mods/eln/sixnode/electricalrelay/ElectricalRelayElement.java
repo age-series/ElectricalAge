@@ -70,8 +70,8 @@ public class ElectricalRelayElement extends SixNodeElement implements IConfigura
         WorldExplosion exp = new WorldExplosion(this).cableExplosion();
 
         //currentWatchDog.set(switchResistor).setIAbsMax(this.descriptor.cable.electricalMaximalCurrent).set(exp);
-        voltageWatchDogA.set(aLoad).setUNominal(this.descriptor.cable.electricalNominalVoltage).set(exp);
-        voltageWatchDogB.set(bLoad).setUNominal(this.descriptor.cable.electricalNominalVoltage).set(exp);
+        voltageWatchDogA.setVoltageState(aLoad).setNominalVoltage(this.descriptor.cable.electricalNominalVoltage).set(exp);
+        voltageWatchDogB.setVoltageState(bLoad).setNominalVoltage(this.descriptor.cable.electricalNominalVoltage).set(exp);
     }
 
     public static boolean canBePlacedOnSide(Direction side, int type) {
@@ -119,7 +119,7 @@ public class ElectricalRelayElement extends SixNodeElement implements IConfigura
 
     @Override
     public String multiMeterString() {
-        return Utils.plotVolt("Ua:", aLoad.getU()) + Utils.plotVolt("Ub:", bLoad.getU()) + Utils.plotAmpere("I:", aLoad.getCurrent());
+        return Utils.plotVolt("Ua:", aLoad.getVoltage()) + Utils.plotVolt("Ub:", bLoad.getVoltage()) + Utils.plotAmpere("I:", aLoad.getCurrent());
     }
 
     @NotNull
@@ -130,7 +130,7 @@ public class ElectricalRelayElement extends SixNodeElement implements IConfigura
         info.put(I18N.tr("Current"), Utils.plotAmpere("", aLoad.getCurrent()));
         if (Eln.wailaEasyMode) {
             info.put(I18N.tr("Default position"), defaultOutput ? I18N.tr("Closed") : I18N.tr("Open"));
-            info.put(I18N.tr("Voltages"), Utils.plotVolt("", aLoad.getU()) + Utils.plotVolt(" ", bLoad.getU()));
+            info.put(I18N.tr("Voltages"), Utils.plotVolt("", aLoad.getVoltage()) + Utils.plotVolt(" ", bLoad.getVoltage()));
         }
         info.put(I18N.tr("Subsystem Matrix Size"), Utils.renderSubSystemWaila(switchResistor.getSubSystem()));
         return info;

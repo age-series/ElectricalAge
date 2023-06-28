@@ -117,11 +117,11 @@ open class AnalogChipElement(node: SixNode, side: Direction, sixNodeDescriptor: 
             for (i in 0..2) {
                 val inputPin = inputPins[i]
                 if (inputPin != null && inputPin.connectedComponents.count() > 0) {
-                    inputs[i] = inputPin.u
+                    inputs[i] = inputPin.voltage
                 }
             }
 
-            outputProcess.setUSafe(function.process(inputs, time))
+            outputProcess.setVoltageSafe(function.process(inputs, time))
         })
     }
 
@@ -150,13 +150,14 @@ open class AnalogChipElement(node: SixNode, side: Direction, sixNodeDescriptor: 
                 else if (pin.stateHigh()) "1" else "?").append(", ")
             }
         }
-        builder.append(I18N.tr(" O: ")).append(if (outputProcess.u == 50.0) "1" else "0")
+        builder.append(I18N.tr(" O: ")).append(if (outputProcess.voltage == 50.0) "1" else "0")
         return builder.toString()
     }
 
     override fun getWaila(): Map<String, String> = function.getWaila(
-        inputPins.map { if (it != null && it.connectedComponents.count() > 0) it.u else null }.toTypedArray(),
-        outputPin.u)
+        inputPins.map { if (it != null && it.connectedComponents.count() > 0) it.voltage else null }.toTypedArray(),
+        outputPin.voltage
+    )
 
     override val ghostObserverCoordonate: Coordinate?
         get() = coordinate!!

@@ -117,7 +117,7 @@ public class ElectricalBreakerElement extends SixNodeElement {
 
     @Override
     public String multiMeterString() {
-        return Utils.plotVolt("Ua:", aLoad.getU()) + Utils.plotVolt("Ub:", bLoad.getU()) + Utils.plotAmpere("I:", aLoad.getCurrent());
+        return Utils.plotVolt("Ua:", aLoad.getVoltage()) + Utils.plotVolt("Ub:", bLoad.getVoltage()) + Utils.plotAmpere("I:", aLoad.getCurrent());
     }
 
     @NotNull
@@ -127,7 +127,7 @@ public class ElectricalBreakerElement extends SixNodeElement {
         info.put(I18N.tr("Contact"), switchState ? I18N.tr("Closed") : I18N.tr("Open"));
         info.put(I18N.tr("Current"), Utils.plotAmpere("", aLoad.getCurrent()));
         if (Eln.wailaEasyMode) {
-            info.put(I18N.tr("Voltages"), Utils.plotVolt("", aLoad.getU()) + Utils.plotVolt(" ", bLoad.getU()));
+            info.put(I18N.tr("Voltages"), Utils.plotVolt("", aLoad.getVoltage()) + Utils.plotVolt(" ", bLoad.getVoltage()));
         }
         return info;
     }

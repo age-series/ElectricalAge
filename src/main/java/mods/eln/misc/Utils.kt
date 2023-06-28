@@ -26,7 +26,6 @@ import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.util.AxisAlignedBB
 import mods.eln.generic.GenericItemUsingDamage
 import mods.eln.generic.GenericItemBlockUsingDamage
-import mods.eln.i18n.I18N
 import net.minecraft.creativetab.CreativeTabs
 import net.minecraftforge.oredict.OreDictionary
 import net.minecraft.util.Vec3
@@ -231,7 +230,7 @@ object Utils {
     fun plotCelsius(header: String, value: Double): String {
         var header = header
         var value = value
-        value += PhysicalConstant.Tref - PhysicalConstant.TCelsius
+        value += PhysicalConstant.ambientTemperatureKelvin - PhysicalConstant.zeroCelsiusInKelvin
         if (header != "") header += " "
         return header + plotValue(value, "\u00B0C ")
     }

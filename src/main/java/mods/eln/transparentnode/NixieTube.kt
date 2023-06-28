@@ -150,9 +150,9 @@ class NixieTubeElement(node: TransparentNode, _descriptor: TransparentNodeDescri
     override fun getThermalLoad(side: Direction, lrdu: LRDU): ThermalLoad? = null
     override fun thermoMeterString(side: Direction): String = ""
     override fun multiMeterString(side: Direction): String =
-        Utils.plotVolt("N:", digitIn.signalU) + " " +
-            Utils.plotVolt("B:", blankIn.signalU) + " " +
-            Utils.plotVolt("D:", dotsIn.signalU)
+        Utils.plotVolt("N:", digitIn.signalVoltage) + " " +
+            Utils.plotVolt("B:", blankIn.signalVoltage) + " " +
+            Utils.plotVolt("D:", dotsIn.signalVoltage)
     override fun onBlockActivated(player: EntityPlayer, side: Direction, vx: Float, vy: Float, vz: Float): Boolean = false
 
     override fun getWaila(): MutableMap<String, String> {

@@ -179,7 +179,7 @@ class GeneratorElement(node: TransparentNode, desc_: TransparentNodeDescriptor) 
         desc.thermalLoadInitializer.applyTo(thermalLoadWatchDog)
         thermal.setAsSlow()
         thermalLoadList.add(thermal)
-        thermalLoadWatchDog.set(thermal).set(WorldExplosion(this).machineExplosion())
+        thermalLoadWatchDog.setThermalLoad(thermal).set(WorldExplosion(this).machineExplosion())
         slowProcessList.add(thermalLoadWatchDog)
 
         heater = ElectricalLoadHeatThermalLoad(inputLoad, thermal)
@@ -197,17 +197,17 @@ class GeneratorElement(node: TransparentNode, desc_: TransparentNodeDescriptor) 
             // Some comments on what math is going on would be great.
             val th = positiveLoad.getSubSystem().getTh(positiveLoad, electricalPowerSource)
             var Ut: Double
-            if (targetU < th.U) {
-                Ut = th.U * 0.999 + targetU * 0.001
+            if (targetU < th.voltage) {
+                Ut = th.voltage * 0.999 + targetU * 0.001
             } else if (th.isHighImpedance()) {
                 Ut = targetU
             } else {
-                val a = 1 / th.R
-                val b = desc.powerOutPerDeltaU - th.U / th.R
+                val a = 1 / th.resistance
+                val b = desc.powerOutPerDeltaU - th.voltage / th.resistance
                 val c = -desc.powerOutPerDeltaU * targetU
                 Ut = (-b + Math.sqrt(b * b - 4 * a * c)) / (2 * a)
             }
-            electricalPowerSource.setU(Ut)
+            electricalPowerSource.setVoltage(Ut)
         }
 
         override fun rootSystemPreStepProcess() {
@@ -219,7 +219,7 @@ class GeneratorElement(node: TransparentNode, desc_: TransparentNodeDescriptor) 
         private var powerFraction = 0.0f
 
         override fun process(time: Double) {
-            val p = electricalPowerSource.p
+            val p = electricalPowerSource.power
             powerFraction = (p / desc.nominalP).toFloat()
             var E = p * time
             if (E.isNaN())
@@ -270,9 +270,9 @@ class GeneratorElement(node: TransparentNode, desc_: TransparentNodeDescriptor) 
     }
 
     override fun multiMeterString(side: Direction) =
-        Utils.plotER(shaft.energy, shaft.rads) + Utils.plotUIP(electricalPowerSource.getU(), electricalPowerSource.getI())
+        Utils.plotER(shaft.energy, shaft.rads) + Utils.plotUIP(electricalPowerSource.getVoltage(), electricalPowerSource.getCurrent())
 
-    override fun thermoMeterString(side: Direction): String = Utils.plotCelsius("T", thermal.getT())
+    override fun thermoMeterString(side: Direction): String = Utils.plotCelsius("T", thermal.getTemperature())
 
     override fun onBlockActivated(player: EntityPlayer, side: Direction, vx: Float, vy: Float, vz: Float): Boolean {
         return false
@@ -288,9 +288,9 @@ class GeneratorElement(node: TransparentNode, desc_: TransparentNodeDescriptor) 
         info.put("Energy", Utils.plotEnergy("", shaft.energy))
         info.put("Speed", Utils.plotRads("", shaft.rads))
         if (Eln.wailaEasyMode) {
-            info.put("Voltage", Utils.plotVolt("", electricalPowerSource.getU()))
-            info.put("Current", Utils.plotAmpere("", electricalPowerSource.getI()))
-            info.put("Temperature", Utils.plotCelsius("", thermal.t))
+            info.put("Voltage", Utils.plotVolt("", electricalPowerSource.getVoltage()))
+            info.put("Current", Utils.plotAmpere("", electricalPowerSource.getCurrent()))
+            info.put("Temperature", Utils.plotCelsius("", thermal.temperature))
         }
         return info
     }

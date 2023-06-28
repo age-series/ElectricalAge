@@ -129,15 +129,15 @@ class LampSocketProcess(var lamp: LampSocketElement) : IProcess, INBTTReady /*,L
             // This code makes the ECO lights blink, and the other lights are just "stable"
             when (lampDescriptor.type) {
                 LampDescriptor.Type.INCANDESCENT, LampDescriptor.Type.LED -> {
-                    if (lamp.lampResistor.u < lampDescriptor.minimalU) {
+                    if (lamp.lampResistor.voltage < lampDescriptor.minimalU) {
                         lightDouble = 0.0
                     } else {
-                        lightDouble = lampDescriptor.nominalLight * ((Math.abs(lamp.lampResistor.u) - lampDescriptor.minimalU) / (lampDescriptor.nominalU - lampDescriptor.minimalU))
+                        lightDouble = lampDescriptor.nominalLight * ((Math.abs(lamp.lampResistor.voltage) - lampDescriptor.minimalU) / (lampDescriptor.nominalU - lampDescriptor.minimalU))
                     }
                     lightDouble *= 15
                 }
                 LampDescriptor.Type.ECO -> {
-                    val U = Math.abs(lamp.lampResistor.u)
+                    val U = Math.abs(lamp.lampResistor.voltage)
                     if (U < lampDescriptor.minimalU) {
                         stableProb = 0.0
                         lightDouble = 0.0
@@ -172,7 +172,7 @@ class LampSocketProcess(var lamp: LampSocketElement) : IProcess, INBTTReady /*,L
             val bulbCanAge = !(lampDescriptor.type == LampDescriptor.Type.LED && Eln.ledLampInfiniteLife) && SaveConfig.instance!!.electricalLampAging
 
             if (bulbCanAge) {
-                val ageFactor = lampAgeFactor(lamp.lampResistor.u)
+                val ageFactor = lampAgeFactor(lamp.lampResistor.voltage)
                 // life lost in hours, per tick
                 val lifeLost = (ageFactor * time) / 3600.0
                 lampDescriptor.setLifeInTag(lampStack, lampDescriptor.getLifeInTag(lampStack) - lifeLost)

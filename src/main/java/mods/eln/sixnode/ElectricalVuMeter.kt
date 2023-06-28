@@ -182,13 +182,13 @@ class ElectricalVuMeterElement(sixNode: SixNode, side: Direction, descriptor: Si
     }
 
     override fun multiMeterString(): String {
-        return Utils.plotVolt("U:", inputGate.u) + Utils.plotAmpere("I:", inputGate.current)
+        return Utils.plotVolt("U:", inputGate.voltage) + Utils.plotAmpere("I:", inputGate.current)
     }
 
     override fun getWaila(): Map<String, String> {
         val info: MutableMap<String, String> = HashMap()
         if (descriptor.isRGB)
-            info[I18N.tr("Input")] = Utils.plotVolt(inputGate.signalU)
+            info[I18N.tr("Input")] = Utils.plotVolt(inputGate.signalVoltage)
         else
             info[I18N.tr("Input")] = if (inputGate.stateHigh()) I18N.tr("ON") else I18N.tr("OFF")
         return info
@@ -202,7 +202,7 @@ class ElectricalVuMeterElement(sixNode: SixNode, side: Direction, descriptor: Si
         super.networkSerialize(stream)
         try {
             stream.writeByte(front.toInt() shl 4)
-            stream.writeFloat((inputGate.u / Eln.SVU).toFloat())
+            stream.writeFloat((inputGate.voltage / Eln.SVU).toFloat())
         } catch (e: IOException) {
             e.printStackTrace()
         }

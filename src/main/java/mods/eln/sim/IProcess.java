@@ -1,5 +1,5 @@
 package mods.eln.sim;
 
 public interface IProcess {
-    public abstract void process(double time);
+    void process(double time);
 }

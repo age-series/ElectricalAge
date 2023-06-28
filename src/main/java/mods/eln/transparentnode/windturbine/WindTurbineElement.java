@@ -78,7 +78,7 @@ public class WindTurbineElement extends TransparentNodeElement {
     @Override
     public void initialize() {
         setPhysicalValue();
-        powerSource.setImax(descriptor.nominalPower * 5 / descriptor.maxVoltage);
+        powerSource.setMaximumCurrent(descriptor.nominalPower * 5 / descriptor.maxVoltage);
         connect();
     }
 
@@ -100,7 +100,7 @@ public class WindTurbineElement extends TransparentNodeElement {
         super.networkSerialize(stream);
         try {
             stream.writeFloat((float) slowProcess.getWind());
-            stream.writeFloat((float) (powerSource.getP() / descriptor.nominalPower));
+            stream.writeFloat((float) (powerSource.getPower() / descriptor.nominalPower));
             node.lrduCubeMask.getTranslate(Direction.YN).serialize(stream);
         } catch (IOException e) {
 
@@ -127,9 +127,9 @@ public class WindTurbineElement extends TransparentNodeElement {
     public Map<String, String> getWaila() {
         Map<String, String> wailaList = new HashMap<String, String>();
         wailaList.put(I18N.tr("Generating"), slowProcess.getWind() > 0 ? I18N.tr("Yes") : I18N.tr("No"));
-        wailaList.put(I18N.tr("Produced power"), Utils.plotPower("", powerSource.getEffectiveP()));
+        wailaList.put(I18N.tr("Produced power"), Utils.plotPower("", powerSource.getEffectivePower()));
         if (Eln.wailaEasyMode) {
-            wailaList.put("Voltage", Utils.plotVolt("", powerSource.getU()));
+            wailaList.put("Voltage", Utils.plotVolt("", powerSource.getVoltage()));
         }
         return wailaList;
     }

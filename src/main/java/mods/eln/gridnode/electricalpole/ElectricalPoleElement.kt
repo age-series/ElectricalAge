@@ -58,7 +58,7 @@ class ElectricalPoleElement(node: TransparentNode, descriptor: TransparentNodeDe
         thermalLoad.setAsSlow()
         slowProcessList.add(thermalWatchdog)
         thermalWatchdog
-                .set(thermalLoad)
+                .setThermalLoad(thermalLoad)
                 .setLimit(desc.cableDescriptor.thermalWarmLimit, desc.cableDescriptor.thermalCoolLimit)
                 .set(WorldExplosion(this).cableExplosion())
 
@@ -72,8 +72,8 @@ class ElectricalPoleElement(node: TransparentNode, descriptor: TransparentNodeDe
             exp = WorldExplosion(this).cableExplosion()
         }
         voltageWatchdog
-                .set(electricalLoad)
-                .setUMaxMin(desc.voltageLimit)
+                .setVoltageState(electricalLoad)
+                .setNominalVoltage(desc.voltageLimit)
                 .set(exp)
 
         if (desc.includeTransformer) {
@@ -96,7 +96,7 @@ class ElectricalPoleElement(node: TransparentNode, descriptor: TransparentNodeDe
             electricalLoadList.add(secondaryLoad)
             electricalComponentList.add(primaryVoltageSource)
             electricalComponentList.add(secondaryVoltageSource)
-            slowProcessList.add(voltageSecondaryWatchdog.set(secondaryLoad).set(exp))
+            slowProcessList.add(voltageSecondaryWatchdog.setVoltageState(secondaryLoad).set(exp))
 
             // Publish load from time to time.
             slowProcessList.add(NodePeriodicPublishProcess(node, 1.0, 0.5))
@@ -121,8 +121,8 @@ class ElectricalPoleElement(node: TransparentNode, descriptor: TransparentNodeDe
 
     override fun multiMeterString(side: Direction): String {
         if (trafo != null) {
-            return (Utils.plotVolt("GridU:", electricalLoad.u) + Utils.plotAmpere("GridP:", electricalLoad.current)
-                + Utils.plotVolt("  GroundU:", trafo.secondaryLoad.u) + Utils.plotAmpere("GroundP:", trafo.secondaryLoad.current))
+            return (Utils.plotVolt("GridU:", electricalLoad.voltage) + Utils.plotAmpere("GridP:", electricalLoad.current)
+                + Utils.plotVolt("  GroundU:", trafo.secondaryLoad.voltage) + Utils.plotAmpere("GroundP:", trafo.secondaryLoad.current))
         } else {
             return super.multiMeterString(side)
         }
@@ -152,7 +152,7 @@ class ElectricalPoleElement(node: TransparentNode, descriptor: TransparentNodeDe
 
     override fun initialize() {
         trafo?.apply {
-            voltageSecondaryWatchdog.setUNominal(Eln.instance.veryHighVoltageCableDescriptor.electricalNominalVoltage)
+            voltageSecondaryWatchdog.setNominalVoltage(Eln.instance.veryHighVoltageCableDescriptor.electricalNominalVoltage)
             secondaryMaxCurrent = desc.cableDescriptor.electricalMaximalCurrent.toFloat()
             interSystemProcess.setRatio(0.25)
         }
@@ -164,7 +164,7 @@ class ElectricalPoleElement(node: TransparentNode, descriptor: TransparentNodeDe
         node!!.lrduCubeMask.getTranslate(front.down()).serialize(stream)
         try {
             if (trafo != null && secondaryMaxCurrent != 0f) {
-                stream.writeFloat((trafo.secondaryLoad.i / secondaryMaxCurrent).toFloat())
+                stream.writeFloat((trafo.secondaryLoad.current / secondaryMaxCurrent).toFloat())
             } else {
                 stream.writeFloat(0f)
             }

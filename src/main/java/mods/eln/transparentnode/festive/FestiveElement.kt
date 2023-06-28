@@ -23,7 +23,7 @@ class FestiveElement(node: TransparentNode, descriptor: TransparentNodeDescripto
     var powerChannel = "xmas" // TODO: Add a GUI in the render panes and allow the user to specify a different channel.
 
     init {
-        loadResistor.r = 1000.0
+        loadResistor.resistance = 1000.0
         slowProcessList.add(FestiveElementProcess(this))
     }
 
@@ -86,12 +86,12 @@ class FestiveElement(node: TransparentNode, descriptor: TransparentNodeDescripto
             val lampSupplyList = findBestSupply(elem.node!!.coordinate)
             val best = lampSupplyList?.second
             if (best != null && best.element.getChannelState(best.id)) {
-                best.element.addToRp(elem.loadResistor.r)
+                best.element.addToRp(elem.loadResistor.resistance)
                 elem.electricalLoad.state = best.element.powerLoad.state
             } else {
                 elem.electricalLoad.state = 0.0
             }
-            var lightDouble = 12 * (Math.abs(elem.loadResistor.u) - 180.0) / 20.0
+            var lightDouble = 12 * (Math.abs(elem.loadResistor.voltage) - 180.0) / 20.0
             lightDouble *= 16
             elem.node!!.lightValue = lightDouble.toInt().coerceIn(0, 15)
         }
