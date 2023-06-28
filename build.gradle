@@ -108,6 +108,20 @@ dependencies {
     compileOnly "dan200.computercraft:ComputerCraft:1.75"
 }
 
+processResources {
+    // this will ensure that this task is redone when the versions change.
+    inputs.property "version", project.version
+    inputs.property "mcversion", project.minecraft.version
+
+    // replace stuff in mcmod.info, nothing else
+    from(sourceSets.main.resources.srcDirs) {
+        include 'mcmod.info'
+
+        // replace version and mcversion
+        expand 'version': project.version, 'mcversion': project.minecraft.version
+    }
+}
+
 jar {
     manifest {
         attributes 'Built-By': 'Electrical-Age Team'
@@ -123,7 +137,7 @@ jar {
     }
 
     // Copy libs jar files
-    from { configurations.external.collect { it.isDirectory() ? it : zipTree(it) } }
+    // from { configurations.external.collect { it.isDirectory() ? it : zipTree(it) } }
 
     // Add README and LICENSE to the release jar
     from(['README.md', 'LICENSE.md'])
@@ -180,19 +194,99 @@ jar {
     }
 }
 
-processResources {
-    // this will ensure that this task is redone when the versions change.
-    inputs.property "version", project.version
-    inputs.property "mcversion", project.minecraft.version
+reobf {}
 
-    // replace stuff in mcmod.info, nothing else
-    from(sourceSets.main.resources.srcDirs) {
-        include 'mcmod.info'
+task devJar(type: Jar) {
+    manifest {
+        attributes 'Built-By': 'Electrical-Age Team'
+        attributes 'Build-Date': new Date().format("yyyy-MM-dd HH:mm:ss")
+        attributes 'Built-JDK': System.getProperty('java.version')
+        attributes 'Implementation-Title': project.name
+        attributes 'Implementation-URL': 'https://github.com/jrddunbr/ElectricalAge'
+        attributes 'Implementation-Vendor': 'Electrical-Age Team'
+        attributes 'Implementation-Vendor-Id': 'net.electricalage.eln'
+        attributes 'Project-Url': 'https://eln.ja13.org/'
+        attributes 'Source-Compatibility': project.sourceCompatibility
+        attributes 'Target-Compatibility': project.targetCompatibility
+    }
 
-        // replace version and mcversion
-        expand 'version': project.version, 'mcversion': project.minecraft.version
+    classifier = 'dev'
+
+    from sourceSets.main.output
+
+    // Copy libs jar files
+    // from { configurations.external.collect { it.isDirectory() ? it : zipTree(it) } }
+
+    // Add README and LICENSE to the release jar
+    from(['README.md', 'LICENSE.md'])
+
+    // Asset whitelist to copy the required asset files into the release jar.
+    // Ignore files not used in Minecraft to reduce the release jar size.
+    // Copy main files
+    from('src/main/resources/assets/eln/') {
+        include 'logo.png'
+        include 'sounds.json'
+        into 'assets/eln/'
+    }
+
+    // Copy language files
+    from('src/main/resources/assets/eln/lang') {
+        include '*.lang'
+        into 'assets/eln/lang'
+    }
+
+    // Copy model
+    from('src/main/resources/assets/eln/model') {
+        exclude '_Common'
+        exclude '_TEMPLATES'
+        exclude 'export_*.png'
+        include '**/*.mtl'
+        include '**/*.obj'
+        include '**/*.txt'
+        include '**/*.png'
+        into 'assets/eln/model'
+    }
+
+    // Copy sounds
+    from('src/main/resources/assets/eln/sounds') {
+        include '*.ogg'
+        into 'assets/eln/sounds'
+    }
+
+    // Copy sprites
+    from('src/main/resources/assets/eln/sprites') {
+        include '**/*.png'
+        into 'assets/eln/sprites'
+    }
+
+    // Copy sprites
+    from('src/main/resources/assets/eln/textures') {
+        include '**/*.png'
+        into 'assets/eln/textures'
+    }
+
+    configurations.shade.each { dep ->
+        from(project.zipTree(dep)){
+            exclude 'META-INF', 'META-INF/**'
+        }
     }
 }
+
+task sourceJar(type: Jar) {
+    manifest {}
+    classifier = 'sources'
+    from sourceSets.main.allSource
+    exclude 'assets/**', 'logos/**'
+}
+
+task changelog(type: Copy) {
+    from('./changelog.md') {
+        rename '.*', "$archivesBaseName-$version-changelog.md"
+    }
+    into './build/libs'
+    ext.output = new File("./build/libs/$archivesBaseName-$version-changelog.md")
+}
+jar.dependsOn changelog
 
 clean {
     // Clean generated/built files. Saves are NOT deleted.
@@ -241,3 +335,34 @@ task updateMasterLanguageFile(type: JavaExec, dependsOn: 'classes') {
 // jar.dependsOn(updateMasterLanguageFile)
 
 idea { module { inheritOutputDirs = true } }
+
+artifacts {
+    archives devJar, sourceJar, changelog.output
+}
+
+if (!hasProperty("mavenUsername")) {
+    ext.mavenUsername="${System.getenv().MAVEN_USERNAME}"
+}
+
+if (!hasProperty("mavenPassword")) {
+    ext.mavenPassword="${System.getenv().MAVEN_PASSWORD}"
+}
+
+if (!hasProperty("mavenURL")) {
+    ext.mavenURL="${System.getenv().MAVEN_URL}"
+}
+
+//if ( !project.buildInfo.tag.contains("-dirty") && (System.getenv().ONLY_RELEASES!="true" || project.buildInfo.isRelease) ) {
+//    task testIfUploadable {}
+
+    uploadArchives {
+        dependsOn jar
+        repositories {
+            mavenDeployer {
+                repository(url: mavenURL) {
+                    authentication(userName: mavenUsername, password: mavenPassword)
+                }
+            }
+        }
+    }
+//}
