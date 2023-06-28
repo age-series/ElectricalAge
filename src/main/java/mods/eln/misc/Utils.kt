@@ -27,7 +27,6 @@ import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.util.AxisAlignedBB
 import mods.eln.generic.GenericItemUsingDamage
 import mods.eln.generic.GenericItemBlockUsingDamage
-import mods.eln.i18n.I18N
 import net.minecraft.creativetab.CreativeTabs
 import net.minecraftforge.oredict.OreDictionary
 import net.minecraft.util.Vec3
@@ -294,7 +293,7 @@ object Utils {
 
     @JvmStatic
     fun plotUIP(U: Double, I: Double): String {
-        return plotVolt("U", U) + plotAmpere("I", I) + plotPower("P", Math.abs(U * I))
+        return plotVolt("U", U) + plotAmpere("I", I) + plotPower("P", abs(U * I))
     }
 
     @JvmStatic
@@ -306,15 +305,12 @@ object Utils {
     fun plotTime(value: Double): String {
         var value = value
         var str = ""
-        val h: Int
-        val mn: Int
-        val s: Int
         if (value == 0.0) return str + "0''"
-        h = (value / 3600).toInt()
-        value = value % 3600
-        mn = (value / 60).toInt()
-        value = value % 60
-        s = (value / 1).toInt()
+        val h: Int = (value / 3600).toInt()
+        value %= 3600
+        val mn: Int = (value / 60).toInt()
+        value %= 60
+        val s: Int = (value / 1).toInt()
         if (h != 0) str += h.toString() + "h"
         if (mn != 0) str += "$mn'"
         if (s != 0) str += "$s''"
@@ -445,11 +441,15 @@ object Utils {
     @JvmStatic
     fun getWind(worldId: Int, y: Int): Double {
         return if (!getWorldExist(worldId)) {
-            Math.max(0.0, Eln.wind.getWind(y))
+            0.0.coerceAtLeast(Eln.wind.getWind(y))
         } else {
             val world = getWorld(worldId)
             val factor = 1f + world.getRainStrength(0f) * 0.2f + world.getWeightedThunderStrength(0f) * 0.2f
-            Math.max(0.0, Eln.wind.getWind(y) * factor + world.getRainStrength(0f) * 1f + world.getWeightedThunderStrength(0f) * 2f)
+            0.0.coerceAtLeast(
+                Eln.wind.getWind(y) * factor + world.getRainStrength(0f) * 1f + world.getWeightedThunderStrength(
+                    0f
+                ) * 2f
+            )
         }
     }
 
@@ -510,12 +510,12 @@ object Utils {
         for (slot in slots) {
             val target = inventory.getStackInSlot(slot)
             if (target == null) {
-                val amount = Math.min(toPut, limit)
+                val amount = toPut.coerceAtMost(limit)
                 inventory.setInventorySlotContents(slot, ItemStack(stack.item, amount, stack.itemDamage))
                 toPut -= amount
             } else {
                 val space = limit - target.stackSize
-                val amount = Math.min(toPut, space)
+                val amount = toPut.coerceAtMost(space)
                 target.stackSize += amount
                 toPut -= amount
             }
@@ -652,8 +652,7 @@ object Utils {
         val y = t.yCoord
         val z = t.zCoord
         val w = t.worldObj
-        var o: TileEntity?
-        o = w.getTileEntity(x + 1, y, z)
+        var o: TileEntity? = w.getTileEntity(x + 1, y, z)
         if (o != null && o is ITileEntitySpawnClient) (o as ITileEntitySpawnClient).tileEntityNeighborSpawn()
         o = w.getTileEntity(x - 1, y, z)
         if (o != null && o is ITileEntitySpawnClient) (o as ITileEntitySpawnClient).tileEntityNeighborSpawn()
@@ -737,7 +736,7 @@ object Utils {
 
     @JvmStatic
     fun isPlayerAround(world: World, axisAlignedBB: AxisAlignedBB?): Boolean {
-        return !world.getEntitiesWithinAABB(EntityPlayer::class.java, axisAlignedBB).isEmpty()
+        return world.getEntitiesWithinAABB(EntityPlayer::class.java, axisAlignedBB).isNotEmpty()
     }
 
     @JvmStatic
@@ -810,7 +809,7 @@ object Utils {
                     if (i == j) return true
                 }
             }
-        } catch (e: Exception) {
+        } catch (_: Exception) {
         }
         return false
     }
@@ -854,12 +853,9 @@ object Utils {
         var y = y
         var z = z
         val blockList = ArrayList<Block>()
-        var dx: Double
-        var dy: Double
-        var dz: Double
-        dx = tx - x
-        dy = ty - y
-        dz = tz - z
+        var dx: Double = tx - x
+        var dy: Double = ty - y
+        var dz: Double = tz - z
         val norm = sqrt(dx * dx + dy * dy + dz * dz)
         val normInv = 1 / (norm + 0.000000001)
         dx *= normInv
@@ -881,9 +877,9 @@ object Utils {
 
     @JvmStatic
     fun traceRay(w: World, posX: Double, posY: Double, posZ: Double, targetX: Double, targetY: Double, targetZ: Double, weight: TraceRayWeight): Float {
-        val posXint = posX.roundToInt().toInt()
-        val posYint = posY.roundToInt().toInt()
-        val posZint = posZ.roundToInt().toInt()
+        val posXint = posX.roundToInt()
+        val posYint = posY.roundToInt()
+        val posZint = posZ.roundToInt()
         var x = (posX - posXint).toFloat()
         var y = (posY - posYint).toFloat()
         var z = (posZ - posZint).toFloat()
@@ -913,14 +909,13 @@ object Utils {
             dx = if (vx > 0) (1 - dx) * vxInv else -dx * vxInv
             dy = if (vy > 0) (1 - dy) * vyInv else -dy * vyInv
             dz = if (vz > 0) (1 - dz) * vzInv else -dz * vzInv
-            val dBest = Math.min(Math.min(dx, dy), dz) + 0.01f
+            val dBest = dx.coerceAtMost(dy).coerceAtMost(dz) + 0.01f
             val xInt = xFloor.toInt()
             val yInt = yFloor.toInt()
             val zInt = zFloor.toInt()
             var block = Blocks.air
             if (w.blockExists(xInt + posXint, yInt + posYint, zInt + posZint)) block = w.getBlock(xInt + posXint, yInt + posYint, zInt + posZint)
-            var dToStack: Float
-            dToStack = if (d + dBest < rangeMax) dBest else {
+            var dToStack: Float = if (d + dBest < rangeMax) dBest else {
                 rangeMax - d
             }
             stackRed += weight.getWeight(block) * dToStack
@@ -948,11 +943,13 @@ object Utils {
         return sqrt(dx * dx + dy * dy + dz * dz)
     }
 
-    fun <T> readPrivateInt(o: Any, feildName: String?): Int {
+    fun <T> readPrivateInt(o: Any, fieldName: String?): Int {
         try {
-            val f = o.javaClass.getDeclaredField(feildName)
-            f.isAccessible = true
-            return f.getInt(o)
+            val f = fieldName?.let { o.javaClass.getDeclaredField(it) }
+            if (f != null) {
+                f.isAccessible = true
+                return f.getInt(o)
+            }
         } catch (e: IllegalArgumentException) {
             e.printStackTrace()
         } catch (e: SecurityException) {
@@ -965,11 +962,13 @@ object Utils {
         return 0
     }
 
-    fun <T> readPrivateDouble(o: Any, feildName: String?): Double {
+    fun <T> readPrivateDouble(o: Any, fieldName: String?): Double {
         try {
-            val f = o.javaClass.getDeclaredField(feildName)
-            f.isAccessible = true
-            return f.getDouble(o)
+            val f = fieldName?.let { o.javaClass.getDeclaredField(it) }
+            if (f != null) {
+                f.isAccessible = true
+                return f.getDouble(o)
+            }
         } catch (e: IllegalArgumentException) {
             e.printStackTrace()
         } catch (e: SecurityException) {
@@ -1227,7 +1226,7 @@ object Utils {
 
     @JvmStatic
     fun getSixNodePinDistance(obj: Obj3DPart): FloatArray {
-        return floatArrayOf(Math.abs(obj.zMin * 16), Math.abs(obj.zMax * 16), Math.abs(obj.yMin * 16), Math.abs(obj.yMax * 16))
+        return floatArrayOf(abs(obj.zMin * 16), abs(obj.zMax * 16), abs(obj.yMin * 16), abs(obj.yMax * 16))
     }
 
     fun isWrench(stack: ItemStack): Boolean {
@@ -1246,24 +1245,24 @@ object Utils {
         try {
             // val cc = Class.forName(name)
             return true
-        } catch (e: ClassNotFoundException) {
+        } catch (_: ClassNotFoundException) {
         }
         return false
     }
 
     @JvmStatic
-    fun plotSignal(U: Double): String {
-        return plotVolt("U", U) + plotPercent("Value", U / Eln.SVU)
+    fun plotSignal(u: Double): String {
+        return plotVolt("U", u) + plotPercent("Value", u / Eln.SVU)
     }
 
     @JvmStatic
     fun limit(value: Float, min: Float, max: Float): Float {
-        return Math.max(Math.min(value, max), min)
+        return value.coerceAtMost(max).coerceAtLeast(min)
     }
 
     @JvmStatic
     fun limit(value: Double, min: Double, max: Double): Double {
-        return Math.max(Math.min(value, max), min)
+        return value.coerceAtMost(max).coerceAtLeast(min)
     }
 
     @JvmStatic
