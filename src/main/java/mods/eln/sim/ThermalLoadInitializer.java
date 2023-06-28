@@ -18,17 +18,6 @@ public class ThermalLoadInitializer {
         this.warmLimit = warmLimit;
     }
 
-/*	public ThermalLoadInitializer (
-            double warmLimit,double coolLimit,
-			double heatingTao,double conductionTao,
-			double P) {
-		this.conductionTao = conductionTao;
-		this.coolLimit = coolLimit;
-		this.heatingTao = heatingTao;
-		this.warmLimit = warmLimit;
-		setMaximalPower(P);
-	}*/
-
     public void setMaximalPower(double P) {
         C = P * heatingTao / (warmLimit);
         Rp = warmLimit / P;

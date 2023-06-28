@@ -39,36 +39,20 @@ public class Line extends Resistor implements ISubSystemProcessFlush, IAbstracto
     }
 
     void restoreResistorIntoCircuit() {
-        //aPin.add(resistors.getFirst());
-        //bPin.add(resistors.getLast());
         this.breakConnection();
     }
 
     void removeResistorFromCircuit() {
-        //aPin.remove(resistors.getFirst());
-        //bPin.remove(resistors.getLast());
     }
-
-	/*void removeCompFromState(Resistor r, State s) {
-		State sNext = (r.aPin == s ? r.bPin : r.aPin);
-		if (sNext != null) sNext.remove(r);
-	}	
-	void addCompFromState(Resistor r, State s) {
-		State sNext = (r.aPin == s ? r.bPin : r.aPin);
-		if (sNext != null) sNext.add(r);
-	}*/
 
     public static void newLine(RootSystem root, LinkedList<Resistor> resistors, LinkedList<State> states) {
         if (resistors.isEmpty()) {
         } else if (resistors.size() == 1) {
-            //root.addComponent(resistors.getFirst());
         } else {
             Resistor first = resistors.getFirst();
             Resistor last = resistors.getLast();
             State stateBefore = first.aPin == states.getFirst() ? first.bPin : first.aPin;
             State stateAfter = last.aPin == states.getLast() ? last.bPin : last.aPin;
-            //stateBefore.remove(first);
-            //stateAfter.remove(last);
 
             Line l = new Line();
             l.resistors = resistors;
@@ -116,14 +100,11 @@ public class Line extends Resistor implements ISubSystemProcessFlush, IAbstracto
         double i = (aPin.state - bPin.state) * getRInv();
         double u = aPin.state;
         Iterator<Resistor> ir = resistors.iterator();
-        Iterator<State> is = states.iterator();
 
-        while (is.hasNext()) {
-            State s = is.next();
+        for (State s : states) {
             Resistor r = ir.next();
             u -= r.getR() * i;
             s.state = u;
-            //u -= r.getR() * i;
         }
     }
 

@@ -10,9 +10,7 @@ public abstract class Component {
 
     public IAbstractor abstractedBy;
 
-    public Component() {
-        //System.out.println("new " + this);
-    }
+    public Component() {}
 
     public void addedTo(SubSystem s) {
         this.subSystem = s;
@@ -54,11 +52,9 @@ public abstract class Component {
         return abstractedBy != null;
     }
 
-    public void onAddToRootSystem() {
-    }
+    public void onAddToRootSystem() {}
 
-    public void onRemovefromRootSystem() {
-    }
+    public void onRemoveFromRootSystem() {}
 
     public String toString() {
         return "(" + this.getClass().getSimpleName() + ")";

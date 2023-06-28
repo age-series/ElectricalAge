@@ -10,10 +10,10 @@ import net.minecraft.nbt.NBTTagCompound;
 
 public class PowerSourceBipole implements IRootSystemPreStepProcess, INBTTReady {
 
-    private VoltageSource aSrc;
-    private VoltageSource bSrc;
-    private State aPin;
-    private State bPin;
+    private final VoltageSource aSrc;
+    private final VoltageSource bSrc;
+    private final State aPin;
+    private final State bPin;
 
     double P, Umax, Imax;
 
