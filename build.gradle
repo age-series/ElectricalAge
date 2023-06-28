@@ -201,7 +201,9 @@ jar {
     }
 }
 
-reobf {}
+reobf {
+    reobf(jar)
+}
 
 task devJar(type: Jar) {
     manifest {
