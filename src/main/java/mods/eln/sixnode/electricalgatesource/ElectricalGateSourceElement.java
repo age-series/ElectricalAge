@@ -108,7 +108,7 @@ public class ElectricalGateSourceElement extends SixNodeElement {
 
     @Override
     public String multiMeterString() {
-        return Utils.plotUIP(outputGate.getU(), outputGate.getCurrent());
+        return Utils.plotUIP(outputGate.getVoltage(), outputGate.getCurrent());
     }
 
     @NotNull
@@ -123,7 +123,7 @@ public class ElectricalGateSourceElement extends SixNodeElement {
                 info.put(I18N.tr("State"), "§c" + I18N.tr("Off"));
             }
         }
-        info.put(I18N.tr("Output voltage"), Utils.plotVolt("", outputGate.getU()));
+        info.put(I18N.tr("Output voltage"), Utils.plotVolt("", outputGate.getVoltage()));
         return info;
     }
 
@@ -138,7 +138,7 @@ public class ElectricalGateSourceElement extends SixNodeElement {
         super.networkSerialize(stream);
         try {
             stream.writeByte(front.toInt() << 4);
-            stream.writeFloat((float) outputGateProcess.getU());
+            stream.writeFloat((float) outputGateProcess.getVoltage());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -182,7 +182,7 @@ public class ElectricalGateSourceElement extends SixNodeElement {
         try {
             switch (stream.readByte()) {
                 case setVoltagerId:
-                    outputGateProcess.setU(stream.readFloat());
+                    outputGateProcess.setVoltage(stream.readFloat());
                     needPublish();
                     break;
             }

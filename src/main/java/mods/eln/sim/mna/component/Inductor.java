@@ -11,8 +11,8 @@ public class Inductor extends Bipole implements ISubSystemProcessI, INBTTReady {
 
     String name;
 
-    private double l = 0;
-    double ldt;
+    private double inductance = 0;
+    double inductancePerStep;
 
     private final CurrentState currentState = new CurrentState();
 
@@ -30,34 +30,40 @@ public class Inductor extends Bipole implements ISubSystemProcessI, INBTTReady {
         return currentState.state;
     }
 
-    public double getL() {
-        return l;
+    public double getInductance() {
+        return inductance;
     }
 
-    public void setL(double l) {
-        this.l = l;
+    public void setInductance(double inductance) {
+        this.inductance = inductance;
         dirty();
     }
 
-    public double getE() {
-        final double i = getCurrent();
-        return i * i * l / 2;
+    /**
+     * getEnergy
+     * (I^2 * inductance) / 2
+     *
+     * @return Energy, in joules
+     */
+    public double getEnergy() {
+        final double current = getCurrent();
+        return current * current * inductance / 2;
     }
 
     @Override
-    public void applyTo(SubSystem s) {
-        ldt = -l / s.getDt();
+    public void applyToSubsystem(SubSystem s) {
+        inductancePerStep = -inductance / s.getDt();
 
         s.addToA(aPin, currentState, 1);
         s.addToA(bPin, currentState, -1);
         s.addToA(currentState, aPin, 1);
         s.addToA(currentState, bPin, -1);
-        s.addToA(currentState, currentState, ldt);
+        s.addToA(currentState, currentState, inductancePerStep);
     }
 
     @Override
     public void simProcessI(SubSystem s) {
-        s.addToI(currentState, ldt * currentState.state);
+        s.addToI(currentState, inductancePerStep * currentState.state);
     }
 
     @Override
@@ -68,8 +74,8 @@ public class Inductor extends Bipole implements ISubSystemProcessI, INBTTReady {
     }
 
     @Override
-    public void addedTo(SubSystem s) {
-        super.addedTo(s);
+    public void addToSubsystem(SubSystem s) {
+        super.addToSubsystem(s);
         s.addState(getCurrentState());
         s.addProcess(this);
     }

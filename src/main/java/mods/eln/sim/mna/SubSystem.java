@@ -58,13 +58,13 @@ public class SubSystem {
 
     public void addComponent(Component c) {
         component.add(c);
-        c.addedTo(this);
+        c.addToSubsystem(this);
         invalidate();
     }
 
     public void addState(State s) {
         states.add(s);
-        s.addedTo(this);
+        s.setSubsystem(this);
         invalidate();
     }
 
@@ -118,7 +118,7 @@ public class SubSystem {
         }
 
         for (Component c : component) {
-            c.applyTo(this);
+            c.applyToSubsystem(this);
         }
 
         //	org.apache.commons.math3.linear.
@@ -250,12 +250,12 @@ public class SubSystem {
         s.addState(n1 = new VoltageState());
 
         s.addComponent((cs1 = new CurrentSource("cs1")).setCurrent(0.01).connectTo(n1, null));
-        s.addComponent((r1 = new Resistor()).setR(10).connectTo(n1, null));
+        s.addComponent((r1 = new Resistor()).setResistance(10).connectTo(n1, null));
 
         s.step();
 
-        System.out.println("R: U = " + r1.getU() + ", I = " + r1.getI());
-        System.out.println("CS: U = " + cs1.getU());
+        System.out.println("R: U = " + r1.getVoltage() + ", I = " + r1.getCurrent());
+        System.out.println("CS: U = " + cs1.getVoltage());
     }
 
     public boolean containe(State state) {
@@ -315,48 +315,48 @@ public class SubSystem {
         return dt;
     }
 
-    static public class Th {
-        public double R, U;
+    static public class Thevenin {
+        public double resistance, voltage;
 
         public boolean isHighImpedance() {
-            return R > 1e8;
+            return resistance > 1e8;
         }
     }
 
-    public Th getTh(State d, VoltageSource voltageSource) {
-        Th th = new Th();
-        double originalU = d.state;
+    public Thevenin getTh(State d, VoltageSource voltageSource) {
+        Thevenin thevenin = new Thevenin();
+        double originalVoltage = d.state;
 
-        double otherU = originalU + 5;
-        voltageSource.setU(otherU);
-        double otherI = solve(voltageSource.getCurrentState());
+        double testVoltage = originalVoltage + 5;
+        voltageSource.setVoltage(testVoltage);
+        double testCurrent = solve(voltageSource.getCurrentState());
 
-        voltageSource.setU(originalU);
-        double originalI = solve(voltageSource.getCurrentState());
+        voltageSource.setVoltage(originalVoltage);
+        double originalCurrent = solve(voltageSource.getCurrentState());
 
-        double Rth = (otherU - originalU) / (originalI - otherI);
-        double Uth;
-        if (Rth > 10000000000000000000.0 || Rth < 0) {
-            Uth = 0;
-            Rth = 10000000000000000000.0;
+        double theveninResistance = (testVoltage - originalVoltage) / (originalCurrent - testCurrent);
+        double theveninVoltage;
+        if (theveninResistance > 10000000000000000000.0 || theveninResistance < 0) {
+            theveninVoltage = 0;
+            theveninResistance = 10000000000000000000.0;
         } else {
-            Uth = otherU + Rth * otherI;
+            theveninVoltage = testVoltage + theveninResistance * testCurrent;
         }
-        voltageSource.setU(originalU);
+        voltageSource.setVoltage(originalVoltage);
 
-        th.R = Rth;
-        th.U = Uth;
+        thevenin.resistance = theveninResistance;
+        thevenin.voltage = theveninVoltage;
 
-        if(Double.isNaN(th.U)) {
-            th.U = originalU;
-            th.R = MnaConst.highImpedance;
+        if(Double.isNaN(thevenin.voltage)) {
+            thevenin.voltage = originalVoltage;
+            thevenin.resistance = MnaConst.highImpedance;
         }
-        if (Double.isNaN(th.R)) {
-            th.U = originalU;
-            th.R = MnaConst.highImpedance;
+        if (Double.isNaN(thevenin.resistance)) {
+            thevenin.voltage = originalVoltage;
+            thevenin.resistance = MnaConst.highImpedance;
         }
 
-        return th;
+        return thevenin;
     }
 
     public String toString() {

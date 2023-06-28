@@ -3,7 +3,6 @@ package mods.eln.sixnode
 import mods.eln.Eln
 import mods.eln.cable.CableRender
 import mods.eln.cable.CableRenderDescriptor
-import mods.eln.i18n.I18N
 import mods.eln.i18n.I18N.tr
 import mods.eln.misc.Direction
 import mods.eln.misc.LRDU
@@ -33,19 +32,19 @@ class PortableNaNDescriptor(name: String, renderIn: CableRenderDescriptor): Gene
     }
 
     override fun applyTo(electricalLoad: ElectricalLoad, rsFactor: Double) {
-        electricalLoad.rs = Double.NaN
+        electricalLoad.serialResistance = Double.NaN
     }
 
     override fun applyTo(electricalLoad: ElectricalLoad) {
-        electricalLoad.rs = Double.NaN
+        electricalLoad.serialResistance = Double.NaN
     }
 
     override fun applyTo(resistor: Resistor) {
-        resistor.r = Double.NaN
+        resistor.resistance = Double.NaN
     }
 
     override fun applyTo(resistor: Resistor, factor: Double) {
-        resistor.r = Double.NaN
+        resistor.resistance = Double.NaN
     }
 
     override fun applyTo(thermalLoad: ThermalLoad) = thermalLoad.set(Double.NaN, Double.NaN, Double.NaN)
@@ -105,20 +104,20 @@ class PortableNaNElement(sixNode: SixNode, side: Direction, descriptor: SixNodeD
     }
 
     override fun multiMeterString(): String {
-        return Utils.plotUIP(electricalLoad.u, electricalLoad.i)
+        return Utils.plotUIP(electricalLoad.voltage, electricalLoad.current)
     }
 
     override fun thermoMeterString(): String {
-        return Utils.plotCelsius("T", thermalLoad.Tc)
+        return Utils.plotCelsius("T", thermalLoad.temperatureCelsius)
     }
 
     override fun getWaila(): Map<String, String> {
         val info = HashMap<String, String>()
 
-        info[tr("Current")] = Utils.plotAmpere("", electricalLoad.i)
-        info[tr("Temperature")] = Utils.plotCelsius("", thermalLoad.t)
+        info[tr("Current")] = Utils.plotAmpere("", electricalLoad.current)
+        info[tr("Temperature")] = Utils.plotCelsius("", thermalLoad.temperature)
         if (Eln.wailaEasyMode) {
-            info[tr("Voltage")] = Utils.plotVolt("", electricalLoad.u)
+            info[tr("Voltage")] = Utils.plotVolt("", electricalLoad.voltage)
         }
         info[tr("Subsystem Matrix Size")] = Utils.renderSubSystemWaila(electricalLoad.subSystem)
         return info

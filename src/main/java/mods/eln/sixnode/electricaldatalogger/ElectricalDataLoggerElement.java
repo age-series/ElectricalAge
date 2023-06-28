@@ -1,6 +1,5 @@
 package mods.eln.sixnode.electricaldatalogger;
 
-import mods.eln.generic.GenericItemBlockUsingDamageDescriptor;
 import mods.eln.generic.GenericItemUsingDamageDescriptor;
 import mods.eln.i18n.I18N;
 import mods.eln.item.BrushDescriptor;
@@ -144,7 +143,7 @@ public class ElectricalDataLoggerElement extends SixNodeElement implements IConf
     @Override
     public Map<String, String> getWaila() {
         Map<String, String> info = new HashMap<String, String>();
-        info.put(I18N.tr("Input"), Utils.plotVolt("", inputGate.getU()));
+        info.put(I18N.tr("Input"), Utils.plotVolt("", inputGate.getVoltage()));
         return info;
     }
 

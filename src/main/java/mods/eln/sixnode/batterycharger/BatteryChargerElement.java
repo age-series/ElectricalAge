@@ -86,7 +86,7 @@ public class BatteryChargerElement extends SixNodeElement {
         slowProcessList.add(slowProcess);
 
         WorldExplosion exp = new WorldExplosion(this).machineExplosion();
-        slowProcessList.add(voltageWatchDog.set(powerLoad).setUNominal(this.descriptor.nominalVoltage).set(exp));
+        slowProcessList.add(voltageWatchDog.setVoltageState(powerLoad).setNominalVoltage(this.descriptor.nominalVoltage).set(exp));
         //slowProcessList.add(powerWatchDog.set(powerResistor).setPmax(this.descriptor.nominalPower * 3).set(exp));
     }
 
@@ -110,7 +110,7 @@ public class BatteryChargerElement extends SixNodeElement {
 
     @Override
     public String multiMeterString() {
-        return Utils.plotUIP(powerLoad.getU(), powerLoad.getCurrent());
+        return Utils.plotUIP(powerLoad.getVoltage(), powerLoad.getCurrent());
     }
 
     @NotNull
@@ -119,8 +119,8 @@ public class BatteryChargerElement extends SixNodeElement {
         Map<String, String> info = new HashMap<String, String>();
         info.put(I18N.tr("Charge Current"), Utils.plotAmpere("", powerLoad.getCurrent()));
         if (Eln.wailaEasyMode) {
-            info.put(I18N.tr("Voltage"), Utils.plotVolt("", powerLoad.getU()));
-            info.put(I18N.tr("Power"), Utils.plotPower("", powerLoad.getI() * powerLoad.getU()));
+            info.put(I18N.tr("Voltage"), Utils.plotVolt("", powerLoad.getVoltage()));
+            info.put(I18N.tr("Power"), Utils.plotPower("", powerLoad.getCurrent() * powerLoad.getVoltage()));
         }
         return info;
     }
@@ -192,7 +192,7 @@ public class BatteryChargerElement extends SixNodeElement {
         super.networkSerialize(stream);
         try {
             stream.writeBoolean(powerOn);
-            stream.writeFloat((float) powerLoad.getU());
+            stream.writeFloat((float) powerLoad.getVoltage());
             Utils.serialiseItemStack(stream, getInventory().getStackInSlot(0));
             Utils.serialiseItemStack(stream, getInventory().getStackInSlot(1));
             Utils.serialiseItemStack(stream, getInventory().getStackInSlot(2));
@@ -230,7 +230,7 @@ public class BatteryChargerElement extends SixNodeElement {
                     eff = Math.pow(0.9, booster.stackSize);
                 }
 
-                energyCounter += powerResistor.getP() * time * eff;
+                energyCounter += powerResistor.getPower() * time * eff;
 
                 for (int idx = 0; idx < 4; idx++) {
                     ItemStack stack = getInventory().getStackInSlot(idx);
@@ -246,7 +246,7 @@ public class BatteryChargerElement extends SixNodeElement {
                 if (energyCounter < descriptor.nominalPower * time * 2 * boost) {
                     //double target = descriptor.nominalPower * time * 2;
                     double power = Math.min(descriptor.nominalPower * boost, (descriptor.nominalPower * time * 2 * boost - energyCounter) / time);
-                    powerResistor.setR(Math.max(powerLoad.getU() * powerLoad.getU() / power, descriptor.Rp / boost));
+                    powerResistor.setResistance(Math.max(powerLoad.getVoltage() * powerLoad.getVoltage() / power, descriptor.Rp / boost));
                 } else {
                     descriptor.setRp(powerResistor, false);
                 }

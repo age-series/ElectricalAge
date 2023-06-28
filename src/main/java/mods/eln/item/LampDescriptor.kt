@@ -70,7 +70,7 @@ class LampDescriptor(
     }
 
     fun applyTo(resistor: Resistor) {
-        resistor.r = r
+        resistor.resistance = r
     }
 
     override fun addInformation(itemStack: ItemStack?, entityPlayer: EntityPlayer?, list: MutableList<String>, par4: Boolean) {

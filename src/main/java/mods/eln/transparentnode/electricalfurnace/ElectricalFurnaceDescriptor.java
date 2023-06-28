@@ -36,7 +36,7 @@ public class ElectricalFurnaceDescriptor extends TransparentNodeDescriptor {
     }
 
     public void refreshTo(ThermalLoad load, double conductionFactor) {
-        double Rp = (load.Tc / thermalPlostfT.getValue(load.Tc)) / conductionFactor;
+        double Rp = (load.temperatureCelsius / thermalPlostfT.getValue(load.temperatureCelsius)) / conductionFactor;
         if (Rp < 0.1) Rp = 0.1;
         load.setRp(Rp);
     }

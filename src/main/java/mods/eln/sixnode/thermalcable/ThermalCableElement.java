@@ -21,7 +21,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nullable;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.HashMap;
@@ -47,7 +46,7 @@ public class ThermalCableElement extends SixNodeElement {
         slowProcessList.add(thermalWatchdog);
 
         thermalWatchdog
-            .set(thermalLoad)
+            .setThermalLoad(thermalLoad)
             .setLimit(this.descriptor.thermalWarmLimit, this.descriptor.thermalCoolLimit)
             .set(new WorldExplosion(this).cableExplosion());
     }
@@ -97,14 +96,14 @@ public class ThermalCableElement extends SixNodeElement {
         Map<String, String> info = new HashMap<String, String>();
 
         info.put(I18N.tr("Thermic power"), Utils.plotPower("", thermalLoad.getPower()));
-        info.put(I18N.tr("Temperature"), Utils.plotCelsius("", thermalLoad.getT()));
+        info.put(I18N.tr("Temperature"), Utils.plotCelsius("", thermalLoad.getTemperature()));
         return info;
     }
 
     @NotNull
     @Override
     public String thermoMeterString() {
-        return Utils.plotCelsius("T", thermalLoad.Tc) + Utils.plotPower("P", thermalLoad.getPower());
+        return Utils.plotCelsius("T", thermalLoad.temperatureCelsius) + Utils.plotPower("P", thermalLoad.getPower());
     }
 
     @Override
@@ -112,7 +111,7 @@ public class ThermalCableElement extends SixNodeElement {
         super.networkSerialize(stream);
         try {
             stream.writeByte((color << 4));
-            stream.writeShort((short) (thermalLoad.Tc * NodeBase.networkSerializeTFactor));
+            stream.writeShort((short) (thermalLoad.temperatureCelsius * NodeBase.networkSerializeTFactor));
         } catch (IOException e) {
             e.printStackTrace();
         }

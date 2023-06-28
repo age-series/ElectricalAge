@@ -40,7 +40,7 @@ public class ReplicatoCableAI extends EntityAIBase implements ITimeRemoverObserv
         load.setAsPrivate();
         this.entity = entity;
         Eln.instance.highVoltageCableDescriptor.applyTo(load);
-        load.setRs(load.getRs() * 10);
+        load.setSerialResistance(load.getSerialResistance() * 10);
         this.setMutexBits(1);
     }
 
@@ -112,15 +112,15 @@ public class ReplicatoCableAI extends EntityAIBase implements ITimeRemoverObserv
         }
         if (distance < 2) {
             //Utils.println("replicator on cable !");
-            double u = cable.electricalLoad.getU();
+            double u = cable.electricalLoad.getVoltage();
             double nextRp = Math.pow(u / Eln.LVU, -0.3) * u * u / (50);
-            if (resistorLoad.getR() < 0.8 * nextRp) {
+            if (resistorLoad.getResistance() < 0.8 * nextRp) {
                 entity.attackEntityFrom(DamageSource.magic, 5);
             } else {
-                entity.eatElectricity(resistorLoad.getP() * 0.05);
+                entity.eatElectricity(resistorLoad.getPower() * 0.05);
             }
 
-            resistorLoad.setR(nextRp);
+            resistorLoad.setResistance(nextRp);
 
             timeRemover.setTimeout(0.16);
             moveTimeOut = moveTimeOutReset;
@@ -134,7 +134,7 @@ public class ReplicatoCableAI extends EntityAIBase implements ITimeRemoverObserv
     }
 
     boolean isElectricalCableInterresting(ElectricalCableElement c) {
-        if (c.descriptor.signalWire || c.electricalLoad.getU() < 30) {
+        if (c.descriptor.signalWire || c.electricalLoad.getVoltage() < 30) {
             return false;
         }
         return true;

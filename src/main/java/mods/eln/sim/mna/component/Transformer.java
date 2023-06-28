@@ -26,9 +26,6 @@ public class Transformer extends Bipole {
         return ratio;
     }
 
-    private final double r = MnaConst.highImpedance;
-    private final double rInv = 1 / MnaConst.highImpedance;
-
     @Override
     public void quitSubSystem() {
         subSystem.states.remove(aCurrentState);
@@ -37,14 +34,14 @@ public class Transformer extends Bipole {
     }
 
     @Override
-    public void addedTo(SubSystem s) {
-        super.addedTo(s);
+    public void addToSubsystem(SubSystem s) {
+        super.addToSubsystem(s);
         s.addState(aCurrentState);
         s.addState(bCurrentState);
     }
 
     @Override
-    public void applyTo(SubSystem s) {
+    public void applyToSubsystem(SubSystem s) {
         s.addToA(bPin, bCurrentState, 1.0);
         s.addToA(bCurrentState, bPin, 1.0);
         s.addToA(bCurrentState, aPin, -ratio);

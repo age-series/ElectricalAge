@@ -28,7 +28,6 @@ import org.jetbrains.annotations.Nullable;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.util.Map;
 
 public class HubElement extends SixNodeElement {
 
@@ -153,8 +152,8 @@ public class HubElement extends SixNodeElement {
             VoltageStateWatchDog watchdog = new VoltageStateWatchDog();
             slowProcessList.add(watchdog);
             watchdog
-                .setUNominal(d.electricalNominalVoltage)
-                .set(electricalLoad[lrdu.toInt()])
+                .setNominalVoltage(d.electricalNominalVoltage)
+                .setVoltageState(electricalLoad[lrdu.toInt()])
                 .set(exp);
         }
 
@@ -164,7 +163,7 @@ public class HubElement extends SixNodeElement {
 
                 if (inventory.getStackInSlot(HubContainer.cableSlotId + lrdu[0].toInt()) != null && inventory.getStackInSlot(HubContainer.cableSlotId + lrdu[1].toInt()) != null) {
                     Resistor r = new Resistor(electricalLoad[lrdu[0].toInt()], electricalLoad[lrdu[1].toInt()]);
-                    r.setR(getCableDescriptorFromLrdu(lrdu[0]).electricalRs + getCableDescriptorFromLrdu(lrdu[1]).electricalRs);
+                    r.setResistance(getCableDescriptorFromLrdu(lrdu[0]).electricalRs + getCableDescriptorFromLrdu(lrdu[1]).electricalRs);
                     electricalComponentList.add(r);
 
                     //ResistorCurrentWatchdog watchdog = new ResistorCurrentWatchdog();

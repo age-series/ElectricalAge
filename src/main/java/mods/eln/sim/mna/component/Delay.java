@@ -9,20 +9,20 @@ public class Delay extends Bipole implements ISubSystemProcessI {
 
     double oldIa, oldIb;
 
-    public Delay set(double impedance) {
+    public Delay setImpedance(double impedance) {
         this.impedance = impedance;
         this.conductance = 1 / impedance;
         return this;
     }
 
     @Override
-    public void addedTo(SubSystem s) {
-        super.addedTo(s);
+    public void addToSubsystem(SubSystem s) {
+        super.addToSubsystem(s);
         s.addProcess(this);
     }
 
     @Override
-    public void applyTo(SubSystem s) {
+    public void applyToSubsystem(SubSystem s) {
         s.addToA(aPin, aPin, conductance);
         s.addToA(bPin, bPin, conductance);
     }

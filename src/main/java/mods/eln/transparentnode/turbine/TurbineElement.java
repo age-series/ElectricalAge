@@ -63,11 +63,11 @@ public class TurbineElement extends TransparentNodeElement {
         slowProcessList.add(thermalWatchdog);
 
         thermalWatchdog
-            .set(warmLoad)
-            .setTMax(this.descriptor.nominalDeltaT * 2)
+            .setThermalLoad(warmLoad)
+            .setMaximumTemperature(this.descriptor.nominalDeltaT * 2)
             .set(exp);
 
-        slowProcessList.add(voltageWatchdog.set(positiveLoad).setUNominal(this.descriptor.nominalU).set(exp));
+        slowProcessList.add(voltageWatchdog.setVoltageState(positiveLoad).setNominalVoltage(this.descriptor.nominalU).set(exp));
         slowProcessList.add(new NodePeriodicPublishProcess(node, 1., .5));
     }
 
@@ -122,8 +122,8 @@ public class TurbineElement extends TransparentNodeElement {
         if (side == front.left()) return "";
         if (side == front.right()) return "";
         if (side == front || side == front.back())
-            return Utils.plotVolt("U+:", positiveLoad.getU()) + Utils.plotAmpere("I+:", positiveLoad.getCurrent());
-        return Utils.plotVolt("U:", positiveLoad.getU()) + Utils.plotAmpere("I:", positiveLoad.getCurrent());
+            return Utils.plotVolt("U+:", positiveLoad.getVoltage()) + Utils.plotAmpere("I+:", positiveLoad.getCurrent());
+        return Utils.plotVolt("U:", positiveLoad.getVoltage()) + Utils.plotAmpere("I:", positiveLoad.getCurrent());
 
     }
 
@@ -131,17 +131,17 @@ public class TurbineElement extends TransparentNodeElement {
     @Override
     public String thermoMeterString(@NotNull Direction side) {
         if (side == front.left())
-            return Utils.plotCelsius("T+:", warmLoad.Tc) + Utils.plotPower("P+:", warmLoad.getPower());
+            return Utils.plotCelsius("T+:", warmLoad.temperatureCelsius) + Utils.plotPower("P+:", warmLoad.getPower());
         if (side == front.right())
-            return Utils.plotCelsius("T-:", coolLoad.Tc) + Utils.plotPower("P-:", coolLoad.getPower());
-        return Utils.plotCelsius("dT:", warmLoad.Tc - coolLoad.Tc) + Utils.plotPercent("Eff:", turbineThermaltProcess.getEfficiency());
+            return Utils.plotCelsius("T-:", coolLoad.temperatureCelsius) + Utils.plotPower("P-:", coolLoad.getPower());
+        return Utils.plotCelsius("dT:", warmLoad.temperatureCelsius - coolLoad.temperatureCelsius) + Utils.plotPercent("Eff:", turbineThermaltProcess.getEfficiency());
 
     }
 
     @Override
     public void initialize() {
         descriptor.applyTo(inputLoad);
-        inputToTurbineResistor.setR(descriptor.electricalRs * 30);
+        inputToTurbineResistor.setResistance(descriptor.electricalRs * 30);
         descriptor.applyTo(warmLoad);
         descriptor.applyTo(coolLoad);
 
@@ -162,7 +162,7 @@ public class TurbineElement extends TransparentNodeElement {
         super.networkSerialize(stream);
         node.lrduCubeMask.getTranslate(front.down()).serialize(stream);
         try {
-            stream.writeFloat((float) (warmLoad.Tc - coolLoad.Tc));
+            stream.writeFloat((float) (warmLoad.temperatureCelsius - coolLoad.temperatureCelsius));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -173,11 +173,11 @@ public class TurbineElement extends TransparentNodeElement {
     public Map<String, String> getWaila() {
         Map<String, String> info = new HashMap<String, String>();
         info.put(I18N.tr("Nominal") + " \u0394T",
-            (warmLoad.Tc - coolLoad.Tc == descriptor.nominalDeltaT ? I18N.tr("Yes") : I18N.tr("No")));
-        info.put(I18N.tr("Generated power"), Utils.plotPower("", electricalPowerSourceProcess.getP()));
+            (warmLoad.temperatureCelsius - coolLoad.temperatureCelsius == descriptor.nominalDeltaT ? I18N.tr("Yes") : I18N.tr("No")));
+        info.put(I18N.tr("Generated power"), Utils.plotPower("", electricalPowerSourceProcess.getPower()));
         if (Eln.wailaEasyMode) {
-            info.put("\u0394T", Utils.plotCelsius("", warmLoad.Tc - coolLoad.Tc));
-            info.put(I18N.tr("Voltage"), Utils.plotVolt("", electricalPowerSourceProcess.getU()));
+            info.put("\u0394T", Utils.plotCelsius("", warmLoad.temperatureCelsius - coolLoad.temperatureCelsius));
+            info.put(I18N.tr("Voltage"), Utils.plotVolt("", electricalPowerSourceProcess.getVoltage()));
         }
         return info;
     }

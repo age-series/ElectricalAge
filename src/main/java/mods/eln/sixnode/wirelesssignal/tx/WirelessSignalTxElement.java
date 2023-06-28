@@ -23,7 +23,6 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
 import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nullable;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -132,7 +131,7 @@ public class WirelessSignalTxElement extends SixNodeElement implements IWireless
     public Map<String, String> getWaila() {
         Map<String, String> info = new HashMap<String, String>();
         info.put(I18N.tr("Channel"), channel);
-        info.put(I18N.tr("Input voltage"), Utils.plotVolt("", inputGate.getU()));
+        info.put(I18N.tr("Input voltage"), Utils.plotVolt("", inputGate.getVoltage()));
         return info;
     }
 

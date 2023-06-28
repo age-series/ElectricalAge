@@ -108,7 +108,7 @@ public class BatteryChargerDescriptor extends SixNodeDescriptor {
         if (!powerOn)
             powerload.highImpedance();
         else
-            powerload.setR(Rp);
+            powerload.setResistance(Rp);
     }
 
     @Override

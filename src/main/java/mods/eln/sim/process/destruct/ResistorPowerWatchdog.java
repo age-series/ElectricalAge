@@ -6,21 +6,22 @@ public class ResistorPowerWatchdog extends ValueWatchdog {
 
     Resistor resistor;
 
-    public ResistorPowerWatchdog set(Resistor resistor) {
+    public ResistorPowerWatchdog setResistor(Resistor resistor) {
         this.resistor = resistor;
         return this;
     }
 
-    public ResistorPowerWatchdog setPmax(double Pmax) {
-        this.max = Pmax;
+    public ResistorPowerWatchdog setMaximumPower(double maximumPower) {
+        this.max = maximumPower;
         this.min = -1;
-        this.timeoutReset = Pmax * 0.20 * 5;
+        // TODO: Abstract 0.2 as step time or seconds?
+        this.timeoutReset = maximumPower * 0.20 * 5;
 
         return this;
     }
 
     @Override
     double getValue() {
-        return resistor.getP();
+        return resistor.getPower();
     }
 }

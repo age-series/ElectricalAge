@@ -22,12 +22,12 @@ public abstract class NodeElectricalGateInputHysteresisProcess implements IProce
     @Override
     public void process(double time) {
         if (state) {
-            if (gate.getU() < Eln.instance.SVU * 0.3) {
+            if (gate.getVoltage() < Eln.SVU * 0.3) {
                 state = false;
                 setOutput(false);
             } else setOutput(true);
         } else {
-            if (gate.getU() > Eln.instance.SVU * 0.7) {
+            if (gate.getVoltage() > Eln.SVU * 0.7) {
                 state = true;
                 setOutput(true);
             } else setOutput(false);

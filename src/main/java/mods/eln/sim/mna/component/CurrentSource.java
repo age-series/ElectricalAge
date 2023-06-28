@@ -7,7 +7,7 @@ import mods.eln.sim.mna.state.State;
 import net.minecraft.nbt.NBTTagCompound;
 
 public class CurrentSource extends Bipole implements ISubSystemProcessI, INBTTReady {
-    double currentToSource;
+    double current;
     String name;
 
     public CurrentSource(String name) { this.name = name; }
@@ -18,20 +18,20 @@ public class CurrentSource extends Bipole implements ISubSystemProcessI, INBTTRe
     }
 
     public CurrentSource setCurrent(double i) {
-        currentToSource = i;
+        current = i;
         return this;
     }
 
     @Override
     public double getCurrent() {
-        return currentToSource;
+        return current;
     }
 
     @Override
-    public void applyTo(SubSystem s) {}
+    public void applyToSubsystem(SubSystem s) {}
 
     @Override
-    public void addedTo(SubSystem s) {
+    public void addToSubsystem(SubSystem s) {
         s.addProcess(this);
     }
 
@@ -43,19 +43,19 @@ public class CurrentSource extends Bipole implements ISubSystemProcessI, INBTTRe
 
     @Override
     public void simProcessI(SubSystem s) {
-        s.addToI(aPin, currentToSource);
-        s.addToI(bPin, -currentToSource);
+        s.addToI(aPin, current);
+        s.addToI(bPin, -current);
     }
 
     @Override
     public void readFromNBT(NBTTagCompound nbt, String str) {
         str += name;
-        currentToSource = nbt.getDouble(str + "I");
+        current = nbt.getDouble(str + "I");
     }
 
     @Override
     public void writeToNBT(NBTTagCompound nbt, String str) {
         str += name;
-        nbt.setDouble(str + "I", currentToSource);
+        nbt.setDouble(str + "I", current);
     }
 }

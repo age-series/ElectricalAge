@@ -18,7 +18,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nullable;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -168,7 +167,7 @@ public class ElectricalDigitalDisplayElement extends SixNodeElement implements I
     @Override
     public Map<String, String> getWaila() {
         HashMap<String, String> info = new HashMap<>();
-        info.put("Input: ", Utils.plotVolt(input.getU()));
+        info.put("Input: ", Utils.plotVolt(input.getVoltage()));
         info.put("Min: ", String.format("%.2f", min));
         info.put("Max: ", String.format("%.2f", max));
         return info;

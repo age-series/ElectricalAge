@@ -80,7 +80,7 @@ public class ThermalDissipatorActiveDescriptor extends TransparentNodeDescriptor
 
     public void applyTo(ElectricalLoad load, Resistor r) {
         cableDescriptor.applyTo(load);
-        r.setR(electricalRp);
+        r.setResistance(electricalRp);
     }
 
 

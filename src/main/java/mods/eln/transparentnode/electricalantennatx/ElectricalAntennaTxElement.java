@@ -127,9 +127,9 @@ public class ElectricalAntennaTxElement extends TransparentNodeElement {
     void calculatePowerInRp() {
         double cmd = commandIn.getNormalized();
         if (cmd == 0.0)
-            powerResistor.setR(MnaConst.highImpedance);
+            powerResistor.setResistance(MnaConst.highImpedance);
         else
-            powerResistor.setR(descriptor.electricalNominalInputR / cmd);
+            powerResistor.setResistance(descriptor.electricalNominalInputR / cmd);
     }
 
     @Override
@@ -208,7 +208,7 @@ public class ElectricalAntennaTxElement extends TransparentNodeElement {
         info.put(I18N.tr("Transmitting"), commandIn.getNormalized() > 0 ? "Yes" : "No");
         info.put(I18N.tr("Efficiency"), Utils.plotPercent("", powerEfficency));
         if (Eln.wailaEasyMode) {
-            info.put(I18N.tr("Power"), Utils.plotPower("", powerIn.getI() * powerIn.getU()));
+            info.put(I18N.tr("Power"), Utils.plotPower("", powerIn.getCurrent() * powerIn.getVoltage()));
         }
         return info;
     }

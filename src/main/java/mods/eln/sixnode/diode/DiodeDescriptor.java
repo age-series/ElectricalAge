@@ -110,7 +110,7 @@ public class DiodeDescriptor extends SixNodeDescriptor {
     }
 
     public void applyTo(ResistorSwitch resistorSwitch) {
-        resistorSwitch.setR(stdU / stdI);
+        resistorSwitch.setResistance(stdU / stdI);
     }
 
     @Override

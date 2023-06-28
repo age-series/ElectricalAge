@@ -10,32 +10,32 @@ public class PowerSource extends VoltageSource implements IRootSystemPreStepProc
 
     String name;
 
-    double P, Umax, Imax;
+    double power, maximumVoltage, maximumCurrent;
 
     public PowerSource(String name, State aPin) {
         super(name, aPin, null);
         this.name = name;
     }
 
-    public void setP(double P) {
-        this.P = P;
+    public void setPower(double P) {
+        this.power = P;
     }
 
-    void setMax(double Umax, double Imax) {
-        this.Umax = Umax;
-        this.Imax = Imax;
+    void setMaximums(double Umax, double Imax) {
+        this.maximumVoltage = Umax;
+        this.maximumCurrent = Imax;
     }
 
-    public void setImax(double imax) {
-        Imax = imax;
+    public void setMaximumCurrent(double maximumCurrent) {
+        this.maximumCurrent = maximumCurrent;
     }
 
-    public void setUmax(double umax) {
-        Umax = umax;
+    public void setMaximumVoltage(double maximumVoltage) {
+        this.maximumVoltage = maximumVoltage;
     }
 
-    public double getP() {
-        return P;
+    public double getPower() {
+        return power;
     }
 
     @Override
@@ -45,26 +45,26 @@ public class PowerSource extends VoltageSource implements IRootSystemPreStepProc
     }
 
     @Override
-    public void addedTo(SubSystem s) {
-        super.addedTo(s);
+    public void addToSubsystem(SubSystem s) {
+        super.addToSubsystem(s);
         getSubSystem().getRoot().addProcess(this);
         s.addProcess(this);
     }
 
     @Override
     public void rootSystemPreStepProcess() {
-        SubSystem.Th t = aPin.getSubSystem().getTh(aPin, this);
+        SubSystem.Thevenin t = aPin.getSubSystem().getTh(aPin, this);
 
-        double U = (Math.sqrt(t.U * t.U + 4 * P * t.R) + t.U) / 2;
-        U = Math.min(Math.min(U, Umax), t.U + t.R * Imax);
+        double U = (Math.sqrt(t.voltage * t.voltage + 4 * power * t.resistance) + t.voltage) / 2;
+        U = Math.min(Math.min(U, maximumVoltage), t.voltage + t.resistance * maximumCurrent);
         if (Double.isNaN(U)) U = 0;
-        if (U < t.U) U = t.U;
+        if (U < t.voltage) U = t.voltage;
 
-        setU(U);
+        setVoltage(U);
     }
 
-    public double getEffectiveP() {
-        return getBipoleU() * getCurrent();
+    public double getEffectivePower() {
+        return getVoltage() * getCurrent();
     }
 
     @Override
@@ -73,9 +73,9 @@ public class PowerSource extends VoltageSource implements IRootSystemPreStepProc
 
         str += name;
 
-        setP(nbt.getDouble(str + "P"));
-        setUmax(nbt.getDouble(str + "Umax"));
-        setImax(nbt.getDouble(str + "Imax"));
+        setPower(nbt.getDouble(str + "P"));
+        setMaximumVoltage(nbt.getDouble(str + "Umax"));
+        setMaximumCurrent(nbt.getDouble(str + "Imax"));
     }
 
     @Override
@@ -84,8 +84,8 @@ public class PowerSource extends VoltageSource implements IRootSystemPreStepProc
 
         str += name;
 
-        nbt.setDouble(str + "P", getP());
-        nbt.setDouble(str + "Umax", Umax);
-        nbt.setDouble(str + "Imax", Imax);
+        nbt.setDouble(str + "P", getPower());
+        nbt.setDouble(str + "Umax", maximumVoltage);
+        nbt.setDouble(str + "Imax", maximumCurrent);
     }
 }

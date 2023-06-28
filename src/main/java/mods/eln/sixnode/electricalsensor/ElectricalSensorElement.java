@@ -88,7 +88,7 @@ public class ElectricalSensorElement extends SixNodeElement implements IConfigur
 
         if (this.descriptor.voltageOnly) {
             slowProcessList.add(voltageWatchDog);
-            voltageWatchDog.set(aLoad).set(exp);
+            voltageWatchDog.setVoltageState(aLoad).set(exp);
         }
     }
 
@@ -160,28 +160,28 @@ public class ElectricalSensorElement extends SixNodeElement implements IConfigur
     @Override
     public String multiMeterString() {
         if (!descriptor.voltageOnly)
-            return Utils.plotUIP(aLoad.getU(), aLoad.getCurrent());
+            return Utils.plotUIP(aLoad.getVoltage(), aLoad.getCurrent());
         else
-            return Utils.plotVolt("Uin:", aLoad.getU()) + Utils.plotVolt("Uout:", outputGate.getU());
+            return Utils.plotVolt("Uin:", aLoad.getVoltage()) + Utils.plotVolt("Uout:", outputGate.getVoltage());
     }
 
     @NotNull
     @Override
     public Map<String, String> getWaila() {
         Map<String, String> info = new HashMap<String, String>();
-        info.put(I18N.tr("Output voltage"), Utils.plotVolt("", outputGate.getU()));
+        info.put(I18N.tr("Output voltage"), Utils.plotVolt("", outputGate.getVoltage()));
         if (Eln.wailaEasyMode) {
             switch (typeOfSensor) {
                 case voltageType:
-                    info.put(I18N.tr("Measured voltage"), Utils.plotVolt("", aLoad.getU()));
+                    info.put(I18N.tr("Measured voltage"), Utils.plotVolt("", aLoad.getVoltage()));
                     break;
 
                 case currantType:
-                    info.put(I18N.tr("Measured current"), Utils.plotAmpere("", aLoad.getI()));
+                    info.put(I18N.tr("Measured current"), Utils.plotAmpere("", aLoad.getCurrent()));
                     break;
 
                 case powerType:
-                    info.put(I18N.tr("Measured power"), Utils.plotPower("", aLoad.getU() * aLoad.getI()));
+                    info.put(I18N.tr("Measured power"), Utils.plotPower("", aLoad.getVoltage() * aLoad.getCurrent()));
                     break;
             }
         }
@@ -231,11 +231,11 @@ public class ElectricalSensorElement extends SixNodeElement implements IConfigur
             if (cableDescriptor == null) {
                 if (resistor != null) resistor.highImpedance();
                 //	currentWatchDog.setIAbsMax(100000);
-                voltageWatchDog.setUNominal(1000000000);
+                voltageWatchDog.setNominalVoltage(1000000000);
             } else {
                 if (resistor != null) cableDescriptor.applyTo(resistor, 2);
                 //	currentWatchDog.setIAbsMax(cableDescriptor.electricalMaximalCurrent);
-                voltageWatchDog.setUNominal(cableDescriptor.electricalNominalVoltage);
+                voltageWatchDog.setNominalVoltage(cableDescriptor.electricalNominalVoltage);
             }
         }
     }

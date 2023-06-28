@@ -82,7 +82,7 @@ public class SolarPanelDescriptor extends TransparentNodeDescriptor {
     boolean canRotate;
 
     public void applyTo(ElectricalLoad load) {
-        load.setRs(electricalRs);
+        load.setSerialResistance(electricalRs);
     }
 
 

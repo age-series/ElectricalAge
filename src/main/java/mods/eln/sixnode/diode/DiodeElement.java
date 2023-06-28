@@ -49,7 +49,7 @@ public class DiodeElement extends SixNodeElement {
         thermalLoadList.add(thermalLoad);
         electricalComponentList.add(resistorSwitch);
         electricalProcessList.add(diodeProcess);
-        slowProcessList.add(thermalWatchdog.set(thermalLoad).set(this.descriptor.thermal).set(new WorldExplosion(this).cableExplosion()));
+        slowProcessList.add(thermalWatchdog.setThermalLoad(thermalLoad).setThermalLoad(this.descriptor.thermal).set(new WorldExplosion(this).cableExplosion()));
         thermalSlowProcessList.add(heater);
     }
 
@@ -93,7 +93,7 @@ public class DiodeElement extends SixNodeElement {
 
     @Override
     public String multiMeterString() {
-        return Utils.plotVolt("U+:", anodeLoad.getU()) + Utils.plotVolt("U-:", catodeLoad.getU()) + Utils.plotAmpere("I:", anodeLoad.getCurrent());
+        return Utils.plotVolt("U+:", anodeLoad.getVoltage()) + Utils.plotVolt("U-:", catodeLoad.getVoltage()) + Utils.plotAmpere("I:", anodeLoad.getCurrent());
     }
 
     @NotNull
@@ -102,8 +102,8 @@ public class DiodeElement extends SixNodeElement {
         Map<String, String> info = new HashMap<String, String>();
         info.put(I18N.tr("Current"), Utils.plotAmpere("", anodeLoad.getCurrent()));
         if (Eln.wailaEasyMode) {
-            info.put(I18N.tr("Forward Voltage"), Utils.plotVolt("", anodeLoad.getU() - catodeLoad.getU()));
-            info.put(I18N.tr("Temperature"), Utils.plotCelsius("", thermalLoad.getT()));
+            info.put(I18N.tr("Forward Voltage"), Utils.plotVolt("", anodeLoad.getVoltage() - catodeLoad.getVoltage()));
+            info.put(I18N.tr("Temperature"), Utils.plotCelsius("", thermalLoad.getTemperature()));
         }
         return info;
     }
@@ -111,7 +111,7 @@ public class DiodeElement extends SixNodeElement {
     @NotNull
     @Override
     public String thermoMeterString() {
-        return Utils.plotCelsius("T:", thermalLoad.Tc);
+        return Utils.plotCelsius("T:", thermalLoad.temperatureCelsius);
     }
 
     @Override
@@ -119,10 +119,10 @@ public class DiodeElement extends SixNodeElement {
         super.networkSerialize(stream);
         try {
             stream.writeByte(front.toInt() << 4);
-            stream.writeShort((short) ((anodeLoad.getU()) * NodeBase.networkSerializeUFactor));
-            stream.writeShort((short) ((catodeLoad.getU()) * NodeBase.networkSerializeUFactor));
+            stream.writeShort((short) ((anodeLoad.getVoltage()) * NodeBase.networkSerializeUFactor));
+            stream.writeShort((short) ((catodeLoad.getVoltage()) * NodeBase.networkSerializeUFactor));
             stream.writeShort((short) (anodeLoad.getCurrent() * NodeBase.networkSerializeIFactor));
-            stream.writeShort((short) (thermalLoad.Tc * NodeBase.networkSerializeTFactor));
+            stream.writeShort((short) (thermalLoad.temperatureCelsius * NodeBase.networkSerializeTFactor));
         } catch (IOException e) {
             e.printStackTrace();
         }

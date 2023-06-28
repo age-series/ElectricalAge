@@ -49,12 +49,12 @@ public class ThermalDissipatorActiveElement extends TransparentNodeElement {
         slowProcessList.add(thermalWatchdog);
 
         thermalWatchdog
-            .set(thermalLoad)
-            .setTMax(this.descriptor.warmLimit)
+            .setThermalLoad(thermalLoad)
+            .setMaximumTemperature(this.descriptor.warmLimit)
             .set(new WorldExplosion(this).machineExplosion());
 
         WorldExplosion exp = new WorldExplosion(this).machineExplosion();
-        slowProcessList.add(voltageWatchdog.set(positiveLoad).setUNominal(this.descriptor.nominalElectricalU).set(exp));
+        slowProcessList.add(voltageWatchdog.setVoltageState(positiveLoad).setNominalVoltage(this.descriptor.nominalElectricalU).set(exp));
 
     }
 
@@ -88,14 +88,14 @@ public class ThermalDissipatorActiveElement extends TransparentNodeElement {
     @Override
     public String multiMeterString(@NotNull Direction side) {
 
-        return Utils.plotVolt("U : ", positiveLoad.getU()) + Utils.plotAmpere("I : ", positiveLoad.getCurrent());
+        return Utils.plotVolt("U : ", positiveLoad.getVoltage()) + Utils.plotAmpere("I : ", positiveLoad.getCurrent());
     }
 
     @NotNull
     @Override
     public String thermoMeterString(@NotNull Direction side) {
 
-        return Utils.plotCelsius("T : ", thermalLoad.Tc) + Utils.plotPower("P : ", thermalLoad.getPower());
+        return Utils.plotCelsius("T : ", thermalLoad.temperatureCelsius) + Utils.plotPower("P : ", thermalLoad.getPower());
     }
 
     @Override
@@ -118,7 +118,7 @@ public class ThermalDissipatorActiveElement extends TransparentNodeElement {
 
         super.networkSerialize(stream);
         try {
-            stream.writeFloat(lastPowerFactor = (float) (powerResistor.getP() / descriptor.electricalNominalP));
+            stream.writeFloat(lastPowerFactor = (float) (powerResistor.getPower() / descriptor.electricalNominalP));
         } catch (IOException e) {
 
             e.printStackTrace();
@@ -132,7 +132,7 @@ public class ThermalDissipatorActiveElement extends TransparentNodeElement {
     @Override
     public Map<String, String> getWaila() {
         Map<String, String> info = new HashMap<String, String>();
-        info.put(I18N.tr("Temperature"), Utils.plotCelsius("", thermalLoad.Tc));
+        info.put(I18N.tr("Temperature"), Utils.plotCelsius("", thermalLoad.temperatureCelsius));
         if (Eln.wailaEasyMode) {
             info.put(I18N.tr("Thermal power"), Utils.plotPower("", thermalLoad.getPower()));
         }

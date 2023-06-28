@@ -28,7 +28,7 @@ public class HeatFurnaceInventoryProcess implements IProcess, INBTTReady {
 
         double isolationFactor = 1;
         if (isolatorChamberStack != null) {
-            if (furnace.thermalLoad.Tc > ((ThermalIsolatorElement)ThermalIsolatorElement.getDescriptor(isolatorChamberStack)).getTmax()) {
+            if (furnace.thermalLoad.temperatureCelsius > ((ThermalIsolatorElement)ThermalIsolatorElement.getDescriptor(isolatorChamberStack)).getTmax()) {
                 furnace.inventory.decrStackSize(HeatFurnaceContainer.isolatorId, 1);
             } else {
                 ThermalIsolatorElement iso = (ThermalIsolatorElement) ((GenericItemUsingDamage) isolatorChamberStack.getItem()).getDescriptor(isolatorChamberStack);

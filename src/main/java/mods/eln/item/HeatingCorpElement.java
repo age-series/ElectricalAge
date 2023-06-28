@@ -50,7 +50,7 @@ public class HeatingCorpElement extends GenericItemUsingDamageDescriptorUpgrade 
     }
 
     public void applyTo(RegulatorThermalLoadToElectricalResistor regulator) {
-        regulator.setRmin(electricalR);
+        regulator.setMinimumResistance(electricalR);
     }
 
     @Override

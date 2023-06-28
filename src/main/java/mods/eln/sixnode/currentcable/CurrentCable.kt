@@ -77,7 +77,7 @@ class CurrentCableDescriptor(
     }
 
     override fun applyTo(electricalLoad: ElectricalLoad, rsFactor: Double) {
-        electricalLoad.rs = electricalRs * rsFactor
+        electricalLoad.serialResistance = electricalRs * rsFactor
     }
 
     override fun applyTo(electricalLoad: ElectricalLoad) {
@@ -89,7 +89,7 @@ class CurrentCableDescriptor(
     }
 
     override fun applyTo(resistor: Resistor, factor: Double) {
-        resistor.r = electricalRs * factor
+        resistor.resistance = electricalRs * factor
     }
 
     override fun applyTo(thermalLoad: ThermalLoad) {
@@ -138,13 +138,13 @@ open class CurrentCableElement(sixNode: SixNode?, side: Direction?, descriptor: 
         thermalLoad.setAsSlow()
         slowProcessList.add(thermalWatchdog)
         thermalWatchdog
-            .set(thermalLoad)
+            .setThermalLoad(thermalLoad)
             .setLimit(this.descriptor.thermalWarmLimit, this.descriptor.thermalCoolLimit)
             .set(WorldExplosion(this).cableExplosion())
         slowProcessList.add(voltageWatchdog)
         voltageWatchdog
-            .set(electricalLoad)
-            .setUMaxMin(this.descriptor.electricalNominalVoltage)
+            .setVoltageState(electricalLoad)
+            .setNominalVoltage(this.descriptor.electricalNominalVoltage)
             .set(WorldExplosion(this).cableExplosion())
     }
 
@@ -174,27 +174,27 @@ open class CurrentCableElement(sixNode: SixNode?, side: Direction?, descriptor: 
 
     override fun multiMeterString(): String {
         return plotUIP(
-            electricalLoad.u,
-            electricalLoad.i
+            electricalLoad.voltage,
+            electricalLoad.current
         ) + " " + plotPower(
             "Cable Power Loss",
-            electricalLoad.i * electricalLoad.i * electricalLoad.rs
+            electricalLoad.current * electricalLoad.current * electricalLoad.serialResistance
         )
     }
 
     override fun getWaila(): Map<String, String> {
         val info: MutableMap<String, String> = HashMap()
-        info[I18N.tr("Current")] = plotAmpere("", electricalLoad.i)
-        info[I18N.tr("Temperature")] = plotCelsius("", thermalLoad.t)
+        info[I18N.tr("Current")] = plotAmpere("", electricalLoad.current)
+        info[I18N.tr("Temperature")] = plotCelsius("", thermalLoad.temperature)
         if (Eln.wailaEasyMode) {
-            info[I18N.tr("Voltage")] = plotVolt("", electricalLoad.u)
+            info[I18N.tr("Voltage")] = plotVolt("", electricalLoad.voltage)
         }
         info[I18N.tr("Subsystem Matrix Size")] = renderSubSystemWaila(electricalLoad.subSystem)
         return info
     }
 
     override fun thermoMeterString(): String {
-        return plotCelsius("T", thermalLoad.Tc)
+        return plotCelsius("T", thermalLoad.temperatureCelsius)
     }
 
     override fun networkSerialize(stream: DataOutputStream) {

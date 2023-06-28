@@ -13,7 +13,6 @@ import mods.eln.node.six.SixNodeDescriptor;
 import mods.eln.node.six.SixNodeElement;
 import mods.eln.sim.ElectricalLoad;
 import mods.eln.sim.ThermalLoad;
-import mods.eln.sim.mna.SubSystem;
 import mods.eln.sim.nbt.NbtElectricalLoad;
 import mods.eln.sim.nbt.NbtThermalLoad;
 import mods.eln.sim.process.destruct.ThermalLoadWatchDog;
@@ -60,15 +59,15 @@ public class ElectricalCableElement extends SixNodeElement {
             thermalLoad.setAsSlow();
             slowProcessList.add(thermalWatchdog);
             thermalWatchdog
-                .set(thermalLoad)
+                .setThermalLoad(thermalLoad)
                 .setLimit(this.descriptor.thermalWarmLimit, this.descriptor.thermalCoolLimit)
                 .set(new WorldExplosion(this).cableExplosion());
         }
 
         slowProcessList.add(voltageWatchdog);
         voltageWatchdog
-            .set(electricalLoad)
-            .setUMaxMin(this.descriptor.electricalNominalVoltage)
+            .setVoltageState(electricalLoad)
+            .setNominalVoltage(this.descriptor.electricalNominalVoltage)
             .set(new WorldExplosion(this).cableExplosion());
 
 
@@ -111,9 +110,9 @@ public class ElectricalCableElement extends SixNodeElement {
     @Override
     public String multiMeterString() {
         if (!descriptor.signalWire)
-            return Utils.plotUIP(electricalLoad.getU(), electricalLoad.getI()) + " " + Utils.plotPower("Cable Power Loss", electricalLoad.getI() * electricalLoad.getI() * electricalLoad.getRs());
+            return Utils.plotUIP(electricalLoad.getVoltage(), electricalLoad.getCurrent()) + " " + Utils.plotPower("Cable Power Loss", electricalLoad.getCurrent() * electricalLoad.getCurrent() * electricalLoad.getSerialResistance());
         else
-            return Utils.plotSignal(electricalLoad.getU());
+            return Utils.plotSignal(electricalLoad.getVoltage());
     }
 
     @NotNull
@@ -121,12 +120,12 @@ public class ElectricalCableElement extends SixNodeElement {
     public Map<String, String> getWaila() {
         Map<String, String> info = new HashMap<String, String>();
         if (descriptor.signalWire) {
-            info.put(I18N.tr("Signal Voltage"), Utils.plotVolt("", electricalLoad.getU()));
+            info.put(I18N.tr("Signal Voltage"), Utils.plotVolt("", electricalLoad.getVoltage()));
         } else {
-            info.put(I18N.tr("Current"), Utils.plotAmpere("", electricalLoad.getI()));
-            info.put(I18N.tr("Temperature"), Utils.plotCelsius("", thermalLoad.getT()));
+            info.put(I18N.tr("Current"), Utils.plotAmpere("", electricalLoad.getCurrent()));
+            info.put(I18N.tr("Temperature"), Utils.plotCelsius("", thermalLoad.getTemperature()));
             if (Eln.wailaEasyMode) {
-                info.put(I18N.tr("Voltage"), Utils.plotVolt("", electricalLoad.getU()));
+                info.put(I18N.tr("Voltage"), Utils.plotVolt("", electricalLoad.getVoltage()));
             }
         }
         info.put(I18N.tr("Subsystem Matrix Size"), Utils.renderSubSystemWaila(electricalLoad.getSubSystem()));
@@ -137,7 +136,7 @@ public class ElectricalCableElement extends SixNodeElement {
     @Override
     public String thermoMeterString() {
         if (!descriptor.signalWire)
-            return Utils.plotCelsius("T", thermalLoad.Tc);
+            return Utils.plotCelsius("T", thermalLoad.temperatureCelsius);
         else
             return null;
     }

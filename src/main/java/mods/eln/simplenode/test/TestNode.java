@@ -42,8 +42,8 @@ public class TestNode extends SimpleNode {
         electricalLoadList.add(load);
         electricalComponentList.add(resistor);
 
-        load.setRs(10);
-        resistor.setR(90);
+        load.setSerialResistance(10);
+        resistor.setResistance(90);
 
         connect();
     }

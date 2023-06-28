@@ -91,7 +91,7 @@ public class ElectricalCableDescriptor extends GenericCableDescriptor {
     }
 
     public void applyTo(ElectricalLoad electricalLoad, double rsFactor) {
-        electricalLoad.setRs(electricalRs * rsFactor);
+        electricalLoad.setSerialResistance(electricalRs * rsFactor);
     }
 
     public void applyTo(ElectricalLoad electricalLoad) {
@@ -103,7 +103,7 @@ public class ElectricalCableDescriptor extends GenericCableDescriptor {
     }
 
     public void applyTo(Resistor resistor, double factor) {
-        resistor.setR(electricalRs * factor);
+        resistor.setResistance(electricalRs * factor);
     }
 
     public void applyTo(ThermalLoad thermalLoad) {

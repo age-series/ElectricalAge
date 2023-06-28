@@ -10,32 +10,32 @@ import net.minecraft.init.Blocks;
 
 public class WorldExplosion implements IDestructable {
 
-    Object origine;
+    Object origin;
 
-    Coordinate c;
+    Coordinate coordinate;
     float strength;
     String type;
 
     public WorldExplosion(Coordinate c) {
-        this.c = c;
+        this.coordinate = c;
     }
 
     public WorldExplosion(SixNodeElement e) {
-        this.c = e.getCoordinate();
+        this.coordinate = e.getCoordinate();
         this.type = e.toString();
-        origine = e;
+        origin = e;
     }
 
     public WorldExplosion(TransparentNodeElement e) {
-        this.c = e.coordinate();
+        this.coordinate = e.coordinate();
         this.type = e.toString();
-        origine = e;
+        origin = e;
     }
 
     public WorldExplosion(EnergyConverterElnToOtherNode e) {
-        this.c = e.coordinate;
+        this.coordinate = e.coordinate;
         this.type = e.toString();
-        origine = e;
+        origin = e;
     }
 
     public WorldExplosion cableExplosion() {
@@ -50,16 +50,14 @@ public class WorldExplosion implements IDestructable {
 
     @Override
     public void destructImpl() {
-        //NodeManager.instance.removeNode(NodeManager.instance.getNodeFromCoordonate(c));
-
-        if (Eln.instance.explosionEnable)
-            c.world().createExplosion((Entity) null, c.x, c.y, c.z, strength, true);
+        if (Eln.explosionEnable)
+            coordinate.world().createExplosion((Entity) null, coordinate.x, coordinate.y, coordinate.z, strength, true);
         else
-            c.world().setBlock(c.x, c.y, c.z, Blocks.air);
+            coordinate.world().setBlock(coordinate.x, coordinate.y, coordinate.z, Blocks.air);
     }
 
     @Override
     public String describe() {
-        return String.format("%s (%s)", this.type, this.c.toString());
+        return String.format("%s (%s)", this.type, this.coordinate.toString());
     }
 }

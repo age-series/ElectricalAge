@@ -150,13 +150,13 @@ open class LogicGateElement(node: SixNode, side: Direction, sixNodeDescriptor: S
                 else if (pin.stateHigh()) "1" else "?").append(", ")
             }
         }
-        builder.append(tr(" O: ")).append(if (outputProcess.u == 50.0) "1" else "0")
+        builder.append(tr(" O: ")).append(if (outputProcess.voltage == 50.0) "1" else "0")
         return builder.toString()
     }
 
     override fun getWaila(): MutableMap<String, String> = function.getWaila(
         inputPins.map { if (it != null && it.connectedComponents.count() > 0) it.normalized else null }.toTypedArray(),
-        outputPin.u / Eln.SVU)
+        outputPin.voltage / Eln.SVU)
 
     override fun readFromNBT(nbt: NBTTagCompound) {
         super.readFromNBT(nbt)

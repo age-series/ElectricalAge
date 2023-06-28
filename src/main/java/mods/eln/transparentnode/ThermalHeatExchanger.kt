@@ -67,7 +67,7 @@ class ThermalHeatExchangerDescriptor(
         super.addInformation(itemStack, entityPlayer, list, par4)
         list.add(I18N.tr("Generates heat when supplied with ic2:hotcoolant"))
         list.add(I18N.tr("Ejects out ic2:coolant"))
-        list.add(Utils.plotCelsius(I18N.tr("  Max. temperature: "), thermal.warmLimit))
+        list.add(Utils.plotCelsius(I18N.tr("  Max. temperature: "), thermal.maximumTemperature))
     }
 
     override fun mustHaveFloor() = false
@@ -140,12 +140,12 @@ class ThermalHeatExchangerElement(
         //println("canMoveOutputMb: $canMoveOutputMb")
         var inTempRange = 1.0
         if (minTemp != null) {
-            if (thermalLoad.Tc < minTemp) {
+            if (thermalLoad.temperatureCelsius < minTemp) {
                 inTempRange = 0.0
             }
         }
         if (maxTemp != null) {
-            if (thermalLoad.Tc > maxTemp) {
+            if (thermalLoad.temperatureCelsius > maxTemp) {
                 inTempRange = 0.0
             }
         }
@@ -177,7 +177,7 @@ class ThermalHeatExchangerElement(
         thermalFastProcessList.add(thermalRegulatorProcess)
         slowProcessList.add(NodePeriodicPublishProcess(transparentNode, 2.0, 1.0))
         slowProcessList.add(thermalWatchdog)
-        thermalWatchdog.set(thermalLoad).setLimit((descriptor as ThermalHeatExchangerDescriptor).thermal)
+        thermalWatchdog.setThermalLoad(thermalLoad).setLimit((descriptor as ThermalHeatExchangerDescriptor).thermal)
             .set(WorldExplosion(this).machineExplosion())
 
         if (ic2hotcoolant != null && ic2coolant != null) {
@@ -232,7 +232,7 @@ class ThermalHeatExchangerElement(
 
     // This would be thermalLoad.power but it's not accurate.
     override fun multiMeterString(side: Direction): String = Utils.plotPercent("Ctl:", electricalControlLoad.normalized)
-    override fun thermoMeterString(side: Direction): String = Utils.plotCelsius("T:", thermalLoad.Tc) + " " + Utils.plotPower(joulesPerTick * 20)
+    override fun thermoMeterString(side: Direction): String = Utils.plotCelsius("T:", thermalLoad.temperatureCelsius) + " " + Utils.plotPower(joulesPerTick * 20)
 
     override fun getWaila(): Map<String, String> = mutableMapOf(
         Pair(I18N.tr("Control"), Utils.plotPercent("", electricalControlLoad.normalized)),
@@ -255,7 +255,7 @@ class ThermalHeatExchangerElement(
     }
 
     override fun initialize() {
-        (descriptor as ThermalHeatExchangerDescriptor).thermal.applyTo(thermalLoad)
+        (descriptor as ThermalHeatExchangerDescriptor).thermal.applyToThermalLoad(thermalLoad)
         connect()
     }
 

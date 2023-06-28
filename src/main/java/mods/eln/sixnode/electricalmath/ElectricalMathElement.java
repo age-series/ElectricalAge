@@ -172,7 +172,7 @@ public class ElectricalMathElement extends SixNodeElement implements IConfigurab
 
     @Override
     public String multiMeterString() {
-        return Utils.plotVolt("Uout:", gateOutput.getU()) + Utils.plotAmpere("Iout:", gateOutput.getCurrent());
+        return Utils.plotVolt("Uout:", gateOutput.getVoltage()) + Utils.plotAmpere("Iout:", gateOutput.getCurrent());
     }
 
     @NotNull
@@ -181,10 +181,10 @@ public class ElectricalMathElement extends SixNodeElement implements IConfigurab
         Map<String, String> info = new HashMap<String, String>();
         info.put(I18N.tr("Equation"), expression);
         info.put(I18N.tr("Input voltages"),
-            Utils.plotVolt("\u00A7c", gateInput[0].getU()) +
-                Utils.plotVolt("\u00A7a", gateInput[1].getU()) +
-                Utils.plotVolt("\u00A79", gateInput[2].getU()));
-        info.put(I18N.tr("Output voltage"), Utils.plotVolt("", gateOutput.getU()));
+            Utils.plotVolt("\u00A7c", gateInput[0].getVoltage()) +
+                Utils.plotVolt("\u00A7a", gateInput[1].getVoltage()) +
+                Utils.plotVolt("\u00A79", gateInput[2].getVoltage()));
+        info.put(I18N.tr("Output voltage"), Utils.plotVolt("", gateOutput.getVoltage()));
         return info;
     }
 

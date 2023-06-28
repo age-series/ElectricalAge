@@ -139,10 +139,10 @@ class PowerCapacitorSixElement(SixNode: SixNode, side: Direction, descriptor: Si
         override fun process(time: Double) {
             if (eLeft <= 0) {
                 eLeft = 0.0
-                dischargeResistor.r = stdDischargeResistor
+                dischargeResistor.resistance = stdDischargeResistor
             } else {
-                eLeft -= dischargeResistor.p * time
-                dischargeResistor.r = eLegaliseResistor
+                eLeft -= dischargeResistor.power * time
+                dischargeResistor.resistance = eLegaliseResistor
             }
         }
     }
@@ -162,15 +162,15 @@ class PowerCapacitorSixElement(SixNode: SixNode, side: Direction, descriptor: Si
     }
 
     override fun multiMeterString(): String {
-        return Utils.plotVolt("U", abs(capacitor.u)) + Utils.plotAmpere("I", capacitor.current)
+        return Utils.plotVolt("U", abs(capacitor.voltage)) + Utils.plotAmpere("I", capacitor.current)
     }
 
     override fun getWaila(): Map<String, String> {
         val info: MutableMap<String, String> = HashMap()
-        info[I18N.tr("Capacity")] = Utils.plotValue(capacitor.c, "F")
-        info[I18N.tr("Charge")] = Utils.plotEnergy("", capacitor.e)
+        info[I18N.tr("Capacity")] = Utils.plotValue(capacitor.coulombs, "F")
+        info[I18N.tr("Charge")] = Utils.plotEnergy("", capacitor.energy)
         if (Eln.wailaEasyMode) {
-            info[I18N.tr("Voltage drop")] = Utils.plotVolt("", Math.abs(capacitor.u))
+            info[I18N.tr("Voltage drop")] = Utils.plotVolt("", Math.abs(capacitor.voltage))
             info[I18N.tr("Current")] = Utils.plotAmpere("", Math.abs(capacitor.current))
         }
         return info
@@ -192,20 +192,20 @@ class PowerCapacitorSixElement(SixNode: SixNode, side: Direction, descriptor: Si
     }
 
     fun setupPhysical() {
-        val eOld = capacitor.e
-        capacitor.c = descriptor.getCValue(inventory)
-        stdDischargeResistor = descriptor.dischargeTao / capacitor.c
+        val eOld = capacitor.energy
+        capacitor.coulombs = descriptor.getCValue(inventory)
+        stdDischargeResistor = descriptor.dischargeTao / capacitor.coulombs
         punkProcess.eLegaliseResistor = descriptor.getUNominalValue(inventory).pow(2.0) / 400
         if (fromNbt) {
-            dischargeResistor.r = stdDischargeResistor
+            dischargeResistor.resistance = stdDischargeResistor
             fromNbt = false
         } else {
-            val deltaE = capacitor.e - eOld
+            val deltaE = capacitor.energy - eOld
             punkProcess.eLeft += deltaE
             if (deltaE < 0) {
-                dischargeResistor.r = stdDischargeResistor
+                dischargeResistor.resistance = stdDischargeResistor
             } else {
-                dischargeResistor.r = punkProcess.eLegaliseResistor
+                dischargeResistor.resistance = punkProcess.eLegaliseResistor
             }
         }
     }

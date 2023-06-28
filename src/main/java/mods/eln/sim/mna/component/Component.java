@@ -12,7 +12,7 @@ public abstract class Component {
 
     public Component() {}
 
-    public void addedTo(SubSystem s) {
+    public void addToSubsystem(SubSystem s) {
         this.subSystem = s;
     }
 
@@ -21,7 +21,7 @@ public abstract class Component {
         return subSystem;
     }
 
-    public abstract void applyTo(SubSystem s);
+    public abstract void applyToSubsystem(SubSystem s);
 
     public abstract State[] getConnectedStates();
 

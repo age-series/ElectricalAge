@@ -271,12 +271,12 @@ abstract class GridElement(transparentNode: TransparentNode, descriptor: Transpa
 
     override fun multiMeterString(side: Direction): String {
         val electricalLoad = getGridElectricalLoad(side)
-        return Utils.plotUIP(electricalLoad?.u ?: 0.0, electricalLoad?.i ?: 0.0)
+        return Utils.plotUIP(electricalLoad?.voltage ?: 0.0, electricalLoad?.current ?: 0.0)
     }
 
     override fun thermoMeterString(side: Direction): String {
         val thermalLoad = getThermalLoad(side, LRDU.Up)
-        return Utils.plotCelsius("T", thermalLoad!!.Tc)
+        return Utils.plotCelsius("T", thermalLoad!!.temperatureCelsius)
     }
 
     companion object {

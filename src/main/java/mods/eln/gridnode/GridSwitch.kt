@@ -151,30 +151,30 @@ class GridSwitchElement(node: TransparentNode, descriptor: TransparentNodeDescri
     val power = NbtElectricalLoad("power").apply {
         Eln.instance.meduimVoltageCableDescriptor.applyTo(this)
     }
-    val powerSink = Resistor(power, null).apply { r = desc.sinkMax.toDouble() }
+    val powerSink = Resistor(power, null).apply { resistance = desc.sinkMax.toDouble() }
 
     val grida = NbtElectricalLoad("grida")
     val gridb = NbtElectricalLoad("gridb")
-    val transfer = Resistor(grida, gridb).apply { r = desc.resistance }
+    val transfer = Resistor(grida, gridb).apply { resistance = desc.resistance }
 
     val explosion = WorldExplosion(this).machineExplosion()
     val powerWatchdog = VoltageStateWatchDog().apply {
-        setUNominal(desc.nominalU)
-        set(power)
+        setNominalVoltage(desc.nominalU)
+        setVoltageState(power)
         set(explosion)
         slowProcessList.add(this)
     }
 
     val gridaWatchdog = VoltageStateWatchDog().apply {
-        setUNominal(51200.0)
-        set(grida)
+        setNominalVoltage(51200.0)
+        setVoltageState(grida)
         set(explosion)
         slowProcessList.add(this)
     }
 
     val gridbWatchdog = VoltageStateWatchDog().apply {
-        setUNominal(51200.0)
-        set(gridb)
+        setNominalVoltage(51200.0)
+        setVoltageState(gridb)
         set(explosion)
         slowProcessList.add(this)
     }
@@ -185,16 +185,16 @@ class GridSwitchElement(node: TransparentNode, descriptor: TransparentNodeDescri
 
     inner class SlowProcess(): IProcess {
         override fun process(time: Double) {
-            interp.ff = ((power.u / desc.nominalU) * desc.nominalAccel).toFloat()
+            interp.ff = ((power.voltage / desc.nominalU) * desc.nominalAccel).toFloat()
             interp.target = control.normalized.toFloat()
             interp.step(time.toFloat())
-            powerSink.r = desc.sinkMin.toDouble() + (desc.sinkMax - desc.sinkMin).toDouble() * (1.0 - abs(interp.get() - interp.target))
+            powerSink.resistance = desc.sinkMin.toDouble() + (desc.sinkMax - desc.sinkMin).toDouble() * (1.0 - abs(interp.get() - interp.target))
             if(abs(lastPos - interp.get()) > 0.1 || abs(lastTarget - interp.target) > 0.001) {
                 lastPos = interp.get()
                 lastTarget = interp.target
                 needPublish()
             }
-            val maxU = arrayOf(grida.u, gridb.u).max()!!
+            val maxU = arrayOf(grida.voltage, gridb.voltage).max()!!
             if(closed) {
                 if(interp.get() > desc.separationHigh * (maxU / desc.nominalGridU)) {
                     closed = false
@@ -203,7 +203,7 @@ class GridSwitchElement(node: TransparentNode, descriptor: TransparentNodeDescri
             } else {
                 if(interp.get() < desc.separationLow * (maxU / desc.nominalGridU)) {
                     closed = true
-                    transfer.r = desc.resistance
+                    transfer.resistance = desc.resistance
                 }
             }
         }
@@ -229,8 +229,8 @@ class GridSwitchElement(node: TransparentNode, descriptor: TransparentNodeDescri
 
     override fun thermoMeterString(side: Direction): String = ""
     override fun multiMeterString(side: Direction): String =
-        Utils.plotUIP(grida.u, grida.i) + " / " + Utils.plotUIP(gridb.u, gridb.i) + " @" + interp.get() + "/" +
-            control.normalized + " " + Utils.plotUIP(power.u, power.i)
+        Utils.plotUIP(grida.voltage, grida.current) + " / " + Utils.plotUIP(gridb.voltage, gridb.current) + " @" + interp.get() + "/" +
+            control.normalized + " " + Utils.plotUIP(power.voltage, power.current)
 
     override fun initialize() {
         ghostPower = GhostPowerNode(
@@ -282,19 +282,19 @@ class GridSwitchElement(node: TransparentNode, descriptor: TransparentNodeDescri
         stream.writeFloat(interp.factorFiltered)
         stream.writeFloat(interp.factorPos)
         stream.writeFloat(interp.factorSpeed)
-        stream.writeDouble(arrayOf(abs(grida.u * grida.i), abs(gridb.u * gridb.i)).max()!!)
+        stream.writeDouble(arrayOf(abs(grida.voltage * grida.current), abs(gridb.voltage * gridb.current)).max()!!)
         stream.writeBoolean(closed)
     }
 
     override fun getWaila(): Map<String, String> {
         val info = mutableMapOf<String, String>()
         if (Eln.wailaEasyMode) {
-            info["Left"] = Utils.plotUIP(grida.u, grida.i)
-            info["Right"] = Utils.plotUIP(gridb.u, gridb.i)
-            info["Transfer"] = Utils.plotPower(transfer.p)
+            info["Left"] = Utils.plotUIP(grida.voltage, grida.current)
+            info["Right"] = Utils.plotUIP(gridb.voltage, gridb.current)
+            info["Transfer"] = Utils.plotPower(transfer.power)
         }
-        info["Drive"] = Utils.plotUIP(power.u, power.i, powerSink.r) + " " + Utils.plotOhm(powerSink.r)
-        info["Signal"] = Utils.plotSignal(control.u)
+        info["Drive"] = Utils.plotUIP(power.voltage, power.current, powerSink.resistance) + " " + Utils.plotOhm(powerSink.resistance)
+        info["Signal"] = Utils.plotSignal(control.voltage)
         info["Closed?"] = if(closed) { "Yes" } else { "No" }
         return info
     }

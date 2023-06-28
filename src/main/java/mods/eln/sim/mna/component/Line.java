@@ -15,11 +15,11 @@ public class Line extends Resistor implements ISubSystemProcessFlush, IAbstracto
 
     boolean ofInterSystem;
 
-    boolean canAdd(Component c) {
+    boolean canAddComponent(Component c) {
         return (c instanceof Resistor);
     }
 
-    void add(Resistor c) {
+    void addResistor(Resistor c) {
         ofInterSystem |= c.canBeReplacedByInterSystem();
         resistors.add(c);
     }
@@ -29,13 +29,13 @@ public class Line extends Resistor implements ISubSystemProcessFlush, IAbstracto
         return ofInterSystem;
     }
 
-    public void recalculateR() {
-        double R = 0;
+    public void recalculateResistance() {
+        double resistance = 0;
         for (Resistor r : resistors) {
-            R += r.getR();
+            resistance += r.getResistance();
         }
 
-        setR(R);
+        setResistance(resistance);
     }
 
     void restoreResistorIntoCircuit() {
@@ -46,33 +46,31 @@ public class Line extends Resistor implements ISubSystemProcessFlush, IAbstracto
     }
 
     public static void newLine(RootSystem root, LinkedList<Resistor> resistors, LinkedList<State> states) {
-        if (resistors.isEmpty()) {
-        } else if (resistors.size() == 1) {
-        } else {
+        if (resistors.size() > 1) {
             Resistor first = resistors.getFirst();
             Resistor last = resistors.getLast();
             State stateBefore = first.aPin == states.getFirst() ? first.bPin : first.aPin;
             State stateAfter = last.aPin == states.getLast() ? last.bPin : last.aPin;
 
-            Line l = new Line();
-            l.resistors = resistors;
-            l.states = states;
-            l.recalculateR();
+            Line line = new Line();
+            line.resistors = resistors;
+            line.states = states;
+            line.recalculateResistance();
             root.addComponents.removeAll(resistors);
             root.addStates.removeAll(states);
-            root.addComponents.add(l);
-            l.connectTo(stateBefore, stateAfter);
-            l.removeResistorFromCircuit();
+            root.addComponents.add(line);
+            line.connectTo(stateBefore, stateAfter);
+            line.removeResistorFromCircuit();
 
-            root.addProcess(l);
+            root.addProcess(line);
 
             for (Resistor r : resistors) {
-                r.abstractedBy = l;
-                l.ofInterSystem |= r.canBeReplacedByInterSystem();
+                r.abstractedBy = line;
+                line.ofInterSystem |= r.canBeReplacedByInterSystem();
             }
 
             for (State s : states) {
-                s.abstractedBy = l;
+                s.abstractedBy = line;
             }
         }
     }
@@ -97,21 +95,21 @@ public class Line extends Resistor implements ISubSystemProcessFlush, IAbstracto
 
     @Override
     public void simProcessFlush() {
-        double i = (aPin.state - bPin.state) * getRInv();
-        double u = aPin.state;
+        double current = (aPin.state - bPin.state) * getResistanceInverse();
+        double voltage = aPin.state;
         Iterator<Resistor> ir = resistors.iterator();
 
         for (State s : states) {
             Resistor r = ir.next();
-            u -= r.getR() * i;
-            s.state = u;
+            voltage -= r.getResistance() * current;
+            s.state = voltage;
         }
     }
 
     @Override
-    public void addedTo(SubSystem s) {
+    public void addToSubsystem(SubSystem s) {
         s.addProcess(this);
-        super.addedTo(s);
+        super.addToSubsystem(s);
     }
 
     @Override
@@ -120,7 +118,7 @@ public class Line extends Resistor implements ISubSystemProcessFlush, IAbstracto
 
     @Override
     public void dirty(Component component) {
-        recalculateR();
+        recalculateResistance();
         if (isAbstracted())
             abstractedBy.dirty(this);
     }

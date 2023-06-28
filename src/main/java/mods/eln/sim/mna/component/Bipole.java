@@ -19,8 +19,8 @@ public abstract class Bipole extends Component {
         this.aPin = aPin;
         this.bPin = bPin;
 
-        if (aPin != null) aPin.add(this);
-        if (bPin != null) bPin.add(this);
+        if (aPin != null) aPin.addComponent(this);
+        if (bPin != null) bPin.addComponent(this);
         return this;
     }
 
@@ -34,8 +34,8 @@ public abstract class Bipole extends Component {
 
     @Override
     public void breakConnection() {
-        if (aPin != null) aPin.remove(this);
-        if (bPin != null) bPin.remove(this);
+        if (aPin != null) aPin.removeComponent(this);
+        if (bPin != null) bPin.removeComponent(this);
     }
 
     @Override
@@ -45,13 +45,10 @@ public abstract class Bipole extends Component {
 
     public abstract double getCurrent();
 
-    public double getU() {
+    public double getVoltage() {
         return (aPin == null ? 0 : aPin.state) - (bPin == null ? 0 : bPin.state);
     }
 
-    public double getBipoleU() {
-        return getU();
-    }
 
     public String toString() {
         return "[" + aPin + " " + this.getClass().getSimpleName() + " " + bPin + "]";

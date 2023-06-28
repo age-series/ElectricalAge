@@ -82,7 +82,7 @@ public class HeatFurnaceDescriptor extends TransparentNodeDescriptor {
     }
 
     public void applyTo(ThermalLoad load) {
-        thermal.applyTo(load);
+        thermal.applyToThermalLoad(load);
     }
 
     public void applyTo(FurnaceProcess process) {
@@ -125,6 +125,6 @@ public class HeatFurnaceDescriptor extends TransparentNodeDescriptor {
         super.addInformation(itemStack, entityPlayer, list, par4);
         list.add(tr("Generates heat when supplied with fuel."));
         list.add("  " + tr("Nominal power: %1$W", Utils.plotValue(nominalPower)));
-        list.add("  " + tr("Max. temperature: %1$°C", Utils.plotValue(thermal.warmLimit)));
+        list.add("  " + tr("Max. temperature: %1$°C", Utils.plotValue(thermal.maximumTemperature)));
     }
 }

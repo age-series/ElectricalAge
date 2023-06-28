@@ -95,9 +95,9 @@ public class PowerInductorElement extends TransparentNodeElement {
 
     public void setupPhysical() {
         double rs = descriptor.getRsValue(inventory);
-        inductor.setL(descriptor.getlValue(inventory));
-        positiveLoad.setRs(rs);
-        negativeLoad.setRs(rs);
+        inductor.setInductance(descriptor.getlValue(inventory));
+        positiveLoad.setSerialResistance(rs);
+        negativeLoad.setSerialResistance(rs);
 
         if (fromNbt) {
             fromNbt = false;
