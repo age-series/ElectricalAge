@@ -186,11 +186,11 @@ import java.util.*;
 import static mods.eln.i18n.I18N.*;
 
 @SuppressWarnings({"SameParameterValue", "PointlessArithmeticExpression"})
-@Mod(modid = Eln.MODID, name = Eln.NAME, version = "@VERSION@")
+@Mod(modid = Eln.MODID, name = Eln.NAME, version = Tags.VERSION, dependencies = "after:CoFHCore;after:CoFHAPI;after:CoFHAPI|energy")
 public class Eln {
     // Mod information (override from 'mcmod.info' file)
-    public final static String MODID = "Eln";
-    public final static String NAME = "Electrical Age";
+    public final static String MODID = Tags.MODID;
+    public final static String NAME = Tags.MODNAME;
     public final static String MODDESC = "Electricity in your base!";
     public final static String URL = "https://eln.ja13.org";
     public final static String UPDATE_URL = "https://github.com/jrddunbr/ElectricalAge/releases";
@@ -387,7 +387,7 @@ public class Eln {
         // Update ModInfo by code
         ModMetadata meta = event.getModMetadata();
         meta.modId = MODID;
-        meta.version = Version.getVersionName();
+        meta.version = Version.getSimpleVersionName();
         meta.name = NAME;
         meta.description = tr("mod.meta.desc");
         meta.url = URL;

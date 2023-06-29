@@ -1,14 +1,14 @@
 [
-    {
-        "modid":"Eln",
-        "version": "${version}",
-        "mcversion": "${mcversion}",
-        "name":"Electrical Age - jrddunbr's build",
-        "url":"http://eln.ja13.org/",
+	{
+		"modid":"${modId}",
+		"version": "${modVersion}",
+		"mcversion": "${minecraftVersion}",
+		"name":"${modName}",
+		"url":"http://eln.ja13.org/",
 		"credits": "The Electrical Age Team",
-        "logoFile": "assets/eln/logo.png",
-        "requiredMods":[
-            "Forge"
-        ]
-    }
+		"logoFile": "assets/eln/logo.png",
+		"requiredMods":[
+			"Forge"
+		]
+	}
 ]

@@ -53,7 +53,7 @@ public class AnalyticsHandler {
             public void run() {
                 try {
                     // Prepare get parameters
-                    final String version = Version.getVersionName().replaceAll("\\s+", "");
+                    final String version = Version.getSimpleVersionName().replaceAll("\\s+", "");
                     final String lang = I18N.getCurrentLanguage();
                     final String url = String.format(URL, Eln.playerUUID, version, lang);
 
@@ -85,7 +85,7 @@ public class AnalyticsHandler {
                 try {
                     // build URL
 
-                    String version = Version.getVersionName().replaceAll("\\s+", "");
+                    String version = Version.getSimpleVersionName().replaceAll("\\s+", "");
                     String lang = I18N.getCurrentLanguage();
                     /*
 

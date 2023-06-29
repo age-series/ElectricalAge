@@ -113,7 +113,7 @@ public class AutoMinerRender extends TransparentNodeElementRender {
 
         front.glRotateXnRef();
 
-        boolean drawScreen = UtilsClient.clientDistanceTo(tileEntity) < 20 && powerOk;
+        boolean drawScreen = UtilsClient.clientDistanceTo(getTileEntity()) < 20 && powerOk;
         boolean drawRay = drawScreen && job != null;
 
         UtilsClient.disableCulling();
@@ -194,9 +194,9 @@ public class AutoMinerRender extends TransparentNodeElementRender {
                         camAlpha = (float) (Math.PI / 2);
                         break;
                 }
-                render.generate(this.tileEntity.getWorldObj(), tileEntity.xCoord + 0.5,
-                    tileEntity.yCoord + 0.5 - (Math.max(0, pipeLength - 5)),
-                    tileEntity.zCoord + 0.5, -(float) (Math.PI * 1 / 2) + camAlpha, -(float) (Math.PI / 2));
+                render.generate(this.getTileEntity().getWorldObj(), getTileEntity().xCoord + 0.5,
+                    getTileEntity().yCoord + 0.5 - (Math.max(0, pipeLength - 5)),
+                    getTileEntity().zCoord + 0.5, -(float) (Math.PI * 1 / 2) + camAlpha, -(float) (Math.PI / 2));
             }
         }
 

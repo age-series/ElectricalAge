@@ -1,0 +1,6 @@
+
+apply plugin: 'org.jetbrains.kotlin.jvm'
+
+tasks.named("processResources", ProcessResources).configure {
+    exclude(["**/_Common", "**/_TEMPLATES", "**/export_*.png", "**/*.blend*", "**/temp/**/*", "**/model-to-be-integrated/**/*"])
+}

@@ -1,20 +1,22 @@
-# EditorConfig, EditorConfig, EditorConfig: http://editorconfig.org
-#
-# For IDEA & GitHub this is automatically applied.
-#
-# Eclipse: See https://github.com/ncjones/editorconfig-eclipse#readme
-# Emacs: See https://github.com/editorconfig/editorconfig-emacs#readme
-#
-# Or just read the instructions on http://editorconfig.org
+# This is the universal Text Editor Configuration
+# for all GTNewHorizons projects
+# See: https://editorconfig.org/
 
 root = true
 
-# Always use unix-style newlines and utf-8.
 [*]
-end_of_line = lf
-insert_final_newline = true
 charset = utf-8
-
-# Use a common indentation style for all our code.
-indent_style = space
+end_of_line = lf
 indent_size = 4
+indent_style = space
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+[*.{bat,ini}]
+end_of_line = crlf
+
+[*.{dtd,json,info,mcmeta,md,sh,svg,xml,xsd,xsl,yaml,yml}]
+indent_size = 2
+
+[*.lang]
+trim_trailing_whitespace = false

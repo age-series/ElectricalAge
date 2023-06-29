@@ -44,7 +44,7 @@ public class ElectricalAntennaTxRender extends TransparentNodeElementRender {
 
         if (cableRefresh) {
             cableRefresh = false;
-            connectionType = CableRender.connectionType(tileEntity, lrduConnection, front.getInverse());
+            connectionType = CableRender.connectionType(getTileEntity(), lrduConnection, front.getInverse());
         }
 
         for (LRDU lrdu : LRDU.values()) {

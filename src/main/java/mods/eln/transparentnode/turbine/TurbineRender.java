@@ -53,7 +53,7 @@ public class TurbineRender extends TransparentNodeElementRender {
 
         if (cableRefresh) {
             cableRefresh = false;
-            connectionType = CableRender.connectionType(tileEntity, eConn, front.down());
+            connectionType = CableRender.connectionType(getTileEntity(), eConn, front.down());
         }
 
         glCableTransform(front.down());
