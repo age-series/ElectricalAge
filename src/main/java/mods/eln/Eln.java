@@ -76,6 +76,7 @@ import mods.eln.sixnode.*;
 import mods.eln.sixnode.TreeResinCollector.TreeResinCollectorDescriptor;
 import mods.eln.sixnode.batterycharger.BatteryChargerDescriptor;
 import mods.eln.sixnode.currentcable.CurrentCableDescriptor;
+import mods.eln.sixnode.currentrelay.CurrentRelayDescriptor;
 import mods.eln.sixnode.diode.DiodeDescriptor;
 import mods.eln.sixnode.electricalalarm.ElectricalAlarmDescriptor;
 import mods.eln.sixnode.electricalbreaker.ElectricalBreakerDescriptor;
@@ -656,6 +657,7 @@ public class Eln {
         registerSixNodeMisc(117);
         registerLogicalGates(118);
         registerAnalogChips(124);
+        registerCurrentRelays(126);
 
         //TRANSPARENT NODE REGISTRATION
         //Sub-UID must be unique in this section only.
@@ -1547,6 +1549,32 @@ public class Eln {
         }
     }
 
+    private void registerCurrentRelays(int id) {
+        int subId;
+        String name;
+        CurrentRelayDescriptor desc;
+        {
+            subId = 0;
+            name = TR_NAME(Type.NONE, "Low Current Relay");
+            desc = new CurrentRelayDescriptor(name, obj.getObj("RelayBig"), lowCurrentCableDescriptor);
+            desc.setPhysicalConstantLikeNormalCable(5.0);
+            sixNodeItem.addDescriptor(subId + (id << 6), desc);
+        }
+        {
+            subId = 1;
+            name = TR_NAME(Type.NONE, "Medium Current Relay");
+            desc = new CurrentRelayDescriptor(name, obj.getObj("relay800"), mediumCurrentCableDescriptor);
+            desc.setPhysicalConstantLikeNormalCable(20.0);
+            sixNodeItem.addDescriptor(subId + (id << 6), desc);
+        }
+        {
+            subId = 2;
+            name = TR_NAME(Type.NONE, "High Current Relay");
+            desc = new CurrentRelayDescriptor(name, obj.getObj("relay800"), highCurrentCableDescriptor);
+            desc.setPhysicalConstantLikeNormalCable(100.0);
+            sixNodeItem.addDescriptor(subId + (id << 6), desc);
+        }
+    }
 
     private void registerThermalCable(int id) {
         int subId;

@@ -1,6 +1,7 @@
 package mods.eln.misc
 
 import mods.eln.Eln
+import mods.eln.sixnode.currentcable.CurrentCableDescriptor
 import mods.eln.sixnode.electricalcable.ElectricalCableDescriptor
 import net.minecraft.util.ResourceLocation
 import net.minecraftforge.client.IItemRenderer.ItemRenderType
