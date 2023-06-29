@@ -51,11 +51,11 @@ fun BlackBodyTemperature(temp: Float): BlackBodyColor {
 
     // blue
     if (temp <= 2000f)
-        B = 0f;
+        B = 0f
     else if (temp < 6600f)
         B = 1.764e-05f * x5 + 0.0003575f * x4 - 0.01554f * x3 + 0.1549f * x2 - 0.3682f * x + 0.2386f
     else
-        B = 1f;
+        B = 1f
 
     return BlackBodyColor(R, G, B)
 }
