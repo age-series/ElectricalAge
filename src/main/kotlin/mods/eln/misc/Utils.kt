@@ -753,7 +753,7 @@ object Utils {
 
     /*
 	 * public static void drawIcon(Icon icon) { Utils.bindTextureByName(icon.getIconName()); Utils.disableCulling(); GL11.glBegin(GL11.GL_QUADS); GL11.glTexCoord2f(0f, 0f); GL11.glVertex3f(0.5f,-0.5f,0f); GL11.glTexCoord2f(0f, 0f);GL11.glVertex3f(-0.5f,-0.5f,0f); GL11.glTexCoord2f(0f, 1f);GL11.glVertex3f(-0.5f,0.5f,0f); GL11.glTexCoord2f(1f, 1f);GL11.glVertex3f(0.5f,0.5f,0f); GL11.glEnd(); Utils.enableCulling(); }
-	 * 
+	 *
 	 * public static void drawEnergyBare(float e) { float x = 14f/16f,y = 15f/16f-e*14f/16f; GL11.glColor3f(e, e, 0f); GL11.glDisable(GL11.GL_TEXTURE_2D); GL11.glBegin(GL11.GL_QUADS); GL11.glVertex3f(x+1f/16f,y,0.01f); GL11.glVertex3f(x,y,0f); GL11.glVertex3f(x,15f/16f,0f); GL11.glVertex3f(x+1f/16f,15f/16f,0.01f); GL11.glEnd(); GL11.glEnable(GL11.GL_TEXTURE_2D); GL11.glColor3f(1f, 1f, 1f); }
 	 */
     @JvmStatic
@@ -767,10 +767,10 @@ object Utils {
                 item.getSubItems(item, null as CreativeTabs?, tempList)
             }
         }
-        val s = name.toLowerCase()
+        val s = name.lowercase()
         for (itemstack in tempList) {
             // String s1 = itemstack.getDisplayName();
-            if (itemstack!!.displayName.toLowerCase().contains(s)) {
+            if (itemstack!!.displayName.lowercase().contains(s)) {
                 list.add(itemstack)
             }
         }
@@ -825,7 +825,7 @@ object Utils {
 
     /*
 	 * public static boolean isPlayerInteractRiseWith(EntityPlayerMP entity, ItemStack stack) {
-	 * 
+	 *
 	 * return entity.inventory.getCurrentItem() == stack && Eln.playerManager.get(entity).getInteractRise(); }
 	 */
     @JvmStatic
@@ -1230,7 +1230,7 @@ object Utils {
     }
 
     fun isWrench(stack: ItemStack): Boolean {
-        return areSame(stack, Eln.wrenchItemStack) || stack.displayName.toLowerCase().contains("wrench")
+        return areSame(stack, Eln.wrenchItemStack) || stack.displayName.lowercase().contains("wrench")
     }
 
     @JvmStatic

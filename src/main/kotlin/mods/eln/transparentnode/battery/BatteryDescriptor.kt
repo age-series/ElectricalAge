@@ -106,7 +106,7 @@ class BatteryDescriptor(
         }
     }
 
-    fun applyTo(load: ElectricalLoad, simulator: Simulator?) {
+    fun applyTo(load: ElectricalLoad, @Suppress("UNUSED_PARAMETER") simulator: Simulator?) {
         load.serialResistance = electricalRs
     }
 

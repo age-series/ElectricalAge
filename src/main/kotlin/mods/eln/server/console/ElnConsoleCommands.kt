@@ -362,7 +362,7 @@ class ElnManCommand: IConsoleCommand {
                 cprint(ics, "")
             }
             else -> {
-                val command = ElnConsoleCommandList.mapNotNull { if (it.name.toLowerCase() == args[0]) it else null }.firstOrNull()
+                val command = ElnConsoleCommandList.mapNotNull { if (it.name.lowercase() == args[0]) it else null }.firstOrNull()
                 if (command == null) {
                     cprint(ics, "Sorry, but no man page was found for ${args[0]}", indent = 1)
                 } else {

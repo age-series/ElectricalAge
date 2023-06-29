@@ -96,7 +96,7 @@ class PacketSerial {
 
                             if (packetData.length >= 2) {
                                 val opcode = packetData[0]
-                                val length = packetData[1].toInt()
+                                val length = packetData[1].code
                                 if (length == packetData.length - 2) {
                                     val p = Packet(opcode, packetData.substring(2))
                                     instance.fromDevice.add(p)

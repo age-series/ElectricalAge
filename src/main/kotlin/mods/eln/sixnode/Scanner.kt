@@ -21,6 +21,7 @@ import net.minecraftforge.common.util.ForgeDirection
 import net.minecraftforge.fluids.IFluidHandler
 import java.io.DataInputStream
 import java.io.DataOutputStream
+import java.util.*
 
 /**
  * A comparator-alike. It doesn't "compare" anything, though.
@@ -103,7 +104,7 @@ class ScannerElement(sixNode: SixNode, side: Direction, descriptor: SixNodeDescr
     private fun scanTileEntity(te: TileEntity, targetSide: ForgeDirection): Double? {
         if (te is IFluidHandler) {
             val info = te.getTankInfo(targetSide)
-            return info.sumByDouble {
+            return info.sumOf {
                 (it.fluid?.amount ?: 0).toDouble() / it.capacity
             } / info.size
         } else if (te is ISidedInventory) {
@@ -124,7 +125,7 @@ class ScannerElement(sixNode: SixNode, side: Direction, descriptor: SixNodeDescr
             return sum.toDouble() / limit
         } else if (te is IInventory) {
             val sum = when (mode) {
-                ScanMode.SIMPLE -> (0..te.sizeInventory - 1).sumBy {
+                ScanMode.SIMPLE -> (0..te.sizeInventory - 1).sumOf {
                     te.getStackInSlot(it)?.stackSize ?: 0
                 }.toDouble()
 
@@ -158,7 +159,8 @@ class ScannerElement(sixNode: SixNode, side: Direction, descriptor: SixNodeDescr
     }
 
     override fun multiMeterString(): String {
-        return "Mode: ${tr(mode.name.toLowerCase().capitalize())}, Value: ${Utils.plotPercent("", outputProcess.outputNormalized)}"
+        return "Mode: ${tr(mode.name.lowercase()
+            .replaceFirstChar { it.titlecase(Locale.getDefault()) })}, Value: ${Utils.plotPercent("", outputProcess.outputNormalized)}"
     }
 
     override fun thermoMeterString(): String = ""

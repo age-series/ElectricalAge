@@ -2,7 +2,6 @@ package mods.eln.misc
 
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.ItemStack
-import sun.audio.AudioPlayer.player
 import net.minecraft.network.play.server.S2FPacketSetSlot
 import net.minecraft.entity.player.EntityPlayerMP
 
@@ -14,7 +13,7 @@ fun EntityPlayer.totalItemsCarried(stack: ItemStack): Int {
     return inventory.mainInventory
         .filterNotNull()
         .filter { it.isItemEqual(stack) }
-        .sumBy { it.stackSize }
+        .sumOf { it.stackSize }
 }
 
 fun EntityPlayer.removeMultipleItems(stack: ItemStack, count: Int) {

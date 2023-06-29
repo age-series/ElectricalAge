@@ -32,7 +32,7 @@ import org.lwjgl.util.Color
 import java.io.DataInputStream
 import java.io.DataOutputStream
 import java.io.IOException
-import java.util.HashMap
+import java.util.*
 
 
 class ElectricalVuMeterDescriptor(name: String, objName: String, var onOffOnly: Boolean) : SixNodeDescriptor(name, ElectricalVuMeterElement::class.java, ElectricalVuMeterRender::class.java) {
@@ -130,7 +130,7 @@ class ElectricalVuMeterDescriptor(name: String, objName: String, var onOffOnly: 
         this.name = name
         obj = Eln.obj.getObj(objName)
         if (obj != null) {
-            if (obj!!.getString("type").toLowerCase() == "rot") {
+            if (obj!!.getString("type").lowercase() == "rot") {
                 objType = ObjType.Rot
                 vumeter = obj!!.getPart("Vumeter")
                 pointer = obj!!.getPart("Pointer")

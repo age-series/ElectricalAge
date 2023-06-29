@@ -194,7 +194,7 @@ class GridSwitchElement(node: TransparentNode, descriptor: TransparentNodeDescri
                 lastTarget = interp.target
                 needPublish()
             }
-            val maxU = arrayOf(grida.voltage, gridb.voltage).max()!!
+            val maxU = arrayOf(grida.voltage, gridb.voltage).max()
             if(closed) {
                 if(interp.get() > desc.separationHigh * (maxU / desc.nominalGridU)) {
                     closed = false
@@ -282,7 +282,7 @@ class GridSwitchElement(node: TransparentNode, descriptor: TransparentNodeDescri
         stream.writeFloat(interp.factorFiltered)
         stream.writeFloat(interp.factorPos)
         stream.writeFloat(interp.factorSpeed)
-        stream.writeDouble(arrayOf(abs(grida.voltage * grida.current), abs(gridb.voltage * gridb.current)).max()!!)
+        stream.writeDouble(arrayOf(abs(grida.voltage * grida.current), abs(gridb.voltage * gridb.current)).max())
         stream.writeBoolean(closed)
     }
 
@@ -317,7 +317,7 @@ class GridSwitchRender(entity: TransparentNodeEntity, descriptor: TransparentNod
 
     inner class ArcSound(samp: String, coord: Coordinate): LoopedSound(samp, coord) {
         override fun getVolume(): Float = if(closed && interp.get() > desc.separationMin && power > 0) {
-            arrayOf(desc.maxVolume.toFloat(), ((0.5 + interp.get()) * power / desc.nominalGridP).toFloat()).min()!!
+            arrayOf(desc.maxVolume.toFloat(), ((0.5 + interp.get()) * power / desc.nominalGridP).toFloat()).min()
         } else {
             0.0f
         }

@@ -508,8 +508,8 @@ private enum class State(val serialized: Byte) {
     }
 }
 
-private const val bootTime: Short = 4 * 20
-private const val stopTime: Short = 1 * 20
+private const val bootTime: Short = (4 * 20).toShort()
+private const val stopTime: Short = (1 * 20).toShort()
 
 @ExperimentalUnsignedTypes
 object OreColorMapping {

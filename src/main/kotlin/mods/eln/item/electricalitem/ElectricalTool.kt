@@ -114,6 +114,6 @@ open class ElectricalTool(name: String, var strengthOn: Float, var strengthOff: 
     }
 
     init {
-        rIcon = ResourceLocation("eln", "textures/items/" + name.replace(" ", "").toLowerCase() + ".png")
+        rIcon = ResourceLocation("eln", "textures/items/" + name.replace(" ", "").lowercase() + ".png")
     }
 }

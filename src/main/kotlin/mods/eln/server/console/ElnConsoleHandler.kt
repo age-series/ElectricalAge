@@ -7,6 +7,7 @@ import net.minecraft.event.ClickEvent
 import net.minecraft.server.MinecraftServer
 import net.minecraft.util.ChatComponentText
 import java.lang.Exception
+import java.util.*
 
 val ElnConsoleCommandList = mutableListOf<IConsoleCommand>()
 
@@ -75,7 +76,7 @@ class ElnConsoleCommands: ICommand {
         }
 
         fun getArgBool(ics: ICommandSender, arg: String): Boolean? {
-            val lowerArg = arg.toLowerCase()
+            val lowerArg = arg.lowercase()
             return if (lowerArg.isEmpty()) {
                 cprint(ics, "Error: Empty argument.", indent = 1)
                 null

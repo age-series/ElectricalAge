@@ -6,7 +6,7 @@ import mods.eln.sim.mna.component.VoltageSource
 import mods.eln.sim.mna.state.State
 import mods.eln.sim.mna.state.VoltageState
 
-fun main(args: Array<String>) {
+fun main(@Suppress("UNUSED_PARAMETER") args: Array<String>) {
     val s = SubSystem(null, 0.05)
 
     val n1: State = VoltageState()

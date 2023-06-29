@@ -490,19 +490,18 @@ class PalGui(val render: PalRender) : GuiScreenEln() {
 
 class Pal : LogicFunction() {
     override val inputCount = 3
-    override val infos =
+    override val infos: String =
         tr("A Programmable Array Logic (PAL) is a programmable\nlogic device semiconductors used to  implement any logic\nfunction in only one digital circuit. The function is\nstateless, which means that no intermediate state is saved.")
-    val truthTable = Array(8, { false })
+    val truthTable = Array(8) { false }
 
     private operator fun Boolean.times(factor: Int): Int = if (this) factor else 0
 
     private fun Array<Boolean>.toInt(): Int {
-        val value = (0..this.count() - 1).filter { this[it] }.sumBy { 1.shl(it) }
-        return value
+        return (0 until count()).filter { this[it] }.sumOf { 1.shl(it) }
     }
 
     private fun Array<Boolean>.fromInt(value: Int) {
-        for (i in 0..this.count() - 1) {
+        for (i in 0 until this.count()) {
             this[i] = (value and 1.shl(i)) != 0
         }
     }

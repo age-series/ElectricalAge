@@ -16,7 +16,7 @@ import org.lwjgl.opengl.GL11
 
 class BrushDescriptor(name: String): GenericItemUsingDamageDescriptor(name) {
 
-    private val ricon = ResourceLocation("eln", "textures/items/" + name.toLowerCase().replace(" ", "") + ".png")
+    private val ricon = ResourceLocation("eln", "textures/items/" + name.lowercase().replace(" ", "") + ".png")
 
 
     override fun getName(stack: ItemStack): String {

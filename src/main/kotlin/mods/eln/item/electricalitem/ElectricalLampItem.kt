@@ -151,7 +151,7 @@ class ElectricalLampItem(name: String, var lightMin: Int, var rangeMin: Int, dis
             2 -> drawlightstate = boosted
         }
         UtilsClient.drawIcon(type!!, drawlightstate)
-        //UtilsClient.drawIcon(type, (getLight(item) != 0 && getLightState(item) != 0 ? on : off));		
+        //UtilsClient.drawIcon(type, (getLight(item) != 0 && getLightState(item) != 0 ? on : off));
         if (type == ItemRenderType.INVENTORY) {
             UtilsClient.drawEnergyBare(type, (getEnergy(item) / getEnergyMax(item)).toFloat())
         }
@@ -175,9 +175,9 @@ class ElectricalLampItem(name: String, var lightMin: Int, var rangeMin: Int, dis
         this.dischargeMax = dischargeMax
         this.energyStorage = energyStorage
         setDefaultIcon(name + "off")
-        boosted = ResourceLocation("eln", "textures/items/" + name.replace(" ", "").toLowerCase() + "boosted.png")
-        on = ResourceLocation("eln", "textures/items/" + name.replace(" ", "").toLowerCase() + "on.png")
-        off = ResourceLocation("eln", "textures/items/" + name.replace(" ", "").toLowerCase() + "off.png")
+        boosted = ResourceLocation("eln", "textures/items/" + name.replace(" ", "").lowercase() + "boosted.png")
+        on = ResourceLocation("eln", "textures/items/" + name.replace(" ", "").lowercase() + "on.png")
+        off = ResourceLocation("eln", "textures/items/" + name.replace(" ", "").lowercase() + "off.png")
         //	off = new ResourceLocation("eln", "/model/StoneFurnace/all.png");
     }
 }
