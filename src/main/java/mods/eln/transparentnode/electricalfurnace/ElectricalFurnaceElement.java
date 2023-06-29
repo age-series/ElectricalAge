@@ -85,7 +85,7 @@ public class ElectricalFurnaceElement extends TransparentNodeElement {
         slowProcessList.add(slowRefreshProcess);
 
         WorldExplosion exp = new WorldExplosion(this).machineExplosion();
-        slowProcessList.add(voltageWatchdog.set(electricalLoad).set(exp));
+        slowProcessList.add(voltageWatchdog.setVoltageState(electricalLoad).set(exp));
     }
 
     @Override
@@ -125,13 +125,13 @@ public class ElectricalFurnaceElement extends TransparentNodeElement {
     @NotNull
     @Override
     public String multiMeterString(@NotNull Direction side) {
-        return Utils.plotUIP(electricalLoad.getU(), electricalLoad.getI());
+        return Utils.plotUIP(electricalLoad.getVoltage(), electricalLoad.getCurrent());
     }
 
     @NotNull
     @Override
     public String thermoMeterString(@NotNull Direction side) {
-        return Utils.plotCelsius("T:", thermalLoad.Tc);
+        return Utils.plotCelsius("T:", thermalLoad.temperatureCelsius);
     }
 
     @Override
@@ -170,12 +170,12 @@ public class ElectricalFurnaceElement extends TransparentNodeElement {
         heatingCorpResistor.setState(powerOn);
         itemStack = inventory.getStackInSlot(heatingCorpSlotId);
         if (itemStack == null) {
-            thermalRegulator.setRmin(MnaConst.highImpedance);
-            voltageWatchdog.setUNominal(100000);
+            thermalRegulator.setMinimumResistance(MnaConst.highImpedance);
+            voltageWatchdog.setNominalVoltage(100000);
         } else {
             HeatingCorpElement element = ((GenericItemUsingDamage<HeatingCorpElement>) itemStack.getItem()).getDescriptor(itemStack);
             element.applyTo(thermalRegulator);
-            voltageWatchdog.setUNominal(element.electricalNominalU);
+            voltageWatchdog.setNominalVoltage(element.electricalNominalU);
         }
 
         itemStack = inventory.getStackInSlot(thermalRegulatorSlotId);
@@ -195,10 +195,10 @@ public class ElectricalFurnaceElement extends TransparentNodeElement {
     public void networkSerialize(java.io.DataOutputStream stream) {
         super.networkSerialize(stream);
         try {
-            stream.writeByte((powerOn ? 1 : 0) + (heatingCorpResistor.getP() > 5 ? 2 : 0));
+            stream.writeByte((powerOn ? 1 : 0) + (heatingCorpResistor.getPower() > 5 ? 2 : 0));
 
             stream.writeShort((int) thermalRegulator.getTarget());
-            stream.writeShort((int) thermalLoad.Tc);
+            stream.writeShort((int) thermalLoad.temperatureCelsius);
 
             ItemStack stack;
             if ((stack = inventory.getStackInSlot(inSlotId)) == null) {
@@ -209,8 +209,8 @@ public class ElectricalFurnaceElement extends TransparentNodeElement {
                 stream.writeShort(stack.getItemDamage());
             }
 
-            stream.writeShort((int) heatingCorpResistor.getP());
-            stream.writeFloat((float) electricalLoad.getU());
+            stream.writeShort((int) heatingCorpResistor.getPower());
+            stream.writeFloat((float) electricalLoad.getVoltage());
             stream.writeFloat((float) slowRefreshProcess.processState());
             stream.writeFloat((float) slowRefreshProcess.processStatePerSecond());
 
@@ -271,7 +271,7 @@ public class ElectricalFurnaceElement extends TransparentNodeElement {
     @Override
     public Map<String, String> getWaila() {
         Map<String, String> info = new HashMap<String, String>();
-        info.put(I18N.tr("Temperature"), Utils.plotCelsius("", thermalLoad.Tc));
+        info.put(I18N.tr("Temperature"), Utils.plotCelsius("", thermalLoad.temperatureCelsius));
         if (inventory.getStackInSlot(heatingCorpSlotId) != null) {
             info.put(I18N.tr("Heating element"), inventory.getStackInSlot(heatingCorpSlotId).getDisplayName());
         } else {

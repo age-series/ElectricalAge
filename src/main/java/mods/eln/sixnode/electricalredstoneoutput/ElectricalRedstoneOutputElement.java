@@ -40,7 +40,7 @@ public class ElectricalRedstoneOutputElement extends SixNodeElement {
     }
 
     public boolean refreshRedstone() {
-        int newValue = (int) (inputGate.getU() * 15.0 / Eln.SVU + 0.5);
+        int newValue = (int) (inputGate.getVoltage() * 15.0 / Eln.SVU + 0.5);
         if (newValue != redstoneValue) {
             redstoneValue = newValue;
             notifyNeighbor();
@@ -94,7 +94,7 @@ public class ElectricalRedstoneOutputElement extends SixNodeElement {
 
     @Override
     public String multiMeterString() {
-        return Utils.plotVolt("U:", inputGate.getU()) + Utils.plotAmpere("I:", inputGate.getCurrent());
+        return Utils.plotVolt("U:", inputGate.getVoltage()) + Utils.plotAmpere("I:", inputGate.getCurrent());
     }
 
     @NotNull
@@ -102,7 +102,7 @@ public class ElectricalRedstoneOutputElement extends SixNodeElement {
     public Map<String, String> getWaila() {
         Map<String, String> info = new HashMap<String, String>();
         info.put(I18N.tr("Redstone value"), Utils.plotValue(redstoneValue));
-        info.put(I18N.tr("Input voltage"), Utils.plotVolt("", inputGate.getU()));
+        info.put(I18N.tr("Input voltage"), Utils.plotVolt("", inputGate.getVoltage()));
         return info;
     }
 

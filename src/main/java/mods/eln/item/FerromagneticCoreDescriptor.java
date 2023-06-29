@@ -26,7 +26,7 @@ public class FerromagneticCoreDescriptor extends GenericItemUsingDamageDescripto
     }
 
     public void applyTo(ElectricalLoad load) {
-        load.setRs(load.getRs() * cableMultiplicator);
+        load.setSerialResistance(load.getSerialResistance() * cableMultiplicator);
     }
 
     @Override

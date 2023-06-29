@@ -12,29 +12,29 @@ public class ResistorProcess implements IProcess {
 
     ResistorElement element;
     ResistorDescriptor descriptor;
-    Resistor r;
+    Resistor resistor;
     ThermalLoad thermal;
 
-    private double lastR = -1;
+    private double lastResistance = -1;
 
-    public ResistorProcess(ResistorElement element, Resistor r, ThermalLoad thermal, ResistorDescriptor descriptor) {
+    public ResistorProcess(ResistorElement element, Resistor resistor, ThermalLoad thermal, ResistorDescriptor descriptor) {
         this.element = element;
         this.descriptor = descriptor;
-        this.r = r;
+        this.resistor = resistor;
         this.thermal = thermal;
     }
 
     @Override
     public void process(double time) {
-        double newR = Math.max(
+        double newResistance = Math.max(
             MnaConst.noImpedance,
-            element.nominalRs * (1 + descriptor.tempCoef * thermal.Tc));
+            element.nominalRs * (1 + descriptor.tempCoef * thermal.temperatureCelsius));
         if (element.control != null) {
-            newR *= (element.control.getNormalized() + 0.01) / 1.01;
+            newResistance *= (element.control.getNormalized() + 0.01) / 1.01;
         }
-        if (newR > lastR * 1.01 || newR < lastR * 0.99) {
-            r.setR(newR);
-            lastR = newR;
+        if (newResistance > lastResistance * 1.01 || newResistance < lastResistance * 0.99) {
+            resistor.setResistance(newResistance);
+            lastResistance = newResistance;
             element.needPublish();
         }
 

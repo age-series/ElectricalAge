@@ -11,7 +11,7 @@ class NbtBatterySlowProcess(
     thermalLoad: ThermalLoad
 ) : BatterySlowProcess(batteryProcess, thermalLoad) {
 
-    var explosionRadius = 2f
+    private var explosionRadius = 2f
 
     override fun destroy() {
         node.physicalSelfDestruction(explosionRadius)

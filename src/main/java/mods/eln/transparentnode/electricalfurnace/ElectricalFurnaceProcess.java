@@ -55,10 +55,10 @@ public class ElectricalFurnaceProcess implements IProcess {
         if (!smeltInProcess) {
             furnace.smeltResistor.highImpedance();
         } else {
-            double T = Math.abs(furnace.thermalLoad.Tc) + 1;
+            double T = Math.abs(furnace.thermalLoad.temperatureCelsius) + 1;
             double P = furnace.descriptor.PfT.getValue(T);
 
-            furnace.smeltResistor.setR(T / P);
+            furnace.smeltResistor.setThermalResistance(T / P);
         }
 
         if (furnace.autoShutDown) {
@@ -74,7 +74,7 @@ public class ElectricalFurnaceProcess implements IProcess {
     }
 
     double getPower() {
-        return furnace.smeltResistor.getP();
+        return furnace.smeltResistor.getPower();
     }
 
     public void smeltInit() {

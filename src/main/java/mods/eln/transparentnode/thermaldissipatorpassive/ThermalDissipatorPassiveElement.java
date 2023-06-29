@@ -40,8 +40,8 @@ public class ThermalDissipatorPassiveElement extends TransparentNodeElement {
         slowProcessList.add(thermalWatchdog);
 
         thermalWatchdog
-            .set(thermalLoad)
-            .setTMax(this.descriptor.warmLimit)
+            .setThermalLoad(thermalLoad)
+            .setMaximumTemperature(this.descriptor.warmLimit)
             .set(new WorldExplosion(this).machineExplosion());
     }
 
@@ -81,7 +81,7 @@ public class ThermalDissipatorPassiveElement extends TransparentNodeElement {
     @Override
     public String thermoMeterString(@NotNull Direction side) {
 
-        return Utils.plotCelsius("T : ", thermalLoad.Tc) + Utils.plotPower("P : ", thermalLoad.getPower());
+        return Utils.plotCelsius("T : ", thermalLoad.temperatureCelsius) + Utils.plotPower("P : ", thermalLoad.getPower());
     }
 
     @Override
@@ -96,13 +96,13 @@ public class ThermalDissipatorPassiveElement extends TransparentNodeElement {
         ItemStack stack = player.getCurrentEquippedItem();
         if (stack == null) return false;
         if (stack.getItem() == Items.water_bucket) {
-            thermalLoad.Tc *= 0.5;
+            thermalLoad.temperatureCelsius *= 0.5;
 
             player.inventory.setInventorySlotContents(player.inventory.currentItem, new ItemStack(Items.bucket));
             return true;
         }
         if (stack.getItem() == Item.getItemFromBlock(Blocks.ice)) {
-            thermalLoad.Tc *= 0.2;
+            thermalLoad.temperatureCelsius *= 0.2;
             if (stack.stackSize != 0)
                 stack.stackSize--;
             else
@@ -116,7 +116,7 @@ public class ThermalDissipatorPassiveElement extends TransparentNodeElement {
     @Override
     public Map<String, String> getWaila() {
         Map<String, String> info = new HashMap<String, String>();
-        info.put(I18N.tr("Temperature"), Utils.plotCelsius("", thermalLoad.Tc));
+        info.put(I18N.tr("Temperature"), Utils.plotCelsius("", thermalLoad.temperatureCelsius));
         if (Eln.wailaEasyMode) {
             info.put(I18N.tr("Thermal power"), Utils.plotPower("", thermalLoad.getPower()));
         }

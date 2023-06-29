@@ -94,7 +94,7 @@ public class ElectricalMachineDescriptor extends TransparentNodeDescriptor imple
     }
 
     public void applyTo(Resistor resistor) {
-        resistor.setR(resistorR);
+        resistor.setResistance(resistorR);
     }
 
     public void applyTo(ElectricalStackMachineProcess machine) {

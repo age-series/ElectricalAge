@@ -77,7 +77,7 @@ class GridLink : INBTTReady {
         assert(ab == null)
         ab = ElectricalConnection(aLoad, bLoad)
         Eln.simulator.addElectricalComponent(ab)
-        ab!!.r = rs
+        ab!!.resistance = rs
 
         // Add link to link lists.
         a.gridLinkList.add(this)

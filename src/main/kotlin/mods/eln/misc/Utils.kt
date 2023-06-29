@@ -231,7 +231,7 @@ object Utils {
     fun plotCelsius(header: String, value: Double): String {
         var header = header
         var value = value
-        value += PhysicalConstant.Tref - PhysicalConstant.TCelsius
+        value += PhysicalConstant.ambientTemperatureKelvin - PhysicalConstant.zeroCelsiusInKelvin
         if (header != "") header += " "
         return header + plotValue(value, "\u00B0C ")
     }

@@ -7,10 +7,10 @@ public class RegulatorThermalLoadToElectricalResistor extends RegulatorProcess {
     ThermalLoad thermalLoad;
     Resistor electricalResistor;
 
-    double Rmin;
+    double minimumResistance;
 
-    public void setRmin(double Rmin) {
-        this.Rmin = Rmin;
+    public void setMinimumResistance(double minimumResistance) {
+        this.minimumResistance = minimumResistance;
     }
 
     public RegulatorThermalLoadToElectricalResistor(String name, ThermalLoad thermalLoad, Resistor electricalResistor) {
@@ -21,7 +21,7 @@ public class RegulatorThermalLoadToElectricalResistor extends RegulatorProcess {
 
     @Override
     protected double getHit() {
-        return thermalLoad.Tc;
+        return thermalLoad.temperatureCelsius;
     }
 
     @Override
@@ -29,9 +29,9 @@ public class RegulatorThermalLoadToElectricalResistor extends RegulatorProcess {
         if (cmd <= 0.001) {
             electricalResistor.highImpedance();
         } else if (cmd >= 1.0) {
-            electricalResistor.setR(Rmin);
+            electricalResistor.setResistance(minimumResistance);
         } else {
-            electricalResistor.setR(Rmin / cmd);
+            electricalResistor.setResistance(minimumResistance / cmd);
         }
     }
 }

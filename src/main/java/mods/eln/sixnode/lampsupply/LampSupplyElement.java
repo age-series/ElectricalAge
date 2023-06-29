@@ -119,7 +119,7 @@ public class LampSupplyElement extends SixNodeElement implements IConfigurable {
 
         slowProcessList.add(voltageWatchdog);
         voltageWatchdog
-            .set(powerLoad)
+            .setVoltageState(powerLoad)
             .set(new WorldExplosion(this).cableExplosion());
         channelStates = new boolean[this.descriptor.channelCount];
         aggregators = new IWirelessSignalAggregator[this.descriptor.channelCount][3];
@@ -142,9 +142,9 @@ public class LampSupplyElement extends SixNodeElement implements IConfigurable {
         @Override
         public void process(double time) {
             if (RpStack != 0) {
-                loadResistor.setR(1 / RpStack);
+                loadResistor.setResistance(1 / RpStack);
             } else {
-                loadResistor.setR(MnaConst.highImpedance);
+                loadResistor.setResistance(MnaConst.highImpedance);
             }
             RpStack = 0;
 
@@ -224,7 +224,7 @@ public class LampSupplyElement extends SixNodeElement implements IConfigurable {
 
     @Override
     public String multiMeterString() {
-        return Utils.plotUIP(powerLoad.getU(), powerLoad.getCurrent());
+        return Utils.plotUIP(powerLoad.getVoltage(), powerLoad.getCurrent());
     }
 
     @NotNull
@@ -238,9 +238,9 @@ public class LampSupplyElement extends SixNodeElement implements IConfigurable {
                     (channelStates[i] ? "\u00A7aON" : "\u00A7cOFF"));
             }
         }
-        info.put(I18N.tr("Total power"), Utils.plotPower("", powerLoad.getU() * powerLoad.getI()));
+        info.put(I18N.tr("Total power"), Utils.plotPower("", powerLoad.getVoltage() * powerLoad.getCurrent()));
         if (Eln.wailaEasyMode) {
-            info.put(I18N.tr("Voltage"), Utils.plotVolt("", powerLoad.getU()));
+            info.put(I18N.tr("Voltage"), Utils.plotVolt("", powerLoad.getVoltage()));
         }
         return info;
     }
@@ -341,9 +341,9 @@ public class LampSupplyElement extends SixNodeElement implements IConfigurable {
         if (cableStack != null) {
             ElectricalCableDescriptor desc = (ElectricalCableDescriptor) ElectricalCableDescriptor.getDescriptor(cableStack);
             desc.applyTo(powerLoad);
-            voltageWatchdog.setUNominal(desc.electricalNominalVoltage);
+            voltageWatchdog.setNominalVoltage(desc.electricalNominalVoltage);
         } else {
-            voltageWatchdog.setUNominal(10000);
+            voltageWatchdog.setNominalVoltage(10000);
             powerLoad.highImpedance();
         }
     }

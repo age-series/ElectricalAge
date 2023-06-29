@@ -17,7 +17,7 @@ public class ElectricalBreakerCutProcess implements IProcess, INBTTReady {
 
     @Override
     public void process(double time) {
-        double U = breaker.aLoad.getU();
+        double U = breaker.aLoad.getVoltage();
         double I = breaker.aLoad.getCurrent();
         double Tmax = 0;
         ElectricalCableDescriptor cable = breaker.cableDescriptor;

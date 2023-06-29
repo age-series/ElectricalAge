@@ -61,10 +61,10 @@ public class PowerCapacitorElement extends TransparentNodeElement {
         public void process(double time) {
             if (eLeft <= 0) {
                 eLeft = 0;
-                dischargeResistor.setR(stdDischargeResistor);
+                dischargeResistor.setResistance(stdDischargeResistor);
             } else {
-                eLeft -= dischargeResistor.getP() * time;
-                dischargeResistor.setR(eLegaliseResistor);
+                eLeft -= dischargeResistor.getPower() * time;
+                dischargeResistor.setResistance(eLegaliseResistor);
             }
         }
     }
@@ -125,23 +125,23 @@ public class PowerCapacitorElement extends TransparentNodeElement {
     boolean fromNbt = false;
 
     public void setupPhysical() {
-        double eOld = capacitor.getE();
-        capacitor.setC(descriptor.getCValue(inventory));
-        stdDischargeResistor = descriptor.dischargeTao / capacitor.getC();
+        double eOld = capacitor.getEnergy();
+        capacitor.setCoulombs(descriptor.getCValue(inventory));
+        stdDischargeResistor = descriptor.dischargeTao / capacitor.getCoulombs();
 
         watchdog.setUNominal(descriptor.getUNominalValue(inventory));
         punkProcess.eLegaliseResistor = Math.pow(descriptor.getUNominalValue(inventory), 2) / 400;
 
         if (fromNbt) {
-            dischargeResistor.setR(stdDischargeResistor);
+            dischargeResistor.setResistance(stdDischargeResistor);
             fromNbt = false;
         } else {
-            double deltaE = capacitor.getE() - eOld;
+            double deltaE = capacitor.getEnergy() - eOld;
             punkProcess.eLeft += deltaE;
             if (deltaE < 0) {
-                dischargeResistor.setR(stdDischargeResistor);
+                dischargeResistor.setResistance(stdDischargeResistor);
             } else {
-                dischargeResistor.setR(punkProcess.eLegaliseResistor);
+                dischargeResistor.setResistance(punkProcess.eLegaliseResistor);
             }
         }
     }

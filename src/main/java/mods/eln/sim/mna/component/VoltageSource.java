@@ -12,8 +12,8 @@ public class VoltageSource extends Bipole implements ISubSystemProcessI, INBTTRe
 
     String name;
 
-    double u = 0;
-    private CurrentState currentState = new CurrentState();
+    double voltage = 0;
+    private final CurrentState currentState = new CurrentState();
 
     public VoltageSource(String name) {
         this.name = name;
@@ -24,13 +24,13 @@ public class VoltageSource extends Bipole implements ISubSystemProcessI, INBTTRe
         this.name = name;
     }
 
-    public VoltageSource setU(double u) {
-        this.u = u;
+    public VoltageSource setVoltage(double voltage) {
+        this.voltage = voltage;
         return this;
     }
 
-    public double getU() {
-        return u;
+    public double getVoltage() {
+        return voltage;
     }
 
     @Override
@@ -41,14 +41,14 @@ public class VoltageSource extends Bipole implements ISubSystemProcessI, INBTTRe
     }
 
     @Override
-    public void addedTo(SubSystem s) {
-        super.addedTo(s);
+    public void addToSubsystem(SubSystem s) {
+        super.addToSubsystem(s);
         s.addState(getCurrentState());
         s.addProcess(this);
     }
 
     @Override
-    public void applyTo(SubSystem s) {
+    public void applyToSubsystem(SubSystem s) {
         s.addToA(aPin, getCurrentState(), 1.0);
         s.addToA(bPin, getCurrentState(), -1.0);
         s.addToA(getCurrentState(), aPin, 1.0);
@@ -57,11 +57,7 @@ public class VoltageSource extends Bipole implements ISubSystemProcessI, INBTTRe
 
     @Override
     public void simProcessI(SubSystem s) {
-        s.addToI(getCurrentState(), u);
-    }
-
-    public double getI() {
-        return -getCurrentState().state;
+        s.addToI(getCurrentState(), voltage);
     }
 
     @Override
@@ -76,18 +72,18 @@ public class VoltageSource extends Bipole implements ISubSystemProcessI, INBTTRe
     @Override
     public void readFromNBT(NBTTagCompound nbt, String str) {
         str += name;
-        setU(nbt.getDouble(str + "U"));
+        setVoltage(nbt.getDouble(str + "U"));
         currentState.state = (nbt.getDouble(str + "Istate"));
     }
 
     @Override
     public void writeToNBT(NBTTagCompound nbt, String str) {
         str += name;
-        nbt.setDouble(str + "U", u);
+        nbt.setDouble(str + "U", voltage);
         nbt.setDouble(str + "Istate", currentState.state);
     }
 
-    public double getP() {
-        return getU() * getI();
+    public double getPower() {
+        return getVoltage() * getCurrent();
     }
 }

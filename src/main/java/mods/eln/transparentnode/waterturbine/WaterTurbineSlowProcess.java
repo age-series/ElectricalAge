@@ -36,7 +36,7 @@ public class WaterTurbineSlowProcess implements IProcess, INBTTReady {
                 filter.step((float) time);
             }
 
-            turbine.powerSource.setP(filter.get());
+            turbine.powerSource.setPower(filter.get());
         }
     }
 

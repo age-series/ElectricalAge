@@ -10,11 +10,9 @@ public abstract class Component {
 
     public IAbstractor abstractedBy;
 
-    public Component() {
-        //System.out.println("new " + this);
-    }
+    public Component() {}
 
-    public void addedTo(SubSystem s) {
+    public void addToSubsystem(SubSystem s) {
         this.subSystem = s;
     }
 
@@ -23,7 +21,7 @@ public abstract class Component {
         return subSystem;
     }
 
-    public abstract void applyTo(SubSystem s);
+    public abstract void applyToSubsystem(SubSystem s);
 
     public abstract State[] getConnectedStates();
 
@@ -54,11 +52,9 @@ public abstract class Component {
         return abstractedBy != null;
     }
 
-    public void onAddToRootSystem() {
-    }
+    public void onAddToRootSystem() {}
 
-    public void onRemovefromRootSystem() {
-    }
+    public void onRemoveFromRootSystem() {}
 
     public String toString() {
         return "(" + this.getClass().getSimpleName() + ")";

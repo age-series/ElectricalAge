@@ -136,15 +136,15 @@ class PowerInductorSixElement(SixNode: SixNode, side: Direction, descriptor: Six
     }
 
     override fun multiMeterString(): String {
-        return Utils.plotVolt("U", abs(inductor.u)) + Utils.plotAmpere("I", inductor.current)
+        return Utils.plotVolt("U", abs(inductor.voltage)) + Utils.plotAmpere("I", inductor.current)
     }
 
     override fun getWaila(): Map<String, String> {
         val info: MutableMap<String, String> = HashMap()
-        info[I18N.tr("Inductance")] = Utils.plotValue(inductor.l, "H")
-        info[I18N.tr("Charge")] = Utils.plotEnergy("", inductor.e)
+        info[I18N.tr("Inductance")] = Utils.plotValue(inductor.inductance, "H")
+        info[I18N.tr("Charge")] = Utils.plotEnergy("", inductor.energy)
         if (Eln.wailaEasyMode) {
-            info[I18N.tr("Voltage drop")] = Utils.plotVolt("", abs(inductor.u))
+            info[I18N.tr("Voltage drop")] = Utils.plotVolt("", abs(inductor.voltage))
             info[I18N.tr("Current")] = Utils.plotAmpere("", abs(inductor.current))
         }
         return info
@@ -165,9 +165,9 @@ class PowerInductorSixElement(SixNode: SixNode, side: Direction, descriptor: Six
 
     fun setupPhysical() {
         val rs = descriptor.getRsValue(inventory)
-        inductor.l = descriptor.getlValue(inventory)
-        positiveLoad.rs = rs
-        negativeLoad.rs = rs
+        inductor.inductance = descriptor.getlValue(inventory)
+        positiveLoad.serialResistance = rs
+        negativeLoad.serialResistance = rs
         if (fromNbt) {
             fromNbt = false
         } else {

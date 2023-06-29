@@ -13,6 +13,7 @@ open class BatteryProcess(
     private var thermalLoad: ThermalLoad
 ) : IProcess {
 
+    // TODO: Change these to charge, and change the charge getter/setter to reflect
     @JvmField
     var Q = 0.0
     var QNominal = 0.0
@@ -31,7 +32,7 @@ open class BatteryProcess(
             Q = lastQ
         }
         val voltage = computeVoltage()
-        voltageSource.u = voltage
+        voltageSource.voltage = voltage
         if (wasteQ > 0) {
             thermalLoad.movePowerTo(Math.abs(voltageSource.current * voltage))
         }
@@ -85,5 +86,5 @@ open class BatteryProcess(
     val u: Double
         get() = computeVoltage()
     val dischargeCurrent: Double
-        get() = voltageSource.i
+        get() = voltageSource.current
 }

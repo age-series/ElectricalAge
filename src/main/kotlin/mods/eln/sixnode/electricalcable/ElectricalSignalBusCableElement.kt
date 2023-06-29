@@ -35,7 +35,7 @@ class ElectricalSignalBusCableElement(sixNode: SixNode?, side: Direction?, descr
         val arry = arrayOfNulls<String>(coloredElectricalLoads.size / 4)
         var t = ""
         for (i in coloredElectricalLoads.indices) {
-            t += wool_to_chat[15 - i].toString() + plotVolt("", coloredElectricalLoads[i].u).trim { it <= ' ' } + "\u00A7r, "
+            t += wool_to_chat[15 - i].toString() + plotVolt("", coloredElectricalLoads[i].voltage).trim { it <= ' ' } + "\u00A7r, "
             if ((i + 1) % 4 == 0) {
                 arry[(i - 3) / 4] = t.substring(0, t.length - 2)
                 t = ""
@@ -50,7 +50,7 @@ class ElectricalSignalBusCableElement(sixNode: SixNode?, side: Direction?, descr
     override fun multiMeterString(): String {
         var t = ""
         for (i in 0..15) {
-            t += wool_to_chat[15 - i].toString() + plotVolt("", coloredElectricalLoads[i].u).trim { it <= ' ' } + " "
+            t += wool_to_chat[15 - i].toString() + plotVolt("", coloredElectricalLoads[i].voltage).trim { it <= ' ' } + " "
         }
         return t
     }

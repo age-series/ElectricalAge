@@ -96,8 +96,8 @@ public class WaterTurbineElement extends TransparentNodeElement {
         setPhysicalValue();
         waterCoord = descriptor.getWaterCoordonate(node.coordinate.world());
         waterCoord.applyTransformation(front, node.coordinate);
-        powerSource.setUmax(descriptor.maxVoltage);
-        powerSource.setImax(descriptor.nominalPower * 5 / descriptor.maxVoltage);
+        powerSource.setMaximumVoltage(descriptor.maxVoltage);
+        powerSource.setMaximumCurrent(descriptor.nominalPower * 5 / descriptor.maxVoltage);
         connect();
     }
 
@@ -134,7 +134,7 @@ public class WaterTurbineElement extends TransparentNodeElement {
 
         super.networkSerialize(stream);
         try {
-            stream.writeFloat((float) (powerSource.getP() / descriptor.nominalPower));
+            stream.writeFloat((float) (powerSource.getPower() / descriptor.nominalPower));
         } catch (IOException e) {
 
             e.printStackTrace();
@@ -154,9 +154,9 @@ public class WaterTurbineElement extends TransparentNodeElement {
     public Map<String, String> getWaila() {
         Map<String, String> wailaList = new HashMap<String, String>();
         wailaList.put(I18N.tr("Generating"), slowProcess.getWaterFactor() > 0 ? I18N.tr("Yes") : I18N.tr("No"));
-        wailaList.put(I18N.tr("Produced power"), Utils.plotPower("", powerSource.getEffectiveP()));
+        wailaList.put(I18N.tr("Produced power"), Utils.plotPower("", powerSource.getEffectivePower()));
         if (Eln.wailaEasyMode) {
-            wailaList.put("Voltage", Utils.plotVolt("", powerSource.getU()));
+            wailaList.put("Voltage", Utils.plotVolt("", powerSource.getVoltage()));
         }
         return wailaList;
     }

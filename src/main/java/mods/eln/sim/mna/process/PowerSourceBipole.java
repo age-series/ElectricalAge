@@ -10,12 +10,14 @@ import net.minecraft.nbt.NBTTagCompound;
 
 public class PowerSourceBipole implements IRootSystemPreStepProcess, INBTTReady {
 
-    private VoltageSource aSrc;
-    private VoltageSource bSrc;
-    private State aPin;
-    private State bPin;
+    private final VoltageSource aSrc;
+    private final VoltageSource bSrc;
+    private final State aPin;
+    private final State bPin;
 
-    double P, Umax, Imax;
+    double power;
+    double maximumVoltage;
+    double maximumCurrent;
 
     public PowerSourceBipole(State aPin, State bPin, VoltageSource aSrc, VoltageSource bSrc) {
         this.aSrc = aSrc;
@@ -24,66 +26,66 @@ public class PowerSourceBipole implements IRootSystemPreStepProcess, INBTTReady 
         this.bPin = bPin;
     }
 
-    public void setP(double P) {
-        this.P = P;
+    public void setPower(double P) {
+        this.power = P;
     }
 
-    void setMax(double Umax, double Imax) {
-        this.Umax = Umax;
-        this.Imax = Imax;
+    void setMaximums(double Umax, double Imax) {
+        this.maximumVoltage = Umax;
+        this.maximumCurrent = Imax;
     }
 
-    public void setImax(double imax) {
-        Imax = imax;
+    public void setMaximumCurrent(double maximumCurrent) {
+        this.maximumCurrent = maximumCurrent;
     }
 
-    public void setUmax(double umax) {
-        Umax = umax;
+    public void setMaximumVoltage(double maximumVoltage) {
+        this.maximumVoltage = maximumVoltage;
     }
 
-    public double getP() {
-        return P;
+    public double getPower() {
+        return power;
     }
 
     @Override
     public void rootSystemPreStepProcess() {
-        SubSystem.Th a = aPin.getSubSystem().getTh(aPin, aSrc);
-        SubSystem.Th b = bPin.getSubSystem().getTh(bPin, bSrc);
-        if (Double.isNaN(a.U)) {
-            a.U = 0.0;
-            a.R = MnaConst.highImpedance;
+        SubSystem.Thevenin a = aPin.getSubSystem().getTh(aPin, aSrc);
+        SubSystem.Thevenin b = bPin.getSubSystem().getTh(bPin, bSrc);
+        if (Double.isNaN(a.voltage)) {
+            a.voltage = 0.0;
+            a.resistance = MnaConst.highImpedance;
         }
-        if (Double.isNaN(b.U)) {
-            b.U = 0.0;
-            b.R = MnaConst.highImpedance;
+        if (Double.isNaN(b.voltage)) {
+            b.voltage = 0.0;
+            b.resistance = MnaConst.highImpedance;
         }
-        double Uth = a.U - b.U;
-        double Rth = a.R + b.R;
-        if (Uth >= Umax) {
-            aSrc.setU(a.U);
-            bSrc.setU(b.U);
+        double theveninVoltage = a.voltage - b.voltage;
+        double theveninResistance = a.resistance + b.resistance;
+        if (theveninVoltage >= maximumVoltage) {
+            aSrc.setVoltage(a.voltage);
+            bSrc.setVoltage(b.voltage);
         } else {
-            double U = (Math.sqrt(Uth * Uth + 4 * P * Rth) + Uth) / 2;
-            U = Math.min(Math.min(U, Umax), Uth + Rth * Imax);
-            if (Double.isNaN(U)) U = 0;
+            double voltage = (Math.sqrt(theveninVoltage * theveninVoltage + 4 * power * theveninResistance) + theveninVoltage) / 2;
+            voltage = Math.min(Math.min(voltage, maximumVoltage), theveninVoltage + theveninResistance * maximumCurrent);
+            if (Double.isNaN(voltage)) voltage = 0;
 
-            double I = (Uth - U) / Rth;
-            aSrc.setU(a.U - I * a.R);
-            bSrc.setU(b.U + I * b.R);
+            double I = (theveninVoltage - voltage) / theveninResistance;
+            aSrc.setVoltage(a.voltage - I * a.resistance);
+            bSrc.setVoltage(b.voltage + I * b.resistance);
         }
     }
 
     @Override
     public void readFromNBT(NBTTagCompound nbt, String str) {
-        setP(nbt.getDouble(str + "P"));
-        setUmax(nbt.getDouble(str + "Umax"));
-        setImax(nbt.getDouble(str + "Imax"));
+        setPower(nbt.getDouble(str + "P"));
+        setMaximumVoltage(nbt.getDouble(str + "Umax"));
+        setMaximumCurrent(nbt.getDouble(str + "Imax"));
     }
 
     @Override
     public void writeToNBT(NBTTagCompound nbt, String str) {
-        nbt.setDouble(str + "P", getP());
-        nbt.setDouble(str + "Umax", Umax);
-        nbt.setDouble(str + "Imax", Imax);
+        nbt.setDouble(str + "P", getPower());
+        nbt.setDouble(str + "Umax", maximumVoltage);
+        nbt.setDouble(str + "Imax", maximumCurrent);
     }
 }

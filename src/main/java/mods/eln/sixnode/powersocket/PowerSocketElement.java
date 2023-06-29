@@ -81,7 +81,7 @@ public class PowerSocketElement extends SixNodeElement implements IConfigurable 
 
         slowProcessList.add(voltageWatchdog);
         voltageWatchdog
-            .set(outputLoad)
+            .setVoltageState(outputLoad)
             .set(new WorldExplosion(this).cableExplosion());
     }
 
@@ -136,7 +136,7 @@ public class PowerSocketElement extends SixNodeElement implements IConfigurable 
 
     @Override
     public String multiMeterString() {
-        return Utils.plotUIP(outputLoad.getU(), outputLoad.getCurrent());
+        return Utils.plotUIP(outputLoad.getVoltage(), outputLoad.getCurrent());
     }
 
     @NotNull
@@ -183,9 +183,9 @@ public class PowerSocketElement extends SixNodeElement implements IConfigurable 
         if (cableStack != null) {
             ElectricalCableDescriptor desc = (ElectricalCableDescriptor) ElectricalCableDescriptor.getDescriptor(cableStack);
             desc.applyTo(outputLoad);
-            voltageWatchdog.setUNominal(desc.electricalNominalVoltage);
+            voltageWatchdog.setNominalVoltage(desc.electricalNominalVoltage);
         } else {
-            voltageWatchdog.setUNominal(10000);
+            voltageWatchdog.setNominalVoltage(10000);
             outputLoad.highImpedance();
         }
     }

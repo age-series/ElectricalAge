@@ -11,7 +11,7 @@ public class RegulatorFurnaceProcess extends RegulatorProcess {
 
     @Override
     protected double getHit() {
-        return furnace.load.Tc;
+        return furnace.load.temperatureCelsius;
     }
 
     @Override

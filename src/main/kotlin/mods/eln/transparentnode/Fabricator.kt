@@ -84,7 +84,7 @@ class FabricatorElement(node: TransparentNode, descriptor: TransparentNodeDescri
         return if (side == Direction.ZN && lrdu == LRDU.Down) NodeBase.maskElectricalPower else 0
     }
 
-    override fun multiMeterString(side: Direction) = Utils.plotUIP(resistorLoad.u, resistorLoad.i, resistorLoad.r)
+    override fun multiMeterString(side: Direction) = Utils.plotUIP(resistorLoad.voltage, resistorLoad.current, resistorLoad.resistance)
 
     override fun thermoMeterString(side: Direction): String = ""
 
@@ -95,8 +95,8 @@ class FabricatorElement(node: TransparentNode, descriptor: TransparentNodeDescri
     override fun initialize() {
         electricalLoadList.add(electricalLoad)
         electricalComponentList.add(resistorLoad)
-        electricalLoad.rs = Eln.getSmallRs()
-        resistorLoad.r = MnaConst.highImpedance
+        electricalLoad.serialResistance = Eln.getSmallRs()
+        resistorLoad.resistance = MnaConst.highImpedance
         slowProcessList.add(craftingProcess)
         connect()
     }
@@ -114,7 +114,7 @@ class FabricatorElement(node: TransparentNode, descriptor: TransparentNodeDescri
     override fun networkSerialize(stream: DataOutputStream) {
         super.networkSerialize(stream)
         stream.writeInt(operation?.nid ?: -1)
-        stream.writeBoolean(resistorLoad.p > 1.0)
+        stream.writeBoolean(resistorLoad.power > 1.0)
     }
 
     override fun networkUnserialize(stream: DataInputStream): Byte {
@@ -212,15 +212,15 @@ class FabricatorProcess(val element: FabricatorElement): IProcess {
         )
 
         if (canOutput && hasInputs && operation != null) {
-            val power = time * element.resistorLoad.p
+            val power = time * element.resistorLoad.power
             powerConsumed += power
             if (powerConsumed > powerRequired * 2) {
-                element.resistorLoad.r = MnaConst.highImpedance
+                element.resistorLoad.resistance = MnaConst.highImpedance
             } else {
-                element.resistorLoad.r = 40.0 // This is 200 * 200 / 1000 (volts^2 / watts), prevents current spikes
+                element.resistorLoad.resistance = 40.0 // This is 200 * 200 / 1000 (volts^2 / watts), prevents current spikes
             }
         } else {
-            element.resistorLoad.r = MnaConst.highImpedance
+            element.resistorLoad.resistance = MnaConst.highImpedance
         }
 
         if (operation?.outputItem != null && powerRequired <= powerConsumed) {

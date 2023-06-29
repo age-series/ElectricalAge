@@ -1,9 +1,7 @@
 package mods.eln.sixnode.electricalsource;
 
 import mods.eln.Eln;
-import mods.eln.generic.GenericItemUsingDamageDescriptor;
 import mods.eln.i18n.I18N;
-import mods.eln.item.BrushDescriptor;
 import mods.eln.item.IConfigurable;
 import mods.eln.misc.Direction;
 import mods.eln.misc.LRDU;
@@ -17,8 +15,6 @@ import mods.eln.sim.ThermalLoad;
 import mods.eln.sim.mna.component.VoltageSource;
 import mods.eln.sim.nbt.NbtElectricalLoad;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -45,7 +41,7 @@ public class ElectricalSourceElement extends SixNodeElement implements IConfigur
     @Override
     public void readFromNBT(@NotNull NBTTagCompound nbt) {
         super.readFromNBT(nbt);
-        voltageSource.setU(nbt.getDouble("voltage"));
+        voltageSource.setVoltage(nbt.getDouble("voltage"));
     }
 
     public static boolean canBePlacedOnSide(Direction side, int type) {
@@ -55,7 +51,7 @@ public class ElectricalSourceElement extends SixNodeElement implements IConfigur
     @Override
     public void writeToNBT(NBTTagCompound nbt) {
         super.writeToNBT(nbt);
-        nbt.setDouble("voltage", voltageSource.getU());
+        nbt.setDouble("voltage", voltageSource.getVoltage());
     }
 
     @Override
@@ -80,17 +76,17 @@ public class ElectricalSourceElement extends SixNodeElement implements IConfigur
 
     @Override
     public String multiMeterString() {
-        return Utils.plotUIP(electricalLoad.getU(), voltageSource.getI());
+        return Utils.plotUIP(electricalLoad.getVoltage(), voltageSource.getCurrent());
     }
 
     @NotNull
     @Override
     public Map<String, String> getWaila() {
         Map<String, String> info = new HashMap<String, String>();
-        info.put(I18N.tr("Voltage"), Utils.plotVolt("", electricalLoad.getU()));
+        info.put(I18N.tr("Voltage"), Utils.plotVolt("", electricalLoad.getVoltage()));
         info.put(I18N.tr("Current"), Utils.plotAmpere("", electricalLoad.getCurrent()));
         if (Eln.wailaEasyMode) {
-            info.put(I18N.tr("Power"), Utils.plotPower("", electricalLoad.getU() * electricalLoad.getI()));
+            info.put(I18N.tr("Power"), Utils.plotPower("", electricalLoad.getVoltage() * electricalLoad.getCurrent()));
         }
         return info;
     }
@@ -105,7 +101,7 @@ public class ElectricalSourceElement extends SixNodeElement implements IConfigur
     public void networkSerialize(DataOutputStream stream) {
         super.networkSerialize(stream);
         try {
-            stream.writeFloat((float) voltageSource.getU());
+            stream.writeFloat((float) voltageSource.getVoltage());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -127,7 +123,7 @@ public class ElectricalSourceElement extends SixNodeElement implements IConfigur
         try {
             switch (stream.readByte()) {
                 case setVoltageId:
-                    voltageSource.setU(stream.readFloat());
+                    voltageSource.setVoltage(stream.readFloat());
                     needPublish();
                     break;
             }
@@ -144,13 +140,13 @@ public class ElectricalSourceElement extends SixNodeElement implements IConfigur
     @Override
     public void readConfigTool(NBTTagCompound compound, EntityPlayer invoker) {
         if(compound.hasKey("voltage")) {
-            voltageSource.setU(compound.getDouble("voltage"));
+            voltageSource.setVoltage(compound.getDouble("voltage"));
             needPublish();
         }
     }
 
     @Override
     public void writeConfigTool(NBTTagCompound compound, EntityPlayer invoker) {
-        compound.setDouble("voltage", voltageSource.getU());
+        compound.setDouble("voltage", voltageSource.getVoltage());
     }
 }

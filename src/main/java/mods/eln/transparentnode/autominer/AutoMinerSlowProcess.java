@@ -74,7 +74,7 @@ public class AutoMinerSlowProcess implements IProcess, INBTTReady {
 
         if (++blinkCounter >= 9) {
             blinkCounter = 0;
-            if ((miner.inPowerLoad.getU() / miner.descriptor.nominalVoltage - 0.5) * 3 > Math.random()) {
+            if ((miner.inPowerLoad.getVoltage() / miner.descriptor.nominalVoltage - 0.5) * 3 > Math.random()) {
                 miner.setPowerOk(true);
                 LightBlockEntity.addLight(miner.lightCoordinate, 12, 11);
             } else {
@@ -82,7 +82,7 @@ public class AutoMinerSlowProcess implements IProcess, INBTTReady {
             }
         }
 
-        energyCounter += miner.powerResistor.getP() * time;
+        energyCounter += miner.powerResistor.getPower() * time;
 
         if (job != jobType.none && job != jobType.full && job != jobType.chestFull && job != jobType.done) {
             if (energyCounter >= energyTarget || (job == jobType.ore && !isReadyToDrill()) || !miner.powerOk) {
@@ -159,14 +159,14 @@ public class AutoMinerSlowProcess implements IProcess, INBTTReady {
                 } else {
                     double p = drill.nominalPower;
                     if (silkTouch) p *= 3;
-                    miner.powerResistor.setR(Math.pow(miner.descriptor.nominalVoltage, 2.0) / p);
+                    miner.powerResistor.setResistance(Math.pow(miner.descriptor.nominalVoltage, 2.0) / p);
                 }
                 break;
             case pipeAdd:
-                miner.powerResistor.setR(miner.descriptor.pipeOperationRp);
+                miner.powerResistor.setResistance(miner.descriptor.pipeOperationRp);
                 break;
             case pipeRemove:
-                miner.powerResistor.setR(miner.descriptor.pipeOperationRp);
+                miner.powerResistor.setResistance(miner.descriptor.pipeOperationRp);
                 break;
         }
 

@@ -197,7 +197,7 @@ class MotorElement(node: TransparentNode, desc_: TransparentNodeDescriptor) :
         desc.thermalLoadInitializer.applyTo(thermalWatchdog)
         thermal.setAsSlow()
         thermalLoadList.add(thermal)
-        thermalWatchdog.set(thermal).set(WorldExplosion(this).machineExplosion())
+        thermalWatchdog.setThermalLoad(thermal).set(WorldExplosion(this).machineExplosion())
         slowProcessList.add(thermalWatchdog)
 
         heater = ElectricalLoadHeatThermalLoad(wireLoad, thermal)
@@ -211,26 +211,26 @@ class MotorElement(node: TransparentNode, desc_: TransparentNodeDescriptor) :
             // Most of this was copied from Generator.kt, and bears the same
             // admonition: I don't actually know how this works.
             val th = wireLoad.subSystem.getTh(wireLoad, powerSource)
-            if (th.U.isNaN()) {
-                th.U = noTorqueU
-                th.R = MnaConst.highImpedance
+            if (th.voltage.isNaN()) {
+                th.voltage = noTorqueU
+                th.resistance = MnaConst.highImpedance
             }
             var U: Double
-            if(noTorqueU < th.U) {
+            if(noTorqueU < th.voltage) {
                 // Input is greater than our output, spin up the shaft
-                U = th.U * 0.997 + noTorqueU * 0.003
+                U = th.voltage * 0.997 + noTorqueU * 0.003
             } else if(th.isHighImpedance()) {
                 // No actual connection, let the system float
                 U = noTorqueU
             } else {
                 // Provide an output voltage by
                 // solving a quadratic, I guess?
-                val a = 1 / th.R
-                val b = desc.elecPPerDU - th.U / th.R
+                val a = 1 / th.resistance
+                val b = desc.elecPPerDU - th.voltage / th.resistance
                 val c = -desc.elecPPerDU * noTorqueU
                 U = (-b + Math.sqrt(b * b - 4 * a * c)) / (2 * a)
             }
-            powerSource.setU(U)
+            powerSource.setVoltage(U)
         }
 
         override fun rootSystemPreStepProcess() {
@@ -240,7 +240,7 @@ class MotorElement(node: TransparentNode, desc_: TransparentNodeDescriptor) :
 
     inner class MotorShaftProcess : IProcess {
         override fun process(time: Double) {
-            val p = powerSource.p
+            val p = powerSource.power
             var E = -p * time
             if (E.isNaN())
                 E = 0.0
@@ -291,9 +291,9 @@ class MotorElement(node: TransparentNode, desc_: TransparentNodeDescriptor) :
 
     override fun multiMeterString(side: Direction) =
         Utils.plotER(shaft.energy, shaft.rads) +
-            Utils.plotUIP(powerSource.u, powerSource.i)
+            Utils.plotUIP(powerSource.voltage, powerSource.current)
 
-    override fun thermoMeterString(side: Direction): String = Utils.plotCelsius("T", thermal.t)
+    override fun thermoMeterString(side: Direction): String = Utils.plotCelsius("T", thermal.temperature)
 
     override fun onBlockActivated(player: EntityPlayer, side: Direction, vx: Float, vy: Float, vz: Float) =
         false
@@ -308,9 +308,9 @@ class MotorElement(node: TransparentNode, desc_: TransparentNodeDescriptor) :
         info.put("Energy", Utils.plotEnergy("", shaft.energy))
         info.put("Speed", Utils.plotRads("", shaft.rads))
         if(Eln.wailaEasyMode) {
-            info.put("Voltage", Utils.plotVolt("", powerSource.u))
-            info.put("Current", Utils.plotAmpere("", powerSource.i))
-            info.put("Temperature", Utils.plotCelsius("", thermal.t))
+            info.put("Voltage", Utils.plotVolt("", powerSource.voltage))
+            info.put("Current", Utils.plotAmpere("", powerSource.current))
+            info.put("Temperature", Utils.plotCelsius("", thermal.temperature))
         }
         return info
     }

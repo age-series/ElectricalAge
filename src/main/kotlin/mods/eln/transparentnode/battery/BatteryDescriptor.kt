@@ -90,7 +90,7 @@ class BatteryDescriptor(
     }
 
     fun applyTo(resistor: Resistor) {
-        resistor.r = electricalRp
+        resistor.resistance = electricalRp
     }
 
     fun applyTo(battery: BatteryProcess) {
@@ -106,8 +106,8 @@ class BatteryDescriptor(
         }
     }
 
-    fun applyTo(load: ElectricalLoad, @Suppress("UNUSED_PARAMETER") simulator: Simulator?) {
-        load.rs = electricalRs
+    fun applyTo(load: ElectricalLoad, simulator: Simulator?) {
+        load.serialResistance = electricalRs
     }
 
     fun applyTo(load: ThermalLoad) {

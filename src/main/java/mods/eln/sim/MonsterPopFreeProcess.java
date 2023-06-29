@@ -12,8 +12,8 @@ import java.util.List;
 
 public class MonsterPopFreeProcess implements IProcess {
 
-    private Coordinate coordinate;
-    private int range;
+    private final Coordinate coordinate;
+    private final int range;
 
     double timerCounter = 0;
     final double timerPeriod = 0.212;
@@ -37,11 +37,9 @@ public class MonsterPopFreeProcess implements IProcess {
             List list = coordinate.world().getEntitiesWithinAABB(EntityMob.class, coordinate.getAxisAlignedBB(range + 8));
 
             for (Object o : list) {
-                //Utils.println("MonsterPopFreeProcess : In range");
                 EntityMob mob = (EntityMob) o;
                 if (oldList == null || !oldList.contains(o)) {
                     if (coordinate.distanceTo(mob) < range) {
-                        //Utils.println("MonsterPopFreeProcess : Must die");
                         if (!(o instanceof ReplicatorEntity) && !(o instanceof EntityWither) && !(o instanceof EntityEnderman)) {
                             mob.setDead();
                             Utils.println("MonsterPopFreeProcess : Dead");

@@ -29,6 +29,6 @@ public class SignalInductorDescriptor extends SixNodeDescriptor {
     }
 
     public void applyTo(Inductor inductor) {
-        inductor.setL(henri);
+        inductor.setInductance(henri);
     }
 }

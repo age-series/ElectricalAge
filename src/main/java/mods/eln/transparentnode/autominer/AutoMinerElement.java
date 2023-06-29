@@ -66,7 +66,7 @@ public class AutoMinerElement extends TransparentNodeElement {
         slowProcessList.add(slowProcess);
 
         WorldExplosion exp = new WorldExplosion(this).machineExplosion();
-        slowProcessList.add(voltageWatchdog.set(inPowerLoad).setUNominal(this.descriptor.nominalVoltage).set(exp));
+        slowProcessList.add(voltageWatchdog.setVoltageState(inPowerLoad).setNominalVoltage(this.descriptor.nominalVoltage).set(exp));
     }
 
     @Override
@@ -88,7 +88,7 @@ public class AutoMinerElement extends TransparentNodeElement {
     @NotNull
     @Override
     public String multiMeterString(@NotNull Direction side) {
-        return Utils.plotUIP(inPowerLoad.getU(), inPowerLoad.getCurrent());
+        return Utils.plotUIP(inPowerLoad.getVoltage(), inPowerLoad.getCurrent());
     }
 
     @NotNull

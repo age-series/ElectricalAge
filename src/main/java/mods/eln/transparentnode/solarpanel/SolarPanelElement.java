@@ -126,7 +126,7 @@ public class SolarPanelElement extends TransparentNodeElement {
     @NotNull
     @Override
     public String multiMeterString(@NotNull Direction side) {
-        return Utils.plotUIP(positiveLoad.getU() - negativeLoad.getU(), positiveLoad.getCurrent());
+        return Utils.plotUIP(positiveLoad.getVoltage() - negativeLoad.getVoltage(), positiveLoad.getCurrent());
     }
 
     @NotNull
@@ -137,8 +137,8 @@ public class SolarPanelElement extends TransparentNodeElement {
 
     @Override
     public void initialize() {
-        powerSource.setUmax(this.descriptor.electricalUmax);
-        powerSource.setImax(this.descriptor.electricalPmax / this.descriptor.electricalUmax * 1.5);
+        powerSource.setMaximumVoltage(this.descriptor.electricalUmax);
+        powerSource.setMaximumCurrent(this.descriptor.electricalPmax / this.descriptor.electricalUmax * 1.5);
 
         descriptor.applyTo(positiveLoad);
         descriptor.applyTo(negativeLoad);
@@ -241,7 +241,7 @@ public class SolarPanelElement extends TransparentNodeElement {
         info.put(I18N.tr("Panel angle"), Utils.plotValue((panelAlpha * (180 / Math.PI)) - 90, "\u00B0"));
         info.put(I18N.tr("Producing energy"), (slowProcess.getSolarLight() != 0 ? "Yes" : "No"));
         if (Eln.wailaEasyMode) {
-            info.put(I18N.tr("Produced power"), Utils.plotPower("", powerSource.getP()));
+            info.put(I18N.tr("Produced power"), Utils.plotPower("", powerSource.getPower()));
         }
         return info;
     }

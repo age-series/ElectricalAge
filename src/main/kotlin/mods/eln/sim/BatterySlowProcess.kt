@@ -2,18 +2,18 @@ package mods.eln.sim
 
 import mods.eln.server.SaveConfig
 
-abstract class BatterySlowProcess(var batteryProcess: BatteryProcess, var thermalLoad: ThermalLoad) : IProcess {
+abstract class BatterySlowProcess(private var batteryProcess: BatteryProcess, var thermalLoad: ThermalLoad) : IProcess {
 
     var lifeNominalCurrent = 0.0
     var lifeNominalLost = 0.0
 
     override fun process(time: Double) {
-        val U = batteryProcess.u
-        if (U < -0.1 * batteryProcess.uNominal) {
+        val voltage = batteryProcess.u
+        if (voltage < -0.1 * batteryProcess.uNominal) {
             destroy()
             return
         }
-        if (U > uMax) {
+        if (voltage > maximumVoltage) {
             destroy()
             return
         }
@@ -26,7 +26,7 @@ abstract class BatterySlowProcess(var batteryProcess: BatteryProcess, var therma
         }
     }
 
-    val uMax: Double
+    val maximumVoltage: Double
         get() = 1.3 * batteryProcess.uNominal
 
     abstract fun destroy()

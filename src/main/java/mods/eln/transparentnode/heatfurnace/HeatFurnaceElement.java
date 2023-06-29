@@ -77,7 +77,7 @@ public class HeatFurnaceElement extends TransparentNodeElement {
         slowProcessList.add(thermalWatchdog);
 
         thermalWatchdog
-            .set(thermalLoad)
+            .setThermalLoad(thermalLoad)
             .setLimit(this.descriptor.thermal)
             .set(new WorldExplosion(this).machineExplosion());
     }
@@ -111,7 +111,7 @@ public class HeatFurnaceElement extends TransparentNodeElement {
     @NotNull
     @Override
     public String thermoMeterString(@NotNull Direction side) {
-        return Utils.plotCelsius("T:", thermalLoad.Tc);
+        return Utils.plotCelsius("T:", thermalLoad.temperatureCelsius);
     }
 
     @Override
@@ -136,10 +136,10 @@ public class HeatFurnaceElement extends TransparentNodeElement {
         try {
             stream.writeBoolean(getControlExternal());
             stream.writeBoolean(getTakeFuel());
-            stream.writeShort((short) (thermalLoad.Tc * NodeBase.networkSerializeTFactor));
+            stream.writeShort((short) (thermalLoad.temperatureCelsius * NodeBase.networkSerializeTFactor));
             stream.writeFloat((float) furnaceProcess.getGain());
             stream.writeFloat((float) regulator.getTarget());
-            stream.writeShort((int) furnaceProcess.getP());
+            stream.writeShort((int) furnaceProcess.getPower());
 
             serialiseItemStack(stream, inventory.getStackInSlot(HeatFurnaceContainer.combustibleId));
         } catch (IOException e) {
@@ -256,7 +256,7 @@ public class HeatFurnaceElement extends TransparentNodeElement {
     @Override
     public Map<String, String> getWaila() {
         Map<String, String> info = new HashMap<String, String>();
-        info.put(I18N.tr("Temperature"), Utils.plotCelsius("", thermalLoad.Tc));
+        info.put(I18N.tr("Temperature"), Utils.plotCelsius("", thermalLoad.temperatureCelsius));
         info.put(I18N.tr("Set temperature"), Utils.plotCelsius("", regulator.getTarget()));
         return info;
     }

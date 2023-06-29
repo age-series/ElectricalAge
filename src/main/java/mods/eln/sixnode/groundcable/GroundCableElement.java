@@ -46,7 +46,7 @@ public class GroundCableElement extends SixNodeElement {
 
         electricalLoadList.add(electricalLoad);
         electricalComponentList.add(ground);
-        ground.setU(0);
+        ground.setVoltage(0);
     }
 
     @Override
@@ -91,14 +91,14 @@ public class GroundCableElement extends SixNodeElement {
 
     @Override
     public String multiMeterString() {
-        return Utils.plotVolt("U:", electricalLoad.getU()) + Utils.plotAmpere("I:", electricalLoad.getCurrent());
+        return Utils.plotVolt("U:", electricalLoad.getVoltage()) + Utils.plotAmpere("I:", electricalLoad.getCurrent());
     }
 
     @NotNull
     @Override
     public Map<String, String> getWaila() {
         Map<String, String> info = new HashMap<String, String>();
-        info.put(I18N.tr("Current"), Utils.plotAmpere("", electricalLoad.getI()));
+        info.put(I18N.tr("Current"), Utils.plotAmpere("", electricalLoad.getCurrent()));
         return info;
     }
 

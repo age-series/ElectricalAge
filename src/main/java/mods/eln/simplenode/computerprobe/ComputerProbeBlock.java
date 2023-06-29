@@ -12,7 +12,7 @@ import net.minecraft.world.World;
 
 public class ComputerProbeBlock extends SimpleNodeBlock {
 
-    private IIcon[] icon = new IIcon[6];
+    private final IIcon[] icon = new IIcon[6];
 
     public ComputerProbeBlock() {
         super(Material.packedIce);

@@ -15,7 +15,7 @@ public class FurnaceProcess implements IProcess {
 
     @Override
     public void process(double time) {
-        double energyConsumed = getP() * time;
+        double energyConsumed = getPower() * time;
         combustibleEnergy -= energyConsumed;
         load.PcTemp += energyConsumed / time;
     }
@@ -35,7 +35,7 @@ public class FurnaceProcess implements IProcess {
         return gain;
     }
 
-    public double getP() {
+    public double getPower() {
         return combustibleEnergy / nominalCombustibleEnergy * nominalPower * gain;
     }
 }

@@ -422,7 +422,7 @@ class ClutchElement(node: TransparentNode, desc_: TransparentNodeDescriptor) : S
             if (desc != null && stack != null)
                 info.put("Wear", String.format("%.6f", desc.getWear(stack)))
         }
-        info.put("Clutching", Utils.plotVolt(inputGate.signalU))
+        info.put("Clutching", Utils.plotVolt(inputGate.signalVoltage))
         if(Eln.wailaEasyMode) {
             info.put("Slipping", if (slipping) {
                 "YES"

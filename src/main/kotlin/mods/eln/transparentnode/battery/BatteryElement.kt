@@ -71,7 +71,7 @@ class BatteryElement(transparentNode: TransparentNode, descriptor: TransparentNo
     }
 
     override fun thermoMeterString(side: Direction): String {
-        return Utils.plotCelsius("Tbat:", thermalLoad.Tc)
+        return Utils.plotCelsius("Tbat:", thermalLoad.temperatureCelsius)
     }
 
     override fun networkSerialize(stream: DataOutputStream) {
@@ -91,9 +91,9 @@ class BatteryElement(transparentNode: TransparentNode, descriptor: TransparentNo
         descriptor.applyTo(thermalLoad)
         descriptor.applyTo(dischargeResistor)
         descriptor.applyTo(batterySlowProcess)
-        positiveLoad.rs = descriptor.electricalRs
-        negativeLoad.rs = descriptor.electricalRs
-        dischargeResistor.r = MnaConst.highImpedance
+        positiveLoad.serialResistance = descriptor.electricalRs
+        negativeLoad.serialResistance = descriptor.electricalRs
+        dischargeResistor.resistance = MnaConst.highImpedance
         if (fromItemStack) {
             println("Loading from item stack")
             batteryProcess.life = fromItemstackLife
@@ -138,7 +138,7 @@ class BatteryElement(transparentNode: TransparentNode, descriptor: TransparentNo
         if (Eln.wailaEasyMode) {
             info[I18N.tr("Voltage")] = Utils.plotVolt("", batteryProcess.u)
             info[I18N.tr("Current")] = Utils.plotAmpere("", batteryProcess.dischargeCurrent)
-            info[I18N.tr("Temperature")] = Utils.plotCelsius("", thermalLoad.Tc)
+            info[I18N.tr("Temperature")] = Utils.plotCelsius("", thermalLoad.temperatureCelsius)
         }
         info[I18N.tr("Subsystem Matrix Size")] = Utils.renderSubSystemWaila(positiveLoad.subSystem)
         return info
@@ -159,8 +159,8 @@ class BatteryElement(transparentNode: TransparentNode, descriptor: TransparentNo
         batteryProcess.IMax = this.descriptor.IMax
         slowProcessList.add(thermalWatchdog)
         thermalWatchdog
-            .set(thermalLoad)
-            .setTMax(this.descriptor.thermalWarmLimit)
+            .setThermalLoad(thermalLoad)
+            .setMaximumTemperature(this.descriptor.thermalWarmLimit)
             .set(WorldExplosion(this).machineExplosion())
     }
 }

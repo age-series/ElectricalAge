@@ -181,8 +181,8 @@ class DcDcElement(transparentNode: TransparentNode, descriptor: TransparentNodeD
         electricalComponentList.add(primaryVoltageSource)
         electricalComponentList.add(secondaryVoltageSource)
         val exp = WorldExplosion(this).machineExplosion()
-        slowProcessList.add(primaryVoltageWatchdog.set(primaryLoad).set(exp))
-        slowProcessList.add(secondaryVoltageWatchdog.set(secondaryLoad).set(exp))
+        slowProcessList.add(primaryVoltageWatchdog.setVoltageState(primaryLoad).set(exp))
+        slowProcessList.add(secondaryVoltageWatchdog.setVoltageState(secondaryLoad).set(exp))
         slowProcessList.add(NodePeriodicPublishProcess(node!!, 1.0, .5))
         slowProcessList.add(DcDcProcess(this))
     }
@@ -222,11 +222,11 @@ class DcDcElement(transparentNode: TransparentNode, descriptor: TransparentNodeD
 
     override fun multiMeterString(side: Direction): String {
         if (side == front.left())
-            return Utils.plotVolt("UP+:", primaryLoad.u) + Utils.plotAmpere("IP+:", -primaryLoad.current)
+            return Utils.plotVolt("UP+:", primaryLoad.voltage) + Utils.plotAmpere("IP+:", -primaryLoad.current)
         return if (side == front.right())
-            Utils.plotVolt("US+:", secondaryLoad.u) + Utils.plotAmpere("IS+:", -secondaryLoad.current)
+            Utils.plotVolt("US+:", secondaryLoad.voltage) + Utils.plotAmpere("IS+:", -secondaryLoad.current)
         else
-            Utils.plotVolt("UP+:", primaryLoad.u) + Utils.plotAmpere("IP+:", primaryVoltageSource.current) + Utils.plotVolt("  US+:", secondaryLoad.u) + Utils.plotAmpere("IS+:", secondaryVoltageSource.current)
+            Utils.plotVolt("UP+:", primaryLoad.voltage) + Utils.plotAmpere("IP+:", primaryVoltageSource.current) + Utils.plotVolt("  US+:", secondaryLoad.voltage) + Utils.plotAmpere("IS+:", secondaryVoltageSource.current)
     }
 
     override fun initialize() {
@@ -244,8 +244,8 @@ class DcDcElement(transparentNode: TransparentNode, descriptor: TransparentNodeD
         val secondaryCable = inventory.getStackInSlot(DcDcContainer.secondaryCableSlotId)
         val core = inventory.getStackInSlot(DcDcContainer.ferromagneticSlotId)
 
-        primaryVoltageWatchdog.setUNominal(120_000.0)
-        secondaryVoltageWatchdog.setUNominal(120_000.0)
+        primaryVoltageWatchdog.setNominalVoltage(120_000.0)
+        secondaryVoltageWatchdog.setNominalVoltage(120_000.0)
 
         primaryMaxCurrent = 5.0
         secondaryMaxCurrent = 5.0
@@ -260,14 +260,14 @@ class DcDcElement(transparentNode: TransparentNode, descriptor: TransparentNodeD
             primaryLoad.highImpedance()
             populated = false
         } else {
-            primaryLoad.rs = coreFactor * 0.01
+            primaryLoad.serialResistance = coreFactor * 0.01
         }
 
         if (secondaryCable == null || core == null || secondaryCable.stackSize < 1) {
             secondaryLoad.highImpedance()
             populated = false
         } else {
-            secondaryLoad.rs = coreFactor * 0.01
+            secondaryLoad.serialResistance = coreFactor * 0.01
         }
 
         populated = primaryCable != null && secondaryCable != null && primaryCable.stackSize >= 1 && secondaryCable.stackSize >= 1 && core != null
@@ -325,8 +325,8 @@ class DcDcElement(transparentNode: TransparentNode, descriptor: TransparentNodeD
             node!!.lrduCubeMask.getTranslate(front.down()).serialize(stream)
             var load = 0f
             if (primaryMaxCurrent != 0.0 && secondaryMaxCurrent != 0.0) {
-                load = Utils.limit(Math.max(primaryLoad.i / primaryMaxCurrent,
-                    secondaryLoad.i / secondaryMaxCurrent).toFloat(), 0f, 1f)
+                load = Utils.limit(Math.max(primaryLoad.current / primaryMaxCurrent,
+                    secondaryLoad.current / secondaryMaxCurrent).toFloat(), 0f, 1f)
             }
             stream.writeFloat(load)
             stream.writeBoolean(inventory.getStackInSlot(3) != null)
@@ -339,8 +339,8 @@ class DcDcElement(transparentNode: TransparentNode, descriptor: TransparentNodeD
         val info = HashMap<String, String>()
         info[I18N.tr("Ratio")] = Utils.plotValue(interSystemProcess.ratio)
         if (Eln.wailaEasyMode) {
-            info["Voltages"] = "\u00A7a" + Utils.plotVolt("", primaryLoad.u) + " " +
-                "\u00A7e" + Utils.plotVolt("", secondaryLoad.u)
+            info["Voltages"] = "\u00A7a" + Utils.plotVolt("", primaryLoad.voltage) + " " +
+                "\u00A7e" + Utils.plotVolt("", secondaryLoad.voltage)
         }
         info[I18N.tr("Subsystem Matrix Size: ")] = Utils.renderDoubleSubsystemWaila(primaryLoad.subSystem, secondaryLoad.subSystem)
         return info

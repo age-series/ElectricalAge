@@ -38,15 +38,15 @@ public class ElectricalAntennaRxElement extends TransparentNodeElement {
     ElectricalAntennaRxDescriptor descriptor;
 
     public double getSignal() {
-        return signalIn.getSignalU();
+        return signalIn.getSignalVoltage();
     }
 
     public void setPowerOut(double power) {
-        powerSrc.setP(power);
+        powerSrc.setPower(power);
     }
 
     public void rxDisconnect() {
-        powerSrc.setP(0.0);
+        powerSrc.setPower(0.0);
     }
 
     public ElectricalAntennaRxElement(TransparentNode transparentNode, TransparentNodeDescriptor descriptor) {
@@ -100,8 +100,8 @@ public class ElectricalAntennaRxElement extends TransparentNodeElement {
     @Override
     public void initialize() {
         descriptor.cable.applyTo(powerOut);
-        powerSrc.setUmax(descriptor.electricalMaximalVoltage * 2);
-        powerSrc.setImax(descriptor.electricalMaximalVoltage * descriptor.electricalMaximalPower * 2);
+        powerSrc.setMaximumVoltage(descriptor.electricalMaximalVoltage * 2);
+        powerSrc.setMaximumCurrent(descriptor.electricalMaximalVoltage * descriptor.electricalMaximalPower * 2);
         connect();
     }
 
@@ -154,10 +154,10 @@ public class ElectricalAntennaRxElement extends TransparentNodeElement {
     @NotNull
     public Map<String, String> getWaila() {
         Map<String, String> info = new HashMap<String, String>();
-        info.put(I18N.tr("Receiving"), powerSrc.getP() != 0 ? "Yes" : "No");
+        info.put(I18N.tr("Receiving"), powerSrc.getPower() != 0 ? "Yes" : "No");
         if (Eln.wailaEasyMode) {
-            info.put(I18N.tr("Power received"), Utils.plotPower("", powerSrc.getP()));
-            info.put(I18N.tr("Effective power"), Utils.plotPower("", powerSrc.getEffectiveP()));
+            info.put(I18N.tr("Power received"), Utils.plotPower("", powerSrc.getPower()));
+            info.put(I18N.tr("Effective power"), Utils.plotPower("", powerSrc.getEffectivePower()));
         }
         return info;
     }

@@ -124,7 +124,7 @@ class EmergencyLampElement(sixNode: SixNode, side: Direction, descriptor: SixNod
             if (closestPowerSupply != null) {
                 isConnectedToLampSupply = true
                 if (closestPowerSupply!!.element.getChannelState(closestPowerSupply!!.id)) {
-                    closestPowerSupply!!.element.addToRp(chargingResistor.r)
+                    closestPowerSupply!!.element.addToRp(chargingResistor.resistance)
                     load.state = closestPowerSupply!!.element.powerLoad.state
                 } else {
                     load.state = 0.0
@@ -135,11 +135,11 @@ class EmergencyLampElement(sixNode: SixNode, side: Direction, descriptor: SixNod
             }
         }
 
-        if (chargingResistor.u > 0.5 * desc.cable.electricalNominalVoltage) {
+        if (chargingResistor.voltage > 0.5 * desc.cable.electricalNominalVoltage) {
             on = false
             if (charge < desc.batteryCapacity) {
                 chargingResistor.state = true
-                charge = Math.min(charge + chargingResistor.p * deltaT, desc.batteryCapacity)
+                charge = Math.min(charge + chargingResistor.power * deltaT, desc.batteryCapacity)
             } else {
                 chargingResistor .state = false
             }
@@ -155,7 +155,7 @@ class EmergencyLampElement(sixNode: SixNode, side: Direction, descriptor: SixNod
     }
 
     override fun initialize() {
-        chargingResistor.r =
+        chargingResistor.resistance =
             desc.cable.electricalNominalVoltage * desc.cable.electricalNominalVoltage / desc.chargePower
         desc.cable.applyTo(load)
 
@@ -163,7 +163,7 @@ class EmergencyLampElement(sixNode: SixNode, side: Direction, descriptor: SixNod
         electricalComponentList.add(chargingResistor)
         slowProcessList.add(process)
         slowProcessList.add(NodePeriodicPublishProcess(sixNode!!, 2.0, 0.5))
-        slowProcessList.add(VoltageStateWatchDog().set(load).setUNominal(desc.cable.electricalNominalVoltage)
+        slowProcessList.add(VoltageStateWatchDog().setVoltageState(load).setNominalVoltage(desc.cable.electricalNominalVoltage)
             .set(WorldExplosion(this).cableExplosion()))
     }
 
@@ -176,8 +176,8 @@ class EmergencyLampElement(sixNode: SixNode, side: Direction, descriptor: SixNod
     override fun getElectricalLoad(lrdu: LRDU, mask: Int): ElectricalLoad? = load
     override fun getThermalLoad(lrdu: LRDU, mask: Int): ThermalLoad? = null
     override fun multiMeterString() = buildString {
-        append(Utils.plotVolt("U:", load.u))
-        append(Utils.plotAmpere("I:", load.i))
+        append(Utils.plotVolt("U:", load.voltage))
+        append(Utils.plotAmpere("I:", load.current))
         append(Utils.plotPercent("Charge:", charge / (sixNodeElementDescriptor as EmergencyLampDescriptor).batteryCapacity))
     }
     override fun thermoMeterString(): String = ""

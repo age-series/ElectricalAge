@@ -12,6 +12,6 @@ public class DiodeProcess implements IProcess {
 
     @Override
     public void process(double time) {
-        resistor.setState(resistor.getU() > 0);
+        resistor.setState(resistor.getVoltage() > 0);
     }
 }

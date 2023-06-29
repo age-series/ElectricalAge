@@ -5,7 +5,7 @@ public class ThermalLoad {
     /**
      * Current temperature, in celsius.
      */
-    public double Tc;
+    public double temperatureCelsius;
     public double Rp;
     /**
      * Thermal resistance, analogous to ohms.
@@ -40,7 +40,7 @@ public class ThermalLoad {
 
     public ThermalLoad() {
         setHighImpedance();
-        Tc = 0;
+        temperatureCelsius = 0;
         PcTemp = 0;
         Pc = 0;
         Prs = 0;
@@ -48,7 +48,7 @@ public class ThermalLoad {
     }
 
     public ThermalLoad(double Tc, double Rp, double Rs, double C) {
-        this.Tc = Tc;
+        this.temperatureCelsius = Tc;
         this.Rp = Rp;
         this.Rs = Rs;
         this.C = C;
@@ -72,8 +72,8 @@ public class ThermalLoad {
     }
 
     public double getPower() {
-        if (Double.isNaN(Prs) || Double.isNaN(Pc) || Double.isNaN(Tc) || Double.isNaN(Rp) || Double.isNaN(Psp)) return 0.0;
-        return (Prs + Math.abs(Pc) + Tc / Rp + Psp) / 2;
+        if (Double.isNaN(Prs) || Double.isNaN(Pc) || Double.isNaN(temperatureCelsius) || Double.isNaN(Rp) || Double.isNaN(Psp)) return 0.0;
+        return (Prs + Math.abs(Pc) + temperatureCelsius / Rp + Psp) / 2;
     }
 
     public void set(double Rs, double Rp, double C) {
@@ -103,16 +103,15 @@ public class ThermalLoad {
 
     public void movePowerTo(double power) {
         if(Double.isNaN(power)) return;
-        //double absI = Math.abs(power);
         PcTemp += power;
         PspTemp += power;
     }
 
-    public double getT() {
-        if (Double.isNaN(Tc)) {
-            Tc = 0.0;
+    public double getTemperature() {
+        if (Double.isNaN(temperatureCelsius)) {
+            temperatureCelsius = 0.0;
         }
-        return Tc;
+        return temperatureCelsius;
     }
 
     public boolean isSlow() {
