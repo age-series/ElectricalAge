@@ -14,6 +14,7 @@ import net.minecraft.tileentity.TileEntity
 import net.minecraft.util.AxisAlignedBB
 import net.minecraft.world.IBlockAccess
 import net.minecraft.world.World
+import java.lang.RuntimeException
 import java.lang.reflect.InvocationTargetException
 import java.util.*
 
@@ -35,7 +36,7 @@ class TransparentNodeBlock(material: Material?, tileEntityClass: Class<*>?) : No
         return -1
     }
 
-    override fun removedByPlayer(world: World, entityPlayer: EntityPlayer, x: Int, y: Int, z: Int): Boolean {
+    override fun removedByPlayer(world: World, entityPlayer: EntityPlayer, x: Int, y: Int, z: Int, willHarvest: Boolean): Boolean {
         if (!world.isRemote) {
             val entity = world.getTileEntity(x, y, z) as? NodeBlockEntity
             if (entity != null) {
@@ -58,7 +59,7 @@ class TransparentNodeBlock(material: Material?, tileEntityClass: Class<*>?) : No
         return world.getBlockMetadata(x, y, z) and 3 shl 6
     }
 
-    override fun getItemDropped(p_149650_1_: Int, p_149650_2_: Random, p_149650_3_: Int): Item? {
+    override fun getItemDropped(meta: Int, random: Random, fortune: Int): Item? {
         return null
     }
 
@@ -105,8 +106,7 @@ class TransparentNodeBlock(material: Material?, tileEntityClass: Class<*>?) : No
         } catch (e: SecurityException) {
             e.printStackTrace()
         }
-        // TODO: Remove this
-        while (true);
+        throw RuntimeException("Unable to continue creating tile entity")
     }
 
     val nodeUuid: String

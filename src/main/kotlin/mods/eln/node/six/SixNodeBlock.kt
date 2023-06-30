@@ -171,7 +171,7 @@ class SixNodeBlock  // public static ArrayList<Integer> repertoriedItemStackId =
      *
      * return tileEntity.onBlockActivated(entityPlayer, Direction.fromIntMinecraftSide(minecraftSide),vx,vy,vz); }
      */
-    override fun removedByPlayer(world: World, entityPlayer: EntityPlayer, x: Int, y: Int, z: Int): Boolean {
+    override fun removedByPlayer(world: World, entityPlayer: EntityPlayer, x: Int, y: Int, z: Int, willHarvest: Boolean): Boolean {
         if (world.isRemote) return false
         val tileEntity = world.getTileEntity(x, y, z) as SixNodeEntity
         val MOP = collisionRayTrace(world, x, y, z, entityPlayer) ?: return false

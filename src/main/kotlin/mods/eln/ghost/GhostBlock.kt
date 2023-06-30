@@ -94,9 +94,9 @@ class GhostBlock : Block(Material.iron) {
 
     /*
 	 * @Override
-	 * 
+	 *
 	 * @SideOnly(Side.CLIENT) public int idPicked(World par1World, int par2, int par3, int par4) {
-	 * 
+	 *
 	 * return Block.dirt.blockID; }
 	 */
     override fun isOpaqueCube(): Boolean {
@@ -111,7 +111,7 @@ class GhostBlock : Block(Material.iron) {
         return -1
     }
 
-    override fun getPickBlock(target: MovingObjectPosition, world: World, x: Int, y: Int, z: Int): ItemStack? {
+    override fun getPickBlock(target: MovingObjectPosition, world: World, x: Int, y: Int, z: Int, player: EntityPlayer): ItemStack? {
         return null
     }
 
