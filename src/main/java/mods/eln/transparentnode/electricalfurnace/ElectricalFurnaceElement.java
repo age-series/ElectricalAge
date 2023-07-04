@@ -59,7 +59,7 @@ public class ElectricalFurnaceElement extends TransparentNodeElement {
     boolean autoShutDown = true;
     ElectricalFurnaceDescriptor descriptor;
 
-    VoltageStateWatchDog voltageWatchdog = new VoltageStateWatchDog();
+    VoltageStateWatchDog voltageWatchdog = new VoltageStateWatchDog(electricalLoad);
 
     public static final byte unserializePowerOnId = 1;
     public static final byte unserializeTemperatureTarget = 2;
@@ -85,7 +85,7 @@ public class ElectricalFurnaceElement extends TransparentNodeElement {
         slowProcessList.add(slowRefreshProcess);
 
         WorldExplosion exp = new WorldExplosion(this).machineExplosion();
-        slowProcessList.add(voltageWatchdog.setVoltageState(electricalLoad).set(exp));
+        slowProcessList.add(voltageWatchdog.setDestroys(exp));
     }
 
     @Override

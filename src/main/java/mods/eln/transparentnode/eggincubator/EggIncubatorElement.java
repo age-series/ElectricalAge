@@ -41,7 +41,7 @@ public class EggIncubatorElement extends TransparentNodeElement {
     EggIncubatorProcess slowProcess = new EggIncubatorProcess();
     EggIncubatorDescriptor descriptor;
 
-    VoltageStateWatchDog voltageWatchdog = new VoltageStateWatchDog();
+    VoltageStateWatchDog voltageWatchdog = new VoltageStateWatchDog(powerLoad);
 
     double lastVoltagePublish;
 
@@ -54,7 +54,7 @@ public class EggIncubatorElement extends TransparentNodeElement {
         this.descriptor = (EggIncubatorDescriptor) descriptor;
 
         WorldExplosion exp = new WorldExplosion(this).machineExplosion();
-        slowProcessList.add(voltageWatchdog.setVoltageState(powerLoad).setNominalVoltage(this.descriptor.nominalVoltage).set(exp));
+        slowProcessList.add(voltageWatchdog.setNominalVoltage(this.descriptor.nominalVoltage).setDestroys(exp));
     }
 
     class EggIncubatorProcess implements IProcess, INBTTReady {

@@ -203,8 +203,8 @@ abstract class SimpleShaftElement(node: TransparentNode, transparentNodeDescript
     override fun isDestructing() = destructing
 
     init {
-        val exp = WorldExplosion(this).machineExplosion()
-        slowProcessList.add(createShaftWatchdog(this).set(exp))
+        val exp = WorldExplosion(this as ShaftElement).machineExplosion()
+        slowProcessList.add(createShaftWatchdog(this).setDestroys(exp))
     }
 
     override val shaftConnectivity: Array<Direction>

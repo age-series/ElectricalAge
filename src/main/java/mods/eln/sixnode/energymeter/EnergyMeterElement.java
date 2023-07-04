@@ -36,8 +36,8 @@ import java.util.Map;
 
 public class EnergyMeterElement extends SixNodeElement {
 
-    VoltageStateWatchDog voltageWatchDogA = new VoltageStateWatchDog();
-    VoltageStateWatchDog voltageWatchDogB = new VoltageStateWatchDog();
+    VoltageStateWatchDog voltageWatchDogA;
+    VoltageStateWatchDog voltageWatchDogB;
     // ResistorCurrentWatchdog currentWatchDog = new ResistorCurrentWatchdog();
 
     public SlowProcess slowProcess = new SlowProcess();
@@ -75,6 +75,9 @@ public class EnergyMeterElement extends SixNodeElement {
         super(sixNode, side, descriptor);
         shunt.mustUseUltraImpedance();
 
+        voltageWatchDogA = new VoltageStateWatchDog(aLoad);
+        voltageWatchDogB = new VoltageStateWatchDog(bLoad);
+
         electricalLoadList.add(aLoad);
         electricalLoadList.add(bLoad);
         electricalComponentList.add(shunt);
@@ -90,8 +93,8 @@ public class EnergyMeterElement extends SixNodeElement {
         slowProcessList.add(voltageWatchDogB);
 
         // currentWatchDog.set(shunt).set(exp);
-        voltageWatchDogA.setVoltageState(aLoad).set(exp);
-        voltageWatchDogB.setVoltageState(bLoad).set(exp);
+        voltageWatchDogA.setDestroys(exp);
+        voltageWatchDogB.setDestroys(exp);
         this.descriptor = (EnergyMeterDescriptor) descriptor;
     }
 
@@ -197,17 +200,12 @@ public class EnergyMeterElement extends SixNodeElement {
         if (cableDescriptor == null) {
             aLoad.highImpedance();
             bLoad.highImpedance();
-
-            voltageWatchDogA.disable();
-            voltageWatchDogB.disable();
-            // currentWatchDog.disable();
         } else {
             cableDescriptor.applyTo(aLoad);
             cableDescriptor.applyTo(bLoad);
 
             voltageWatchDogA.setNominalVoltage(cableDescriptor.electricalNominalVoltage);
             voltageWatchDogB.setNominalVoltage(cableDescriptor.electricalNominalVoltage);
-            // currentWatchDog.setIAbsMax(cableDescriptor.electricalMaximalCurrent);
         }
     }
 

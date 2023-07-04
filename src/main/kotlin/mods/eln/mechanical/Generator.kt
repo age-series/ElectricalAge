@@ -162,7 +162,7 @@ class GeneratorElement(node: TransparentNode, desc_: TransparentNodeDescriptor) 
 
     internal val thermal = NbtThermalLoad("thermal")
     internal val heater: ElectricalLoadHeatThermalLoad
-    internal val thermalLoadWatchDog = ThermalLoadWatchDog()
+    internal val thermalLoadWatchDog = ThermalLoadWatchDog(thermal)
 
     init {
         electricalLoadList.add(positiveLoad)
@@ -179,7 +179,7 @@ class GeneratorElement(node: TransparentNode, desc_: TransparentNodeDescriptor) 
         desc.thermalLoadInitializer.applyTo(thermalLoadWatchDog)
         thermal.setAsSlow()
         thermalLoadList.add(thermal)
-        thermalLoadWatchDog.setThermalLoad(thermal).set(WorldExplosion(this).machineExplosion())
+        thermalLoadWatchDog.setDestroys(WorldExplosion(this as ShaftElement).machineExplosion())
         slowProcessList.add(thermalLoadWatchDog)
 
         heater = ElectricalLoadHeatThermalLoad(inputLoad, thermal)

@@ -35,7 +35,7 @@ class BatteryElement(transparentNode: TransparentNode, descriptor: TransparentNo
     var voltageSource = VoltageSource("volSrc", positiveLoad, negativeLoad)
     var thermalLoad = NbtThermalLoad("thermalLoad")
     var negativeETProcess = ElectricalLoadHeatThermalLoad(negativeLoad, thermalLoad)
-    var thermalWatchdog = ThermalLoadWatchDog()
+    var thermalWatchdog = ThermalLoadWatchDog(thermalLoad)
     var batteryProcess = NbtBatteryProcess(positiveLoad, negativeLoad, this.descriptor.UfCharge, 0.0, voltageSource, thermalLoad)
     var dischargeResistor = Resistor(positiveLoad, negativeLoad)
     var batterySlowProcess = NbtBatterySlowProcess(node!!, batteryProcess, thermalLoad)
@@ -159,8 +159,7 @@ class BatteryElement(transparentNode: TransparentNode, descriptor: TransparentNo
         batteryProcess.IMax = this.descriptor.IMax
         slowProcessList.add(thermalWatchdog)
         thermalWatchdog
-            .setThermalLoad(thermalLoad)
             .setMaximumTemperature(this.descriptor.thermalWarmLimit)
-            .set(WorldExplosion(this).machineExplosion())
+            .setDestroys(WorldExplosion(this).machineExplosion())
     }
 }

@@ -163,8 +163,8 @@ class EmergencyLampElement(sixNode: SixNode, side: Direction, descriptor: SixNod
         electricalComponentList.add(chargingResistor)
         slowProcessList.add(process)
         slowProcessList.add(NodePeriodicPublishProcess(sixNode!!, 2.0, 0.5))
-        slowProcessList.add(VoltageStateWatchDog().setVoltageState(load).setNominalVoltage(desc.cable.electricalNominalVoltage)
-            .set(WorldExplosion(this).cableExplosion()))
+        slowProcessList.add(VoltageStateWatchDog(load).setNominalVoltage(desc.cable.electricalNominalVoltage)
+            .setDestroys(WorldExplosion(this).cableExplosion()))
     }
 
     override fun getConnectionMask(lrdu: LRDU) = when {
@@ -173,7 +173,7 @@ class EmergencyLampElement(sixNode: SixNode, side: Direction, descriptor: SixNod
         else -> 0
     }
 
-    override fun getElectricalLoad(lrdu: LRDU, mask: Int): ElectricalLoad? = load
+    override fun getElectricalLoad(lrdu: LRDU, mask: Int): ElectricalLoad = load
     override fun getThermalLoad(lrdu: LRDU, mask: Int): ThermalLoad? = null
     override fun multiMeterString() = buildString {
         append(Utils.plotVolt("U:", load.voltage))

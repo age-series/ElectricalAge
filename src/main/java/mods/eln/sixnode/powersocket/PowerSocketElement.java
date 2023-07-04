@@ -56,7 +56,7 @@ public class PowerSocketElement extends SixNodeElement implements IConfigurable 
 
     public int paintColor = 0;
 
-    VoltageStateWatchDog voltageWatchdog = new VoltageStateWatchDog();
+    VoltageStateWatchDog voltageWatchdog = new VoltageStateWatchDog(outputLoad);
 
     public static final byte setChannelId = 1;
 
@@ -80,9 +80,7 @@ public class PowerSocketElement extends SixNodeElement implements IConfigurable 
         this.descriptor = (PowerSocketDescriptor) descriptor;
 
         slowProcessList.add(voltageWatchdog);
-        voltageWatchdog
-            .setVoltageState(outputLoad)
-            .set(new WorldExplosion(this).cableExplosion());
+        voltageWatchdog.setDestroys(new WorldExplosion(this).cableExplosion());
     }
 
     class PowerSocketSlowProcess implements IProcess {

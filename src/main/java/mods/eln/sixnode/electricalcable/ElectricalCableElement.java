@@ -39,8 +39,8 @@ public class ElectricalCableElement extends SixNodeElement {
     NbtThermalLoad thermalLoad = new NbtThermalLoad("thermalLoad");
 
     ElectricalLoadHeatThermalLoad heater = new ElectricalLoadHeatThermalLoad(electricalLoad, thermalLoad);
-    ThermalLoadWatchDog thermalWatchdog = new ThermalLoadWatchDog();
-    VoltageStateWatchDog voltageWatchdog = new VoltageStateWatchDog();
+    ThermalLoadWatchDog thermalWatchdog = new ThermalLoadWatchDog(thermalLoad);
+    VoltageStateWatchDog voltageWatchdog = new VoltageStateWatchDog(electricalLoad);
 
     int color;
     int colorCare;
@@ -59,16 +59,14 @@ public class ElectricalCableElement extends SixNodeElement {
             thermalLoad.setAsSlow();
             slowProcessList.add(thermalWatchdog);
             thermalWatchdog
-                .setThermalLoad(thermalLoad)
-                .setLimit(this.descriptor.thermalWarmLimit, this.descriptor.thermalCoolLimit)
-                .set(new WorldExplosion(this).cableExplosion());
+                .setTemperatureLimits(this.descriptor.thermalWarmLimit, this.descriptor.thermalCoolLimit)
+                .setDestroys(new WorldExplosion(this).cableExplosion());
         }
 
         slowProcessList.add(voltageWatchdog);
         voltageWatchdog
-            .setVoltageState(electricalLoad)
             .setNominalVoltage(this.descriptor.electricalNominalVoltage)
-            .set(new WorldExplosion(this).cableExplosion());
+            .setDestroys(new WorldExplosion(this).cableExplosion());
 
 
     }

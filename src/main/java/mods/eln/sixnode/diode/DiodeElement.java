@@ -35,7 +35,7 @@ public class DiodeElement extends SixNodeElement {
     public ResistorSwitch resistorSwitch = new ResistorSwitch("resistorSwitch", anodeLoad, catodeLoad);
     public NbtThermalLoad thermalLoad = new NbtThermalLoad("thermalLoad");
     public DiodeHeatThermalLoad heater = new DiodeHeatThermalLoad(resistorSwitch, thermalLoad);
-    public ThermalLoadWatchDog thermalWatchdog = new ThermalLoadWatchDog();
+    public ThermalLoadWatchDog thermalWatchdog = new ThermalLoadWatchDog(thermalLoad);
     public DiodeProcess diodeProcess = new DiodeProcess(resistorSwitch);
 
     public DiodeElement(SixNode sixNode, Direction side, SixNodeDescriptor descriptor) {
@@ -49,7 +49,7 @@ public class DiodeElement extends SixNodeElement {
         thermalLoadList.add(thermalLoad);
         electricalComponentList.add(resistorSwitch);
         electricalProcessList.add(diodeProcess);
-        slowProcessList.add(thermalWatchdog.setThermalLoad(thermalLoad).setThermalLoad(this.descriptor.thermal).set(new WorldExplosion(this).cableExplosion()));
+        slowProcessList.add(thermalWatchdog.setThermalLoad(this.descriptor.thermal).setDestroys(new WorldExplosion(this).cableExplosion()));
         thermalSlowProcessList.add(heater);
     }
 

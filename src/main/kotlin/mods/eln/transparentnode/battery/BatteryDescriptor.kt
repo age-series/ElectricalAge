@@ -112,7 +112,7 @@ class BatteryDescriptor(
 
     fun applyTo(load: ThermalLoad) {
         load.Rp = thermalRp
-        load.C = thermalC
+        load.heatCapacity = thermalC
     }
 
     fun applyTo(process: BatterySlowProcess) {

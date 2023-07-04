@@ -51,7 +51,7 @@ public class ElectricalMachineElement extends TransparentNodeElement implements 
     public final int outSlotId = 0;
     private int boosterSlotId = 1;
 
-    private final VoltageStateWatchDog voltageWatchdog = new VoltageStateWatchDog();
+    private final VoltageStateWatchDog voltageWatchdog = new VoltageStateWatchDog(electricalLoad);
 
     public ElectricalMachineElement(TransparentNode transparentNode, TransparentNodeDescriptor descriptor) {
         super(transparentNode, descriptor);
@@ -74,7 +74,7 @@ public class ElectricalMachineElement extends TransparentNodeElement implements 
         slowProcessList.add(new NodePeriodicPublishProcess(transparentNode, 2, 1));
 
         WorldExplosion exp = new WorldExplosion(this).machineExplosion();
-        slowProcessList.add(voltageWatchdog.setVoltageState(electricalLoad).setNominalVoltage(this.descriptor.nominalU).set(exp));
+        slowProcessList.add(voltageWatchdog.setNominalVoltage(this.descriptor.nominalU).setDestroys(exp));
     }
 
     @Override

@@ -96,7 +96,7 @@ public class ThermalCableDescriptor extends SixNodeDescriptor {
     public void setThermalLoad(ThermalLoad thermalLoad) {
         thermalLoad.Rp = thermalRp;
         thermalLoad.Rs = thermalRs;
-        thermalLoad.C = thermalC;
+        thermalLoad.heatCapacity = thermalC;
     }
 
     @Override

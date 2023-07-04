@@ -35,6 +35,7 @@ public class GenericItemUsingDamage<Descriptor extends GenericItemUsingDamageDes
         defaultElement = descriptor;
     }
 
+    @SuppressWarnings("deprecation")
     public void addWithoutRegistry(int damage, Descriptor descriptor) {
         subItemList.put(damage, descriptor);
         ItemStack stack = new ItemStack(this, 1, damage);
@@ -42,6 +43,7 @@ public class GenericItemUsingDamage<Descriptor extends GenericItemUsingDamageDes
         descriptor.setParent(this, damage);
     }
 
+    @SuppressWarnings("deprecation")
     public void addElement(int damage, Descriptor descriptor) {
         subItemList.put(damage, descriptor);
         ItemStack stack = new ItemStack(this, 1, damage);
@@ -76,7 +78,7 @@ public class GenericItemUsingDamage<Descriptor extends GenericItemUsingDamageDes
 	@SideOnly(Side.CLIENT)
 	public int getIconFromDamage(int damage) {
 	return getDescriptor(damage).getIconId();
-	
+
 	}
 	@Override
 	public String getTextureFile () {
@@ -97,7 +99,7 @@ public class GenericItemUsingDamage<Descriptor extends GenericItemUsingDamageDes
     @Override
     public String getUnlocalizedName(ItemStack par1ItemStack) {
         Descriptor desc = getDescriptor(par1ItemStack);
-        if (desc != null && desc.name != null) {
+        if (desc != null) {
             return desc.name.replaceAll("\\s+", "_");
         } else {
             return null;

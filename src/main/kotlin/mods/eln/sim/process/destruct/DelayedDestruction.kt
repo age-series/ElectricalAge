@@ -3,7 +3,7 @@ package mods.eln.sim.process.destruct
 import mods.eln.Eln
 import mods.eln.sim.IProcess
 
-class DelayedDestruction(val dest: IDestructable, var timeout: Double): IProcess {
+class DelayedDestruction(val dest: IDestructible, var timeout: Double): IProcess {
     init {
         Eln.simulator.addSlowProcess(this)
     }

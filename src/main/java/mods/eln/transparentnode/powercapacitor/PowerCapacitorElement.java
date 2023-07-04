@@ -34,7 +34,7 @@ public class PowerCapacitorElement extends TransparentNodeElement {
     Capacitor capacitor = new Capacitor(positiveLoad, negativeLoad);
     Resistor dischargeResistor = new Resistor(positiveLoad, negativeLoad);
     PunkProcess punkProcess = new PunkProcess();
-    BipoleVoltageWatchdog watchdog = new BipoleVoltageWatchdog().set(capacitor);
+    BipoleVoltageWatchdog watchdog = new BipoleVoltageWatchdog(capacitor);
 
     public PowerCapacitorElement(TransparentNode transparentNode,
                                  TransparentNodeDescriptor descriptor) {
@@ -48,7 +48,7 @@ public class PowerCapacitorElement extends TransparentNodeElement {
         electricalProcessList.add(punkProcess);
         slowProcessList.add(watchdog);
 
-        watchdog.set(new WorldExplosion(this).machineExplosion());
+        watchdog.setDestroys(new WorldExplosion(this).machineExplosion());
         positiveLoad.setAsMustBeFarFromInterSystem();
     }
 
@@ -129,7 +129,7 @@ public class PowerCapacitorElement extends TransparentNodeElement {
         capacitor.setCoulombs(descriptor.getCValue(inventory));
         stdDischargeResistor = descriptor.dischargeTao / capacitor.getCoulombs();
 
-        watchdog.setUNominal(descriptor.getUNominalValue(inventory));
+        watchdog.setNominalVoltage(descriptor.getUNominalValue(inventory));
         punkProcess.eLegaliseResistor = Math.pow(descriptor.getUNominalValue(inventory), 2) / 400;
 
         if (fromNbt) {
@@ -171,10 +171,10 @@ public class PowerCapacitorElement extends TransparentNodeElement {
         super.networkSerialize(stream);
         /*
 		 * try {
-		 * 
-		 * 
+		 *
+		 *
 		 * } catch (IOException e) {
-		 * 
+		 *
 		 * e.printStackTrace(); }
 		 */
     }
@@ -186,10 +186,10 @@ public class PowerCapacitorElement extends TransparentNodeElement {
         byte packetType = super.networkUnserialize(stream);
 		/*
 		 * try { switch(packetType) {
-		 * 
-		 * 
+		 *
+		 *
 		 * default: return packetType; } } catch (IOException e) {
-		 * 
+		 *
 		 * e.printStackTrace(); }
 		 */
         return unserializeNulldId;

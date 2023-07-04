@@ -35,16 +35,14 @@ class GridTransformerElement(node: TransparentNode, descriptor: TransparentNodeD
 
     internal val explosion = WorldExplosion(this).machineExplosion()
 
-    internal var voltagePrimaryWatchdog = VoltageStateWatchDog().apply {
+    internal var voltagePrimaryWatchdog = VoltageStateWatchDog(primaryLoad).apply {
         setNominalVoltage(primaryVoltage)
-        setVoltageState(primaryLoad)
-        set(explosion)
+        setDestroys(explosion)
         slowProcessList.add(this)
     }
-    internal var voltageSecondaryWatchdog = VoltageStateWatchDog().apply {
+    internal var voltageSecondaryWatchdog = VoltageStateWatchDog(secondaryLoad).apply {
         setNominalVoltage(secondaryVoltage)
-        setVoltageState(secondaryLoad)
-        set(explosion)
+        setDestroys(explosion)
         slowProcessList.add(this)
     }
 
@@ -54,10 +52,9 @@ class GridTransformerElement(node: TransparentNode, descriptor: TransparentNodeD
         slowProcessList.add(ElectricalLoadHeatThermalLoad(secondaryLoad, this))
         thermalLoadList.add(this)
     }
-    internal val thermalWatchdog = ThermalLoadWatchDog().apply {
-        setLimit(desc.cableDescriptor.thermalWarmLimit, desc.cableDescriptor.thermalCoolLimit)
-        setThermalLoad(thermalLoad)
-        set(explosion)
+    internal val thermalWatchdog = ThermalLoadWatchDog(thermalLoad).apply {
+        setTemperatureLimits(desc.cableDescriptor.thermalWarmLimit, desc.cableDescriptor.thermalCoolLimit)
+        setDestroys(explosion)
         slowProcessList.add(this)
     }
 

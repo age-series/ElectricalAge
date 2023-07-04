@@ -28,7 +28,6 @@ import mods.eln.sim.process.destruct.ThermalLoadWatchDog
 import mods.eln.sim.process.destruct.VoltageStateWatchDog
 import mods.eln.sim.process.destruct.WorldExplosion
 import mods.eln.sim.process.heater.ElectricalLoadHeatThermalLoad
-import mods.eln.sim.process.heater.ResistorHeatThermalLoad
 import mods.eln.sixnode.currentcable.CurrentCableDescriptor
 import mods.eln.sixnode.electricalrelay.ElectricalRelayElement
 import mods.eln.sound.SoundCommand
@@ -82,7 +81,7 @@ class CurrentRelayDescriptor(
         val thermalMaximalPowerDissipated = electricalRs * electricalMaximalCurrent * electricalMaximalCurrent * 2
         thermalC = thermalMaximalPowerDissipated * Eln.cableHeatingTime / Eln.cableWarmLimit
         thermalRp = Eln.cableWarmLimit / thermalMaximalPowerDissipated
-        thermalRs = 0.5 / thermalC / 2
+        thermalRs = 0.25 / thermalC
     }
 
     fun applyTo(load: ElectricalLoad) {
@@ -154,9 +153,9 @@ class CurrentRelayElement(sixNode: SixNode, side: Direction, descriptor: SixNode
     var gate = NbtElectricalGateInput("gate")
     private var gateProcess = CurrentRelayGateProcess(this, "GP", gate)
 
-    private var voltageWatchDogA = VoltageStateWatchDog()
-    private var voltageWatchDogB = VoltageStateWatchDog()
-    private var thermalWatchdog = ThermalLoadWatchDog()
+    private var voltageWatchDogA = VoltageStateWatchDog(aLoad)
+    private var voltageWatchDogB = VoltageStateWatchDog(bLoad)
+    private var thermalWatchdog = ThermalLoadWatchDog(thermalLoad)
 
     var switchState = false
         set(value) {
@@ -187,10 +186,8 @@ class CurrentRelayElement(sixNode: SixNode, side: Direction, descriptor: SixNode
         slowProcessList.add(voltageWatchDogA)
         slowProcessList.add(voltageWatchDogB)
 
-        val exp = WorldExplosion(this).cableExplosion()
-
-        voltageWatchDogA.set(aLoad).setUNominal(cableDescriptor.electricalNominalVoltage).set(exp)
-        voltageWatchDogB.set(bLoad).setUNominal(cableDescriptor.electricalNominalVoltage).set(exp)
+        voltageWatchDogA.setNominalVoltage(cableDescriptor.electricalNominalVoltage)
+        voltageWatchDogB.setNominalVoltage(cableDescriptor.electricalNominalVoltage)
 
         val heater = ElectricalLoadHeatThermalLoad(aLoad, thermalLoad)
         thermalSlowProcessList.add(heater)
@@ -199,13 +196,11 @@ class CurrentRelayElement(sixNode: SixNode, side: Direction, descriptor: SixNode
 
         slowProcessList.add(thermalWatchdog)
         thermalWatchdog
-            .set(thermalLoad)
-            .setLimit(Eln.cableWarmLimit, -10.0)
-            .set(WorldExplosion(this).cableExplosion())
+            .setTemperatureLimits(Eln.cableWarmLimit, -10.0)
+            .setDestroys(WorldExplosion(this).cableExplosion())
     }
 
-
-
+    @Suppress("UNUSED_PARAMETER")
     fun canBePlacedOnSide(side: Direction?, type: Int): Boolean {
         return true
     }
@@ -244,25 +239,25 @@ class CurrentRelayElement(sixNode: SixNode, side: Direction, descriptor: SixNode
     }
 
     override fun multiMeterString(): String {
-        return plotVolt("Ua:", aLoad.u) + plotVolt("Ub:", bLoad.u) + plotAmpere("I:", aLoad.current)
+        return plotVolt("Ua:", aLoad.voltage) + plotVolt("Ub:", bLoad.voltage) + plotAmpere("I:", aLoad.current)
     }
 
     override fun getWaila(): Map<String, String> {
         val info: MutableMap<String, String> = HashMap()
         info[I18N.tr("Position")] = if (switchState) I18N.tr("Closed") else I18N.tr("Open")
         info[I18N.tr("Current")] = plotAmpere("", aLoad.current)
-        info[I18N.tr("Temperature")] = Utils.plotCelsius("", thermalLoad.t)
+        info[I18N.tr("Temperature")] = Utils.plotCelsius("", thermalLoad.temperatureCelsius)
         if (Eln.wailaEasyMode) {
             info[I18N.tr("Default position")] = if (defaultOutput) I18N.tr("Closed") else I18N.tr("Open")
             info[I18N.tr("Voltages")] =
-                plotVolt("", aLoad.u) + plotVolt(" ", bLoad.u)
+                plotVolt("", aLoad.voltage) + plotVolt(" ", bLoad.voltage)
         }
         info[I18N.tr("Subsystem Matrix Size")] = renderSubSystemWaila(switchResistor.subSystem)
         return info
     }
 
     override fun thermoMeterString(): String {
-        return Utils.plotCelsius("T", thermalLoad.Tc)
+        return Utils.plotCelsius("T", thermalLoad.temperatureCelsius)
     }
 
     override fun networkSerialize(stream: DataOutputStream) {
@@ -285,7 +280,6 @@ class CurrentRelayElement(sixNode: SixNode, side: Direction, descriptor: SixNode
 
     override fun initialize() {
         computeElectricalLoad()
-        switchState = switchState
         refreshSwitchResistor()
     }
 
@@ -301,7 +295,7 @@ class CurrentRelayElement(sixNode: SixNode, side: Direction, descriptor: SixNode
 
     private fun configThermalLoad(thermalLoad: ThermalLoad) {
         thermalLoad.Rs = currentRelayDescriptor.thermalRs
-        thermalLoad.C = currentRelayDescriptor.thermalC
+        thermalLoad.heatCapacity = currentRelayDescriptor.thermalC
         thermalLoad.Rp = currentRelayDescriptor.thermalRp
     }
 
@@ -352,7 +346,7 @@ class CurrentRelayGui(val render: CurrentRelayRender): GuiScreenEln() {
     override fun guiObjectEvent(`object`: IGuiObject?) {
         super.guiObjectEvent(`object`)
         if (`object` === toggleDefaultOutput) {
-            render.clientToogleDefaultOutput()
+            render.clientToggleDefaultOutput()
         }
     }
 
@@ -403,7 +397,7 @@ class CurrentRelayRender(override var tileEntity: SixNodeEntity, side: Direction
         boot = false
     }
 
-    fun clientToogleDefaultOutput() {
+    fun clientToggleDefaultOutput() {
         clientSend(ElectricalRelayElement.toogleOutputDefaultId.toInt())
     }
 

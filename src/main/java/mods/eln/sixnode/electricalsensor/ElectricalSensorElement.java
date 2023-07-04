@@ -40,11 +40,12 @@ import java.util.Map;
 
 public class ElectricalSensorElement extends SixNodeElement implements IConfigurable {
 
-    VoltageStateWatchDog voltageWatchDog = new VoltageStateWatchDog();
+
     //ResistorCurrentWatchdog currentWatchDog = new ResistorCurrentWatchdog();
 
     public ElectricalSensorDescriptor descriptor;
     public NbtElectricalLoad aLoad, bLoad;
+    VoltageStateWatchDog voltageWatchDog;
     public NbtElectricalLoad outputGate = new NbtElectricalLoad("outputGate");
     public NbtElectricalGateOutputProcess outputGateProcess = new NbtElectricalGateOutputProcess("outputGateProcess", outputGate);
     public ElectricalSensorProcess slowProcess = new ElectricalSensorProcess(this);
@@ -69,6 +70,7 @@ public class ElectricalSensorElement extends SixNodeElement implements IConfigur
         this.descriptor = (ElectricalSensorDescriptor) descriptor;
 
         aLoad = new NbtElectricalLoad("aLoad");
+        voltageWatchDog = new VoltageStateWatchDog(aLoad);
         electricalLoadList.add(aLoad);
         WorldExplosion exp = new WorldExplosion(this).cableExplosion();
 
@@ -88,7 +90,7 @@ public class ElectricalSensorElement extends SixNodeElement implements IConfigur
 
         if (this.descriptor.voltageOnly) {
             slowProcessList.add(voltageWatchDog);
-            voltageWatchDog.setVoltageState(aLoad).set(exp);
+            voltageWatchDog.setDestroys(exp);
         }
     }
 

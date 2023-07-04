@@ -64,7 +64,7 @@ public class EnergyMeterRender extends SixNodeElementRender {
 
         descriptor.draw(energyStack / Math.pow(10, energyUnit * 3 - 1), timerCouter / (timeUnit == 0 ? 360 : 8640),
             energyUnit, timeUnit,
-            UtilsClient.distanceFromClientPlayer(tileEntity) < 20);
+            UtilsClient.distanceFromClientPlayer(getTileEntity()) < 20);
 
         GL11.glPopMatrix();
 

@@ -1,27 +1,18 @@
-package mods.eln.sim.process.destruct;
+package mods.eln.sim.process.destruct
 
-import mods.eln.sim.mna.component.Resistor;
+import mods.eln.sim.mna.component.Resistor
 
-public class ResistorPowerWatchdog extends ValueWatchdog {
+class ResistorPowerWatchdog(var resistor: Resistor) : ValueWatchdog() {
 
-    Resistor resistor;
-
-    public ResistorPowerWatchdog setResistor(Resistor resistor) {
-        this.resistor = resistor;
-        return this;
-    }
-
-    public ResistorPowerWatchdog setMaximumPower(double maximumPower) {
-        this.max = maximumPower;
-        this.min = -1;
+    fun setMaximumPower(maximumPower: Double): ResistorPowerWatchdog {
+        max = maximumPower
+        min = -1.0
         // TODO: Abstract 0.2 as step time or seconds?
-        this.timeoutReset = maximumPower * 0.20 * 5;
-
-        return this;
+        timeoutReset = maximumPower * 0.20 * 5
+        return this
     }
 
-    @Override
-    double getValue() {
-        return resistor.getPower();
+    override fun getValue(): Double {
+        return resistor.power
     }
 }

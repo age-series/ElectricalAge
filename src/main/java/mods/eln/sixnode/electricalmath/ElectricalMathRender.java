@@ -70,7 +70,7 @@ public class ElectricalMathRender extends SixNodeElementRender {
             pinDistances = descriptor.pinDistance;
         }
 
-        if (UtilsClient.distanceFromClientPlayer(tileEntity) < 15) {
+        if (UtilsClient.distanceFromClientPlayer(getTileEntity()) < 15) {
             GL11.glColor3f(0, 0, 0);
             UtilsClient.drawConnectionPinSixNode(front, pinDistances, 1.8f, 1.35f);
             GL11.glColor3f(1, 0, 0);
@@ -103,7 +103,7 @@ public class ElectricalMathRender extends SixNodeElementRender {
             ledTime = 0;
         }
 
-        if (!Utils.isPlayerAround(tileEntity.getWorldObj(), coord.getAxisAlignedBB(0)))
+        if (!Utils.isPlayerAround(getTileEntity().getWorldObj(), coord.getAxisAlignedBB(0)))
             interpolator.setTarget(0f);
         else
             interpolator.setTarget(1f);

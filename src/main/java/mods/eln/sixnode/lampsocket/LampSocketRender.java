@@ -77,7 +77,7 @@ public class LampSocketRender extends SixNodeElementRender {
         super.draw(); //Colored cable only
 
         GL11.glRotatef(descriptor.initialRotateDeg, 1.f, 0.f, 0.f);
-        descriptor.render.draw(this, UtilsClient.distanceFromClientPlayer(this.tileEntity));
+        descriptor.render.draw(this, UtilsClient.distanceFromClientPlayer(this.getTileEntity()));
     }
 
     @Override
@@ -87,7 +87,7 @@ public class LampSocketRender extends SixNodeElementRender {
 
             entityTimout -= dt;
             if (entityTimout < 0) {
-                entityList = tileEntity.getWorldObj().getEntitiesWithinAABB(Entity.class, new Coordinate(tileEntity.xCoord, tileEntity.yCoord - 2, tileEntity.zCoord, tileEntity.getWorldObj()).getAxisAlignedBB(2));
+                entityList = getTileEntity().getWorldObj().getEntitiesWithinAABB(Entity.class, new Coordinate(getTileEntity().xCoord, getTileEntity().yCoord - 2, getTileEntity().zCoord, getTileEntity().getWorldObj()).getAxisAlignedBB(2));
                 entityTimout = 0.1f;
             }
 
@@ -105,8 +105,8 @@ public class LampSocketRender extends SixNodeElementRender {
                 pertuVy += e.motionZ * eFactor * dt;
             }
 
-            if (tileEntity.getWorldObj().getSavedLightValue(EnumSkyBlock.Sky, tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord) > 3) {
-                float weather = (float) UtilsClient.getWeather(tileEntity.getWorldObj()) * 0.9f + 0.1f;
+            if (getTileEntity().getWorldObj().getSavedLightValue(EnumSkyBlock.Sky, getTileEntity().xCoord, getTileEntity().yCoord, getTileEntity().zCoord) > 3) {
+                float weather = (float) UtilsClient.getWeather(getTileEntity().getWorldObj()) * 0.9f + 0.1f;
 
                 // TODO: Reduce swinging of lamps to some degree?
                 weatherAlphaY += (0.4 - Math.random()) * dt * Math.PI / 0.2 * weather;

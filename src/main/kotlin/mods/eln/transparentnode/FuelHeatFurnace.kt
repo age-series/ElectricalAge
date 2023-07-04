@@ -143,7 +143,7 @@ class FuelHeatFurnaceElement(transparentNode: TransparentNode, descriptor: Trans
         }
     }
 
-    private val thermalWatchdog = ThermalLoadWatchDog()
+    private val thermalWatchdog = ThermalLoadWatchDog(thermalLoad)
 
     init {
         thermalLoadList.add(thermalLoad)
@@ -154,8 +154,8 @@ class FuelHeatFurnaceElement(transparentNode: TransparentNode, descriptor: Trans
 
         tank.setFilter(FuelRegistry.fluidListToFluids(FuelRegistry.gasolineList + FuelRegistry.dieselList))
 
-        thermalWatchdog.setThermalLoad(thermalLoad).setLimit((descriptor as FuelHeatFurnaceDescriptor).thermal)
-            .set(WorldExplosion(this).machineExplosion())
+        thermalWatchdog.setTemperatureLimits((descriptor as FuelHeatFurnaceDescriptor).thermal)
+            .setDestroys(WorldExplosion(this).machineExplosion())
     }
 
     override fun getElectricalLoad(side: Direction, lrdu: LRDU) = when {

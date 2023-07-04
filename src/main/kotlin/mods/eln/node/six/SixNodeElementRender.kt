@@ -29,7 +29,7 @@ import java.io.DataInputStream
 import java.io.DataOutputStream
 import java.io.IOException
 
-abstract class SixNodeElementRender(@JvmField var tileEntity: SixNodeEntity, @JvmField var side: Direction, @JvmField var sixNodeDescriptor: SixNodeDescriptor) {
+abstract class SixNodeElementRender(open var tileEntity: SixNodeEntity, @JvmField var side: Direction, @JvmField var sixNodeDescriptor: SixNodeDescriptor) {
     @JvmField
     var connectedSide = LRDUMask()
     var glList = 0

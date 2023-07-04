@@ -181,7 +181,7 @@ class MotorElement(node: TransparentNode, desc_: TransparentNodeDescriptor) :
 
     internal val thermal = NbtThermalLoad("thermal")
     internal val heater: ElectricalLoadHeatThermalLoad
-    internal val thermalWatchdog = ThermalLoadWatchDog()
+    internal val thermalWatchdog = ThermalLoadWatchDog(thermal)
 
     init {
         electricalLoadList.addAll(arrayOf(wireLoad, shaftLoad))
@@ -197,7 +197,7 @@ class MotorElement(node: TransparentNode, desc_: TransparentNodeDescriptor) :
         desc.thermalLoadInitializer.applyTo(thermalWatchdog)
         thermal.setAsSlow()
         thermalLoadList.add(thermal)
-        thermalWatchdog.setThermalLoad(thermal).set(WorldExplosion(this).machineExplosion())
+        thermalWatchdog.setDestroys(WorldExplosion(this as ShaftElement).machineExplosion())
         slowProcessList.add(thermalWatchdog)
 
         heater = ElectricalLoadHeatThermalLoad(wireLoad, thermal)
