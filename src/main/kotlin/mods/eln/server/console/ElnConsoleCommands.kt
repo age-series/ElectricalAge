@@ -34,13 +34,7 @@ open class ElnAboutCommand: IConsoleCommand {
     override fun runCommand(ics: ICommandSender, args: List<String>) {
         cprint(ics, "${FC.WHITE}About Electrical Age:")
         cprint(ics,  "${FC.BRIGHT_GREY}Authors: ${FC.DARK_GREY}${Eln.AUTHORS.joinToString(", ")}")
-        cprint(ics, "${FC.BRIGHT_GREY}Version: ${FC.DARK_GREY}" + Version.getSimpleVersionName())
-        if (Version.BUILD_HOST.isNotEmpty())
-            cprint(ics, "${FC.BRIGHT_GREY}Build Host: ${FC.DARK_GREY}${Version.BUILD_HOST}")
-        if (Version.BUILD_DATE.isNotEmpty())
-            cprint(ics, "${FC.BRIGHT_GREY}Build Host: ${FC.DARK_GREY}${Version.BUILD_DATE}")
-        if (Version.JAVA_VERSION.isNotEmpty())
-            cprint(ics, "${FC.BRIGHT_GREY}Java Build Version: ${FC.DARK_GREY}${Version.JAVA_VERSION}")
+        cprint(ics, "${FC.BRIGHT_GREY}Version: ${FC.DARK_GREY}" + Version.simpleVersionName)
         if (Version.GIT_REVISION.isNotEmpty()) {
             cprint(ics, "${FC.BRIGHT_GREY}Git Build Version: ${FC.DARK_GREY}${Version.GIT_REVISION}")
             cprint(ics, "${FC.BRIGHT_BLUE}[GitHub Link to Git Version]", "https://github.com/jrddunbr/ElectricalAge/commit/" + Version.GIT_REVISION)

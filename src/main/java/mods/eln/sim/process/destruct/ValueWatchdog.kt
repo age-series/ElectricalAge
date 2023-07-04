@@ -38,9 +38,9 @@ abstract class ValueWatchdog : IProcess {
             println(
                 "%s destroying %s",
                 javaClass.name,
-                destructible!!.describe()
+                destructible?.describe()?: "Null destructible"
             )
-            if (!Eln.debugExplosions) destructible!!.destructImpl()
+            if (!Eln.debugExplosions) destructible?.destructImpl()
         }
     }
 

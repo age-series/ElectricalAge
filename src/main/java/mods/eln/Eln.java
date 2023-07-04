@@ -388,7 +388,7 @@ public class Eln {
         // Update ModInfo by code
         ModMetadata meta = event.getModMetadata();
         meta.modId = MODID;
-        meta.version = Version.getSimpleVersionName();
+        meta.version = Version.INSTANCE.getSimpleVersionName();
         meta.name = NAME;
         meta.description = tr("mod.meta.desc");
         meta.url = URL;

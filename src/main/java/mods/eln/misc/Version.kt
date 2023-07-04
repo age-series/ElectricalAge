@@ -1,76 +1,66 @@
-package mods.eln.misc;
+package mods.eln.misc
 
-import mods.eln.Tags;
-import org.semver4j.Semver;
-
-import static mods.eln.i18n.I18N.tr;
+import mods.eln.Tags
+import mods.eln.i18n.I18N
+import org.semver4j.Semver
 
 /**
  *
- * ====================================================================================
- * WARNING! DO NOT CONVERT THIS TO KOTLIN WITHOUT CHECKING HOW GRADLE PARSES THIS FILE!
- * ====================================================================================
  * Current mod version. Used to check if a new mod version is available. Must be
  * set correctly for each mod release.
  *
  * @author metc
  */
-public final class Version {
-
+object Version {
     /**
      * SemVer Version
      */
-    public final static Semver SEMVER = Semver.parse(Tags.VERSION);
+    val SEMVER = Semver.parse(Tags.VERSION.replace(".dirty", ""))
 
     /**
      * Major version code.
      */
-    public final static int MAJOR = SEMVER.getMajor();
+    val MAJOR = SEMVER.major
 
     /**
      * Minor version code.
      */
-    public final static int MINOR = SEMVER.getMinor();
+    val MINOR = SEMVER.minor
 
     /**
      * Revision version code.
      */
-    public final static int REVISION = SEMVER.getPatch();
+    val REVISION = SEMVER.patch
 
-    // These attributes make the build not reproducible, should not bake in build-host information
-    //public final static String BUILD_HOST = parseAdditionals("@BUILD_HOST@");
-    //public final static String BUILD_DATE = parseAdditionals("@BUILD_DATE@");
-    //public final static String JAVA_VERSION = parseAdditionals("@JAVA_VERSION@");
-    public final static String BUILD_HOST = "";
-    public final static String BUILD_DATE = "";
-    public final static String JAVA_VERSION = "";
+    /**
+     * If there are uncommited changes in the project
+     */
+    val DIRTY = Tags.VERSION.contains(".dirty")
 
     // RFG doesn't output the build information in the semver build field, it puts it in the second prerelease field
     // instead for some reason
-    public final static String GIT_REVISION = SEMVER.getPreRelease().size()>=2 ? SEMVER.getPreRelease().get(1) : "";
+    val GIT_REVISION = if (SEMVER.preRelease.size >= 2) SEMVER.preRelease[1] else ""
 
     /**
      * Unique version code. Must be a String for annotations. Used to check if a
      * new version if available. Each update must increment this number.
      */
-    public final static int UNIQUE_VERSION = 1000000 * MAJOR + 1000 * MINOR + REVISION;
-
-    public final static String VERSION_STRING = MAJOR + "." + MINOR + "." + REVISION;
-
-    public static String getSimpleVersionName() {
-        return VERSION_STRING;
+    @JvmField
+    val UNIQUE_VERSION = 1000000 * MAJOR + 1000 * MINOR + REVISION
+    val simpleVersionName = if (!DIRTY) "$MAJOR.$MINOR.$REVISION" else "$MAJOR.$MINOR.$REVISION (Dirty)"
+    @JvmStatic
+    fun print(): String {
+        return I18N.tr("mod.name") + " " + simpleVersionName
     }
 
-    public static String print() {
-        return tr("mod.name") + " " + getSimpleVersionName();
+    @JvmStatic
+    fun printColor(): String {
+        return (FC.WHITE + I18N.tr("mod.name") + " version "
+                + FC.ORANGE + simpleVersionName)
     }
 
-    public static String printColor() {
-        return FC.WHITE + tr("mod.name") + " version "
-            + FC.ORANGE + getSimpleVersionName();
-    }
-
-    public static void main(String... args) {
-        System.out.print(getSimpleVersionName());
+    @JvmStatic
+    fun main(args: Array<String>) {
+        print(simpleVersionName)
     }
 }
