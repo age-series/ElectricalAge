@@ -1,6 +1,7 @@
 package mods.eln.sim
 
 import java.util.function.Function
+import kotlin.math.cos
 import kotlin.math.roundToLong
 import kotlin.math.sin
 
@@ -37,18 +38,31 @@ class Integrator(private var timeStep: Double) {
 }
 
 fun main() {
-    val testFunction = Function { xa: Double -> sin(10 * xa) }
-    val actualIntegrationFunction = Function { x: Double -> sin(5 * x) * sin(5 * x) / 5 }
+    val testFunction = Function { xa: Double -> sin(2 * xa) }
+    val actualIntegralFunction = Function { x: Double -> sin(x) * sin(x) }
+    val actualDerivativeFunction = Function { x: Double -> 2 * cos(2 * x) }
     val dx = 1.0 / 20
     val integrator = Integrator(dx)
+    val differentiator = Differentiator(dx)
     val tEnd = (1 / dx).roundToLong() + 1
-    for (t in 0 until tEnd) {
+    for (t in 1 until tEnd) {
         val x: Double = t * dx
-        val test: Double = integrator.nextStep(testFunction.apply(x))
-        val actual: Double = actualIntegrationFunction.apply(x)
-        val error: Double = test - actual
-        System.out.printf(
-            "x = %1f, Y ~= %2f, Y = %3f, E = %4e%n", x, test, actual, error
+        val y = testFunction.apply(x)
+        val derivativeY: Double = differentiator.nextStep(y)
+        val integralY: Double = integrator.nextStep(y)
+        val derivativeActual: Double = actualDerivativeFunction.apply(x)
+        val integralActual: Double = actualIntegralFunction.apply(x)
+        println(
+            "x = %.5f, y = %.5f, Y ~= %.5f, Y = %.5f, dy ~= %.5f, dy = %.5f, errInt = %.3e, errDiff = %.3e".format(
+                x,
+                y,
+                integralY,
+                integralActual,
+                derivativeY,
+                derivativeActual,
+                integralY - integralActual,
+                derivativeY - derivativeActual
+            )
         )
     }
 }
