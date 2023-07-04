@@ -153,8 +153,8 @@ class VariableDcDcElement(transparentNode: TransparentNode, descriptor: Transpar
     var primaryMaxCurrent = 0.0
     var secondaryMaxCurrent = 0.0
 
-    val primaryVoltageWatchdog = VoltageStateWatchDog()
-    val secondaryVoltageWatchdog = VoltageStateWatchDog()
+    val primaryVoltageWatchdog = VoltageStateWatchDog(primaryLoad)
+    val secondaryVoltageWatchdog = VoltageStateWatchDog(secondaryLoad)
 
     var populated = false
 
@@ -165,8 +165,8 @@ class VariableDcDcElement(transparentNode: TransparentNode, descriptor: Transpar
         electricalComponentList.add(primaryVoltageSource)
         electricalComponentList.add(secondaryVoltageSource)
         val exp = WorldExplosion(this).machineExplosion()
-        slowProcessList.add(primaryVoltageWatchdog.setVoltageState(primaryLoad).set(exp))
-        slowProcessList.add(secondaryVoltageWatchdog.setVoltageState(secondaryLoad).set(exp))
+        slowProcessList.add(primaryVoltageWatchdog.setDestroys(exp))
+        slowProcessList.add(secondaryVoltageWatchdog.setDestroys(exp))
         slowProcessList.add(NodePeriodicPublishProcess(node!!, 1.0, .5))
         slowProcessList.add(VariableDcDcProcess(this))
     }

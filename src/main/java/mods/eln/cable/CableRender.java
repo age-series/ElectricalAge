@@ -16,7 +16,7 @@ public class CableRender {
     private CableRender() {
     }
     /*
-	static final int connectionStandard = 0;	
+	static final int connectionStandard = 0;
 	static final int connectionInternal = 1;
 	static final int connectionWrappeHalf = 2;
 	static final int connectionWrappeFull = 3;
@@ -174,11 +174,10 @@ public class CableRender {
             Direction sideLrdu = side.applyLRDU(lrdu);
 
             //InternalConnection
-            assert sideLrdu != null;
-            if (element.tileEntity.elementRenderList[sideLrdu.getInt()] != null) {
+            if (element.getTileEntity().elementRenderList[sideLrdu.getInt()] != null) {
                 LRDU otherLRDU = sideLrdu.getLRDUGoingTo(side);
                 CableRenderDescriptor render = element.getCableRender(lrdu);
-                SixNodeElementRender otherElement = element.tileEntity.elementRenderList[sideLrdu.getInt()];
+                SixNodeElementRender otherElement = element.getTileEntity().elementRenderList[sideLrdu.getInt()];
                 CableRenderDescriptor otherRender = otherElement.getCableRender(otherLRDU);
 
                 if (otherRender == null || render == null) {
@@ -209,9 +208,9 @@ public class CableRender {
                 continue;
             }
 
-            x2 = element.tileEntity.xCoord;
-            y2 = element.tileEntity.yCoord;
-            z2 = element.tileEntity.zCoord;
+            x2 = element.getTileEntity().xCoord;
+            y2 = element.getTileEntity().yCoord;
+            z2 = element.getTileEntity().zCoord;
 
             switch (sideLrdu) {
                 case XN:
@@ -237,7 +236,7 @@ public class CableRender {
             }
 
             //standardConnection
-            otherTileEntity = element.tileEntity.getWorldObj().getTileEntity(x2, y2, z2);
+            otherTileEntity = element.getTileEntity().getWorldObj().getTileEntity(x2, y2, z2);
             if (otherTileEntity instanceof SixNodeEntity) {
                 SixNodeEntity sixNodeEntity = (SixNodeEntity) otherTileEntity;
                 if (sixNodeEntity.elementRenderList[side.getInt()] != null) {
@@ -248,7 +247,7 @@ public class CableRender {
             }
 
             //no wrappeConection ?
-            if (!NodeBase.isBlockWrappable(element.tileEntity.getWorldObj().getBlock(x2, y2, z2), element.tileEntity.getWorldObj(), x2, y2, z2)) {
+            if (!NodeBase.isBlockWrappable(element.getTileEntity().getWorldObj().getBlock(x2, y2, z2), element.getTileEntity().getWorldObj(), x2, y2, z2)) {
                 continue;
             } else {
                 switch (side) {
@@ -274,7 +273,7 @@ public class CableRender {
                         break;
                 }
 
-                otherTileEntity = element.tileEntity.getWorldObj().getTileEntity(x2, y2, z2);
+                otherTileEntity = element.getTileEntity().getWorldObj().getTileEntity(x2, y2, z2);
 
                 if (otherTileEntity instanceof NodeBlockEntity) {
                     //Direction otherDirection = side.getInverse();
@@ -324,13 +323,13 @@ public class CableRender {
                     connectionTypeBuild.otherRender[lrdu.getDir()] = otherNode.getCableRender(otherDirection, otherLRDU);
                     continue;
                 }
-				
+
 				/*
 				if(otherTileEntity instanceof SixNodeEntity) {
 				//	SixNodeEntity sixNodeEntity = (SixNodeEntity) otherTileEntity;
 					//sixNodeEntity.elementRenderList[0].
 					connectionTypeBuild += connectionWrappeHalf<<(lrdu.dir*8);
-					continue;					
+					continue;
 				}
 				else {
 					connectionTypeBuild += connectionWrappeFull<<(lrdu.dir*8);

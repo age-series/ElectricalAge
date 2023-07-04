@@ -1,49 +1,41 @@
-package mods.eln.sim.process.destruct;
+package mods.eln.sim.process.destruct
 
-import mods.eln.sim.ThermalLoad;
-import mods.eln.sim.ThermalLoadInitializer;
-import mods.eln.sim.ThermalLoadInitializerByPowerDrop;
+import mods.eln.sim.ThermalLoad
+import mods.eln.sim.ThermalLoadInitializer
+import mods.eln.sim.ThermalLoadInitializerByPowerDrop
 
-public class ThermalLoadWatchDog extends ValueWatchdog {
+class ThermalLoadWatchDog(var state: ThermalLoad): ValueWatchdog() {
 
-    ThermalLoad state;
-
-    @Override
-    double getValue() {
-        return state.getTemperature();
+    override fun getValue(): Double {
+        return state.temperature
     }
 
-    public ThermalLoadWatchDog setThermalLoad(ThermalLoad state) {
-        this.state = state;
-        return this;
-    }
-
-    public ThermalLoadWatchDog setMaximumTemperature(double maximumTemperature) {
-        this.max = maximumTemperature;
-        this.min = -40;
+    fun setMaximumTemperature(maximumTemperature: Double): ThermalLoadWatchDog {
+        max = maximumTemperature
+        min = -40.0
         // TODO: Abstract 0.1 as step time or seconds?
-        this.timeoutReset = maximumTemperature * 0.1 * 10;
-        return this;
+        timeoutReset = maximumTemperature * 0.1 * 10
+        return this
     }
 
-    public ThermalLoadWatchDog setThermalLoad(ThermalLoadInitializer t) {
-        this.max = t.maximumTemperature;
-        this.min = t.minimumTemperature;
-        this.timeoutReset = max * 0.1 * 10;
-        return this;
+    fun setThermalLoad(t: ThermalLoadInitializer): ThermalLoadWatchDog {
+        max = t.maximumTemperature
+        min = t.minimumTemperature
+        timeoutReset = max * 0.1 * 10
+        return this
     }
 
-    public ThermalLoadWatchDog setLimit(double maximumTemperature, double minimumTemperature) {
-        this.max = maximumTemperature;
-        this.min = minimumTemperature;
-        this.timeoutReset = max * 0.1 * 10;
-        return this;
+    fun setTemperatureLimits(maximumTemperature: Double, minimumTemperature: Double): ThermalLoadWatchDog {
+        max = maximumTemperature
+        min = minimumTemperature
+        timeoutReset = max * 0.1 * 10
+        return this
     }
 
-    public ThermalLoadWatchDog setLimit(ThermalLoadInitializerByPowerDrop t) {
-        this.max = t.maximumTemperature;
-        this.min = t.minimumTemperature;
-        this.timeoutReset = max * 0.1 * 10;
-        return this;
+    fun setTemperatureLimits(t: ThermalLoadInitializerByPowerDrop): ThermalLoadWatchDog {
+        max = t.maximumTemperature
+        min = t.minimumTemperature
+        timeoutReset = max * 0.1 * 10
+        return this
     }
 }

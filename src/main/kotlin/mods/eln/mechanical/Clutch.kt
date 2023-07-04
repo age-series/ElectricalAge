@@ -261,7 +261,7 @@ class ClutchElement(node: TransparentNode, desc_: TransparentNodeDescriptor) : S
             if(slipping) {
                 if(plateDescriptor.explodes && (faster.rads - slower.rads) > 5) {
                     DelayedDestruction(
-                        WorldExplosion(this@ClutchElement).machineExplosion(),
+                        WorldExplosion(this@ClutchElement as ShaftElement).machineExplosion(),
                         0.0
                     )
                     return

@@ -106,7 +106,7 @@ class ThermalHeatExchangerElement(
     private val thermalLoad = NbtThermalLoad("thermalLoad")
     val tankMap = mapOf(Pair(INPUT_SIDE, TankData(FluidTank(1000))), Pair(OUTPUT_SIDE, TankData(FluidTank(1000))))
     private val tank = ElementSidedFluidHandler(tankMap)
-    private val thermalWatchdog = ThermalLoadWatchDog()
+    private val thermalWatchdog = ThermalLoadWatchDog(thermalLoad)
     private val fluidRegulatorProcess = IProcess {
         val inputFluid = tank.getFluidType(INPUT_SIDE)
         var joulesPerMb = 0.0
@@ -177,8 +177,8 @@ class ThermalHeatExchangerElement(
         thermalFastProcessList.add(thermalRegulatorProcess)
         slowProcessList.add(NodePeriodicPublishProcess(transparentNode, 2.0, 1.0))
         slowProcessList.add(thermalWatchdog)
-        thermalWatchdog.setThermalLoad(thermalLoad).setLimit((descriptor as ThermalHeatExchangerDescriptor).thermal)
-            .set(WorldExplosion(this).machineExplosion())
+        thermalWatchdog.setTemperatureLimits((descriptor as ThermalHeatExchangerDescriptor).thermal)
+            .setDestroys(WorldExplosion(this).machineExplosion())
 
         if (ic2hotcoolant != null && ic2coolant != null) {
             //println("IC2 Coolant Enabled in Thermal Heat Exchanger")

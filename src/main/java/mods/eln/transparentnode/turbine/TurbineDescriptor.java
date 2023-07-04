@@ -65,7 +65,7 @@ public class TurbineDescriptor extends TransparentNodeDescriptor {
     public final String soundFile;
 
     public void applyTo(ThermalLoad load) {
-        load.C = thermalC;
+        load.heatCapacity = thermalC;
         load.Rp = thermalRp;
         load.Rs = thermalRs;
     }

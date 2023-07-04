@@ -1,7 +1,6 @@
-package mods.eln.sim.process.destruct;
+package mods.eln.sim.process.destruct
 
-public interface IDestructable {
-    void destructImpl();
-
-    String describe();
+interface IDestructible {
+    fun destructImpl()
+    fun describe(): String?
 }

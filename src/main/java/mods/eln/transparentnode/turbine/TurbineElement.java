@@ -60,19 +60,17 @@ public class TurbineElement extends TransparentNodeElement {
 
         WorldExplosion exp = new WorldExplosion(this).machineExplosion();
 
+        ThermalLoadWatchDog thermalWatchdog = new ThermalLoadWatchDog(warmLoad);
         slowProcessList.add(thermalWatchdog);
 
         thermalWatchdog
-            .setThermalLoad(warmLoad)
             .setMaximumTemperature(this.descriptor.nominalDeltaT * 2)
-            .set(exp);
+            .setDestroys(exp);
 
-        slowProcessList.add(voltageWatchdog.setVoltageState(positiveLoad).setNominalVoltage(this.descriptor.nominalU).set(exp));
+        VoltageStateWatchDog voltageWatchdog = new VoltageStateWatchDog(positiveLoad);
+        slowProcessList.add(voltageWatchdog.setNominalVoltage(this.descriptor.nominalU).setDestroys(exp));
         slowProcessList.add(new NodePeriodicPublishProcess(node, 1., .5));
     }
-
-    private final VoltageStateWatchDog voltageWatchdog = new VoltageStateWatchDog();
-    private final ThermalLoadWatchDog thermalWatchdog = new ThermalLoadWatchDog();
 
     @Override
     public void connectJob() {

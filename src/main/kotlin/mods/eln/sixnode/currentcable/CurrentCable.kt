@@ -94,7 +94,7 @@ class CurrentCableDescriptor(
 
     override fun applyTo(thermalLoad: ThermalLoad) {
         thermalLoad.Rs = thermalRs
-        thermalLoad.C = thermalC
+        thermalLoad.heatCapacity = thermalC
         thermalLoad.Rp = thermalRp
     }
 
@@ -122,8 +122,8 @@ open class CurrentCableElement(sixNode: SixNode?, side: Direction?, descriptor: 
     var electricalLoad = NbtElectricalLoad("electricalLoad")
     var thermalLoad = NbtThermalLoad("thermalLoad")
     var heater = ElectricalLoadHeatThermalLoad(electricalLoad, thermalLoad)
-    var thermalWatchdog = ThermalLoadWatchDog()
-    var voltageWatchdog = VoltageStateWatchDog()
+    var thermalWatchdog = ThermalLoadWatchDog(thermalLoad)
+    var voltageWatchdog = VoltageStateWatchDog(electricalLoad)
     var color: Int
     var colorCare: Int
 
@@ -138,14 +138,12 @@ open class CurrentCableElement(sixNode: SixNode?, side: Direction?, descriptor: 
         thermalLoad.setAsSlow()
         slowProcessList.add(thermalWatchdog)
         thermalWatchdog
-            .setThermalLoad(thermalLoad)
-            .setLimit(this.descriptor.thermalWarmLimit, this.descriptor.thermalCoolLimit)
-            .set(WorldExplosion(this).cableExplosion())
+            .setTemperatureLimits(this.descriptor.thermalWarmLimit, this.descriptor.thermalCoolLimit)
+            .setDestroys(WorldExplosion(this).cableExplosion())
         slowProcessList.add(voltageWatchdog)
         voltageWatchdog
-            .setVoltageState(electricalLoad)
             .setNominalVoltage(this.descriptor.electricalNominalVoltage)
-            .set(WorldExplosion(this).cableExplosion())
+            .setDestroys(WorldExplosion(this).cableExplosion())
     }
 
     override fun readFromNBT(nbt: NBTTagCompound) {

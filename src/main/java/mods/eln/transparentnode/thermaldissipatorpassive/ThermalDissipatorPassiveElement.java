@@ -40,13 +40,12 @@ public class ThermalDissipatorPassiveElement extends TransparentNodeElement {
         slowProcessList.add(thermalWatchdog);
 
         thermalWatchdog
-            .setThermalLoad(thermalLoad)
             .setMaximumTemperature(this.descriptor.warmLimit)
-            .set(new WorldExplosion(this).machineExplosion());
+            .setDestroys(new WorldExplosion(this).machineExplosion());
     }
 
 
-    ThermalLoadWatchDog thermalWatchdog = new ThermalLoadWatchDog();
+    ThermalLoadWatchDog thermalWatchdog = new ThermalLoadWatchDog(thermalLoad);
 
     @Nullable
     @Override

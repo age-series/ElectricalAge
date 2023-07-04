@@ -81,7 +81,7 @@ public class LampSupplyElement extends SixNodeElement implements IConfigurable {
 
     public ArrayList<Entry> entries = new ArrayList<Entry>();
 
-    VoltageStateWatchDog voltageWatchdog = new VoltageStateWatchDog();
+    VoltageStateWatchDog voltageWatchdog = new VoltageStateWatchDog(powerLoad);
 
     public static final byte setPowerName = 1;
     public static final byte setWirelessName = 2;
@@ -118,9 +118,7 @@ public class LampSupplyElement extends SixNodeElement implements IConfigurable {
 
 
         slowProcessList.add(voltageWatchdog);
-        voltageWatchdog
-            .setVoltageState(powerLoad)
-            .set(new WorldExplosion(this).cableExplosion());
+        voltageWatchdog.setDestroys(new WorldExplosion(this).cableExplosion());
         channelStates = new boolean[this.descriptor.channelCount];
         aggregators = new IWirelessSignalAggregator[this.descriptor.channelCount][3];
         for (int idx = 0; idx < this.descriptor.channelCount; idx++) {

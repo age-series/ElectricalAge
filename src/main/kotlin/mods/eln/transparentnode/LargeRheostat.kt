@@ -88,7 +88,7 @@ class LargeRheostatElement(node: TransparentNode, desc_: TransparentNodeDescript
 
     val thermalLoad = NbtThermalLoad("thermalLoad")
     val heater = ResistorHeatThermalLoad(resistor, thermalLoad)
-    val thermalWatchdog = ThermalLoadWatchDog()
+    val thermalWatchdog = ThermalLoadWatchDog(thermalLoad)
 
     init {
         // Electrics
@@ -102,8 +102,8 @@ class LargeRheostatElement(node: TransparentNode, desc_: TransparentNodeDescript
         thermalLoadList.add(thermalLoad)
         thermalFastProcessList.add(heater)
         slowProcessList.add(thermalWatchdog)
-        thermalWatchdog.setThermalLoad(thermalLoad).setMaximumTemperature(desc.dissipator.warmLimit)
-            .set(WorldExplosion(this).machineExplosion())
+        thermalWatchdog.setMaximumTemperature(desc.dissipator.warmLimit)
+            .setDestroys(WorldExplosion(this).machineExplosion())
     }
 
     inner class ControlProcess() : IProcess {

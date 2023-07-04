@@ -78,13 +78,13 @@ class ArcFurnaceElement(node: TransparentNode, descriptor: TransparentNodeDescri
     private val electricalLoad = NbtElectricalLoad("electricalLoad")
     val electricalResistor = Resistor(electricalLoad, null)
 
-    private val voltageWatchdog = VoltageStateWatchDog()
+    private val voltageWatchdog = VoltageStateWatchDog(electricalLoad)
 
     init {
         electricalLoadList.add(electricalLoad)
         electricalComponentList.add(electricalResistor)
         val exp = WorldExplosion(this).machineExplosion()
-        slowProcessList.add(voltageWatchdog.setVoltageState(electricalLoad).setNominalVoltage(800.0).set(exp))
+        slowProcessList.add(voltageWatchdog.setNominalVoltage(800.0).setDestroys(exp))
     }
 
     override fun multiMeterString(side: Direction): String {

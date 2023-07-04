@@ -39,8 +39,8 @@ public class ElectricalRelayElement extends SixNodeElement implements IConfigura
     public NbtElectricalGateInput gate = new NbtElectricalGateInput("gate");
     public ElectricalRelayGateProcess gateProcess = new ElectricalRelayGateProcess(this, "GP", gate);
 
-    VoltageStateWatchDog voltageWatchDogA = new VoltageStateWatchDog();
-    VoltageStateWatchDog voltageWatchDogB = new VoltageStateWatchDog();
+    VoltageStateWatchDog voltageWatchDogA = new VoltageStateWatchDog(aLoad);
+    VoltageStateWatchDog voltageWatchDogB = new VoltageStateWatchDog(bLoad);
     //ResistorCurrentWatchdog currentWatchDog = new ResistorCurrentWatchdog();
 
     boolean switchState = false, defaultOutput = false;
@@ -70,8 +70,8 @@ public class ElectricalRelayElement extends SixNodeElement implements IConfigura
         WorldExplosion exp = new WorldExplosion(this).cableExplosion();
 
         //currentWatchDog.set(switchResistor).setIAbsMax(this.descriptor.cable.electricalMaximalCurrent).set(exp);
-        voltageWatchDogA.setVoltageState(aLoad).setNominalVoltage(this.descriptor.cable.electricalNominalVoltage).set(exp);
-        voltageWatchDogB.setVoltageState(bLoad).setNominalVoltage(this.descriptor.cable.electricalNominalVoltage).set(exp);
+        voltageWatchDogA.setNominalVoltage(this.descriptor.cable.electricalNominalVoltage).setDestroys(exp);
+        voltageWatchDogB.setNominalVoltage(this.descriptor.cable.electricalNominalVoltage).setDestroys(exp);
     }
 
     public static boolean canBePlacedOnSide(Direction side, int type) {

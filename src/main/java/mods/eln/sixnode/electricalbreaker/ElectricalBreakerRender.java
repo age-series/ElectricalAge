@@ -46,7 +46,7 @@ public class ElectricalBreakerRender extends SixNodeElementRender {
         super.draw();
 
         front.glRotateOnX();
-        descriptor.draw(interpol.get(), UtilsClient.distanceFromClientPlayer(tileEntity));
+        descriptor.draw(interpol.get(), UtilsClient.distanceFromClientPlayer(getTileEntity()));
     }
 
     @Override

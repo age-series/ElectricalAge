@@ -32,7 +32,7 @@ public class ThermalCableElement extends SixNodeElement {
 
     NbtThermalLoad thermalLoad = new NbtThermalLoad("thermalLoad");
 
-    ThermalLoadWatchDog thermalWatchdog = new ThermalLoadWatchDog();
+    ThermalLoadWatchDog thermalWatchdog = new ThermalLoadWatchDog(thermalLoad);
 
     int color = 0;
     int colorCare = 1;
@@ -46,9 +46,8 @@ public class ThermalCableElement extends SixNodeElement {
         slowProcessList.add(thermalWatchdog);
 
         thermalWatchdog
-            .setThermalLoad(thermalLoad)
-            .setLimit(this.descriptor.thermalWarmLimit, this.descriptor.thermalCoolLimit)
-            .set(new WorldExplosion(this).cableExplosion());
+            .setTemperatureLimits(this.descriptor.thermalWarmLimit, this.descriptor.thermalCoolLimit)
+            .setDestroys(new WorldExplosion(this).cableExplosion());
     }
 
     public static boolean canBePlacedOnSide(Direction side, int type) {

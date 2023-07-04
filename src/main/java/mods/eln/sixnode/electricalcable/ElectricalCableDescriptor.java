@@ -108,7 +108,7 @@ public class ElectricalCableDescriptor extends GenericCableDescriptor {
 
     public void applyTo(ThermalLoad thermalLoad) {
         thermalLoad.Rs = this.thermalRs;
-        thermalLoad.C = this.thermalC;
+        thermalLoad.heatCapacity = this.thermalC;
         thermalLoad.Rp = this.thermalRp;
     }
 

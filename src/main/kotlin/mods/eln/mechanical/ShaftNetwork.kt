@@ -137,7 +137,7 @@ open class ShaftNetwork() : INBTTReady {
             if (wouldExplode(this, other) && invoker != null) {
                 Utils.println(String.format("SN.mS: Bad matching, %s will explode", invoker))
                 DelayedDestruction(
-                    WorldExplosion(invoker.coordonate()).machineExplosion(),
+                    WorldExplosion(invoker).machineExplosion(),
                     0.0  // Sooner than later, just not right now :)
                 )
                 // Continue, however. The networks will unmerge when a component disappears, but assume they might not.

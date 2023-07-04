@@ -11,7 +11,12 @@ public class ThermalLoad {
      * Thermal resistance, analogous to ohms.
      */
     public double Rs;
-    public double C;
+
+    /**
+     * heatCapacity: <a href="https://en.wikipedia.org/wiki/Heat_capacity">Heat Capacity</a>
+     * Joules/Kelvin
+     */
+    public double heatCapacity;
     /**
      * Current thermal power, in watts, of this load.
      * This will be negative if it's cooling down.
@@ -47,21 +52,21 @@ public class ThermalLoad {
         Psp = 0;
     }
 
-    public ThermalLoad(double Tc, double Rp, double Rs, double C) {
+    public ThermalLoad(double Tc, double Rp, double Rs, double heatCapacity) {
         this.temperatureCelsius = Tc;
         this.Rp = Rp;
         this.Rs = Rs;
-        this.C = C;
+        this.heatCapacity = heatCapacity;
         PcTemp = 0;
     }
 
     public void setRsByTao(double tao) {
-        Rs = tao / C;
+        Rs = tao / heatCapacity;
     }
 
     public void setHighImpedance() {
         Rs = 1000000000.0;
-        C = 1;
+        heatCapacity = 1;
         Rp = 1000000000.0;
     }
 
@@ -79,7 +84,7 @@ public class ThermalLoad {
     public void set(double Rs, double Rp, double C) {
         this.Rp = Rp;
         this.Rs = Rs;
-        this.C = C;
+        this.heatCapacity = C;
     }
 
     public static void moveEnergy(double energy, double time, ThermalLoad from, ThermalLoad to) {

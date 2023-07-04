@@ -39,8 +39,8 @@ class ElectricalPoleElement(node: TransparentNode, descriptor: TransparentNodeDe
     var electricalLoad = NbtElectricalLoad("electricalLoad")
     var thermalLoad = NbtThermalLoad("thermalLoad")
     internal var heater = ElectricalLoadHeatThermalLoad(electricalLoad, thermalLoad)
-    internal var thermalWatchdog = ThermalLoadWatchDog()
-    internal var voltageWatchdog = VoltageStateWatchDog()
+    internal var thermalWatchdog = ThermalLoadWatchDog(thermalLoad)
+    internal var voltageWatchdog = VoltageStateWatchDog(electricalLoad)
     internal var secondaryMaxCurrent = 0f
 
     val trafo: Transformer?
@@ -58,30 +58,27 @@ class ElectricalPoleElement(node: TransparentNode, descriptor: TransparentNodeDe
         thermalLoad.setAsSlow()
         slowProcessList.add(thermalWatchdog)
         thermalWatchdog
-                .setThermalLoad(thermalLoad)
-                .setLimit(desc.cableDescriptor.thermalWarmLimit, desc.cableDescriptor.thermalCoolLimit)
-                .set(WorldExplosion(this).cableExplosion())
+                .setTemperatureLimits(desc.cableDescriptor.thermalWarmLimit, desc.cableDescriptor.thermalCoolLimit)
+                .setDestroys(WorldExplosion(this).cableExplosion())
 
         slowProcessList.add(voltageWatchdog)
         // Electrical poles can handle higher voltages, due to air insulation.
         // This puts utility poles at 4 * Very High Voltage.
-        val exp: WorldExplosion
-        if (desc.includeTransformer) {
-            exp = WorldExplosion(this).machineExplosion()
+        val exp: WorldExplosion = if (desc.includeTransformer) {
+            WorldExplosion(this).machineExplosion()
         } else {
-            exp = WorldExplosion(this).cableExplosion()
+            WorldExplosion(this).cableExplosion()
         }
         voltageWatchdog
-                .setVoltageState(electricalLoad)
                 .setNominalVoltage(desc.voltageLimit)
-                .set(exp)
+                .setDestroys(exp)
 
         if (desc.includeTransformer) {
             val secondaryLoad = NbtElectricalLoad("secondaryLoad")
             val primaryVoltageSource = VoltageSource("primaryVoltageSource", electricalLoad, null)
             val secondaryVoltageSource = VoltageSource("secondaryVoltageSource", secondaryLoad, null)
             val interSystemProcess = TransformerInterSystemProcess(electricalLoad, secondaryLoad, primaryVoltageSource, secondaryVoltageSource)
-            val voltageSecondaryWatchdog = VoltageStateWatchDog()
+            val voltageSecondaryWatchdog = VoltageStateWatchDog(secondaryLoad)
 
             trafo = Transformer(
                 secondaryLoad,
@@ -96,7 +93,7 @@ class ElectricalPoleElement(node: TransparentNode, descriptor: TransparentNodeDe
             electricalLoadList.add(secondaryLoad)
             electricalComponentList.add(primaryVoltageSource)
             electricalComponentList.add(secondaryVoltageSource)
-            slowProcessList.add(voltageSecondaryWatchdog.setVoltageState(secondaryLoad).set(exp))
+            slowProcessList.add(voltageSecondaryWatchdog.setDestroys(exp))
 
             // Publish load from time to time.
             slowProcessList.add(NodePeriodicPublishProcess(node, 1.0, 0.5))
@@ -120,11 +117,11 @@ class ElectricalPoleElement(node: TransparentNode, descriptor: TransparentNodeDe
     }
 
     override fun multiMeterString(side: Direction): String {
-        if (trafo != null) {
-            return (Utils.plotVolt("GridU:", electricalLoad.voltage) + Utils.plotAmpere("GridP:", electricalLoad.current)
-                + Utils.plotVolt("  GroundU:", trafo.secondaryLoad.voltage) + Utils.plotAmpere("GroundP:", trafo.secondaryLoad.current))
+        return if (trafo != null) {
+            (Utils.plotVolt("GridU:", electricalLoad.voltage) + Utils.plotAmpere("GridP:", electricalLoad.current)
+                    + Utils.plotVolt("  GroundU:", trafo.secondaryLoad.voltage) + Utils.plotAmpere("GroundP:", trafo.secondaryLoad.current))
         } else {
-            return super.multiMeterString(side)
+            super.multiMeterString(side)
         }
     }
 

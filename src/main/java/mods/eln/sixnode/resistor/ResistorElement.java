@@ -41,7 +41,7 @@ public class ResistorElement extends SixNodeElement {
 
     public NbtElectricalGateInput control;
 
-    ThermalLoadWatchDog thermalWatchdog = new ThermalLoadWatchDog();
+    ThermalLoadWatchDog thermalWatchdog;
     NbtThermalLoad thermalLoad = new NbtThermalLoad("thermalLoad");
     ResistorHeatThermalLoad heater = new ResistorHeatThermalLoad(r, thermalLoad);
     ResistorProcess resistorProcess;
@@ -53,6 +53,8 @@ public class ResistorElement extends SixNodeElement {
     public ResistorElement(SixNode SixNode, Direction side, SixNodeDescriptor descriptor) {
         super(SixNode, side, descriptor);
         this.descriptor = (ResistorDescriptor) descriptor;
+
+        thermalWatchdog = new ThermalLoadWatchDog(thermalLoad);
 
         electricalLoadList.add(aLoad);
         electricalLoadList.add(bLoad);
@@ -73,9 +75,8 @@ public class ResistorElement extends SixNodeElement {
         thermalLoad.set(thermalRs, thermalRp, thermalC);
         slowProcessList.add(thermalWatchdog);
         thermalWatchdog
-            .setThermalLoad(thermalLoad)
-            .setLimit(this.descriptor.thermalWarmLimit, this.descriptor.thermalCoolLimit)
-            .set(new WorldExplosion(this).cableExplosion());
+            .setTemperatureLimits(this.descriptor.thermalWarmLimit, this.descriptor.thermalCoolLimit)
+            .setDestroys(new WorldExplosion(this).cableExplosion());
 
         resistorProcess = new ResistorProcess(this, r, thermalLoad, this.descriptor);
         if (this.descriptor.tempCoef != 0 || this.descriptor.isRheostat) {

@@ -43,7 +43,7 @@ public class ElectricalSwitchRender extends SixNodeElementRender {
             drawPowerPin(LRDU.Left, descriptor.pinDistance);
             drawPowerPin(LRDU.Right, descriptor.pinDistance);
         }
-        descriptor.draw(interpol.get(), UtilsClient.distanceFromClientPlayer(tileEntity), tileEntity);
+        descriptor.draw(interpol.get(), UtilsClient.distanceFromClientPlayer(this.getTileEntity()), getTileEntity());
     }
 
     @Override

@@ -1,69 +1,57 @@
-package mods.eln.sim.process.destruct;
+package mods.eln.sim.process.destruct
 
-import mods.eln.*;
-import mods.eln.misc.Utils;
-import mods.eln.sim.IProcess;
+import mods.eln.Eln
+import mods.eln.misc.Utils
+import mods.eln.misc.Utils.println
+import mods.eln.sim.IProcess
 
-public abstract class ValueWatchdog implements IProcess {
+abstract class ValueWatchdog : IProcess {
+    private var destructible: IDestructible? = null
+    var min = 0.0
+    var max = 0.0
+    var timeoutReset = 2.0
+    var timeout = 0.0
+    var boot = true
 
-    IDestructable destructible;
-    double min;
-    double max;
-
-    double timeoutReset = 2;
-
-    double timeout = 0;
-    boolean boot = true;
     // TODO: Rename. Hysteresis?
-    boolean joker = true;
-
-    double rand = Utils.rand(0.5, 1.5);
-
-    @Override
-    public void process(double time) {
+    private var joker = true
+    override fun process(time: Double) {
         if (boot) {
-            boot = false;
-            timeout = timeoutReset;
+            boot = false
+            timeout = timeoutReset
         }
-        double value = getValue();
-        double overflow = Math.max(value - max, min - value);
+        val value = getValue()
+        var overflow = (value - max).coerceAtLeast(min - value)
         if (overflow > 0) {
             if (joker) {
-                joker = false;
-                overflow = 0;
+                joker = false
+                overflow = 0.0
             }
         } else {
-            joker = true;
+            joker = true
         }
-
-        timeout -= time * overflow * rand;
+        timeout -= time * overflow * Utils.rand(0.5, 1.5)
         if (timeout > timeoutReset) {
-            timeout = timeoutReset;
+            timeout = timeoutReset
         }
         if (timeout < 0) {
-            Utils.println("%s destroying %s",
-                getClass().getName(),
-                destructible.describe());
-            if (!Eln.debugExplosions)
-                destructible.destructImpl();
+            println(
+                "%s destroying %s",
+                javaClass.name,
+                destructible!!.describe()
+            )
+            if (!Eln.debugExplosions) destructible!!.destructImpl()
         }
     }
 
-    public ValueWatchdog set(IDestructable d) {
-        this.destructible = d;
-        return this;
+    fun setDestroys(destructible: IDestructible): ValueWatchdog {
+        this.destructible = destructible
+        return this
     }
 
-    abstract double getValue();
+    abstract fun getValue(): Double
 
-    // TODO: Refactor
-    public void disable() {
-        this.max = 100000000;
-        this.min = -max;
-        this.timeoutReset = 10000000;
-    }
-
-    public void reset() {
-        boot = true;
+    fun reset() {
+        boot = true
     }
 }

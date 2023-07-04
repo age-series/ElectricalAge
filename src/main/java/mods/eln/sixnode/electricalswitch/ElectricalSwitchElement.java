@@ -35,8 +35,8 @@ public class ElectricalSwitchElement extends SixNodeElement {
     public NbtElectricalLoad bLoad = new NbtElectricalLoad("bLoad");
     public ResistorSwitch switchResistor = new ResistorSwitch("switchRes", aLoad, bLoad);
 
-    VoltageStateWatchDog voltageWatchDogA = new VoltageStateWatchDog();
-    VoltageStateWatchDog voltageWatchDogB = new VoltageStateWatchDog();
+    VoltageStateWatchDog voltageWatchDogA = new VoltageStateWatchDog(aLoad);
+    VoltageStateWatchDog voltageWatchDogB = new VoltageStateWatchDog(bLoad);
 //	ResistorCurrentWatchdog currentWatchDog = new ResistorCurrentWatchdog();
 
     boolean switchState = false;
@@ -60,8 +60,8 @@ public class ElectricalSwitchElement extends SixNodeElement {
         slowProcessList.add(voltageWatchDogB);
 
         //currentWatchDog.set(switchResistor).setIAbsMax(this.descriptor.maximalPower/this.descriptor.nominalVoltage).set(exp);
-        voltageWatchDogA.setVoltageState(aLoad).setNominalVoltage(this.descriptor.nominalVoltage).set(exp);
-        voltageWatchDogB.setVoltageState(bLoad).setNominalVoltage(this.descriptor.nominalVoltage).set(exp);
+        voltageWatchDogA.setNominalVoltage(this.descriptor.nominalVoltage).setDestroys(exp);
+        voltageWatchDogB.setNominalVoltage(this.descriptor.nominalVoltage).setDestroys(exp);
     }
 
     public static boolean canBePlacedOnSide(Direction side, int type) {

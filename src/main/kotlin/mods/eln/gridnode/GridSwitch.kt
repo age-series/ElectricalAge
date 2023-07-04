@@ -158,24 +158,21 @@ class GridSwitchElement(node: TransparentNode, descriptor: TransparentNodeDescri
     val transfer = Resistor(grida, gridb).apply { resistance = desc.resistance }
 
     val explosion = WorldExplosion(this).machineExplosion()
-    val powerWatchdog = VoltageStateWatchDog().apply {
+    val powerWatchdog = VoltageStateWatchDog(power).apply {
         setNominalVoltage(desc.nominalU)
-        setVoltageState(power)
-        set(explosion)
+        setDestroys(explosion)
         slowProcessList.add(this)
     }
 
-    val gridaWatchdog = VoltageStateWatchDog().apply {
+    val gridaWatchdog = VoltageStateWatchDog(grida).apply {
         setNominalVoltage(51200.0)
-        setVoltageState(grida)
-        set(explosion)
+        setDestroys(explosion)
         slowProcessList.add(this)
     }
 
-    val gridbWatchdog = VoltageStateWatchDog().apply {
+    val gridbWatchdog = VoltageStateWatchDog(gridb).apply {
         setNominalVoltage(51200.0)
-        setVoltageState(gridb)
-        set(explosion)
+        setDestroys(explosion)
         slowProcessList.add(this)
     }
 
@@ -183,7 +180,7 @@ class GridSwitchElement(node: TransparentNode, descriptor: TransparentNodeDescri
     var lastTarget = interp.target
     var closed = true
 
-    inner class SlowProcess(): IProcess {
+    inner class SlowProcess: IProcess {
         override fun process(time: Double) {
             interp.ff = ((power.voltage / desc.nominalU) * desc.nominalAccel).toFloat()
             interp.target = control.normalized.toFloat()

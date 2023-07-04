@@ -1,28 +1,15 @@
-package mods.eln.sim.process.heater;
+package mods.eln.sim.process.heater
 
-import mods.eln.sim.ElectricalLoad;
-import mods.eln.sim.IProcess;
-import mods.eln.sim.ThermalLoad;
+import mods.eln.misc.Utils.println
+import mods.eln.sim.ElectricalLoad
+import mods.eln.sim.IProcess
+import mods.eln.sim.ThermalLoad
 
-public class ElectricalLoadHeatThermalLoad implements IProcess {
-
-    ElectricalLoad resistor;
-    ThermalLoad load;
-
-    public ElectricalLoadHeatThermalLoad(ElectricalLoad r, ThermalLoad load) {
-        this.resistor = r;
-        this.load = load;
+class ElectricalLoadHeatThermalLoad(var resistor: ElectricalLoad, var load: ThermalLoad) : IProcess {
+    override fun process(time: Double) {
+        if (resistor.isNotSimulated) return
+        val current = resistor.current
+        println("Moving heat: ${current * current * resistor.serialResistance * 2} watts at $resistor $load")
+        load.movePowerTo(current * current * resistor.serialResistance * 2)
     }
-
-    @Override
-    public void process(double time) {
-        if (resistor.isNotSimulated()) return;
-        double current = resistor.getCurrent();
-        load.movePowerTo(current * current * resistor.getSerialResistance() * 2);
-    }
-
-	/*double powerMax = 100000;
-    public void setDeltaTPerSecondMax(double deltaTPerSecondMax) {
-		powerMax = deltaTPerSecondMax*load.C;
-	}*/
 }

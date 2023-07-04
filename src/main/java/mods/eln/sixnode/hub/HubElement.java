@@ -149,12 +149,11 @@ public class HubElement extends SixNodeElement {
             ElectricalCableDescriptor d = getCableDescriptorFromLrdu(lrdu);
             if (d == null) continue;
 
-            VoltageStateWatchDog watchdog = new VoltageStateWatchDog();
+            VoltageStateWatchDog watchdog = new VoltageStateWatchDog(electricalLoad[lrdu.toInt()]);
             slowProcessList.add(watchdog);
             watchdog
                 .setNominalVoltage(d.electricalNominalVoltage)
-                .setVoltageState(electricalLoad[lrdu.toInt()])
-                .set(exp);
+                .setDestroys(exp);
         }
 
         for (int idx = 0; idx < 6; idx++) {

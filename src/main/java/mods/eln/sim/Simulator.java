@@ -8,7 +8,7 @@ import mods.eln.misc.Utils;
 import mods.eln.sim.mna.RootSystem;
 import mods.eln.sim.mna.component.Component;
 import mods.eln.sim.mna.state.State;
-import mods.eln.sim.process.destruct.IDestructable;
+import mods.eln.sim.process.destruct.IDestructible;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -29,7 +29,7 @@ public class Simulator /* ,IPacketHandler */ {
     private ArrayList<IProcess> thermalFastProcessList, thermalSlowProcessList;
     private ArrayList<ThermalConnection> thermalFastConnectionList, thermalSlowConnectionList;
     private ArrayList<ThermalLoad> thermalFastLoadList, thermalSlowLoadList;
-    private Set<IDestructable> destructableSet;
+    private Set<IDestructible> destructableSet;
 
     boolean run;
 
@@ -84,7 +84,7 @@ public class Simulator /* ,IPacketHandler */ {
         thermalFastLoadList = new ArrayList<ThermalLoad>();
         thermalSlowConnectionList = new ArrayList<ThermalConnection>();
         thermalSlowLoadList = new ArrayList<ThermalLoad>();
-        destructableSet = new HashSet<IDestructable>();
+        destructableSet = new HashSet<IDestructible>();
 
         run = false;
     }
@@ -414,7 +414,7 @@ public class Simulator /* ,IPacketHandler */ {
             process.process(0.05);
         }
 
-        for (IDestructable d : destructableSet) {
+        for (IDestructible d : destructableSet) {
             d.destructImpl();
         }
         destructableSet.clear();
@@ -478,7 +478,7 @@ public class Simulator /* ,IPacketHandler */ {
         for (ThermalLoad load : loadList) {
             load.PcTemp -= load.temperatureCelsius / load.Rp;
 
-            load.temperatureCelsius += load.PcTemp * dt / load.C;
+            load.temperatureCelsius += load.PcTemp * dt / load.heatCapacity;
 
             load.Pc = load.PcTemp;
             load.Prs = load.PrsTemp;

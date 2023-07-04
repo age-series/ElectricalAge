@@ -45,7 +45,7 @@ public class ElectricalGateSourceRender extends SixNodeElementRender {
         } else {
             LRDU.Down.glRotateOnX();
         }
-        descriptor.draw(interpolator.get(), UtilsClient.distanceFromClientPlayer(this.tileEntity), tileEntity);
+        descriptor.draw(interpolator.get(), UtilsClient.distanceFromClientPlayer(this.getTileEntity()), getTileEntity());
     }
 
     @Override

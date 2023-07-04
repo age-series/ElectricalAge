@@ -1,26 +1,17 @@
-package mods.eln.sim.process.destruct;
+package mods.eln.sim.process.destruct
 
-import mods.eln.sim.mna.component.Bipole;
+import mods.eln.sim.mna.component.Bipole
 
-public class BipoleVoltageWatchdog extends ValueWatchdog {
+class BipoleVoltageWatchdog(var bipole: Bipole) : ValueWatchdog() {
 
-    Bipole bipole;
-
-    public BipoleVoltageWatchdog set(Bipole bipole) {
-        this.bipole = bipole;
-        return this;
+    fun setNominalVoltage(nominalVoltage: Double): BipoleVoltageWatchdog {
+        max = nominalVoltage * 1.3
+        min = -max
+        timeoutReset = nominalVoltage * 0.10 * 5
+        return this
     }
 
-    public BipoleVoltageWatchdog setUNominal(double UNominal) {
-        this.max = UNominal * 1.3;
-        this.min = -max;
-        this.timeoutReset = UNominal * 0.10 * 5;
-
-        return this;
-    }
-
-    @Override
-    double getValue() {
-        return bipole.getVoltage();
+    override fun getValue(): Double {
+        return bipole.voltage
     }
 }

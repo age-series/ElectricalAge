@@ -49,17 +49,16 @@ public class ThermalDissipatorActiveElement extends TransparentNodeElement {
         slowProcessList.add(thermalWatchdog);
 
         thermalWatchdog
-            .setThermalLoad(thermalLoad)
             .setMaximumTemperature(this.descriptor.warmLimit)
-            .set(new WorldExplosion(this).machineExplosion());
+            .setDestroys(new WorldExplosion(this).machineExplosion());
 
         WorldExplosion exp = new WorldExplosion(this).machineExplosion();
-        slowProcessList.add(voltageWatchdog.setVoltageState(positiveLoad).setNominalVoltage(this.descriptor.nominalElectricalU).set(exp));
+        slowProcessList.add(voltageWatchdog.setNominalVoltage(this.descriptor.nominalElectricalU).setDestroys(exp));
 
     }
 
-    VoltageStateWatchDog voltageWatchdog = new VoltageStateWatchDog();
-    ThermalLoadWatchDog thermalWatchdog = new ThermalLoadWatchDog();
+    VoltageStateWatchDog voltageWatchdog = new VoltageStateWatchDog(positiveLoad);
+    ThermalLoadWatchDog thermalWatchdog = new ThermalLoadWatchDog(thermalLoad);
 
     @Override
     public ElectricalLoad getElectricalLoad(Direction side, LRDU lrdu) {

@@ -129,7 +129,7 @@ class PowerCapacitorSixElement(SixNode: SixNode, side: Direction, descriptor: Si
     var capacitor = Capacitor(positiveLoad, negativeLoad)
     var dischargeResistor = Resistor(positiveLoad, negativeLoad)
     var punkProcess: PunkProcess = PunkProcess()
-    var voltageWatchdog = BipoleVoltageWatchdog().set(capacitor).setUNominal(this.descriptor.getUNominalValue(this.inventory)).set(WorldExplosion(this).cableExplosion())
+    var voltageWatchdog = BipoleVoltageWatchdog(capacitor).setNominalVoltage(this.descriptor.getUNominalValue(this.inventory)).setDestroys(WorldExplosion(this).cableExplosion())
     var stdDischargeResistor = 0.0
     var fromNbt = false
 

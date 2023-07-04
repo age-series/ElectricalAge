@@ -107,7 +107,7 @@ public class BatteryChargerRender extends SixNodeElementRender {
             voltage = stream.readFloat();
 
             for (int idx = 0; idx < 4; idx++) {
-                b[idx] = Utils.unserializeItemStackToEntityItem(stream, b[idx], tileEntity);
+                b[idx] = Utils.unserializeItemStackToEntityItem(stream, b[idx], getTileEntity());
             }
 
             byte temp = stream.readByte();

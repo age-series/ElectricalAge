@@ -48,7 +48,7 @@ public class AutoMinerElement extends TransparentNodeElement {
 
     Coordinate lightCoordinate;
 
-    private final VoltageStateWatchDog voltageWatchdog = new VoltageStateWatchDog();
+    private final VoltageStateWatchDog voltageWatchdog = new VoltageStateWatchDog(inPowerLoad);
 
     private final ArrayList<AutoMinerPowerNode> powerNodeList = new ArrayList<AutoMinerPowerNode>();
 
@@ -66,7 +66,7 @@ public class AutoMinerElement extends TransparentNodeElement {
         slowProcessList.add(slowProcess);
 
         WorldExplosion exp = new WorldExplosion(this).machineExplosion();
-        slowProcessList.add(voltageWatchdog.setVoltageState(inPowerLoad).setNominalVoltage(this.descriptor.nominalVoltage).set(exp));
+        slowProcessList.add(voltageWatchdog.setNominalVoltage(this.descriptor.nominalVoltage).setDestroys(exp));
     }
 
     @Override
