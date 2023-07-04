@@ -23,7 +23,6 @@ class BlockElnFluid(
     material: Material?, val color: Int
 ) : BlockFluidClassic(fluid, material) {
 
-    @SideOnly(Side.CLIENT)
     var fluidIcon: Array<IIcon> = arrayOf()
 
     init {
@@ -47,6 +46,7 @@ class BlockElnFluid(
         )
     }
 
+    @SideOnly(Side.CLIENT)
     override fun getIcon(side: Int, meta: Int): IIcon {
         return if (side != 0 && side != 1) fluidIcon[1] else fluidIcon[0]
     }
