@@ -5,7 +5,7 @@ import kotlin.math.cos
 import kotlin.math.roundToLong
 import kotlin.math.sin
 
-class Integrator(private var timeStep: Double) {
+class Integrator {
     private var integrationPhase = 0
     private var stepsTaken = 0
     private var sample: DoubleArray = doubleArrayOf(0.0, 0.0, 0.0, 0.0, 0.0)
@@ -22,7 +22,7 @@ class Integrator(private var timeStep: Double) {
         integrations = doubleArrayOf(0.0, 0.0, 0.0, 0.0)
     }
 
-    fun nextStep(nextValue: Double): Double {
+    fun nextStep(nextValue: Double, timeStep: Double): Double {
         var summation = 0.0
         stepsTaken++
         summation += sample[1].also { sample[0] = it } * 7
@@ -42,14 +42,14 @@ fun main() {
     val actualIntegralFunction = Function { x: Double -> sin(x) * sin(x) }
     val actualDerivativeFunction = Function { x: Double -> 2 * cos(2 * x) }
     val dx = 1.0 / 20
-    val integrator = Integrator(dx)
-    val differentiator = Differentiator(dx)
+    val integrator = Integrator()
+    val differentiator = Differentiator()
     val tEnd = (1 / dx).roundToLong() + 1
     for (t in 1 until tEnd) {
         val x: Double = t * dx
         val y = testFunction.apply(x)
-        val derivativeY: Double = differentiator.nextStep(y)
-        val integralY: Double = integrator.nextStep(y)
+        val derivativeY: Double = differentiator.nextStep(y, dx)
+        val integralY: Double = integrator.nextStep(y, dx)
         val derivativeActual: Double = actualDerivativeFunction.apply(x)
         val integralActual: Double = actualIntegralFunction.apply(x)
         println(

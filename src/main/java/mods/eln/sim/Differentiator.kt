@@ -1,13 +1,13 @@
 package mods.eln.sim
 
-class Differentiator(private var timeStep: Double) {
+class Differentiator {
     private var stepsTaken = 0
     private var sample: DoubleArray = doubleArrayOf(0.0, 0.0, 0.0, 0.0)
     fun reset() {
         sample = doubleArrayOf(0.0, 0.0, 0.0, 0.0)
     }
 
-    fun nextStep(nextValue: Double): Double {
+    fun nextStep(nextValue: Double, timeStep: Double): Double {
         var summation = 0.0
 
         if (stepsTaken >= 4) {
