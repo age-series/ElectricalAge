@@ -38,13 +38,14 @@ class Integrator {
 }
 
 fun main() {
-    val testFunction = Function { xa: Double -> sin(2 * xa) }
-    val actualIntegralFunction = Function { x: Double -> sin(x) * sin(x) }
-    val actualDerivativeFunction = Function { x: Double -> 2 * cos(2 * x) }
-    val dx = 1.0 / 20
+    val freq = 60.0
+    val dx = 0.001
+    val testFunction = Function { xa: Double -> sin(freq * xa) }
+    val actualIntegralFunction = Function { x: Double -> (1 - cos(freq * x)) / freq }
+    val actualDerivativeFunction = Function { x: Double -> cos(freq * x) * freq }
     val integrator = Integrator()
     val differentiator = Differentiator()
-    val tEnd = (1 / dx).roundToLong() + 1
+    val tEnd = (1 / dx).roundToLong() * 60 + 1
     for (t in 1 until tEnd) {
         val x: Double = t * dx
         val y = testFunction.apply(x)
