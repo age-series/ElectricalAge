@@ -1,5 +1,6 @@
 package mods.eln.sixnode.electricalgatesource;
 
+import mods.eln.Eln;
 import mods.eln.gui.GuiHelper;
 import mods.eln.gui.GuiScreenEln;
 import mods.eln.gui.GuiVerticalTrackBar;
@@ -24,7 +25,7 @@ public class ElectricalGateSourceGui extends GuiScreenEln {
         voltage = newGuiVerticalTrackBar(6, 6 + 2, 20, 50);
         voltage.setStepIdMax((int) 100);
         voltage.setEnable(true);
-        voltage.setRange(0f, 50f);
+        voltage.setRange(0f, (float) Eln.SVU);
 
         syncVoltage();
     }
@@ -46,7 +47,7 @@ public class ElectricalGateSourceGui extends GuiScreenEln {
     protected void preDraw(float f, int x, int y) {
         super.preDraw(f, x, y);
         if (render.voltageSyncNew) syncVoltage();
-        voltage.setComment(0, tr("Output at %1$%", ((int) voltage.getValue() * 2)));
+        voltage.setComment(0, tr("Output at %1$%", (int)((voltage.getValue() / Eln.SVU) * 100)));
     }
 
     @Override

@@ -375,7 +375,8 @@ public class Eln {
     float xRayScannerRange;
     boolean addOtherModOreToXRay;
     boolean xRayScannerCanBeCrafted = true;
-    double stdBatteryHalfLife = 2 * Utils.minecraftDay;    public static final double SVU = 50, SVII = gateOutputCurrent / 50, SVUinv = 1.0 / SVU;
+    double stdBatteryHalfLife = 2 * Utils.minecraftDay;
+    public static final double SVU = 5, SVII = gateOutputCurrent / SVU, SVUinv = 1.0 / SVU;
     double batteryCapacityFactor = 1.;
     TestBlock testBlock;
     private boolean replicatorPop;
@@ -383,7 +384,8 @@ public class Eln {
     private boolean ComputerProbeEnable;
     private boolean ElnToOtherEnergyConverterEnable;
     private EnergyConverterElnToOtherBlock elnToOtherBlockConverter;
-    private ComputerProbeBlock computerProbeBlock;    public static final double SVP = gateOutputCurrent * SVU;
+    private ComputerProbeBlock computerProbeBlock;
+    public static final double SVP = gateOutputCurrent * SVU;
     private ElectricalFurnaceDescriptor electricalFurnace;
     private double incandescentLampLife;
     private double economicLampLife;

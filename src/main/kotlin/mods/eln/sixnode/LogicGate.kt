@@ -310,8 +310,13 @@ class Oscillator : LogicFunction() {
     private var ramp = 0.0
     private var state = false
 
+    // 0v = 0.1Hz through 5v = 10Hz
+    private val hertzFunction = LinearFunction(0f, 0.1f, Eln.SVU.toFloat(), (1 / Eln.simulator.callPeriod).toFloat())
+
     override fun process(inputs: Array<Double?>): Boolean {
-        ramp += Math.pow(50.0, (inputs[0] ?: 0.0)) / 50
+        val hertz = hertzFunction.getValue(inputs[0]?: 0.0)
+        val halfPeriod = (1 / hertz) * 0.5
+        ramp += Eln.simulator.callPeriod/halfPeriod
         if (ramp >= 1) {
             ramp = 0.0
             state = !state

@@ -49,7 +49,7 @@ public class ThermalSensorElement extends SixNodeElement implements IConfigurabl
 
     static final byte powerType = 0, temperatureType = 1;
     int typeOfSensor = temperatureType;
-    float lowValue = 0, highValue = 50;
+    float lowValue = 0, highValue = (float) Eln.SVU;
 
     public static final byte setTypeOfSensorId = 1;
     public static final byte setValueId = 2;

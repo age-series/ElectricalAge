@@ -32,7 +32,7 @@ public class ThermalSensorRender extends SixNodeElementRender {
     LRDU front;
 
     int typeOfSensor = 0;
-    float lowValue = 0, highValue = 50;
+    float lowValue = 0, highValue = (float) Eln.SVU;
 
     ThermalCableDescriptor cable;
     ElectricalCableDescriptor eCable;

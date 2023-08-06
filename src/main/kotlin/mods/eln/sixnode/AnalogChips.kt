@@ -31,6 +31,7 @@ import java.io.ByteArrayOutputStream
 import java.io.DataInputStream
 import java.io.DataOutputStream
 import java.io.IOException
+import kotlin.math.sin
 
 open class AnalogChipDescriptor(name: String, obj: Obj3D?, functionName: String,
                                 functionClass: Class<out AnalogFunction>,
@@ -145,17 +146,17 @@ open class AnalogChipElement(node: SixNode, side: Direction, sixNodeDescriptor: 
         val builder = StringBuilder()
         for (i in 1..3) {
             val pin = inputPins[i - 1]
-            if (pin != null && pin.connectedComponents.count() > 0) {
+            if (pin != null && pin.connectedComponents.isNotEmpty()) {
                 builder.append("I$i: ").append(if (pin.stateLow()) "0"
                 else if (pin.stateHigh()) "1" else "?").append(", ")
             }
         }
-        builder.append(I18N.tr(" O: ")).append(if (outputProcess.voltage == 50.0) "1" else "0")
+        builder.append(I18N.tr(" O: ")).append(if (outputProcess.voltage == Eln.SVU) "1" else "0")
         return builder.toString()
     }
 
     override fun getWaila(): Map<String, String> = function.getWaila(
-        inputPins.map { if (it != null && it.connectedComponents.count() > 0) it.voltage else null }.toTypedArray(),
+        inputPins.map { if (it != null && it.connectedComponents.isNotEmpty()) it.voltage else null }.toTypedArray(),
         outputPin.voltage
     )
 
@@ -422,8 +423,13 @@ open class VoltageControlledSawtoothOscillator : AnalogFunction() {
 
     private var out = 0.0
 
+    // 0v = 0.1Hz through 5v = 10Hz
+    open val hertzFunction = LinearFunction(0f, 0.1f, Eln.SVU.toFloat(), (1 / Eln.simulator.callPeriod).toFloat())
+
     override fun process(inputs: Array<Double?>, deltaTime: Double): Double {
-        out += Math.pow(50.0, (inputs[0] ?: 0.0) / 50) * 2 * deltaTime
+        val hertz = hertzFunction.getValue(inputs[0]?: 0.0)
+        val halfPeriod = (1 / hertz) * 0.5
+        out += Eln.simulator.callPeriod/halfPeriod
         if (out > Eln.SVU) {
             out = 0.0
         }
@@ -440,8 +446,12 @@ open class VoltageControlledSawtoothOscillator : AnalogFunction() {
 }
 
 class VoltageControlledSineOscillator : VoltageControlledSawtoothOscillator() {
+    val svu2 = Eln.SVU/2
+
+    override val hertzFunction = LinearFunction(0f, 0.01f, Eln.SVU.toFloat(), 0.5f)
+
     override fun process(inputs: Array<Double?>, deltaTime: Double) =
-        25.0 + 25.0 * Math.sin(Math.PI * super.process(inputs, deltaTime) / 25.0)
+        svu2 + svu2 * sin(Math.PI * 2 * super.process(inputs, deltaTime))
 }
 
 class Amplifier : AnalogFunction() {

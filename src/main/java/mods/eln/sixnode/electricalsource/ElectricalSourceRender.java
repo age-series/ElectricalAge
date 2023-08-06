@@ -33,7 +33,7 @@ public class ElectricalSourceRender extends SixNodeElementRender {
 
         front.glRotateOnX();
 
-        descriptor.draw(voltage >= 25);
+        descriptor.draw(voltage >= (Eln.SVU/2));
     }
 
     @Override
