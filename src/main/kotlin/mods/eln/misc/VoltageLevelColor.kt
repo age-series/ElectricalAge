@@ -8,7 +8,15 @@ import net.minecraftforge.client.IItemRenderer.ItemRenderType
 import org.lwjgl.opengl.GL11
 
 enum class VoltageLevelColor(private val voltageLevel: String?) {
-    None(null), Neutral("neutral"), SignalVoltage("signal"), LowVoltage("low"), MediumVoltage("medium"), HighVoltage("high"), VeryHighVoltage("veryhigh"), Grid("grid"), HighGrid("highgrid"), Thermal("thermal");
+    None(null),
+    Neutral("neutral"),
+    SignalVoltage("signal"),
+    LowVoltage("low"),
+    MediumVoltage("medium"),
+    HighVoltage("high"),
+    VeryHighVoltage("veryhigh"),
+    Grid("grid"),
+    Thermal("thermal");
 
     fun drawIconBackground(type: ItemRenderType) {
         if (!Eln.noVoltageBackground && voltageLevel != null && type == ItemRenderType.INVENTORY || type == ItemRenderType.FIRST_PERSON_MAP) {
@@ -41,6 +49,8 @@ enum class VoltageLevelColor(private val voltageLevel: String?) {
                 HighVoltage
             } else if (voltage <= 2 * Eln.VVU) {
                 VeryHighVoltage
+            } else if (voltage <= 2 * Eln.CCU) {
+                Neutral
             } else {
                 None
             }
@@ -54,6 +64,15 @@ enum class VoltageLevelColor(private val voltageLevel: String?) {
                 } else {
                     fromVoltage(descriptor.electricalNominalVoltage)
                 }
+            } else {
+                None
+            }
+        }
+
+        @JvmStatic
+        fun fromCable(descriptor: CurrentCableDescriptor?): VoltageLevelColor {
+            return if (descriptor != null) {
+                Neutral
             } else {
                 None
             }

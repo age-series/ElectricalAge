@@ -216,6 +216,7 @@ public class Eln {
     public static final double MVU = 200;
     public static final double HVU = 800;
     public static final double VVU = 3200;
+    public static final double CCU = 120_000;
     public static final double cableHeatingTime = 30;
     public static final double cableWarmLimit = 130;
     public static final double cableThermalConductionTao = 0.5;

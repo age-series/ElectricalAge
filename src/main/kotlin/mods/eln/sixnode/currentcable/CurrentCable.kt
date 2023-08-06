@@ -50,7 +50,7 @@ class CurrentCableDescriptor(
     var description = "todo cable"
 
     init {
-        electricalNominalVoltage = 120_000.0
+        electricalNominalVoltage = Eln.CCU
         thermalRp = 1.0
         thermalRs = 1.0
         thermalC = 1.0
