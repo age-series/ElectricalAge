@@ -170,7 +170,7 @@ open class ShaftRender(entity: TransparentNodeEntity, desc: TransparentNodeDescr
                     if (!eConn.get(lrdu)) continue
                     if (lrdu != front!!.down().getLRDUGoingTo(front!!) && lrdu.inverse() != front!!.down().getLRDUGoingTo(front!!)) continue
                     mask.set(1.shl(lrdu.ordinal))
-                    CableRender.drawCable(cableRender, mask, connectionType)
+                    CableRender.drawCable(cableRender, mask, connectionType!!)
                 }
             }
         }

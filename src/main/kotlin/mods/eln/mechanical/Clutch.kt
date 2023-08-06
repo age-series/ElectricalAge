@@ -493,7 +493,7 @@ class ClutchRender(entity: TransparentNodeEntity, desc_: TransparentNodeDescript
                 Utils.setGlColorFromDye(connectionType!!.otherdry[lrdu.toInt()])
                 if (!eConn.get(lrdu)) continue
                 mask.set(1.shl(lrdu.ordinal))
-                CableRender.drawCable(cableRender, mask, connectionType)
+                CableRender.drawCable(cableRender, mask, connectionType!!)
             }
         }
     }

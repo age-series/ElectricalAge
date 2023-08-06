@@ -75,7 +75,7 @@ abstract class SixNodeElementRender(open var tileEntity: SixNodeEntity, @JvmFiel
             cableListReady[idx] = false
             if (render != null && connectedSide.mask and (1 shl idx) != 0) {
                 GL11.glNewList(cableList[idx], GL11.GL_COMPILE)
-                CableRender.drawCable(render, LRDUMask(1 shl idx), connectionType)
+                CableRender.drawCable(render, LRDUMask(1 shl idx), connectionType!!)
                 GL11.glEndList()
                 cableListReady[idx] = true
             }

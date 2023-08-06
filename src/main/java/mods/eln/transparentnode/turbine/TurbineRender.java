@@ -65,7 +65,7 @@ public class TurbineRender extends TransparentNodeElementRender {
             if (lrdu != front.down().getLRDUGoingTo(front) && lrdu.inverse() != front.down().getLRDUGoingTo(front))
                 continue;
             maskTemp.set(1 << lrdu.toInt());
-            CableRender.drawCable(descriptor.eRender, maskTemp, connectionType);
+            CableRender.drawCable(descriptor.eRender, maskTemp, connectionType, descriptor.eRender.getWidthDiv2() / 2f, false);
         }
     }
 

@@ -31,7 +31,7 @@ public class Rs485CableRender extends SixNodeElementRender {
 
     @Override
     public void glListDraw() {
-        CableRender.drawCable(descriptor.render, connectedSide, CableRender.connectionType(this, side));
+        CableRender.drawCable(descriptor.render, connectedSide, CableRender.connectionType(this, side), descriptor.render.getWidthDiv2() / 2.0f, false);
         CableRender.drawNode(descriptor.render, connectedSide, CableRender.connectionType(this, side));
     }
 

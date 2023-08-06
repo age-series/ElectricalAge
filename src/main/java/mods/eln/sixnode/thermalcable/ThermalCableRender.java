@@ -64,7 +64,7 @@ public class ThermalCableRender extends SixNodeElementRender {
 
     @Override
     public void glListDraw() {
-        CableRender.drawCable(cableDesciptor.render, connectedSide, CableRender.connectionType(this, side));
+        CableRender.drawCable(cableDesciptor.render, connectedSide, CableRender.connectionType(this, side), cableDesciptor.render.getWidthDiv2() / 2.0f, false);
         CableRender.drawNode(cableDesciptor.render, connectedSide, CableRender.connectionType(this, side));
     }
 

@@ -52,9 +52,9 @@ public class ElectricalAntennaTxRender extends TransparentNodeElementRender {
             if (!lrduConnection.get(lrdu)) continue;
             maskTemp.set(1 << lrdu.toInt());
             if (lrdu == rot)
-                CableRender.drawCable(descriptor.cable.render, maskTemp, connectionType);
+                CableRender.drawCable(descriptor.cable.render, maskTemp, connectionType, descriptor.cable.render.getWidthDiv2() / 2.0f, false);
             else if (lrdu == rot.left() || lrdu == rot.right())
-                CableRender.drawCable(Eln.instance.signalCableDescriptor.render, maskTemp, connectionType);
+                CableRender.drawCable(Eln.instance.signalCableDescriptor.render, maskTemp, connectionType, Eln.instance.signalCableDescriptor.render.getWidthDiv2() / 2.0f, false);
         }
     }
 

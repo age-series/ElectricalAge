@@ -160,7 +160,7 @@ abstract class TransparentNodeElementRender(var tileEntity: TransparentNodeEntit
         glCableTransform(side)
         render.bindCableTexture()
         for (lrdu in LRDU.values()) {
-            setGlColorFromDye(renderPreProcess!!.otherdry[lrdu.toInt()])
+            setGlColorFromDye(renderPreProcess.otherdry[lrdu.toInt()])
             if (!connection[lrdu]) continue
             maskTempDraw.set(1 shl lrdu.toInt())
             CableRender.drawCable(render, maskTempDraw, renderPreProcess, render.widthDiv2 / 2f, drawBottom)

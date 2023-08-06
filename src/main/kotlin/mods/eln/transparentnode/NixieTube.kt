@@ -198,9 +198,9 @@ class NixieTubeRender(entity: TransparentNodeEntity, _descriptor: TransparentNod
                 val render = getCableRenderSide(front!!.down(), lrdu)
                 if (render != null) {
                     render.bindCableTexture()
-                    Utils.setGlColorFromDye(connTypes!!.get(lrdu.ordinal)!!.otherdry[lrdu.toInt()])
+                    Utils.setGlColorFromDye(connTypes!![lrdu.ordinal]!!.otherdry[lrdu.toInt()])
                     val mask = LRDUMask(1.shl(lrdu.ordinal))
-                    CableRender.drawCable(render, mask, connTypes!!.get(lrdu.ordinal))
+                    CableRender.drawCable(render, mask, connTypes!![lrdu.ordinal]!!)
                 }
             }
         }
