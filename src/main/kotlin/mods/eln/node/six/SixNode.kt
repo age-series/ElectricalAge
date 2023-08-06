@@ -391,7 +391,7 @@ class SixNode : Node() {
             println("sixnode newConnectionAt error")
             while (true);
         }
-        lrduElementMask[elementSide, elementSide.getLRDUGoingTo(side)] = true
+        lrduElementMask[elementSide, elementSide.getLRDUGoingTo(side)!!] = true
         element!!.newConnectionAt(connection, isA)
     }
 
@@ -402,7 +402,7 @@ class SixNode : Node() {
             println("sixnode newConnectionAt error")
             while (true);
         }
-        lrduElementMask[elementSide, elementSide.getLRDUGoingTo(side)] = false
+        lrduElementMask[elementSide, elementSide.getLRDUGoingTo(side)!!] = false
     }
 
     override fun onBlockActivated(entityPlayer: EntityPlayer, side: Direction, vx: Float, vy: Float, vz: Float): Boolean {

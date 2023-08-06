@@ -277,7 +277,7 @@ class PowerInductorSixRender(tileEntity: SixNodeEntity, side: Direction, descrip
 }
 
 
-class PowerInductorSixGui(player: EntityPlayer?, inventory: IInventory?, var render: PowerInductorSixRender) : GuiContainerEln(PowerInductorSixContainer(player, inventory)) {
+class PowerInductorSixGui(player: EntityPlayer, inventory: IInventory, var render: PowerInductorSixRender) : GuiContainerEln(PowerInductorSixContainer(player, inventory)) {
     override fun guiObjectEvent(`object`: IGuiObject) {
         super.guiObjectEvent(`object`)
     }
@@ -293,7 +293,7 @@ class PowerInductorSixGui(player: EntityPlayer?, inventory: IInventory?, var ren
 }
 
 
-class PowerInductorSixContainer(player: EntityPlayer?, inventory: IInventory?) : BasicContainer(player, inventory, arrayOf<Slot>(
+class PowerInductorSixContainer(player: EntityPlayer, inventory: IInventory) : BasicContainer(player, inventory, arrayOf<Slot>(
     GenericItemUsingDamageSlot(inventory, cableId, 132, 8, 19, CopperCableDescriptor::class.java,
         ISlotSkin.SlotSkin.medium, arrayOf(I18N.tr("Copper cable slot"), I18N.tr("(Increases inductance)"))),
     GenericItemUsingDamageSlot(inventory, coreId, 132 + 20, 8, 1, FerromagneticCoreDescriptor::class.java,

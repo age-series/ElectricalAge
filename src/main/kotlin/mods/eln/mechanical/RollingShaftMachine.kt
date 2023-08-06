@@ -110,7 +110,7 @@ class RollingShaftMachineRender(entity: TransparentNodeEntity, desc: Transparent
 
 const val cellOffset = 20
 
-class RollingShaftMachineContainer(player: EntityPlayer?, inv: IInventory) : BasicContainer(
+class RollingShaftMachineContainer(player: EntityPlayer, inv: IInventory) : BasicContainer(
     player, inv, arrayOf(
         SlotWithSkinAndComment(inv, 0, 8 + cellOffset, 12, SlotSkin.medium, arrayOf("Input Slot")),
         SlotWithSkinAndComment(inv, 1, 8 + cellOffset, 12 + cellOffset * 2, SlotSkin.big, arrayOf("Output Slot"))//,
@@ -119,7 +119,7 @@ class RollingShaftMachineContainer(player: EntityPlayer?, inv: IInventory) : Bas
     )
 )
 
-class RollingShaftMachineGui(player: EntityPlayer?, inv: IInventory, val render: RollingShaftMachineRender) : GuiContainerEln(RollingShaftMachineContainer(player, inv)) {
+class RollingShaftMachineGui(player: EntityPlayer, inv: IInventory, val render: RollingShaftMachineRender) : GuiContainerEln(RollingShaftMachineContainer(player, inv)) {
     override fun newHelper() = HelperStdContainer(this)
 }
 

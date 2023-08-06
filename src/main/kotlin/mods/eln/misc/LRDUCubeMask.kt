@@ -12,11 +12,11 @@ class LRDUCubeMask {
         }
     }
 
-    operator fun set(direction: Direction, lrdu: LRDU?, value: Boolean) {
+    operator fun set(direction: Direction, lrdu: LRDU, value: Boolean) {
         get(direction)!![lrdu] = value
     }
 
-    operator fun get(direction: Direction, lrdu: LRDU?): Boolean {
+    operator fun get(direction: Direction, lrdu: LRDU): Boolean {
         return get(direction)!![lrdu]
     }
 
@@ -29,7 +29,7 @@ class LRDUCubeMask {
         for (lrdu in LRDU.values()) {
             val otherSide = side.applyLRDU(lrdu)
             val otherLrdu = otherSide.getLRDUGoingTo(side)
-            mask[lrdu] = this[otherSide, otherLrdu]
+            mask[lrdu] = this[otherSide, otherLrdu!!]
         }
         return mask
     }

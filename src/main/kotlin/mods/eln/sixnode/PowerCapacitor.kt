@@ -318,7 +318,7 @@ class PowerCapacitorSixGui(player: EntityPlayer, inventory: IInventory, var rend
     }
 }
 
-class PowerCapacitorSixContainer(player: EntityPlayer?, inventory: IInventory?) : BasicContainer(player, inventory, arrayOf(
+class PowerCapacitorSixContainer(player: EntityPlayer, inventory: IInventory) : BasicContainer(player, inventory, arrayOf(
     SlotFilter(inventory, redId, 132, 8, 13, arrayOf(ItemStackFilter(Items.redstone)),
         ISlotSkin.SlotSkin.medium, arrayOf(I18N.tr("Redstone slot"), I18N.tr("(Increases capacity)"))),
     GenericItemUsingDamageSlot(inventory, dielectricId, 132 + 20, 8, 20, DielectricItem::class.java,
