@@ -1,8 +1,8 @@
 package mods.eln.transparentnode.turret;
 
-import mods.eln.fsm.CompositeState;
-import mods.eln.fsm.State;
-import mods.eln.fsm.StateMachine;
+import mods.eln.sim.fsm.CompositeState;
+import mods.eln.sim.fsm.State;
+import mods.eln.sim.fsm.StateMachine;
 import mods.eln.generic.GenericItemUsingDamageDescriptor;
 import mods.eln.item.EntitySensorFilterDescriptor;
 import mods.eln.misc.Coordinate;
