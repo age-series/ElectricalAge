@@ -1170,3 +1170,5 @@ Rolling_Shaft_Machine.name=Rolling Shaft Machine
 Low_Current_Relay.name=Low Current Relay
 Medium_Current_Relay.name=Medium Current Relay
 High_Current_Relay.name=High Current Relay
+Type_E_Socket.name=Type E Socket
+Type_J_Socket.name=Type J Socket

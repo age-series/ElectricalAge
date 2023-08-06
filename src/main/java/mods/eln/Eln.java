@@ -1769,19 +1769,15 @@ stdBatteryHalfLife * 8, heatTIme, 60, -100);
         PowerSocketDescriptor desc;
         {
             subId = 1;
-            name = TR_NAME(Type.NONE, "50V Power Socket");
-            desc = new PowerSocketDescriptor(subId, name, obj.getObj("PowerSocket"), 10 //Range for plugged devices
-            // (without obstacles)
-            );
+            name = TR_NAME(Type.NONE, "Type J Socket");
+            desc = new PowerSocketDescriptor(subId, name, obj.getObj("PowerSocket"));
             desc.setPlaceDirection(new Direction[]{Direction.XP, Direction.XN, Direction.ZP, Direction.ZN});
             sixNodeItem.addDescriptor(subId + (id << 6), desc);
         }
         {
             subId = 2;
-            name = TR_NAME(Type.NONE, "200V Power Socket");
-            desc = new PowerSocketDescriptor(subId, name, obj.getObj("PowerSocket"), 10 //Range for plugged devices
-            // (without obstacles)
-            );
+            name = TR_NAME(Type.NONE, "Type E Socket");
+            desc = new PowerSocketDescriptor(subId, name, obj.getObj("PowerSocket"));
             desc.setPlaceDirection(new Direction[]{Direction.XP, Direction.XN, Direction.ZP, Direction.ZN});
             sixNodeItem.addDescriptor(subId + (id << 6), desc);
         }
@@ -4616,9 +4612,9 @@ new ItemStack(Items.iron_ingot));
     }
 
     private void recipePowerSocket() {
-        addRecipe(findItemStack("50V Power Socket", 16), "RUR", "ACA", 'R', "itemRubber", 'U', findItemStack("Copper " +
+        addRecipe(findItemStack("Type J Socket", 16), "RUR", "ACA", 'R', "itemRubber", 'U', findItemStack("Copper " +
          "Plate"), 'A', findItemStack("Alloy Plate"), 'C', findItemStack("Low Voltage Cable"));
-        addRecipe(findItemStack("200V Power Socket", 16), "RUR", "ACA", 'R', "itemRubber", 'U', findItemStack("Copper" +
+        addRecipe(findItemStack("Type E Socket", 16), "RUR", "ACA", 'R', "itemRubber", 'U', findItemStack("Copper" +
          " Plate"), 'A', findItemStack("Alloy Plate"), 'C', findItemStack("Medium Voltage Cable"));
     }
 
