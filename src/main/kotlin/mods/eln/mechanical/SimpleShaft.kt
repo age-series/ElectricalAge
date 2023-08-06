@@ -202,11 +202,6 @@ abstract class SimpleShaftElement(node: TransparentNode, transparentNodeDescript
     var destructing = false
     override fun isDestructing() = destructing
 
-    init {
-        val exp = WorldExplosion(this as ShaftElement).machineExplosion()
-        slowProcessList.add(createShaftWatchdog(this).setDestroys(exp))
-    }
-
     override val shaftConnectivity: Array<Direction>
         get() = arrayOf(front.left(), front.right())
 
@@ -220,6 +215,8 @@ abstract class SimpleShaftElement(node: TransparentNode, transparentNodeDescript
             // These calls can still change the speed via mergeShaft
             shaft.connectShaft(this, it)
         }
+        val exp = WorldExplosion(this as ShaftElement).machineExplosion()
+        slowProcessList.add(createShaftWatchdog(this).setDestroys(exp))
     }
 
     override fun onBreakElement() {
