@@ -791,6 +791,7 @@ Side.SERVER);
         //registerFloodlight(68);
         registerFestive(69);
         registerFab(70);
+        //registerStreetLamps(71); // Needs fixed model, placement on side, probably channel selection code
 
 
         //ITEM REGISTRATION
@@ -1716,7 +1717,19 @@ stdBatteryHalfLife * 8, heatTIme, 60, -100);
             sixNodeItem.addDescriptor(subId + (id << 6), desc);
             desc.cameraOpt = false;
         }
+    }
 
+    private void registerStreetLamps(int id) {
+        int subId;
+        String name;
+        {
+            System.out.println("Street Light?");
+            System.out.println(obj.getObjectList());
+            subId = 0;
+            name = TR_NAME(Type.NONE, "StreetLightWall");
+            StreetLightWallDescriptor desc = new StreetLightWallDescriptor(name, obj.getObj("StreetLightWall"));
+            transparentNodeItem.addDescriptor(subId + (id << 6), desc);
+        }
     }
 
     /*

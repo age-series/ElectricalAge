@@ -10,6 +10,7 @@ import java.security.CodeSource;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
@@ -103,5 +104,9 @@ public class Obj3DFolder {
     public void draw(String objName, String partName) {
         Obj3DPart part = getPart(objName, partName);
         if (part != null) part.draw();
+    }
+
+    public Set<String> getObjectList() {
+        return nameToObjHash.keySet();
     }
 }

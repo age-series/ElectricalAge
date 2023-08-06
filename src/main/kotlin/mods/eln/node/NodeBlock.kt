@@ -49,6 +49,7 @@ abstract class NodeBlock(material: Material?, tileEntityClass: Class<*>, blockIt
 
     //client server
     open fun onBlockPlacedBy(world: World, x: Int, y: Int, z: Int, front: Direction?, entityLiving: EntityLivingBase?, metadata: Int): Boolean {
+        // If you're getting a mysterious NPE here, it's probably because your ghost group overrides the base node. You're welcome.
         val tileEntity = world.getTileEntity(x, y, z) as NodeBlockEntity
         tileEntity.onBlockPlacedBy(front, entityLiving, metadata)
         return true
