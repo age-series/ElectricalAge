@@ -34,17 +34,40 @@ class LampSocketProcess(var lamp: LampSocketElement) : IProcess, INBTTReady /*,L
     private fun findBestSupply(here: Coordinate, forceUpdate: Boolean = false): Pair<Double, PowerSupplyChannelHandle>? {
         val chanMap = LampSupplyElement.channelMap[lamp.channel] ?: return null
         val bestChanHand = bestChannelHandle
+
         // Here's our cached value. We just check if it's null and if it's still a thing.
         if (bestChanHand != null && !forceUpdate && chanMap.contains(bestChanHand.second)) {
             return bestChanHand // we good!
         }
-        val list = LampSupplyElement.channelMap[lamp.channel]?.filterNotNull() ?: return null
-        val chanHand = list
-            .map { Pair(it.element.sixNode?.coordinate?.trueDistanceTo(here)?: Double.MAX_VALUE, it) }
+
+        // Check if the list is not empty before calling minBy
+        val list = LampSupplyElement.channelMap[lamp.channel]?.filterNotNull()
+        if (list.isNullOrEmpty()) {
+            return null
+        }
+
+        val validElements = list.filter { it.element.sixNode?.coordinate != null }
+
+        if (validElements.isEmpty()) {
+            return null
+        }
+
+        val distancesWithHandles = validElements
+            .map { Pair(it.element.sixNode!!.coordinate!!.trueDistanceTo(here), it) }
             .filter { it.first < it.second.element.range }
-            .minBy { it.first }
-        bestChannelHandle = chanHand
-        return bestChannelHandle
+
+        if (distancesWithHandles.isEmpty()) {
+            return null
+        }
+
+        val chanHand = distancesWithHandles.minBy { it.first }
+
+        if (chanHand != null) {
+            bestChannelHandle = chanHand
+            return bestChannelHandle
+        }
+
+        return null // Return null if no valid elements were found within range
     }
 
     private fun updateNearbyBlocks(growRate: Double, nominalLight: Double, actualLight: Int, deltaT: Double) {
