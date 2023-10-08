@@ -51,7 +51,7 @@ public class ItemStackFilter implements IItemStackFilter {
     public boolean tryItemStack(ItemStack itemStack) {// caca1.5.1
         if (Utils.getItemId(itemStack) != itemId)
             return false;
-        if ((itemStack.getItemDamage() & damageMask) != damageValue)
+        if (itemStack.getItemDamage() != damageValue)
             return false;
         return true;
     }
