@@ -42,7 +42,7 @@ class LampSocketProcess(var lamp: LampSocketElement) : IProcess, INBTTReady /*,L
         val chanHand = list
             .map { Pair(it.element.sixNode?.coordinate?.trueDistanceTo(here)?: Double.MAX_VALUE, it) }
             .filter { it.first < it.second.element.range }
-            .minBy { it.first }
+            .minByOrNull { it.first }
         bestChannelHandle = chanHand
         return bestChannelHandle
     }
