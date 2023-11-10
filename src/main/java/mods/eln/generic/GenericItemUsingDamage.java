@@ -4,6 +4,7 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.LanguageRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import mods.eln.misc.RealisticEnum;
 import mods.eln.misc.UtilsClient;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.IIconRegister;
@@ -150,8 +151,10 @@ public class GenericItemUsingDamage<Descriptor extends GenericItemUsingDamageDes
         Descriptor desc = getDescriptor(itemStack);
         if (desc == null) return;
         List listFromDescriptor = new ArrayList();
+        List realismData = new ArrayList();
         desc.addInformation(itemStack, entityPlayer, listFromDescriptor, par4);
-        UtilsClient.showItemTooltip(listFromDescriptor, list);
+        RealisticEnum realism = desc.addRealismContext(realismData);
+        UtilsClient.showItemTooltip(listFromDescriptor, realismData, realism, list);
     }
 
     /**

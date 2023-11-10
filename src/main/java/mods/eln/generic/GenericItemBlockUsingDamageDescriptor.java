@@ -3,7 +3,7 @@ package mods.eln.generic;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import mods.eln.Eln;
-import mods.eln.misc.Utils;
+import mods.eln.misc.RealisticEnum;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
@@ -58,6 +58,10 @@ public class GenericItemBlockUsingDamageDescriptor {
     }
 
     public void addInformation(ItemStack itemStack, EntityPlayer entityPlayer, List<String> list, boolean par4) {
+    }
+
+    public RealisticEnum addRealismContext(List<String> list) {
+        return null;
     }
 
     @SideOnly(value = Side.CLIENT)

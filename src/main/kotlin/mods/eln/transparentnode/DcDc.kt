@@ -15,16 +15,7 @@ import mods.eln.item.ConfigCopyToolDescriptor
 import mods.eln.item.CopperCableDescriptor
 import mods.eln.item.FerromagneticCoreDescriptor
 import mods.eln.item.IConfigurable
-import mods.eln.misc.BasicContainer
-import mods.eln.misc.Coordinate
-import mods.eln.misc.Direction
-import mods.eln.misc.LRDU
-import mods.eln.misc.LRDUMask
-import mods.eln.misc.Obj3D
-import mods.eln.misc.PhysicalInterpolator
-import mods.eln.misc.SlewLimiter
-import mods.eln.misc.Utils
-import mods.eln.misc.VoltageLevelColor
+import mods.eln.misc.*
 import mods.eln.node.NodeBase
 import mods.eln.node.NodePeriodicPublishProcess
 import mods.eln.node.transparent.TransparentNode
@@ -93,6 +84,12 @@ class DcDcDescriptor(name: String, objM: Obj3D, coreM: Obj3D, casingM: Obj3D, va
     override fun addInformation(itemStack: ItemStack, entityPlayer: EntityPlayer, list: MutableList<String>, par4: Boolean) {
         super.addInformation(itemStack, entityPlayer, list, par4)
         Collections.addAll(list, *I18N.tr("Transforms an input voltage to\nan output voltage.")!!.split("\n".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray())
+    }
+
+    override fun addRealismContext(list: MutableList<String>?): RealisticEnum {
+        list?.add(I18N.tr("This DC/DC has unrealistic capacitance effects and can sink/source power that violates Newton's laws"))
+        list?.add(I18N.tr("It is made this way to improve the performance of the simulator in large power networks"))
+        return RealisticEnum.UNREALISTIC
     }
 
     override fun shouldUseRenderHelper(type: IItemRenderer.ItemRenderType, item: ItemStack, helper: IItemRenderer.ItemRendererHelper): Boolean {

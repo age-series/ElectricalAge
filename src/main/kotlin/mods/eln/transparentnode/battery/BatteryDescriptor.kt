@@ -2,11 +2,9 @@ package mods.eln.transparentnode.battery
 
 import mods.eln.Eln
 import mods.eln.i18n.I18N
-import mods.eln.misc.FunctionTable
-import mods.eln.misc.Obj3D
+import mods.eln.i18n.I18N.tr
+import mods.eln.misc.*
 import mods.eln.misc.Obj3D.Obj3DPart
-import mods.eln.misc.Utils
-import mods.eln.misc.VoltageLevelColor
 import mods.eln.node.transparent.TransparentNodeDescriptor
 import mods.eln.sim.BatteryProcess
 import mods.eln.sim.BatterySlowProcess
@@ -136,6 +134,17 @@ class BatteryDescriptor(
         list.add("")
         list.add(Utils.plotPercent(I18N.tr("Actual charge: "), getChargeInTag(itemStack)))
         if (lifeEnable) list.add(Utils.plotPercent(I18N.tr("Life: "), getLifeInTag(itemStack)))
+    }
+
+    override fun addRealismContext(list: MutableList<String>?): RealisticEnum {
+        list?.add(tr("Battery could be realistic in the future"))
+        list?.add(tr("  * Batteries have internal resistance"))
+        list?.add(tr("  * Not currently simulating any particular chemistry of battery"))
+        list?.add(tr("Batteries are based in realistic battery designs that someone might implement realistically:"))
+        list?.add(tr("  * Single use batteries emulate a voltaic pile"))
+        list?.add(tr("  * Current oriented uses two smaller batteries in parallel to increase current capability"))
+        list?.add(tr("  * Voltage oriented uses two smaller batteries in series to increase voltage"))
+        return RealisticEnum.IDEAL
     }
 
     override fun getName(stack: ItemStack): String {

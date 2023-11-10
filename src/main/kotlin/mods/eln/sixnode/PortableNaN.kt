@@ -4,10 +4,7 @@ import mods.eln.Eln
 import mods.eln.cable.CableRender
 import mods.eln.cable.CableRenderDescriptor
 import mods.eln.i18n.I18N.tr
-import mods.eln.misc.Direction
-import mods.eln.misc.LRDU
-import mods.eln.misc.Utils
-import mods.eln.misc.UtilsClient
+import mods.eln.misc.*
 import mods.eln.node.NodeBase
 import mods.eln.node.six.*
 import mods.eln.sim.ElectricalLoad
@@ -56,6 +53,11 @@ class PortableNaNDescriptor(name: String, renderIn: CableRenderDescriptor): Gene
         list.add("  " + tr("Voltage: Yes"))
         list.add("  " + tr("Current: No"))
         list.add("  " + tr("Serial Resistance: OK Ω"))
+    }
+
+    override fun addRealismContext(list: MutableList<String>?): RealisticEnum {
+        list?.add(tr("A debugging feature that throws NaN (Not a Number) anywhere it can in the simulator to find bugs"))
+        return RealisticEnum.UNREALISTIC
     }
 
     override fun getNodeMask(): Int {

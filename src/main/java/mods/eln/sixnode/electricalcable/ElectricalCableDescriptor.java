@@ -2,6 +2,7 @@ package mods.eln.sixnode.electricalcable;
 
 import mods.eln.Eln;
 import mods.eln.cable.CableRenderDescriptor;
+import mods.eln.misc.RealisticEnum;
 import mods.eln.misc.Utils;
 import mods.eln.misc.VoltageLevelColor;
 import mods.eln.node.NodeBase;
@@ -137,6 +138,15 @@ public class ElectricalCableDescriptor extends GenericCableDescriptor {
             list.add("  " + tr("Power: %1$W", Utils.plotValue(electricalNominalPower)));
             list.add("  " + tr("Serial resistance: %1$\u2126", Utils.plotValue(electricalRs * 2)));
         }
+    }
+
+    @Override
+    public RealisticEnum addRealismContext(List list) {
+        list.add(tr("Has some caveats:"));
+        list.add(tr("  * Wire resistance is much higher than normal"));
+        list.add(tr("  * Wire resistance is not impacted by temperature"));
+        list.add(tr("  * Wire voltage/current limits are arbitrary values, added as a gameplay mechanic"));
+        return RealisticEnum.REALISTIC;
     }
 
     @Override

@@ -36,6 +36,12 @@ class NixieTubeDescriptor(val name: String, val obj: Obj3D) : TransparentNodeDes
         list?.add(tr("Displays a single glowing digit."))
     }
 
+    override fun addRealismContext(list: MutableList<String>?): RealisticEnum {
+        list?.add(tr("Signal input doesn't require power, and interfaces are tailored to gameplay"))
+        list?.add(tr("Nixie tube has been textured realistically"))
+        return RealisticEnum.UNREALISTIC
+    }
+
     fun draw(_digit: Int, blank: Boolean, _dots: Int) {
         var digit = _digit
         if(digit < 0) digit = 0

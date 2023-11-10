@@ -8,6 +8,7 @@ import mods.eln.i18n.I18N
 import mods.eln.item.BrushDescriptor
 import mods.eln.misc.Direction
 import mods.eln.misc.LRDU
+import mods.eln.misc.RealisticEnum
 import mods.eln.misc.Utils.addChatMessage
 import mods.eln.misc.Utils.isPlayerUsingWrench
 import mods.eln.misc.Utils.plotAmpere
@@ -105,6 +106,15 @@ class CurrentCableDescriptor(
         list.add("  " + I18N.tr("Current: %1\$A", plotValue(electricalNominalPower / electricalNominalVoltage)))
         list.add("  " + I18N.tr("Power: %1\$W", plotValue(electricalNominalPower)))
         list.add("  " + I18N.tr("Serial resistance: %1$\u2126", plotValue(electricalRs * 2)))
+    }
+
+    override fun addRealismContext(list: MutableList<String>): RealisticEnum? {
+        list.add(I18N.tr("Has some caveats:"))
+        list.add(I18N.tr("  * Wire resistance is much higher than normal"))
+        list.add(I18N.tr("  * Wire resistance is not impacted by temperature"))
+        list.add(I18N.tr("  * Wire voltage limits are arbitrary values, picked to within reasonable simulator error"))
+        list.add(I18N.tr("  * Wire current limits are arbitrary values, added as a gameplay mechanic"))
+        return RealisticEnum.REALISTIC
     }
 
     override fun getNodeMask(): Int {

@@ -566,18 +566,32 @@ object UtilsClient {
     }
 
     @JvmStatic
-    fun showItemTooltip(src: List<String>, dst: MutableList<String>) {
-        if (src.isEmpty()) return
-        if (showItemTooltip()) {
-            dst.addAll(src)
+    fun showItemTooltip(details: List<String>, realismDetails: List<String>, realisticEnum: RealisticEnum?, dst: MutableList<String>) {
+        if (realisticEnum != null)
+            dst.add("§r${realisticEnum.color}${realisticEnum.name}§r")
+        if (details.isEmpty()) return
+        if (isShiftHeld()) {
+            dst.addAll(details)
         } else {
-            dst.add("\u00a7F\u00a7o<" + I18N.tr("Hold shift") + ">")
+            dst.add("§F§o${I18N.tr("Hold [shift] for details")}")
+        }
+        if (isControlHeld()) {
+            dst.addAll(realismDetails)
+        } else {
+            if (realisticEnum != null) {
+                if (realismDetails.isNotEmpty()) {
+                    dst.add("§F§o${I18N.tr("Hold [ctrl] for realism details")}")
+                }
+            }
         }
     }
 
-    @JvmStatic
-    fun showItemTooltip(): Boolean {
+    private fun isShiftHeld(): Boolean {
         return Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_RSHIFT)
+    }
+
+    private fun isControlHeld(): Boolean {
+        return Keyboard.isKeyDown(Keyboard.KEY_LCONTROL) || Keyboard.isKeyDown(Keyboard.KEY_RCONTROL)
     }
 
     @JvmStatic

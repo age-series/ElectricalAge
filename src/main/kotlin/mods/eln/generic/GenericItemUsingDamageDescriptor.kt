@@ -2,6 +2,7 @@ package mods.eln.generic
 
 import cpw.mods.fml.relauncher.Side
 import cpw.mods.fml.relauncher.SideOnly
+import mods.eln.misc.RealisticEnum
 import mods.eln.misc.UtilsClient
 import mods.eln.misc.VoltageLevelColor
 import net.minecraft.block.Block
@@ -17,7 +18,6 @@ import net.minecraft.util.ResourceLocation
 import net.minecraft.world.World
 import net.minecraftforge.client.IItemRenderer.ItemRenderType
 import net.minecraftforge.client.IItemRenderer.ItemRendererHelper
-import java.util.*
 
 open class GenericItemUsingDamageDescriptor {
 
@@ -45,6 +45,8 @@ open class GenericItemUsingDamageDescriptor {
     open fun getDefaultNBT(): NBTTagCompound? = null
 
     open fun addInformation(itemStack: ItemStack?, entityPlayer: EntityPlayer?, list: MutableList<String>, par4: Boolean) {}
+
+    open fun addRealismContext(list: List<*>?): RealisticEnum? = null
 
     open fun onItemRightClick(s: ItemStack, w: World, p: EntityPlayer): ItemStack {
         return s

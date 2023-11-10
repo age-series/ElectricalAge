@@ -6,7 +6,6 @@ import mods.eln.gui.HelperStdContainer
 import mods.eln.i18n.I18N
 import mods.eln.i18n.I18N.tr
 import mods.eln.misc.*
-import mods.eln.misc.SeriesFunction
 import mods.eln.node.NodeBase
 import mods.eln.node.transparent.*
 import mods.eln.sim.ElectricalLoad
@@ -49,7 +48,13 @@ class LargeRheostatDescriptor(name: String, val dissipator: ThermalDissipatorPas
             list.add(tr("Control resistance with signal"))
             list.add(tr("Dissapates ~4kW of heat passively"))
         }
+    }
 
+    override fun addRealismContext(list: MutableList<String>?): RealisticEnum {
+        list?.add(tr("Has some caveats:"))
+        list?.add(tr("  * Resistance is not impacted by temperature"))
+        list?.add(tr("  * Signal input doesn't require power"))
+        return RealisticEnum.REALISTIC
     }
 
     fun getRsValue(inventory: IInventory): Double {
