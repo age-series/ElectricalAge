@@ -95,7 +95,6 @@ class BatteryElement(transparentNode: TransparentNode, descriptor: TransparentNo
         negativeLoad.serialResistance = descriptor.electricalRs
         dischargeResistor.resistance = MnaConst.highImpedance
         if (fromItemStack) {
-            println("Loading from item stack")
             batteryProcess.life = fromItemstackLife
             batteryProcess.charge = fromItemstackCharge
             fromItemStack = false
@@ -118,8 +117,8 @@ class BatteryElement(transparentNode: TransparentNode, descriptor: TransparentNo
 
     override fun readItemStackNBT(nbt: NBTTagCompound?) {
         super.readItemStackNBT(nbt)
-        fromItemstackCharge = nbt?.getDouble("charge")?: 0.5
-        fromItemstackLife = nbt?.getDouble("life")?: 1.0
+        fromItemstackCharge = nbt?.getDouble("charge")?: descriptor.getChargeInTag(this.descriptor.newItemStack())
+        fromItemstackLife = nbt?.getDouble("life")?: descriptor.getLifeInTag(this.descriptor.newItemStack())
         fromItemStack = true
     }
 
