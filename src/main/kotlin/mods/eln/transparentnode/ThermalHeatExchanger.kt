@@ -155,7 +155,7 @@ class ThermalHeatExchangerElement(
         //println("predictedInputMb: $predictedInputMb")
         if (predictedInputMb > 0) {
             val movedInputMb = tank.drain(INPUT_SIDE, predictedInputMb, true)?.amount?: 0
-            //val movedOutputMb = tank.fill(OUTPUT_SIDE, FluidStack(outputFluid, (movedInputMb * ratio).toInt()), true)
+            tank.fill(OUTPUT_SIDE, FluidStack(outputFluid, (movedInputMb * ratio).toInt()), true)
             //println("movedInputMb: $movedInputMb")
             //println("movedOutputMb: $movedOutputMb")
             return movedInputMb
@@ -182,8 +182,8 @@ class ThermalHeatExchangerElement(
 
         if (ic2hotcoolant != null && ic2coolant != null) {
             //println("IC2 Coolant Enabled in Thermal Heat Exchanger")
-            thermalPairs.add(ThermalPairing(ic2coolant, ic2hotcoolant, -640.0 / 7.0, 9, 1.0, false, minTemp = 300.0))
-            thermalPairs.add(ThermalPairing(ic2hotcoolant, ic2coolant, 640.0 / 7.0, 9, 1.0, false))
+            thermalPairs.add(ThermalPairing(ic2coolant, ic2hotcoolant, -1920.0 / 7.0, 9, 1.0, false, minTemp = 300.0))
+            thermalPairs.add(ThermalPairing(ic2hotcoolant, ic2coolant, 1920.0 / 7.0, 9, 1.0, false))
         }
 
         if (ic2hotwater != null) {
