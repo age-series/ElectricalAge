@@ -1,12 +1,9 @@
 package mods.eln.sixnode.powersocket
 
 import mods.eln.i18n.I18N
-import mods.eln.misc.Direction
-import mods.eln.misc.LRDU
-import mods.eln.misc.Obj3D
+import mods.eln.misc.*
 import mods.eln.misc.Obj3D.Obj3DPart
 import mods.eln.misc.Utils.setGlColorFromDye
-import mods.eln.misc.VoltageLevelColor
 import mods.eln.node.six.SixNodeDescriptor
 import mods.eln.wiki.Data
 import net.minecraft.entity.player.EntityPlayer
@@ -87,6 +84,12 @@ class PowerSocketDescriptor(subID: Int, name: String, obj: Obj3D) :
         list?.addAll(I18N.tr("Supplies any device\nplugged in with energy.").split("\n".toRegex())
             .dropLastWhile { it.isEmpty() }
             .toTypedArray())
+    }
+
+    override fun addRealismContext(list: MutableList<String?>): RealisticEnum {
+        super.addRealismContext(list)
+        list.add(I18N.tr("Homes have power sockets. These are not them."))
+        return RealisticEnum.UNREALISTIC
     }
 
     override fun getFrontFromPlace(side: Direction, player: EntityPlayer): LRDU? {

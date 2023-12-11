@@ -1,5 +1,6 @@
 package mods.eln.sixnode.lampsocket;
 
+import mods.eln.misc.RealisticEnum;
 import mods.eln.misc.VoltageLevelColor;
 import mods.eln.node.six.SixNodeDescriptor;
 import mods.eln.wiki.Data;
@@ -111,5 +112,12 @@ public class LampSocketDescriptor extends SixNodeDescriptor {
                 list.add(tr("Angle: %1$° to %2$°", ((int) alphaZMin), ((int) alphaZMax)));
             }
         }
+    }
+
+    @Override
+    public RealisticEnum addRealismContext(List<String> list) {
+        super.addRealismContext(list);
+        list.add(tr("Wireless mode of lights intended to pretend wires are in the walls"));
+        return RealisticEnum.REALISTIC;
     }
 }

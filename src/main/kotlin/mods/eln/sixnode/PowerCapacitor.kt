@@ -10,16 +10,11 @@ import mods.eln.gui.ISlotSkin
 import mods.eln.gui.ItemStackFilter
 import mods.eln.gui.SlotFilter
 import mods.eln.i18n.I18N
+import mods.eln.i18n.I18N.tr
 import mods.eln.item.DielectricItem
 import mods.eln.item.IConfigurable
 import mods.eln.item.ItemMovingHelper
-import mods.eln.misc.BasicContainer
-import mods.eln.misc.Direction
-import mods.eln.misc.IFunction
-import mods.eln.misc.LRDU
-import mods.eln.misc.Obj3D
-import mods.eln.misc.Utils
-import mods.eln.misc.VoltageLevelColor
+import mods.eln.misc.*
 import mods.eln.node.NodeBase
 import mods.eln.node.six.SixNode
 import mods.eln.node.six.SixNodeDescriptor
@@ -107,6 +102,22 @@ class PowerCapacitorSixDescriptor(name: String,
         } else {
             super.renderItem(type, item, *data)
         }
+    }
+
+    override fun addInformation(
+        itemStack: ItemStack?,
+        entityPlayer: EntityPlayer?,
+        list: MutableList<String>?,
+        par4: Boolean
+    ) {
+        super.addInformation(itemStack, entityPlayer, list, par4)
+        list?.add(tr("Provides capacitance. Use with dielectrics and redstone"))
+    }
+
+    override fun addRealismContext(list: MutableList<String>?): RealisticEnum {
+        super.addRealismContext(list)
+        list?.add(tr("It doesn't really behave well for DC"))
+        return RealisticEnum.UNREALISTIC
     }
 
     override fun getFrontFromPlace(side: Direction, player: EntityPlayer): LRDU {

@@ -7,17 +7,9 @@ import mods.eln.gui.GuiScreenEln
 import mods.eln.gui.GuiTextFieldEln
 import mods.eln.i18n.I18N
 import mods.eln.item.IConfigurable
-import mods.eln.misc.Direction
-import mods.eln.misc.LRDU
-import mods.eln.misc.Obj3D
-import mods.eln.misc.Utils
-import mods.eln.misc.VoltageLevelColor
+import mods.eln.misc.*
 import mods.eln.node.NodeBase
-import mods.eln.node.six.SixNode
-import mods.eln.node.six.SixNodeDescriptor
-import mods.eln.node.six.SixNodeElement
-import mods.eln.node.six.SixNodeElementRender
-import mods.eln.node.six.SixNodeEntity
+import mods.eln.node.six.*
 import mods.eln.sim.ElectricalLoad
 import mods.eln.sim.ThermalLoad
 import mods.eln.sim.mna.component.CurrentSource
@@ -47,6 +39,12 @@ class CurrentSourceDescriptor(name: String, obj: Obj3D) : SixNodeDescriptor(name
         list.add(I18N.tr("Internal resistance: %1$\u2126", Utils.plotValue(Eln.instance.lowVoltageCableDescriptor.electricalRs)))
         list.add("")
         list.add(I18N.tr("Creative block."))
+    }
+
+    override fun addRealismContext(list: MutableList<String?>): RealisticEnum {
+        super.addRealismContext(list)
+        list.add(I18N.tr("Acts as an ideal voltage source, with a small inline resistance"))
+        return RealisticEnum.IDEAL
     }
 
     override fun handleRenderType(item: ItemStack, type: IItemRenderer.ItemRenderType): Boolean {

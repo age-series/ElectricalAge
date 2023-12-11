@@ -1,11 +1,7 @@
 package mods.eln.sixnode.resistor;
 
 import mods.eln.Eln;
-import mods.eln.misc.Direction;
-import mods.eln.misc.IFunction;
-import mods.eln.misc.LRDU;
-import mods.eln.misc.Obj3D;
-import mods.eln.misc.VoltageLevelColor;
+import mods.eln.misc.*;
 import mods.eln.node.six.SixNodeDescriptor;
 import mods.eln.wiki.Data;
 import net.minecraft.entity.player.EntityPlayer;
@@ -15,6 +11,10 @@ import net.minecraftforge.client.IItemRenderer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.opengl.GL11;
+
+import java.util.List;
+
+import static mods.eln.i18n.I18N.tr;
 
 /**
  * Created by svein on 05/08/15.
@@ -114,5 +114,18 @@ public class ResistorDescriptor extends SixNodeDescriptor {
     @Override
     public LRDU getFrontFromPlace(@NotNull Direction side, @NotNull EntityPlayer player) {
         return super.getFrontFromPlace(side, player).left();
+    }
+
+
+    @Override
+    public void addInformation(ItemStack itemStack, EntityPlayer entityPlayer, List<String> list, boolean par4) {
+        super.addInformation(itemStack, entityPlayer, list, par4);
+        list.add(tr("It's a resistor"));
+    }
+
+    @Override
+    public RealisticEnum addRealismContext(List<String> list) {
+        super.addRealismContext(list);
+        return RealisticEnum.REALISTIC;
     }
 }

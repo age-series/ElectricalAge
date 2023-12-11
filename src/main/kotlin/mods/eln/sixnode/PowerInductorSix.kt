@@ -12,13 +12,7 @@ import mods.eln.item.CopperCableDescriptor
 import mods.eln.item.FerromagneticCoreDescriptor
 import mods.eln.item.IConfigurable
 import mods.eln.item.ItemMovingHelper
-import mods.eln.misc.BasicContainer
-import mods.eln.misc.Direction
-import mods.eln.misc.IFunction
-import mods.eln.misc.LRDU
-import mods.eln.misc.Obj3D
-import mods.eln.misc.Utils
-import mods.eln.misc.VoltageLevelColor
+import mods.eln.misc.*
 import mods.eln.node.NodeBase
 import mods.eln.node.six.SixNode
 import mods.eln.node.six.SixNodeDescriptor
@@ -97,6 +91,23 @@ class PowerInductorSixDescriptor(name: String,
         } else {
             super.renderItem(type, item, *data)
         }
+    }
+
+    override fun addInformation(
+        itemStack: ItemStack?,
+        entityPlayer: EntityPlayer?,
+        list: MutableList<String>?,
+        par4: Boolean
+    ) {
+        super.addInformation(itemStack, entityPlayer, list, par4)
+        list?.add(I18N.tr("Provides inductance. Use with iron cores and bare copper cables"))
+    }
+
+    override fun addRealismContext(list: MutableList<String>?): RealisticEnum {
+        super.addRealismContext(list)
+        list?.add(I18N.tr("It doesn't really behave well for DC"))
+        list?.add(I18N.tr("* Missing an inductive voltage spike on field collapse"))
+        return RealisticEnum.UNREALISTIC
     }
 
     override fun getFrontFromPlace(side: Direction, player: EntityPlayer): LRDU {

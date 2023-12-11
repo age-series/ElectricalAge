@@ -1,5 +1,6 @@
 package mods.eln.sixnode.wirelesssignal.source;
 
+import mods.eln.misc.RealisticEnum;
 import mods.eln.misc.VoltageLevelColor;
 import mods.eln.node.six.SixNodeDescriptor;
 import mods.eln.sixnode.electricalgatesource.ElectricalGateSourceRenderObj;
@@ -75,5 +76,12 @@ public class WirelessSignalSourceDescriptor extends SixNodeDescriptor {
             GL11.glScalef(1.5f, 1.5f, 1.5f);
             draw(0f, 1f, null);
         }
+    }
+
+    @Override
+    public RealisticEnum addRealismContext(List<String> list) {
+        super.addRealismContext(list);
+        list.add(tr("It should require power to transmit realistically"));
+        return RealisticEnum.IDEAL;
     }
 }

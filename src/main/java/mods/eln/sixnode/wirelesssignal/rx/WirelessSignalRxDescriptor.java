@@ -11,6 +11,10 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.opengl.GL11;
 
+import java.util.List;
+
+import static mods.eln.i18n.I18N.tr;
+
 public class WirelessSignalRxDescriptor extends SixNodeDescriptor {
 
     private Obj3D obj;
@@ -74,5 +78,18 @@ public class WirelessSignalRxDescriptor extends SixNodeDescriptor {
     @Override
     public LRDU getFrontFromPlace(@NotNull Direction side, @NotNull EntityPlayer player) {
         return super.getFrontFromPlace(side, player).inverse();
+    }
+
+    @Override
+    public void addInformation(ItemStack itemStack, EntityPlayer entityPlayer, List<String> list, boolean par4) {
+        super.addInformation(itemStack, entityPlayer, list, par4);
+        list.add(tr("Receive signal voltage on selected wireless signal channel"));
+    }
+
+    @Override
+    public RealisticEnum addRealismContext(List<String> list) {
+        super.addRealismContext(list);
+        list.add(tr("It should require power to receive and propogate the signal realistically"));
+        return RealisticEnum.IDEAL;
     }
 }

@@ -97,6 +97,15 @@ public class LampSupplyDescriptor extends SixNodeDescriptor {
         Collections.addAll(list,tr("Supports control from a wireless signal\nchannel for each lighting channel.").split("\n"));
     }
 
+    @Override
+    public RealisticEnum addRealismContext(List<String> list) {
+        super.addRealismContext(list);
+        list.add(tr("Most homes have a circuit breaker panel for lights"));
+        list.add(tr("The wireless power aspect is pretending there are wires in the walls"));
+        list.add(tr("Wireless control signals are totally possible"));
+        return RealisticEnum.REALISTIC;
+    }
+
     @Nullable
     @Override
     public LRDU getFrontFromPlace(@NotNull Direction side, @NotNull EntityPlayer player) {

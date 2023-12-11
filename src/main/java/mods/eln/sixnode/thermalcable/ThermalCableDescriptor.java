@@ -2,6 +2,7 @@ package mods.eln.sixnode.thermalcable;
 
 import mods.eln.Eln;
 import mods.eln.cable.CableRenderDescriptor;
+import mods.eln.misc.RealisticEnum;
 import mods.eln.misc.Utils;
 import mods.eln.misc.VoltageLevelColor;
 import mods.eln.node.six.SixNodeDescriptor;
@@ -110,5 +111,12 @@ public class ThermalCableDescriptor extends SixNodeDescriptor {
         list.add("");
         Collections.addAll(list, tr("Low serial resistance\n => High conductivity.").split("\n"));
         Collections.addAll(list, tr("High parallel resistance\n => Low power dissipation.").split("\n"));
+    }
+
+    @Override
+    public RealisticEnum addRealismContext(List<String> list) {
+        super.addRealismContext(list);
+        list.add(tr("The thermal simulator doesn't properly manage heat"));
+        return RealisticEnum.UNREALISTIC;
     }
 }

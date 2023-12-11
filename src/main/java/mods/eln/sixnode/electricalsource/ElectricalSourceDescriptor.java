@@ -67,6 +67,13 @@ public class ElectricalSourceDescriptor extends SixNodeDescriptor {
     }
 
     @Override
+    public RealisticEnum addRealismContext(List<String> list) {
+        super.addRealismContext(list);
+        list.add(tr("Acts as an ideal voltage source, with a small inline resistance"));
+        return RealisticEnum.IDEAL;
+    }
+
+    @Override
     public boolean handleRenderType(ItemStack item, ItemRenderType type) {
         return true;
     }

@@ -48,6 +48,14 @@ public class GroundCableDescriptor extends SixNodeDescriptor {
         list.add(tr("Internal resistance: %1$\u2126", Utils.plotValue(Eln.getSmallRs())));
     }
 
+    @Override
+    public RealisticEnum addRealismContext(List<String> list) {
+        super.addRealismContext(list);
+        list.add(tr("Acts as a ground reference."));
+        list.add(tr("Has a small resistance inline"));
+        return RealisticEnum.REALISTIC;
+    }
+
     @Nullable
     @Override
     public LRDU getFrontFromPlace(@NotNull Direction side, @NotNull EntityPlayer player) {

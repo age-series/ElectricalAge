@@ -118,6 +118,13 @@ public class BatteryChargerDescriptor extends SixNodeDescriptor {
         list.add(tr("Nominal power: %1$W", Utils.plotValue(nominalPower)));
     }
 
+    @Override
+    public RealisticEnum addRealismContext(List<String> list) {
+        super.addRealismContext(list);
+        list.add(tr("This battery charger doesn't take into account battery chemistry"));
+        return RealisticEnum.IDEAL;
+    }
+
     @Nullable
     @Override
     public LRDU getFrontFromPlace(@NotNull Direction side, @NotNull EntityPlayer player) {
