@@ -24,15 +24,16 @@ import net.minecraft.nbt.NBTTagCompound
 import org.lwjgl.opengl.GL11
 import java.io.DataInputStream
 import java.io.DataOutputStream
-import java.util.*
+import kotlin.math.cos
+import kotlin.math.pow
 
-class RotaryMotorDescriptor(baseName: String, obj: Obj3D) :
-    SimpleShaftDescriptor(baseName, RotaryMotorElement::class, RotaryMotorRender::class, EntityMetaTag.Fluid) {
+class RadialMotorDescriptor(baseName: String, obj: Obj3D) :
+    SimpleShaftDescriptor(baseName, RadialMotorElement::class, RadialMotorRender::class, EntityMetaTag.Fluid) {
     companion object {
         const val GAS_GUZZLER_CONSTANT = 0.5
     }
 
-    override val sound = "eln:RotaryEngine"
+    override val sound = "eln:RadialEngine"
     override val static = arrayOf(
         obj.getPart("Body_Cylinder.001")
     )
@@ -84,32 +85,33 @@ class RotaryMotorDescriptor(baseName: String, obj: Obj3D) :
     }
 }
 
-class RotaryMotorElement(node: TransparentNode, transparentNodeDescriptor: TransparentNodeDescriptor) :
+class RadialMotorElement(node: TransparentNode, transparentNodeDescriptor: TransparentNodeDescriptor) :
     SimpleShaftElement(node, transparentNodeDescriptor) {
-    val desc = transparentNodeDescriptor as RotaryMotorDescriptor
+    val desc = transparentNodeDescriptor as RadialMotorDescriptor
 
     val tank = PreciseElementFluidHandler(desc.fluidConsumption.toInt())
     var fluidRate = 0f
     var efficiency = 0f
-    val rotaryMotorSlowProcess = RotaryMotorSlowProcess()
+    val radialMotorSlowProcess = RadialMotorSlowProcess()
 
     internal val throttle = NbtElectricalGateInput("throttle")
 
     internal var volume: Float by published(0f)
 
-    inner class RotaryMotorSlowProcess() : IProcess, INBTTReady {
+    inner class RadialMotorSlowProcess : IProcess, INBTTReady {
         val rc = RcInterpolator(desc.inertia)
 
         override fun process(time: Double) {
             // Do anything at all?
             val target: Float
-            val computedEfficiency = if (shaft.rads > 700) {
-                 Math.max(Math.pow(Math.cos(((shaft.rads - desc.optimalRads) / (desc.optimalRads * desc.efficiencyCurve)) * (Math.PI / 2)), 3.0), 0.0) * RotaryMotorDescriptor.GAS_GUZZLER_CONSTANT
+            val computedEfficiency = if (shaft.rads > 0.7 * absoluteMaximumShaftSpeed) {
+                 cos(((shaft.rads - desc.optimalRads) / (desc.optimalRads * desc.efficiencyCurve)) * (Math.PI / 2))
+                     .pow(3.0).coerceAtLeast(0.0) * RadialMotorDescriptor.GAS_GUZZLER_CONSTANT
             } else {
                 0.25
             }
             efficiency = computedEfficiency.toFloat()
-            val th = if (throttle.connectedComponents.count() > 0) throttle.normalized else 1.0
+            val th = if (throttle.connectedComponents.isNotEmpty()) throttle.normalized else 1.0
             target = (desc.fluidConsumption * th).toFloat()
 
             val drained = tank.drain(target * time).toFloat()
@@ -122,7 +124,7 @@ class RotaryMotorElement(node: TransparentNode, transparentNodeDescriptor: Trans
             shaft.energy += power * time.toFloat()
 
             volume = if (fluidRate > 0.25) {
-                Math.max(0.75f, (power / desc.maxFluidPower).toFloat())
+                0.75f.coerceAtLeast((power / desc.maxFluidPower).toFloat())
             } else {
                 0.0f
             }
@@ -139,7 +141,7 @@ class RotaryMotorElement(node: TransparentNode, transparentNodeDescriptor: Trans
 
     init {
         tank.setFilter(FuelRegistry.fluidListToFluids(desc.fluidTypes))
-        slowProcessList.add(rotaryMotorSlowProcess)
+        slowProcessList.add(radialMotorSlowProcess)
         electricalLoadList.add(throttle)
     }
 
@@ -156,22 +158,22 @@ class RotaryMotorElement(node: TransparentNode, transparentNodeDescriptor: Trans
     override fun writeToNBT(nbt: NBTTagCompound) {
         super.writeToNBT(nbt)
         tank.writeToNBT(nbt, "tank")
-        rotaryMotorSlowProcess.writeToNBT(nbt, "proc")
+        radialMotorSlowProcess.writeToNBT(nbt, "proc")
     }
 
     override fun readFromNBT(nbt: NBTTagCompound) {
         super.readFromNBT(nbt)
         tank.readFromNBT(nbt, "tank")
-        rotaryMotorSlowProcess.readFromNBT(nbt, "proc")
+        radialMotorSlowProcess.readFromNBT(nbt, "proc")
     }
 
     override fun getWaila(): Map<String, String> {
         val info = mutableMapOf<String, String>()
-        info.put("Speed", Utils.plotRads("", shaft.rads))
-        info.put("Energy", Utils.plotEnergy("", shaft.energy))
+        info["Speed"] = Utils.plotRads("", shaft.rads)
+        info["Energy"] = Utils.plotEnergy("", shaft.energy)
         if (Eln.wailaEasyMode) {
-            info.put("Efficiency", Utils.plotPercent("", efficiency.toDouble()))
-            info.put("Fuel usage", Utils.plotBuckets("", fluidRate / 1000.0) + "/s")
+            info["Efficiency"] = Utils.plotPercent("", efficiency.toDouble())
+            info["Fuel usage"] = Utils.plotBuckets("", fluidRate / 1000.0) + "/s"
         }
         return info
     }
@@ -187,7 +189,7 @@ class RotaryMotorElement(node: TransparentNode, transparentNodeDescriptor: Trans
 }
 
 // TODO: Particles flying out the exhaust pipe
-class RotaryMotorRender(entity: TransparentNodeEntity, desc: TransparentNodeDescriptor) : ShaftRender(entity, desc) {
+class RadialMotorRender(entity: TransparentNodeEntity, desc: TransparentNodeDescriptor) : ShaftRender(entity, desc) {
     override val cableRender = Eln.instance.stdCableRenderSignal
 
     override fun networkUnserialize(stream: DataInputStream) {

@@ -2653,7 +2653,7 @@ Amplifier.class, AmplifierElement.class, AmplifierRender.class));
 
         {
             subId = 19;
-            RotaryMotorDescriptor desc = new RotaryMotorDescriptor(TR_NAME(Type.NONE, "Rotary Motor"), obj.getObj(
+            RadialMotorDescriptor desc = new RadialMotorDescriptor(TR_NAME(Type.NONE, "Radial Motor"), obj.getObj(
                     "Starter_Motor"));
             GhostGroup g = new GhostGroup();
             for (int x = -1; x < 2; x++) {
@@ -4759,7 +4759,7 @@ findItemStack("Copper Cable"), 'C', dictAdvancedChip);
         addRecipe(findItemStack("Gas Turbine"), "msH", "sSs", " M ", 'm', findItemStack("Advanced Electrical Motor"),
 'H', findItemStack("Copper Thermal Cable"), 's', firstExistingOre("ingotSteel", "ingotIron"), 'S',
           firstExistingOre("blockSteel", "blockIron"), 'M', findItemStack("Advanced Machine Block"));
-        addRecipe(findItemStack("Rotary Motor"), " r ", "rSr", " rM", 'r', "plateAlloy", 'S', firstExistingOre(
+        addRecipe(findItemStack("Radial Motor"), " r ", "rSr", " rM", 'r', "plateAlloy", 'S', firstExistingOre(
                 "blockSteel", "blockIron"), 'M', findItemStack("Advanced Machine Block"));
         addRecipe(findItemStack("Joint"), "   ", "iii", " m ", 'i', "ingotIron", 'm', findItemStack("Machine Block"));
         addRecipe(findItemStack("Joint hub"), " i ", "iii", " m ", 'i', "ingotIron", 'm', findItemStack("Machine " +

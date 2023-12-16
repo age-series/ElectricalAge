@@ -350,11 +350,11 @@
 			}
 		]
 	},
-    "RotaryEngine": {
+    "RadialEngine": {
         "category": "block",
         "sounds": [
             {
-                "name": "RotaryEngine",
+                "name": "RadialEngine",
                 "stream": false
             }
         ]

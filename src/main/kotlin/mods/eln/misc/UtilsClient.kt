@@ -569,21 +569,30 @@ object UtilsClient {
     fun showItemTooltip(details: List<String>, realismDetails: List<String>, realisticEnum: RealisticEnum?, dst: MutableList<String>) {
         if (realisticEnum != null)
             dst.add("§r${realisticEnum.color}${realisticEnum.name}§r")
-        if (details.isEmpty()) return
-        if (isShiftHeld()) {
-            dst.addAll(details)
-        } else {
-            dst.add("§F§o${I18N.tr("Hold [shift] for details")}")
+        if (details.isNotEmpty()) {
+            if (isShiftHeld()) {
+                dst.addAll(details)
+            } else {
+                dst.add("§F§o${I18N.tr("Hold [shift] for details")}")
+            }
         }
-        if (isControlHeld()) {
-            dst.addAll(realismDetails)
-        } else {
-            if (realisticEnum != null) {
-                if (realismDetails.isNotEmpty()) {
-                    dst.add("§F§o${I18N.tr("Hold [ctrl] for realism details")}")
+        if (realismDetails.isNotEmpty()) {
+            if (isControlHeld()) {
+                dst.addAll(realismDetails)
+            } else {
+                if (realisticEnum != null) {
+                    if (realismDetails.isNotEmpty()) {
+                        dst.add("§F§o${I18N.tr("Hold [ctrl] for realism details")}")
+                    }
                 }
             }
         }
+        dst.listLengthFormatter(24)
+    }
+
+    private fun List<String>.listLengthFormatter(length: Int) {
+        val chars: Sequence<Char> = "abcd".asSequence()
+        val str: String = chars.joinToString()
     }
 
     private fun isShiftHeld(): Boolean {
