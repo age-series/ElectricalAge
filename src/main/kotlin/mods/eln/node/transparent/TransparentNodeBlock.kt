@@ -20,7 +20,7 @@ import java.util.*
 
 class TransparentNodeBlock(material: Material?, tileEntityClass: Class<*>?) : NodeBlock(material, tileEntityClass!!, 0) {
 
-    override fun getSubBlocks(par1: Item, tab: CreativeTabs, subItems: List<*>?) {
+    override fun getSubBlocks(par1: Item, tab: CreativeTabs?, subItems: List<*>?) {
         Eln.transparentNodeItem.getSubItems(par1, tab, subItems)
     }
 
