@@ -1,34 +1,24 @@
-package mods.eln.signalinductor;
+package mods.eln.sixnode.signalinductor
 
-import mods.eln.node.six.SixNodeDescriptor;
-import mods.eln.sim.ElectricalLoad;
-import mods.eln.sim.mna.component.Inductor;
-import mods.eln.sixnode.electricalcable.ElectricalCableDescriptor;
-import net.minecraft.item.Item;
+import mods.eln.node.six.SixNodeDescriptor
+import mods.eln.sim.ElectricalLoad
+import mods.eln.sim.mna.component.Inductor
+import mods.eln.sixnode.electricalcable.ElectricalCableDescriptor
+import net.minecraft.item.Item
 
-public class SignalInductorDescriptor extends SixNodeDescriptor {
+class SignalInductorDescriptor(name: String?, var henri: Double, @JvmField var cable: ElectricalCableDescriptor) :
+    SixNodeDescriptor(name, SignalInductorElement::class.java, SignalInductorRender::class.java) {
+    var descriptor: String? = null
 
-    ElectricalCableDescriptor cable;
-    String descriptor;
-    public double henri;
-
-    public SignalInductorDescriptor(String name, double henri, ElectricalCableDescriptor cable) {
-        super(name, SignalInductorElement.class, SignalInductorRender.class);
-        this.henri = henri;
-        this.cable = cable;
+    override fun setParent(item: Item, damage: Int) {
+        super.setParent(item, damage)
     }
 
-    @Override
-    public void setParent(Item item, int damage) {
-        super.setParent(item, damage);
-        //Data.addEnergy(newItemStack());
+    fun applyTo(load: ElectricalLoad?) {
+        cable.applyTo(load)
     }
 
-    public void applyTo(ElectricalLoad load) {
-        cable.applyTo(load);
-    }
-
-    public void applyTo(Inductor inductor) {
-        inductor.setInductance(henri);
+    fun applyTo(inductor: Inductor) {
+        inductor.inductance = henri
     }
 }

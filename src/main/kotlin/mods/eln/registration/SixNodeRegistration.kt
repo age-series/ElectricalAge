@@ -11,7 +11,7 @@ import mods.eln.misc.FunctionTableYProtect
 import mods.eln.misc.IFunction
 import mods.eln.misc.SeriesFunction.Companion.newE12
 import mods.eln.misc.SeriesFunction.Companion.newE6
-import mods.eln.signalinductor.SignalInductorDescriptor
+import mods.eln.sixnode.signalinductor.SignalInductorDescriptor
 import mods.eln.sixnode.*
 import mods.eln.sixnode.TreeResinCollector.TreeResinCollectorDescriptor
 import mods.eln.sixnode.batterycharger.BatteryChargerDescriptor

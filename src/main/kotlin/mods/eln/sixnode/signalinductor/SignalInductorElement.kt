@@ -1,69 +1,59 @@
-package mods.eln.signalinductor;
+package mods.eln.sixnode.signalinductor
 
-import mods.eln.misc.Direction;
-import mods.eln.misc.LRDU;
-import mods.eln.misc.Utils;
-import mods.eln.node.six.SixNode;
-import mods.eln.node.six.SixNodeDescriptor;
-import mods.eln.node.six.SixNodeElement;
-import mods.eln.sim.ElectricalLoad;
-import mods.eln.sim.ThermalLoad;
-import mods.eln.sim.mna.component.Inductor;
-import mods.eln.sim.nbt.NbtElectricalLoad;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import mods.eln.misc.Direction
+import mods.eln.misc.LRDU
+import mods.eln.misc.Utils.plotAmpere
+import mods.eln.node.six.SixNode
+import mods.eln.node.six.SixNodeDescriptor
+import mods.eln.node.six.SixNodeElement
+import mods.eln.sim.ElectricalLoad
+import mods.eln.sim.ThermalLoad
+import mods.eln.sim.mna.component.Inductor
+import mods.eln.sim.nbt.NbtElectricalLoad
 
-public class SignalInductorElement extends SixNodeElement {
+class SignalInductorElement(sixNode: SixNode?, side: Direction?, descriptor: SixNodeDescriptor) : SixNodeElement(
+    sixNode!!, side!!, descriptor
+) {
+    var descriptor: SignalInductorDescriptor
+    var postiveLoad: NbtElectricalLoad = NbtElectricalLoad("postiveLoad")
+    var negativeLoad: NbtElectricalLoad = NbtElectricalLoad("negativeLoad")
+    var inductor: Inductor = Inductor("inductor", postiveLoad, negativeLoad)
 
-    public SignalInductorDescriptor descriptor;
-    public NbtElectricalLoad postiveLoad = new NbtElectricalLoad("postiveLoad");
-    public NbtElectricalLoad negativeLoad = new NbtElectricalLoad("negativeLoad");
-    public Inductor inductor = new Inductor("inductor", postiveLoad, negativeLoad);
-
-    public SignalInductorElement(SixNode sixNode, Direction side, SixNodeDescriptor descriptor) {
-        super(sixNode, side, descriptor);
-        electricalLoadList.add(postiveLoad);
-        electricalLoadList.add(negativeLoad);
-        electricalComponentList.add(inductor);
-        postiveLoad.setAsMustBeFarFromInterSystem();
-        this.descriptor = (SignalInductorDescriptor) descriptor;
+    init {
+        electricalLoadList.add(postiveLoad)
+        electricalLoadList.add(negativeLoad)
+        electricalComponentList.add(inductor)
+        postiveLoad.setAsMustBeFarFromInterSystem()
+        this.descriptor = descriptor as SignalInductorDescriptor
     }
 
-    @Override
-    public ElectricalLoad getElectricalLoad(LRDU lrdu, int mask) {
-        if (front == lrdu) return postiveLoad;
-        if (front.inverse() == lrdu) return negativeLoad;
-        return null;
+    override fun getElectricalLoad(lrdu: LRDU, mask: Int): ElectricalLoad? {
+        if (front == lrdu) return postiveLoad
+        if (front.inverse() == lrdu) return negativeLoad
+        return null
     }
 
-    @Nullable
-    @Override
-    public ThermalLoad getThermalLoad(@NotNull LRDU lrdu, int mask) {
-        return null;
+    override fun getThermalLoad(lrdu: LRDU, mask: Int): ThermalLoad? {
+        return null
     }
 
-    @Override
-    public int getConnectionMask(LRDU lrdu) {
-        if (front == lrdu) return descriptor.cable.getNodeMask();
-        if (front.inverse() == lrdu) return descriptor.cable.getNodeMask();
-        return 0;
+    override fun getConnectionMask(lrdu: LRDU): Int {
+        if (front == lrdu) return descriptor.cable.nodeMask
+        if (front.inverse() == lrdu) return descriptor.cable.nodeMask
+        return 0
     }
 
-    @Override
-    public String multiMeterString() {
-        return Utils.plotAmpere("I", inductor.getCurrent());
+    override fun multiMeterString(): String {
+        return plotAmpere("I", inductor.current)
     }
 
-    @NotNull
-    @Override
-    public String thermoMeterString() {
-        return "";
+    override fun thermoMeterString(): String {
+        return ""
     }
 
-    @Override
-    public void initialize() {
-        descriptor.applyTo(negativeLoad);
-        descriptor.applyTo(postiveLoad);
-        descriptor.applyTo(inductor);
+    override fun initialize() {
+        descriptor.applyTo(negativeLoad)
+        descriptor.applyTo(postiveLoad)
+        descriptor.applyTo(inductor)
     }
 }
