@@ -9,6 +9,7 @@ import cpw.mods.fml.common.network.FMLNetworkEvent.ClientDisconnectionFromServer
 import mods.eln.Eln;
 import mods.eln.misc.Utils;
 import mods.eln.misc.UtilsClient;
+import net.minecraft.client.Minecraft;
 
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
@@ -35,7 +36,7 @@ public class ConnectionListener {
     @SubscribeEvent
     public void onDisconnectedFromServerEvent(ClientDisconnectionFromServerEvent event) {
         Utils.println("Disconnected from server " + FMLCommonHandler.instance().getEffectiveSide());
-        UtilsClient.glDeleteListsAllSafe();
+        Minecraft.getMinecraft().func_152344_a(UtilsClient::glDeleteListsAllSafe);
     }
 
     @SubscribeEvent
