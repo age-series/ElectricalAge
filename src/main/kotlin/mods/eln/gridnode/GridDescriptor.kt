@@ -1,6 +1,5 @@
 package mods.eln.gridnode
 
-import jdk.nashorn.internal.objects.NativeDebug.getClass
 import mods.eln.misc.Direction
 import mods.eln.misc.Obj3D
 import mods.eln.misc.preserveMatrix
@@ -9,7 +8,6 @@ import mods.eln.sixnode.electricalcable.ElectricalCableDescriptor
 import net.minecraft.item.ItemStack
 import net.minecraft.util.Vec3
 import net.minecraftforge.client.IItemRenderer
-import org.lwjgl.opengl.GL11
 
 import java.util.ArrayList
 
@@ -66,11 +64,11 @@ open class GridDescriptor(name: String, protected val obj: Obj3D, ElementClass: 
         }
         objItemScale(obj)
         Direction.ZN.glRotateXnRef()
-        GL11.glPushMatrix()
-        GL11.glTranslatef(0f, -1f, 0f)
-        GL11.glScalef(0.6f, 0.6f, 0.6f)
+        glPushMatrix()
+        glTranslatef(0f, -1f, 0f)
+        glScalef(0.6f, 0.6f, 0.6f)
         draw(0f)
-        GL11.glPopMatrix()
+        glPopMatrix()
     }
 
     override fun handleRenderType(item: ItemStack, type: IItemRenderer.ItemRenderType): Boolean {
@@ -82,10 +80,6 @@ open class GridDescriptor(name: String, protected val obj: Obj3D, ElementClass: 
         if(helper == IItemRenderer.ItemRendererHelper.INVENTORY_BLOCK)
             return !hasCustomIcon()
         return true
-    }
-
-    fun use2DIcon(): Boolean {
-        return hasCustomIcon()
     }
 
     open fun rotationIsFixed(): Boolean {

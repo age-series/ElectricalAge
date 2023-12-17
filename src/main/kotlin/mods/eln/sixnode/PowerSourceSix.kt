@@ -214,7 +214,7 @@ class PowerSourceRender(tileEntity: SixNodeEntity, side: Direction, descriptor: 
     override fun publishUnserialize(stream: DataInputStream) {
         super.publishUnserialize(stream)
         try {
-            current = stream.readFloat().toDouble()
+            current = stream.readDouble()
             needRedrawCable()
         } catch (e: IOException) {
             e.printStackTrace()
