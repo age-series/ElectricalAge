@@ -45,9 +45,6 @@ public class ClientProxy extends CommonProxy {
         if (Eln.versionCheckEnabled)
             FMLCommonHandler.instance().bus().register(VersionCheckerHandler.getInstance());
 
-        if (Eln.analyticsEnabled)
-            FMLCommonHandler.instance().bus().register(AnalyticsHandler.getInstance());
-
         new FrameTime();
         new ConnectionListener();
 

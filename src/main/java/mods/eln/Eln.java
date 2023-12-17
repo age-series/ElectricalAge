@@ -17,6 +17,7 @@ import mods.eln.block.ArcClayItemBlock;
 import mods.eln.block.ArcMetalBlock;
 import mods.eln.block.ArcMetalItemBlock;
 import mods.eln.cable.CableRenderDescriptor;
+import mods.eln.misc.AnalyticsHandler;
 import mods.eln.client.ClientKeyHandler;
 import mods.eln.client.SoundLoader;
 import mods.eln.entity.ReplicatorEntity;
@@ -833,6 +834,9 @@ Side.SERVER);
         if (isDevelopmentRun()) {
             registerWipItems();
         }
+
+        AnalyticsHandler.INSTANCE.submitUpstreamAnalytics();
+        AnalyticsHandler.INSTANCE.submitAgeSeriesAnalytics();
     }
 
     private void registerFestive(int id) {
