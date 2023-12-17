@@ -17,6 +17,7 @@ import mods.eln.block.ArcClayItemBlock;
 import mods.eln.block.ArcMetalBlock;
 import mods.eln.block.ArcMetalItemBlock;
 import mods.eln.cable.CableRenderDescriptor;
+import mods.eln.config.ConfigHandler;
 import mods.eln.misc.AnalyticsHandler;
 import mods.eln.client.ClientKeyHandler;
 import mods.eln.client.SoundLoader;
@@ -376,27 +377,27 @@ public class Eln {
     public RecipesList magnetiserRecipes = new RecipesList();
     public GenericItemUsingDamageDescriptorWithComment tinIngot, copperIngot, silverIngot, plumbIngot, tungstenIngot;
     public DataLogsPrintDescriptor dataLogsPrintDescriptor;
-    float xRayScannerRange;
-    boolean addOtherModOreToXRay;
-    boolean xRayScannerCanBeCrafted = true;
-    double stdBatteryHalfLife = 2 * Utils.minecraftDay;
+    public float xRayScannerRange;
+    public boolean addOtherModOreToXRay;
+    public boolean xRayScannerCanBeCrafted = true;
+    public double stdBatteryHalfLife = 2 * Utils.minecraftDay;
     public static final double SVU = 5, SVII = gateOutputCurrent / SVU, SVUinv = 1.0 / SVU;
-    double batteryCapacityFactor = 1.;
+    public double batteryCapacityFactor = 1.;
     TestBlock testBlock;
-    private boolean replicatorPop;
-    private int plateConversionRatio;
-    private boolean ComputerProbeEnable;
-    private boolean ElnToOtherEnergyConverterEnable;
+    public boolean replicatorPop;
+    public int plateConversionRatio;
+    public boolean ComputerProbeEnable;
+    public boolean ElnToOtherEnergyConverterEnable;
     private EnergyConverterElnToOtherBlock elnToOtherBlockConverter;
     private ComputerProbeBlock computerProbeBlock;
     public static final double SVP = gateOutputCurrent * SVU;
     private ElectricalFurnaceDescriptor electricalFurnace;
-    private double incandescentLampLife;
-    private double economicLampLife;
-    private double carbonLampLife;
-    private double ledLampLife;
-    private double fuelGeneratorTankCapacity = 20 * 60;
-    private int replicatorRegistrationId = -1;
+    public double incandescentLampLife;
+    public double economicLampLife;
+    public double carbonLampLife;
+    public double ledLampLife;
+    public double fuelGeneratorTankCapacity = 20 * 60;
+    public int replicatorRegistrationId = -1;
 
     public static void registerPortableNaN() {
         int id, subId;
@@ -507,159 +508,8 @@ Side.SERVER);
         if (side == Side.CLIENT) MinecraftForge.EVENT_BUS.register(new SoundLoader());
 
         config = new Configuration(event.getSuggestedConfigurationFile());
-        config.load();
 
-        //Hacks for correct long date typing failures in config file
-        //WARNING/BUG: "renameProperty" changes the type to String! However, read functions don't seem to care
-        // attention to it, so it's OK... for the moment.
-        if (config.hasKey("lamp", "incondescentLifeInHours"))
-            config.renameProperty("lamp", "incondescentLifeInHours", "incandescentLifeInHours");
-        if (config.hasKey("mapgenerate", "plumb")) config.renameProperty("mapgenerate", "plumb", "lead");
-        if (config.hasKey("mapgenerate", "cooper")) config.renameProperty("mapgenerate", "cooper", "copper");
-        if (config.hasKey("simulation", "electricalFrequancy"))
-            config.renameProperty("simulation", "electricalFrequancy", "electricalFrequency");
-        if (config.hasKey("simulation", "thermalFrequancy"))
-            config.renameProperty("simulation", "thermalFrequancy", "thermalFrequency");
-
-        modbusEnable = config.get("modbus", "enable", false, "Enable Modbus RTU").getBoolean(false);
-        modbusPort = config.get("modbus", "port", 1502, "TCP Port for Modbus RTU").getInt(1502);
-        debugEnabled = config.get("debug", "enable", false, "Enables debug printing spam").getBoolean(false);
-        debugExplosions = config.get("debug", "watchdog", false, "Watchdog Impl. check").getBoolean(false);
-        explosionEnable = config.get("gameplay", "explosion", false, "Make explosions a bit bigger").getBoolean(true);
-
-        Eln.versionCheckEnabled =
-                config.get("general", "versionCheckEnable", true, "Enable version checker").getBoolean(true);
-        Eln.analyticsEnabled =
-                config.get("general", "analyticsEnable", true, "Enable Analytics for Electrical Age").getBoolean(true);
-        Eln.analyticsURL = config.get("general", "analyticsURL", "http://eln.ja13.org/stat",
-                "Set update checker URL").getString();
-        Eln.analyticsPlayerUUIDOptIn = config.get("general", "analyticsPlayerOptIn", false, "Opt into sending player " +
-         "UUID when sending analytics").getBoolean(false);
-        Eln.enableFestivities = config.get("general", "enableFestiveItems", true, "Set this to false to enable grinch" +
-         " mode").getBoolean();
-        Eln.verticalIronCableCrafting = config.get("general", "verticalIronCableCrafting", false, "Set this to true " +
-         "to craft with vertical ingots instead of horizontal ones").getBoolean();
-
-        if (analyticsEnabled) {
-            final Property p = config.get("general", "playerUUID", "");
-            if (p.getString().length() == 0) {
-                playerUUID = UUID.randomUUID().toString();
-                p.set(playerUUID);
-            } else playerUUID = p.getString();
-        }
-
-        Eln.directPoles = config.get("general", "directPoles", true, "Enables direct air to ground poles").getBoolean();
-
-        heatTurbinePowerFactor = config.get("balancing", "heatTurbinePowerFactor", 1).getDouble(1);
-        solarPanelPowerFactor = config.get("balancing", "solarPanelPowerFactor", 1).getDouble(1);
-        windTurbinePowerFactor = config.get("balancing", "windTurbinePowerFactor", 1).getDouble(1);
-        waterTurbinePowerFactor = config.get("balancing", "waterTurbinePowerFactor", 1).getDouble(1);
-        fuelGeneratorPowerFactor = config.get("balancing", "fuelGeneratorPowerFactor", 1).getDouble(1);
-        fuelHeatFurnacePowerFactor = config.get("balancing", "fuelHeatFurnacePowerFactor", 1.0).getDouble();
-        autominerRange = config.get("balancing", "autominerRange", 10, "Maximum horizontal distance from autominer " +
-         "that will be mined").getInt(10);
-
-        Other.wattsToEu =
-                config.get("balancing", "ElnToIndustrialCraftConversionRatio", 1.0 / 3.0, "Watts to EU").getDouble(1.0 / 3.0);
-        Other.wattsToOC = config.get("balancing", "ElnToOpenComputerConversionRatio", 1.0 / 3.0 / 2.5, "Watts to OC " +
- "Power").getDouble(1.0 / 3.0 / 2.5);
-        Other.wattsToRf = config.get("balancing", "ElnToThermalExpansionConversionRatio", 1.0 / 3.0 * 4, "Watts to " +
-"RF").getDouble(1.0 / 3.0 * 4);
-        plateConversionRatio = config.get("balancing", "platesPerIngot", 1, "Plates made per ingot").getInt(1);
-        shaftEnergyFactor = config.get("balancing", "shaftEnergyFactor", 0.05).getDouble(0.05);
-
-        stdBatteryHalfLife = config.get("battery", "batteryHalfLife", 2, "How many days it takes for a battery to " +
-         "decay half way").getDouble(2) * Utils.minecraftDay;
-        batteryCapacityFactor = config.get("balancing", "batteryCapacityFactor", 1).getDouble(1.);
-
-        ComputerProbeEnable = config.get("compatibility", "ComputerProbeEnable", true, "Enable the OC/CC <-> Eln " +
-         "Computer Probe").getBoolean(true);
-        ElnToOtherEnergyConverterEnable = config.get("compatibility", "ElnToOtherEnergyConverterEnable", true,
-        "Enable the Eln Energy Exporter").getBoolean(true);
-
-        replicatorPop = config.get("entity", "replicatorPop", false, "Enable the replicator mob").getBoolean(false);
-        ReplicatorPopProcess.popPerSecondPerPlayer = config.get("entity", "replicatorPopWhenThunderPerSecond",
-         1.0 / 120).getDouble(1.0 / 120);
-        replicatorRegistrationId = config.get("entity", "replicatorId", -1).getInt(-1);
-        killMonstersAroundLamps = config.get("entity", "killMonstersAroundLamps", true).getBoolean(true);
-        killMonstersAroundLampsRange = config.get("entity", "killMonstersAroundLampsRange", 9).getInt(9);
-        maxReplicators = config.get("entity", "maxReplicators", 100).getInt(100);
-
-        forceOreRegen = config.get("mapGenerate", "forceOreRegen", false).getBoolean(false);
-        genCopper = config.get("mapGenerate", "copper", true).getBoolean(true);
-        genLead = config.get("mapGenerate", "lead", true).getBoolean(true);
-        genTungsten = config.get("mapGenerate", "tungsten", true).getBoolean(true);
-        genCinnabar = config.get("mapGenerate", "cinnabar", true).getBoolean(true);
-        genCinnabar = false;
-
-        oredictTungsten = config.get("dictionary", "tungsten", false).getBoolean(false);
-        if (oredictTungsten) {
-            dictTungstenOre = "oreTungsten";
-            dictTungstenDust = "dustTungsten";
-            dictTungstenIngot = "ingotTungsten";
-        } else {
-            dictTungstenOre = "oreElnTungsten";
-            dictTungstenDust = "dustElnTungsten";
-            dictTungstenIngot = "ingotElnTungsten";
-        }
-        oredictChips = config.get("dictionary", "chips", true).getBoolean(true);
-        if (oredictChips) {
-            dictCheapChip = "circuitBasic";
-            dictAdvancedChip = "circuitAdvanced";
-        } else {
-            dictCheapChip = "circuitElnBasic";
-            dictAdvancedChip = "circuitElnAdvanced";
-        }
-
-        incandescentLampLife = config.get("lamp", "incandescentLifeInHours", 16.0).getDouble(16.0);
-        economicLampLife = config.get("lamp", "economicLifeInHours", 64.0).getDouble(64.0);
-        carbonLampLife = config.get("lamp", "carbonLifeInHours", 6.0).getDouble(6.0);
-        ledLampLife = config.get("lamp", "ledLifeInHours", 512.0).getDouble(512.0);
-        ledLampInfiniteLife = config.get("lamp", "infiniteLedLife", false).getBoolean();
-        allowSwingingLamps = config.get("lamp", "swingingLamps", true).getBoolean();
-
-        fuelGeneratorTankCapacity =
-         config.get("fuelGenerator", "tankCapacityInSecondsAtNominalPower", 20 * 60).getDouble(20 * 60);
-
-        addOtherModOreToXRay = config.get("xrayscannerconfig", "addOtherModOreToXRay", true).getBoolean(true);
-        xRayScannerRange = (float) config.get("xrayscannerconfig", "rangeInBloc", 5.0, "X-Ray Scanner range; set " +
-                "between 4 and 10 blocks").getDouble(5.0);
-        xRayScannerRange = Math.max(Math.min(xRayScannerRange, 10), 4);
-        xRayScannerCanBeCrafted = config.get("xrayscannerconfig", "canBeCrafted", true).getBoolean(true);
-
-        electricalFrequency =
-                config.get("simulation", "electricalFrequency", 20, "Set to a clean divisor of 20").getDouble(20);
-        electricalInterSystemOverSampling = config.get("simulation", "electricalInterSystemOverSampling", 50, "You " +
-         "don't want to set this lower than 50.").getInt(50);
-        thermalFrequency =
- config.get("simulation", "thermalFrequency", 400, "I wouldn't touch this one either").getDouble(400);
-
-        wirelessTxRange = config.get("wireless", "txRange", 32, "Maximum range for wireless transmitters to be " +
-                "recieved, as well as lamp supplies").getInt();
-
-        wailaEasyMode = config.get("balancing", "wailaEasyMode", false, "Display more detailed WAILA info on some " +
-         "machines (good for creative mode)").getBoolean(false);
-        cablePowerFactor = config.get("balancing", "cablePowerFactor", 1.0, "Multiplication factor for cable power " +
-         "capacity. We recommend 2.0 to 4.0 for larger modpacks, but 1.0 for Eln standalone, or if you like a " +
-          "challenge.", 0.5, 4.0).getDouble(1.0);
-
-        fuelHeatValueFactor = config.get("balancing", "fuelHeatValueFactor", 0.0000675, "Factor to apply when " +
-         "converting real word heat values to Minecraft heat values (1mB = 1l).").getDouble();
-
-        Eln.noSymbols = config.get("general", "noSymbols", false, "Show the item instead of the electrical symbol as " +
-         "an icon").getBoolean();
-        Eln.noVoltageBackground = config.get("general", "noVoltageBackground", false, "Disable colored background to " +
-                "items").getBoolean();
-
-        Eln.maxSoundDistance = config.get("debug", "maxSoundDistance", 16.0, "Set this lower if you have clipping " +
-         "sounds in spaces with many sound sources (generators)").getDouble();
-        Eln.soundChannels = config.get("debug", "soundChannels", 200, "Change the number of sound channels. Set to -1" +
-         " to use default").getInt(200);
-
-        Eln.flywheelMass = Math.min(Math.max(config.get("balancing", "flywheelMass", 50.0, "How heavy is *your* " +
-         "flywheel?").getDouble(), 1.0), 1000.0);
-
-        config.save();
+        ConfigHandler.INSTANCE.loadConfig(this);
 
         eventChannel = NetworkRegistry.INSTANCE.newEventDrivenChannel(channelName);
 
