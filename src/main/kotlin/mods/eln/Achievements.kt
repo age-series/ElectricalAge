@@ -1,31 +1,38 @@
-package mods.eln;
+package mods.eln
 
-import net.minecraft.init.Items;
-import net.minecraft.stats.Achievement;
-import net.minecraftforge.common.AchievementPage;
+import mods.eln.i18n.I18N
+import net.minecraft.init.Items
+import net.minecraft.stats.Achievement
+import net.minecraftforge.common.AchievementPage
 
-import static mods.eln.i18n.I18N.*;
+object Achievements {
+    @JvmField
+    var openGuide: Achievement? = null
+    @JvmField
+    var craft50VMacerator: Achievement? = null
+    var achievementPageEln: AchievementPage? = null
 
-public class Achievements {
+    @JvmStatic
+    fun init() {
+        openGuide = Achievement(
+            I18N.TR("achievement.open_guide"),
+            "open_guide", 0, 0, Items.book, null
+        ).registerStat()
 
-    public static Achievement openGuide;
-    public static Achievement craft50VMacerator;
-    public static AchievementPage achievementPageEln;
+        I18N.TR_DESC(I18N.Type.ACHIEVEMENT, "open_guide")
 
-    public static void init() {
-        openGuide = new Achievement(TR("achievement.open_guide"),
-            "open_guide", 0, 0, Items.book, null).registerStat();
+        craft50VMacerator = Achievement(
+            I18N.TR("achievement.craft_50v_macerator"),
+            "craft_50v_macerator", 0, 2, Eln.findItemStack("50V Macerator", 0), openGuide
+        ).registerStat()
 
-        TR_DESC(Type.ACHIEVEMENT, "open_guide");
+        I18N.TR_DESC(I18N.Type.ACHIEVEMENT, "craft_50v_macerator")
 
-        craft50VMacerator = new Achievement(TR("achievement.craft_50v_macerator"),
-            "craft_50v_macerator", 0, 2, Eln.findItemStack("50V Macerator", 0), openGuide).registerStat();
+        achievementPageEln = AchievementPage(
+            I18N.tr("Electrical Age [WIP]"),
+            openGuide, craft50VMacerator
+        )
 
-        TR_DESC(Type.ACHIEVEMENT, "craft_50v_macerator");
-
-        achievementPageEln = new AchievementPage(tr("Electrical Age [WIP]"),
-            openGuide, craft50VMacerator);
-
-        AchievementPage.registerAchievementPage(achievementPageEln);
+        AchievementPage.registerAchievementPage(achievementPageEln)
     }
 }
