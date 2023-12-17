@@ -65,6 +65,9 @@ import mods.eln.sim.ThermalLoadInitializer;
 import mods.eln.sim.ThermalLoadInitializerByPowerDrop;
 import mods.eln.sim.mna.component.Resistor;
 import mods.eln.sim.nbt.NbtElectricalLoad;
+import mods.eln.simplenode.ConduitBlock;
+import mods.eln.simplenode.ConduitEntity;
+import mods.eln.simplenode.ConduitNode;
 import mods.eln.simplenode.computerprobe.ComputerProbeBlock;
 import mods.eln.simplenode.computerprobe.ComputerProbeEntity;
 import mods.eln.simplenode.computerprobe.ComputerProbeNode;
@@ -730,6 +733,9 @@ Side.SERVER);
         registerTestBlock();
         registerEnergyConverter();
         registerComputer();
+        if (isDevelopmentRun()) {
+            registerConduitSingles();
+        }
 
         registerArmor();
         registerTool();
@@ -767,6 +773,9 @@ Side.SERVER);
         registerLogicalGates(118);
         registerAnalogChips(124);
         registerCurrentRelays(126);
+        if (isDevelopmentRun()) {
+            registerConduit(127);
+        }
 
         //TRANSPARENT NODE REGISTRATION
         //Sub-UID must be unique in this section only.
@@ -837,6 +846,20 @@ Side.SERVER);
 
         AnalyticsHandler.INSTANCE.submitUpstreamAnalytics();
         AnalyticsHandler.INSTANCE.submitAgeSeriesAnalytics();
+    }
+
+    private void registerConduitSingles() {
+        {
+            String entityName = TR_NAME(Type.TILE, "eln.Conduit");
+
+            TileEntity.addMapping(ConduitEntity.class, entityName);
+            NodeManager.registerUuid(ConduitNode.Companion.getNodeUuidStatic(), ConduitNode.class);
+
+
+            ConduitBlock conduitBlock = new ConduitBlock();
+            conduitBlock.setCreativeTab(creativeTab).setBlockName(entityName);
+            GameRegistry.registerBlock(conduitBlock, SimpleNodeItem.class, entityName);
+        }
     }
 
     private void registerFestive(int id) {
@@ -1451,6 +1474,13 @@ Side.SERVER);
             desc.setPhysicalConstantLikeNormalCable(100.0);
             sixNodeItem.addDescriptor(subId + (id << 6), desc);
         }
+    }
+
+    private void registerConduit(int id) {
+        int subId = 0;
+        String name = TR_NAME(Type.NONE, "Conduit");
+        ConduitCableDescriptor desc = new ConduitCableDescriptor(name, new CableRenderDescriptor("eln", "sprites/conduit.png", 4, 4));
+        sixNodeItem.addDescriptor(subId + (id << 6), desc);
     }
 
     private void registerThermalCable(int id) {

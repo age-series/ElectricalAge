@@ -1172,3 +1172,5 @@ Medium_Current_Relay.name=Medium Current Relay
 High_Current_Relay.name=High Current Relay
 Type_E_Socket.name=Type E Socket
 Type_J_Socket.name=Type J Socket
+Conduit.name=Conduit Cable
+tile.eln.Conduit.name=Conduit Block

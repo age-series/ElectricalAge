@@ -447,6 +447,7 @@ abstract class NodeBase {
         const val maskSignal = 1 shl 9
         const val maskRs485 = 1 shl 10
         const val maskSignalBus = 1 shl 11
+        const val maskConduit = 1 shl 12
         const val maskColorData = 0xF shl 16
         const val maskColorShift = 16
         const val maskColorCareShift = 20
