@@ -1,27 +1,27 @@
-package mods.eln.packets;
+package mods.eln.packets
 
-import cpw.mods.fml.common.network.ByteBufUtils;
-import cpw.mods.fml.common.network.simpleimpl.IMessage;
-import io.netty.buffer.ByteBuf;
+import cpw.mods.fml.common.network.ByteBufUtils
+import cpw.mods.fml.common.network.simpleimpl.IMessage
+import io.netty.buffer.ByteBuf
 
-public class AchievePacket implements IMessage {
+class AchievePacket : IMessage {
 
-    String text;
+    var text: String?
 
-    public AchievePacket() {
+    @Suppress("unused") // This actually is used by Forge and will crash if you delete it
+    constructor() {
+        text = null
     }
 
-    public AchievePacket(String text) {
-        this.text = text;
+    constructor(text: String?) {
+        this.text = text
     }
 
-    @Override
-    public void fromBytes(ByteBuf buf) {
-        text = ByteBufUtils.readUTF8String(buf);
+    override fun fromBytes(buf: ByteBuf) {
+        text = ByteBufUtils.readUTF8String(buf)
     }
 
-    @Override
-    public void toBytes(ByteBuf buf) {
-        ByteBufUtils.writeUTF8String(buf, text);
+    override fun toBytes(buf: ByteBuf) {
+        ByteBufUtils.writeUTF8String(buf, text)
     }
 }
