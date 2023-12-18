@@ -1,4 +1,4 @@
-*   text elf=lf
+*   text eol=lf
 
 *.[jJ][aA][rR]          binary
 *.[bB][lL][eE][nN][dD]  binary
