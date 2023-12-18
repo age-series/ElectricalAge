@@ -1,8 +1,6 @@
-package mods.eln.sound;
+package mods.eln.sound
 
-public interface IPlayer {
-
-    void play(SoundCommand cmd);
-
-    void stop(int uuid);
+interface IPlayer {
+    fun play(cmd: SoundCommand)
+    fun stop(uuid: Int)
 }

@@ -1,88 +1,83 @@
-package mods.eln.sound;
+package mods.eln.sound
 
-import java.util.ArrayList;
+class SoundTrack {
+    var track: String? = null
+    var trackLength: Double = 0.0
+    var volume: Float = 1f
+    var pitch: Float = 1f
+    var rangeNominal: Float = 0f
+    var rangeMax: Float = 0f
+    var blockFactor: Float = 0f
+    var uuid: ArrayList<Int> = ArrayList()
 
-public class SoundTrack {
-
-    String track;
-    double trackLength;
-    float volume = 1, pitch = 1;
-    float rangeNominal, rangeMax, blockFactor;
-    ArrayList<Integer> uuid = new ArrayList<Integer>();
-
-    enum Range {Small, Mid, Far}
-
-    public SoundTrack() {
+    enum class Range {
+        Small, Mid, Far
     }
 
-    public SoundTrack(String track) {
-        this.track = track;
-        mediumRange();
+    constructor()
+
+    constructor(track: String?) {
+        this.track = track
+        mediumRange()
     }
 
-    public SoundTrack(String track, double trackLength) {
-        this.track = track;
-        this.trackLength = trackLength;
-        mediumRange();
+    constructor(track: String?, trackLength: Double) {
+        this.track = track
+        this.trackLength = trackLength
+        mediumRange()
     }
 
-    public SoundTrack copy() {
-        SoundTrack c = new SoundTrack();
-        c.track = track;
-        c.trackLength = trackLength;
-        c.volume = volume;
-        c.pitch = pitch;
-        c.rangeNominal = rangeNominal;
-        c.rangeMax = rangeMax;
-        c.blockFactor = blockFactor;
-        c.uuid = (ArrayList<Integer>) uuid.clone();
-        return c;
+    fun copy(): SoundTrack {
+        val c = SoundTrack()
+        c.track = track
+        c.trackLength = trackLength
+        c.volume = volume
+        c.pitch = pitch
+        c.rangeNominal = rangeNominal
+        c.rangeMax = rangeMax
+        c.blockFactor = blockFactor
+        c.uuid = uuid.clone() as ArrayList<Int>
+        return c
     }
 
-    void applyRange(Range range) {
-        switch (range) {
-            case Small:
-                smallRange();
-                break;
-            case Far:
-                longRange();
-                break;
-            case Mid:
-            default:
-                mediumRange();
-                break;
+    fun applyRange(range: Range?) {
+        when (range) {
+            Range.Small -> smallRange()
+            Range.Far -> longRange()
+            Range.Mid -> mediumRange()
+            else -> mediumRange()
         }
     }
 
-    public SoundTrack mediumRange() {
-        rangeNominal = 4;
-        rangeMax = 16;
-        blockFactor = 1;
-        return this;
+    fun mediumRange(): SoundTrack {
+        rangeNominal = 4f
+        rangeMax = 16f
+        blockFactor = 1f
+        return this
     }
 
-    public SoundTrack smallRange() {
-        rangeNominal = 2;
-        rangeMax = 8;
-        blockFactor = 3;
-        return this;
+    fun smallRange(): SoundTrack {
+        rangeNominal = 2f
+        rangeMax = 8f
+        blockFactor = 3f
+        return this
     }
 
-    public SoundTrack longRange() {
-        rangeNominal = 8;
-        rangeMax = 48;
-        blockFactor = 0.5f;
-        return this;
+    fun longRange(): SoundTrack {
+        rangeNominal = 8f
+        rangeMax = 48f
+        blockFactor = 0.5f
+        return this
     }
 
-    public SoundTrack setVolume(float volume, float pitch) {
-        this.volume = volume;
-        this.pitch = pitch;
-        return this;
+    fun setVolume(volume: Float, pitch: Float): SoundTrack {
+        this.volume = volume
+        this.pitch = pitch
+        return this
     }
 
-    public SoundTrack addUuid(int uuid) {
-        this.uuid.add(uuid);
-        return this;
+    fun addUuid(uuid: Int): SoundTrack {
+        this.uuid.add(uuid)
+        return this
     }
 }

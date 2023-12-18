@@ -1,36 +1,32 @@
-package mods.eln.sound;
+package mods.eln.sound
 
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import mods.eln.client.UuidManager;
-import net.minecraft.client.audio.ISound;
-import net.minecraft.client.audio.SoundManager;
-import net.minecraftforge.client.event.sound.PlaySoundSourceEvent;
-import net.minecraftforge.common.MinecraftForge;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent
+import mods.eln.client.UuidManager
+import net.minecraft.client.audio.ISound
+import net.minecraft.client.audio.SoundManager
+import net.minecraftforge.client.event.sound.PlaySoundSourceEvent
+import net.minecraftforge.common.MinecraftForge
 
-import java.util.ArrayList;
+class SoundClientEventListener(var uuidManager: UuidManager) {
+    @JvmField
+    var currentUuid: ArrayList<Int>? = null
 
-public class SoundClientEventListener {
-
-    UuidManager uuidManager;
-    ArrayList<Integer> currentUuid = null;
-
-    public SoundClientEventListener(UuidManager uuidManager) {
-        this.uuidManager = uuidManager;
-        MinecraftForge.EVENT_BUS.register(this);
+    init {
+        MinecraftForge.EVENT_BUS.register(this)
     }
 
     @SubscribeEvent
-    public void event(PlaySoundSourceEvent e) {
-        if (currentUuid == null) return;
-        uuidManager.add(currentUuid, new SoundClientEntity(e.manager, e.sound));
+    fun event(e: PlaySoundSourceEvent) {
+        if (currentUuid == null) return
+        uuidManager.add(currentUuid!!, SoundClientEntity(e.manager, e.sound))
     }
 
-    static class KillSound {
-        public ISound sound;
-        public SoundManager sm;
+    internal class KillSound {
+        var sound: ISound? = null
+        var sm: SoundManager? = null
 
-        public void kill() {
-            sm.stopSound(sound);
+        fun kill() {
+            sm!!.stopSound(sound)
         }
     }
 }

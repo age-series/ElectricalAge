@@ -1,51 +1,75 @@
-package mods.eln.sound;
+package mods.eln.sound
 
-import mods.eln.client.ClientProxy;
-import mods.eln.client.SoundLoader;
-import mods.eln.misc.Utils;
-import net.minecraft.client.Minecraft;
-import net.minecraft.entity.player.EntityPlayer;
+import mods.eln.client.ClientProxy
+import mods.eln.client.SoundLoader
+import mods.eln.misc.Utils.TraceRayWeightOpaque
+import mods.eln.misc.Utils.println
+import mods.eln.misc.Utils.traceRay
+import net.minecraft.client.Minecraft
+import net.minecraft.entity.player.EntityPlayer
+import kotlin.math.pow
+import kotlin.math.sqrt
 
-public class SoundClient {
-    /*public static void playFromBlock(World world, int x, int y, int z, String track, float volume, float pitch, float rangeNominal, float rangeMax) {
-		play(world, x + 0.5, y + 0.5, z + 0.5, track, volume, pitch, rangeNominal, rangeMax);
-	}*/
+object SoundClient {
+    fun play(p: SoundCommand) {
+        ClientProxy.soundClientEventListener.currentUuid = p.uuid
 
-    public static void play(SoundCommand p) {
-        ClientProxy.soundClientEventListener.currentUuid = p.uuid; //trolilole
-
-        EntityPlayer player = Minecraft.getMinecraft().thePlayer;
-        if (p.world.provider.dimensionId != player.dimension) return;
-        double distance = Math.sqrt(Math.pow(p.x - player.posX, 2) + Math.pow(p.y - player.posY, 2) + Math.pow(p.z - player.posZ, 2));
-        if (distance >= p.rangeMax) return;
-        float distanceFactor = 1;
+        val player: EntityPlayer = Minecraft.getMinecraft().thePlayer
+        if (p.world!!.provider.dimensionId != player.dimension) return
+        val distance = sqrt((p.x - player.posX).pow(2.0) + (p.y - player.posY).pow(2.0) + (p.z - player.posZ).pow(2.0))
+        if (distance >= p.rangeMax) return
+        var distanceFactor = 1f
         if (distance > p.rangeNominal) {
-            distanceFactor = (float) ((p.rangeMax - distance) / (p.rangeMax - p.rangeNominal));
+            distanceFactor = ((p.rangeMax - distance) / (p.rangeMax - p.rangeNominal)).toFloat()
         }
 
-        float blockFactor = Utils.traceRay(p.world, player.posX, player.posY, player.posZ, p.x, p.y, p.z, new Utils.TraceRayWeightOpaque()) * p.blockFactor;
+        val blockFactor = traceRay(
+            p.world!!,
+            player.posX,
+            player.posY,
+            player.posZ,
+            p.x,
+            p.y,
+            p.z,
+            TraceRayWeightOpaque()
+        ) * p.blockFactor
 
-        int trackCount = SoundLoader.getTrackCount(p.track);
+        val trackCount = SoundLoader.getTrackCount(p.track)
 
         if (trackCount == 1) {
-            float temp = 1.0f / (1 + blockFactor);
-            p.volume *= Math.pow(temp, 2);
-            p.volume *= distanceFactor;
-            if (p.volume <= 0) return;
+            val temp = 1.0f / (1 + blockFactor)
+            p.volume *= temp.pow(2.0f)
+            p.volume *= distanceFactor
+            if (p.volume <= 0) return
 
-            p.world.playSound(player.posX + 2 * (p.x - player.posX) / distance, player.posY + 2 * (p.y - player.posY) / distance, player.posZ + 2 * (p.z - player.posZ) / distance, p.track, p.volume, p.pitch, false);
+            p.world!!.playSound(
+                player.posX + 2 * (p.x - player.posX) / distance,
+                player.posY + 2 * (p.y - player.posY) / distance,
+                player.posZ + 2 * (p.z - player.posZ) / distance,
+                p.track,
+                p.volume,
+                p.pitch,
+                false
+            )
         } else {
-            for (int idx = 0; idx < trackCount; idx++) {
-                float bandVolume = p.volume;
-                bandVolume *= distanceFactor;
-                float normalizedBlockFactor = blockFactor;
+            for (idx in 0 until trackCount) {
+                var bandVolume = p.volume
+                bandVolume *= distanceFactor
 
-                bandVolume -= ((trackCount - 1 - idx) / (trackCount - 1f) + 0.2) * normalizedBlockFactor;
-                Utils.println(bandVolume);
-                p.world.playSound(player.posX + 2 * (p.x - player.posX) / distance, player.posY + 2 * (p.y - player.posY) / distance, player.posZ + 2 * (p.z - player.posZ) / distance, p.track + "_" + idx + "x", bandVolume, p.pitch, false);
+                bandVolume -= (((trackCount - 1 - idx) / (trackCount - 1f) + 0.2) * blockFactor).toFloat()
+                println(bandVolume)
+                p.world!!.playSound(
+                    player.posX + 2 * (p.x - player.posX) / distance,
+                    player.posY + 2 * (p.y - player.posY) / distance,
+                    player.posZ + 2 * (p.z - player.posZ) / distance,
+                    p.track + "_" + idx + "x",
+                    bandVolume,
+                    p.pitch,
+                    false
+                )
             }
         }
 
-        ClientProxy.soundClientEventListener.currentUuid = null;
+        ClientProxy.soundClientEventListener.currentUuid = null
     }
 }

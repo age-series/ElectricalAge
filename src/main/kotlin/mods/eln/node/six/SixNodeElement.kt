@@ -64,6 +64,7 @@ abstract class SixNodeElement(sixNode: SixNode, @JvmField var side: Direction, d
     }
 
     open fun inventoryChanged() {}
+
     override fun play(s: SoundCommand) {
         s.addUuid(getUuid())
         s.set(sixNode!!.coordinate)

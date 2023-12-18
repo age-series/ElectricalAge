@@ -1,204 +1,214 @@
-package mods.eln.sound;
+package mods.eln.sound
 
-import mods.eln.misc.Coordinate;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.world.World;
+import mods.eln.misc.Coordinate
+import net.minecraft.tileentity.TileEntity
+import net.minecraft.world.World
+import java.io.DataInputStream
+import java.io.DataOutputStream
+import java.io.IOException
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.util.ArrayList;
+class SoundCommand {
+    @JvmField
+    var world: World? = null
+    @JvmField
+    var x: Double = 0.0
+    @JvmField
+    var y: Double = 0.0
+    @JvmField
+    var z: Double = 0.0
+    @JvmField
+    var track: String? = null
+    var trackLength: Double = 0.0
+    @JvmField
+    var volume: Float = 1f
+    @JvmField
+    var pitch: Float = 1f
+    @JvmField
+    var rangeNominal: Float = 0f
+    @JvmField
+    var rangeMax: Float = 0f
+    @JvmField
+    var blockFactor: Float = 0f
+    @JvmField
+    var uuid: ArrayList<Int> = ArrayList()
 
-public class SoundCommand {
-
-    World world;
-    double x, y, z;
-    String track;
-    double trackLength;
-    float volume = 1, pitch = 1;
-    float rangeNominal, rangeMax, blockFactor;
-    ArrayList<Integer> uuid = new ArrayList<Integer>();
-
-    enum Range {Small, Mid, Far}
-
-    public SoundCommand() {
-        mediumRange();
+    enum class Range {
+        Small, Mid, Far
     }
 
-    public SoundCommand(String track) {
-        this.track = track;
-        mediumRange();
+    constructor() {
+        mediumRange()
     }
 
-    public SoundCommand(String track, double trackLength) {
-        this.track = track;
-        this.trackLength = trackLength;
-        mediumRange();
+    constructor(track: String?) {
+        this.track = track
+        mediumRange()
     }
 
-    public SoundCommand(SoundTrack s) {
-        track = s.track;
-        volume = s.volume;
-        pitch = s.pitch;
-        rangeNominal = s.rangeNominal;
-        rangeMax = s.rangeMax;
-        blockFactor = s.blockFactor;
-        uuid = (ArrayList<Integer>) s.uuid.clone();
+    constructor(track: String?, trackLength: Double) {
+        this.track = track
+        this.trackLength = trackLength
+        mediumRange()
     }
 
-    public SoundCommand copy() {
-        SoundCommand c = new SoundCommand();
-        c.world = world;
-        c.x = x;
-        c.y = y;
-        c.z = z;
-        c.track = track;
-        c.trackLength = trackLength;
-        c.volume = volume;
-        c.pitch = pitch;
-        c.rangeNominal = rangeNominal;
-        c.rangeMax = rangeMax;
-        c.blockFactor = blockFactor;
-        c.uuid = (ArrayList<Integer>) uuid.clone();
-        return c;
+    constructor(s: SoundTrack) {
+        track = s.track
+        volume = s.volume
+        pitch = s.pitch
+        rangeNominal = s.rangeNominal
+        rangeMax = s.rangeMax
+        blockFactor = s.blockFactor
+        uuid = s.uuid.clone() as ArrayList<Int>
     }
 
-    public void play() {
-        if (world.isRemote)
-            SoundClient.play(this);
-        else
-            SoundServer.play(this);
+    fun copy(): SoundCommand {
+        val c = SoundCommand()
+        c.world = world
+        c.x = x
+        c.y = y
+        c.z = z
+        c.track = track
+        c.trackLength = trackLength
+        c.volume = volume
+        c.pitch = pitch
+        c.rangeNominal = rangeNominal
+        c.rangeMax = rangeMax
+        c.blockFactor = blockFactor
+        c.uuid = uuid.clone() as ArrayList<Int>
+        return c
     }
 
-    public SoundCommand set(Coordinate c) {
-        world = c.world();
-        x = c.x + 0.5;
-        y = c.y + 0.5;
-        z = c.z + 0.5;
-        return this;
+    fun play() {
+        if (world!!.isRemote) SoundClient.play(this)
+        else SoundServer.play(this)
     }
 
-    public SoundCommand set(TileEntity c) {
-        world = c.getWorldObj();
-        x = c.xCoord + 0.5;
-        y = c.yCoord + 0.5;
-        z = c.zCoord + 0.5;
+    fun set(c: Coordinate): SoundCommand {
+        world = c.world()
+        x = c.x + 0.5
+        y = c.y + 0.5
+        z = c.z + 0.5
+        return this
+    }
+
+    fun set(c: TileEntity): SoundCommand {
+        world = c.worldObj
+        x = c.xCoord + 0.5
+        y = c.yCoord + 0.5
+        z = c.zCoord + 0.5
         //mediumRange();
-        return this;
+        return this
     }
 
-    public SoundCommand set(double x, double y, double z, World w) {
-        world = w;
-        this.x = x;
-        this.y = y;
-        this.z = z;
-        return this;
+    fun set(x: Double, y: Double, z: Double, w: World?): SoundCommand {
+        world = w
+        this.x = x
+        this.y = y
+        this.z = z
+        return this
     }
 
-    void applyRange(Range range) {
-        switch (range) {
-            case Small:
-                smallRange();
-                break;
-            case Far:
-                longRange();
-                break;
-            case Mid:
-            default:
-                mediumRange();
-                break;
+    fun applyRange(range: Range?) {
+        when (range) {
+            Range.Small -> smallRange()
+            Range.Far -> longRange()
+            Range.Mid -> mediumRange()
+            else -> mediumRange()
         }
     }
 
-    public SoundCommand mediumRange() {
-        rangeNominal = 4;
-        rangeMax = 16;
-        blockFactor = 1;
-        return this;
+    fun mediumRange(): SoundCommand {
+        rangeNominal = 4f
+        rangeMax = 16f
+        blockFactor = 1f
+        return this
     }
 
-    public SoundCommand smallRange() {
-        rangeNominal = 2;
-        rangeMax = 8;
-        blockFactor = 3;
-        return this;
+    fun smallRange(): SoundCommand {
+        rangeNominal = 2f
+        rangeMax = 8f
+        blockFactor = 3f
+        return this
     }
 
-    public SoundCommand verySmallRange() {
-        rangeNominal = 2;
-        rangeMax = 4;
-        blockFactor = 10;
-        return this;
+    fun verySmallRange(): SoundCommand {
+        rangeNominal = 2f
+        rangeMax = 4f
+        blockFactor = 10f
+        return this
     }
 
-    public SoundCommand longRange() {
-        rangeNominal = 8;
-        rangeMax = 48;
-        blockFactor = 0.3f;
-        return this;
+    fun longRange(): SoundCommand {
+        rangeNominal = 8f
+        rangeMax = 48f
+        blockFactor = 0.3f
+        return this
     }
 
-    public SoundCommand mulVolume(float volume, float pitch) {
-        this.volume *= volume;
-        this.pitch *= pitch;
-        return this;
+    fun mulVolume(volume: Float, pitch: Float): SoundCommand {
+        this.volume *= volume
+        this.pitch *= pitch
+        return this
     }
 
-    public SoundCommand addUuid(int uuid) {
-        this.uuid.add(uuid);
-        return this;
+    fun addUuid(uuid: Int): SoundCommand {
+        this.uuid.add(uuid)
+        return this
     }
 
-    public static SoundCommand fromStream(DataInputStream stream, World w) throws IOException {
-        SoundCommand p = new SoundCommand();
-        p.world = w;
+    @Throws(IOException::class)
+    fun writeTo(stream: DataOutputStream) {
+        stream.writeInt((x * 8).toInt())
+        stream.writeInt((y * 8).toInt())
+        stream.writeInt((z * 8).toInt())
 
-        p.x = stream.readInt() / 8.0;
-        p.y = stream.readInt() / 8.0;
-        p.z = stream.readInt() / 8.0;
-        p.track = stream.readUTF();
-        p.volume = stream.readFloat();
-        p.pitch = stream.readFloat();
-        p.rangeNominal = stream.readFloat();
-        p.rangeMax = stream.readFloat();
-        p.blockFactor = stream.readFloat();
-        p.uuid = new ArrayList<Integer>();
-        for (int idx = stream.readByte(); idx != 0; idx--) {
-            p.addUuid(stream.readInt());
-        }
-        return p;
-    }
-
-    public void writeTo(DataOutputStream stream) throws IOException {
-        stream.writeInt((int) (x * 8));
-        stream.writeInt((int) (y * 8));
-        stream.writeInt((int) (z * 8));
-
-        stream.writeUTF(track);
-        stream.writeFloat(volume);
-        stream.writeFloat(pitch);
-        stream.writeFloat(rangeNominal);
-        stream.writeFloat(rangeMax);
-        stream.writeFloat(blockFactor);
-        stream.writeByte(uuid.size());
-        for (Integer i : uuid) {
-            stream.writeInt(i);
+        stream.writeUTF(track)
+        stream.writeFloat(volume)
+        stream.writeFloat(pitch)
+        stream.writeFloat(rangeNominal)
+        stream.writeFloat(rangeMax)
+        stream.writeFloat(blockFactor)
+        stream.writeByte(uuid.size)
+        for (i in uuid) {
+            stream.writeInt(i)
         }
     }
 
-    public SoundCommand mulVolume(double volume) {
-        this.volume *= volume;
-        return this;
+    fun mulVolume(volume: Double): SoundCommand {
+        this.volume *= volume.toFloat()
+        return this
     }
 
-    public SoundCommand applyNominalVolume(double nominalVolume) {
-        //this.blockFactor *= nominalVolume;
-        mulVolume(nominalVolume);
-        return this;
+    fun applyNominalVolume(nominalVolume: Double): SoundCommand {
+        mulVolume(nominalVolume)
+        return this
     }
 
-    public SoundCommand mulBlockAttenuation(double factor) {
-        this.blockFactor *= factor;
-        return this;
+    fun mulBlockAttenuation(factor: Double): SoundCommand {
+        this.blockFactor *= factor.toFloat()
+        return this
+    }
+
+    companion object {
+        @Throws(IOException::class)
+        fun fromStream(stream: DataInputStream, w: World?): SoundCommand {
+            val p = SoundCommand()
+            p.world = w
+
+            p.x = stream.readInt() / 8.0
+            p.y = stream.readInt() / 8.0
+            p.z = stream.readInt() / 8.0
+            p.track = stream.readUTF()
+            p.volume = stream.readFloat()
+            p.pitch = stream.readFloat()
+            p.rangeNominal = stream.readFloat()
+            p.rangeMax = stream.readFloat()
+            p.blockFactor = stream.readFloat()
+            p.uuid = ArrayList()
+            for (idx in stream.readByte() downTo 1) {
+                p.addUuid(stream.readInt())
+            }
+            return p
+        }
     }
 }

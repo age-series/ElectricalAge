@@ -1,34 +1,23 @@
-package mods.eln.sound;
+package mods.eln.sound
 
-import mods.eln.client.IUuidEntity;
-import mods.eln.misc.Utils;
-import net.minecraft.client.audio.ISound;
-import net.minecraft.client.audio.SoundManager;
+import mods.eln.client.IUuidEntity
+import mods.eln.misc.Utils.println
+import net.minecraft.client.audio.ISound
+import net.minecraft.client.audio.SoundManager
 
-public class SoundClientEntity implements IUuidEntity {
+class SoundClientEntity(var sm: SoundManager, var sound: ISound) : IUuidEntity {
+    var borneTimer: Int = 5
 
-    public ISound sound;
-    public SoundManager sm;
-
-    int borneTimer = 5;
-
-    public SoundClientEntity(SoundManager sm, ISound sound) {
-        this.sound = sound;
-        this.sm = sm;
-    }
-
-    @Override
-    public boolean isAlive() {
+    override fun isAlive(): Boolean {
         if (borneTimer != 0) {
-            borneTimer--;
-            return true;
+            borneTimer--
+            return true
         }
-        return sm.isSoundPlaying(sound);
+        return sm.isSoundPlaying(sound)
     }
 
-    @Override
-    public void kill() {
-        Utils.println("Sound deleted");
-        sm.stopSound(sound);
+    override fun kill() {
+        println("Sound deleted")
+        sm.stopSound(sound)
     }
 }
