@@ -37,6 +37,7 @@ dependencies {
     shadowImplementation 'org.apache.commons:commons-math3:3.6.1'
     shadowImplementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
     shadowImplementation "org.semver4j:semver4j:4.3.0" // Can be removed and replaced with Runtime.Version if java9+ is required
+    shadowImplementation "com.github.age-series:libage:9cc61e7f0"
     implementation "cofh:CoFHCore:1.7.10R3.0.4:dev"
     implementation "cofh:CoFHLib:1.7.10R3.0.3:dev"
     compileOnly "mcp.mobius.waila:Waila:1.5.11-RC2-NONEI_1.7.10:dev"

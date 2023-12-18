@@ -7,6 +7,7 @@ import mods.eln.node.transparent.TransparentNode
 import mods.eln.node.transparent.TransparentNodeElement
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.world.WorldSavedData
+import org.ageseries.libage.data.ComponentGraph
 import java.util.*
 
 class NodeManager(par1Str: String?) : WorldSavedData(par1Str) {
@@ -14,6 +15,8 @@ class NodeManager(par1Str: String?) : WorldSavedData(par1Str) {
     val nodes: ArrayList<NodeBase>
     val nodeList: Collection<NodeBase>
         get() = nodeArray.values
+
+    val conduitGraph = ComponentGraph()
 
     fun addNode(node: NodeBase) {
         // nodeArray.add(node);
