@@ -1,22 +1,11 @@
-package mods.eln.solver;
+package mods.eln.solver
 
-public class ConstSymbole implements ISymbole {
-
-    private double value;
-    private String name;
-
-    public ConstSymbole(String name, double value) {
-        this.value = value;
-        this.name = name;
+class ConstSymbole(private val name: String, private val value: Double) : ISymbole {
+    override fun getValue(): Double {
+        return value
     }
 
-    @Override
-    public double getValue() {
-        return value;
-    }
-
-    @Override
-    public String getName() {
-        return name;
+    override fun getName(): String {
+        return name
     }
 }

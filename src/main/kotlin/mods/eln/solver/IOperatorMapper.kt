@@ -1,5 +1,5 @@
-package mods.eln.solver;
+package mods.eln.solver
 
-public interface IOperatorMapper {
-    IOperator newOperator(String key, int depthDelta, java.util.List<Object> arg, int argOffset);
+interface IOperatorMapper {
+    fun newOperator(key: String, depthDelta: Int, arg: MutableList<Any>, argOffset: Int): IOperator?
 }

@@ -1,15 +1,7 @@
-package mods.eln.solver;
+package mods.eln.solver
 
-public class Constant implements IValue {
-
-    private double value;
-
-    Constant(double value) {
-        this.value = value;
-    }
-
-    @Override
-    public double getValue() {
-        return value;
+class Constant internal constructor(private val value: Double) : IValue {
+    override fun getValue(): Double {
+        return value
     }
 }

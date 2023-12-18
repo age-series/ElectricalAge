@@ -128,7 +128,7 @@ public class ElectricalMathElement extends SixNodeElement implements IConfigurab
 
         redstoneRequired = 0;
         if (equationIsValid = equation.isValid()) {
-            redstoneRequired = equation.getOperatorCount();
+            redstoneRequired = equation.operatorCount;
         }
         checkRedstone();
     }

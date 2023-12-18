@@ -15,6 +15,7 @@ import mods.eln.sim.nbt.NbtElectricalGateInput
 import mods.eln.sim.nbt.NbtElectricalGateOutput
 import mods.eln.sim.nbt.NbtElectricalGateOutputProcess
 import mods.eln.sixnode.SummingUnitElement.Companion.GainChangedEvents
+import mods.eln.solver.Constant
 import mods.eln.solver.Equation
 import mods.eln.solver.IValue
 import mods.eln.wiki.Data
@@ -239,12 +240,12 @@ class PIDRegulator : AnalogFunction() {
 
     override fun process(inputs: Array<Double?>, deltaTime: Double): Double {
         pid.setOperator(arrayOf(
-            IValue { (inputs[0] ?: 0.0) / Eln.SVU },
-            IValue { (inputs[1] ?: 0.0) / Eln.SVU } ,
-            IValue { Kp }, IValue { Ki} , IValue { Kd }
+            Constant((inputs[0] ?: 0.0) / Eln.SVU),
+            Constant((inputs[1] ?: 0.0) / Eln.SVU),
+            Constant(Kp), Constant(Ki), Constant(Kd)
         ))
         pid.process(deltaTime)
-        return Eln.SVU * pid.value
+        return Eln.SVU * pid.getValue()
     }
 
     override fun readFromNBT(nbt: NBTTagCompound, str: String) {

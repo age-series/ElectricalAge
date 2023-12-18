@@ -1,8 +1,6 @@
-package mods.eln.solver;
+package mods.eln.solver
 
-public interface IOperator extends IValue {
-
-    void setOperator(IValue[] values);
-
-    int getRedstoneCost();
+interface IOperator : IValue {
+    fun setOperator(values: Array<IValue>)
+    val redstoneCost: Int
 }

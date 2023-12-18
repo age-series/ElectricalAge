@@ -1,41 +1,31 @@
-package mods.eln.solver;
+package mods.eln.solver
 
-public class OperatorMapperAB implements IOperatorMapper {
+class OperatorMapperAB(private val key: String, private val operator: Class<*>) : IOperatorMapper {
+    override fun newOperator(key: String, depthDelta: Int, arg: MutableList<Any>, argOffset: Int): IOperator? {
+        if (depthDelta != 0) return null
+        if (this.key != key) return null
+        if (argOffset - 1 < 0 || arg[argOffset - 1] !is IValue) return null
+        if (argOffset + 1 > arg.size - 1 || arg[argOffset + 1] !is IValue) return null
 
-    private Class operator;
-    private String key;
-
-    public OperatorMapperAB(String key, Class operator) {
-        this.operator = operator;
-        this.key = key;
-    }
-
-    @Override
-    public IOperator newOperator(String key, int depthDelta, java.util.List<Object> arg, int argOffset) {
-        if (depthDelta != 0) return null;
-        if (!this.key.equals(key)) return null;
-        if (argOffset - 1 < 0 || !(arg.get(argOffset - 1) instanceof IValue)) return null;
-        if (argOffset + 1 > arg.size() - 1 || !(arg.get(argOffset + 1) instanceof IValue)) return null;
-
-        IOperator o;
+        val o: IOperator
 
         try {
-            o = (IOperator) operator.newInstance();
-            o.setOperator(new IValue[]{(IValue) arg.get(argOffset - 1), (IValue) arg.get(argOffset + 1)});
-            arg.set(argOffset - 1, o);
-            arg.remove(argOffset);
-            arg.remove(argOffset);
-            return o;
-        } catch (IllegalArgumentException e) {
-            e.printStackTrace();
-        } catch (SecurityException e) {
-            e.printStackTrace();
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
+            o = operator.newInstance() as IOperator
+            o.setOperator(arrayOf(arg[argOffset - 1] as IValue, arg[argOffset + 1] as IValue))
+            arg[argOffset - 1] = o
+            arg.removeAt(argOffset)
+            arg.removeAt(argOffset)
+            return o
+        } catch (e: IllegalArgumentException) {
+            e.printStackTrace()
+        } catch (e: SecurityException) {
+            e.printStackTrace()
+        } catch (e: InstantiationException) {
+            e.printStackTrace()
+        } catch (e: IllegalAccessException) {
+            e.printStackTrace()
         }
 
-        return null;
+        return null
     }
 }

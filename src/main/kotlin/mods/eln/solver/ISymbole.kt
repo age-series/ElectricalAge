@@ -1,5 +1,5 @@
-package mods.eln.solver;
+package mods.eln.solver
 
-public interface ISymbole extends IValue {
-    public abstract String getName();
+interface ISymbole : IValue {
+    fun getName(): String?
 }

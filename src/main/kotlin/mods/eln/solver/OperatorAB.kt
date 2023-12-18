@@ -1,12 +1,11 @@
-package mods.eln.solver;
+package mods.eln.solver
 
-public abstract class OperatorAB implements IOperator {
+abstract class OperatorAB : IOperator {
+    lateinit var a: IValue
+    lateinit var b: IValue
 
-    protected IValue a, b;
-
-    @Override
-    public void setOperator(IValue[] values) {
-        this.a = values[0];
-        this.b = values[1];
+    override fun setOperator(values: Array<IValue>) {
+        this.a = values[0]
+        this.b = values[1]
     }
 }
