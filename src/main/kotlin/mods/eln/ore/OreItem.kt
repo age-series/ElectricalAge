@@ -1,30 +1,16 @@
-package mods.eln.ore;
+package mods.eln.ore
 
-import cpw.mods.fml.common.registry.GameRegistry;
-import mods.eln.generic.GenericItemBlockUsingDamage;
-import net.minecraft.block.Block;
+import cpw.mods.fml.common.registry.GameRegistry
+import mods.eln.generic.GenericItemBlockUsingDamage
+import net.minecraft.block.Block
 
-public class OreItem extends GenericItemBlockUsingDamage<OreDescriptor> {
-
-    public OreItem(Block b) {
-        super(b);
+class OreItem(b: Block?) : GenericItemBlockUsingDamage<OreDescriptor?>(b) {
+    override fun getMetadata(par1: Int): Int {
+        return par1
     }
 
-    @Override
-    public int getMetadata(int par1) {
-        return par1;
-    }
-
-/*//caca1.5.1
-    @Override
-	public String getTextureFile() {
-		return CommonProxy.BLOCK_PNG;
-	}
-	*/
-
-    @Override
-    public void addDescriptor(int damage, OreDescriptor descriptor) {
-        super.addDescriptor(damage, descriptor);
-        GameRegistry.registerWorldGenerator(descriptor, 0);
+    override fun addDescriptor(damage: Int, descriptor: OreDescriptor?) {
+        super.addDescriptor(damage, descriptor)
+        GameRegistry.registerWorldGenerator(descriptor, 0)
     }
 }

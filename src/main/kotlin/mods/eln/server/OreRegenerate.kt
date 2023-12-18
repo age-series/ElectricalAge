@@ -45,7 +45,7 @@ class OreRegenerate {
                 }
                 Utils.println("Regenerated! " + jobs.size)
                 for (d in Eln.oreItem.descriptors) {
-                    d.generate(server.rand, chunk.xPosition, chunk.zPosition, server, null, null)
+                    d?.generate(server.rand, chunk.xPosition, chunk.zPosition, server, null, null)
                 }
             }
         }
