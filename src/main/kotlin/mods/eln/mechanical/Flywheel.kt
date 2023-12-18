@@ -28,8 +28,8 @@ class FlyWheelElement(node: TransparentNode, desc_: TransparentNodeDescriptor) :
         val yTolerance = 1.0
         val xzTolerance = 0.5
         val minRads = 5.0
-        val velocityF = LinearFunction(0f, 0f, 250f, 10f)
-        val damageF = LinearFunction(5f, 1f, 250f, 10f)
+        val velocityF = LinearFunction(0f, 0f, absoluteMaximumShaftSpeed.toFloat(), 1f)
+        val damageF = LinearFunction(5f, 1f, absoluteMaximumShaftSpeed.toFloat(), 20f)
 
         var timer = 0.0
 
@@ -66,14 +66,13 @@ class FlyWheelElement(node: TransparentNode, desc_: TransparentNodeDescriptor) :
                     Utils.println("FPP.sP: dz out of range (" + dz + "; c.z " + coord.z + " e.z" + ent.posZ + "): " + ent)
                     continue
                 }
-                val mag = velocityF.getValue(rads)
+                val mag = velocityF.getValue(rads).coerceIn(0.0, 1.0)
                 val vel = when(front) {
                     Direction.ZN, Direction.ZP -> arrayOf(0.0, mag * 0.1, mag)
                     Direction.XN, Direction.XP -> arrayOf(mag, mag * 0.1, 0.0)
                     else -> arrayOf(0.0, mag, 0.0) // XXX
                 }
-                ent.addVelocity(vel[0], vel[1], vel[2])
-                var dmg = damageF.getValue(rads).toInt()
+                val dmg = damageF.getValue(rads).toInt().coerceIn(0, 1000)
                 if (ent is EntityPlayer) {
                     val ply = ent
                     // creative mode players can't have their position set, apparently.
@@ -97,7 +96,7 @@ class FlyWheelElement(node: TransparentNode, desc_: TransparentNodeDescriptor) :
     }
 
     override fun getWaila(): Map<String, String> {
-        var info = mutableMapOf<String, String>()
+        val info = mutableMapOf<String, String>()
         info.put("Speed", Utils.plotRads("", shaft.rads))
         info.put("Energy", Utils.plotEnergy("", shaft.energy))
         return info
