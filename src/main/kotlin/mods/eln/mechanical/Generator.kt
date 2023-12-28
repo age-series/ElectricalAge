@@ -2,6 +2,7 @@ package mods.eln.mechanical
 
 import mods.eln.Eln
 import mods.eln.cable.CableRenderDescriptor
+import mods.eln.i18n.I18N
 import mods.eln.misc.*
 import mods.eln.node.NodeBase
 import mods.eln.node.transparent.EntityMetaTag
@@ -72,13 +73,12 @@ class GeneratorDescriptor(
     ).requireNoNulls()
 
     override fun addInformation(stack: ItemStack, player: EntityPlayer, list: MutableList<String>, par4: Boolean) {
-        list.add("Converts mechanical energy into ")
-        list.add("electricity, or (badly) vice versa.")
-        list.add("Nominal usage ->")
-        list.add(Utils.plotVolt("  Voltage out: ", nominalU.toDouble()))
-        list.add(Utils.plotPower("  Power out: ", nominalP.toDouble()))
-        list.add(Utils.plotRads("  Rads: ", nominalRads.toDouble()))
-        list.add(Utils.plotRads("Max rads:  ", absoluteMaximumShaftSpeed))
+        list.add(I18N.tr("Converts mechanical energy into electricity, or (badly) vice versa."))
+        list.add(I18N.tr("Nominal usage ->"))
+        list.add("  "+I18N.tr("Voltage out: %1$",Utils.plotVolt("", nominalU.toDouble())))
+        list.add("  "+I18N.tr("Power out: %1$",Utils.plotPower("", nominalP.toDouble())))
+        list.add("  "+I18N.tr("Rads: %1$",Utils.plotRads("", nominalRads.toDouble())))
+        list.add(I18N.tr("Max rads:  %1$",Utils.plotRads("", absoluteMaximumShaftSpeed)))
     }
 }
 
@@ -285,12 +285,12 @@ class GeneratorElement(node: TransparentNode, desc_: TransparentNodeDescriptor) 
 
     override fun getWaila(): Map<String, String> {
         var info = mutableMapOf<String, String>()
-        info.put("Energy", Utils.plotEnergy("", shaft.energy))
-        info.put("Speed", Utils.plotRads("", shaft.rads))
+        info.put(I18N.tr("Energy"), Utils.plotEnergy("", shaft.energy))
+        info.put(I18N.tr("Speed"), Utils.plotRads("", shaft.rads))
         if (Eln.wailaEasyMode) {
-            info.put("Voltage", Utils.plotVolt("", electricalPowerSource.getVoltage()))
-            info.put("Current", Utils.plotAmpere("", electricalPowerSource.getCurrent()))
-            info.put("Temperature", Utils.plotCelsius("", thermal.temperature))
+            info.put(I18N.tr("Voltage"), Utils.plotVolt("", electricalPowerSource.getVoltage()))
+            info.put(I18N.tr("Current"), Utils.plotAmpere("", electricalPowerSource.getCurrent()))
+            info.put(I18N.tr("Temperature"), Utils.plotCelsius("", thermal.temperature))
         }
         return info
     }

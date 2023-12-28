@@ -1,6 +1,7 @@
 package mods.eln.gridnode
 
 import mods.eln.Eln
+import mods.eln.i18n.I18N
 import mods.eln.misc.*
 import mods.eln.node.NodeBase
 import mods.eln.node.transparent.TransparentNode
@@ -286,13 +287,13 @@ class GridSwitchElement(node: TransparentNode, descriptor: TransparentNodeDescri
     override fun getWaila(): Map<String, String> {
         val info = mutableMapOf<String, String>()
         if (Eln.wailaEasyMode) {
-            info["Left"] = Utils.plotUIP(grida.voltage, grida.current)
-            info["Right"] = Utils.plotUIP(gridb.voltage, gridb.current)
-            info["Transfer"] = Utils.plotPower(transfer.power)
+            info[I18N.tr("Left")] = Utils.plotUIP(grida.voltage, grida.current)
+            info[I18N.tr("Right")] = Utils.plotUIP(gridb.voltage, gridb.current)
+            info[I18N.tr("Transfer")] = Utils.plotPower(transfer.power)
         }
-        info["Drive"] = Utils.plotUIP(power.voltage, power.current, powerSink.resistance) + " " + Utils.plotOhm(powerSink.resistance)
-        info["Signal"] = Utils.plotSignal(control.voltage)
-        info["Closed?"] = if(closed) { "Yes" } else { "No" }
+        info[I18N.tr("Drive")] = Utils.plotUIP(power.voltage, power.current, powerSink.resistance) + " " + Utils.plotOhm(powerSink.resistance)
+        info[I18N.tr("Signal")] = Utils.plotSignal(control.voltage)
+        info[I18N.tr("Closed?")] = if(closed) { "Yes" } else { "No" }
         return info
     }
 }
