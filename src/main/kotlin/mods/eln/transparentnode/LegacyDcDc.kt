@@ -343,10 +343,10 @@ class LegacyDcDcElement(transparentNode: TransparentNode, descriptor: Transparen
         val info = HashMap<String, String>()
         info[I18N.tr("Ratio")] = Utils.plotValue(interSystemProcess.ratio)
         if (Eln.wailaEasyMode) {
-            info["Voltages"] = "\u00A7a" + Utils.plotVolt("", primaryLoad.voltage) + " " +
+            info[I18N.tr("Voltages")] = "\u00A7a" + Utils.plotVolt("", primaryLoad.voltage) + " " +
                 "\u00A7e" + Utils.plotVolt("", secondaryLoad.voltage)
         }
-        info[I18N.tr("Subsystem Matrix Size: ")] = Utils.renderDoubleSubsystemWaila(primaryLoad.subSystem, secondaryLoad.subSystem)
+        info[I18N.tr("Subsystem Matrix Size")] = Utils.renderDoubleSubsystemWaila(primaryLoad.subSystem, secondaryLoad.subSystem)
         return info
     }
 
