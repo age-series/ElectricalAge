@@ -423,8 +423,6 @@ Stored_Energy\:_%1$J_(%2$%)=储存的能量: %1$J (%2$%)
 
 # ./src/main/java/mods/eln/mechanical/Clutch.kt
 Prevents_clutches_from_slipping\nagain_after_they_stop.=防止离合器停止后打滑。
-Clutch_Plate=槽(离合器片)
-Clutch_Pin=槽(离合器销)
 
 # ./src/main/java/mods/eln/mechanical/CrankableShaft.kt
 Player_crankable_shaft=手动曲轴
@@ -1287,7 +1285,7 @@ Utility_Pole_w/DC-DC_Converter.name=T1电线杆(变压器)
 Portable_NaN.name=便携式NaN(开发项目)
 Old_800V_Arc_Furnace.name=电弧炉(800V,10kW)
 Christmas_Tree.name=圣诞树
-Holiday_Candle.name=节日蜡烛
+Holiday_Candle.name=假日蜡烛
 String_Lights.name=一串灯
 Radial_Motor.name=发动机(燃气,64mB/s)
 Thermal_Heat_Exchanger.name=热交换器
@@ -1333,7 +1331,7 @@ Energies=动能
 Clutching=制动力信号
 Fuel_usage=燃料消耗速度
 Process_State=加工进度
-Can_Process=工作中
+Can_Process=可以工作
 Not_as_warm_as_it_could_be=没有达到预期的温暖程度
 It_probably_works_if_you_apply_~200v_to_the_xmas_wireless_channel=如果你在"xmas"无线照明频道中输入200V，它可能会工作
 Control=控制
