@@ -210,8 +210,8 @@ abstract class LogicFunction : INBTTReady {
     open fun process(inputs: List<Boolean?>): Boolean = false
 
     open fun getWaila(inputs: Array<Double?>, output: Double) = mutableMapOf(
-        Pair(tr("Inputs"), (1..inputCount).map { "${AnalogFunction.inputColors[it - 1]}${inputs[it - 1].toDigitalString()}" }.joinToString(" ")),
-        Pair(tr("Output"), output.toDigitalString())
+        Pair("Inputs", (1..inputCount).map { "${AnalogFunction.inputColors[it - 1]}${inputs[it - 1].toDigitalString()}" }.joinToString(" ")),
+        Pair("Output", output.toDigitalString())
     )
 
     override fun readFromNBT(nbt: NBTTagCompound, str: String) {}
@@ -325,8 +325,8 @@ class Oscillator : LogicFunction() {
     }
 
     override fun getWaila(inputs: Array<Double?>, output: Double) = mutableMapOf(
-        Pair(tr("Inputs"), "${AnalogFunction.inputColors[0]} ${Utils.plotVolt("", inputs[0] ?: 0.0)}"),
-        Pair(tr("Output"), output.toDigitalString())
+        Pair("Inputs", "${AnalogFunction.inputColors[0]} ${Utils.plotVolt("", inputs[0] ?: 0.0)}"),
+        Pair("Output", output.toDigitalString())
     )
 
     override fun readFromNBT(nbt: NBTTagCompound, str: String) {

@@ -746,7 +746,7 @@ object ItemRegistration {
             name = I18N.TR_NAME(I18N.Type.NONE, "Ferrite Ingot")
             element = GenericItemUsingDamageDescriptorWithComment(
                 name,
-                arrayOf(I18N.tr("useless"), I18N.tr("Really useless"))
+                arrayOf("useless", "Really useless")
             )
             Eln.sharedItem.addElement(completId, element)
             Data.addResource(element.newItemStack())
@@ -768,7 +768,7 @@ object ItemRegistration {
             completId = subId + (id shl 6)
             name = I18N.TR_NAME(I18N.Type.NONE, "Mercury")
             element =
-                GenericItemUsingDamageDescriptorWithComment(name, arrayOf(I18N.tr("useless"), I18N.tr("miaou")))
+                GenericItemUsingDamageDescriptorWithComment(name, arrayOf("useless", "miaou"))
             Eln.sharedItem.addElement(completId, element)
             Data.addResource(element.newItemStack())
             addToOre("quicksilver", element.newItemStack())

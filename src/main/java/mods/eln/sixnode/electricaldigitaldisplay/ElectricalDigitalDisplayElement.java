@@ -1,7 +1,6 @@
 package mods.eln.sixnode.electricaldigitaldisplay;
 
 import mods.eln.generic.GenericItemUsingDamageDescriptor;
-import mods.eln.i18n.I18N;
 import mods.eln.item.BrushDescriptor;
 import mods.eln.item.IConfigurable;
 import mods.eln.misc.Direction;
@@ -168,9 +167,9 @@ public class ElectricalDigitalDisplayElement extends SixNodeElement implements I
     @Override
     public Map<String, String> getWaila() {
         HashMap<String, String> info = new HashMap<>();
-        info.put(I18N.tr("Input"), Utils.plotVolt(input.getVoltage()));
-        info.put(I18N.tr("Min"), String.format("%.2f", min));
-        info.put(I18N.tr("Max"), String.format("%.2f", max));
+        info.put("Input: ", Utils.plotVolt(input.getVoltage()));
+        info.put("Min: ", String.format("%.2f", min));
+        info.put("Max: ", String.format("%.2f", max));
         return info;
     }
 

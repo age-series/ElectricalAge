@@ -43,7 +43,7 @@ class CurrentSourceDescriptor(name: String, obj: Obj3D) : SixNodeDescriptor(name
 
     override fun addRealismContext(list: MutableList<String?>): RealisticEnum {
         super.addRealismContext(list)
-        list.add(I18N.tr("Acts as an ideal current source, with a small inline resistance"))
+        list.add(I18N.tr("Acts as an ideal voltage source, with a small inline resistance"))
         return RealisticEnum.IDEAL
     }
 

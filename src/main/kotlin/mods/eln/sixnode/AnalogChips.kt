@@ -212,8 +212,8 @@ abstract class AnalogFunction : INBTTReady {
     abstract fun process(inputs: Array<Double?>, deltaTime: Double): Double
 
     open fun getWaila(inputs: Array<Double?>, output: Double) = mutableMapOf(
-        Pair(I18N.tr("Inputs"), (1..inputCount).map { "${inputColors[it - 1]}${Utils.plotVolt("", inputs[it - 1] ?: 0.0)}" }.joinToString(" ")),
-        Pair(I18N.tr("Output"), Utils.plotVolt("", output))
+        Pair("Inputs", (1..inputCount).map { "${inputColors[it - 1]}${Utils.plotVolt("", inputs[it - 1] ?: 0.0)}" }.joinToString(" ")),
+        Pair("Output", Utils.plotVolt("", output))
     )
 
     override fun readFromNBT(nbt: NBTTagCompound, str: String) {}
@@ -474,7 +474,7 @@ class Amplifier : AnalogFunction() {
 
     override fun getWaila(inputs: Array<Double?>, output: Double): MutableMap<String, String> {
         val info = super.getWaila(inputs, output)
-        info[I18N.tr("Gain")] = Utils.plotValue(gain)
+        info["Gain"] = Utils.plotValue(gain)
         return info
     }
 }
@@ -585,7 +585,7 @@ class VoltageControlledAmplifier : AnalogFunction() {
 
     override fun getWaila(inputs: Array<Double?>, output: Double): MutableMap<String, String> {
         val info = super.getWaila(inputs, output)
-        info[I18N.tr("Gain")] = Utils.plotValue((inputs[1] ?: 5.0) / 5.0)
+        info["Gain"] = Utils.plotValue((inputs[1] ?: 5.0) / 5.0)
         return info
     }
 }
@@ -614,7 +614,7 @@ class SummingUnit : AnalogFunction() {
 
     override fun getWaila(inputs: Array<Double?>, output: Double): MutableMap<String, String> {
         val info = super.getWaila(inputs, output)
-        info[I18N.tr("Gains")] = (0..2).map { "${inputColors[it]}${Utils.plotValue(gains[it])}" }.joinToString(" ")
+        info["Gains"] = (0..2).map { "${inputColors[it]}${Utils.plotValue(gains[it])}" }.joinToString(" ")
         return info
     }
 }
