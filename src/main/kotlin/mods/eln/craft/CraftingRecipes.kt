@@ -18,6 +18,8 @@ import net.minecraft.launchwrapper.LogWrapper
 import net.minecraftforge.oredict.OreDictionary
 import net.minecraftforge.oredict.ShapedOreRecipe
 import net.minecraftforge.oredict.ShapelessOreRecipe
+import java.util.*
+import kotlin.collections.HashSet
 
 object CraftingRecipes {
 
@@ -116,6 +118,14 @@ object CraftingRecipes {
         recipeECoal()
 
         recipeGridDevices(Eln.oreNames)
+        recipeMaceratorModOres()
+        craftBrush()
+        val cal: Calendar = Calendar.getInstance()
+        val month: Int = cal.get(Calendar.MONTH) + 1
+        val day: Int = cal.get(Calendar.DAY_OF_MONTH)
+        if(month == 12 && day == 25) {
+            recipeChristmas()
+        }
 
         checkRecipe()
     }
@@ -371,6 +381,10 @@ object CraftingRecipes {
             findItemStack("Coal Dust")
         )
         addRecipe(
+            findItemStack("Thermistor"), "   ", "cCc", "   ", 'c', findItemStack("Copper Cable"), 'C',
+            findItemStack("Copper Ingot")
+        )
+        addRecipe(
             findItemStack("Rheostat"), " R ", " MS", "cmc", 'R', findItemStack("Power Resistor"), 'c',
             findItemStack("Copper Cable"), 'm', findItemStack("Machine Block"), 'M', findItemStack("Electrical Motor"),
             'S', findItemStack("Signal Cable")
@@ -433,6 +447,24 @@ object CraftingRecipes {
             findItemStack("Signal Relay"), "GGG", "OIO", "CRC", 'R', ItemStack(Items.redstone), 'O',
             findItemStack("Iron Cable"), 'G', ItemStack(Blocks.glass_pane), 'I', findItemStack("Copper Cable"), 'C',
             findItemStack("Signal Cable")
+        )
+        addRecipe(
+            findItemStack("Low Current Relay"), "GGG", "OIO", "CRC", 'R', ItemStack(Items.redstone), 'O',
+            findItemStack("Iron Cable"), 'G', ItemStack(Blocks.glass_pane), 'A', "itemRubber", 'I', findItemStack(
+                "Copper Cable"
+            ), 'C', findItemStack("Low Current Cable")
+        )
+        addRecipe(
+            findItemStack("Medium Current Relay"), "GGG", "OIO", "CRC", 'R', ItemStack(Items.redstone), 'O',
+            findItemStack("Iron Cable"), 'G', ItemStack(Blocks.glass_pane), 'A', "itemRubber", 'I', findItemStack(
+                "Copper Cable"
+            ), 'C', findItemStack("Medium Current Cable")
+        )
+        addRecipe(
+            findItemStack("High Current Relay"), "GGG", "OIO", "CRC", 'R', ItemStack(Items.redstone), 'O',
+            findItemStack("Iron Cable"), 'G', ItemStack(Blocks.glass_pane), 'A', "itemRubber", 'I', findItemStack(
+                "Copper Cable"
+            ), 'C', findItemStack("High Current Cable")
         )
     }
 
@@ -510,6 +542,10 @@ object CraftingRecipes {
         addRecipe(
             findItemStack("Amplifier"), "  r", "cCc", "   ", 'r', ItemStack(Items.redstone), 'c',
             findItemStack("Copper Cable"), 'C', Eln.dictAdvancedChip
+        )
+        addRecipe(
+            findItemStack("Voltage controlled amplifier"), " sr", "cCc", "   ", 'r', ItemStack(Items.redstone), 'c',
+            findItemStack("Copper Cable"), 'C', Eln.dictAdvancedChip, 's', findItemStack("Signal Cable")
         )
         addRecipe(
             findItemStack("OpAmp"), "  r", "cCc", " c ", 'r', ItemStack(Items.redstone), 'c',
@@ -610,6 +646,7 @@ object CraftingRecipes {
             ), 'M', findItemStack("Advanced Machine Block")
         )
         addRecipe(findItemStack("Joint"), "   ", "iii", " m ", 'i', "ingotIron", 'm', findItemStack("Machine Block"))
+        addRecipe(findItemStack("Crank Shaft"), "  i", "iii", " m ", 'i', "ingotIron", 'm', findItemStack("Machine Block"))
         addRecipe(
             findItemStack("Joint hub"), " i ", "iii", " m ", 'i', "ingotIron", 'm', findItemStack(
                 "Machine " +
@@ -637,6 +674,10 @@ object CraftingRecipes {
             findItemStack("Fixed Shaft"), "iBi", " c ", 'i', "ingotIron", 'B', "blockIron", 'c', findItemStack(
                 "Machine Block"
             )
+        )
+        addRecipe(
+            findItemStack("Rolling Shaft Machine"), "IiI", "IcI", "IiI", 'i', "ingotIron", 'I', "plateIron", 'c', findItemStack(
+                "Machine Block")
         )
     }
 
@@ -1365,6 +1406,10 @@ object CraftingRecipes {
             findItemStack("Monster Filter"), " g", "gc", " g", 'g', ItemStack(Blocks.glass_pane), 'c',
             ItemStack(Items.dye, 1, 1)
         )
+        addRecipe(
+            findItemStack("Animal Filter"), " g", "gc", " g", 'g', ItemStack(Blocks.glass_pane), 'c',
+            ItemStack(Items.dye, 1, 4)
+        )
         addRecipe(Eln.findItemStack("Casing", 1), "ppp", "p p", "ppp", 'p', findItemStack("Iron Cable"))
         addRecipe(findItemStack("Iron Clutch Plate"), " t ", "tIt", " t ", 'I', "plateIron", 't', Eln.dictTungstenDust)
         addRecipe(findItemStack("Gold Clutch Plate"), " t ", "tGt", " t ", 'G', "plateGold", 't', Eln.dictTungstenDust)
@@ -1780,7 +1825,7 @@ object CraftingRecipes {
         ) //hardcoded 7MJ to prevent overunity
     }
 
-    public fun recipeMaceratorModOres() {
+    private fun recipeMaceratorModOres() {
         val f = 4000f
         recipeMaceratorModOre(f * 3f, "oreCertusQuartz", "dustCertusQuartz", 3)
         recipeMaceratorModOre(f * 1.5f, "crystalCertusQuartz", "dustCertusQuartz", 1)
@@ -2106,23 +2151,21 @@ object CraftingRecipes {
     }
 
     private fun recipeElectricalVuMeter() {
-        for (idx in 0..3) {
-            addRecipe(
-                Eln.findItemStack("Analog vuMeter", 1), "WWW", "RIr", "WSW", 'W', ItemStack(
-                    Blocks.planks, 1,
-                    idx
-                ), 'R', ItemStack(Items.redstone), 'I', findItemStack("Iron Cable"), 'r', ItemStack(
-                    Items.dye,
-                    1, 1
-                ), 'S', findItemStack("Signal Cable")
-            )
-        }
-        for (idx in 0..3) {
-            addRecipe(
-                Eln.findItemStack("LED vuMeter", 1), " W ", "WTW", " S ", 'W', ItemStack(Blocks.planks, 1, idx),
-                'T', ItemStack(Blocks.redstone_torch), 'S', findItemStack("Signal Cable")
-            )
-        }
+        addRecipe(
+            Eln.findItemStack("Analog vuMeter", 1), "WWW", "RIr", "WSW", 'W', "plankWood",
+            'R', ItemStack(Items.redstone), 'I', findItemStack("Iron Cable"), 'r', ItemStack(
+                Items.dye,
+                1, 1
+            ), 'S', findItemStack("Signal Cable")
+        )
+        addRecipe(
+            Eln.findItemStack("LED vuMeter", 1), " W ", "WTW", " S ", 'W', "plankWood",
+            'T', ItemStack(Blocks.redstone_torch), 'S', findItemStack("Signal Cable")
+        )
+        addRecipe(
+            Eln.findItemStack("Multicolor LED vuMeter", 1), " W ", "WRW", " S ", 'W', "plankWood",
+            'R', ItemStack(Items.redstone), 'S', findItemStack("Signal Cable")
+        )
     }
 
     private fun recipeElectricalBreaker() {
@@ -2368,6 +2411,13 @@ object CraftingRecipes {
         ReplicatorEntity.dropList.add(ItemStack(Items.glowstone_dust))
         // EntityRegistry.addSpawn(ReplicatorEntity.class, 1, 1, 2, EnumCreatureType.monster, BiomeGenBase.plains);
     }
-
+    private fun recipeChristmas(){
+        addShapelessRecipe(Eln.findItemStack("Christmas Tree", 1), findItemStack("String Lights"), ItemStack(Blocks.sapling, 1, 1), findItemStack("String Lights"))
+        addRecipe(
+            Eln.findItemStack("Holiday Candle", 1), " g ", "gbg", " i ", 'g', ItemStack(Blocks.glass_pane), 'b',
+            findItemStack("200V LED Bulb"), 'i', "ingotIron"
+        )
+        addShapelessRecipe(Eln.findItemStack("String Lights", 2), findItemStack("200V LED Bulb"), "materialString")
+    }
 
 }
