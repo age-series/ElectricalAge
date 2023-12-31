@@ -7,7 +7,7 @@ import mods.eln.gui.GuiContainerEln
 import mods.eln.gui.GuiHelperContainer
 import mods.eln.gui.IGuiObject
 import mods.eln.gui.ISlotSkin
-import mods.eln.i18n.I18N
+import mods.eln.i18n.I18N.tr
 import mods.eln.item.CopperCableDescriptor
 import mods.eln.item.FerromagneticCoreDescriptor
 import mods.eln.item.IConfigurable
@@ -100,13 +100,13 @@ class PowerInductorSixDescriptor(name: String,
         par4: Boolean
     ) {
         super.addInformation(itemStack, entityPlayer, list, par4)
-        list?.add(I18N.tr("Provides inductance. Use with iron cores and bare copper cables"))
+        list?.add(tr("Provides inductance. Use with iron cores and bare copper cables"))
     }
 
     override fun addRealismContext(list: MutableList<String>?): RealisticEnum {
         super.addRealismContext(list)
-        list?.add(I18N.tr("It doesn't really behave well for DC"))
-        list?.add(I18N.tr("* Missing an inductive voltage spike on field collapse"))
+        list?.add(tr("It doesn't really behave well for DC"))
+        list?.add(tr("* Missing an inductive voltage spike on field collapse"))
         return RealisticEnum.UNREALISTIC
     }
 
@@ -152,11 +152,11 @@ class PowerInductorSixElement(SixNode: SixNode, side: Direction, descriptor: Six
 
     override fun getWaila(): Map<String, String> {
         val info: MutableMap<String, String> = HashMap()
-        info[I18N.tr("Inductance")] = Utils.plotValue(inductor.inductance, "H")
-        info[I18N.tr("Charge")] = Utils.plotEnergy("", inductor.energy)
+        info[tr("Inductance")] = Utils.plotValue(inductor.inductance, "H")
+        info[tr("Charge")] = Utils.plotEnergy("", inductor.energy)
         if (Eln.wailaEasyMode) {
-            info[I18N.tr("Voltage drop")] = Utils.plotVolt("", abs(inductor.voltage))
-            info[I18N.tr("Current")] = Utils.plotAmpere("", abs(inductor.current))
+            info[tr("Voltage drop")] = Utils.plotVolt("", abs(inductor.voltage))
+            info[tr("Current")] = Utils.plotAmpere("", abs(inductor.current))
         }
         return info
     }
@@ -294,7 +294,7 @@ class PowerInductorSixGui(player: EntityPlayer, inventory: IInventory, var rende
     }
 
     override fun postDraw(f: Float, x: Int, y: Int) {
-        helper.drawString(8, 12, -0x1000000, I18N.tr("Inductance: %1\$H", Utils.plotValue(render.descriptor.getlValue(render.inventory))))
+        helper.drawString(8, 12, -0x1000000, tr("Inductance: %1\$H", Utils.plotValue(render.descriptor.getlValue(render.inventory))))
         super.postDraw(f, x, y)
     }
 
@@ -306,9 +306,9 @@ class PowerInductorSixGui(player: EntityPlayer, inventory: IInventory, var rende
 
 class PowerInductorSixContainer(player: EntityPlayer, inventory: IInventory) : BasicContainer(player, inventory, arrayOf<Slot>(
     GenericItemUsingDamageSlot(inventory, cableId, 132, 8, 19, CopperCableDescriptor::class.java,
-        ISlotSkin.SlotSkin.medium, arrayOf(I18N.tr("Copper cable slot"), I18N.tr("(Increases inductance)"))),
+        ISlotSkin.SlotSkin.medium, arrayOf(tr("Copper cable slot"), tr("(Increases inductance)"))),
     GenericItemUsingDamageSlot(inventory, coreId, 132 + 20, 8, 1, FerromagneticCoreDescriptor::class.java,
-        ISlotSkin.SlotSkin.medium, arrayOf(I18N.tr("Ferromagnetic core slot")))
+        ISlotSkin.SlotSkin.medium, arrayOf(tr("Ferromagnetic core slot")))
 )) {
     companion object {
         const val cableId = 0

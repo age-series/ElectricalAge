@@ -1,7 +1,6 @@
 package mods.eln.transparentnode.battery
 
 import mods.eln.Eln
-import mods.eln.i18n.I18N
 import mods.eln.i18n.I18N.tr
 import mods.eln.misc.*
 import mods.eln.misc.Obj3D.Obj3DPart
@@ -127,13 +126,13 @@ class BatteryDescriptor(
 
     override fun addInformation(itemStack: ItemStack, entityPlayer: EntityPlayer?, list: MutableList<String>, par4: Boolean) {
         super.addInformation(itemStack, entityPlayer, list, par4)
-        list.add(Utils.plotVolt(I18N.tr("Nominal voltage: "), electricalU))
-        list.add(Utils.plotPower(I18N.tr("Nominal power: "), electricalStdP))
-        list.add(Utils.plotEnergy(I18N.tr("Energy capacity: "), electricalStdDischargeTime * electricalStdP))
-        list.add(Utils.plotOhm(I18N.tr("Internal resistance: "), electricalRs * 2))
+        list.add(Utils.plotVolt(tr("Nominal voltage: "), electricalU))
+        list.add(Utils.plotPower(tr("Nominal power: "), electricalStdP))
+        list.add(Utils.plotEnergy(tr("Energy capacity: "), electricalStdDischargeTime * electricalStdP))
+        list.add(Utils.plotOhm(tr("Internal resistance: "), electricalRs * 2))
         list.add("")
-        list.add(Utils.plotPercent(I18N.tr("Actual charge: "), getChargeInTag(itemStack)))
-        if (lifeEnable) list.add(Utils.plotPercent(I18N.tr("Life: "), getLifeInTag(itemStack)))
+        list.add(Utils.plotPercent(tr("Actual charge: "), getChargeInTag(itemStack)))
+        if (lifeEnable) list.add(Utils.plotPercent(tr("Life: "), getLifeInTag(itemStack)))
     }
 
     override fun addRealismContext(list: MutableList<String>?): RealisticEnum {
@@ -148,7 +147,7 @@ class BatteryDescriptor(
     }
 
     override fun getName(stack: ItemStack): String {
-        return super.getName(stack) + Utils.plotPercent(I18N.tr(" charged at "), getChargeInTag(stack))
+        return super.getName(stack) + Utils.plotPercent(tr(" charged at "), getChargeInTag(stack))
     }
 
     fun getChargeInTag(stack: ItemStack): Double {

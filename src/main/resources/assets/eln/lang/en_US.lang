@@ -423,6 +423,8 @@ Stored_Energy\:_%1$J_(%2$%)=Stored Energy: %1$J (%2$%)
 
 # ./src/main/java/mods/eln/mechanical/Clutch.kt
 Prevents_clutches_from_slipping\nagain_after_they_stop.=Prevents clutches from slipping\nagain after they stop.
+Clutch_Plate=Clutch Plate
+Clutch_Pin=Clutch Pin
 
 # ./src/main/java/mods/eln/mechanical/CrankableShaft.kt
 Player_crankable_shaft=Player crankable shaft
@@ -430,16 +432,15 @@ Can_rotate_slowly=Can rotate slowly
 
 # ./src/main/java/mods/eln/mechanical/Generator.kt
 Converts_mechanical_energy_into_electricity,_or_(badly)_vice_versa.=将机械能转换为电能，或反之(低效)。
-Voltage_out\:_%1$=Voltage out: %1$
-Power_out\:_%1$=Power out: %1$
-Rads\:_%1$=Rads: %1$
+__Voltage_out\:_=Voltage out:
+__Rads\:_%1$=  Rads: %1$
 
 # ./src/main/java/mods/eln/mechanical/Motor.kt
 Converts_electricity_into_mechanical_energy,_or_(badly)_vice_versa.=Converts electricity into mechanical energy, or (badly) vice versa.
-Voltage_in\:_%1$=Voltage in: %1$
-Power_in\:_%1$=Power in: %1$
-rad_s\:_%1$=rad/s: %1$
-Max_rad_s\:_%1$=Max rad/s: %1$
+__Voltage_in\:_=  Voltage in:
+__Power_in\:_=  Power in:
+__rad_s\:_=  rad/s:
+Max_rad_s\:_=Max rad/s:
 
 # ./src/main/java/mods/eln/mechanical/Tachometer.kt
 Rads_s_corresponding\nto_0%_output=Rads/s corresponding\nto 0% output
@@ -450,10 +451,10 @@ Converts_%1$_into_mechanical_energy.=Converts %1$ into mechanical energy.
 Nominal_usage_->=Nominal usage ->
 %1$_input\:_%2$_mB_s=%1$ input: %2$ mB/s
 No_valid_fluids_for_this_turbine!=No valid fluids for this turbine!
-Power_out\:_%1$=Power out: %1$
+__Power_out\:_=Power out:
 Power_out\:_%1$-_%2$=Power out: %1$- %2$
-Optimal_rads\:_%1$=Optimal rads: %1$
-Max_rads\:__%1$=Max rads:  %1$
+__Optimal_rads\:_=Optimal rads:
+Max_rads\:__=Max rads:
 
 # ./src/main/java/mods/eln/misc/UtilsClient.java
 Hold_[shift]_for_details=Hold [shift] for details
@@ -563,7 +564,7 @@ Cable_is_adapted_to_conduct\nelectrical_signals.=Cable is adapted to conduct\nel
 Current\:_%1$A=Current: %1$A
 Nominal_Ratings\:=Nominal Ratings:
 Not_adapted_to_transport_power.=Not adapted to transport power.
-Serial_resistance\:_%1$\u2126=Serial resistance: %1$\u2126
+Serial_resistance\:_%1$Ω=Serial resistance: %1$Ω
 __*_Wire_resistance_is_much_higher_than_normal=  * Wire resistance is much higher than normal
 __*_Wire_resistance_is_not_impacted_by_temperature=  * Wire resistance is not impacted by temperature
 __*_Wire_voltage_current_limits_are_arbitrary_values,_added_as_a_gameplay_mechanic=  * Wire voltage current limits are arbitrary values, added as a gameplay mechanic
@@ -767,6 +768,7 @@ Wireless_mode_of_lights_intended_to_pretend_wires_are_in_the_walls=Wireless mode
 
 # ./src/main/java/mods/eln/sixnode/lampsocket/LampSocketElement.java
 Bulb=Bulb
+Life_Left\:_=Life Left:
 
 # ./src/main/java/mods/eln/sixnode/lampsocket/LampSocketGuiDraw.java
 Cable_slot_empty=Cable slot empty
@@ -847,8 +849,8 @@ Coal_dust_slot=Coal dust slot
 It's_a_resistor=It's a resistor
 
 # ./src/main/java/mods/eln/sixnode/thermalcable/ThermalCableDescriptor.java
-High_parallel_resistance\n_⇨_Low_power_dissipation.=High parallel resistance\n ⇨ Low power dissipation.
-Low_serial_resistance\n_⇨_High_conductivity.=Low serial resistance\n ⇨ High conductivity.
+High_parallel_resistance\n_->_Low_power_dissipation.=High parallel resistance\n -> Low power dissipation.
+Low_serial_resistance\n_->_High_conductivity.=Low serial resistance\n -> High conductivity.
 Parallel_resistance\:_%1$K_W=Parallel resistance: %1$K/W
 Serial_resistance\:_%1$K_W=Serial resistance: %1$K/W
 The_thermal_simulator_doesn't_properly_manage_heat=The thermal simulator doesn't properly manage heat
@@ -900,14 +902,14 @@ Nominal_voltage\:_%1$_V=Nominal voltage: %1$ V
 Produces_electricity_using_gasoline.=Produces electricity using gasoline.
 
 # ./src/main/java/mods/eln/transparentnode/FuelHeatFurnace.kt
-Actual\:_%1$=Actual: %1$
+Actual\:_=Actual:
 Analog_regulator_slot=Analog regulator slot
-Control_value_at_%1$=Control value at %1$
+Control_value_at_=Control value at
 Fuel_burner_slot=Fuel burner slot
 Furnace_is_off=Furnace is off
 Furnace_is_on=Furnace is on
-Heat_Power\:_%1$=Heat Power: %1$
-Set_point\:_%1$=Set point: %1$
+Heat_Power\:_=Heat Power:
+Set_point\:_=Set point:
 __Max._temperature\:_=  Max. temperature:
 
 # ./src/main/java/mods/eln/transparentnode/LargeRheostat.kt
@@ -963,7 +965,7 @@ __*_Voltage_oriented_uses_two_smaller_batteries_in_series_to_increase_voltage=  
 Charged=Charged
 Discharge=Discharge
 Energy\:=Energy:
-Energy\:_%1$=Energy: %1$
+Energy\:_=Energy:
 Life\:=Life:
 No_charge=No charge
 Power_in\:=Power in:
@@ -1208,7 +1210,7 @@ Inductance\:_%1$H=Inductance: %1$H
 Input=Input
 Input_voltage=Input voltage
 Internal_control=Internal control
-Internal_resistance\:_%1$\u2126=Internal resistance: %1$\u2126
+Internal_resistance\:_%1$Ω=Internal resistance: %1$Ω
 Is_off=Is off
 Is_on=Is on
 Life=Life
@@ -1246,7 +1248,7 @@ Redstone_value=Redstone value
 Regulator_slot=Regulator slot
 Reset=Reset
 Resistance=Resistance
-Resistance\:_%1$\u2126=Resistance: %1$\u2126
+Resistance\:_%1$Ω=Resistance: %1$Ω
 Signal_Voltage=Signal Voltage
 Smallest=Smallest
 Specify_the_channel=Specify the channel

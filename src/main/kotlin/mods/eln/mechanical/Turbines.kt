@@ -3,7 +3,7 @@ package mods.eln.mechanical
 import mods.eln.Eln
 import mods.eln.fluid.FuelRegistry
 import mods.eln.fluid.PreciseElementFluidHandler
-import mods.eln.i18n.I18N
+import mods.eln.i18n.I18N.tr
 import mods.eln.misc.*
 import mods.eln.node.NodeBase
 import mods.eln.node.published
@@ -59,18 +59,19 @@ abstract class TurbineDescriptor(baseName: String, obj: Obj3D) :
     )
 
     override fun addInformation(stack: ItemStack, player: EntityPlayer, list: MutableList<String>, par4: Boolean) {
-        list.add(I18N.tr("Converts %1$ into mechanical energy.",fluidDescription))
-        list.add(I18N.tr("Nominal usage ->"))
-        list.add("  "+I18N.tr("%1$ input: %2$ mB/s",fluidDescription.replaceFirstChar { if (it.isLowerCase()) it.titlecase() else it.toString() },fluidConsumption))
+        list.add(tr("Converts %1$ into mechanical energy.",fluidDescription))
+        list.add(tr("Nominal usage ->"))
+        list.add("  "+tr("%1$ input: %2$ mB/s",fluidDescription.replaceFirstChar { if (it.isLowerCase()) it.titlecase() else it.toString() },fluidConsumption))
         if (power.isEmpty()) {
-            list.add("  "+I18N.tr("No valid fluids for this turbine!"))
+            list.add("  "+tr("No valid fluids for this turbine!"))
         } else if (power.size == 1) {
-            list.add("  "+I18N.tr("Power out: %1$",Utils.plotPower(power[0])))
+            list.add(Utils.plotPower(tr("  Power out: "),power[0]))
         } else {
-            list.add("  "+I18N.tr("Power out: %1$- %2$",Utils.plotPower(minFluidPower),Utils.plotPower(maxFluidPower)))
+            list.add("  "+tr("Power out: %1$- %2$",Utils.plotPower(minFluidPower),Utils.plotPower(maxFluidPower)))
         }
-        list.add("  "+I18N.tr("Optimal rads: %1$",Utils.plotRads("", optimalRads)))
-        list.add(I18N.tr("Max rads:  %1$",Utils.plotRads("",absoluteMaximumShaftSpeed)))
+        list.add(Utils.plotRads(tr("  Optimal rads: "), optimalRads))
+        list.add(Utils.plotRads(tr("Max rads:  "),absoluteMaximumShaftSpeed))
+
     }
 }
 
@@ -188,11 +189,11 @@ class TurbineElement(node: TransparentNode, desc_: TransparentNodeDescriptor) :
 
     override fun getWaila(): Map<String, String> {
         var info = mutableMapOf<String, String>()
-        info.put(I18N.tr("Speed"), Utils.plotRads("", shaft.rads))
-        info.put(I18N.tr("Energy"), Utils.plotEnergy("", shaft.energy))
+        info.put(tr("Speed"), Utils.plotRads("", shaft.rads))
+        info.put(tr("Energy"), Utils.plotEnergy("", shaft.energy))
         if (Eln.wailaEasyMode) {
-            info.put(I18N.tr("Efficiency"), Utils.plotPercent("", efficiency.toDouble()))
-            info.put(I18N.tr("Fuel usage"), Utils.plotBuckets("", fluidRate / 1000.0) + "/s")
+            info.put(tr("Efficiency"), Utils.plotPercent("", efficiency.toDouble()))
+            info.put(tr("Fuel usage"), Utils.plotBuckets("", fluidRate / 1000.0) + "/s")
         }
         return info
     }

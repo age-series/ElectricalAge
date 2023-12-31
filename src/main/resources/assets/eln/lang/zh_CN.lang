@@ -432,16 +432,15 @@ Can_rotate_slowly=右键慢速转动
 
 # ./src/main/java/mods/eln/mechanical/Generator.kt
 Converts_mechanical_energy_into_electricity,_or_(badly)_vice_versa.=将机械能转换为电能，或反之(低效)。
-Voltage_out\:_%1$=输出电压:
-Power_out\:_%1$=输出功率: %1$
-Rads\:_%1$=最佳转速: %1$
+__Voltage_out\:_=  输出电压:
+__Rads\:_=  最佳转速:
 
 # ./src/main/java/mods/eln/mechanical/Motor.kt
 Converts_electricity_into_mechanical_energy,_or_(badly)_vice_versa.=将电能转换为机械能，或反之(低效)。
-Voltage_in\:_%1$=输入电压: %1$
-Power_in\:_%1$=输入功率: %1$
-rad_s\:_%1$=最佳转速: %1$
-Max_rad_s\:_%1$=最大转速: %1$
+__Voltage_in\:_=  输入电压:
+__Power_in\:_=  输入功率:
+__rad_s\:_=  最佳转速:
+Max_rad_s\:_=最大转速:
 
 # ./src/main/java/mods/eln/mechanical/Tachometer.kt
 Rads_s_corresponding\nto_0%_output=对应 0% 输出的Rads/s(转速)
@@ -452,10 +451,10 @@ Converts_%1$_into_mechanical_energy.=消耗%1$产生机械能
 Nominal_usage_->=额定参数:
 %1$_input\:_%2$_mB_s=%1$输入: %2$ mB/s
 No_valid_fluids_for_this_turbine!=没有有效的流体用于这个发动机!
-Power_out\:_%1$=输出功率: %1$
+__Power_out\:_=输出功率:
 Power_out\:_%1$-_%2$=输出功率: %1$- %2$
-Optimal_rads\:_%1$=最佳转速: %1$
-Max_rads\:__%1$=最大转速:  %1$
+__Optimal_rads\:_=最佳转速:
+Max_rads\:__=最大转速:
 
 # ./src/main/java/mods/eln/misc/UtilsClient.java
 Hold_[shift]_for_details=按住 [shift] 查看细节
@@ -658,7 +657,7 @@ A_relay_is_an_electrical\ncontact_that_conducts\ncurrent_when_a_signal\nvoltage_
 The_relay's_input_behaves\nlike_a_Schmitt_Trigger.=继电器的输入行为类似于施密特触发器
 
 # ./src/main/java/mods/eln/sixnode/electricalrelay/ElectricalRelayElement.java
-Default_position=Default position
+Default_position=触点默认状态
 
 # ./src/main/java/mods/eln/sixnode/electricalrelay/ElectricalRelayGui.java
 Normally_closed=默认合上
@@ -769,6 +768,7 @@ Wireless_mode_of_lights_intended_to_pretend_wires_are_in_the_walls=用于假装�
 
 # ./src/main/java/mods/eln/sixnode/lampsocket/LampSocketElement.java
 Bulb=灯泡
+Life_Left\:_=剩余寿命
 
 # ./src/main/java/mods/eln/sixnode/lampsocket/LampSocketGuiDraw.java
 Cable_slot_empty=导线槽没有导线
@@ -849,8 +849,8 @@ Coal_dust_slot=槽(煤粉)
 It's_a_resistor=这是一个电阻
 
 # ./src/main/java/mods/eln/sixnode/thermalcable/ThermalCableDescriptor.java
-High_parallel_resistance\n_⇨_Low_power_dissipation.=高并联热阻\n ⇨ 低热损
-Low_serial_resistance\n_⇨_High_conductivity.=低串联热阻\n ⇨ 高热导.
+High_parallel_resistance\n_->_Low_power_dissipation.=高并联热阻\n -> 低热损
+Low_serial_resistance\n_->_High_conductivity.=低串联热阻\n -> 高热导.
 Parallel_resistance\:_%1$K_W=并联热阻: %1$K/W
 Serial_resistance\:_%1$K_W=串联热阻: %1$K/W
 The_thermal_simulator_doesn't_properly_manage_heat=热量模拟器无法正确管理热量
@@ -902,14 +902,14 @@ Nominal_voltage\:_%1$_V=额定电压: %1$ V
 Produces_electricity_using_gasoline.=燃烧轻油发电
 
 # ./src/main/java/mods/eln/transparentnode/FuelHeatFurnace.kt
-Actual\:_%1$=实际温度: %1$
+Actual\:_=实际温度:
 Analog_regulator_slot=槽(温控组件)
-Control_value_at_%1$=控制值 %1$
+Control_value_at_=控制值
 Fuel_burner_slot=槽(燃料燃烧器)
 Furnace_is_off=加热炉已停止
 Furnace_is_on=加热炉正在工作
-Heat_Power\:_%1$=加热功率: %1$
-Set_point\:_%1$=设定温度: %1$
+Heat_Power\:_=加热功率:
+Set_point\:_=设定温度:
 __Max._temperature\:_=  最大温度:
 
 # ./src/main/java/mods/eln/transparentnode/LargeRheostat.kt
@@ -965,7 +965,7 @@ __*_Voltage_oriented_uses_two_smaller_batteries_in_series_to_increase_voltage=  
 Charged=充满了
 Discharge=放电
 Energy\:=电量:
-Energy\:_%1$=电量: %1$
+Energy\:_=电量:
 Life\:=寿命:
 No_charge=没有充电
 Power_in\:=充电功率:
@@ -1334,7 +1334,7 @@ Clutching=制动力信号
 Fuel_usage=燃料消耗速度
 Process_State=加工进度
 Can_Process=工作中
-Not_as_warm_as_it_could_be=没有达到预期的温暖程度
+Not_as_warm_as_it_could_be=不如本应温暖
 It_probably_works_if_you_apply_~200v_to_the_xmas_wireless_channel=如果你在"xmas"无线照明频道中输入200V，它可能会工作
 Control=控制
 input_tank_level=热冷却液

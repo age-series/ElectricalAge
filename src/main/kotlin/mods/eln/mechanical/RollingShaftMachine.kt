@@ -5,7 +5,7 @@ import mods.eln.gui.GuiContainerEln
 import mods.eln.gui.HelperStdContainer
 import mods.eln.gui.ISlotSkin.SlotSkin
 import mods.eln.gui.SlotWithSkinAndComment
-import mods.eln.i18n.I18N
+import mods.eln.i18n.I18N.tr
 import mods.eln.misc.*
 import mods.eln.misc.Direction.Companion.fromIntMinecraftSide
 import mods.eln.node.transparent.*
@@ -59,10 +59,10 @@ class RollingShaftMachineElement(node: TransparentNode, desc: TransparentNodeDes
 
     override fun getWaila(): Map<String, String> {
         val info = mutableMapOf<String, String>()
-        info[I18N.tr("Energy")] = Utils.plotEnergy("", shaft.energy)
-        info[I18N.tr("Speed")] = Utils.plotRads("", shaft.rads)
-        info[I18N.tr("Process State")] = Utils.plotPercent("", operationalProcess.getProcessState())
-        info[I18N.tr("Can Process")] = if (operationalProcess.canSmelt()) "Yes" else "No"
+        info[tr("Energy")] = Utils.plotEnergy("", shaft.energy)
+        info[tr("Speed")] = Utils.plotRads("", shaft.rads)
+        info[tr("Process State")] = Utils.plotPercent("", operationalProcess.getProcessState())
+        info[tr("Can Process")] = if (operationalProcess.canSmelt()) "Yes" else "No"
         return info
     }
 

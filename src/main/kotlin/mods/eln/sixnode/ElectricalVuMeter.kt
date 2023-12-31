@@ -2,7 +2,7 @@ package mods.eln.sixnode
 
 import mods.eln.Eln
 import mods.eln.cable.CableRenderDescriptor
-import mods.eln.i18n.I18N
+import mods.eln.i18n.I18N.tr
 import mods.eln.misc.Direction
 import mods.eln.misc.LRDU
 import mods.eln.misc.Obj3D
@@ -103,9 +103,9 @@ class ElectricalVuMeterDescriptor(name: String, objName: String, var onOffOnly: 
     override fun addInformation(itemStack: ItemStack, entityPlayer: EntityPlayer, list: MutableList<String>, par4: Boolean) {
         super.addInformation(itemStack, entityPlayer, list, par4)
         if (isRGB)
-            list.add(I18N.tr("Displays a color based on the value of a signal"))
+            list.add(tr("Displays a color based on the value of a signal"))
         else
-            list.add(I18N.tr("Displays the value of a signal."))
+            list.add(tr("Displays the value of a signal."))
     }
 
     override fun shouldUseRenderHelper(type: IItemRenderer.ItemRenderType, item: ItemStack, helper: IItemRenderer.ItemRendererHelper) = type != IItemRenderer.ItemRenderType.INVENTORY
@@ -188,9 +188,9 @@ class ElectricalVuMeterElement(sixNode: SixNode, side: Direction, descriptor: Si
     override fun getWaila(): Map<String, String> {
         val info: MutableMap<String, String> = HashMap()
         if (descriptor.isRGB)
-            info[I18N.tr("Input")] = Utils.plotVolt(inputGate.signalVoltage)
+            info[tr("Input")] = Utils.plotVolt(inputGate.signalVoltage)
         else
-            info[I18N.tr("Input")] = if (inputGate.stateHigh()) I18N.tr("ON") else I18N.tr("OFF")
+            info[tr("Input")] = if (inputGate.stateHigh()) tr("ON") else tr("OFF")
         return info
     }
 

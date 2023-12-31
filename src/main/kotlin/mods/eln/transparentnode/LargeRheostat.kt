@@ -195,9 +195,9 @@ class LargeRheostatElement(node: TransparentNode, desc_: TransparentNodeDescript
     override fun newContainer(side: Direction, player: EntityPlayer) = ResistorContainer(player, inventory)
 
     override fun getWaila(): Map<String, String> = mutableMapOf(
-        Pair(I18N.tr("Resistance"), Utils.plotOhm("", resistor.resistance)),
-        Pair(I18N.tr("Temperature"), Utils.plotCelsius("", thermalLoad.temperature)),
-        Pair(I18N.tr("Power loss"), Utils.plotPower("", resistor.power))
+        Pair(tr("Resistance"), Utils.plotOhm("", resistor.resistance)),
+        Pair(tr("Temperature"), Utils.plotCelsius("", thermalLoad.temperature)),
+        Pair(tr("Power loss"), Utils.plotPower("", resistor.power))
     )
 }
 
