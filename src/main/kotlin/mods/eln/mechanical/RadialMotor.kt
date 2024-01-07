@@ -3,6 +3,7 @@ package mods.eln.mechanical
 import mods.eln.Eln
 import mods.eln.fluid.FuelRegistry
 import mods.eln.fluid.PreciseElementFluidHandler
+import mods.eln.i18n.I18N.tr
 import mods.eln.misc.Coordinate
 import mods.eln.misc.Direction
 import mods.eln.misc.INBTTReady
@@ -70,18 +71,19 @@ class RadialMotorDescriptor(baseName: String, obj: Obj3D) :
     override val obj: Obj3D = obj
 
     override fun addInformation(stack: ItemStack, player: EntityPlayer, list: MutableList<String>, par4: Boolean) {
-        list.add("Converts $fluidDescription into mechanical energy.")
-        list.add("Nominal usage ->")
-        list.add("  ${fluidDescription.replaceFirstChar { if (it.isLowerCase()) it.titlecase() else it.toString() }} input: $fluidConsumption mB/s")
+        list.add(tr("Converts %1$ into mechanical energy.",fluidDescription))
+        list.add(tr("Nominal usage ->"))
+        list.add("  "+ tr("%1$ input: %2$ mB/s",fluidDescription.replaceFirstChar { if (it.isLowerCase()) it.titlecase() else it.toString() },fluidConsumption))
         if (power.isEmpty()) {
-            list.add("  No valid fluids for this turbine!")
+            list.add("  "+ tr("No valid fluids for this turbine!"))
         } else if (power.size == 1) {
-            list.add(Utils.plotPower("  Power out: ", power[0]))
+            list.add(Utils.plotPower(tr("  Power out: "),power[0]))
+
         } else {
-            list.add("  Power out: ${Utils.plotPower(minFluidPower  * GAS_GUZZLER_CONSTANT)}- ${Utils.plotPower(maxFluidPower * GAS_GUZZLER_CONSTANT)}")
+            list.add("  "+ tr("Power out: %1$- %2$",Utils.plotPower(minFluidPower  * GAS_GUZZLER_CONSTANT),Utils.plotPower(maxFluidPower * GAS_GUZZLER_CONSTANT)))
         }
-        list.add(Utils.plotRads("  Optimal rads: ", optimalRads))
-        list.add(Utils.plotRads("Max rads:  ", absoluteMaximumShaftSpeed))
+        list.add(Utils.plotRads(tr("  Optimal rads: "), optimalRads))
+        list.add(Utils.plotRads(tr("Max rads:  "),absoluteMaximumShaftSpeed))
     }
 }
 
@@ -169,11 +171,11 @@ class RadialMotorElement(node: TransparentNode, transparentNodeDescriptor: Trans
 
     override fun getWaila(): Map<String, String> {
         val info = mutableMapOf<String, String>()
-        info["Speed"] = Utils.plotRads("", shaft.rads)
-        info["Energy"] = Utils.plotEnergy("", shaft.energy)
+        info[tr("Speed")] = Utils.plotRads("", shaft.rads)
+        info[tr("Energy")] = Utils.plotEnergy("", shaft.energy)
         if (Eln.wailaEasyMode) {
-            info["Efficiency"] = Utils.plotPercent("", efficiency.toDouble())
-            info["Fuel usage"] = Utils.plotBuckets("", fluidRate / 1000.0) + "/s"
+            info[tr("Efficiency")] = Utils.plotPercent("", efficiency.toDouble())
+            info[tr("Fuel usage")] = Utils.plotBuckets("", fluidRate / 1000.0) + "/s"
         }
         return info
     }

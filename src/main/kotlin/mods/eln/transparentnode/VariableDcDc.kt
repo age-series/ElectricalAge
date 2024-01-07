@@ -9,7 +9,6 @@ import mods.eln.generic.GenericItemUsingDamageSlot
 import mods.eln.gui.GuiContainerEln
 import mods.eln.gui.GuiHelperContainer
 import mods.eln.gui.ISlotSkin
-import mods.eln.i18n.I18N
 import mods.eln.i18n.I18N.tr
 import mods.eln.item.*
 import mods.eln.misc.*
@@ -80,8 +79,8 @@ class VariableDcDcDescriptor(name: String, objM: Obj3D, coreM: Obj3D, casingM: O
     }
 
     override fun addRealismContext(list: MutableList<String>?): RealisticEnum {
-        list?.add(I18N.tr("This variable DC/DC has unrealistic capacitance effects and can sink/source power that violates Newton's laws"))
-        list?.add(I18N.tr("It is made this way to improve the performance of the simulator in large power networks"))
+        list?.add(tr("This variable DC/DC has unrealistic capacitance effects and can sink/source power that violates Newton's laws"))
+        list?.add(tr("It is made this way to improve the performance of the simulator in large power networks"))
         return RealisticEnum.UNREALISTIC
     }
 
@@ -330,10 +329,10 @@ class VariableDcDcElement(transparentNode: TransparentNode, descriptor: Transpar
         val info = HashMap<String, String>()
         info[tr("Ratio")] = Utils.plotValue(interSystemProcess.ratio)
         // It's just not fair not to show the voltages on the VDC/DC. It's so variable...
-        info["Voltages"] = "\u00A7a" + Utils.plotVolt("", primaryLoad.voltage) + " " +
+        info[tr("Voltages")] = "\u00A7a" + Utils.plotVolt("", primaryLoad.voltage) + " " +
             "\u00A7e" + Utils.plotVolt("", secondaryLoad.voltage)
-        info["Control Voltage"] = Utils.plotVolt(control.voltage)
-        info[tr("Subsystem Matrix Size: ")] = Utils.renderDoubleSubsystemWaila(primaryLoad.subSystem, secondaryLoad.subSystem)
+        info[tr("Control Voltage")] = Utils.plotVolt(control.voltage)
+        info[tr("Subsystem Matrix Size")] = Utils.renderDoubleSubsystemWaila(primaryLoad.subSystem, secondaryLoad.subSystem)
         return info
     }
 

@@ -6,6 +6,7 @@ import mods.eln.gui.GuiHelper
 import mods.eln.gui.GuiScreenEln
 import mods.eln.gui.GuiTextFieldEln
 import mods.eln.i18n.I18N
+import mods.eln.i18n.I18N.tr
 import mods.eln.item.IConfigurable
 import mods.eln.misc.*
 import mods.eln.node.NodeBase
@@ -34,16 +35,16 @@ class CurrentSourceDescriptor(name: String, obj: Obj3D) : SixNodeDescriptor(name
 
     override fun addInformation(itemStack: ItemStack, entityPlayer: EntityPlayer, list: MutableList<String>, par4: Boolean) {
         super.addInformation(itemStack, entityPlayer, list, par4)
-        Collections.addAll<String>(list, *I18N.tr("Provides an ideal current source\nwithout energy or power limitation.").split("\n").toTypedArray())
+        Collections.addAll<String>(list, *tr("Provides an ideal current source\nwithout energy or power limitation.").split("\n").toTypedArray())
         list.add("")
-        list.add(I18N.tr("Internal resistance: %1$\u2126", Utils.plotValue(Eln.instance.lowVoltageCableDescriptor.electricalRs)))
+        list.add(tr("Internal resistance: %1$\u2126", Utils.plotValue(Eln.instance.lowVoltageCableDescriptor.electricalRs)))
         list.add("")
-        list.add(I18N.tr("Creative block."))
+        list.add(tr("Creative block."))
     }
 
     override fun addRealismContext(list: MutableList<String?>): RealisticEnum {
         super.addRealismContext(list)
-        list.add(I18N.tr("Acts as an ideal voltage source, with a small inline resistance"))
+        list.add(tr("Acts as an ideal current source, with a small inline resistance"))
         return RealisticEnum.IDEAL
     }
 
@@ -105,10 +106,10 @@ class CurrentSourceElement(sixNode: SixNode, side: Direction, descriptor: SixNod
 
     override fun getWaila(): Map<String, String> {
         val info: MutableMap<String, String> = HashMap()
-        info[I18N.tr("Voltage")] = Utils.plotVolt("", electricalLoad.voltage)
-        info[I18N.tr("Current")] = Utils.plotAmpere("", electricalLoad.current)
+        info[tr("Voltage")] = Utils.plotVolt("", electricalLoad.voltage)
+        info[tr("Current")] = Utils.plotAmpere("", electricalLoad.current)
         if (Eln.wailaEasyMode) {
-            info[I18N.tr("Power")] = Utils.plotPower("", electricalLoad.voltage * electricalLoad.current)
+            info[tr("Power")] = Utils.plotPower("", electricalLoad.voltage * electricalLoad.current)
         }
         return info
     }
@@ -178,7 +179,7 @@ class CurrentSourceGui(var render: CurrentSourceRender) : GuiScreenEln() {
         current = newGuiTextField(6, 6, 50)
         current!!.setText(render.current.toFloat())
         current!!.setObserver(this)
-        current!!.setComment(arrayOf(I18N.tr("Current sourced")))
+        current!!.setComment(arrayOf(tr("Current sourced")))
     }
 
     override fun textFieldNewValue(textField: GuiTextFieldEln, value: String) {

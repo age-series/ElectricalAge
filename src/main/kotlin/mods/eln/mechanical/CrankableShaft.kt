@@ -1,5 +1,6 @@
 package mods.eln.mechanical
 
+import mods.eln.i18n.I18N.tr
 import mods.eln.misc.*
 import mods.eln.node.transparent.EntityMetaTag
 import mods.eln.node.transparent.TransparentNode
@@ -17,9 +18,9 @@ class CrankableShaftDescriptor(name: String, override val obj: Obj3D, private va
     override val rotating = arrayOf(obj.getPart("Shaft"))
 
     override fun addInformation(stack: ItemStack, player: EntityPlayer, list: MutableList<String>, par4: Boolean) {
-        list.add("Player crankable shaft")
-        list.add("Can rotate slowly")
-        list.add(Utils.plotRads("Max rads:  ", nominalRads.toDouble()))
+        list.add(tr("Player crankable shaft"))
+        list.add(tr("Can rotate slowly"))
+        list.add(Utils.plotRads(tr("Max rads:  "), nominalRads.toDouble()))
     }
 }
 
@@ -60,8 +61,8 @@ class CrankableShaftElement(node: TransparentNode, desc_: TransparentNodeDescrip
 
     override fun getWaila(): Map<String, String> {
         val info = mutableMapOf<String, String>()
-        info["Energy"] = Utils.plotEnergy("", shaft.energy)
-        info["Speed"] = Utils.plotRads("", shaft.rads)
+        info[tr("Energy")] = Utils.plotEnergy("", shaft.energy)
+        info[tr("Speed")] = Utils.plotRads("", shaft.rads)
         return info
     }
 

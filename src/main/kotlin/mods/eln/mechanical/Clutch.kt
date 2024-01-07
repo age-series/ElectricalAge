@@ -407,10 +407,10 @@ class ClutchElement(node: TransparentNode, desc_: TransparentNodeDescriptor) : S
     override fun getWaila(): MutableMap<String, String> {
         val info = mutableMapOf<String, String>()
         val entries = mapOf(Pair(front.left(), leftShaft), Pair(front.right(), rightShaft)).entries
-        info.put("Speeds", entries.map {
+        info.put(tr("Speeds"), entries.map {
             Utils.plotRads("", it.value.rads)
         }.joinToString(", "))
-        info.put("Energies", entries.map {
+        info.put(tr("Energies"), entries.map {
             Utils.plotEnergy("", it.value.energy)
         }.joinToString(", "))
         if(Eln.wailaEasyMode) {
@@ -422,7 +422,7 @@ class ClutchElement(node: TransparentNode, desc_: TransparentNodeDescriptor) : S
             if (desc != null && stack != null)
                 info.put("Wear", String.format("%.6f", desc.getWear(stack)))
         }
-        info.put("Clutching", Utils.plotVolt(inputGate.signalVoltage))
+        info.put(tr("Clutching"), Utils.plotVolt(inputGate.signalVoltage))
         if(Eln.wailaEasyMode) {
             info.put("Slipping", if (slipping) {
                 "YES"

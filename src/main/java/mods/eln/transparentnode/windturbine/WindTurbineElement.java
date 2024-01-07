@@ -129,7 +129,7 @@ public class WindTurbineElement extends TransparentNodeElement {
         wailaList.put(I18N.tr("Generating"), slowProcess.getWind() > 0 ? I18N.tr("Yes") : I18N.tr("No"));
         wailaList.put(I18N.tr("Produced power"), Utils.plotPower("", powerSource.getEffectivePower()));
         if (Eln.wailaEasyMode) {
-            wailaList.put("Voltage", Utils.plotVolt("", powerSource.getVoltage()));
+            wailaList.put(I18N.tr("Voltage"), Utils.plotVolt("", powerSource.getVoltage()));
         }
         return wailaList;
     }

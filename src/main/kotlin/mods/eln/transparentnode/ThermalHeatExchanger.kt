@@ -3,7 +3,7 @@ package mods.eln.transparentnode.themralheatexchanger
 import mods.eln.Eln
 import mods.eln.fluid.ElementSidedFluidHandler
 import mods.eln.fluid.TankData
-import mods.eln.i18n.I18N
+import mods.eln.i18n.I18N.tr
 import mods.eln.misc.Direction
 import mods.eln.misc.LRDU
 import mods.eln.misc.Utils
@@ -65,9 +65,9 @@ class ThermalHeatExchangerDescriptor(
 
     override fun addInformation(itemStack: ItemStack?, entityPlayer: EntityPlayer?, list: MutableList<String>, par4: Boolean) {
         super.addInformation(itemStack, entityPlayer, list, par4)
-        list.add(I18N.tr("Generates heat when supplied with ic2:hotcoolant"))
-        list.add(I18N.tr("Ejects out ic2:coolant"))
-        list.add(Utils.plotCelsius(I18N.tr("  Max. temperature: "), thermal.maximumTemperature))
+        list.add(tr("Generates heat when supplied with ic2:hotcoolant"))
+        list.add(tr("Ejects out ic2:coolant"))
+        list.add(Utils.plotCelsius(tr("  Max. temperature: "), thermal.maximumTemperature))
     }
 
     override fun mustHaveFloor() = false
@@ -235,13 +235,13 @@ class ThermalHeatExchangerElement(
     override fun thermoMeterString(side: Direction): String = Utils.plotCelsius("T:", thermalLoad.temperatureCelsius) + " " + Utils.plotPower(joulesPerTick * 20)
 
     override fun getWaila(): Map<String, String> = mutableMapOf(
-        Pair(I18N.tr("Control"), Utils.plotPercent("", electricalControlLoad.normalized)),
-        Pair(I18N.tr("input tank level"), tank.getFluidAmount(INPUT_SIDE).toString()),
-        Pair(I18N.tr("output tank level"), tank.getFluidAmount(OUTPUT_SIDE).toString()),
-        Pair(I18N.tr("input mB/t"), Utils.plotBuckets("", inputMbPerTick / 1000.0)),
-        Pair(I18N.tr("output mB/t"), Utils.plotBuckets("", outputMbPerTick / 1000.0)),
-        Pair(I18N.tr("joules per tick"), joulesPerTick.toString()),
-        Pair(I18N.tr("thermal power"), Utils.plotPower(joulesPerTick * 20))
+        Pair(tr("Control"), Utils.plotPercent("", electricalControlLoad.normalized)),
+        Pair(tr("input tank level"), tank.getFluidAmount(INPUT_SIDE).toString()),
+        Pair(tr("output tank level"), tank.getFluidAmount(OUTPUT_SIDE).toString()),
+        Pair(tr("input mB/t"), Utils.plotBuckets("", inputMbPerTick / 1000.0)),
+        Pair(tr("output mB/t"), Utils.plotBuckets("", outputMbPerTick / 1000.0)),
+        Pair(tr("joules per tick"), joulesPerTick.toString()),
+        Pair(tr("thermal power"), Utils.plotPower(joulesPerTick * 20))
     )
 
     override fun writeToNBT(nbt: NBTTagCompound) {
