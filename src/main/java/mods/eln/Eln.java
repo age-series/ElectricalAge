@@ -328,15 +328,15 @@ public class Eln {
         elnNetwork = NetworkRegistry.INSTANCE.newSimpleChannel("electrical-age");
         elnNetwork.registerMessage(AchievePacketHandler.class, AchievePacket.class, 0, Side.SERVER);
         elnNetwork.registerMessage(TransparentNodeRequestPacketHandler.class, TransparentNodeRequestPacket.class, 1,
-Side.SERVER);
-        elnNetwork.registerMessage(TransparentNodeResponsePacketHandler.class, TransparentNodeResponsePacket.class, 2
-        , Side.CLIENT);
+                Side.SERVER);
+        elnNetwork.registerMessage(TransparentNodeResponsePacketHandler.class, TransparentNodeResponsePacket.class, 2,
+                Side.CLIENT);
         elnNetwork.registerMessage(GhostNodeWailaRequestPacketHandler.class, GhostNodeWailaRequestPacket.class, 3,
                 Side.SERVER);
         elnNetwork.registerMessage(GhostNodeWailaResponsePacketHandler.class, GhostNodeWailaResponsePacket.class, 4,
                 Side.CLIENT);
         elnNetwork.registerMessage(SixNodeWailaRequestPacketHandler.class, SixNodeWailaRequestPacket.class, 5,
-Side.SERVER);
+                Side.SERVER);
         elnNetwork.registerMessage(SixNodeWailaResponsePacketHandler.class, SixNodeWailaResponsePacket.class, 6,
                 Side.CLIENT);
 
@@ -387,16 +387,16 @@ Side.SERVER);
         arcMetalBlock = new ArcMetalBlock();
 
         sharedItem =
-         (SharedItem) new SharedItem().setCreativeTab(creativeTab).setMaxStackSize(64).setUnlocalizedName("sharedItem");
+                (SharedItem) new SharedItem().setCreativeTab(creativeTab).setMaxStackSize(64).setUnlocalizedName("sharedItem");
 
         sharedItemStackOne =
-         (SharedItem) new SharedItem().setCreativeTab(creativeTab).setMaxStackSize(1).setUnlocalizedName(
-                 "sharedItemStackOne");
+                (SharedItem) new SharedItem().setCreativeTab(creativeTab).setMaxStackSize(1).setUnlocalizedName(
+                        "sharedItemStackOne");
 
         transparentNodeBlock = (TransparentNodeBlock) new TransparentNodeBlock(Material.iron,
- TransparentNodeEntity.class).setCreativeTab(creativeTab).setBlockTextureName("iron_block");
+                TransparentNodeEntity.class).setCreativeTab(creativeTab).setBlockTextureName("iron_block");
         sixNodeBlock =
-         (SixNodeBlock) new SixNodeBlock(Material.plants, SixNodeEntity.class).setCreativeTab(creativeTab).setBlockTextureName("iron_block");
+                (SixNodeBlock) new SixNodeBlock(Material.plants, SixNodeEntity.class).setCreativeTab(creativeTab).setBlockTextureName("iron_block");
 
         ghostBlock = (GhostBlock) new GhostBlock().setBlockTextureName("iron_block");
         lightBlock = new LightBlock();
@@ -445,7 +445,7 @@ Side.SERVER);
         if (Other.ccLoaded) {
             PeripheralHandler.register();
         }
-        CraftingRecipes.INSTANCE.recipeMaceratorModOres();
+        CraftingRecipes.INSTANCE.itemCrafting();
     }
 
     @EventHandler
@@ -462,7 +462,7 @@ Side.SERVER);
         FMLCommonHandler.instance().bus().register(new ElnFMLEventsHandler());
         MinecraftForge.EVENT_BUS.register(this);
         FMLInterModComms.sendMessage("Waila", "register", "mods.eln.integration.waila.WailaIntegration" +
- ".callbackRegister");
+                ".callbackRegister");
         Utils.println("Electrical age init done");
     }
 
