@@ -2,6 +2,7 @@ package mods.eln.mechanical
 
 import mods.eln.Eln
 import mods.eln.cable.CableRenderDescriptor
+import mods.eln.i18n.I18N.tr
 import mods.eln.misc.*
 import mods.eln.node.NodeBase
 import mods.eln.node.transparent.EntityMetaTag
@@ -81,12 +82,12 @@ class MotorDescriptor(
     }
 
     override fun addInformation(stack: ItemStack, player: EntityPlayer, list: MutableList<String>, par4: Boolean) {
-        list.add("Converts electricity into mechanical energy, or (badly) vice versa.")
-        list.add("Nominal usage ->")
-        list.add(Utils.plotVolt("  Voltage in: ", nominalU.toDouble()))
-        list.add(Utils.plotPower("  Power in: ", nominalP.toDouble()))
-        list.add(Utils.plotRads("  rad/s: ", nominalRads.toDouble()))
-        list.add(Utils.plotRads("Max rad/s: ", absoluteMaximumShaftSpeed))
+        list.add(tr("Converts electricity into mechanical energy, or (badly) vice versa."))
+        list.add(tr("Nominal usage ->"))
+        list.add(Utils.plotVolt(tr("  Voltage in: "), nominalU.toDouble()))
+        list.add(Utils.plotPower(tr("  Power in: "), nominalP.toDouble()))
+        list.add(Utils.plotRads(tr("  rad/s: "), nominalRads.toDouble()))
+        list.add(Utils.plotRads(tr("Max rad/s: "), absoluteMaximumShaftSpeed))
     }
 }
 
@@ -305,12 +306,12 @@ class MotorElement(node: TransparentNode, desc_: TransparentNodeDescriptor) :
 
     override fun getWaila(): MutableMap<String, String> {
         var info = mutableMapOf<String, String>()
-        info.put("Energy", Utils.plotEnergy("", shaft.energy))
-        info.put("Speed", Utils.plotRads("", shaft.rads))
+        info.put(tr("Energy"), Utils.plotEnergy("", shaft.energy))
+        info.put(tr("Speed"), Utils.plotRads("", shaft.rads))
         if(Eln.wailaEasyMode) {
-            info.put("Voltage", Utils.plotVolt("", powerSource.voltage))
-            info.put("Current", Utils.plotAmpere("", powerSource.current))
-            info.put("Temperature", Utils.plotCelsius("", thermal.temperature))
+            info.put(tr("Voltage"), Utils.plotVolt("", powerSource.voltage))
+            info.put(tr("Current"), Utils.plotAmpere("", powerSource.current))
+            info.put(tr("Temperature"), Utils.plotCelsius("", thermal.temperature))
         }
         return info
     }

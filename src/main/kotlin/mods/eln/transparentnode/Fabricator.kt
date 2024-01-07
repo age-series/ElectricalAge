@@ -4,6 +4,7 @@ import mods.eln.Eln
 import mods.eln.generic.GenericItemUsingDamageDescriptor
 import mods.eln.gui.*
 import mods.eln.gui.ISlotSkin.SlotSkin
+import mods.eln.i18n.I18N.tr
 import mods.eln.misc.*
 import mods.eln.node.INodeContainer
 import mods.eln.node.NodeBase
@@ -58,8 +59,8 @@ class FabricatorDescriptor(
 
     override fun addInformation(itemStack: ItemStack?, entityPlayer: EntityPlayer?, list: MutableList<String>?, par4: Boolean) {
         super.addInformation(itemStack, entityPlayer, list, par4)
-        list?.addAll("The Fabricator creates chips\nfrom silicon and copper plates".split("\n"))
-        list?.add("Nominal Ohms: ${Utils.plotOhm(40.0)}")
+        list?.addAll(tr("The Fabricator creates chips\nfrom silicon and copper plates").split("\n"))
+        list?.add(tr("Nominal Ohms: %1$",Utils.plotOhm(40.0)))
     }
 }
 
@@ -89,7 +90,7 @@ class FabricatorElement(node: TransparentNode, descriptor: TransparentNodeDescri
     override fun thermoMeterString(side: Direction): String = ""
 
     override fun getWaila(): Map<String, String> {
-        return mapOf(Pair("Operation", operation?.opName?: "None"))
+        return mapOf(Pair(tr("Operation"), operation?.outputItem?.displayName ?: "None"))
     }
 
     override fun initialize() {

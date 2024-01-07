@@ -2,7 +2,7 @@ package mods.eln.sixnode
 
 import mods.eln.cable.CableRender
 import mods.eln.cable.CableRenderDescriptor
-import mods.eln.i18n.I18N
+import mods.eln.i18n.I18N.tr
 import mods.eln.misc.*
 import mods.eln.node.NodeBase
 import mods.eln.node.six.*
@@ -18,12 +18,12 @@ class ConduitCableDescriptor(
 
     override fun addInformation(itemStack: ItemStack, entityPlayer: EntityPlayer, list: MutableList<String>, par4: Boolean) {
         super.addInformation(itemStack, entityPlayer, list, par4)
-        list.add(I18N.tr("A conduit to run your cables through"))
+        list.add(tr("A conduit to run your cables through"))
     }
 
     override fun addRealismContext(list: MutableList<String>): RealisticEnum {
-        list.add(I18N.tr("Has some caveats:"))
-        list.add(I18N.tr("  * Thermal Sim is disabled in the conduit"))
+        list.add(tr("Has some caveats:"))
+        list.add(tr("  * Thermal Sim is disabled in the conduit"))
         return RealisticEnum.REALISTIC
     }
 
@@ -54,7 +54,7 @@ class ConduitCableElement(
 
     override fun getWaila(): Map<String, String> {
         val info: MutableMap<String, String> = HashMap()
-        info[I18N.tr("Contained Cables")] = "0"
+        info[tr("Contained Cables")] = "0"
         return info
     }
 

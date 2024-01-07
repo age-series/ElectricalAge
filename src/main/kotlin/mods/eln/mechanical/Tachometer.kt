@@ -7,7 +7,7 @@ import mods.eln.gui.GuiHelper
 import mods.eln.gui.GuiScreenEln
 import mods.eln.gui.GuiTextFieldEln
 import mods.eln.gui.IGuiObject
-import mods.eln.i18n.I18N
+import mods.eln.i18n.I18N.tr
 import mods.eln.item.IConfigurable
 import mods.eln.misc.Coordinate
 import mods.eln.misc.Direction
@@ -154,7 +154,7 @@ class TachometerRender(entity: TransparentNodeEntity, desc: TransparentNodeDescr
 }
 
 class TachometerGui(val render: TachometerRender) : GuiScreenEln() {
-    val validate: GuiButton by lazy { newGuiButton(82, 12, 80, I18N.tr("Validate")) }
+    val validate: GuiButton by lazy { newGuiButton(82, 12, 80, tr("Validate")) }
     val lowValue: GuiTextFieldEln by lazy { newGuiTextField(8, 24, 70) }
     val highValue: GuiTextFieldEln by lazy { newGuiTextField(8, 8, 70) }
 
@@ -163,8 +163,8 @@ class TachometerGui(val render: TachometerRender) : GuiScreenEln() {
     override fun initGui() {
         super.initGui()
         validate.enabled = true
-        lowValue.setComment(I18N.tr("Rads/s corresponding\nto 0% output").split("\n".toRegex()).dropLastWhile({ it.isEmpty() }).toTypedArray())
-        highValue.setComment(I18N.tr("Rads/s corresponding\nto 100% output").split("\n".toRegex()).dropLastWhile({ it.isEmpty() }).toTypedArray())
+        lowValue.setComment(tr("Rads/s corresponding\nto 0% output").split("\n".toRegex()).dropLastWhile({ it.isEmpty() }).toTypedArray())
+        highValue.setComment(tr("Rads/s corresponding\nto 100% output").split("\n".toRegex()).dropLastWhile({ it.isEmpty() }).toTypedArray())
         lowValue.setText(render.minRads)
         highValue.setText(render.maxRads)
     }
