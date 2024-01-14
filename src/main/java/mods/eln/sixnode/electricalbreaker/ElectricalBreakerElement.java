@@ -39,7 +39,7 @@ public class ElectricalBreakerElement extends SixNodeElement {
 
     SixNodeElementInventory inventory = new SixNodeElementInventory(1, 64, this);
 
-    public float voltageMax = (float) Eln.SVU, voltageMin = 0;
+    public float voltageMax = (float) Eln.LVU, voltageMin = 0;
 
     boolean switchState = false;
     double currantMax = 0;
