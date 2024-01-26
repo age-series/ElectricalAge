@@ -2,7 +2,7 @@ package mods.eln.sixnode
 
 import mods.eln.Eln
 import mods.eln.generic.GenericItemUsingDamageDescriptor
-import mods.eln.i18n.I18N
+import mods.eln.i18n.I18N.tr
 import mods.eln.item.ElectricalFuseDescriptor
 import mods.eln.misc.*
 import mods.eln.node.NodeBase
@@ -73,7 +73,7 @@ class ElectricalFuseHolderDescriptor(name: String, obj: Obj3D) :
     override fun addInformation(itemStack: ItemStack?, entityPlayer: EntityPlayer?, list: MutableList<String>?, par4: Boolean) {
         super.addInformation(itemStack, entityPlayer, list, par4)
         if (list != null) {
-            I18N.tr("Protects electrical components.\nFuse melts if current exceeds the\nfuse limit").split("\n").forEach { list.add(it) }
+            tr("Protects electrical components.\nFuse melts if current exceeds the\nfuse limit").split("\n").forEach { list.add(it) }
         }
     }
 
@@ -166,7 +166,7 @@ class ElectricalFuseHolderElement(sixNode: SixNode, side: Direction, descriptor:
     override fun multiMeterString() = Utils.plotAmpere("I:", Math.abs(aLoad.current))
 
     override fun getWaila(): MutableMap<String, String> {
-        return mutableMapOf(Pair(I18N.tr("Current"), Utils.plotAmpere("", Math.abs(aLoad.current))))
+        return mutableMapOf(Pair(tr("Current"), Utils.plotAmpere("", Math.abs(aLoad.current))))
     }
 
     override fun networkSerialize(stream: DataOutputStream) {

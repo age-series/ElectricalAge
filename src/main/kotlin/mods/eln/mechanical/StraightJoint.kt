@@ -1,5 +1,6 @@
 package mods.eln.mechanical
 
+import mods.eln.i18n.I18N.tr
 import mods.eln.misc.Coordinate
 import mods.eln.misc.Direction
 import mods.eln.misc.LRDU
@@ -24,8 +25,8 @@ open class StraightJointElement(node: TransparentNode, desc_: TransparentNodeDes
 
     override fun getWaila(): Map<String, String> {
         var info = mutableMapOf<String, String>()
-        info.put("Speed", Utils.plotRads("", shaft.rads))
-        info.put("Energy", Utils.plotEnergy("", shaft.energy))
+        info.put(tr("Speed"), Utils.plotRads("", shaft.rads))
+        info.put(tr("Energy"), Utils.plotEnergy("", shaft.energy))
         return info
     }
 

@@ -4,7 +4,7 @@ package mods.eln.misc
 import cpw.mods.fml.common.network.internal.FMLProxyPacket
 import mods.eln.Eln
 import mods.eln.GuiHandler
-import mods.eln.i18n.I18N
+import mods.eln.i18n.I18N.tr
 import mods.eln.misc.Obj3D.Obj3DPart
 import mods.eln.node.six.SixNodeEntity
 import mods.eln.node.transparent.TransparentNodeEntity
@@ -573,7 +573,7 @@ object UtilsClient {
             if (isShiftHeld()) {
                 dst.addAll(details)
             } else {
-                dst.add("§F§o${I18N.tr("Hold [shift] for details")}")
+                dst.add("§F§o${tr("Hold [shift] for details")}")
             }
         }
         if (realismDetails.isNotEmpty()) {
@@ -582,7 +582,7 @@ object UtilsClient {
             } else {
                 if (realisticEnum != null) {
                     if (realismDetails.isNotEmpty()) {
-                        dst.add("§F§o${I18N.tr("Hold [ctrl] for realism details")}")
+                        dst.add("§F§o${tr("Hold [ctrl] for realism details")}")
                     }
                 }
             }

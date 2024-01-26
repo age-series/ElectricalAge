@@ -78,11 +78,11 @@ class EmergencyLampDescriptor(name: String, val cable: ElectricalCableDescriptor
     override fun addInformation(itemStack: ItemStack?, entityPlayer: EntityPlayer?, list: MutableList<String>,
                                 par4: Boolean) {
         with(list) {
-            add("As long as power is provided, the internal battery")
-            add("is charged and the lamp is off. On a power failure,")
-            add("the lamp turns on and runs on batteries.")
-            add(Utils.plotVolt("Nominal voltage:", cable.electricalNominalVoltage))
-            add(Utils.plotEnergy("Battery capacity:", batteryCapacity))
+            add(tr("As long as power is provided, the internal battery"))
+            add(tr("is charged and the lamp is off. On a power failure,"))
+            add(tr("the lamp turns on and runs on batteries."))
+            add(Utils.plotVolt(tr("Nominal voltage:"), cable.electricalNominalVoltage))
+            add(Utils.plotEnergy(tr("Battery capacity:"), batteryCapacity))
         }
     }
 }
@@ -182,13 +182,13 @@ class EmergencyLampElement(sixNode: SixNode, side: Direction, descriptor: SixNod
     }
     override fun thermoMeterString(): String = ""
     override fun getWaila() = mapOf(
-        "State" to when {
-            on -> "On"
-            chargingResistor.state -> "Charging..."
-            charge <= 0.0 -> "Batteries empty"
-            else -> "Fully charged"
+        tr("State") to when {
+            on -> tr("On")
+            chargingResistor.state -> tr("Charging...")
+            charge <= 0.0 -> tr("Batteries empty")
+            else -> tr("Fully charged")
         },
-        "Charge" to Utils.plotPercent("", charge / (sixNodeElementDescriptor as EmergencyLampDescriptor).batteryCapacity)
+        tr("Charge") to Utils.plotPercent("", charge / (sixNodeElementDescriptor as EmergencyLampDescriptor).batteryCapacity)
     )
 
     override fun networkSerialize(stream: DataOutputStream) {

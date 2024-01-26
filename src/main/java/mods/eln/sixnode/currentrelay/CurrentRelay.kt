@@ -5,7 +5,7 @@ import mods.eln.cable.CableRenderDescriptor
 import mods.eln.gui.GuiHelper
 import mods.eln.gui.GuiScreenEln
 import mods.eln.gui.IGuiObject
-import mods.eln.i18n.I18N
+import mods.eln.i18n.I18N.tr
 import mods.eln.item.IConfigurable
 import mods.eln.misc.*
 import mods.eln.misc.LRDU.Companion.fromInt
@@ -95,11 +95,11 @@ class CurrentRelayDescriptor(
     override fun addInformation(itemStack: ItemStack?, entityPlayer: EntityPlayer?, list: MutableList<String>, par4: Boolean) {
         super.addInformation(itemStack, entityPlayer, list, par4)
         list.addAll(
-            I18N.tr("A relay is an electrical\ncontact that conducts\ncurrent when a signal\nvoltage is applied.")
+            tr("A relay is an electrical\ncontact that conducts\ncurrent when a signal\nvoltage is applied.")
                 .split("\n".toRegex()).dropLastWhile { it.isEmpty() }
         )
         list.addAll(
-            I18N.tr("The relay's input behaves\nlike a Schmitt Trigger.").split("\n".toRegex())
+            tr("The relay's input behaves\nlike a Schmitt Trigger.").split("\n".toRegex())
                 .dropLastWhile { it.isEmpty() }
         )
     }
@@ -244,15 +244,15 @@ class CurrentRelayElement(sixNode: SixNode, side: Direction, descriptor: SixNode
 
     override fun getWaila(): Map<String, String> {
         val info: MutableMap<String, String> = HashMap()
-        info[I18N.tr("Position")] = if (switchState) I18N.tr("Closed") else I18N.tr("Open")
-        info[I18N.tr("Current")] = plotAmpere("", aLoad.current)
-        info[I18N.tr("Temperature")] = Utils.plotCelsius("", thermalLoad.temperatureCelsius)
+        info[tr("Position")] = if (switchState) tr("Closed") else tr("Open")
+        info[tr("Current")] = plotAmpere("", aLoad.current)
+        info[tr("Temperature")] = Utils.plotCelsius("", thermalLoad.temperatureCelsius)
         if (Eln.wailaEasyMode) {
-            info[I18N.tr("Default position")] = if (defaultOutput) I18N.tr("Closed") else I18N.tr("Open")
-            info[I18N.tr("Voltages")] =
+            info[tr("Default position")] = if (defaultOutput) tr("Closed") else tr("Open")
+            info[tr("Voltages")] =
                 plotVolt("", aLoad.voltage) + plotVolt(" ", bLoad.voltage)
         }
-        info[I18N.tr("Subsystem Matrix Size")] = renderSubSystemWaila(switchResistor.subSystem)
+        info[tr("Subsystem Matrix Size")] = renderSubSystemWaila(switchResistor.subSystem)
         return info
     }
 
@@ -340,7 +340,7 @@ class CurrentRelayGui(val render: CurrentRelayRender): GuiScreenEln() {
 
     override fun initGui() {
         super.initGui()
-        toggleDefaultOutput = newGuiButton(6, 32 / 2 - 10, 115, I18N.tr("Toggle switch"))
+        toggleDefaultOutput = newGuiButton(6, 32 / 2 - 10, 115, tr("Toggle switch"))
     }
 
     override fun guiObjectEvent(`object`: IGuiObject?) {
@@ -353,7 +353,7 @@ class CurrentRelayGui(val render: CurrentRelayRender): GuiScreenEln() {
     override fun preDraw(f: Float, x: Int, y: Int) {
         super.preDraw(f, x, y)
         if (render.defaultOutput) toggleDefaultOutput.displayString =
-            I18N.tr("Normally closed") else toggleDefaultOutput.displayString = I18N.tr("Normally open")
+            tr("Normally closed") else toggleDefaultOutput.displayString = tr("Normally open")
     }
 
     override fun newHelper(): GuiHelper {

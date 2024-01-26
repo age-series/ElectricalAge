@@ -1,5 +1,6 @@
 package mods.eln.transparentnode.festive
 
+import mods.eln.i18n.I18N.tr
 import mods.eln.misc.Coordinate
 import mods.eln.misc.Direction
 import mods.eln.misc.LRDU
@@ -28,11 +29,11 @@ class FestiveElement(node: TransparentNode, descriptor: TransparentNodeDescripto
     }
 
     override fun thermoMeterString(side: Direction): String {
-        return "Not as warm as it could be"
+        return tr("Not as warm as it could be")
     }
 
     override fun multiMeterString(side: Direction): String {
-        return "It probably works if you apply ~200v to the xmas wireless channel"
+        return tr("It probably works if you apply ~200v to the xmas wireless channel")
     }
 
     override fun getElectricalLoad(side: Direction, lrdu: LRDU): ElectricalLoad? {

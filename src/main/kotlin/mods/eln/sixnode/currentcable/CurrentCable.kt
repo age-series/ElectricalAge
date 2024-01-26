@@ -4,7 +4,7 @@ import mods.eln.Eln
 import mods.eln.cable.CableRender
 import mods.eln.cable.CableRenderDescriptor
 import mods.eln.generic.GenericItemUsingDamageDescriptor.Companion.getDescriptor
-import mods.eln.i18n.I18N
+import mods.eln.i18n.I18N.tr
 import mods.eln.item.BrushDescriptor
 import mods.eln.misc.Direction
 import mods.eln.misc.LRDU
@@ -101,19 +101,19 @@ class CurrentCableDescriptor(
 
     override fun addInformation(itemStack: ItemStack, entityPlayer: EntityPlayer, list: MutableList<String>, par4: Boolean) {
         super.addInformation(itemStack, entityPlayer, list, par4)
-        list.add(I18N.tr("Nominal Ratings:"))
-        list.add("  " + I18N.tr("Voltage: %1\$V", plotValue(electricalNominalVoltage)))
-        list.add("  " + I18N.tr("Current: %1\$A", plotValue(electricalNominalPower / electricalNominalVoltage)))
-        list.add("  " + I18N.tr("Power: %1\$W", plotValue(electricalNominalPower)))
-        list.add("  " + I18N.tr("Serial resistance: %1$\u2126", plotValue(electricalRs * 2)))
+        list.add(tr("Nominal Ratings:"))
+        list.add("  " + tr("Voltage: %1\$V", plotValue(electricalNominalVoltage)))
+        list.add("  " + tr("Current: %1\$A", plotValue(electricalNominalPower / electricalNominalVoltage)))
+        list.add("  " + tr("Power: %1\$W", plotValue(electricalNominalPower)))
+        list.add("  " + tr("Serial resistance: %1$\u2126", plotValue(electricalRs * 2)))
     }
 
     override fun addRealismContext(list: MutableList<String>): RealisticEnum? {
-        list.add(I18N.tr("Has some caveats:"))
-        list.add(I18N.tr("  * Wire resistance is much higher than normal"))
-        list.add(I18N.tr("  * Wire resistance is not impacted by temperature"))
-        list.add(I18N.tr("  * Wire voltage limits are arbitrary values, picked to within reasonable simulator error"))
-        list.add(I18N.tr("  * Wire current limits are arbitrary values, added as a gameplay mechanic"))
+        list.add(tr("Has some caveats:"))
+        list.add(tr("  * Wire resistance is much higher than normal"))
+        list.add(tr("  * Wire resistance is not impacted by temperature"))
+        list.add(tr("  * Wire voltage limits are arbitrary values, picked to within reasonable simulator error"))
+        list.add(tr("  * Wire current limits are arbitrary values, added as a gameplay mechanic"))
         return RealisticEnum.REALISTIC
     }
 
@@ -192,12 +192,12 @@ open class CurrentCableElement(sixNode: SixNode?, side: Direction?, descriptor: 
 
     override fun getWaila(): Map<String, String> {
         val info: MutableMap<String, String> = HashMap()
-        info[I18N.tr("Current")] = plotAmpere("", electricalLoad.current)
-        info[I18N.tr("Temperature")] = plotCelsius("", thermalLoad.temperature)
+        info[tr("Current")] = plotAmpere("", electricalLoad.current)
+        info[tr("Temperature")] = plotCelsius("", thermalLoad.temperature)
         if (Eln.wailaEasyMode) {
-            info[I18N.tr("Voltage")] = plotVolt("", electricalLoad.voltage)
+            info[tr("Voltage")] = plotVolt("", electricalLoad.voltage)
         }
-        info[I18N.tr("Subsystem Matrix Size")] = renderSubSystemWaila(electricalLoad.subSystem)
+        info[tr("Subsystem Matrix Size")] = renderSubSystemWaila(electricalLoad.subSystem)
         return info
     }
 

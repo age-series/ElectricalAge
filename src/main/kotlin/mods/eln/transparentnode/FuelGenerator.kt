@@ -222,10 +222,10 @@ class FuelGeneratorElement(transparentNode: TransparentNode, descriptor_: Transp
     }
 
     override fun getWaila(): Map<String, String> = mutableMapOf(
-        Pair(I18N.tr("State"), if (on) I18N.tr("ON") else I18N.tr("OFF")),
-        Pair(I18N.tr("Fuel level"), Utils.plotPercent("", tankLevel)),
-        Pair(I18N.tr("Generated power"), Utils.plotPower("", powerSource.effectivePower)),
-        Pair(I18N.tr("Voltage"), Utils.plotVolt("", powerSource.voltage))
+        Pair(tr("State"), if (on) tr("ON") else tr("OFF")),
+        Pair(tr("Fuel level"), Utils.plotPercent("", tankLevel)),
+        Pair(tr("Generated power"), Utils.plotPower("", powerSource.effectivePower)),
+        Pair(tr("Voltage"), Utils.plotVolt("", powerSource.voltage))
     )
 }
 

@@ -1,7 +1,7 @@
 package mods.eln.item.electricalitem
 
 import mods.eln.generic.GenericItemUsingDamageDescriptor
-import mods.eln.i18n.I18N
+import mods.eln.i18n.I18N.tr
 import mods.eln.item.electricalinterface.IItemEnergyBattery
 import mods.eln.misc.Utils
 import mods.eln.misc.UtilsClient
@@ -29,10 +29,10 @@ class BatteryItem(name: String, var energyStorage: Double, var chargePower: Doub
 
     override fun addInformation(itemStack: ItemStack?, entityPlayer: EntityPlayer?, list: MutableList<String>, par4: Boolean) {
         super.addInformation(itemStack, entityPlayer, list, par4)
-        list.add(I18N.tr("Charge power: %1\$W", Utils.plotValue(chargePower)))
-        list.add(I18N.tr("Discharge power: %1\$W", Utils.plotValue(dischargePower)))
+        list.add(tr("Charge power: %1\$W", Utils.plotValue(chargePower)))
+        list.add(tr("Discharge power: %1\$W", Utils.plotValue(dischargePower)))
         if (itemStack != null) {
-            list.add(I18N.tr("Stored energy: %1\$J (%2$%)", Utils.plotValue(getEnergy(itemStack)),
+            list.add(tr("Stored energy: %1\$J (%2$%)", Utils.plotValue(getEnergy(itemStack)),
                 (getEnergy(itemStack) / energyStorage * 100).toInt()))
         }
     }

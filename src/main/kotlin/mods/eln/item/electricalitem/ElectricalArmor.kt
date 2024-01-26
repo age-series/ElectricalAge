@@ -1,7 +1,7 @@
 package mods.eln.item.electricalitem
 
 import mods.eln.generic.genericArmorItem
-import mods.eln.i18n.I18N
+import mods.eln.i18n.I18N.tr
 import mods.eln.item.electricalinterface.IItemEnergyBattery
 import mods.eln.misc.Utils
 import mods.eln.wiki.Data
@@ -77,8 +77,8 @@ class ElectricalArmor(
 
     override fun addInformation(itemStack: ItemStack, entityPlayer: EntityPlayer?, list: MutableList<Any?>, par4: Boolean) {
         super.addInformation(itemStack, entityPlayer, list, par4)
-        list.add(I18N.tr("Charge power: %1\$W", chargePower.toInt()))
-        list.add(I18N.tr("Stored energy: %1\$J (%2$%)", getEnergy(itemStack),
+        list.add(tr("Charge power: %1\$W", chargePower.toInt()))
+        list.add(tr("Stored energy: %1\$J (%2$%)", getEnergy(itemStack),
             (getEnergy(itemStack) / energyStorage * 100).toInt()))
         //list.add("Power button is " + (getPowerOn(itemStack) ? "ON" : "OFF"));
     }

@@ -5,7 +5,7 @@ import mods.eln.cable.CableRenderDescriptor
 import mods.eln.gui.GuiHelper
 import mods.eln.gui.GuiScreenEln
 import mods.eln.gui.GuiTextFieldEln
-import mods.eln.i18n.I18N
+import mods.eln.i18n.I18N.tr
 import mods.eln.item.IConfigurable
 import mods.eln.misc.Direction
 import mods.eln.misc.LRDU
@@ -43,11 +43,11 @@ class PowerSourceDescriptor(name: String, obj: Obj3D) : SixNodeDescriptor(name, 
 
     override fun addInformation(itemStack: ItemStack, entityPlayer: EntityPlayer, list: MutableList<String>, par4: Boolean) {
         super.addInformation(itemStack, entityPlayer, list, par4)
-        Collections.addAll<String>(list, *I18N.tr("Provides an ideal power source\nwithout energy or power limitation.").split("\n").toTypedArray())
+        Collections.addAll<String>(list, *tr("Provides an ideal power source\nwithout energy or power limitation.").split("\n").toTypedArray())
         list.add("")
-        list.add(I18N.tr("Internal resistance: %1$\u2126", Utils.plotValue(Eln.instance.lowVoltageCableDescriptor.electricalRs)))
+        list.add(tr("Internal resistance: %1$\u2126", Utils.plotValue(Eln.instance.lowVoltageCableDescriptor.electricalRs)))
         list.add("")
-        list.add(I18N.tr("Creative block."))
+        list.add(tr("Creative block."))
     }
 
     override fun handleRenderType(item: ItemStack, type: IItemRenderer.ItemRenderType): Boolean {
@@ -108,10 +108,10 @@ class PowerSourceElement(sixNode: SixNode, side: Direction, descriptor: SixNodeD
 
     override fun getWaila(): Map<String, String> {
         val info: MutableMap<String, String> = HashMap()
-        info[I18N.tr("Voltage")] = Utils.plotVolt("", electricalLoad.voltage)
-        info[I18N.tr("Current")] = Utils.plotAmpere("", electricalLoad.current)
+        info[tr("Voltage")] = Utils.plotVolt("", electricalLoad.voltage)
+        info[tr("Current")] = Utils.plotAmpere("", electricalLoad.current)
         if (Eln.wailaEasyMode) {
-            info[I18N.tr("Power")] = Utils.plotPower("", electricalLoad.voltage * electricalLoad.current)
+            info[tr("Power")] = Utils.plotPower("", electricalLoad.voltage * electricalLoad.current)
         }
         return info
     }
@@ -181,7 +181,7 @@ class PowerSourceGui(var render: PowerSourceRender) : GuiScreenEln() {
         current = newGuiTextField(6, 6, 50)
         current!!.setText(render.current.toFloat())
         current!!.setObserver(this)
-        current!!.setComment(arrayOf(I18N.tr("Power sourced")))
+        current!!.setComment(arrayOf(tr("Power sourced")))
     }
 
     override fun textFieldNewValue(textField: GuiTextFieldEln, value: String) {

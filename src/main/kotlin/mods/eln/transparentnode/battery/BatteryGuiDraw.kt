@@ -5,7 +5,7 @@ import mods.eln.gui.GuiScreenEln
 import mods.eln.gui.GuiVerticalProgressBar
 import mods.eln.gui.HelperStdContainer
 import mods.eln.gui.IGuiObject
-import mods.eln.i18n.I18N
+import mods.eln.i18n.I18N.tr
 import mods.eln.misc.Utils
 
 class BatteryGuiDraw(var render: BatteryRender) : GuiScreenEln() {
@@ -25,7 +25,7 @@ class BatteryGuiDraw(var render: BatteryRender) : GuiScreenEln() {
     override fun preDraw(f: Float, x: Int, y: Int) {
         super.preDraw(f, x, y)
         energyBar!!.setValue((render.energy / (render.descriptor.electricalStdEnergy * render.life)).toFloat())
-        energyBar!!.setComment(0, I18N.tr("Energy: %1$", Utils.plotPercent("", energyBar!!.value).replace(" ", "")))
+        energyBar!!.setComment(0, Utils.plotPercent(tr("Energy: "), energyBar!!.value).replace(" ", ""))
     }
 
     override fun postDraw(f: Float, x: Int, y: Int) {
@@ -36,29 +36,29 @@ class BatteryGuiDraw(var render: BatteryRender) : GuiScreenEln() {
         val energyMiss = render.descriptor.electricalStdEnergy * render.life - render.energy
         when {
             Math.abs(p) < 5 -> {
-                str1 = I18N.tr("No charge")
+                str1 = tr("No charge")
             }
             p > 0 -> {
-                str1 = I18N.tr("Discharge")
+                str1 = tr("Discharge")
                 str2 = Utils.plotTime("", render.energy / p)
             }
             energyMiss > 0 -> {
-                str1 = I18N.tr("Charge")
+                str1 = tr("Charge")
                 str2 = Utils.plotTime("", -energyMiss / p)
             }
             else -> {
-                str1 = I18N.tr("Charged")
+                str1 = tr("Charged")
             }
         }
         val xDelta = 70
         if (render.descriptor.lifeEnable) {
-            drawString(8, 8, I18N.tr("Life:"))
+            drawString(8, 8, tr("Life:"))
             drawString(xDelta, 8, Utils.plotPercent("", render.life.toDouble()))
         }
-        drawString(8, 17, I18N.tr("Energy:"))
+        drawString(8, 17, tr("Energy:"))
         drawString(xDelta, 17,
             Utils.plotValue(render.energy.toDouble(), "J/") + Utils.plotValue(render.descriptor.electricalStdEnergy * render.life, "J"))
-        if (render.power >= 0) drawString(8, 26, I18N.tr("Power out:")) else drawString(8, 26, I18N.tr("Power in:"))
+        if (render.power >= 0) drawString(8, 26, tr("Power out:")) else drawString(8, 26, tr("Power in:"))
         drawString(xDelta, 26, Utils.plotValue(Math.abs(render.power).toDouble(), "W/") + Utils.plotValue(render.descriptor.electricalStdP, "W"))
         drawString(8, 35, str1)
         drawString(xDelta, 35, str2)

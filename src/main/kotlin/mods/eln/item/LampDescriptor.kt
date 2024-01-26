@@ -1,7 +1,7 @@
 package mods.eln.item
 
 import mods.eln.Eln
-import mods.eln.i18n.I18N
+import mods.eln.i18n.I18N.tr
 import mods.eln.misc.IConfigSharing
 import mods.eln.misc.Utils
 import mods.eln.misc.VoltageLevelColor
@@ -75,22 +75,22 @@ class LampDescriptor(
 
     override fun addInformation(itemStack: ItemStack?, entityPlayer: EntityPlayer?, list: MutableList<String>, par4: Boolean) {
         super.addInformation(itemStack, entityPlayer, list, par4)
-        list.add(I18N.tr("Technology: %1$", type))
-        list.add(I18N.tr("Range: %1$ blocks", (nominalLight * 15).toInt()))
-        list.add(I18N.tr("Power: %1\$W", Utils.plotValue(nominalP)))
-        list.add(I18N.tr("Resistance: %1$\u2126", Utils.plotValue(r)))
-        list.add(I18N.tr("Nominal lifetime: %1\$h", serverNominalLife))
+        list.add(tr("Technology: %1$", type))
+        list.add(tr("Range: %1$ blocks", (nominalLight * 15).toInt()))
+        list.add(tr("Power: %1\$W", Utils.plotValue(nominalP)))
+        list.add(tr("Resistance: %1$\u2126", Utils.plotValue(r)))
+        list.add(tr("Nominal lifetime: %1\$h", serverNominalLife))
         if (itemStack != null) {
             if (!itemStack.hasTagCompound() || !itemStack.tagCompound.hasKey("life")) {
-                list.add(I18N.tr("Condition:") + " " + I18N.tr("New"))
+                list.add(tr("Condition:") + " " + tr("New"))
             } else if (getLifeInTag(itemStack) > 0.5) {
-                list.add(I18N.tr("Condition:") + " " + I18N.tr("Good"))
+                list.add(tr("Condition:") + " " + tr("Good"))
             } else if (getLifeInTag(itemStack) > 0.2) {
-                list.add(I18N.tr("Condition:") + " " + I18N.tr("Used"))
+                list.add(tr("Condition:") + " " + tr("Used"))
             } else if (getLifeInTag(itemStack) > 0.1) {
-                list.add(I18N.tr("Condition:") + " " + I18N.tr("End of life"))
+                list.add(tr("Condition:") + " " + tr("End of life"))
             } else {
-                list.add(I18N.tr("Condition:") + " " + I18N.tr("Bad"))
+                list.add(tr("Condition:") + " " + tr("Bad"))
             }
             if (Eln.debugEnabled)
                 list.add("Life: ${getLifeInTag(itemStack)}")

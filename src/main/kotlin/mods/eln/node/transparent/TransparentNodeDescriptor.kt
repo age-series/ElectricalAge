@@ -2,7 +2,7 @@ package mods.eln.node.transparent
 
 import mods.eln.generic.GenericItemBlockUsingDamageDescriptor
 import mods.eln.ghost.GhostGroup
-import mods.eln.i18n.I18N
+import mods.eln.i18n.I18N.tr
 import mods.eln.misc.Coordinate
 import mods.eln.misc.Direction
 import mods.eln.misc.Obj3D
@@ -89,19 +89,19 @@ open class TransparentNodeDescriptor @JvmOverloads constructor(
             val temp = Coordinate(coord!!)
             temp.move(Direction.YN)
             block = temp.block
-            if (!block.isOpaqueCube && block !is BlockHopper) return I18N.tr("You can't place this block at this side")
+            if (!block.isOpaqueCube && block !is BlockHopper) return tr("You can't place this block at this side")
         }
         if (mustHaveCeiling()) {
             val temp = Coordinate(coord!!)
             temp.move(Direction.YP)
             block = temp.block
-            if (!block.isOpaqueCube) return I18N.tr("You can't place this block at this side")
+            if (!block.isOpaqueCube) return tr("You can't place this block at this side")
         }
         if (mustHaveWallFrontInverse()) {
             val temp = Coordinate(coord!!)
             temp.move(front.inverse)
             block = temp.block
-            if (!block.isOpaqueCube) return I18N.tr("You can't place this block at this side")
+            if (!block.isOpaqueCube) return tr("You can't place this block at this side")
         }
         if (mustHaveWall()) {
             var wall = false
@@ -121,10 +121,10 @@ open class TransparentNodeDescriptor @JvmOverloads constructor(
             temp.move(Direction.ZP)
             block = temp.block
             if (block.isOpaqueCube) wall = true
-            if (!wall) return I18N.tr("You can't place this block at this side")
+            if (!wall) return tr("You can't place this block at this side")
         }
         val ghostGroup = getGhostGroupFront(front)
-        return if (ghostGroup != null && !ghostGroup.canBePloted(coord!!)) I18N.tr("Not enough space for this block") else null
+        return if (ghostGroup != null && !ghostGroup.canBePloted(coord!!)) tr("Not enough space for this block") else null
     }
 
     open fun getFrontFromPlace(side: Direction, entityLiving: EntityLivingBase?): Direction? {

@@ -163,9 +163,9 @@ class NixieTubeElement(node: TransparentNode, _descriptor: TransparentNodeDescri
 
     override fun getWaila(): MutableMap<String, String> {
         var info = HashMap<String, String>()
-        info.put("Digit", curDigit.toString())
-        info.put("Blank", curBlank.toString())
-        info.put("Dots", when(curDots) {
+        info.put(tr("Digit"), curDigit.toString())
+        info.put(tr("Blank"), curBlank.toString())
+        info.put(tr("Dots"), when(curDots) {
             1 -> "low"
             2 -> "high"
             3 -> "both"

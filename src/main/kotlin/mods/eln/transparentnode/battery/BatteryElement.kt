@@ -1,7 +1,7 @@
 package mods.eln.transparentnode.battery
 
 import mods.eln.Eln
-import mods.eln.i18n.I18N
+import mods.eln.i18n.I18N.tr
 import mods.eln.misc.Direction
 import mods.eln.misc.LRDU
 import mods.eln.misc.Utils
@@ -131,15 +131,15 @@ class BatteryElement(transparentNode: TransparentNode, descriptor: TransparentNo
 
     override fun getWaila(): Map<String, String> {
         val info: MutableMap<String, String> = HashMap()
-        info[I18N.tr("Charge")] = Utils.plotPercent("", batteryProcess.charge)
-        info[I18N.tr("Energy")] = Utils.plotEnergy("", batteryProcess.energy)
-        info[I18N.tr("Life")] = Utils.plotPercent("", batteryProcess.life)
+        info[tr("Charge")] = Utils.plotPercent("", batteryProcess.charge)
+        info[tr("Energy")] = Utils.plotEnergy("", batteryProcess.energy)
+        info[tr("Life")] = Utils.plotPercent("", batteryProcess.life)
         if (Eln.wailaEasyMode) {
-            info[I18N.tr("Voltage")] = Utils.plotVolt("", batteryProcess.u)
-            info[I18N.tr("Current")] = Utils.plotAmpere("", batteryProcess.dischargeCurrent)
-            info[I18N.tr("Temperature")] = Utils.plotCelsius("", thermalLoad.temperatureCelsius)
+            info[tr("Voltage")] = Utils.plotVolt("", batteryProcess.u)
+            info[tr("Current")] = Utils.plotAmpere("", batteryProcess.dischargeCurrent)
+            info[tr("Temperature")] = Utils.plotCelsius("", thermalLoad.temperatureCelsius)
         }
-        info[I18N.tr("Subsystem Matrix Size")] = Utils.renderSubSystemWaila(positiveLoad.subSystem)
+        info[tr("Subsystem Matrix Size")] = Utils.renderSubSystemWaila(positiveLoad.subSystem)
         return info
     }
 

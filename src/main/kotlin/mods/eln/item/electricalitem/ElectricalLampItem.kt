@@ -1,6 +1,6 @@
 package mods.eln.item.electricalitem
 
-import mods.eln.i18n.I18N
+import mods.eln.i18n.I18N.tr
 import mods.eln.item.electricalinterface.IItemEnergyBattery
 import mods.eln.misc.Utils
 import mods.eln.misc.UtilsClient
@@ -90,11 +90,11 @@ class ElectricalLampItem(name: String, var lightMin: Int, var rangeMin: Int, dis
 
     override fun addInformation(itemStack: ItemStack?, entityPlayer: EntityPlayer?, list: MutableList<String>, par4: Boolean) {
         super.addInformation(itemStack, entityPlayer, list, par4)
-        list.add(I18N.tr("Discharge power: %1\$W", Utils.plotValue(dischargeMin)))
+        list.add(tr("Discharge power: %1\$W", Utils.plotValue(dischargeMin)))
         if (itemStack != null) {
-            list.add(I18N.tr("Stored Energy: %1\$J (%2$%)", Utils.plotValue(getEnergy(itemStack)),
+            list.add(tr("Stored Energy: %1\$J (%2$%)", Utils.plotValue(getEnergy(itemStack)),
                 (getEnergy(itemStack) / energyStorage * 100).toInt()))
-            list.add(I18N.tr("State:") + " " + if (getLightState(itemStack) != 0) I18N.tr("On") else I18N.tr("Off"))
+            list.add(tr("State:") + " " + if (getLightState(itemStack) != 0) tr("On") else tr("Off"))
         }
     }
 

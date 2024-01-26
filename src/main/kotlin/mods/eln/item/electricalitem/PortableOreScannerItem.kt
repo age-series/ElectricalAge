@@ -2,7 +2,7 @@ package mods.eln.item.electricalitem
 
 import mods.eln.Eln
 import mods.eln.generic.GenericItemUsingDamageDescriptor
-import mods.eln.i18n.I18N
+import mods.eln.i18n.I18N.tr
 import mods.eln.item.electricalinterface.IItemEnergyBattery
 import mods.eln.misc.Obj3D
 import mods.eln.misc.Obj3D.Obj3DPart
@@ -101,9 +101,9 @@ class PortableOreScannerItem(name: String?, private val obj: Obj3D,
 
     override fun addInformation(itemStack: ItemStack?, entityPlayer: EntityPlayer?, list: MutableList<String>, par4: Boolean) {
         super.addInformation(itemStack, entityPlayer, list, par4)
-        list.add(I18N.tr("Discharge power: %1\$W", Utils.plotValue(dischargePower)))
+        list.add(tr("Discharge power: %1\$W", Utils.plotValue(dischargePower)))
         if (itemStack != null) {
-            list.add(I18N.tr("Stored energy: %1\$J (%2$%)", Utils.plotValue(getEnergy(itemStack)),
+            list.add(tr("Stored energy: %1\$J (%2$%)", Utils.plotValue(getEnergy(itemStack)),
                 (getEnergy(itemStack) / energyStorage * 100).toInt()))
         }
     }
