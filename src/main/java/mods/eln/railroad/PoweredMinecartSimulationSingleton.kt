@@ -1,7 +1,6 @@
-package mods.eln.transparentnode.railroad
+package mods.eln.railroad
 
 import mods.eln.Eln
-import mods.eln.entity.carts.EntityElectricMinecart
 import mods.eln.node.transparent.TransparentNodeElement
 import mods.eln.sim.IProcess
 import mods.eln.sim.mna.misc.MnaConst

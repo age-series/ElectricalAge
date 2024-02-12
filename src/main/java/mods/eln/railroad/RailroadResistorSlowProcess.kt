@@ -1,7 +1,6 @@
-package mods.eln.transparentnode.railroad
+package mods.eln.railroad
 
 import mods.eln.Eln
-import mods.eln.entity.carts.EntityElectricMinecart
 import mods.eln.sim.IProcess
 
 class RailroadResistorSlowProcess(val rpi: RailroadPowerInterface, val cart: EntityElectricMinecart, var timeLeft: Double): IProcess {

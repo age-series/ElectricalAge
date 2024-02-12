@@ -1,15 +1,14 @@
-package mods.eln.transparentnode.railroad
+package mods.eln.railroad
 
 import mods.eln.Eln
 import mods.eln.cable.CableRenderDescriptor
-import mods.eln.entity.carts.EntityElectricMinecart
 import mods.eln.i18n.I18N
 import mods.eln.misc.*
 import mods.eln.node.NodeBase
 import mods.eln.node.transparent.*
 import mods.eln.sim.ElectricalConnection
 import mods.eln.sim.ElectricalLoad
-import mods.eln.transparentnode.railroad.PoweredMinecartSimulationSingleton.poweredMinecartSimulationData
+import mods.eln.railroad.PoweredMinecartSimulationSingleton.poweredMinecartSimulationData
 import mods.eln.sim.mna.component.Resistor
 import mods.eln.sim.mna.misc.MnaConst
 import mods.eln.sim.nbt.NbtElectricalLoad

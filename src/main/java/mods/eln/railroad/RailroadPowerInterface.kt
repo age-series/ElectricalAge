@@ -1,6 +1,4 @@
-package mods.eln.transparentnode.railroad
-
-import mods.eln.entity.carts.EntityElectricMinecart
+package mods.eln.railroad
 
 interface RailroadPowerInterface {
     /**

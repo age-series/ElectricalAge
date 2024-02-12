@@ -1,6 +1,5 @@
-package mods.eln.transparentnode.railroad
+package mods.eln.railroad
 
-import mods.eln.entity.carts.EntityElectricMinecart
 import mods.eln.sim.ElectricalConnection
 import mods.eln.sim.ElectricalLoad
 import mods.eln.sim.mna.component.Resistor
