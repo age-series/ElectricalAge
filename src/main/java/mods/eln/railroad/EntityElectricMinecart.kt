@@ -50,9 +50,10 @@ class EntityElectricMinecart(world: World, x: Double, y: Double, z: Double): Ent
             }
 
             if (energyBufferJoules < energyBufferTargetJoules) {
-                PoweredMinecartSimulationSingleton.powerCart(this, locomotiveMaximumResistance, 0.1)
+                val chargeRateInv = energyBufferTargetJoules / (abs(energyBufferTargetJoules - energyBufferJoules) * 2)
+                PoweredMinecartSimulationSingleton.powerCart(this, chargeRateInv * locomotiveMaximumResistance, 0.1)
             } else {
-                PoweredMinecartSimulationSingleton.powerCart(this, MnaConst.highImpedance, 1.0)
+                PoweredMinecartSimulationSingleton.powerCart(this, MnaConst.highImpedance, 0.1)
             }
             energyBufferJoules += PoweredMinecartSimulationSingleton.cartCollectEnergy(this)
         }
