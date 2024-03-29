@@ -23,7 +23,7 @@ class ClientKeyHandler {
     // Note: C is the default wrench key, but it can be changed with the GUI in-game. This is override with the value stored in options.txt
     private val keyboardKeys = listOf(
         ElectricalAgeKey(Keyboard.KEY_C, ServerKeyHandler.WRENCH),
-        ElectricalAgeKey(Keyboard.KEY_W, ServerKeyHandler.WIKI)
+        ElectricalAgeKey(Keyboard.KEY_P, ServerKeyHandler.WIKI)
     )
 
     init {
@@ -45,7 +45,9 @@ class ClientKeyHandler {
         if (entry.lastState != state) {
             entry.lastState = state // Be sure to set the state so that it calls again when key released
 
-            if (entry.name == ServerKeyHandler.WIKI) {
+            if (entry.name == ServerKeyHandler.WIKI && state) {
+                // Only trigger if state = true (ie, when pressed, not when released)
+                // TODO: Add latch feature to allow closing of the UI by pressing again.
                 clientOpenGui(Root(null))
             }
 
