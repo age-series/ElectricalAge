@@ -24,6 +24,7 @@ import java.io.IOException
 import kotlin.jvm.JvmOverloads
 import net.minecraft.server.MinecraftServer
 import cpw.mods.fml.common.FMLCommonHandler
+import mods.eln.ServerKeyHandler
 import net.minecraft.world.WorldServer
 import net.minecraft.entity.item.EntityItem
 import net.minecraft.inventory.IInventory
@@ -173,7 +174,7 @@ abstract class NodeBase {
                 }
                 val act: String
                 var snd = beepError
-                if (entityPlayer.isSneaking || Eln.playerManager[entityPlayer]!!.interactEnable) {
+                if (entityPlayer.isSneaking && ServerKeyHandler.get(ServerKeyHandler.WRENCH)) {
                     if (writeConfigTool(side, equipped.tagCompound, entityPlayer)) snd = beepDownloaded
                     act = "write"
                 } else {

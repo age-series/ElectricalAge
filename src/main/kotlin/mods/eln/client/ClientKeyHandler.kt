@@ -1,88 +1,65 @@
-package mods.eln.client;
+package mods.eln.client
 
-import cpw.mods.fml.client.registry.ClientRegistry;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.common.gameevent.InputEvent.KeyInputEvent;
-import cpw.mods.fml.common.gameevent.TickEvent.ClientTickEvent;
-import cpw.mods.fml.common.gameevent.TickEvent.Phase;
-import mods.eln.Eln;
-import mods.eln.misc.UtilsClient;
-import mods.eln.wiki.Root;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.settings.KeyBinding;
-import net.minecraft.util.StatCollector;
-import org.lwjgl.input.Keyboard;
+import cpw.mods.fml.client.registry.ClientRegistry
+import cpw.mods.fml.common.eventhandler.SubscribeEvent
+import cpw.mods.fml.common.gameevent.InputEvent.KeyInputEvent
+import mods.eln.Eln
+import mods.eln.ServerKeyHandler
+import mods.eln.i18n.I18N.tr
+import mods.eln.misc.Utils
+import mods.eln.misc.UtilsClient.clientOpenGui
+import mods.eln.misc.UtilsClient.sendPacketToServer
+import mods.eln.wiki.Root
+import net.minecraft.client.settings.KeyBinding
+import net.minecraft.util.StatCollector
+import org.lwjgl.input.Keyboard
+import java.io.ByteArrayOutputStream
+import java.io.DataOutputStream
+import java.io.IOException
 
-import java.io.ByteArrayOutputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
-//import mods.eln.wiki.Root;
+data class ElectricalAgeKey(var defaultKeybind: Int, val name: String, var lastState: Boolean = false, var binding: KeyBinding? = null)
 
-public class ClientKeyHandler {
+class ClientKeyHandler {
+    // Note: C is the default wrench key, but it can be changed with the GUI in-game. This is override with the value stored in options.txt
+    private val keyboardKeys = listOf(
+        ElectricalAgeKey(Keyboard.KEY_C, ServerKeyHandler.WRENCH),
+        ElectricalAgeKey(Keyboard.KEY_W, ServerKeyHandler.WIKI)
+    )
 
-    static public final int openWikiId = 0;
-    static public final int wrenchId = 1;
-    static final String openWiki = "Open Wiki";
-    static final String wrench = "Wrench";
-    private static final int[] keyValues = {Keyboard.KEY_X, Keyboard.KEY_C};
-    private static final String[] desc = {openWiki, wrench};
-    public static final KeyBinding[] keys = new KeyBinding[desc.length];
-
-    boolean[] states = new boolean[desc.length];
-
-    Minecraft mc;
-
-    public ClientKeyHandler() {
-        mc = Minecraft.getMinecraft();
-
-        for (int i = 0; i < desc.length; ++i) {
-            if (i != 3)
-                states[i] = false;
-            keys[i] = new KeyBinding(desc[i], keyValues[i], StatCollector.translateToLocal("ElectricalAge"));
-            ClientRegistry.registerKeyBinding(keys[i]);
+    init {
+        keyboardKeys.forEach {
+            it.binding = KeyBinding(it.name, it.defaultKeybind, StatCollector.translateToLocal("ElectricalAge"))
+            ClientRegistry.registerKeyBinding(it.binding)
         }
     }
 
     @SubscribeEvent
-    public void onKeyInput(KeyInputEvent event) {
-        for (int i = 0; i < desc.length; ++i) {
-            boolean s = keys[i].getIsKeyPressed();
-            if (s == false) continue;
-            if (states[i])
-                setState(i, false);
-            setState(i, true);
+    fun onKeyInput(event: KeyInputEvent?) {
+        keyboardKeys.forEach {
+            setState(it.name, it.binding?.isKeyPressed ?: return@forEach)
         }
     }
 
-    @SubscribeEvent
-    public void tick(ClientTickEvent event) {
-        if (event.phase != Phase.START) return;
-        for (int i = 0; i < desc.length; ++i) {
-            boolean s = keys[i].getIsKeyPressed();
-            if (s == false && states[i] == true) {
-                setState(i, false);
+    fun setState(name: String, state: Boolean) {
+        val entry = keyboardKeys.firstOrNull { it.name == name }?: return
+        if (entry.lastState != state) {
+            entry.lastState = state // Be sure to set the state so that it calls again when key released
+
+            if (entry.name == ServerKeyHandler.WIKI) {
+                clientOpenGui(Root(null))
             }
+
+            Utils.println("Sending a client key event to server: ${entry.name} is $state")
+            val bos = ByteArrayOutputStream(64)
+            val stream = DataOutputStream(bos)
+            try {
+                stream.writeByte(Eln.packetPlayerKey.toInt())
+                stream.writeUTF(entry.name)
+                stream.writeBoolean(state)
+            } catch (e: IOException) {
+                e.printStackTrace()
+            }
+            sendPacketToServer(bos)
         }
-    }
-
-    void setState(int id, boolean state) {
-        states[id] = state;
-
-        if (id == openWikiId) {
-            UtilsClient.clientOpenGui(new Root(null));
-        }
-
-        ByteArrayOutputStream bos = new ByteArrayOutputStream(64);
-        DataOutputStream stream = new DataOutputStream(bos);
-
-        try {
-            stream.writeByte(Eln.packetPlayerKey);
-            stream.writeByte(id);
-            stream.writeBoolean(state);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        UtilsClient.sendPacketToServer(bos);
     }
 }

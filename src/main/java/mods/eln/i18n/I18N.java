@@ -2,6 +2,7 @@ package mods.eln.i18n;
 
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.registry.LanguageRegistry;
+import mods.eln.misc.Utils;
 
 /**
  * Internationalization and localization helper class.
@@ -50,7 +51,12 @@ public class I18N {
      */
     public static String tr(final String text, Object... objects) {
         // Try to find the translation for the string using forge API.
-        String translation = languageRegistry.getStringLocalization(encodeLangKey(text));
+        String translation = null;
+        try {
+            translation = languageRegistry.getStringLocalization(encodeLangKey(text));
+        } catch (NullPointerException ignored) {
+            Utils.println("Unable to translate string: " + text);
+        }
 
         // If no translation was found, just use the original text.
         if (translation == null || "".equals(translation)) {

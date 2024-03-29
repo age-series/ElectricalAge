@@ -149,7 +149,6 @@ public class Eln {
     public static SaveConfig saveConfig;
     public static GhostManager ghostManager;
     public static GhostManagerNbt ghostManagerNbt;
-    public static PlayerManager playerManager;
     public static ModbusTcpServer modbusServer;
     public static NodeManagerNbt nodeManagerNbt;
     public static Simulator simulator = null;
@@ -369,8 +368,6 @@ Side.SERVER);
         ghostManager = new GhostManager("caca2");
         delayedTask = new DelayedTaskManager();
 
-        playerManager = new PlayerManager();
-
         oreRegenerate = new OreRegenerate();
         nodeServer = new NodeServer();
         clientLiveDataManager = new LiveDataManager();
@@ -485,7 +482,6 @@ Side.SERVER);
         NodeBlockEntity.clientList.clear();
         TeleporterElement.teleporterList.clear();
         IWirelessSignalSpot.spots.clear();
-        playerManager.clear();
         clientLiveDataManager.stop();
         nodeManager.clear();
         ghostManager.clear();
@@ -509,7 +505,6 @@ Side.SERVER);
         LightBlockEntity.observers.clear();
         WirelessSignalTxElement.channelMap.clear();
         LampSupplyElement.channelMap.clear();
-        playerManager.clear();
         clientLiveDataManager.start();
         simulator.init();
         simulator.addSlowProcess(wind = new WindProcess());

@@ -1,6 +1,7 @@
 package mods.eln.node.six
 
 import mods.eln.Eln
+import mods.eln.ServerKeyHandler
 import mods.eln.item.IConfigurable
 import mods.eln.misc.Direction
 import mods.eln.misc.Direction.Companion.fromInt
@@ -412,11 +413,11 @@ class SixNode : Node() {
             val stack = entityPlayer.currentEquippedItem
             var b = Blocks.air
             if (stack != null) b = Block.getBlockFromItem(stack.item)
-            var accepted = false
-            if (Eln.playerManager[entityPlayer]!!.interactEnable && stack != null) {
+            var isWrenchReplacingBlock = false
+            if (ServerKeyHandler.get(ServerKeyHandler.WRENCH) && stack != null) {
                 for (a in sixNodeCacheList) {
                     if (a.accept(stack)) {
-                        accepted = true
+                        isWrenchReplacingBlock = true
                         sixNodeCacheBlock = b
                         sixNodeCacheBlockMeta = a.getMeta(stack).toByte()
                         break
@@ -424,8 +425,7 @@ class SixNode : Node() {
                 }
             }
 
-            if (accepted) {
-                println("ACACAC")
+            if (isWrenchReplacingBlock) {
                 needPublish = true
                 if (!isCreative((entityPlayer as EntityPlayerMP))) entityPlayer.inventory.decrStackSize(entityPlayer.inventory.currentItem, 1)
 

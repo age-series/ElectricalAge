@@ -16,6 +16,7 @@ import org.lwjgl.opengl.GL11
 import net.minecraft.world.World
 import cpw.mods.fml.common.FMLCommonHandler
 import cpw.mods.fml.relauncher.Side
+import mods.eln.ServerKeyHandler
 import net.minecraftforge.common.DimensionManager
 import net.minecraft.entity.item.EntityItem
 import java.io.IOException
@@ -1236,7 +1237,7 @@ object Utils {
     @JvmStatic
     fun isPlayerUsingWrench(player: EntityPlayer?): Boolean {
         if (player == null) return false
-        if (Eln.playerManager[player]!!.interactEnable) return true
+        if (ServerKeyHandler.get(ServerKeyHandler.WRENCH)) return true
         val stack = player.inventory.getCurrentItem() ?: return false
         return isWrench(stack)
     }
