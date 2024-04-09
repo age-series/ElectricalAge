@@ -122,8 +122,7 @@ object CraftingRecipes {
         craftBrush()
         val cal: Calendar = Calendar.getInstance()
         val month: Int = cal.get(Calendar.MONTH) + 1
-        val day: Int = cal.get(Calendar.DAY_OF_MONTH)
-        if(month == 12 && day == 25) {
+        if(month == 12 ) {
             recipeChristmas()
         }
 
