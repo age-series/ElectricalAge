@@ -174,7 +174,7 @@ abstract class NodeBase {
                 }
                 val act: String
                 var snd = beepError
-                if (entityPlayer.isSneaking && ServerKeyHandler.get(ServerKeyHandler.WRENCH)) {
+                if (entityPlayer.isSneaking) {
                     if (writeConfigTool(side, equipped.tagCompound, entityPlayer)) snd = beepDownloaded
                     act = "write"
                 } else {
