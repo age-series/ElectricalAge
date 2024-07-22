@@ -431,7 +431,7 @@ Player_crankable_shaft=Player crankable shaft
 Can_rotate_slowly=Can rotate slowly
 
 # ./src/main/java/mods/eln/mechanical/Generator.kt
-Converts_mechanical_energy_into_electricity,_or_(badly)_vice_versa.=Converts_mechanical_energy_into_electricity,_or_(badly)_vice_versa.
+Converts_mechanical_energy_into_electricity,_or_(badly)_vice_versa.=Converts mechanical energy into electricity, or (badly) vice versa.
 __Voltage_out\:_=Voltage out:
 __Rads\:_%1$=  Rads: %1$
 
