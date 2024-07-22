@@ -15,7 +15,8 @@ object Version {
     /**
      * SemVer Version
      */
-    val SEMVER = Semver.parse(Tags.VERSION.replace(".dirty", ""))
+    val SEMVER = Semver.parse(Tags.VERSION.replace(".dirty", "+dirty"))?:
+        Semver.parse("0.0.0-${Tags.VERSION}".replace(".dirty", "+dirty"))
 
     /**
      * Major version code.
