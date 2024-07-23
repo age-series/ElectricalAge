@@ -21,6 +21,9 @@ import mods.eln.misc.Utils.coalEnergyReference
 import mods.eln.misc.Utils.printFunction
 import mods.eln.sim.ThermalLoadInitializer
 import mods.eln.sim.ThermalLoadInitializerByPowerDrop
+import mods.eln.sixnode.lampsocket.LampSocketDescriptor
+import mods.eln.sixnode.lampsocket.LampSocketStandardObjRender
+import mods.eln.sixnode.lampsocket.LampSocketType
 import mods.eln.sound.SoundCommand
 import mods.eln.transparentnode.*
 import mods.eln.transparentnode.autominer.AutoMinerDescriptor
@@ -73,7 +76,7 @@ object TransparentNodeRegistration {
         registerTransparentNodeMisc(65)
         registerTurret(66)
         registerFuelGenerator(67)
-        //registerFloodlight(68);
+        registerFloodlight(68)
         registerFestive(69)
         registerFab(70)
         registerLargeRheostat() // 96, but from the wrong side.
@@ -114,26 +117,25 @@ object TransparentNodeRegistration {
         }
     }
 
-    /*
-        private void registerFloodlight(int id) {
-            int subId;
-            String name;
-            {
-                subId = 0;
-                name = TR_NAME(Type.NONE, "Basic Floodlight");
-                BasicFloodlightDescriptor desc = new BasicFloodlightDescriptor(name, obj.getObj("Floodlight"));
-                transparentNodeItem.addDescriptor(subId + (id << 6), desc);
-            }
-            {
-                subId = 1;
-                name = TR_NAME(Type.NONE, "Motorized Floodlight");
-                MotorizedFloodlightDescriptor desc = new MotorizedFloodlightDescriptor(name, obj.getObj
-                ("FloodlightMotor"));
-                transparentNodeItem.addDescriptor(subId + (id << 6), desc);
-            }
-        }
-    */
+    private fun registerFloodlight(id: Int) {
+        var subId: Int
+        var name: String
 
+        run {
+            subId = 0
+            name = TR_NAME(I18N.Type.NONE, "Basic Floodlight")
+            val desc = BasicFloodlightDescriptor(name, Eln.obj.getObj("Floodlight"))
+            transparentNodeItem.addDescriptor(subId + (id shl 6), desc)
+        }
+
+        run {
+            subId = 1
+            name = TR_NAME(I18N.Type.NONE, "Motorized Floodlight")
+            val desc = MotorizedFloodlightDescriptor(name, Eln.obj.getObj("FloodlightMotor"))
+            transparentNodeItem.addDescriptor(subId + (id shl 6), desc)
+        }
+
+    }
 
     private fun registerLargeRheostat() {
         val id = 96
