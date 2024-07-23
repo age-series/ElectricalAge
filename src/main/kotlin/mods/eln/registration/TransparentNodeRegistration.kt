@@ -21,9 +21,6 @@ import mods.eln.misc.Utils.coalEnergyReference
 import mods.eln.misc.Utils.printFunction
 import mods.eln.sim.ThermalLoadInitializer
 import mods.eln.sim.ThermalLoadInitializerByPowerDrop
-import mods.eln.sixnode.lampsocket.LampSocketDescriptor
-import mods.eln.sixnode.lampsocket.LampSocketStandardObjRender
-import mods.eln.sixnode.lampsocket.LampSocketType
 import mods.eln.sound.SoundCommand
 import mods.eln.transparentnode.*
 import mods.eln.transparentnode.autominer.AutoMinerDescriptor
