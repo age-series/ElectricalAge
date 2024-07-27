@@ -144,7 +144,7 @@ class StreetLightWallRender(tileEntity: TransparentNodeEntity, transparentNodede
     }
 
     override fun draw() {
-        (transparentNodedescriptor as StreetLightWallDescriptor).draw(front!!, powered)
+        (transparentNodeDescriptor as StreetLightWallDescriptor).draw(front!!, powered)
     }
 
     override fun cameraDrawOptimisation(): Boolean {

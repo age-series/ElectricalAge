@@ -63,7 +63,7 @@ class StringLightsRender(tileEntity: TransparentNodeEntity, transparentNodedescr
     }
 
     override fun draw() {
-        (transparentNodedescriptor as StringLightsDescriptor).draw(front!!, powered)
+        (transparentNodeDescriptor as StringLightsDescriptor).draw(front!!, powered)
     }
 }
 
