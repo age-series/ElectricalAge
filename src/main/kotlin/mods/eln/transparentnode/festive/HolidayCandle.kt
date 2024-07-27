@@ -54,6 +54,6 @@ class HolidayCandleRender(tileEntity: TransparentNodeEntity, transparentNodedesc
     }
 
     override fun draw() {
-        (transparentNodedescriptor as HolidayCandleDescriptor).draw(front!!, powered)
+        (transparentNodeDescriptor as HolidayCandleDescriptor).draw(front!!, powered)
     }
 }
