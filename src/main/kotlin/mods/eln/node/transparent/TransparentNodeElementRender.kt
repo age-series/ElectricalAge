@@ -28,7 +28,7 @@ import java.io.DataInputStream
 import java.io.DataOutputStream
 import java.io.IOException
 
-abstract class TransparentNodeElementRender(var tileEntity: TransparentNodeEntity, var transparentNodedescriptor: TransparentNodeDescriptor) {
+abstract class TransparentNodeElementRender(var tileEntity: TransparentNodeEntity, var transparentNodeDescriptor: TransparentNodeDescriptor) {
     @JvmField
     var front: Direction? = null
     var grounded = false

@@ -68,7 +68,7 @@ class ChristmasTreeRender(tileEntity: TransparentNodeEntity, transparentNodedesc
     }
 
     override fun draw() {
-        (transparentNodedescriptor as ChristmasTreeDescriptor).draw(front!!, x, powered)
+        (transparentNodeDescriptor as ChristmasTreeDescriptor).draw(front!!, x, powered)
     }
 
     override fun refresh(deltaT: Float) {
