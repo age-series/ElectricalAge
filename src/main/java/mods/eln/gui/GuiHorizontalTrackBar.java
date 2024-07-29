@@ -6,7 +6,7 @@ import net.minecraft.client.gui.Gui;
 
 import java.util.ArrayList;
 
-public class GuiVerticalTrackBar extends Gui implements IGuiObject {
+public class GuiHorizontalTrackBar extends Gui implements IGuiObject {
 
     public boolean sliderDrawEnable = true;
     public int width, height, xPosition, yPosition;
@@ -39,7 +39,7 @@ public class GuiVerticalTrackBar extends Gui implements IGuiObject {
         this.observer = observer;
     }
 
-    public GuiVerticalTrackBar(int xPosition, int yPosition, int width, int height, GuiHelper helper) {
+    public GuiHorizontalTrackBar(int xPosition, int yPosition, int width, int height, GuiHelper helper) {
         this.width = width;
         this.height = height;
         this.xPosition = xPosition;
