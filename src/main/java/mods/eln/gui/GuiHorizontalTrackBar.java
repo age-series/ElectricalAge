@@ -76,7 +76,7 @@ public class GuiHorizontalTrackBar extends Gui implements IGuiObject {
     }
 
     public float getValue() {
-        return min + (max - min) * stepId / stepIdMax;
+        return max + (min - max) * stepId / stepIdMax;
     }
 
     public boolean mouseClicked(int x, int y, int which) {
@@ -112,7 +112,7 @@ public class GuiHorizontalTrackBar extends Gui implements IGuiObject {
 
     public void mouseMove(int x, int y) {
         if (drag) {
-            stepId = (int) ((1.0 - (double) (y - yPosition) / height + 1.0 / stepIdMax / 2.0) * stepIdMax);
+            stepId = (int) ((1.0 - (double) (x - xPosition) / width + 1.0 / stepIdMax / 2.0) * stepIdMax);
 
             stepLimit();
         }
@@ -123,31 +123,31 @@ public class GuiHorizontalTrackBar extends Gui implements IGuiObject {
     }
 
     public int getCursorPosition() {
-        return (int) (yPosition + height - 1.0 * stepId / stepIdMax * height);
+        return (int) (xPosition + width - 1.0 * stepId / stepIdMax * width);
     }
 
     public int getCursorPositionForValue(float value) {
         value -= min;
-        int yCalc = (int) (yPosition + height - (value / (max - min)) * height);
-        if (yCalc < yPosition) yCalc = yPosition;
-        if (yCalc > yPosition + height) yCalc = yPosition + height;
-        return yCalc;
+        int xCalc = (int) (xPosition + width - (value / (max - min)) * width);
+        if (xCalc < xPosition) xCalc = xPosition;
+        if (xCalc > xPosition + width) xCalc = xPosition + width;
+        return xCalc;
     }
 
     public void drawBase(float par1, int x, int y) {
         if (!visible) return;
 
-        drawRect(xPosition, yPosition - 2, xPosition + width, yPosition + height + 2, 0xFF404040);
-        drawRect(xPosition + 1, yPosition - 1, xPosition + width - 1, yPosition + height + 1, 0xFF606060);
-        drawRect(xPosition + 2, yPosition, xPosition + width - 2, yPosition + height, 0xFF808080);
+        drawRect(xPosition - 2, yPosition, xPosition + width + 2, yPosition + height, 0xFF404040);
+        drawRect(xPosition - 1, yPosition + 1, xPosition + width + 1, yPosition + height - 1, 0xFF606060);
+        drawRect(xPosition, yPosition + 2, xPosition + width, yPosition + height - 2, 0xFF808080);
     }
 
     public void drawBare(float par1, int x, int y) {
         if (!visible) return;
         if (!sliderDrawEnable) return;
 
-        drawRect(xPosition - 2, getCursorPosition() - 2, xPosition + width + 2, getCursorPosition() + 2, 0xFF202020);
-        drawRect(xPosition - 1, getCursorPosition() - 1, xPosition + width + 1, getCursorPosition() + 1, 0xFF606060);
+        drawRect(getCursorPosition() + 2, yPosition + height + 2, getCursorPosition() - 2, yPosition - 2, 0xFF202020);
+        drawRect(getCursorPosition() + 1, yPosition + height + 1, getCursorPosition() - 1, yPosition - 1, 0xFF606060);
     }
 
     ArrayList<String> comment = new ArrayList<String>();
