@@ -19,6 +19,11 @@ public class GuiHelpText extends Gui implements IGuiObject {
     }
 
     @Override
+    public int getXMax() {
+        return xPosition + width;
+    }
+
+    @Override
     public int getYMax() {
         return yPosition + height;
     }

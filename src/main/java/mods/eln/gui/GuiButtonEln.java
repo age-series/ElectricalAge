@@ -33,6 +33,11 @@ public class GuiButtonEln extends GuiButton implements IGuiObject {
     }
 
     @Override
+    public int getXMax() {
+        return xPosition + width;
+    }
+
+    @Override
     public int getYMax() {
         return yPosition + height;
     }
