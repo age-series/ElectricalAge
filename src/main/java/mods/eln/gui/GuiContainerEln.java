@@ -61,12 +61,6 @@ public abstract class GuiContainerEln extends GuiContainer implements IGuiObject
         return o;
     }
 
-    public GuiHorizontalTrackBar newGuiHorizontalTrackBar(int x, int y, int width, int height) {
-        GuiHorizontalTrackBar o = helper.newGuiHorizontalTrackBar(x, y, width, height);
-        o.setObserver(this);
-        return o;
-    }
-
     public GuiVerticalTrackBar newGuiVerticalTrackBar(int x, int y, int width, int height) {
         GuiVerticalTrackBar o = helper.newGuiVerticalTrackBar(x, y, width, height);
         o.setObserver(this);
