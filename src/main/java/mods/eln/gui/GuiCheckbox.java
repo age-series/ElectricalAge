@@ -54,11 +54,6 @@ public class GuiCheckbox extends Gui implements IGuiObject {
     }
 
     @Override
-    public int getXMax() {
-        return 0;
-    }
-
-    @Override
     public int getYMax() {
         return 0;
     }

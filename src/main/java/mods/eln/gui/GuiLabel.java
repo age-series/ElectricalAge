@@ -52,11 +52,6 @@ public class GuiLabel extends Gui implements IGuiObject {
     }
 
     @Override
-    public int getXMax() {
-        return xPos + 10;
-    } // TODO: what is the x-constant equivalent of the y-constant?
-
-    @Override
     public int getYMax() {
         return yPos + 10;
     }

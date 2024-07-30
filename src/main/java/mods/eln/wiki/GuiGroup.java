@@ -164,12 +164,6 @@ public class GuiGroup extends Gui implements IGuiObject, IGuiObjectObserver {
     }
 
     @Override
-    public int getXMax() {
-
-        return posY + w;
-    }
-
-    @Override
     public int getYMax() {
 
         return posY + h;
