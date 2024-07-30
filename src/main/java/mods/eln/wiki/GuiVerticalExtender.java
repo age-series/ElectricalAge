@@ -200,12 +200,6 @@ public class GuiVerticalExtender extends Gui implements IGuiObject, IGuiObjectOb
     }
 
     @Override
-    public int getXMax() {
-        
-        return posX + w;
-    }
-
-    @Override
     public int getYMax() {
 
         return posY + h;

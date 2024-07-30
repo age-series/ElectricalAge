@@ -20,7 +20,5 @@ public interface IGuiObject {
 
     public void translate(int x, int y);
 
-    public int getXMax();
-
     public int getYMax();
 }

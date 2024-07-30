@@ -145,12 +145,6 @@ public class GuiItemStack extends Gui implements IGuiObject {
     }
 
     @Override
-    public int getXMax() {
-
-        return posX + w;
-    }
-
-    @Override
     public int getYMax() {
 
         return posY + h;
