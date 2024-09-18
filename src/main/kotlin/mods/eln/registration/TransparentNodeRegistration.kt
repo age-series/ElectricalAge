@@ -33,6 +33,7 @@ import mods.eln.transparentnode.electricalmachine.*
 import mods.eln.transparentnode.festive.ChristmasTreeDescriptor
 import mods.eln.transparentnode.festive.HolidayCandleDescriptor
 import mods.eln.transparentnode.festive.StringLightsDescriptor
+import mods.eln.transparentnode.floodlight.FloodlightDescriptor
 import mods.eln.transparentnode.heatfurnace.HeatFurnaceDescriptor
 import mods.eln.transparentnode.powercapacitor.PowerCapacitorDescriptor
 import mods.eln.transparentnode.powerinductor.PowerInductorDescriptor
@@ -121,14 +122,14 @@ object TransparentNodeRegistration {
         run {
             subId = 0
             name = TR_NAME(I18N.Type.NONE, "Basic Floodlight")
-            val desc = BasicFloodlightDescriptor(name, Eln.obj.getObj("Floodlight"))
+            val desc = FloodlightDescriptor(name, Eln.obj.getObj("Floodlight"), false)
             transparentNodeItem.addDescriptor(subId + (id shl 6), desc)
         }
 
         run {
             subId = 1
             name = TR_NAME(I18N.Type.NONE, "Motorized Floodlight")
-            val desc = MotorizedFloodlightDescriptor(name, Eln.obj.getObj("FloodlightMotor"))
+            val desc = FloodlightDescriptor(name, Eln.obj.getObj("FloodlightMotor"), true)
             transparentNodeItem.addDescriptor(subId + (id shl 6), desc)
         }
 
