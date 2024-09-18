@@ -96,6 +96,7 @@ Code/models:
 - **meelock** (typo fix)
 - **Sukasa** (code enhancement)
 - **DrummingFish** (GUI text parsing, cleaning/refactoring, some tweaks)
+- **TheBuilderBoy76** (implementing new features)
 
 Languages:
 
