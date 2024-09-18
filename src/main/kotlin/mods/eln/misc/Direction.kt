@@ -496,6 +496,17 @@ enum class Direction(var int: Int) {
         }
     }
 
+    fun toHybridNodeDirection(): HybridNodeDirection {
+        return when (this) {
+            XN -> HybridNodeDirection.XN
+            XP -> HybridNodeDirection.XP
+            YN -> HybridNodeDirection.YN
+            YP -> HybridNodeDirection.YP
+            ZN -> HybridNodeDirection.ZN
+            ZP -> HybridNodeDirection.ZP
+        }
+    }
+
     companion object {
         val intToDir = arrayOf(XN, XP, YN, YP, ZN, ZP)
         val all = arrayOf(XN, XP, YN, YP, ZN, ZP)
