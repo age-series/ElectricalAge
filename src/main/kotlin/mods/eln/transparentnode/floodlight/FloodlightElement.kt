@@ -4,10 +4,7 @@ import mods.eln.Eln
 import mods.eln.i18n.I18N
 import mods.eln.item.ConfigCopyToolDescriptor
 import mods.eln.item.LampDescriptor
-import mods.eln.misc.Direction
-import mods.eln.misc.HybridNodeDirection
-import mods.eln.misc.LRDU
-import mods.eln.misc.Utils
+import mods.eln.misc.*
 import mods.eln.misc.Utils.getItemObject
 import mods.eln.misc.Utils.plotAmpere
 import mods.eln.misc.Utils.plotPower
@@ -189,7 +186,7 @@ class FloodlightElement(transparentNode: TransparentNode, transparentNodeDescrip
     }
 
     override fun getElectricalLoad(side: Direction, lrdu: LRDU): ElectricalLoad? {
-        if (createMaskFromLRDU(lrdu)) return null
+        if (lrdu.toHybridNodeLRDU().normalizeLRDU(rotationAxis, side) != HybridNodeLRDU.Down) return null
 
         return if (motorized) when (side.toHybridNodeDirection()) {
             blockFacing.back() -> electricalLoad
@@ -208,9 +205,7 @@ class FloodlightElement(transparentNode: TransparentNode, transparentNodeDescrip
     }
 
     override fun getConnectionMask(side: Direction, lrdu: LRDU): Int {
-        println("rotationAxis: $rotationAxis, facing: $blockFacing, inSide: $side, lrdu: $lrdu")
-
-        if (createMaskFromLRDU(lrdu)) return 0
+        if (lrdu.toHybridNodeLRDU().normalizeLRDU(rotationAxis, side) != HybridNodeLRDU.Down) return 0
 
         return if (motorized) when (side.toHybridNodeDirection()) {
             blockFacing.back() -> NodeBase.maskElectricalPower
@@ -240,71 +235,6 @@ class FloodlightElement(transparentNode: TransparentNode, transparentNodeDescrip
         }
         catch (e: IOException) {
             e.printStackTrace()
-        }
-    }
-
-    private fun createMaskFromLRDU(lrdu: LRDU): Boolean {
-        return when (rotationAxis) {
-            HybridNodeDirection.XN -> {
-                when (blockFacing) {
-                    HybridNodeDirection.XN -> TODO("unused - impossible facing direction")
-                    HybridNodeDirection.XP -> TODO("unused - impossible facing direction")
-                    HybridNodeDirection.YN -> lrdu != LRDU.Up
-                    HybridNodeDirection.YP -> lrdu != LRDU.Up
-                    HybridNodeDirection.ZN -> lrdu != LRDU.Right
-                    HybridNodeDirection.ZP -> lrdu != LRDU.Left
-                }
-            }
-            HybridNodeDirection.XP -> {
-                when (blockFacing) {
-                    HybridNodeDirection.XN -> TODO("unused - impossible facing direction")
-                    HybridNodeDirection.XP -> TODO("unused - impossible facing direction")
-                    HybridNodeDirection.YN -> lrdu != LRDU.Down
-                    HybridNodeDirection.YP -> lrdu != LRDU.Down
-                    HybridNodeDirection.ZN -> lrdu != LRDU.Left
-                    HybridNodeDirection.ZP -> lrdu != LRDU.Right
-                }
-            }
-            HybridNodeDirection.YN -> {
-                when (blockFacing) {
-                    HybridNodeDirection.XN -> lrdu != LRDU.Up
-                    HybridNodeDirection.XP -> lrdu != LRDU.Up
-                    HybridNodeDirection.YN -> TODO("unused - impossible facing direction")
-                    HybridNodeDirection.YP -> TODO("unused - impossible facing direction")
-                    HybridNodeDirection.ZN -> lrdu != LRDU.Up
-                    HybridNodeDirection.ZP -> lrdu != LRDU.Up
-                }
-            }
-            HybridNodeDirection.YP -> {
-                when (blockFacing) {
-                    HybridNodeDirection.XN -> lrdu != LRDU.Down
-                    HybridNodeDirection.XP -> lrdu != LRDU.Down
-                    HybridNodeDirection.YN -> TODO("unused - impossible facing direction")
-                    HybridNodeDirection.YP -> TODO("unused - impossible facing direction")
-                    HybridNodeDirection.ZN -> lrdu != LRDU.Down
-                    HybridNodeDirection.ZP -> lrdu != LRDU.Down
-                }
-            }
-            HybridNodeDirection.ZN -> {
-                when (blockFacing) {
-                    HybridNodeDirection.XN -> lrdu != LRDU.Left
-                    HybridNodeDirection.XP -> lrdu != LRDU.Right
-                    HybridNodeDirection.YN -> lrdu != LRDU.Right
-                    HybridNodeDirection.YP -> lrdu != LRDU.Left
-                    HybridNodeDirection.ZN -> TODO("unused - impossible facing direction")
-                    HybridNodeDirection.ZP -> TODO("unused - impossible facing direction")
-                }
-            }
-            HybridNodeDirection.ZP -> {
-                when (blockFacing) {
-                    HybridNodeDirection.XN -> lrdu != LRDU.Right
-                    HybridNodeDirection.XP -> lrdu != LRDU.Left
-                    HybridNodeDirection.YN -> lrdu != LRDU.Left
-                    HybridNodeDirection.YP -> lrdu != LRDU.Right
-                    HybridNodeDirection.ZN -> TODO("unused - impossible facing direction")
-                    HybridNodeDirection.ZP -> TODO("unused - impossible facing direction")
-                }
-            }
         }
     }
 
