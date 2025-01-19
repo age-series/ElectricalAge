@@ -164,6 +164,15 @@ enum class LRDU(var dir: Int) {
         }
     }
 
+    fun toHybridNodeLRDU(): HybridNodeLRDU {
+        return when (this) {
+            Left -> HybridNodeLRDU.Left
+            Right -> HybridNodeLRDU.Right
+            Down -> HybridNodeLRDU.Down
+            Up -> HybridNodeLRDU.Up
+        }
+    }
+
     companion object {
         @JvmStatic
         fun fromInt(value: Int): LRDU {
