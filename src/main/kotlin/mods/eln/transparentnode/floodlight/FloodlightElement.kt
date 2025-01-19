@@ -259,7 +259,7 @@ class FloodlightElement(transparentNode: TransparentNode, transparentNodeDescrip
     override fun getWaila(): Map<String, String> {
         val info: MutableMap<String, String> = LinkedHashMap()
 
-        info[I18N.tr("Power consumption")] = plotPower("", electricalLoad.voltage * electricalLoad.current)
+        info[I18N.tr("Power Consumption")] = plotPower("", electricalLoad.voltage * electricalLoad.current)
 
         val lamp1Stack = inventory.getStackInSlot(FloodlightContainer.LAMP_SLOT_1_ID)
         val lamp2Stack = inventory.getStackInSlot(FloodlightContainer.LAMP_SLOT_2_ID)

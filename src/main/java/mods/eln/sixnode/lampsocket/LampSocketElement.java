@@ -233,7 +233,7 @@ public class LampSocketElement extends SixNodeElement implements IConfigurable {
             }
             info.put(I18N.tr("Voltage"), Utils.plotVolt("", positiveLoad.getVoltage()));
             if (lampStack != null && lampDescriptor != null) {
-                info.put(I18N.tr("Life Left: "), Utils.plotValue(lampDescriptor.getLifeInTag(lampStack)) + " Hours");
+                info.put(I18N.tr("Life Left"), Utils.plotValue(lampDescriptor.getLifeInTag(lampStack)) + " Hours");
             }
 
         }

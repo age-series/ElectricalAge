@@ -228,7 +228,7 @@ public class LampSupplyElement extends SixNodeElement implements IConfigurable {
     @NotNull
     @Override
     public Map<String, String> getWaila() {
-        Map<String, String> info = new HashMap<String, String>();
+        Map<String, String> info = new LinkedHashMap<String, String>();
         for (int i = 0; i < 3; ++i) {
             Entry e = entries.get(i);
             if (!e.powerChannel.isEmpty()) {
