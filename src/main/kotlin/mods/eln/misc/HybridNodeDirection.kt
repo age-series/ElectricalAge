@@ -1,5 +1,7 @@
 package mods.eln.misc
 
+import net.minecraft.util.MathHelper
+import net.minecraft.util.Vec3
 import org.lwjgl.opengl.GL11
 
 enum class HybridNodeDirection(val int: Int) {
@@ -212,6 +214,41 @@ enum class HybridNodeDirection(val int: Int) {
                     ZN -> TODO("unused - impossible rotation direction")
                     ZP -> TODO("unused - impossible rotation direction")
                 }
+            }
+        }
+    }
+
+    fun rotateFromXP(v: Vec3) {
+        when (this) {
+            XN -> {
+                v.xCoord = -v.xCoord
+                v.yCoord = 0.0
+                v.zCoord = 0.0
+            }
+            XP -> {
+                v.xCoord = v.xCoord
+                v.yCoord = 0.0
+                v.zCoord = 0.0
+            }
+            YN -> {
+                v.xCoord = 0.0
+                v.yCoord = -v.xCoord
+                v.zCoord = 0.0
+            }
+            YP -> {
+                v.xCoord = 0.0
+                v.yCoord = v.xCoord
+                v.zCoord = 0.0
+            }
+            ZN -> {
+                v.xCoord = 0.0
+                v.yCoord = 0.0
+                v.zCoord = -v.xCoord
+            }
+            ZP -> {
+                v.xCoord = 0.0
+                v.yCoord = 0.0
+                v.zCoord = v.xCoord
             }
         }
     }
