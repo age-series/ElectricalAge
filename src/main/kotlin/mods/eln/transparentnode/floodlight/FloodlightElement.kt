@@ -54,14 +54,16 @@ class FloodlightElement(transparentNode: TransparentNode, transparentNodeDescrip
 
     val motorized = descriptor.motorized
 
-    private var rotationAxis: HybridNodeDirection = (descriptor.placementSide).toHybridNodeDirection()
-    private lateinit var blockFacing: HybridNodeDirection
+    var rotationAxis: HybridNodeDirection = (descriptor.placementSide).toHybridNodeDirection()
+    lateinit var blockFacing: HybridNodeDirection
 
     var powered by published(false)
     var swivelAngle by published(0f)
     var headAngle by published(0f)
-    private var coneWidth by published(FloodlightConeWidth.NARROW)
-    private var coneRange by published(FloodlightConeRange.NEAR)
+    var coneWidth by published(FloodlightConeWidth.NARROW)
+    var coneRange by published(FloodlightConeRange.NEAR)
+
+    var lbCoord: Coordinate = Coordinate(this.node!!.coordinate)
 
     val electricalLoad = NbtElectricalLoad("electricalLoad")
     private val lamp1Resistor: Resistor = Resistor(electricalLoad, null)
