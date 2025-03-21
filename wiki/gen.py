@@ -311,4 +311,47 @@ def get_all_server_files():
     return set(files_list).union(set(images_list))
 
 
-pprint(get_all_server_files())
+# pprint(get_all_server_files())
+
+def get_images():
+
+    with open("all_images.html") as all_images_file:
+        all_images_html = all_images_file.read()
+
+        prefix = """src="/images/"""
+
+        image_sections = all_images_html.split(prefix)[1:]
+        images = [sec.split("\"", 1)[0] for sec in image_sections]
+
+        url_prefix = "https://wiki.electrical-age.net/images/"
+
+        images = [image for image in images if "Grid" not in image]
+        images = [image.replace("thumb/", "") for image in images]
+
+        new_images = []
+
+        for image in images:
+            if ".png" in image:
+                new_images.append(f"{image.split(".png", 1)[0]}.png")
+            if ".jpg" in image:
+                new_images.append(f"{image.split(".jpg", 1)[0]}.jpg")
+            if ".jpeg" in image:
+                new_images.append(f"{image.split(".jpeg", 1)[0]}.jpeg")
+
+        images = new_images
+
+        image_uris = [f"{url_prefix}{image}" for image in images]
+
+        pprint(image_uris)
+
+        for image_uri in image_uris:
+            try:
+                from subprocess import check_output
+
+                command = f"wget {image_uri}"
+
+                check_output(command.split(" "))
+            except:
+                print(f"Could not get {image_uri}")
+
+# get_images()
