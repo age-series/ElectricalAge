@@ -1,0 +1,25 @@
+{{Tool
+|itemname=X-RayScanner
+|data=dec: 7535:7840
+|renewable=Infinite
+|stackable=No (1)
+|poweredby=Stored Energy
+}}
+The X-ray Scanner is a very useful item. It assists you in finding ores and, in some situations, other blocks. This is very useful, especially for people who like to mine. But there is a "small" downside. The scanner runs on [[Portable Battery|batteries]], and as you (should) know, batteries don't last forever. So it is important that you keep atleast 1 Portable Battery Pack with you at all times if you're planing on using the scanner for a prolonged duration.
+
+==Crafting==
+{{Crafting_Grid
+|1=Iron_Ingot|2=Glass_Pane|3=Iron_Ingot
+|4=Iron_Ingot|5=Advanced_Chip|6=Iron_Ingot
+|7=Iron_Ingot|8=Portable_Battery|9=Iron_Ingot
+|result=X-Ray_Scanner}} 
+
+==How to charge the X-Ray Scanner==
+It's quite simple really. To use it, you first need to make sure you have at least one of the following items that are charged to some degree: '''[[Portable Battery]], [[Portable Battery|Portable Battery Pack]], [[Portable Condensator]], [[Portable Condensator|Portable Condensator Pack]], [[Portable Electrical Mining Drill]], [[Portable Electrical Axe]], or [[ECoal Helmet]]/[[ECoal Chestplate|Chestplate]]/[[ECoal Leggings|Leggings]]/[[ECoal Boots|Boots]].''' Once you have at least one of those things, make sure both the X-Ray Scanner and whatever you are using to charge it is in your inventory (I recommend putting them both in your hotbar) then press C (It is important that you don't have any other mod's keybindings interfering with Electrical-Age's keybindings). The power left in the whatever portable electrical device you have should go into X-Ray Scanner.  
+
+==How to use the X-Ray Scanner==
+After it's been charged (read above for information on how to charge it) right click, and it should power on after being initialized. On the screen of the X-Ray Scanner you will probably see a bunch of orange to red and blue stuff. These next few things are very important to remember. <u>'''Blue is Air/Nothing, Yellow and Green are Ores, Red is Dirt/Grass, and Orange blocks are ore(s) that are behind a block.'''</u> Now you're set!
+[[File:XSExample.png|thumb|left|Example usage of the X-Ray Scanner]]
+[[Category:Tools]]
+
+[[File:BrokenScanner.png|thumb|left|The screen becomes more cracked as you break blocks with it. Eventually, the screen will malfunction. If the scanner continues to be misused, the screen dies and the entire unit must be replaced.]]

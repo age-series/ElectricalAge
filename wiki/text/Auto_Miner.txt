@@ -1,0 +1,34 @@
+{{Block
+|blockname=Auto Miner
+|image=Miner1
+|type=MultiBlock
+|poweredby=800 Volts
+|requirements=Drill Head & Mining Pipes
+}}The Auto Miner is a multiblock that when powered with 800 volts and supplied with a drill head and some mining pipes will start mining a hole under it, and mines exclusively ore blocks from a large volume around the hole. This way it won't destroy the landscape and the hole can be easily covered. 
+
+==Crafting==
+{{Crafting_Grid
+|1=Advanced_Electrical_Motor|2=Advanced_Chip|3=Advanced_Electrical_Motor
+|4=Advanced_Machine_Block|5=Ore_Scanner|6=Advanced_Machine_Block
+|8=Mining_Pipe
+|result=Auto_Miner}} 
+
+==How to use the Auto Miner:==
+First make sure you have a drill head and some mining pipes and a chest. The Auto Miner requires 800V in either one of the legs with an electricity symbol. After you have given it 800V it will light up letting you know it's on.  Next, put a chest [or other inventory storage item - pipes from mods such as BuildCraft will not attach directly] between the two rear legs of the miner.  Finally, open the GUI and put the drill head and the mining pipes into the correct slots.  The miner should then start its mining operations. The current shape of the hole and current operation are displayed on the miner's screen.  If you didn't put the chest in the right location or are out of pipes, the miner will throw an error.
+
+==Operations==
+When power is applied and a drill and mining pipes are in inventory, it will dig a central shaft hole that is 1x1 for eight levels, then cross-shaped for four levels, then 3x3 below that. It will also mine all ores from a volume that expands as a cone from the position of the Auto Miner until it reaches a radius of 10, then continues down as a cylinder.
+
+If the drill is removed from the Auto Miner's inventory, it will retract the deployed mining pipe back into its inventory. If the pipe is broken (e.g. by mining it with a pickaxe), or if the Auto Miner is broken while pipe is still deployed, the deployed pipes will drop as items into the shaft.
+
+===Power requirements===
+* 2 KW when mining using the fast drill.
+* 1 KW when mining using the average drill.
+* 500 W when mining using the cheap drill.
+* 50 W when deploying or retracting mining pipe.
+* Mining power consumption is tripled when the silk touch option is enabled.
+
+==Silk Touch Mode==
+Silk touch mode takes 3x as much energy and 2x as much time to complete drilling operations, but results in items that are as though they had been gathered from a silk touch pickaxe.
+
+[[Category:Blocks]]

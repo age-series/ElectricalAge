@@ -1,0 +1,23 @@
+{{Block
+|blockname=50V Fuel Generator
+|requirements=None
+|image=50V Fuel Generator
+|poweredby=Fuels
+|type=Single
+|stackable=Yes
+}}The '''50V Fuel Generator''' produces electricity using liquid fuel. Nominal voltage: 50v, Nominal power: 1.20K W
+
+==Crafting==
+<b>50v Fuel Generator</b>
+{{Crafting_Grid
+|1=Iron Plate|2=Iron Plate|3=Iron Plate
+|5=Machine Block|6=Analogic Regulator
+|7=Low Voltage Cable|8=Electrical Motor|9=Low Voltage Cable
+|result=50V Fuel Generator}}
+
+==Usage==
+The fuel generator is a simple machine and has no interface. You can only manually fill it with buckets of fuel and it has an internal buffer of 2000mB. Right-clicking will turn the generator on and off.
+
+==Fuel types==
+* Buildcraft fuel
+* Gasoline

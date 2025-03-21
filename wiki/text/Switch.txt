@@ -1,0 +1,43 @@
+{{Block
+|blockname=Electrical Switch
+|image=LvSwitch
+|type=Single
+}}Electrical Switches Can break an electric circuit, interupting the current. This basic funcionality allows switching devices on/off
+
+==Crafting==
+<b>Low Voltage Switch</b>
+{{Crafting_Grid
+|3=Copper_Cable
+|5=Copper_Cable
+|7=Low_Voltage_Cable|8=Rubber|9=Low_Voltage_Cable
+|result=Low_Voltage_Switch}}
+[[File:Switches.png|thumb|Common Switch usage example]]
+<b>Medium voltage Switch</b>
+{{Crafting_Grid
+|3=Copper_Cable
+|4=Rubber|5=Copper_Cable|6=Rubber
+|7=Medium_Voltage_Cable|8=Rubber|9=Medium_Voltage_Cable
+|result=Medium_Voltage_Switch}}
+<b>High Voltage Switch</b>
+{{Crafting_Grid
+|1=Rubber|2=Rubber|3=Copper_Cable
+|4=Rubber|5=Copper_Cable|6=Rubber
+|7=High_Voltage_Cable|8=Rubber|9=High_Voltage_Cable
+|result=High_Voltage_Switch}}
+[[File:HV Switch.png|thumb|High and Very High Voltage Switches Look diffrent]]
+<b>Very High Voltage Switch</b>
+{{Crafting_Grid
+|1=Rubber|2=Rubber|3=Copper_Cable
+|4=Rubber|5=Copper_Cable|6=Rubber
+|7=Very_High_Voltage_Cable|8=Rubber|9=Very_High_Voltage_Cable
+|result=Very_High_Voltage_Switch}}
+
+==Usage==
+Simply place the Switch as you will normaly place [[Cable]]s. Right-click them to turn it on, rightclick again to turn off 
+
+==Nominals and Maximums==
+Same as cables they were made of, Both having limits. Refer to [[Cable]]
+==Technical==
+All four variants of Swithes Can break an electric circuit, interupting the current.
+[[Category:Blocks]]
+&AdIO&

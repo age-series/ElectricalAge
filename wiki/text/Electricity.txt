@@ -1,0 +1,39 @@
+Electricity is the set of physical phenomena that are associated with the presence and flow of electric charge. In the case of the Electrical Age mod, electricity is used as electrical power.
+
+==Voltage==
+The [[wikipedia:Volt|Volt]] ('''V''') is the unit for electrical potential. It measures the difference in electrical potential between 2 points. Think of it kind of like pressure, if it is too high, your wires or machinery will fail.
+
+<pre>
+V = IR
+V = P/I
+V = sqrt(PR)
+</pre>
+
+==Current==
+[[wikipedia:Electric_current|Current]] ('''I'''), or amperage, is the flow of electrical charge. Current is measured in units called [[wikipedia:Ampere|Amperes]]. It is also measured in a unit known as a [[wikipedia:Coulomb|Coulomb]] which is equal to 1 Ampere over 1 second. Currents can create magnetic fields, which can be used in [[Inductor|inductors]], motors, and generators. Electric currents also cause heating, which can be used to create light. Not too much though, you don't want to melt your wires or components.
+
+<pre>
+I = V/R
+I = P/V
+I = sqrt(P/R)
+</pre>
+
+==Resistance==
+Electrical resistance ('''R'''), is a measure of how difficult it is for electricity to move through a circuit. Measured in [[wikipedia:Ohm|Ohms]]. Higher resistance will cause the electricity to struggle more and release more heat as a result. Due to current being based on resistance, having a higher resistance will actually lower the overall heating, since less current is flowing.
+
+<pre>
+R = V/I
+R = (V^2)/P
+R = P/(I^2)
+</pre>
+
+In the case of batteries or diodes, V and I will not be directly proportional, however this formula may still be useful for calculating the static resistance.
+
+==Electric Power==
+Electrical power ('''P''') is the rate at which a circuit transfers energy. This can be measured in Joules per second and [[wikipedia:watt|watts]]. Joules are how much energy is within a point at any given time. Watts are simply Joules in motion: watts are equal to 1 Joule over 1 second.
+
+<pre>
+P = VI
+P = (I^2)R
+P = (V^2)/R
+</pre>

@@ -1,0 +1,9 @@
+
+
+For testing purposes only !
+
+==Expandable block==
+<div class="toccolours mw-collapsible mw-collapsed" style="width:100%">
+This text is not collapsible; but the next is collapsible and hidden by default:
+<div class="mw-collapsible-content">{{Lorem}}</div>
+</div>

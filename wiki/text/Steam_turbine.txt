@@ -1,0 +1,22 @@
+Steam turbines take steam and convert it into mechanical power. You need to use [[Generator]] to convert mechanical power into electric power.
+{{Block
+|blockname=Steam turbine
+|requirements=None
+|image=Steam Turbine
+|poweredby=Steam
+|type=Single
+|stackable=No
+}}
+
+
+==Performance Curve==
+[[File:steam performance.png]]
+
+
+== See Also ==
+
+* [[Steam turbine example]]
+* [[Gas turbine]]
+* [[Generator]]
+
+[[Category:Shaft Power]]

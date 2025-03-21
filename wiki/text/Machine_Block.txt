@@ -1,0 +1,12 @@
+{{Item
+|itemname=Machine-Block
+|renewable=No
+}}
+
+==Crafting==
+<b>Machine Block</b>
+{{Crafting_Grid
+|1=Iron Ingot|2=Iron Ingot|3=Iron Ingot
+|4=Iron Ingot|5=Copper Cable|6=Iron Ingot
+|7=Iron Ingot|8=Iron Ingot|9=Iron Ingot
+|result=Machine Block}}

@@ -1,0 +1,57 @@
+{{Block
+|blockname=Solar Panel
+|image=SolarPanel
+|type=Single
+|requirements=Sunlight
+|poweredby=Renewable Energy
+}}
+
+Solar panels convert sunlight energy into electrical energy. In the morning and the evening the panels are less effective. There are two types of solar panels - Solar Panel (Static) and Rotating Solar Panel.
+
+Rotating Solar Panel can track sun movement and produce electricity more effectively than static panel. In order for it to follow the sun, a [[Solar Tracker]] is needed. It can also be set manually if one cannot obtain the resources to make the tracker.
+
+==Usage and behavior==
+
+Solar panels can't be covered with any blocks, otherwise it won't produce as much electricity.
+
+You can connect Solar Panels in series or in parallel. A single Solar Panel can produce 14.8v, which is not enough to power any 50v devices.
+
+===Serial connection===
+
+When Solar Panels are connected in series, the voltage adds up. For example, 3 panels connected in series can produce 44.4V of electricity.
+
+[[File:Solarpanel_serial.png|thumb|left|Solar panels connected in serial.]]
+<br /><br /><br /><br /><br /><br /><br />
+===Parallel connection===
+
+In this type of connection the panels produces the same voltage but it have more available power.
+
+The panels in parallel connection can deliver only 14.8V but you can connect it in serial-parallel to produce more voltage and more power.
+
+[[File:Solarpanel parallel.png|thumb|left|Solar panels connected in serial-parallel.]]
+
+<br /><br /><br /><br /><br /><br /><br />
+
+==Crafting==
+===Small Solar Panel===
+* '''Maximal power''' : 65W
+* '''Maximal voltage''' : 14.8V
+{{Crafting_Grid
+|1=Iron_Ingot|2=Iron_Ingot|3=Iron_Ingot
+|4=Low_Voltage_Cable|5=Silicon_Plate|6=Low_Voltage_Cable
+|7=Iron_Ingot|8=Iron_Ingot|9=Iron_Ingot
+|result=Solar_Panel}}
+===Small Rotating Solar Panel===
+* '''Maximal power''' : 65W
+* '''Maximal voltage''' : 14.8V
+* '''Can track sun movement.'''
+{{Crafting_Grid
+|1=Iron_Ingot|2=Solar_Panel|3=Iron_Ingot
+|4=Iron_Ingot|6=Iron_Ingot
+|result=Rotating_Solar_Panel}}
+
+TODO: Add 200v panels
+
+==See also==
+* [[Solar Tracker]]
+* [[Electrical Cables]]

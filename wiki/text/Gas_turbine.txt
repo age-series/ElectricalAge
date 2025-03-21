@@ -1,0 +1,47 @@
+Gas turbine takes power and converts it into mechanical power. You need to use [[Generator]] to convert mechanical power into electric power
+''Are you looking for a tutorial on [[simple gas turbine control]]?''
+
+{{Block
+|blockname=Gas turbine
+|requirements=None
+|image=Gas Turbine
+|poweredby=Fuels
+|type=Single
+|stackable=No
+}}
+
+
+== Accepted Fuels ==
+
+=== Gasoline-equivalents ===
+
+These Light oils can be used by any combustion engine, such as the fuel generator.
+The ones on this list are all pretty close to each other in energy content.
+
+* '''Syngas''' (Advanced Generators), provides 20 MJ/m3
+* '''fuel''' (Buildcraft), provides 41 MJ/kg, with a density of 0.77 kg/l
+* '''rc ethanol''' (Rotarycraft), provides 26.8 MJ/kg, with a density of 0,79 kg/l
+* '''biofuel''' (Minefactory reloaded), provides 22,68 MJ/l, with a density of 0.786 kg/l
+* '''bioethanol''' (Forestry), provides 22,68 MJ/l
+* '''gasoline''' (PneumaticCraft), provides 34,2 MJ/l, with a density of 0.755 kg/L
+* '''kerosene''' (Pneumaticcraft), provides 34,8 MJ/l
+* '''lpg''' (Pneumaticcraft), provides 46 MJ/kg, with a density of density = 0.54 kg/l
+* '''fuelgc''' (Galacticcraft), provides 41 MJ/kg, with a density of 0.77 kg/l
+* '''lightoil''' (Magneticraft), provides 42.6 MJ/kg, with a density of 0.83 kg/l
+
+=== Burnable gases ===
+
+True to their real life counterparts, Gas Turbines can burn pretty much any combustible fluid. Here are a list of fuels which will only burn in the Gas Turbine.
+
+* '''naturalgas''' (Magneticraft), provides 36 MJ/m3
+
+
+== Performance Curve ==
+
+[[File:gas performance.png]]
+
+== See Also ==
+
+* [[Steam turbine]]
+
+[[Category:Shaft Power]]

@@ -1,0 +1,33 @@
+'''Modified Nodal Analysis''' is a method of calculating the particular state of a set of voltage/current sources and passive components. It condenses all of this information into a set of matrices, and then some mathematical operations are done to get you the complete solution, with voltage, currents, and more for every component.
+
+==Resources==
+
+Before I explain how Modified Nodal Analysis works, I want to reference some sources that I have used to understand more about Modified Nodal Analysis. (both of these links are on the Internet Archive)
+
+These further reference more materials, which currently go much more in-depth than this does.
+
+https://www.swarthmore.edu/NatSci/echeeve1/Ref/mna/MNA2.html
+
+http://qucs.sourceforge.net/tech/node14.html
+
+I have also read various older texts on the subject at one point or another.
+
+==High Level Understanding==
+
+Modified Nodal Analysis works by gathering all of the information about various '''passive''' (this is important) components, such as resistors, capacitors, and inductors, as well as voltage and current sources, and condensing it into a set of matrices, and then solving them.
+
+There's (according to most major references on the subject) 3 matrices to consider: the (square) <b>A</b> <!-- what the heck, weird wiki formatting won't accept '''A''' or '''x''' -->matrix (where all of the component details and voltage sources are located), the '''z''' matrix (the things we want to find), and the '''x''' matrix (the voltages and currents we know of). The aim of this is to find all of the things we don't know in '''z'''.
+
+It's important to know that the larger the A matrix gets, the longer it takes for a computer to compute it, and from my understanding, this takes a time complexity of about n squared. So we like to keep the matrices relatively small. If you run <code>/eln matrix</code> in newer versions of Electrical Age, you can get a dump of all of the matrix structure at that current moment (it can take a moment to do this), it will get dumped into a file called <code>elnDumpMatrix.txt</code>
+
+==Shortfalls==
+
+Electrical Age has to work on most computers. The best we have for precise floating point numbers is double (64 bit) precision. I haven't seen any hardware Java support for larger numbers like Quad Precision, but if you have a [https://en.wikipedia.org/wiki/POWER9 recent IBM Power9 mainframe] you want me to work with...
+
+Considering that, we need to consider that we're not going to get more than roughly 18 digits in either direction that are very precise. Even that's cutting it close.
+
+There is also a few other things to consider, since we're working with matrices - we have to worry about the [https://en.wikipedia.org/wiki/Condition_number condition number] of our matrixes (and if we don't, things tend to explode because of errors in the calculations). We also have to consider that singular matrices are non-invertible (a major component of the MNA), and that if we can't invert the A matrix, we're not going to be solving anything.
+
+These are just points to consider, the most major shortfall is that MNA is only designed for passive components, not active ones. So things like diodes, transistors (or really any kind of silicon) are much more difficult to simulate.
+
+Electrical Age fakes this capability by repeatedly iterating over the matrix (a few times per tick, the number varies based on your configuration file if you dare) until the active components have switched one way or another. Not the best, but it typically comes to the correct result after enough iterations.

@@ -1,0 +1,20 @@
+{{Entity
+|image=Replicator.png
+|invimage=Replicator Spawn Egg
+|health={{hp|8}}
+|behavior=Hostile
+|damage={{hp|2}}
+|spawn=During lightning storms
+|size=Height: 0.3 Blocks<br>Width: 0.4 Blocks
+|id='''[[JE]]''': 383/3
+|entityid=replicator
+|drops=Redstone, Glowstone, Iron, Copper or gold dust
+|exp=5
+}}
+These strange little critters show up during thunder storms and seem to have a vicious appetite. What do they eat? Electricity! Any active power lines left unguarded will be sought out by these little pests as they attempt to suck the power out of your network. The higher the voltage in the wire, the further away a Replicator will notice it from, and the more attracted to it they will be. If you notice one standing on top of a particularly high voltage line, you can almost guarantee that it's drawing power from it!
+
+If they do not find 'food' within a certain amount of time, they will starve to death. Replicators will always drop one dust when they die. It will either drop redstone, glowstone, iron, copper, or gold dust. It can be quite advantageous to put a very active line just out of their reach as a sort of trap for collection. Both to obtain its valuable drops and also to keep them away from your less protected lines.
+
+Replicators are aggressive to the player, and will drop anything they are doing to try and kill you. If the player backs off, the replicator will proceed to carry on whatever it was doing.
+
+They also have another curious behavior: True to their name, if given enough electricity they will bud off a new replicator. This can be a big problem if they are eating off your mains as they can spread fast, but in a controlled environment this can be used as a very effective farm for the dusts that they drop. Just be careful that the wires feeding them do not overload as a result of too many growing.

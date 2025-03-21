@@ -1,0 +1,5 @@
+This VCO (Voltage Controlled Oscillator) generates a Sine output signal which's frequency can be controlled by the analog input of the chip.
+
+== See also ==
+* [[wikipedia:Voltage-controlled_oscillator]]
+* [[wikipedia:Sine_wave]]

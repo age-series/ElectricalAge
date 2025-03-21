@@ -1,0 +1,32 @@
+{{Item
+|itemname=Portable Capacitor
+|renewable=Yes
+}}
+A Portable Capacitor can storage electrical energy and can be used in small portable devices such as [[Digital Watch]] or to charge up [[X-Ray Scanner]].<br />
+To provide more energy you can use Portable Capacitor Pack. In contrast to [[Portable Battery]], capacitors can store less energy but it can provide more energy in one time. <br />
+It can be charged in [[Battery Charger]].
+
+==Crafting and informations==
+
+===Portable Capacitor===
+* '''Charge power''' : 2000W
+* '''Discharge power''' : 500W
+* '''Maximal stored energy''' : 5000J
+{{Crafting_Grid
+|1=Rubber|2=Copper_Plate|3=Rubber
+|4=Copper_Cable|5=Redstone|6=Copper_Cable
+|7=Rubber|8=Copper_Plate|9=Rubber
+|result=Portable_Capacitor}}
+
+===Portable Capacitor Pack===
+* '''Charge power''' : 6000W
+* '''Discharge power''' : 1500W
+* '''Maximal stored energy''' : 15000J
+{{Crafting_Grid
+|1=Portable_Capacitor|2=Portable_Capacitor|3=Portable_Capacitor
+|result=Portable_Capacitor_Pack}}
+
+==See also==
+* [[Portable Battery]]
+* [[Battery Charger]]
+[[Category:Items]]

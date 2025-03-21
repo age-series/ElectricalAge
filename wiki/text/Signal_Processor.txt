@@ -1,0 +1,147 @@
+{{Block
+|blockname=Signal Processor
+|requirements=None
+|image=Signal Processor
+|poweredby=Signal
+|type=Single
+|stackable=No
+|tool=None
+}}
+
+
+==Crafting==
+<b>Signal Processor</b>
+{{Crafting_Grid
+|1=Iron Ingot|2=Signal Cable|3=Iron Ingot
+|4=Signal Cable|5=Cheap Chip|6=Signal Cable
+|7=Iron Ingot|8=Signal Cable|9=Iron Ingot
+|result=Signal Processor}}
+
+== Purpose ==
+
+The signal processor can execute nearly arbitrary calculations on signals. It has three inputs, called A, B and C internally, and marked with colored spots on its sides. Its single output is pushed to its single black side.
+
+Internally, it operates on floating-point numbers. Each input is mapped to the [0,1] interval, and its output is similarly capped. For example, a 10V signal line will be read as 0.2, while function "1 + A" will output 50V for any value of A. The latter is because a 0V input signal is read as 0, and negative inputs do not exist. The processor can, however, represent far larger values internally; to output these without being capped, divide them by some large number.
+
+The signal processor can be rotated by the use of a wrench.
+
+To function, it needs a minimum amount of redstone inserted in its UI.
+
+== Example usage ==
+
+Exact code will not be included, as figuring it out is half the fun. To simplify that process I would recommend prolific use of data loggers.
+
+Things you should be able to do with the signal processor include:
+* Controlling a bank of generators, microwave receivers or similar devices to maintain an exact system voltage.
+* Calculating the open-circuit voltage of a battery, given closed-circuit voltage and power use.
+* Keeping a bank of batteries charged, without blowing them up.
+* Tracking power usage.
+* And much more...
+
+== Functions ==
+
+=== Arithmetic ===
+
+The Signal Processor can handle Addition(+), Subtraction(-), Multiplication(*), Division(/), and Modulus(%). It can use the unary minus (-) operator to invert the sign of an argument.
+
+The mathematical functions will process internally, and have no limit, but all results will be clamped upon exporting. Keep in mind that inputs are represented as a percentage from 0 to 1, with 25V appearing as 0.5 (50%)
+
+Example: A = 25V (0.5)
+
+((A*50) * 2) / 50
+
+First, the input voltage is multiplied by 50 to convert it into a Voltage value (rather than a percent) This turns the input 0.5 into the whole number 25. Next, the number is doubled. Once all that is complete, the result is divided by 50 to return it back to a % value, ready to be exported as the new value: 1 (or 50V) Converting to a voltage value then back may seem like extra work, but being able to work with an intuitive number make the Signal Processor much easier to work with.
+
+=== Relational operators ===
+The > and < operators exist. These return 1 for true and 0 for false.
+
+Note that the = operator converts the arguments to boolean values [as described below] before comparing.
+
+=== Boolean operators ===
+
+The &, |, = and ^ operators exist. These operate by reading any value less than 0.5 as "false", 0.5 or larger as "true". So, for example, 0.3 | 0.7 = 1, while 0.3 & 0.7 = 0.
+
+=== Functions ===
+
+* '''if(a, b, c)''': If a >= 0.5, this returns b; otherwise, c.
+* '''min(x, y), max(x, y)''': Respectively, the smaller or larger of x and y.
+* '''sin(x), cos(x), asin(x), acos(x)''': Performs trigonometry, using radians for angle units.
+* '''abs(x)''': Turns any negative number positive.
+* '''pow(x, y)''': Calculates x to the y power. Tip: you can use '''pow(x, 0.5)''' for square root (or '''pow(x, 1/n)''' for any ''n''th root).
+* '''scale(x, in0, in1, out0, out1)''':  Scales x from within range in0 (min) and in1 (max) to within range out0 (min) and out1 (max) in a linearly proportional manner.
+* '''batteryCharge(x)''': Returns the battery charge, given the open-circuit voltage of a battery expressed as a fraction of its nominal voltage. For example, batteryCharge(1) can be a 50V battery at 50V, a 200V battery at 200V or a battery bank with 800V nominal voltage at 800V. Since the battery voltage can go above it's nominal voltage, the value given to the function has to be able to get above 1(represents the battery's nominal voltage) too. This is achieved by rescaling the value given by a probe that can measure voltages above the battery's nominal voltage. For example the value given by a probe that can measure from 0V to 60V connected to a 50V battery has to be multiplied with 1.2(60V / 50V = 1.2) so 50V at the battery is represented as 1 to the function instead of 0.83 as given by the probe.
+
+=== Functions with memory ===
+
+* '''ramp(period)''': Generates a sawtooth wave, at the given period.
+* '''rs(reset, set)''': Holds a Boolean value. When Set is pulsed, output becomes 1. When Reset is pulsed, output becomes 0.
+* '''integrate(value, resetTrigger)''': Sums "value" over time, and returns the sum. Resets if resetTrigger is pulsed.
+* '''integrate(value, min, max)''': Sums "value" over time. Will never return values outside of its min/max bounds; its internal counter is bounded to these values. Does not have a reset trigger.
+* '''derivate(value)''': At each tick, outputs the difference between the current and previous tick.
+* '''rc(tao, value)''': Outputs the moving average of "value" across the last "tao" seconds.
+* '''pid(target, actual, p, i, d, minV, maxV)''': Returns min(minV, max(maxV, pid(target, hit, p, i, d)))
+* '''pid(target, actual, p, i, d)''': This implements a PID controller. See below under [[#PID_Controller_procedure]].
+
+=== PID Controller procedure ===
+
+The pid procedure is a standard implementation of a Proportional-Integrate-Derivative controller, as can be found described on Wikipedia. Given pid(target, hit, p, i, d), the procedure attempts to manipulate its output such that the values of target and hit become equal.
+
+The p, i and d parameters control the three procedures used to accomplish this; you can adjust them to adjust how much each contributes to the controller's output.
+
+The PID controller assumes that its input (actual) is a monotonic function of its output, and may malfunction if this is not the case, though it is relatively robust to complex functions and lag between changing output and input.
+
+For more details you should really read the Wikipedia entry on [https://en.wikipedia.org/wiki/PID_controller PID controllers], but a quick overview:
+
+The PID controller starts by computing the "error", as "target - actual". It then computes the P, I and D functions, sums them, and returns the sum.
+
+'''P''': This is a simple function, which returns "error * P". Given a perfectly proportional system, it may be all that is needed; usually it is not.
+
+'''I''': This sums (error * I) over time, and outputs that. As the sum can only decrease if the error is negative, some overshoot is guaranteed, but using it is usually required to avoid offsets from the correct output. It is somewhat vulnerable to integral windup, but the internal sum is capped to (-1, 1), which limits this.
+
+'''D''': This returns the derivative of the error, multiplied by D. This allows the controller to react to how fast its output is changing, and can be used to limit overshoot.
+
+For more tips, see the [https://en.wikipedia.org/wiki/PID_controller#Manual_tuning "Manual Tuning" section on Wikipedia].
+
+You can, with some care, implement your own PID controller in terms of '''integrate''' and '''derivate'''. Doing it this way affords more flexibility (such as adjusting factors dynamically and having the "resetTrigger" input available) at the cost of more redstone.
+
+== Redstone Cost ==
+
+The amount of redstone required is calculated by summing the cost of every operation used in the formula.
+
+{|class="wikitable"
+!Operation!!Redstone cost
+|-
+|Constants, Inputs                        || 0
+|-
+|Brackets                                 || 0
+|-
+|Arithmetic(+ - * / %)                    || 1
+|-
+|Boolean operators                        || 1
+|-
+|abs()                                    || 1
+|-
+|if()                                     || 2
+|-
+|min(), max()                             || 2
+|-
+|sin(), cos()                             || 2
+|-
+|ramp()                                   || 3
+|-
+|rs()                                     || 3
+|-
+|derivate()                               || 3
+|-
+|rc()                                     || 3
+|-
+|integrate()                              || 4
+|-
+|scale()                                  || 5
+|-
+|batteryCharge()                          || 8
+|-
+|pid(target, actual, p, i, d)             || 12
+|-
+|pid(target, actual, p, i, d, minV, maxV) || 14
+|}

@@ -1,0 +1,16 @@
+{{Block
+|blockname=Sensor
+|image=2016-12-13 17.10.36
+|type=Single
+|poweredby=Signal
+}}
+Sensor is a Six-Node block outputting signal Voltage based on different things.
+==Types of sensors==
+* [[Light Sensor]] Detects Light
+* [[Daylight Sensor]] Detects only natural light (made by sun). Torches or [[Lamp]]s won't work.
+* [[Weather Sensor]] Detects Weather
+* [[Anemometer Sensor]] Detects wind speed
+* [[Entity Sensor]] Detects entity movement
+* [[Fire Detector]] Detects Fire
+==See Also==
+[[Signal Cable]]

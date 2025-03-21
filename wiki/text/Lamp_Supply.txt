@@ -1,0 +1,38 @@
+{{Block
+|blockname=Lamp Supply
+|image=LampSupply
+|type=Single
+|poweredby=Varied Voltages
+}}
+
+Lamp Supplies are used to provide power wirelessly to [[Lamp|lamps]].  This means that cables don't have to be run all over just to get a nice room.  Lamp supplies will connect to an infinite number of lamps, with the only limit being the voltage and current in the cable that supplies them.
+
+==Crafting==
+<b>Lamp Supply</b>
+{{Crafting_Grid
+|2=Iron_Ingot
+|4=Iron_Ingot|5=Copper_Ingot|6=Iron_Ingot
+|8=Iron_Ingot
+|result=Lamp_Supply}}
+
+==Usage==
+After placement, right-clicking the lamp supply will open it's GUI (See image).
+[[File:Lamp-supply-gui.png|thumb]]
+
+The GUI consists of three identical sections. This means that you can supply and control 3 different independent groups of lamps using the same lamp supply.
+
+The textfield at the top left of each section identifies the wireless power channel used to power the lamps. A lamp socket must use the same ID to be connected to that section. 
+
+The textfield at the right specifies the control channel. The control channel is a wireless signal channel that controls all lights on that section. You can use wireless switches or buttons (or even signal transmitters) to control the lights on that section. Using the remaining three buttons, you can specify how the signals of multiple buttons on the very same wireless channel are merged. 
+
+Using the option "Biggest" takes the biggest value of all the signals on the wireless channel which corresponds to an OR logic operation (If at least one switch is on, the lights turn on). 
+
+The option "Smallest" takes the smallest value which behaves like an AND logical operation (All switches have to be turned on in order to power the lights). 
+
+The last option "Toggle" is useful if you use a lot of buttons to control the lights, as each change of such a button toggles the output of the lamp supply for that section.
+
+You need at lest to put one cable into the cable slot in order to be able to connect power to the supply. With this one cable in the slot, the range to the lamps that can be supplied is 32 blocks, but you can extend the range by placing more cables into that slot, 1 additional cable extends the range by 1 block.
+
+[[Category:Blocks]]
+[[Category:50 Volts]]
+[[Category:200 Volts]]

@@ -1,0 +1,15 @@
+In digital electronics, a [https://en.wikipedia.org/wiki/NAND_gate NAND gate] (negative-AND) is a logic gate which produces an output which
+is 0 (low) only if all its inputs are 1 (high); thus its output is complement to that of the AND gate.
+A 0 (low) output results only if all the inputs to the gate are 1 (high); if at least one of the
+inputs are 0 (low), a 1 (high) output results.
+
+The NAND gate is significant because any boolean function can be implemented by using a combination
+of NAND gates. This property is called functional completeness.
+
+If no signal is connected to an input pin, the input is read as 1 (high). This is done by internal
+pull-up resistors that pull the signal to high in the absence of an input signal. Using this
+mechanism the NAND gate can be used with 2 or 3 inputs in the exact same way.
+
+Play with the 3 buttons to see the function of the NAND gate. You will see that the output is only
+0 (low) if all 3 inputs are 1 (high).
+[[Category:Digital chips]]

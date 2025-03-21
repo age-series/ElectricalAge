@@ -1,0 +1,1 @@
+The signal buttons activates when right clicked to create a quick pulse of signal down its connected wire. Unlike the switch, the button will not stay down when pressed. Unlike the minecraft button, holding the button down will produce a bunch of short bursts rather than a continuous one.

@@ -1,0 +1,58 @@
+{{Block
+|blockname=Battery Charger
+|image=BatteryCharger
+|type=Single
+|poweredby=Varied Voltages
+}}
+
+The Battery Charger can be used to recharge electrical items. To power the device, you have to connect a 50v or 200v source to the charger with [[Electrical Cables|electrical cables]].
+
+It can charge the following:
+
+* [[Portable Battery]]
+* [[Portable Battery|Portable Battery Pack]]
+* [[Portable Condensator]]
+* [[Portable Condensator|Portable Condensator Pack]]
+* [[Small Flashlight]], 
+* [[Portable Electrical Mining Drill]]
+* [[Portable Electrical Axe]]
+* [[X-Ray Scanner]]
+* [[E-Coal Armour]].
+
+To speed up charging process, you can use [[Machine Booster|machine boosters]]. The maximum number of [[Machine Booster|machine boosters]] per device is 5.
+
+==Crafting and informations==
+
+===Weak 50 V Battery Charger===
+* '''Nominal charging power''' : 200W
+{{Crafting_Grid
+|1=Redstone|2=Iron_Ingot|3=Redstone
+|4=Iron_Ingot|5=Iron_Ingot|6=Iron_Ingot
+|7=Redstone|8=Low_Voltage_Cable|9=Redstone
+|result=Battery_Charger}}
+
+===50 V Battery Charger===
+* '''Nominal charging power''' : 400W
+{{Crafting_Grid
+|1=Redstone|2=Iron_Ingot|3=Redstone
+|4=Iron_Ingot|5=Cheap_Chip|6=Iron_Ingot
+|7=Redstone|8=Low_Voltage_Cable|9=Redstone
+|result=Battery_Charger}}
+
+===200V Battery Charger===
+* '''Nominal charging power''' : 1000W
+{{Crafting_Grid
+|1=Redstone|2=Iron_Ingot|3=Redstone
+|4=Iron_Ingot|5=Advanced_Chip|6=Iron_Ingot
+|7=Redstone|8=Medium_Voltage_Cable|9=Redstone
+|result=Battery_Charger}}
+
+==See also==
+* [[Machine Booster]]
+* [[Portable Battery]]
+* [[Portable Condensator]]
+* [[Electrical Source]]
+
+[[Category:Blocks]]
+[[Category:50 Volts]]
+[[Category:200 Volts]]

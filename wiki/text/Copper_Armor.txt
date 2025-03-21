@@ -1,0 +1,3 @@
+{{Item
+|itemname=Copper Armor
+}}Copper armor has the same durability and protection level as vanilla iron armor

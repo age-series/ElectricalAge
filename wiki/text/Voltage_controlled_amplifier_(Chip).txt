@@ -1,0 +1,9 @@
+A VCA (Voltage Controlled Amplifier) is a signal voltage amplifier which amplifies an input voltage with a factor that depends a control input.
+
+The gain can be calculated as:
+gain = gain_input / 5.0
+
+This means that gains between 0 and 10 are possible.
+
+== See also ==
+* [[wikipedia:Variable-gain_amplifier]]

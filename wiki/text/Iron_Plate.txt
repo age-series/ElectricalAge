@@ -1,0 +1,7 @@
+{{Item
+|itemname=Iron Plate
+|renewable=No
+}}Iron plates are made in the [[Plate Machine]].
+
+== Usage ==
+Iron plates are used in various machines and items.

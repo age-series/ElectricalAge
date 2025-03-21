@@ -1,0 +1,92 @@
+{{Block
+|blockname=Lamp
+|image=Lamp
+|type=Single
+|poweredby=Varied Voltages
+}}Lamps are used to provide light. They come in numerous shapes and sizes, and can be powered directly by a cable or by a [[Lamp Supply|lamp supply]]. These options can be configured by right-clicking the lamp to open its GUI. Lamps require an internal cable like most components, which means they can explode if wired incorrectly. Each type of lamp has a specific spot distance. This is basically is a measure of how far the lamp can project light from its origin. If the lamp faces a block that's closer than its spot distance, it will reflect some of the light back onto itself. Lamps require a [[Light Bulb|light bulb]] and a compatible [[Electrical_Cables|electrical cable]] to work.
+
+==Crafting and placement==
+===Lamp Socket A=== 
+Can be placed on ceilings, walls, and floors like a regular cable.  
+* '''Spot range''' : 4 blocks
+{{Crafting_Grid
+|1=Glass_Pane
+|4=Iron_Ingot|5=Glass_Pane
+|7=Glass_Pane
+|result=Lamp_Socket_A}}
+
+===Lamp Socket B Projector===
+Can be placed on ceilings, walls, and floors like a regular cable. This model allows the direction of the light to be projected in a specific direction, rather than uniformly around the lamp.  <br />
+This lamp is great for lighting tall ceilings or sides of buildings.
+* '''Spot range''' : 10 blocks
+{{Crafting_Grid
+|2=Iron_Ingot
+|4=Iron_Ingot|5=Glass_Pane
+|8=Iron_Ingot
+|result=Lamp_Socket_B_Projector}}
+
+===Robust Lamp Socket===
+Can be placed on ceilings, walls, and floors like a regular cable. A good look for basements or industrial locations.
+* '''Spot range''' : 3 blocks
+{{Crafting_Grid
+|1=Glass_Pane|2=Iron_Ingot|3=Glass_Pane
+|result=Robust_Lamp_Socket}}
+
+===Flat Lamp Socket===  
+Can be placed on ceilings, walls, and floors like a regular cable. Looks good in office or factory-type locations.  <br />
+You can also place it in the floor and cover it with glass for some snazzy looking lighting.
+* '''Spot range''' : 3 blocks
+{{Crafting_Grid
+|1=Iron_Ingot|2=Glass_Pane|3=Iron_Ingot
+|result=Flat_Lamp_Socket}}
+
+===Simple Lamp Socket=== 
+Can be placed on ceilings, walls, and floors like a regular cable. Looks good in homes, especially as a central light fixture.
+* '''Spot range''' : 3 blocks
+{{Crafting_Grid
+|2=Iron_Ingot
+|4=Glass_Pane|5=Glass_Pane|6=Glass_Pane
+|result=Simple_Lamp_Socket}}
+
+===Fluorescent Lamp Socket===  
+Can be placed on ceilings, walls, and floors like a regular cable. Slightly higher spot range and shape makes it look nice on taller ceilings.
+* '''Spot range''' : 4 blocks
+{{Crafting_Grid
+|2=Iron_Ingot
+|4=Iron_Ingot|6=Iron_Ingot
+|result=Fluorescent_Lamp_Socket}}
+
+===Street Light===  
+Must be placed on the ground. 
+* '''Spot range''' : No spot range, as lamp top directs light downward.
+{{Crafting_Grid
+|1=Glass_Pane
+|4=Iron_Ingot
+|7=Iron_Ingot
+|result=Street_Lamp}}
+
+===Suspended Lamp Socket=== 
+Can only be placed on the ceiling. It has the interesting feature of swinging due to moving air around it. Passing players and rain storms will cause it to move with the breeze. <br />
+A delightful compliment to an outdoor patio or dining room.  
+* '''Spot range''' : 3 blocks
+{{Crafting_Grid
+|1=Iron_Ingot
+|4=Robust_Lamp_Socket
+|result=Suspended_Lamp_Socket}}
+
+===Long Suspended Lamp Socket===  
+A one block longer chain gives this one an extra block of spot range. For when you want a more tasteful alternative than fluorescent lights for tall rooms.  
+* '''Spot range''' : 4 blocks
+{{Crafting_Grid
+|1=Iron_Ingot
+|4=Iron_Ingot
+|7=Robust_Lamp_Socket
+|result=Long_Suspended_Lamp_Socket}}
+
+==See also==
+* [[Lamp Supply]]
+* [[Light Bulb]]
+
+[[Category:Blocks]]
+[[Category:50 Volts]]
+[[Category:200 Volts]]

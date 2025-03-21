@@ -1,0 +1,3 @@
+The Utility pole is a high-voltage (up to 12.8kV nominal) wire used to transport electricity through the air via overhead electrical cables. It is very useful, as it creates less resistance than traditional wire, and looks better than wire set up on the ground.
+
+The base of the pole is where you provide either 800v or 3.2kV, and at the top of the pole, the voltage will be 4x as much (and the amperage 1/4 of what it is on the ground). This higher voltage helps prevent loss over longer distances.

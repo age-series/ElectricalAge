@@ -1,0 +1,41 @@
+{{Block
+|blockname=Wind Turbine
+|requirements=None
+|image=Wind Turbine
+|poweredby=Renewable Energy
+|type=MultiBlock
+|stackable=Yes
+}}
+
+The '''Wind Turbine''' provides power of 160W at ~50v (Depending On Wind Power) Can be connected to other blocks via [[Cable]].
+It's one of the simplest forms of generating power
+
+==Crafting==
+[[File:WindTurbCraft.png|left]]
+<b>Wind Turbine</b>
+In Order to craft wind turbine, you will need:
+3x Iron Plate
+1xElectrical Motor
+1xMachine Block
+
+{{-}}
+
+==Usage==
+
+
+===Connection===
+[[File:Connection.png|frameless|left]]
+As you can see, Wind turbine only has a connector for power cables (50V) at it's back. For voltages higher than 50V, you can use a [[Transformer]].
+[[File:WindTurbineShape.png|thumb|Shape of a wind turbine]]
+
+===Positioning===
+The Higher, The Better.
+Try to position your Wind Turbine As high as it is possible (on a hill or build a tower)
+The wind speed peaks at Y100 so if you want optimal performance, build that high.
+Make sure that nothing obstructs airflow:
+No blocks either at the front, or the back of a Windmill
+(tip: Power generation is higher during rain or storm)
+REMEMBER:160W of power is the maximum of it.The real power of it is about 15-35w.Sometimes higher,but really rare.Very unstable!
+
+==See also==
+*

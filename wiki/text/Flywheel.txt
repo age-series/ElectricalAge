@@ -1,0 +1,12 @@
+{{Block
+|blockname=Flywheel
+|requirements=none
+|image=Flywheel
+|poweredby=Shaft Power
+|type=Single
+|stackable=Yes
+}}
+
+A flywheel adds potential energy to a shaft powered device.
+
+Fun fact - all devices have some potential energy (mass), but a flywheel has a LOT of potential energy.
