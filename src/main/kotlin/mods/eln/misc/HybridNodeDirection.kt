@@ -1,8 +1,8 @@
 package mods.eln.misc
 
-import net.minecraft.util.MathHelper
 import net.minecraft.util.Vec3
 import org.lwjgl.opengl.GL11
+import kotlin.math.abs
 
 enum class HybridNodeDirection(val int: Int) {
 
@@ -218,39 +218,34 @@ enum class HybridNodeDirection(val int: Int) {
         }
     }
 
-    fun rotateFromXP(v: Vec3) {
-        when (this) {
-            XN -> {
-                v.xCoord = -v.xCoord
-                v.yCoord = 0.0
-                v.zCoord = 0.0
-            }
-            XP -> {
-                v.xCoord = v.xCoord
-                v.yCoord = 0.0
-                v.zCoord = 0.0
-            }
-            YN -> {
-                v.xCoord = 0.0
-                v.yCoord = -v.xCoord
-                v.zCoord = 0.0
-            }
-            YP -> {
-                v.xCoord = 0.0
-                v.yCoord = v.xCoord
-                v.zCoord = 0.0
-            }
-            ZN -> {
-                v.xCoord = 0.0
-                v.yCoord = 0.0
-                v.zCoord = -v.xCoord
-            }
-            ZP -> {
-                v.xCoord = 0.0
-                v.yCoord = 0.0
-                v.zCoord = v.xCoord
-            }
+    fun directionCrossProduct(dir: HybridNodeDirection): HybridNodeDirection {
+        val v1 = createUnitVector(this)
+        val v2 = createUnitVector(dir)
+
+        return unitVectorToDirection(v1.crossProduct(v2))
+    }
+
+    private fun createUnitVector(dir: HybridNodeDirection): Vec3 {
+        val v = Vec3.createVectorHelper(0.0, 0.0, 0.0)
+
+        when (dir) {
+            XN -> v.xCoord = -1.0
+            XP -> v.xCoord = 1.0
+            YN -> v.yCoord = -1.0
+            YP -> v.yCoord = 1.0
+            ZN -> v.zCoord = -1.0
+            ZP -> v.zCoord = 1.0
         }
+
+        return v
+    }
+
+    private fun unitVectorToDirection(v: Vec3): HybridNodeDirection {
+        val xInt = (((v.xCoord + 1) / 2) + XN.int) * abs(v.xCoord)
+        val yInt = (((v.yCoord + 1) / 2) + YN.int) * abs(v.yCoord)
+        val zInt = (((v.zCoord + 1) / 2) + ZN.int) * abs(v.zCoord)
+
+        return fromInt((xInt + yInt + zInt).toInt())!!
     }
 
 }
