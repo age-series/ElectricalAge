@@ -14,8 +14,6 @@ import java.io.ByteArrayOutputStream
 import java.io.DataOutputStream
 import java.io.IOException
 import kotlin.math.abs
-import kotlin.math.pow
-import kotlin.math.sqrt
 
 class FloodlightProcess(var element: FloodlightElement) : IProcess {
 
@@ -45,12 +43,9 @@ class FloodlightProcess(var element: FloodlightElement) : IProcess {
 
         if (!element.lbCoord.blockExist) return
 
-        val vv = Vec3.createVectorHelper(1.0, 0.0, 0.0)
+        val vv = createRotationVector(element.swivelAngle, element.headAngle, element.rotationAxis, element.blockFacing)
+
         val vp = Utils.getVec05(element.node!!.coordinate)
-
-        element.blockFacing.rotateFromXP(vv)
-
-        rotateAroundFacing(vv, element.rotationAxis, element.swivelAngle, element.headAngle)
 
         val newCoord = Coordinate(element.node!!.coordinate)
         for (idx in 0 until element.coneRange.int) {
@@ -72,6 +67,8 @@ class FloodlightProcess(var element: FloodlightElement) : IProcess {
         }
         if (!exit) {
             while (newCoord != element.node!!.coordinate) {
+                // TODO: Offset negative directions by 1
+                // TODO: Also fix air detection to not be offset by 1
                 val block = newCoord.block
                 if (block === Blocks.air || block === Eln.lightBlock) break
                 vp.xCoord -= vv.xCoord
@@ -83,48 +80,175 @@ class FloodlightProcess(var element: FloodlightElement) : IProcess {
         if (!exit) setLightAt(newCoord, newLight)
     }
 
-    private fun rotateAroundFacing(v: Vec3, axis: HybridNodeDirection, horzAngle: Float, vertAngle: Float) {
+    private fun createRotationVector(horzAngle: Float, vertAngle: Float, axis: HybridNodeDirection, facing: HybridNodeDirection): Vec3 {
+        val oldV = getRawRotationVector(horzAngle, vertAngle)
+
+        val newV = Vec3.createVectorHelper(0.0, 0.0, 0.0)
+
+        when (axis) {
+            XN -> {
+                newV.xCoord = -oldV.yCoord
+
+                when (facing) {
+                    XN -> TODO("unused - impossible facing direction")
+                    XP -> TODO("unused - impossible facing direction")
+                    YN -> {
+                        newV.yCoord = -oldV.zCoord
+                        newV.zCoord = oldV.xCoord
+                    }
+                    YP -> {
+                        newV.yCoord = oldV.zCoord
+                        newV.zCoord = -oldV.xCoord
+                    }
+                    ZN -> {
+                        newV.yCoord = -oldV.xCoord
+                        newV.zCoord = -oldV.zCoord
+                    }
+                    ZP -> {
+                        newV.yCoord = oldV.xCoord
+                        newV.zCoord = oldV.zCoord
+                    }
+                }
+            }
+            XP -> {
+                newV.xCoord = oldV.yCoord
+
+                when (facing) {
+                    XN -> TODO("unused - impossible facing direction")
+                    XP -> TODO("unused - impossible facing direction")
+                    YN -> {
+                        newV.yCoord = -oldV.zCoord
+                        newV.zCoord = -oldV.xCoord
+                    }
+                    YP -> {
+                        newV.yCoord = oldV.zCoord
+                        newV.zCoord = oldV.xCoord
+                    }
+                    ZN -> {
+                        newV.yCoord = oldV.xCoord
+                        newV.zCoord = -oldV.zCoord
+                    }
+                    ZP -> {
+                        newV.yCoord = -oldV.xCoord
+                        newV.zCoord = oldV.zCoord
+                    }
+                }
+            }
+            YN -> {
+                newV.yCoord = -oldV.yCoord
+
+                when (facing) {
+                    XN -> {
+                        newV.xCoord = -oldV.zCoord
+                        newV.zCoord = -oldV.xCoord
+                    }
+                    XP -> {
+                        newV.xCoord = oldV.zCoord
+                        newV.zCoord = oldV.xCoord
+                    }
+                    YN -> TODO("unused - impossible facing direction")
+                    YP -> TODO("unused - impossible facing direction")
+                    ZN -> {
+                        newV.xCoord = oldV.xCoord
+                        newV.zCoord = -oldV.zCoord
+                    }
+                    ZP -> {
+                        newV.xCoord = -oldV.xCoord
+                        newV.zCoord = oldV.zCoord
+                    }
+                }
+            }
+            YP -> {
+                newV.yCoord = oldV.yCoord
+
+                when (facing) {
+                    XN -> {
+                        newV.xCoord = -oldV.zCoord
+                        newV.zCoord = oldV.xCoord
+                    }
+                    XP -> {
+                        newV.xCoord = oldV.zCoord
+                        newV.zCoord = -oldV.xCoord
+                    }
+                    YN -> TODO("unused - impossible facing direction")
+                    YP -> TODO("unused - impossible facing direction")
+                    ZN -> {
+                        newV.xCoord = -oldV.xCoord
+                        newV.zCoord = -oldV.zCoord
+                    }
+                    ZP -> {
+                        newV.xCoord = oldV.xCoord
+                        newV.zCoord = oldV.zCoord
+                    }
+                }
+            }
+            ZN -> {
+                newV.zCoord = -oldV.yCoord
+
+                when (facing) {
+                    XN -> {
+                        newV.xCoord = -oldV.zCoord
+                        newV.yCoord = oldV.xCoord
+                    }
+                    XP -> {
+                        newV.xCoord = oldV.zCoord
+                        newV.yCoord = -oldV.xCoord
+                    }
+                    YN -> {
+                        newV.xCoord = -oldV.xCoord
+                        newV.yCoord = -oldV.zCoord
+                    }
+                    YP -> {
+                        newV.xCoord = oldV.xCoord
+                        newV.yCoord = oldV.zCoord
+                    }
+                    ZN -> TODO("unused - impossible facing direction")
+                    ZP -> TODO("unused - impossible facing direction")
+                }
+            }
+            ZP -> {
+                newV.zCoord = oldV.yCoord
+
+                when (facing) {
+                    XN -> {
+                        newV.xCoord = -oldV.zCoord
+                        newV.yCoord = -oldV.xCoord
+                    }
+                    XP -> {
+                        newV.xCoord = oldV.zCoord
+                        newV.yCoord = oldV.xCoord
+                    }
+                    YN -> {
+                        newV.xCoord = oldV.xCoord
+                        newV.yCoord = -oldV.zCoord
+                    }
+                    YP -> {
+                        newV.xCoord = -oldV.xCoord
+                        newV.yCoord = oldV.zCoord
+                    }
+                    ZN -> TODO("unused - impossible facing direction")
+                    ZP -> TODO("unused - impossible facing direction")
+                }
+            }
+        }
+
+        return newV
+    }
+
+    private fun getRawRotationVector(horzAngle: Float, vertAngle: Float): Vec3 {
         val horzSin = MathHelper.sin(horzAngle * (Math.PI / 180.0).toFloat())
         val horzCos = MathHelper.cos(horzAngle * (Math.PI / 180.0).toFloat())
 
         val vertSin = MathHelper.sin(vertAngle * (Math.PI / 180.0).toFloat())
         val vertCos = MathHelper.cos(vertAngle * (Math.PI / 180.0).toFloat())
 
-        when (axis) {
-            XN -> {
+        val v = Vec3.createVectorHelper(0.0, 0.0, 0.0)
 
-            }
-            XP -> {
+        v.xCoord = vertCos.toDouble() * horzSin.toDouble()
+        v.yCoord = vertSin.toDouble()
+        v.zCoord = vertCos.toDouble() * horzCos.toDouble()
 
-            }
-            YN -> {
-                // TODO: Fix overlapping horizontal and vertical rotations
-                // TODO: Offset negative directions by 1
-                // TODO: Add other rotation directions
-            }
-            YP -> {
-                v.xCoord = horzCos.toDouble()
-                v.yCoord = vertSin.toDouble()
-                v.zCoord = -horzSin.toDouble()
-            }
-            ZN -> {
-
-            }
-            ZP -> {
-
-            }
-        }
-    }
-
-    private fun rotateAroundZ(v: Vec3, par1: Float) {
-        val f1 = MathHelper.cos(par1)
-        val f2 = MathHelper.sin(par1)
-        val d0 = v.xCoord * f1.toDouble() + v.yCoord * f2.toDouble()
-        val d1 = v.yCoord * f1.toDouble() - v.xCoord * f2.toDouble()
-        val d2 = v.zCoord
-        v.xCoord = d0
-        v.yCoord = d1
-        v.zCoord = d2
+        return v
     }
 
     private fun isOpaque(coord: Coordinate): Boolean {
@@ -139,9 +263,11 @@ class FloodlightProcess(var element: FloodlightElement) : IProcess {
         // TODO: Issue here with detecting when to update light value of floodlight block
         if (newLbCoord != oldLbCoord) {
             element.lbCoord = Coordinate(newLbCoord)
+            /*
             if ((oldLbCoord == element.node!!.coordinate) || ((newLbCoord == element.node!!.coordinate) && (newLight != oldLight))) {
                 element.node!!.lightValue = newLight
             }
+            */
         }
 
         if (newLbCoord != element.node!!.coordinate) {
