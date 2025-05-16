@@ -1,0 +1,48 @@
+Matrix Size is an important consideration when working with Electrical Age. Hopefully, in a future update, it will be less of a concern, but for the time being, the matrix size is important.
+
+=== Advantages of large matrices ===
+
+Large matrices allow for more advanced circuits; you can have many resistors, voltage sources, power sources, and other primary MNA elements. The other plus to large matrices is they get all of the components updated at the exact same time. This prevents problems with added capacitance in the (likely broken) MNA.
+
+=== Disadvantages of large matrices ===
+
+Modified Nodal Analysis matrices scale approximately at the n^2 speed. This means that if you have 5 components, it takes 25 units of computational time
+
+See the following table to get an idea:
+
+{| class="wikitable"
+|-
+! Component Count !! Computational Units
+|-
+| 5 || 25
+|-
+| 10 || 100
+|-
+| 25 || 625
+|-
+| 50 || 2500
+|-
+| 100 || 10000
+|-
+| 150 || 22500
+|}
+
+Another disadvantage to large matrices is that any time any one of the resistors gets updated, the matrix has to be completely recalculated, which includes a matrix inversion and some other math, versus changing a voltage source or current source voltage or current, which only requires some basic math to be recomputed. On average, changing a resistance can take 100-1000 times longer than changing the voltage of a voltage source.
+
+=== Determining the size of your matrices ===
+
+In Electrical Age 1.15.4 and newer (on jrddunbr's builds), there was a field added to WAILA for cables and some other components that allows you to see the size of matrices. Unfortunately, as a side effect of the changes made, sometimes shaft networks cause NaN bugs. This will be resolved in 1.15.7
+
+=== Increasing Server Performance ===
+
+As a general rule, you want to keep the matrix counts below 30, and matrices that are lower than 10 in size are better off.
+Matrices in exceptionally large sizes (over 100) have been known to cause incredibly poor server performance.
+
+To reduce matrix size, the best thing to do for power cables is to use a DC/DC converter in Isolated mode. You can place 1 cable in each side with an optimal core, and it will not cause voltage/power drops (in most cases) across the device, and will reduce the matrix size for each of the connected matrices. For signal cables, it can be a bit more complicated, but you can use logic gates or other components to reduce it there. Also, signal bus cables can cause large matrix counts when there are many branches of a cable - don't run signal bus cables farther than you need to, unnecessary branches will cause major increases in matrix count for the contained wires. (Unfortunately, Signal Bus Cables don't show the contained matrix counts, you need to check the individual wires as they branch off).
+
+=== Things to watch around for high matrix counts ===
+
+* Shaft components (generators, shaft motors)
+* BATTERIES (there are 5 components per battery)
+* Most power sources (solar panels, fuel generator, heat turbine, etc.)
+* Wire matrices (when you make a grid shape of wires)

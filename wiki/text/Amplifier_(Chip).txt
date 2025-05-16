@@ -1,0 +1,5 @@
+The amplifier chips lets you to boost any signal voltage by a configurable (GUI) factor. 
+The output voltage can be in the range 0..50V, even if the amplified signal would be bigger.
+
+== See also ==
+* [[wikipedia:Amplifier]]

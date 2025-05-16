@@ -1,0 +1,40 @@
+{{Block
+|blockname=Heat Turbines
+|requirements=[[Stone Heat Furnace]] and any kind of [[Thermal Dissipator]]
+|image=Heat-Turbines
+|poweredby=Thermal Energy
+|type=Single
+|stackable=Yes
+}}The heat turbine transfers heat energy from a high temperature on the red side into a low temperature on the blue side. This process generates electricity which can be drawn out from the both sides.<br />
+
+== Producing Energy ==
+Energy production can be accomplished by putting a [[Stone Heat Furnace]] on the red side, and a [[Thermal Dissipator|Passive Thermal Dissipator]], [[Thermal Dissipator|50v Active Thermal Dissipator]] or an [[Thermal Dissipator|200V Active Thermal Dissipator]] on the blue side.
+
+The greater the difference in the temperature means that the more energy is produced, as proven by the pitch of the satisfying noise the engine creates.
+
+Be careful not to spin it up too fast though, or else the machine will violently fail!
+
+== Usage ==
+All one has to do to draw power from it to provide it an electrical load; it will start passing heat through it to produce electricity to meet the demand. Ideally, a heat dissapator should be waiting on the other end to keep the temperature difference ideal, but it's also possible to put another heat turbine to extract even more energy. It's very difficult to pull off without careful planning though!
+
+Remember: Every machine and generator has only one terminal. This is because the other terminal is already connected to ground, reducing the need to loop wires.
+
+== Efficiency ==
+
+When converting from heat energy into electrical energy, up to 28.16% of the energy can be converted while the rest is unavoidably lost. This means that an non-upgraded heat furnace can produce 1000W of heat and therefore generate up to 281.6W of electrical power.
+
+* A heat furnace with no upgrades produces 281.6W
+* A heat furnace with one upgrade produces 422.4W
+* A heat furnace with both upgrades produces 563.2W
+* A liquid heat furnace with a small engine produces 1,408W
+* A liquid heat furnace with a medium engine produces 2,816W
+* A liquid heat furnace with a large engine produces 7,040W
+
+Remember to consider that higher heat values will require more turbines to extract from, and that more cooling will also be required. It is highly recommended to consider the active heat dissipators to maintain favorable efficiencies.
+
+== Too weak! ==
+
+Your shiny 50V heat turbine got you through the early game, and your upgraded 200V helped you through the mid game, but now that's not enough. You need more. Sure you could chain a bunch of them, but that's proving to be more and more unrealistic. Eventually, it will be time to leave your turbines behind and generate power via [[Generator]]s.
+
+[[Category:50 Volts]]
+[[Category:200 Volts]]

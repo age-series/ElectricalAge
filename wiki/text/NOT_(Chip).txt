@@ -1,0 +1,24 @@
+
+
+The simplest possible logic function is the [https://en.wikipedia.org/wiki/Inverter_(logic_gate) NOT function].
+
+In digital logic, an inverter or NOT gate is a logic gate which implements logical negation. An
+inverter circuit outputs a voltage representing the opposite logic-level to its input. Its main
+function is to invert the input signal applied. If the applied input is low then the output becomes
+high and vice versa.
+
+Logic gates in EA operate at fixed voltage levels corresponding to a logical 0 or 1. A voltage of
+less than 10V is considered as a logical 0 (low), a voltage above 30V is considered as a logical 1
+(high). Voltages in-between 10V and 30V are can not be determined reliable as a 0 or a 1, so the
+considered input signal oscillates randomly between 0 and 1.
+[[File:NOT GATE .png|150px|thumb|right]]
+Push the signal switch in order to see the NOT chips function. The output signal is always the
+opposite of the input signal.
+
+You can also connect in put and out put of it,make a lot.you can crash your game ,or.......
+
+== See also ==
+
+*[[wikipedia:NOT gate]]
+
+[[Category:Digital chips]]

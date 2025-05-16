@@ -1,0 +1,116 @@
+== Basic Steam Turbine == 
+
+Here's a simple example (perhaps a first tier with the raw essentails) of what is needed to make a steam turbine work :)
+
+Obviously, as your power needs increase, this basic solution may not suffice any longer, at which point, you may need to work on better regulation with PID's for example.
+
+But, this is great for your basic setup.
+
+=== What you will need to get started ===
+
+* 1.2 buckets per second (or 80mB/t - Gold BuildCraft Fluid Pipe for example) of Steam - I tend to use Railcraft steam
+* 1x [[Steam_turbine|Steam Turbine]]
+* 1x [[Generator]]
+* 1x [[Signal_trimmer|Signal Trimmer]]
+* 96+ [[Coal Dust]] - used to configure Rheostats resistance. (One can reduce this requirement a little bit by using more signal trimmers on the signal lines for the rheostats, it saves a few dust)
+* 1x [[Tachometer]]
+* 1x [[Signal Cable]]
+* 1x [[Very High Voltage Relay]]
+* 2x [[Large Rheostat]] (the one with a heat sink)
+* 4+ Small Passive [[Thermal_Dissipator]] - or better. You don't need as many of these if you have active dissipation
+* 1x [[Ground Cable]]
+
+=== Also recommended ===
+
+* Some Very High Voltage Wire (at least 12 probably)
+* Circuit Breaker (two or more best, one at the inflow, and one at the output)
+* Enough [[Transformer|DC/DC converters]] and respective cables and [[Ferromagnetic_Core|cores]] for them to reach the desired voltage
+* Electrical Probes and loggers (for watching your power over time)
+* Somewhere to dump all of this power (but not essential)
+
+=== Layout ===
+
+Below, find a minimal example of a steam generator.
+
+[[File:T1-steam-overview.png]]
+
+Starting from the upper left, we have a Ralicraft admin steam producer. This can produce ridiculous amounts of steam, which we then pipe into the steam turbine. The steam turbine has a signal trimmer set at 16%, which allows approximately the same as a gold BuildCraft pipe, around 1.2 Buckets/s or 80mb/t. Allowing more than that will actually cause problems and you will explode, since the resistor will not be able to regulate the power enough to prevent the axle from spinning out of control.
+
+In general, the amount of steam you need can be produced by a 2x2 Railcraft boiler, with 2 tall high-pressure chambers. Increasing chambers will increase the steam production. Remember, keep water in the boiler or it will explode :)
+
+To the right of the generator, we have a tachometer:
+
+[[File:Tachometer.png]]
+
+The tachometer is configured to output 50v when the rotational speed is less than 800 rad/s, and to output 0v when the rotational speed is more than 801 rad/s. This in turn sets the relay to turn on and off (it's in the normally closed position). What this does, is when the generator goes over the designated speed, it converts the rotational energy into heat in the large rheostats, and thus slowing down the shaft rotation. It also does cause the output voltage to go down a little bit.
+
+In the overview, you will see that there are two large rheostats, and then they ground out. The rheostats have 64 and 32 coal dust in them (ore-dict coal dust is fine), which modifies the resistance of the rheostat.
+
+Behind the rheostats, we have heatsinks (thermal disappators). The ones in the photo are 200v active ones, but they can be passive if the temperature stays below 100C at idle. Adding more disappators allows more heat to be removed from the system as well. You can also technically get some of this power back with other means, such as the heat turbines.
+
+
+Here's a final close-up of the generator:
+
+[[File:T1-steam-closeup.png]]
+
+=== Monitoring, Circuit Breakers, and output example ===
+
+One of the leads from the motor proceeds to go to the two panels near the upper right of the image. They monitor the voltage and watts respectively for the cable. If you right click on the screens, you can configure what they are measuring, and what the lower bound and upper bound are on the graph. You will want to configure this to be the same numbers as what is on the electrical probe, otherwise your graph will be incorrect (it's all based on the voltage from the electrical probe, between 0v-50v on the signal cable).
+
+After that, we have an electrical breaker set for 3600v (or 3.6kV). If you go above that, then it's time to prevent the cable from exploding. It also prevents over-current draw on the cable.
+
+In this case, our power gets dumped into a transformer to convert to 800v, and then a 800v energy converter, which fills an RF storage unit.
+
+See below for the [[Transformer]] configuration. Intuitively, the VHV cable side (the green side in this case) connects to the VHV cables on the ground (also marked on the green side), as seen in the overview. The same goes for the orange cables - they are both connected to the yellow side. Since we have an optimal core, and there is a 4:1 ratio of cables, it coverts 3.2kV to 800v (4:1).
+
+[[File:Vhv-hv-transformer.png]]
+
+== Starting the generator ==
+
+As soon as you apply steam, the shaft will begin to rotate. Be prepared for this. You will want all of the electrical work in place to regulate the voltage before you start - if your shaft goes over 1000 rad/s, it will explode. It also will increase in speed in (what appears to be) quadratic fashon after 200 rad/s..
+
+Also worth noting that if you have power on the DC/DC regulator, and you insert wires, it may explode. Be sure that you don't get the wrong voltage wires on the wrong side.
+
+Unlike the gas generators, you can just start steam by applying lots of steam to the turbine. It is recommended however that you start your generator much like the gas tutorial if you are short on time. It's not essential, but it can save 5-10 minutes of waiting for it to start. In general, never start the generator under load, or it will not start at all, due to very low efficiency at lower speeds.
+
+If you have flywheels (which you don't necessarily need), you will certainly need to start it similarly to the gas turbine, and it will take upwards of 10-20 minutes of real time to start. Flywheels have the positive effect of reducing the amount of fluctuation in your generator speed once it's started.
+
+== Going Further ==
+
+Ways you can improve this generator:
+
+* Use the PID block and the voltage output (via a electrical probe) to regulate for 3.2kV. Generally, the voltage and the shaft rotation speed are well related, and can prevent over-speed.
+* Reduce the use of rheostats to regulate the speed of the shaft by having better inflow regulation
+* find a sweet spot between steam turbines and generators - how many generators to a turbine?
+
+== More advanced turbine examples ==
+
+The above turbine is pretty simple, and can be greatly improved on. That design had a few problems with blowing up if you gave it too much steam and isn't very efficent, so I never really use that design longer than I have to.
+
+=== Rheostat based turbine ===
+
+This turbine is one that I personally use a lot. It is not very efficient at idle (it converts all unused energy to heat), however it hardly has any voltage fluxuation greater than a volt or two (important on very high voltage lines to prevent one generator from running another over long distances), and can be stably configured for virtually any voltage, and will mostly not be affected by how much load there is on the system, and particularly so when loads turn on and off without much warning, which can cause a PID system to have a large voltage fluctuation. This means that you can run this particular generator around 3900v and not hit 4000v (exploding voltage), and if you don't draw too much power, won't go over 1000rpm either.
+
+In the first image below, we have the generators. I have configured the vhv relays in the back to be normally closed (so that if a signal cable breaks it stops instead of blowing up; thus a fail safely scenario). The relays connect to the back of the signal wall where the rheostats are. On the left, we have a voltage based regulation system - if the voltage is over 3201v, it will set the signal line to 0v, and all of the rheostats will dump the power. If it goes below 3200v, the relays turn off and the generators can provide full power. In this way, it can have very tight power regulation properties, great for high voltage lines. It does introduce a bit of electrical noise into the lines when idling (which can be resolved with capacitors and other devices), and if you don't use diodes before the poles it will actually pull down the voltage on the grid when it can - this is undesirable since it's also how the shaft rotation speed is managed.
+
+[[File:Resistive-generator.png|800px]]
+
+On the back side, we have the rheostats. They are configured to be at 900 ohms each, with 60 coal dust. Any coal dust in the ore dictionary will work if Eln has been configured to allow ore dictionary items.
+
+One side of the rheostat is attached to ground, the other to the relay on the other side of the signal wall.
+
+On the right side of the image, we also have the steam turbine. In this scenario, I've made it in creative mode, and I've used a Railcraft Admin Steam Producer (which requires redstone signal to activate, thus the lever). I'm using Thermal Dynamics pipes to move the steam from the admin steam producer to the steam turbine (which works unrestricted for a single turbine).
+
+[[File:Resistive-generator-rheostats.png|800px]]
+
+Worth mentioning, in survival mode, this generator will require two 3x3x3 high pressure Railcraft steam boilers (either the solid or fluid type works about the same) to properly provide enough steam to run at full speed. You will need a very stable source of coal coke if you intend to use the solid fuel option, and automatic fuel feeding is a must (not to mention a water pipe for the boiler).
+
+If you want to save efficency of the design, you can reduce the amount of steam introduced into the steam turbine with a signal trimmer (but this will (obviously) affect the power output of the generation station).
+
+A nice feature of this particular generation system is that it's rather modular, and extensible without much thought - just have 4 generators per turbine, and you can scale along the axle as far as you would like. While probably not as efficient with one, a flywheel can be used. This general frame design is also pretty workable to modify to work with PID, and it can be configured that the rheostats are only used in emergency situations when the system has been converted to PID.
+
+=== PID based turbine ===
+
+( todo: make one )
+
+[[category:Example]]

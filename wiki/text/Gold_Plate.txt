@@ -1,0 +1,1 @@
+Gold Plates currently don't have any use within the mod. Don't craft them unless another mod uses Gold Plates.

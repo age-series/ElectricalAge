@@ -1,0 +1,5 @@
+The [[Alloy Ingot]] is a metal ingot which is essential to higher-tier Electrical Age construction. In particular, it is used in the construction of [[Very High Voltage Cable]] and many of the 200V [[Machine]]s.
+
+= Recipe =
+
+Smelt [[Alloy Dust]]. One dust yields one ingot.

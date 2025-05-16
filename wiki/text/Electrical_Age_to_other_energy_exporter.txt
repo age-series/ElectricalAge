@@ -1,0 +1,85 @@
+{{Block
+|blockname=Electrical Age to other energy exporter
+|poweredby=Varied Voltages
+|image=exporter
+|requirements=Connected to ELN on one side and converted to the opposite.
+}}
+
+The Electrical Age to other energy exporter can convert Electrical Age power into a number of other energy types from different mods, including RF, EU, and Open Computers Power. The power converters all have a GUI, which can be used to set the maximum amount of energy which can be converted by the block to the other energy type. Doing so will adjust the amount of power the converter will attempt to draw.
+
+Currently only RF, EU, and OpenComputer's power units are compatible.
+
+
+== No, you can't convert other mods' power into electricity ==
+
+You '''cannot''' convert power from other mods into Electrical Age Watts. 
+
+Instead, you can use mods' fuels to power the various generators, or create power in the steam turbine.
+
+== Variants ==
+Converters are available in 50V, 200V, and 800V variants.
+
+*  50V can handle up to 4kW (300RF/t)
+* 200V can handle 8kW (600RF/t)
+* 800V can handle 20kW (1500RF/t)
+
+== Conversions ==
+
+* 1 RF/t = 13.33W
+* 1 EU/t = 33.33W
+* 1 OC/t = 1.33W
+
+Another way of representing this is
+
+* 1W = 0.075 RF/t
+* 1W = 0.030 EU/t
+* 1W = 0.752 OC/t
+
+Or for a more proper conversion
+
+* 1W = 1.5 RF/s
+* 1W = 0.6 EU/s
+* 1W = 15.04 OC/s
+
+These values can be changed in the config. This is highly recommended if the current values are underpowered compared to other power generation in your modpack.
+
+== Comparisons to Other Generation Methods ==
+
+*Buildcraft Stirling Engine: 10 RF/t = 133W
+*Railcraft Hobbyist Steam Engine: 16 RF/t = 213W
+*Railcraft Commercial Steam Engine: 40 RF/t = 533W
+*Buildcraft Combustion Engine: 60 RF/t = 800W
+*Thermal Expansion Dynamo T0: 60 RF/t = 800W
+*Railcraft Industrial Steam Engine: 80 RF/t = 1,066W
+*Thermal Expansion Dynamo T1: 120 RF/t = 1,600W
+*Thermal Expansion Dynamo T2: 240 RF/t = 3,200W
+*Thermal Expansion Dynamo T3: 480 RF/t = 6,400W
+
+*Solar Panel: 1 EU/t = 33W
+*Fuel Generator: 10 EU/t = 333W
+*Radioisotope Thermoelectric Generator: 32 EU/t = 1,066W
+*Radioisotope Heat Generator: 48 EU/t = 1,600W
+*Small Passive Nuclear Reactor: 120 EU/t = 4,000W
+*Railcraft Steam Turbine: 200 EU/t = 6,660W
+*Full Passive Nuclear Reactor: 420 EU/t = 14,000W
+*The Output of an MFE: 512EU/t = 17,065W
+*1000HU Fluid Nuclear Reactor: 750 EU/t = 25,000W
+*The Output of an MFSU: 2048EU/t = 68,260W
+
+It's worth looking at your current power generation capabilities to see if it's worth exporting your ELN power over simply using the mod's native generation methods. The default configuration is pretty well balanced and shouldn't need adjusting in most packs.
+
+== Maximum Conversion Values ==
+
+* 50V - 300 RF/t - 120EU/t - 3000 OC/t
+* 200V - 600 RF/t - 240EU/t - 6000 OC/t
+* 800V - 1500 RF/t - 540EU/t - 15000 OC/t
+
+== Fun Fact ==
+
+Nominally, the largest amount of ELN power that can be converted from a powerline is 8,000RF/t. It will take 12 800V converters at max power, 4 poles all delivering VHV and a VERY good power supply capable of handling the 60,000W load.
+
+[[File:Max Conversion.png|thumb|A design which allows for the maximum conversion]]
+
+[[Category:50 Volts]]
+[[Category:200 Volts]]
+[[Category:800 Volts]]

@@ -1,0 +1,5 @@
+This chip outputs a rectangular signal which frequency depends the input voltage to the chip. The
+higher the input voltage - the higher the output frequency.
+
+Play with the signal trimmer and observe the output signal of the oscillator on the data logger.
+[[Category:Mixed signal chips]]

@@ -1,0 +1,21 @@
+{{Block
+|blockname=Wireless Signal Repeater
+|poweredby=Wireless Signal
+|image=Signal_Repeater
+|type=Single
+}}Wireless Signal Repeater is a simple device which repeats wireless electrical signal.
+It is used to increase wireless signal range up to 32 blocks from the repeater.
+
+==Crafting==
+{{Crafting_Grid
+|1=Signal_Antenna|3=Signal_Antenna
+|4=Redstone|6=Redstone
+|7=Iron_Ingot|8=Cheap_Chip|9=Iron_Ingot
+|result=Signal_Repeater}}
+
+==See also==
+* [[Signal Transmitter]]
+* [[Signal Receiver]]
+
+[[Category:Blocks]]
+[[Category:Signal]]

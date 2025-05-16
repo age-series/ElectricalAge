@@ -1,0 +1,13 @@
+The [https://en.wikipedia.org/wiki/XNOR_gate XNOR gate] is a digital logic gate whose function is the logical complement of the XOR gate.
+A 1 (high) output results if none or two of the inputs to the gate are 1 (high). If one or three
+inputs are 1 (high), a 0 (low) output results.
+
+A way to remember XNOR is "the number of 1 (high) inputs is even".
+
+If no signal is connected to an input pin, the input is read as 0 (low). This is done by internal
+pull-down resistors that pull the signal to low in the absence of an input signal. Using this
+mechanism the XNOR gate can be used with 2 or 3 inputs in the exact same way.
+
+Play with the 3 buttons to see the function of the XOR gate. You will see that the output is only
+1 (high) if one or all three inputs are 1 (high), in any other case the output will be 0 (low).
+[[Category:Digital chips]]

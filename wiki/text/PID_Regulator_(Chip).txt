@@ -1,0 +1,6 @@
+A PID (proportional–integral–derivative regulator or controller) can be used to control ANY process in EA. You can configure the Kp, Ki and Kd constants of the regulator (GUI).
+
+Without basic knowledge of how a regulation actually works, it might be quite hard to use. To be secure side, just play with the Kp factor and let Ki and Kd 0.
+
+== See also ==
+* [[wikipedia:PID_controller]]

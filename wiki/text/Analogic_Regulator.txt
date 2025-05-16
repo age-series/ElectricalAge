@@ -1,0 +1,13 @@
+The Analogic Regulator is used in the turbine recipies and can be used in certain machines to control them.
+
+==Crafting==
+<b>Analogic Regulator</b>
+{{Crafting_Grid
+|1=Redstone|3=Redstone
+|5=Cheap Chip
+|8=Iron Ingot
+|result=Analogic Regulator}}
+
+== Usage ==
+
+TODO

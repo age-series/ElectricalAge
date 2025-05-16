@@ -1,0 +1,22 @@
+Schmitt trigger devices are typically used in signal conditioning applications to remove noise
+from signals used in digital circuits, particularly mechanical contact bounce.
+
+In EA a Schmitt trigger basically does this:
+If the input voltage is lower than 10V, the output is 0 (low), if the output is bigger or equal
+than 30V, the output will be 1 (high). For all voltages in between, the output value does not
+change. In other words the Schmitt trigger only changes from 1 (high) to low at the moment the
+input voltage is below 10V and it changes only from 0 (low) to 1 (high) if the voltage surpasses
+30V.
+
+You can see here a system where a Sinus-Signal with an amplitude of 50V is used as input to a
+NOT gate and another path where the signal is conditioned by a Schmitt trigger before going to
+the NOT gate.
+
+If the Sinus is applied to the NOT gate directly, the output can start to oscillate as between
+10V and 30V the signal is not defined as 0 or 1 and can be both. Using a Schmitt trigger eliminates
+the problems of these oscillations as the Schmitt trigger offers a defined output signal even in the
+case the input voltage is between 10V and 30V.
+[[Category:Mixed signal chips]]
+
+== See also ==
+* [[wikipedia:Schmitt_trigger]]

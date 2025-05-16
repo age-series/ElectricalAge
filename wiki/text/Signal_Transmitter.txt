@@ -1,0 +1,26 @@
+{{Block
+|blockname=Wireless Signal Transmitter
+|poweredby=Wireless Signal
+|image=Signal_Transmitter
+|type=Single
+}}Remote Signal Transmitter can transmit electrical signal wirelessly. To transmit electrical signal you have to connect [[Signal Cable]] to the device.<br />
+Wireless signal has range up to 32 blocks. To increase signal range you can use [[Signal Repeater]].<br />
+You can set specified channel name and the signal will be transmitted on this channel.
+
+Large electrical discharges nearby have been known to disrupt a wireless signal for a short period.
+
+==Crafting==
+
+{{Crafting_Grid
+|2=Signal_Antenna
+|5=Redstone
+|7=Iron_Ingot|8=Cheap_Chip|9=Iron_Ingot
+|result=Signal_Transmitter}}
+
+==See also==
+* [[Signal Cable]]
+* [[Signal Repeater]]
+* [[Signal Receiver]]
+
+[[Category:Blocks]]
+[[Category:Signal]]

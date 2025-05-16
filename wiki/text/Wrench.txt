@@ -1,0 +1,32 @@
+{{Item
+|itemname=Wrench
+|image=wrench
+|stackable=Yes (64)
+}}
+== Obtaining ==
+
+Wrench could be crafting using this recipe:
+<b>Wrench</b>
+{{Crafting_Grid
+|2=Iron_Cable
+|4=Iron_Cable|5=Iron_Cable
+|9=Iron_Cable
+|result=Wrench}}
+
+== Usage ==
+
+Has wide usage in the mod.
+Allows player to rotate small objects, like logic gates, lamps.
+
+
+When used on a wire, wire will change it's policy against other non-same-colored wires, and with that in chat there will appear a message:
+'''Wire color care N'''
+N is either 1 or 0, where 0 means wire now connects with other wires whatever color they are, 1 means that wire now connects only with wires of same color.
+
+
+Also is used to craft
+<b>[[Config Copy Tool|Config Copy Tool]]</b>
+{{Crafting_Grid
+|1=Wrench|2=Redstone
+|4=Redstone|5=Advanced Circuit
+|result=Config Copy Tool}}

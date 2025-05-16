@@ -1,0 +1,61 @@
+{{Block
+|blockname=Stone Heat Furnace
+|requirements=None
+|image=Stone Heat Furnace
+|poweredby=Fuels
+|type=Single
+|stackable=Yes
+}}
+
+The '''Stone Heat Furnace''' provides heat either direct to other blocks or via [[Copper Thermal Cable]]. They are typically used to create a heat gradient for [[Heat Turbine|Turbine]].
+
+==Crafting==
+<b>Stone Heat Furnace</b>
+{{Crafting_Grid
+|1=Stone|2=Stone|3=Stone
+|4=Stone|5=Combustion Chamber|6=Stone
+|7=Stone|8=Copper Thermal Cable|9=Stone
+|result=Stone Heat Furnace}}
+
+==Interface==
+[[File:Stone Heat Furnace Interface.png]]
+
+=== Internal/External Control (A) ===
+
+If set to internal control, you can move the Gauges yourself. If set to external, the Gauges are controlled by a signal coming in over a [[Signal Cable]].
+
+=== Take/Decline Fuel (B) ===
+
+If under Internal control, this controls whether the Furnace will consume fuel. If it is left off, the furnace won't consume any fuel.
+
+=== Regulator Slot (C) ===
+
+Normally only the Control Gauge can be controlled. If you have a [[Regulator]] installed, you can set a particular temperature for the furnace to hold. The [[Regulator|Analog Regulator]] does so gradually, finding the exact right control setting, while the 1%/10% regulators work approximately like a standard thermostat.
+
+=== Combustion Chamber Slot (D) ===
+
+At least 1 [[Combustion Chamber]] is needed for the Stone Heat Furnace to work. Add a second to improve efficiency.
+
+=== Fuel Slot (E) ===
+
+Insert combustible fuel here, such as coal or charcoal.
+
+=== Temperature Gauge (F) ===
+
+Shows the current temperature of the furnace. Requires a regulator to be able to be controlled.
+
+===Control Gauge (G) ===
+
+Sets the rate at which to burn fuel in %.  At a setting under 10%, no fuel will be burned, and the Furnace is effectively off.
+
+==Signal Behavior==
+Signals will adjust the Control gauge. The signal strength directly correlates to its position on the bar.
+
+* 50V - Outputs 1,000 watts
+* 25V - Outputs 500 watts
+*  0V - Outputs 100 Watts
+
+==See also==
+* [[Copper Thermal Cable]]
+* [[Combustion Chamber]]
+* [[Regulator]]

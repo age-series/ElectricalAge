@@ -1,0 +1,100 @@
+==Larger Power Systems==
+
+If you have a need for much more power, in the hundreds of kW range, designing a clean system with failsafes becomes essential.
+You will likely need T2 poles for the amount of power you'll be transporting, and a way to use it all. The large amount of power required by the irresponsible drill can be a good sink.
+
+[[Image:512kWExampleOverview.png|705px]]
+
+==Basics==
+
+You'll likely want to round to the nearest power of two above the amount of power you're striving for, so 256kW for the irresponsible drill.
+This makes crafting turbines and generators and arraying them easier, as well as being close to cable limits for efficiency.
+
+It's recommended to split generators, turbines, and other parts of the shaft network into separate banks, so that maintenance and control can be easily done.
+Your will likely only pull 200+kW when your drill is running, and so you may want ti shut off some turbines when your power draw is not that high.
+As well, you may want only some generators to be online when you are underspeed, and it's easier to turn off banks of generators than trying to figure it out in huge clumps.
+
+Whichever turbine you're using, ''make sure you have enough fuel''. I would not recommend using the steam turbines without a reactor of some kind, either ReactorCraft, NuclearCraft, or BigReactors. You will regret it when your steam vanishes from your tank or you're building 32-64 HP RailCraft boilers. The gas turbine, while producing about half the power of its steam cousin, reacts faster, consumes a more reasonable amount of fuel, and can be more fuel efficient than the steam if you're running fluid fuel through a boiler. You'll still need a large amount of fuel, though.
+
+You'll likely want power storage of some kind, overspeed/overvolt protection, and some way to limit the power coming out of your shaft network so that you don't need to spin up again. As well, you'll want spin-up to be automated, so it can recover from a shutdown without your intervention.
+
+==Parts of the system==
+
+===Spin-up===
+
+You've got a couple options for spinning up your turbines, and while steam doesn't need to be spun up, it's helpful if you do because of how painstakingly slow it is when you have many flywheels.
+
+Since you've likely got your liquid fuel automated (and if you don't, you should do so soon), your best choice for manual spin-up is to use 200V fuel generators, as at 6kW per they're a large power output for the space, though unable to be automated because they require manual fuel input and turning on by hand.
+If you're looking for automation, dependability, and automatic startup, your best choice is solar panels with either of the power storage options discussed in the next section. This allows automated spin-up and turbine speed recovery at any time, as long as it's not too frequent (which it shouldn't be anyway).
+
+You'll want to feed that power into a shaft motor for startup, but you don't want it to always keep running and wasting power while exploding the shafts, do you?
+This is where clutches and tachometers are important. You can set a tachometer to disable a clutch if the system is above ~700 rad/s second, after most fuels should have ignited and be producing power in your gas turbines. If you're using steam turbines, it can also cutoff at there, as the turbines start to be decently efficient at that point, and can normally get up to speed reasonably from there.
+
+[[Image:512kWExampleStartup.png|705px]]
+
+===Power Storage===
+
+Some days, you'll be pulling more power than your system can generate, if because you decided to run your arc furnace and your miner is still running, or other reasons, you don't want to lose power entirely.
+There are a couple options for this, and each has its merits and pitfalls.
+
+* Using flywheels directly connected to your turbines is the simplest solution, and it's straightforward and can easily hold a lot of power. It will spin up and spin down with the turbines, however, and so can impede the startup process by requiring more energy than without. As well, if you try to take too much energy from them, they lose speed, so after while you may need to either lower your draw, disconnect generators, or spin up while still connected to get your voltage out closer to the 3200V recommended.
+
+* The next logical solution is to use batteries, then. If flywheels can slow down your turbines, why not move to batteries that are disconnected from the turbines? There a couple problems with this, in that if you're hitting the 800 rad/s (3200V) max efficiency on the efficiency curve of the turbines, your batteries will charge very slowly, because of the low voltage difference. Secondly, since they're not connected to the turbine system, you will need to use a Signal Processor with the batteryCharge() function to read the batteries' charge for when to shut off power output so as not to waste power of overcharge the batteries. Lastly, all batteries other than life-oriented (which need large amounts of gold), have a limited time they can last before they fail. This leads to the need to replace batteries occasionally.
+
+* So if you're not happy with directly connected flywheels, but don't want batteries, you can make bank(s) of flywheels connected to the turbines through a clutch, so that turbine speed can never be brought below a certain threshold, directly the opposite of how the startup motors turn off at a certain speed so as not to run concurrently with the turbines. This falls prey to some of the same problems as the other flywheel system, in that you'll eventually have a voltage drop as speed decreases, but you have a disconnect from your turbines at least.
+
+None of these are a "best" option, so pick whichever one you want of you think fits your system best.
+
+
+[[Image:512kWExampleFlywheels.png|705px|Flywheels, first type]]
+
+===Generators===
+
+You'll want some way to get the power you're producing out of the shaft network, and that's what generators are for. They convert rotation power into electrical power, and output at 3200V.
+Depending on what the cable power multiplier in your configs is set you, you'll need different amounts of generators to max out a VHV cable. At base, the number is 4, but I'll be using 4x mult (so 16 generators) in most of the pictures. 
+
+Put as many generators as you can on the cable, and make as many banks of generators as you need to convert all of your rotational power being produced to electricity. Generators can handle 4kW each, so for the 512kW build I've been showing you need 128 generators. Then run the VHV cable from the generators to some T1 poles with DC/DC transformers on them. You'll want to put only ~128kW per pole at default configs, or 512kW per pole at 4x. Either way, connect all of the poles together up to the max a pole can handle and you have power output ready.
+
+But wait, what if the generators overamp and explode? Add to some protection for that, you can have VHV relays before the transformer poles, set to trip at whatever amperage is too large for the cable to carry [equal to: (4*(# of generators)/3200)]. This will disconnect the power output of the generators if the draw is too much, preventing cable and generator explosions.
+
+[[Image:512kWExampleGenerators.png|705px]]
+
+===Stepping Up the Power===
+
+So, now that you have your power, you don't want to be running 8 lines of T1 poles everywhere to carry it all. You can use the T2 transmission towers to carry a much larger amount of power at ~49kV and lower loss. You'll need grid transformers between the T1 and T2 poles, and this comes with some dangers and concerns. You'll need to charge the grid transformers slowly, almost one at a time, or the draw from the capacitance will blow your grid completely. Other than that, you now have all of your power in one handy transmission tower, ready for distribution!
+
+[[Image:512kWExampleStepup.png|705px]]
+
+===Turbines===
+
+Now that you have the rest of the infrastructure in place, you can set up the power for it; your turbines. Look at the amount of power you want to produce, and divide by 8 to get about the amount of gas turbines, or by 16 for the number of steam turbines. For 512kW, that should be 32 steam turbines, or 64 gas turbines. Your turbines should be set up in banks so that if your draw is not the full capacity of your generation, you can turn some off, but keep them spinning at the correct speed for reignition if needed. The turbines in the example are in banks of 16, so one-quarter on at once. You'll need to provide fuel to your turbines, and a signal to make sure your turbines do not overspeed the network and explode.
+
+[[Image:512kWExampleTurbines.png|705px]]
+
+===Control and Safety===
+
+So, you have your system, but don't turn it on yet. You'll have a resulting explosion. You want some control first. There are many things you can control, and most are beneficial.
+
+====Turbine controls====
+PID for regulation of speed is necessary, you're not sinking all that power all the time. Remember steam turbines respond slower than gas turbines, so need tighter margins!
+Set them up in banks, and have banks turn off depending on power needs (half-implemented in picture)
+
+[[Image:512kWExampleControl.png|705px]]
+
+====Generator Controls====
+On/off based on speed of network. In the example build, I have two banks, one toggling on at 750 rad/s, and one toggling on at 775 rad/s, to make sure that the gas turbines will never need to be restarted unless a massive amount of energy is taken out before the clutches can react.
+You can also make something that disables them if your batteries are full, if you went that route
+
+====Startup Controls====
+Very similar to the turbine controls, they turn off as the speed of the networks get higher, and the number of them running at said speed is [(700-speed)/700)*4)]
+The green and blue signal processors in the image are what control the motors
+
+====Overspeed control====
+Don't want your turbines to explode even if they reach 975+ rad/s? Here's what you can do:
+Have a clutch engage fixed shaft(s) when you're over a certain rad/s on your network. The example has it set to 975 rad/s, to allow some time to clutch the speed down.
+It'll waste power very fast, but your turbines won't explode if they get that fast in the first place.
+
+[[Image:512kwExampleOverspeed.png|705px]]
+
+==Uses==
+You have little use for the power just sitting there, so go use it! The irresponsible drill in the Autominer is ''incredibly'' fast, and paired with an arc furnace, the results are incredible. I won't tell you how to set up the system, but it's the recommended use for this amount of power, and can be extremely profitable. Other than that, you can power cities and the rest of your machines fairly easily, and possibly set up a mob farm with turrets. Who knows. Or you could convert it to RF, but that's left to you to figure out.

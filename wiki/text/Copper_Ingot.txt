@@ -1,0 +1,11 @@
+{{Item
+|itemname=Copper Ingot
+|image=Copper Ingot
+|stackable=Yes (64)
+}}
+== Obtaining ==
+<br />
+Copper ingots can be obtained by smelting [[Copper Ore]]
+<br />
+== Usage ==
+Copper Ingots is a crafting item which can be turned into cables, tools, and armor. Tools made with copper have less durability, but are more effective than those made from iron.

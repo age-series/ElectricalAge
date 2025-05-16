@@ -1,0 +1,76 @@
+First, if you haven't read it yet, see [[Developing]] for how to make your own local copy of a project. If you're just browsing the source, read on.
+
+For the remainder of this document, I'll be using the forward slash (<code>/</code>) as the path separator, as it is on most UNIX-like operating systems. This should be equally valid on Windows, despite its normal path separator being the backslash (<code>\</code>). If you're on Windows, take note that some of the paths you see may ''appear'' different as a result. Similarly, the "absolute paths" (starting with <code>/</code>) will be ''relative to the repository root''--wherever you cloned that, or are viewing it. Finally, if a path ends with a slash, it means that it's a directory.
+
+= Code and Assets =
+
+Everything of this sort lives in <code>/src/main/</code>. When building, you may find some siblings in <code>/src/</code>, like <code>api/</code> or <code>test/</code> appear--you can safely ignore these.
+
+Under <code>/src/main/</code>, you will find two directories, <code>java/</code> and <code>resources/</code>. The former is the code, and the latter is the assets.
+
+== Code ==
+
+In <code>/src/main/java/</code>, you may find a few directories, many of which are APIs linked to by ELN, such as ComputerCraft and OpenComputers APIs. The main content lives in <code>mods/eln/</code>; there, you will find all of the following content.
+
+=== Components and Simulation ===
+
+* <code>Eln.java</code>: The main mod file. It is ''absolutely enormous'' as of this writing, and we are sorry. This is where all the blocks, items, recipes, etc. get registered. If you're going to add a ''completely new'' block, item, recipe, etc., you will have to add it somewhere in this file.
+* <code>sim/</code>: The Big Bad itself. The [[Simulator]] is responsible for running all the [[Process]]es in various orders, and solving all the circuits made out of [[Node]]s in the world, once per tick.
+** <code>mna/</code>: Stands for Modified Nodal Analysis. This is the core of the Electrical Age Engine code.
+*** <code>component/</code>: All of the various basic components. Some of these are built from parts of one another. Everything inherits from `Component`, and then `Bipole`. Most things inherit `Resistor`, `Capacitor`, `Inductor`, or `VoltageSource`.
+*** <code>state/</code>: All of the various nodes (as the actual MNA terminology uses it) that are the connection points for components. Components can also be connected to Null instead of a State. Everything in this package inherits from `State`, and some with very little change code-wise.
+*** <code>process/</code>: A lot of processes that are independent of the states or components, these are used mostly for inter-subsystem solves.
+*** <code>misc/</code>: This folder mostly contains constants (which should be kept here and not in Eln.java, so that when you run the MNA independently of Minecraft it still works!), and various interface classes that are used in the MNA.
+*** <code>SubSystem.java</code>: SubSystem is a single subsystem (See it as the single instance of a complete MNA matrix) which calculates everything with regards to an actual MNA itself.
+*** <code>RootSystem.java</code>: RootSystem ties together a lot of SubSystems, with "InterSystem" (as we tend to call it) classes that connect various subsystems together.
+** <code>nbt/</code>: Various classes that wrap stateful components into the Minecraft code.
+** <code>process/</code>: Various classes, including watchdogs, explosions, and some thermal code.
+** - various classes -: A set of classes that do various things close to the simulator, such as simulating the thermal system, and other components such as batteries and other devices. These are built from components in the MNA itself, but usually use the nbt wrappers to store state.
+* <code>node/</code>: This is where all the [[Node]] base classes live, including <code>NodeBase</code>, <code>NodeBlock</code>, and so forth. The base classes for [[SixNode]] and [[TransparentNode]] also live here.
+* <code>sixnode/</code>: This is where all the realized (derived from) [[SixNode]] content lives, like the [[Signal Processor]], the [[Sensor]]s, all of the [[Cable]]s, [[Switch]]es, [[Relay]]s, [[Capacitor]]s and [[Inductor]]s, etc.
+* <code>transparentnode/</code>: This is where ''almost all'' the realized [[TransparentNode]] content lives, like the [[Thermal Dissipator]]s, [[Solar Panel]]s, all of the [[Machine]]s, [[Battery|Batteries]], the [[Wind turbine|wind]], [[Water turbine|water]], and [[Heat turbine]]s, and so forth.
+* <code>gridnode/</code>: Code for the [[Powerline example|T1]] and T2 electrical [[Grid]]s (the latter is undocumented as of this writing), such as the [[Grid Transformer]]. They have a common [[GridNode]] base, which is a [[TransparentNode]] as well. These tend to use <code>GhostNode</code>s often; see <code>ghost/</code> below. Quite a lot of this is Kotlin.
+* <code>mechanical/</code>: Code for the [[Simple gas turbine control|mechanical (shaft) networks]], including the [[Steam turbine|steam]] and [[Gas turbine]] (but not the other ones above), the [[Generator]], the [[Motor]], and so forth. They are also derivatives of [[TransparentNode]], and also majority Kotlin.
+* <code>simplenode/</code>: Pretty much just the [[Electrical Age to other energy exporter]] and the Energy Exporters.
+
+=== Minecraft Interaction ===
+
+* <code>item/</code>: Plenty of the items which have no in-world representation, like [[Machine Booster]]s, [[Alloy Dust]], the [[X-Ray Scanner]], the [[Light Bulb]]s, and so forth.
+* <code>entity/</code>: Really, only the [[Replicator]] mob.
+* <code>fluid/</code>: Interacts with Forge's fluid API. Mostly used by the [[Steam turbine|steam]] and [[Gas turbine]]s, but also the [[Fluid Heat Furnace]].
+* <code>generic/</code>: The [[Generic Proxy System]] used by ELN. In essence, this encodes a large number of different items and blocks in the Minecraft world by using damage values as identifiers, preventing the exhaustion of Block and Item IDs. ''This system will probably be supplanted in the upcoming 1.10 port with BlockState.''
+* <code>packets/</code>: Network packet encoder/decoders sent over the wire.
+* <code>server/</code>: Various serverside things, like the <code>ConsoleListener</code> which interprets chat commands, and <code>PlayerManager</code> and <code>PlayerMetadata</code>, which handle the "wrench" key functionality.
+* <code>client/</code>: Various clientside things, including <code>FrameTime</code> which updates rendered objects' animations in accordance with the ''real time'' clock, and the event listener which handles the "wrench" key presses.
+* <code>sound/</code>: Utilities for playing sound, continuously or per event, in various ways.
+* <code>gui/</code>: Various classes to help with rendering the clientside interfaces.
+
+=== Supporting Code ===
+
+* <code>fsm/</code>: Finite State Machines, for long, state-oriented processes, like the [[Turret]] or [[Transporter]].
+* <code>ghost/</code>: Handles "ghost" blocks with no rendering that bound the larger objects (entities, really), like the [[Utility pole]]s, [[Grid Transformer]], Large Solar Panels, Autominer, the [[Transporter]], and so forth.
+* <code>cable/</code>: Only the ''rendering'' of cables (which is quite complex); the actual cable itself is a [[SixNode]].
+* <code>misc/</code>: Tons of utility classes, the <code>WindProcess</code> for the [[Wind turbine]]s, some of the code for the network protocol, the famous [[Cordoonate]], [[LRDU]], and [[Direction]] classes, and other dragons of all shapes and sizes.
+
+=== Everything Else ===
+
+Do note that there's some blatantly dead code hanging around in the base; if it's not referenced in <code>Eln.java</code>, it's probably not in the game.
+
+And, of course, beware of all the scary things hiding in the dark corners of the codebase. You may, of course, run into them, and may even need to use them, but warning has been given--people who are 100% aware of how everything works together are few and far between.
+
+== Assets ==
+
+Back out in <code>/src/main/resources/</code>, one finds two files: <code>mcmod.info</code> (which declares some important high-level info about the mod, like its name, requirements, authors, logo, etc.), and <code>assets/eln/</code>, which contains the following content:
+
+* <code>logo.png</code>: Wow, that looks [https://raw.githubusercontent.com/Electrical-Age/ElectricalAge/develop/src/main/resources/assets/eln/logo.png kinda nice].
+* <code>model/</code>, <code>model-to-be-integrated/</code>: All of the [[Models]] that get rendered as tile entities. The two directories are separated because [[Obj3D|Obj3DFolder]] loads ''every'' file which ends in a <code>.obj</code> extension under <code>model/</code>. See [[Modelling]] for more information.
+* <code>sprites/</code>: Various textures used within the game engine, such as masks for cable textures, and a couple atlas textures of unknown use. Notably, however, it contains a subdirectory:
+** <code>sprites/gui/</code>: Contains the interfaces for various machines; nominally 256x256 pixel PNGs with transparency, you'll also notice (in some) "off-screen" areas that contain, e.g., the animated arrow in the case of the furnace. Many of the active elements, such as buttons and inventory slots, are missing from these backgrounds--and added by the [[Gui]] and [[Container]] classes, using pixel positions.
+* <code>sounds.json</code>, <code>sounds/</code>: The former is a [https://minecraft.gamepedia.com/Sounds.json sounds.json] file, as would be loaded by a resource pack, and defines ''all'' the sounds loaded by the mod. The latter directory is the root of the search for the sounds named in <code>sounds.json</code>. See [[Sounds]].
+* <code>lang/</code>: [[Translation]] files.
+* <code>textures/</code>: Image files mostly intended to be displayed in inventory slots, with occasional exception:
+** <code>textures/armor/</code>: One exception; these are UV-mapped textures for the [[Ecoal]] and [[Copper Armor]].
+** <code>textures/entity/</code>: The other exception; UV-mapped textures for the [[Replicator]] (and, presumably, other mobs).
+** <code>textures/voltages/</code>: Backgrounds for the various "voltage levels" or tiers; this is what contributes the background color to some inventory slots. Many of these are PNGs with translucency throughout.
+** <code>textures/items/</code>, <code>textures/blocks/</code>: Item and block textures, as seen in inventories. The filenames correspond to the string names given to the [[Generic Proxy System]] constructors, lowercase and with spaces removed.
+** <code>textures/wire.png</code>: Another weird exception, this is the cable texture used for [[Grid]] links. (Arguably better placed in <code>sprites/</code>...)

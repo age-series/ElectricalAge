@@ -1,0 +1,12 @@
+{{Item
+|itemname=Tree Resin
+|renewable=No
+}}Tree Resin is used to create [[Rubber]].
+
+== Obtaining ==
+
+It can be obtained with the [[Tree Resin Collector]] or by compressing Oak Wood in an [[Compressor]].
+
+== Usage ==
+
+For now, it is only used to create [[Rubber]].
