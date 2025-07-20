@@ -42,6 +42,14 @@ class Coordinate : INBTTReady {
         readFromNBT(nbt, str)
     }
 
+    // Emulates the default Minecraft behavior for determining block coordinates
+    constructor(v: Vec3) {
+        x = kotlin.math.floor(v.xCoord).toInt()
+        y = kotlin.math.floor(v.yCoord).toInt()
+        z = kotlin.math.floor(v.zCoord).toInt()
+        dimension = 0
+    }
+
     override fun hashCode(): Int {
         return (x + y) * 0x10101010 + z
     }
@@ -169,10 +177,11 @@ class Coordinate : INBTTReady {
         z = vp[2].toInt()
     }
 
+    // Emulates the default Minecraft behavior for determining block coordinates
     fun setPosition(vp: Vec3) {
-        x = vp.xCoord.toInt()
-        y = vp.yCoord.toInt()
-        z = vp.zCoord.toInt()
+        x = kotlin.math.floor(vp.xCoord).toInt()
+        y = kotlin.math.floor(vp.yCoord).toInt()
+        z = kotlin.math.floor(vp.zCoord).toInt()
     }
 
     val tileEntity: TileEntity?
@@ -243,6 +252,11 @@ class Coordinate : INBTTReady {
 
     fun negate(): Coordinate {
         return Coordinate(-x, -y, -z, dimension)
+    }
+
+    // Emulates the default Minecraft behavior for determining block coordinates
+    fun toVec3(): Vec3 {
+        return Vec3.createVectorHelper(this.x + 0.5, this.y + 0.5, this.z + 0.5)
     }
 
     companion object {
