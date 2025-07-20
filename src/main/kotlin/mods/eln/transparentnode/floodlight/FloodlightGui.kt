@@ -52,6 +52,7 @@ class FloodlightGui(player: EntityPlayer, inventory: IInventory, val render: Flo
     override fun preDraw(f: Float, x: Int, y: Int) {
         super.preDraw(f, x, y)
 
+        /*
         when (render.coneWidth) {
             FloodlightConeWidth.NARROW -> coneWidthSelect.displayString = I18N.tr("Cone width: narrow")
             FloodlightConeWidth.MEDIUM -> coneWidthSelect.displayString = I18N.tr("Cone width: medium")
@@ -63,11 +64,10 @@ class FloodlightGui(player: EntityPlayer, inventory: IInventory, val render: Flo
             FloodlightConeRange.MIDDLE -> coneRangeSelect.displayString = I18N.tr("Cone range: middle")
             FloodlightConeRange.FAR -> coneRangeSelect.displayString = I18N.tr("Cone range: far")
         }
-
-        /*
-        coneWidthSelect.displayString = I18N.tr("Cone width: ${render.coneWidth.int} blocks")
-        coneRangeSelect.displayString = I18N.tr("Cone range: ${render.coneRange.int} blocks")
         */
+
+        coneWidthSelect.displayString = I18N.tr("Cone angle: ${render.coneWidth.int}°")
+        coneRangeSelect.displayString = I18N.tr("Cone range: ${render.coneRange.int} blocks")
 
         horizontalAdjust.setComment(0, I18N.tr("Horizontal orientation: ${(horizontalAdjust.value).toInt()}°"))
         verticalAdjust.setComment(0, I18N.tr("Vertical orientation: ${(verticalAdjust.value).toInt()}°"))

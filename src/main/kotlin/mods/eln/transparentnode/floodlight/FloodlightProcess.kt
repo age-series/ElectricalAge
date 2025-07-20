@@ -1,13 +1,10 @@
 package mods.eln.transparentnode.floodlight
 
-import mods.eln.Eln
 import mods.eln.misc.Coordinate
 import mods.eln.misc.HybridNodeDirection
 import mods.eln.misc.HybridNodeDirection.*
-import mods.eln.misc.Utils
 import mods.eln.sim.IProcess
 import mods.eln.sixnode.lampsocket.LightBlockEntity
-import net.minecraft.init.Blocks
 import net.minecraft.util.MathHelper
 import net.minecraft.util.Vec3
 import java.io.ByteArrayOutputStream
@@ -32,52 +29,82 @@ class FloodlightProcess(var element: FloodlightElement) : IProcess {
             0
         }
 
-        placeSpot(newLightValue)
+        element.powered = newLightValue > 8
 
-        element.powered = element.node!!.lightValue > 8
-        // if ((lamp1Stack != null && lamp2Stack == null) || (lamp1Stack == null && lamp2Stack != null)) element.node!!.lightValue /= 2
+        placeSpot(newLightValue)
     }
 
-    private fun placeSpot(newLight: Int) {
-        var exit = false
-
+    private fun placeSpot(lightValue: Int) {
         if (!element.lbCoord.blockExist) return
 
-        val vv = createRotationVector(element.swivelAngle, element.headAngle, element.rotationAxis, element.blockFacing)
+        val offsetAngle = (element.coneWidth.int / 2).toFloat()
 
-        val vp = Utils.getVec05(element.node!!.coordinate)
+        val rotationVectors = mutableListOf<Vec3>()
+        val lightVectors = mutableListOf<Vec3>()
+        val lbCoords = mutableListOf<Coordinate>()
 
-        val newCoord = Coordinate(element.node!!.coordinate)
-        for (idx in 0 until element.coneRange.int) {
-            vp.xCoord += vv.xCoord
-            vp.yCoord += vv.yCoord
-            vp.zCoord += vv.zCoord
-            newCoord.setPosition(vp)
-            if (!newCoord.blockExist) {
-                exit = true
-                break
-            }
-            if (isOpaque(newCoord)) {
-                vp.xCoord -= vv.xCoord
-                vp.yCoord -= vv.yCoord
-                vp.zCoord -= vv.zCoord
-                newCoord.setPosition(vp)
-                break
+        rotationVectors.add(createRotationVector(element.swivelAngle, element.headAngle, element.rotationAxis, element.blockFacing))
+        rotationVectors.add(createRotationVector((element.swivelAngle + offsetAngle), element.headAngle, element.rotationAxis, element.blockFacing))
+        rotationVectors.add(createRotationVector((element.swivelAngle - offsetAngle), element.headAngle, element.rotationAxis, element.blockFacing))
+        rotationVectors.add(createRotationVector(element.swivelAngle, (element.headAngle + offsetAngle), element.rotationAxis, element.blockFacing))
+        rotationVectors.add(createRotationVector(element.swivelAngle, (element.headAngle - offsetAngle), element.rotationAxis, element.blockFacing))
+
+        for (idx in 0 until rotationVectors.size) {
+            lightVectors.add(element.node!!.coordinate.toVec3())
+
+            lbCoords.add(Coordinate(lightVectors[idx]))
+
+            for (jdx in 0 until element.coneRange.int) {
+                if (lbCoords[idx].block.isOpaqueCube) break
+
+                lightVectors[idx].xCoord += rotationVectors[idx].xCoord
+                lightVectors[idx].yCoord += rotationVectors[idx].yCoord
+                lightVectors[idx].zCoord += rotationVectors[idx].zCoord
+                lbCoords[idx].setPosition(lightVectors[idx])
+
+                if (!lbCoords[idx].blockExist) return
+
+                if (jdx % 2 == 1) setLightAt(lbCoords[idx], lightValue)
             }
         }
-        if (!exit) {
-            while (newCoord != element.node!!.coordinate) {
-                // TODO: Offset negative directions by 1
-                // TODO: Also fix air detection to not be offset by 1
-                val block = newCoord.block
-                if (block === Blocks.air || block === Eln.lightBlock) break
-                vp.xCoord -= vv.xCoord
-                vp.yCoord -= vv.yCoord
-                vp.zCoord -= vv.zCoord
-                newCoord.setPosition(vp)
-            }
+    }
+
+    private fun setLightAt(newLbCoord: Coordinate, newLight: Int) {
+        element.lbCoord = Coordinate(newLbCoord)
+
+        LightBlockEntity.addLight(element.lbCoord, newLight, 5)
+
+        element.node!!.lightValue = newLight
+
+        val bos = ByteArrayOutputStream(64)
+        val packet = DataOutputStream(bos)
+
+        element.preparePacketForClient(packet)
+
+        try {
+            packet.writeByte(element.node!!.lightValue)
         }
-        if (!exit) setLightAt(newCoord, newLight)
+        catch (e: IOException) {
+            e.printStackTrace()
+        }
+
+        element.sendPacketToAllClient(bos)
+    }
+
+    private fun getRawRotationVector(horzAngle: Float, vertAngle: Float): Vec3 {
+        val horzSin = MathHelper.sin(horzAngle * (Math.PI / 180.0).toFloat())
+        val horzCos = MathHelper.cos(horzAngle * (Math.PI / 180.0).toFloat())
+
+        val vertSin = MathHelper.sin(vertAngle * (Math.PI / 180.0).toFloat())
+        val vertCos = MathHelper.cos(vertAngle * (Math.PI / 180.0).toFloat())
+
+        val v = Vec3.createVectorHelper(0.0, 0.0, 0.0)
+
+        v.xCoord = vertCos.toDouble() * horzSin.toDouble()
+        v.yCoord = vertSin.toDouble()
+        v.zCoord = vertCos.toDouble() * horzCos.toDouble()
+
+        return v
     }
 
     private fun createRotationVector(horzAngle: Float, vertAngle: Float, axis: HybridNodeDirection, facing: HybridNodeDirection): Vec3 {
@@ -233,58 +260,6 @@ class FloodlightProcess(var element: FloodlightElement) : IProcess {
         }
 
         return newV
-    }
-
-    private fun getRawRotationVector(horzAngle: Float, vertAngle: Float): Vec3 {
-        val horzSin = MathHelper.sin(horzAngle * (Math.PI / 180.0).toFloat())
-        val horzCos = MathHelper.cos(horzAngle * (Math.PI / 180.0).toFloat())
-
-        val vertSin = MathHelper.sin(vertAngle * (Math.PI / 180.0).toFloat())
-        val vertCos = MathHelper.cos(vertAngle * (Math.PI / 180.0).toFloat())
-
-        val v = Vec3.createVectorHelper(0.0, 0.0, 0.0)
-
-        v.xCoord = vertCos.toDouble() * horzSin.toDouble()
-        v.yCoord = vertSin.toDouble()
-        v.zCoord = vertCos.toDouble() * horzCos.toDouble()
-
-        return v
-    }
-
-    private fun isOpaque(coord: Coordinate): Boolean {
-        val block = coord.block
-        return block !== Blocks.air && (block.isOpaqueCube && block !== Blocks.farmland)
-    }
-
-    private fun setLightAt(newLbCoord: Coordinate, newLight: Int) {
-        val oldLbCoord = element.lbCoord
-        val oldLight = element.node!!.lightValue
-
-        // TODO: Issue here with detecting when to update light value of floodlight block
-        if (newLbCoord != oldLbCoord) {
-            element.lbCoord = Coordinate(newLbCoord)
-            /*
-            if ((oldLbCoord == element.node!!.coordinate) || ((newLbCoord == element.node!!.coordinate) && (newLight != oldLight))) {
-                element.node!!.lightValue = newLight
-            }
-            */
-        }
-
-        if (newLbCoord != element.node!!.coordinate) {
-            LightBlockEntity.addLight(Coordinate(newLbCoord), newLight, 5)
-        }
-
-        if (newLight != oldLight) {
-            val bos = ByteArrayOutputStream(64)
-            val packet = DataOutputStream(bos)
-            element.preparePacketForClient(packet)
-            try {
-                packet.writeByte(element.node!!.lightValue)
-            } catch (e: IOException) {
-                e.printStackTrace()
-            }
-            element.sendPacketToAllClient(bos)
-        }
     }
 
 }

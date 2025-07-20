@@ -2,7 +2,7 @@ package mods.eln.transparentnode.floodlight
 
 enum class FloodlightConeWidth(val int: Int) {
 
-    NARROW(1), MEDIUM(5), WIDE(9);
+    NARROW(60), MEDIUM(90), WIDE(120);
 
     companion object {
         fun fromInt(idx: Int): FloodlightConeWidth? {
@@ -25,7 +25,7 @@ enum class FloodlightConeWidth(val int: Int) {
 
 enum class FloodlightConeRange(val int: Int) {
 
-    NEAR(10), MIDDLE(15), FAR(20);
+    NEAR(8), MIDDLE(16), FAR(24), EXTRA(32);
 
     companion object {
         fun fromInt(idx: Int): FloodlightConeRange? {
@@ -40,7 +40,8 @@ enum class FloodlightConeRange(val int: Int) {
         return when (this) {
             NEAR -> MIDDLE
             MIDDLE -> FAR
-            FAR -> NEAR
+            FAR -> EXTRA
+            EXTRA -> NEAR
         }
     }
 
