@@ -36,10 +36,9 @@ import java.io.IOException
 class FloodlightElement(transparentNode: TransparentNode, transparentNodeDescriptor: TransparentNodeDescriptor) : TransparentNodeElement(transparentNode, transparentNodeDescriptor) {
 
     companion object {
-        const val CONE_WIDTH_SELECT_EVENT: Byte = 0
-        const val CONE_RANGE_SELECT_EVENT: Byte = 1
-        const val HORIZONTAL_ADJUST_EVENT: Byte = 2
-        const val VERTICAL_ADJUST_EVENT: Byte = 3
+        const val HORIZONTAL_ADJUST_EVENT: Byte = 0
+        const val VERTICAL_ADJUST_EVENT: Byte = 1
+        const val BEAM_ANGLE_EVENT: Byte = 2
     }
 
     override val inventory = TransparentNodeElementInventory(2, 64, this)
@@ -60,8 +59,7 @@ class FloodlightElement(transparentNode: TransparentNode, transparentNodeDescrip
     var powered by published(false)
     var swivelAngle by published(0f)
     var headAngle by published(0f)
-    var coneWidth by published(FloodlightConeWidth.NARROW)
-    var coneRange by published(FloodlightConeRange.NEAR)
+    var beamAngle by published(0f)
 
     var lbCoord: Coordinate = Coordinate(this.node!!.coordinate)
 
@@ -122,8 +120,7 @@ class FloodlightElement(transparentNode: TransparentNode, transparentNodeDescrip
         powered = nbt.getBoolean("powered")
         swivelAngle = nbt.getFloat("swivelAngle")
         headAngle = nbt.getFloat("headAngle")
-        coneWidth = FloodlightConeWidth.fromInt(nbt.getInteger("coneWidth"))!!
-        coneRange = FloodlightConeRange.fromInt((nbt.getInteger("coneRange")))!!
+        beamAngle = nbt.getFloat("beamAngle")
     }
 
     override fun writeToNBT(nbt: NBTTagCompound) {
@@ -134,8 +131,7 @@ class FloodlightElement(transparentNode: TransparentNode, transparentNodeDescrip
         nbt.setBoolean("powered", powered)
         nbt.setFloat("swivelAngle", swivelAngle)
         nbt.setFloat("headAngle", headAngle)
-        nbt.setInteger("coneWidth", coneWidth.int)
-        nbt.setInteger("coneRange", coneRange.int)
+        nbt.setFloat("beamAngle", beamAngle)
     }
 
     override fun initialize() {
@@ -230,8 +226,7 @@ class FloodlightElement(transparentNode: TransparentNode, transparentNodeDescrip
             stream.writeBoolean(powered)
             stream.writeFloat(swivelAngle)
             stream.writeFloat(headAngle)
-            stream.writeInt(coneWidth.int)
-            stream.writeInt(coneRange.int)
+            stream.writeFloat(beamAngle)
             Utils.serialiseItemStack(stream, inventory.getStackInSlot(FloodlightContainer.LAMP_SLOT_1_ID))
             Utils.serialiseItemStack(stream, inventory.getStackInSlot(FloodlightContainer.LAMP_SLOT_2_ID))
         }
@@ -242,10 +237,9 @@ class FloodlightElement(transparentNode: TransparentNode, transparentNodeDescrip
 
     override fun networkUnserialize(stream: DataInputStream): Byte {
         when (super.networkUnserialize(stream)) {
-            CONE_WIDTH_SELECT_EVENT -> coneWidth = coneWidth.cycleConeWidth()
-            CONE_RANGE_SELECT_EVENT -> coneRange = coneRange.cycleConeRange()
             HORIZONTAL_ADJUST_EVENT -> swivelAngle = stream.readFloat()
             VERTICAL_ADJUST_EVENT -> headAngle = stream.readFloat()
+            BEAM_ANGLE_EVENT -> beamAngle = stream.readFloat()
         }
         return unserializeNulldId
     }

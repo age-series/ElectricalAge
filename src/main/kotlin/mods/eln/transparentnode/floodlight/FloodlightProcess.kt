@@ -37,7 +37,7 @@ class FloodlightProcess(var element: FloodlightElement) : IProcess {
     private fun placeSpot(lightValue: Int) {
         if (!element.lbCoord.blockExist) return
 
-        val offsetAngle = (element.coneWidth.int / 2).toFloat()
+        val offsetAngle = (element.beamAngle / 2)
 
         val rotationVectors = mutableListOf<Vec3>()
         val lightVectors = mutableListOf<Vec3>()
@@ -54,7 +54,8 @@ class FloodlightProcess(var element: FloodlightElement) : IProcess {
 
             lbCoords.add(Coordinate(lightVectors[idx]))
 
-            for (jdx in 0 until element.coneRange.int) {
+            //for (jdx in 0 until element.coneRange.int) {
+            for (jdx in 0 until 16) {// TODO: not magic number
                 if (lbCoords[idx].block.isOpaqueCube) break
 
                 lightVectors[idx].xCoord += rotationVectors[idx].xCoord

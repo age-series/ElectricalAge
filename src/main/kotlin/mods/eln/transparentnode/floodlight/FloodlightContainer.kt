@@ -9,9 +9,9 @@ import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.inventory.IInventory
 
 class FloodlightContainer(player: EntityPlayer, inventory: IInventory) : BasicContainer(player, inventory, arrayOf(
-    GenericItemUsingDamageSlot(inventory, LAMP_SLOT_1_ID, 70, 7 + 20 + 4 + 20 + 4 + 3 +(1), 1,
+    GenericItemUsingDamageSlot(inventory, LAMP_SLOT_1_ID, 70 +(1), 7 + 20 + 4 + 20 + 4 + 3 +(1), 1,
         arrayOf<Class<*>>(LampDescriptor::class.java), SlotSkin.medium, arrayOf(tr("Lamp slot 1"))),
-    GenericItemUsingDamageSlot(inventory, LAMP_SLOT_2_ID, 88, 7 + 20 + 4 + 20 + 4 + 3 +(1), 1,
+    GenericItemUsingDamageSlot(inventory, LAMP_SLOT_2_ID, 88 +(1), 7 + 20 + 4 + 20 + 4 + 3 +(1), 1,
         arrayOf<Class<*>>(LampDescriptor::class.java), SlotSkin.medium, arrayOf(tr("Lamp slot 2"))))) {
 
     companion object {
