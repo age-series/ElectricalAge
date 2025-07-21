@@ -9,7 +9,6 @@ import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.ItemStack
 import org.lwjgl.opengl.GL11
 import java.io.DataInputStream
-import java.io.DataOutputStream
 import java.io.IOException
 
 class FloodlightRender(tileEntity: TransparentNodeEntity, transparentNodeDescriptor: TransparentNodeDescriptor) : TransparentNodeElementRender(tileEntity, transparentNodeDescriptor) {
@@ -23,8 +22,7 @@ class FloodlightRender(tileEntity: TransparentNodeEntity, transparentNodeDescrip
     private var powered: Boolean = false
     var swivelAngle = Synchronizable(0f)
     var headAngle = Synchronizable(0f)
-    var coneWidth = FloodlightConeWidth.NARROW
-    var coneRange = FloodlightConeRange.NEAR
+    var beamAngle = Synchronizable(0f)
     private var lamp1Stack: ItemStack? = null
     private var lamp2Stack: ItemStack? = null
 /*
@@ -41,8 +39,7 @@ class FloodlightRender(tileEntity: TransparentNodeEntity, transparentNodeDescrip
             powered = stream.readBoolean()
             swivelAngle.value = stream.readFloat()
             headAngle.value = stream.readFloat()
-            coneWidth = FloodlightConeWidth.fromInt(stream.readInt())!!
-            coneRange = FloodlightConeRange.fromInt(stream.readInt())!!
+            beamAngle.value = stream.readFloat()
             lamp1Stack = Utils.unserialiseItemStack(stream)
             lamp2Stack = Utils.unserialiseItemStack(stream)
         } catch (e: IOException) {
