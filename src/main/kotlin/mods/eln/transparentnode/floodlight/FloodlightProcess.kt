@@ -18,6 +18,7 @@ class FloodlightProcess(var element: FloodlightElement) : IProcess {
         if (element.motorized) {
             element.swivelAngle = (element.swivelControl.normalized).toFloat() * 360f
             element.headAngle = (element.headControl.normalized).toFloat() * 180f
+            element.shutterAngle = (element.shutterControl.normalized.toFloat()) * 180f
         }
 
         val lamp1Stack = element.inventory.getStackInSlot(FloodlightContainer.LAMP_SLOT_1_ID)
@@ -37,7 +38,7 @@ class FloodlightProcess(var element: FloodlightElement) : IProcess {
     private fun placeSpot(lightValue: Int) {
         if (!element.lbCoord.blockExist) return
 
-        val offsetAngle = (element.beamAngle / 2)
+        val offsetAngle = (element.shutterAngle / 2)
 
         val rotationVectors = mutableListOf<Vec3>()
         val lightVectors = mutableListOf<Vec3>()

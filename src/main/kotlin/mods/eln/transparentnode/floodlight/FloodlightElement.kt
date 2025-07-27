@@ -38,7 +38,7 @@ class FloodlightElement(transparentNode: TransparentNode, transparentNodeDescrip
     companion object {
         const val HORIZONTAL_ADJUST_EVENT: Byte = 0
         const val VERTICAL_ADJUST_EVENT: Byte = 1
-        const val BEAM_ANGLE_EVENT: Byte = 2
+        const val SHUTTER_ADJUST_EVENT: Byte = 2
     }
 
     override val inventory = TransparentNodeElementInventory(2, 64, this)
@@ -56,10 +56,11 @@ class FloodlightElement(transparentNode: TransparentNode, transparentNodeDescrip
     var rotationAxis: HybridNodeDirection = (descriptor.placementSide).toHybridNodeDirection()
     lateinit var blockFacing: HybridNodeDirection
 
-    var powered by published(false)
+    var powered = false
+
     var swivelAngle by published(0f)
     var headAngle by published(0f)
-    var beamAngle by published(0f)
+    var shutterAngle by published(0f)
 
     var lbCoord: Coordinate = Coordinate(this.node!!.coordinate)
 
@@ -69,6 +70,7 @@ class FloodlightElement(transparentNode: TransparentNode, transparentNodeDescrip
 
     val swivelControl = NbtElectricalGateInput("swivelControl")
     val headControl = NbtElectricalGateInput("headControl")
+    val shutterControl = NbtElectricalGateInput("shutterControl")
 
     private val voltageWatchdog = VoltageStateWatchDog(electricalLoad)
 
@@ -80,6 +82,7 @@ class FloodlightElement(transparentNode: TransparentNode, transparentNodeDescrip
         if (motorized) {
             electricalLoadList.add(swivelControl)
             electricalLoadList.add(headControl)
+            electricalLoadList.add(shutterControl)
         }
 
         electricalLoad.serialResistance = ((Eln.MVU * Eln.MVU) / Eln.instance.MVP()) * 0.005 // NOTE: power factor comes from MV cable registration
@@ -120,7 +123,7 @@ class FloodlightElement(transparentNode: TransparentNode, transparentNodeDescrip
         powered = nbt.getBoolean("powered")
         swivelAngle = nbt.getFloat("swivelAngle")
         headAngle = nbt.getFloat("headAngle")
-        beamAngle = nbt.getFloat("beamAngle")
+        shutterAngle = nbt.getFloat("shutterAngle")
     }
 
     override fun writeToNBT(nbt: NBTTagCompound) {
@@ -131,7 +134,7 @@ class FloodlightElement(transparentNode: TransparentNode, transparentNodeDescrip
         nbt.setBoolean("powered", powered)
         nbt.setFloat("swivelAngle", swivelAngle)
         nbt.setFloat("headAngle", headAngle)
-        nbt.setFloat("beamAngle", beamAngle)
+        nbt.setFloat("shutterAngle", shutterAngle)
     }
 
     override fun initialize() {
@@ -190,6 +193,7 @@ class FloodlightElement(transparentNode: TransparentNode, transparentNodeDescrip
             blockFacing.back() -> electricalLoad
             blockFacing.right(rotationAxis) -> headControl
             blockFacing.left(rotationAxis) -> swivelControl
+            blockFacing.front() -> shutterControl
             else -> null
         }
         else when (side.toHybridNodeDirection()) {
@@ -209,6 +213,7 @@ class FloodlightElement(transparentNode: TransparentNode, transparentNodeDescrip
             blockFacing.back() -> NodeBase.maskElectricalPower
             blockFacing.right(rotationAxis) -> NodeBase.maskElectricalGate
             blockFacing.left(rotationAxis) -> NodeBase.maskElectricalGate
+            blockFacing.front() -> NodeBase.maskElectricalGate
             else -> 0
         }
         else when (side.toHybridNodeDirection()) {
@@ -226,7 +231,7 @@ class FloodlightElement(transparentNode: TransparentNode, transparentNodeDescrip
             stream.writeBoolean(powered)
             stream.writeFloat(swivelAngle)
             stream.writeFloat(headAngle)
-            stream.writeFloat(beamAngle)
+            stream.writeFloat(shutterAngle)
             Utils.serialiseItemStack(stream, inventory.getStackInSlot(FloodlightContainer.LAMP_SLOT_1_ID))
             Utils.serialiseItemStack(stream, inventory.getStackInSlot(FloodlightContainer.LAMP_SLOT_2_ID))
         }
@@ -239,7 +244,7 @@ class FloodlightElement(transparentNode: TransparentNode, transparentNodeDescrip
         when (super.networkUnserialize(stream)) {
             HORIZONTAL_ADJUST_EVENT -> swivelAngle = stream.readFloat()
             VERTICAL_ADJUST_EVENT -> headAngle = stream.readFloat()
-            BEAM_ANGLE_EVENT -> beamAngle = stream.readFloat()
+            SHUTTER_ADJUST_EVENT -> shutterAngle = stream.readFloat()
         }
         return unserializeNulldId
     }
