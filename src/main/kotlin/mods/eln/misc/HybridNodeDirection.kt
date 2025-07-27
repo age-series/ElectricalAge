@@ -112,6 +112,10 @@ enum class HybridNodeDirection(val int: Int) {
         return up(axis).inverse
     }
 
+    fun front(): HybridNodeDirection {
+        return this
+    }
+
     fun back(): HybridNodeDirection {
         return inverse
     }
