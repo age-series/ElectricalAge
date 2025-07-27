@@ -16,9 +16,9 @@ class FloodlightGui(player: EntityPlayer, inventory: IInventory, val render: Flo
         const val MAX_SHUTTER_ANGLE: Float = 180f
     }
 
-    private lateinit var horizontalAdjust: GuiVerticalTrackBar
-    private lateinit var verticalAdjust: GuiVerticalTrackBar
-    private lateinit var shutterAdjust: GuiVerticalTrackBar
+    private lateinit var horizontalAdjust: GuiHorizontalTrackBar
+    private lateinit var verticalAdjust: GuiHorizontalTrackBar
+    private lateinit var shutterAdjust: GuiHorizontalTrackBar
 
     override fun newHelper(): GuiHelperContainer {
         return HelperStdContainer(this)
@@ -27,17 +27,17 @@ class FloodlightGui(player: EntityPlayer, inventory: IInventory, val render: Flo
     override fun initGui() {
         super.initGui()
 
-        horizontalAdjust = newGuiVerticalTrackBar(7, 7+2, 162, 14-4)
+        horizontalAdjust = newGuiHorizontalTrackBar(7, 7, 162, 14)
         horizontalAdjust.setRange(MIN_HORIZONTAL_ANGLE, MAX_HORIZONTAL_ANGLE)
         horizontalAdjust.setStepIdMax(360)
         horizontalAdjust.value = render.swivelAngle
 
-        verticalAdjust = newGuiVerticalTrackBar(7, 25+2, 162, 14-4)
+        verticalAdjust = newGuiHorizontalTrackBar(7, 25, 162, 14)
         verticalAdjust.setRange(MIN_VERTICAL_ANGLE, MAX_VERTICAL_ANGLE)
         verticalAdjust.setStepIdMax(180)
         verticalAdjust.value = render.headAngle
 
-        shutterAdjust = newGuiVerticalTrackBar(7, 43+2, 162, 14-4)
+        shutterAdjust = newGuiHorizontalTrackBar(7, 43, 162, 14)
         shutterAdjust.setRange(MIN_SHUTTER_ANGLE, MAX_SHUTTER_ANGLE)
         shutterAdjust.setStepIdMax(180)
         shutterAdjust.value = render.shutterAngle
