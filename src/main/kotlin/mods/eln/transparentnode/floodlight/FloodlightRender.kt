@@ -2,7 +2,6 @@ package mods.eln.transparentnode.floodlight
 
 import mods.eln.misc.*
 import mods.eln.misc.HybridNodeDirection.*
-import mods.eln.node.Synchronizable
 import mods.eln.node.transparent.*
 import net.minecraft.client.gui.GuiScreen
 import net.minecraft.entity.player.EntityPlayer
@@ -19,10 +18,10 @@ class FloodlightRender(tileEntity: TransparentNodeEntity, transparentNodeDescrip
     private var rotationAxis = XN
     private var blockFacing = XN
     var motorized = false
-    private var powered: Boolean = false
-    var swivelAngle = Synchronizable(0f)
-    var headAngle = Synchronizable(0f)
-    var beamAngle = Synchronizable(0f)
+    private var powered = false
+    var swivelAngle = 0f
+    var headAngle = 0f
+    var shutterAngle = 0f
     private var lamp1Stack: ItemStack? = null
     private var lamp2Stack: ItemStack? = null
 /*
@@ -37,9 +36,9 @@ class FloodlightRender(tileEntity: TransparentNodeEntity, transparentNodeDescrip
             blockFacing = HybridNodeDirection.fromInt(stream.readInt())!!
             motorized = stream.readBoolean()
             powered = stream.readBoolean()
-            swivelAngle.value = stream.readFloat()
-            headAngle.value = stream.readFloat()
-            beamAngle.value = stream.readFloat()
+            swivelAngle = stream.readFloat()
+            headAngle = stream.readFloat()
+            shutterAngle = stream.readFloat()
             lamp1Stack = Utils.unserialiseItemStack(stream)
             lamp2Stack = Utils.unserialiseItemStack(stream)
         } catch (e: IOException) {
@@ -50,7 +49,7 @@ class FloodlightRender(tileEntity: TransparentNodeEntity, transparentNodeDescrip
     override fun draw() {
         glNormalizePlacement(rotationAxis, blockFacing)
         // descriptor.draw(swivelAnimate.get(), headAnimate.get(), lamp1Stack, lamp2Stack, powered)
-        descriptor.draw(swivelAngle.value / 360f, headAngle.value / 180f, lamp1Stack, lamp2Stack, powered)
+        descriptor.draw(swivelAngle / 360f, headAngle / 180f, lamp1Stack, lamp2Stack, powered)
     }
 /*
     override fun refresh(deltaT: Float) {
