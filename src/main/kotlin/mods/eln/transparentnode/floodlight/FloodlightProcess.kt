@@ -1,43 +1,107 @@
 package mods.eln.transparentnode.floodlight
 
+import mods.eln.Eln
+import mods.eln.item.LampDescriptor
 import mods.eln.misc.Coordinate
 import mods.eln.misc.HybridNodeDirection
 import mods.eln.misc.HybridNodeDirection.*
+import mods.eln.misc.Utils.getItemObject
+import mods.eln.server.SaveConfig
 import mods.eln.sim.IProcess
 import mods.eln.sixnode.lampsocket.LightBlockEntity
+import net.minecraft.item.ItemStack
 import net.minecraft.util.MathHelper
 import net.minecraft.util.Vec3
 import java.io.ByteArrayOutputStream
 import java.io.DataOutputStream
 import java.io.IOException
 import kotlin.math.abs
+import kotlin.math.max
 
 class FloodlightProcess(var element: FloodlightElement) : IProcess {
 
     override fun process(time: Double) {
         if (element.motorized) {
-            element.swivelAngle = (element.swivelControl.normalized).toFloat() * 360f
-            element.headAngle = (element.headControl.normalized).toFloat() * 180f
-            element.shutterAngle = (element.shutterControl.normalized.toFloat()) * 180f
+            element.swivelAngle = (element.swivelControl.normalized).toFloat() * FloodlightGui.MAX_HORIZONTAL_ANGLE
+            element.headAngle = (element.headControl.normalized).toFloat() * FloodlightGui.MAX_VERTICAL_ANGLE
+            element.shutterAngle = (element.shutterControl.normalized.toFloat()) * FloodlightGui.MAX_SHUTTER_ANGLE
         }
 
-        val lamp1Stack = element.inventory.getStackInSlot(FloodlightContainer.LAMP_SLOT_1_ID)
-        val lamp2Stack = element.inventory.getStackInSlot(FloodlightContainer.LAMP_SLOT_2_ID)
+        val lampStacks = mutableListOf<ItemStack?>()
+        val lampLightValues = mutableListOf<Int>()
+        val lampLightRanges = mutableListOf<Int>()
 
-        val newLightValue = if (lamp1Stack != null || lamp2Stack != null) {
-            (((abs(element.electricalLoad.voltage) - 150) / 3.3333).toInt()).coerceIn(0, 15)
-        } else {
-            0
+        lampStacks.add(element.inventory.getStackInSlot(FloodlightContainer.LAMP_SLOT_1_ID))
+        lampStacks.add(element.inventory.getStackInSlot(FloodlightContainer.LAMP_SLOT_2_ID))
+
+
+        for (idx in 0 until lampStacks.size) {
+            if (lampStacks[idx] != null) {
+                val lampDescriptor = getItemObject(lampStacks[idx]) as LampDescriptor
+
+                val lampVoltage = element.electricalLoad.voltage
+
+                val num: Double = abs(lampVoltage) - lampDescriptor.minimalU
+                val den: Double = lampDescriptor.nominalU - lampDescriptor.minimalU
+
+                lampLightValues.add(((num / den) * lampDescriptor.nominalLight * LampDescriptor.MC_MAX_LIGHT_VALUE).toInt())
+
+                if (lampLightValues[idx] < LampDescriptor.MC_MIN_LIGHT_VALUE) lampLightValues[idx] = LampDescriptor.MC_MIN_LIGHT_VALUE
+                else if (lampLightValues[idx] > LampDescriptor.MC_MAX_LIGHT_VALUE) lampLightValues[idx] = LampDescriptor.MC_MAX_LIGHT_VALUE
+
+                lampLightRanges.add((lampDescriptor.nominalP * LampDescriptor.HALOGEN_RANGE_FACTOR).toInt())
+
+                val bulbCanAge = !Eln.halogenLampInfiniteLife && SaveConfig.instance!!.electricalLampAging
+
+                if (bulbCanAge) {
+                    // if (!FloodlightContainer.lockLampAging) {
+                        // FloodlightContainer.lockStackTransfer = true
+
+                        val currentLife = lampDescriptor.ageLamp(lampStacks[idx]!!, lampVoltage, time)
+
+                        if (currentLife <= 0.0) {
+                            element.inventory.setInventorySlotContents(idx, null)
+                            element.inventoryChange(element.inventory)
+                        }
+                    // }
+
+                    // FloodlightContainer.lockStackTransfer = false
+                }
+            }
+            else {
+                lampLightValues.add(LampDescriptor.MC_MIN_LIGHT_VALUE)
+                lampLightRanges.add((0.0 * LampDescriptor.HALOGEN_RANGE_FACTOR).toInt())
+            }
         }
 
-        element.powered = newLightValue > 8
+        val newLightValue = max(lampLightValues[FloodlightContainer.LAMP_SLOT_1_ID], lampLightValues[FloodlightContainer.LAMP_SLOT_2_ID])
 
-        placeSpot(newLightValue)
+        element.powered = newLightValue > LampDescriptor.MC_MIN_LIGHT_VALUE
+        element.lightRange = lampLightRanges[FloodlightContainer.LAMP_SLOT_1_ID] + lampLightRanges[FloodlightContainer.LAMP_SLOT_2_ID]
+
+        updateBlockLight(newLightValue)
+        placeSpots(newLightValue)
     }
 
-    private fun placeSpot(lightValue: Int) {
-        if (!element.lbCoord.blockExist) return
+    private fun updateBlockLight(newLight: Int) {
+        element.node!!.lightValue = newLight
 
+        val bos = ByteArrayOutputStream(64)
+        val packet = DataOutputStream(bos)
+
+        element.preparePacketForClient(packet)
+
+        try {
+            packet.writeInt(element.node!!.lightValue)
+        }
+        catch (e: IOException) {
+            e.printStackTrace()
+        }
+
+        element.sendPacketToAllClient(bos)
+    }
+
+    private fun placeSpots(lightValue: Int) {
         val offsetAngle = (element.shutterAngle / 2)
 
         val rotationVectors = mutableListOf<Vec3>()
@@ -55,8 +119,7 @@ class FloodlightProcess(var element: FloodlightElement) : IProcess {
 
             lbCoords.add(Coordinate(lightVectors[idx]))
 
-            //for (jdx in 0 until element.coneRange.int) {
-            for (jdx in 0 until 16) {// TODO: not magic number
+            for (jdx in 0 until element.lightRange) {
                 if (lbCoords[idx].block.isOpaqueCube) break
 
                 lightVectors[idx].xCoord += rotationVectors[idx].xCoord
@@ -66,31 +129,9 @@ class FloodlightProcess(var element: FloodlightElement) : IProcess {
 
                 if (!lbCoords[idx].blockExist) return
 
-                if (jdx % 2 == 1) setLightAt(lbCoords[idx], lightValue)
+                if (jdx % 2 == 1) LightBlockEntity.addLight(Coordinate(lbCoords[idx]), lightValue, 5)
             }
         }
-    }
-
-    private fun setLightAt(newLbCoord: Coordinate, newLight: Int) {
-        element.lbCoord = Coordinate(newLbCoord)
-
-        LightBlockEntity.addLight(element.lbCoord, newLight, 5)
-
-        element.node!!.lightValue = newLight
-
-        val bos = ByteArrayOutputStream(64)
-        val packet = DataOutputStream(bos)
-
-        element.preparePacketForClient(packet)
-
-        try {
-            packet.writeByte(element.node!!.lightValue)
-        }
-        catch (e: IOException) {
-            e.printStackTrace()
-        }
-
-        element.sendPacketToAllClient(bos)
     }
 
     private fun getRawRotationVector(horzAngle: Float, vertAngle: Float): Vec3 {
