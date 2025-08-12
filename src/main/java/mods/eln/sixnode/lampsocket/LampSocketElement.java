@@ -315,6 +315,12 @@ public class LampSocketElement extends SixNodeElement implements IConfigurable {
                     }
                     return true;
                 }
+
+                if (itemDescriptor instanceof LampDescriptor) {
+                    if (((LampDescriptor) itemDescriptor).socket != socketDescriptor.socketType) {
+                        return false;
+                    }
+                }
             }
         }
 

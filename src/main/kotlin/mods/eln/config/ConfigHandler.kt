@@ -130,7 +130,9 @@ object ConfigHandler {
         eln.economicLampLife = Eln.config["lamp", "economicLifeInHours", 64.0].getDouble(64.0)
         eln.carbonLampLife = Eln.config["lamp", "carbonLifeInHours", 6.0].getDouble(6.0)
         eln.ledLampLife = Eln.config["lamp", "ledLifeInHours", 512.0].getDouble(512.0)
+        eln.halogenLampLife = Eln.config["lamp", "halogenLifeInHours", 128.0].getDouble(128.0)
         Eln.ledLampInfiniteLife = Eln.config["lamp", "infiniteLedLife", false].boolean
+        Eln.halogenLampInfiniteLife = Eln.config["lamp", "infiniteHalogenLife", false].boolean
         Eln.allowSwingingLamps = Eln.config["lamp", "swingingLamps", true].boolean
 
         eln.fuelGeneratorTankCapacity =

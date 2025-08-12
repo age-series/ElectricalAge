@@ -128,7 +128,7 @@ class LampSocketProcess(var lamp: LampSocketElement) : IProcess, INBTTReady /*,L
         if (lampDescriptor != null) {
             // This code makes the ECO lights blink, and the other lights are just "stable"
             when (lampDescriptor.type) {
-                LampDescriptor.Type.INCANDESCENT, LampDescriptor.Type.LED -> {
+                LampDescriptor.Type.INCANDESCENT, LampDescriptor.Type.LED, LampDescriptor.Type.HALOGEN -> {
                     if (lamp.lampResistor.voltage < lampDescriptor.minimalU) {
                         lightDouble = 0.0
                     } else {
@@ -164,22 +164,16 @@ class LampSocketProcess(var lamp: LampSocketElement) : IProcess, INBTTReady /*,L
         if (newLight > 15) newLight = 15
         if (newLight < 0) newLight = 0
 
-        fun lampAgeFactor(voltage: Double): Double {
-            return 0.000008 * Math.pow(voltage, 3.0) - 0.003225 * Math.pow(voltage, 2.0) + 0.33 * voltage
-        }
-
         if (lampDescriptor != null) {
             val bulbCanAge = !(lampDescriptor.type == LampDescriptor.Type.LED && Eln.ledLampInfiniteLife) && SaveConfig.instance!!.electricalLampAging
 
             if (bulbCanAge) {
-                val ageFactor = lampAgeFactor(lamp.lampResistor.voltage)
-                // life lost in hours, per tick
-                val lifeLost = (ageFactor * time) / 3600.0
-                lampDescriptor.setLifeInTag(lampStack, lampDescriptor.getLifeInTag(lampStack) - lifeLost)
-            }
-            if (lampDescriptor.getLifeInTag(lampStack) <= 0.0) {
-                lamp.inventory!!.setInventorySlotContents(0, null)
-                newLight = 0
+                val currentLife = lampDescriptor.ageLamp(lampStack, lamp.lampResistor.voltage, time)
+
+                if (currentLife <= 0.0) {
+                    lamp.inventory!!.setInventorySlotContents(0, null)
+                    newLight = 0
+                }
             }
         } else {
             newLight = 0

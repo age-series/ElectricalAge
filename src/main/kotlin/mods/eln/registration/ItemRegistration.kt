@@ -506,6 +506,38 @@ object ItemRegistration {
             )
             Eln.sharedItem.addElement(completId, element)
         }
+        run {
+            subId = 44
+            completId = subId + (id shl 6)
+            element = LampDescriptor(
+                I18N.TR_NAME(I18N.Type.NONE, "Small Halogen Bulb"),
+                "smallhalogenlamp",
+                LampDescriptor.Type.HALOGEN,
+                LampSocketType.Tube,
+                Eln.MVU,
+                250.0,
+                lightLevel[15],
+                instance.halogenLampLife,
+                standardGrowRate
+            )
+            Eln.sharedItem.addElement(completId, element)
+        }
+        run {
+            subId = 45
+            completId = subId + (id shl 6)
+            element = LampDescriptor(
+                I18N.TR_NAME(I18N.Type.NONE, "Large Halogen Bulb"),
+                "largehalogenlamp",
+                LampDescriptor.Type.HALOGEN,
+                LampSocketType.Tube,
+                Eln.MVU,
+                500.0,
+                lightLevel[15],
+                instance.halogenLampLife,
+                standardGrowRate
+            )
+            Eln.sharedItem.addElement(completId, element)
+        }
     }
 
     private fun registerProtection(id: Int) {

@@ -40,6 +40,16 @@ open class BasicContainer(player: EntityPlayer, protected var inventory: IInvent
     override fun transferStackInSlot(player: EntityPlayer, slotId: Int): ItemStack? {
         val slot = inventorySlots[slotId] as Slot?
         if (slot != null && slot.hasStack) {
+            /*
+            if (this is FloodlightContainer) {
+                FloodlightContainer.lockLampAging = true
+                FloodlightContainer.transferStackIteration += 1
+
+                while (FloodlightContainer.lockStackTransfer) {
+                    Thread.sleep(10)
+                }
+            }
+            */
             val itemstack1 = slot.stack
             val invSize = inventory.getSizeInventory()
             if (slotId < invSize) {
@@ -59,6 +69,14 @@ open class BasicContainer(player: EntityPlayer, protected var inventory: IInvent
             } else {
                 slot.onSlotChanged()
             }
+            /*
+            if (this is FloodlightContainer) {
+                if (FloodlightContainer.transferStackIteration == 2) {
+                    FloodlightContainer.lockLampAging = false
+                    FloodlightContainer.transferStackIteration = 0
+                }
+            }
+            */
         }
 
         return null

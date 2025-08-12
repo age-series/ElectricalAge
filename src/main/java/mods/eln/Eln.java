@@ -219,6 +219,7 @@ public class Eln {
     public static WindProcess wind;
     public static int wirelessTxRange = 32;
     public static boolean ledLampInfiniteLife = false;
+    public static boolean halogenLampInfiniteLife = false;
     static public GenericItemUsingDamageDescriptor multiMeterElement, thermometerElement, allMeterElement;
     static public GenericItemUsingDamageDescriptor configCopyToolElement;
     public static TreeResin treeResin;
@@ -292,6 +293,7 @@ public class Eln {
     public double economicLampLife;
     public double carbonLampLife;
     public double ledLampLife;
+    public double halogenLampLife;
     public double fuelGeneratorTankCapacity = 20 * 60;
     public int replicatorRegistrationId = -1;
 

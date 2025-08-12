@@ -27,17 +27,17 @@ class FloodlightGui(player: EntityPlayer, inventory: IInventory, val render: Flo
     override fun initGui() {
         super.initGui()
 
-        horizontalAdjust = newGuiHorizontalTrackBar(7, 7, 162, 14)
+        horizontalAdjust = newGuiHorizontalTrackBar(7, 8, 162, 12)
         horizontalAdjust.setRange(MIN_HORIZONTAL_ANGLE, MAX_HORIZONTAL_ANGLE)
         horizontalAdjust.setStepIdMax(360)
         horizontalAdjust.value = render.swivelAngle
 
-        verticalAdjust = newGuiHorizontalTrackBar(7, 25, 162, 14)
+        verticalAdjust = newGuiHorizontalTrackBar(7, 26, 162, 12)
         verticalAdjust.setRange(MIN_VERTICAL_ANGLE, MAX_VERTICAL_ANGLE)
         verticalAdjust.setStepIdMax(180)
         verticalAdjust.value = render.headAngle
 
-        shutterAdjust = newGuiHorizontalTrackBar(7, 43, 162, 14)
+        shutterAdjust = newGuiHorizontalTrackBar(7, 44, 162, 12)
         shutterAdjust.setRange(MIN_SHUTTER_ANGLE, MAX_SHUTTER_ANGLE)
         shutterAdjust.setStepIdMax(180)
         shutterAdjust.value = render.shutterAngle

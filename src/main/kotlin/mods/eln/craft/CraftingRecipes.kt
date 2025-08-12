@@ -333,6 +333,17 @@ object CraftingRecipes {
             ), 'b', findItemStack("Portable Battery Pack"), 'l', findItemStack("200V LED Bulb"), 'g',
             ItemStack(Blocks.glass_pane)
         )
+        // Floodlights
+        addRecipe(
+            findItemStack("Basic Floodlight"), "ABC", "DEB", "AFA", 'A', ItemStack(Items.iron_ingot),
+            'B', findItemStack("Iron Plate"), 'C', ItemStack(Blocks.glass_pane), 'D', findItemStack("Rubber"),
+            'E', findItemStack("Machine Block"), 'F', findItemStack("Medium Voltage Cable")
+        )
+        addRecipe(
+            findItemStack("Motorized Floodlight"), "ABC", "DEB", "AFA", 'A', ItemStack(Items.iron_ingot),
+            'B', findItemStack("Iron Plate"), 'C', ItemStack(Blocks.glass_pane), 'D', findItemStack("Advanced Electrical Motor"),
+            'E', findItemStack("Advanced Machine Block"), 'F', findItemStack("Medium Voltage Cable")
+        )
     }
 
     private fun recipeLampSupply() {
@@ -1052,6 +1063,15 @@ object CraftingRecipes {
         addRecipe(
             Eln.findItemStack("200V LED Bulb", 2), "GGG", "SSS", " C ", 'G', ItemStack(Blocks.glass_pane), 'S',
             findItemStack("Silicon Ingot"), 'C', findItemStack("Medium Voltage Cable")
+        )
+        // Halogen Bulbs
+        addRecipe(
+            Eln.findItemStack("Small Halogen Bulb", 2), "GGG", "CTC", "GGG", 'G', ItemStack(Blocks.glass_pane),
+            'C', findItemStack("Copper Cable"), 'T', findItemStack("Tungsten Cable")
+        )
+        addRecipe(
+            Eln.findItemStack("Large Halogen Bulb", 2), "GGG", "CTC", "GGG", 'G', ItemStack(Blocks.glass_pane),
+            'C', findItemStack("Copper Cable"), 'T', findItemStack("Tungsten Ingot")
         )
     }
 

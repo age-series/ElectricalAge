@@ -128,6 +128,10 @@ Most graphics and all 3D models are licensed under the Creative Commons Attribut
   Designed by [Creative Stall](https://thenounproject.com/creativestall/).
 - src/main/resources/assets/eln/textures/items/
   Designed by Guillermo Guso from the Noun Project
+- src/main/resources/assets/eln/textures/items/smallhalogenlamp.png
+  Designed by [LiveDieRespwn](https://github.com/LiveDieRespwn).
+- src/main/resources/assets/eln/textures/items/largehalogenlamp.png
+  Designed by [LiveDieRespwn](https://github.com/LiveDieRespwn).
 
 Some graphics are public domain. These are:
 
