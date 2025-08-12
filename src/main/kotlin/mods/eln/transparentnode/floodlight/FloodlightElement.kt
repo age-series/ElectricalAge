@@ -62,7 +62,7 @@ class FloodlightElement(transparentNode: TransparentNode, transparentNodeDescrip
     var headAngle by published(0f)
     var shutterAngle by published(0f)
 
-    var lbCoord: Coordinate = Coordinate(this.node!!.coordinate)
+    var lightRange = 0
 
     val electricalLoad = NbtElectricalLoad("electricalLoad")
     private val lamp1Resistor: Resistor = Resistor(electricalLoad, null)
@@ -108,7 +108,15 @@ class FloodlightElement(transparentNode: TransparentNode, transparentNodeDescrip
             return true
         }
 
-        return acceptingInventory.take(player.currentEquippedItem, this, true,false)
+        val currentEquippedItem = getItemObject(player.currentEquippedItem)
+
+        if (currentEquippedItem is LampDescriptor) {
+            if (currentEquippedItem.socket == FloodlightContainer.LAMP_SOCKET_TYPE) {
+                return acceptingInventory.take(player.currentEquippedItem, this, true, true)
+            }
+        }
+
+        return false
     }
 
     override fun getLightOpacity(): Float {
@@ -124,6 +132,7 @@ class FloodlightElement(transparentNode: TransparentNode, transparentNodeDescrip
         swivelAngle = nbt.getFloat("swivelAngle")
         headAngle = nbt.getFloat("headAngle")
         shutterAngle = nbt.getFloat("shutterAngle")
+        lightRange = nbt.getInteger("lightRange")
     }
 
     override fun writeToNBT(nbt: NBTTagCompound) {
@@ -135,6 +144,7 @@ class FloodlightElement(transparentNode: TransparentNode, transparentNodeDescrip
         nbt.setFloat("swivelAngle", swivelAngle)
         nbt.setFloat("headAngle", headAngle)
         nbt.setFloat("shutterAngle", shutterAngle)
+        nbt.setInteger("lightRange", lightRange)
     }
 
     override fun initialize() {
