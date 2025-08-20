@@ -335,14 +335,14 @@ object CraftingRecipes {
         )
         // Floodlights
         addRecipe(
-            findItemStack("Basic Floodlight"), "ABC", "DEB", "AFA", 'A', ItemStack(Items.iron_ingot),
-            'B', findItemStack("Iron Plate"), 'C', ItemStack(Blocks.glass_pane), 'D', findItemStack("Rubber"),
-            'E', findItemStack("Machine Block"), 'F', findItemStack("Medium Voltage Cable")
+            findItemStack("Basic Floodlight"), " PG", "MBP", "ICI",
+            'P', findItemStack("Iron Plate"), 'G', ItemStack(Blocks.glass_pane), 'M', findItemStack("Electrical Motor"),
+            'B', findItemStack("Machine Block"), 'I', ItemStack(Items.iron_ingot), 'C', findItemStack("Medium Voltage Cable")
         )
         addRecipe(
-            findItemStack("Motorized Floodlight"), "ABC", "DEB", "AFA", 'A', ItemStack(Items.iron_ingot),
-            'B', findItemStack("Iron Plate"), 'C', ItemStack(Blocks.glass_pane), 'D', findItemStack("Advanced Electrical Motor"),
-            'E', findItemStack("Advanced Machine Block"), 'F', findItemStack("Medium Voltage Cable")
+            findItemStack("Motorized Floodlight"), " PG", "MBP", "ICI",
+            'P', findItemStack("Iron Plate"), 'G', ItemStack(Blocks.glass_pane), 'M', findItemStack("Advanced Electrical Motor"),
+            'B', findItemStack("Advanced Machine Block"), 'I', ItemStack(Items.iron_ingot), 'C', findItemStack("Medium Voltage Cable")
         )
     }
 
@@ -1066,12 +1066,12 @@ object CraftingRecipes {
         )
         // Halogen Bulbs
         addRecipe(
-            Eln.findItemStack("Small Halogen Bulb", 2), "GGG", "CTC", "GGG", 'G', ItemStack(Blocks.glass_pane),
-            'C', findItemStack("Copper Cable"), 'T', findItemStack("Tungsten Cable")
+            Eln.findItemStack("50V Halogen Bulb", 2), "GGG", "CTC", "GGG", 'G', ItemStack(Blocks.glass_pane),
+            'C', findItemStack("Low Voltage Cable"), 'T', findItemStack("Tungsten Ingot")
         )
         addRecipe(
-            Eln.findItemStack("Large Halogen Bulb", 2), "GGG", "CTC", "GGG", 'G', ItemStack(Blocks.glass_pane),
-            'C', findItemStack("Copper Cable"), 'T', findItemStack("Tungsten Ingot")
+            Eln.findItemStack("200V Halogen Bulb", 2), "GGG", "CTC", "GGG", 'G', ItemStack(Blocks.glass_pane),
+            'C', findItemStack("Medium Voltage Cable"), 'T', findItemStack("Tungsten Ingot")
         )
     }
 

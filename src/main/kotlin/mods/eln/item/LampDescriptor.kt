@@ -21,17 +21,14 @@ class LampDescriptor(
     name: String, iconName: String,
     type: Type, socket: LampSocketType,
     nominalU: Double, nominalP: Double, nominalLight: Double, nominalLife: Double,
-    vegetableGrowRate: Double) : GenericItemUsingDamageDescriptorUpgrade(name), IConfigSharing {
+    vegetableGrowRate: Double, range: Int) : GenericItemUsingDamageDescriptorUpgrade(name), IConfigSharing {
     enum class Type {
         INCANDESCENT, ECO, LED, HALOGEN
     }
 
     companion object {
-        const val MC_MIN_LIGHT_VALUE: Int = 0
-        const val MC_MAX_LIGHT_VALUE: Int = 15
-
-        // TODO: Temporary multiplication factor for floodlight range calculation; will later be incorporated into full lighting code overhaul
-        const val HALOGEN_RANGE_FACTOR: Double = 8.0 / 250.0
+        const val MIN_LIGHT_VALUE: Int = 0
+        const val MAX_LIGHT_VALUE: Int = 15
     }
 
     var nominalP: Double
@@ -48,6 +45,8 @@ class LampDescriptor(
     var stableTime = 0.0
     var vegetableGrowRate: Double
     var serverNominalLife = 0.0
+    var range: Int
+
     override fun setParent(item: Item?, damage: Int) {
         super.setParent(item, damage)
         Data.addLight(newItemStack())
@@ -97,7 +96,7 @@ class LampDescriptor(
         super.addInformation(itemStack, entityPlayer, list, par4)
         list.add(tr("Technology: %1$", type))
         // TODO: Convert all lamp ranges (instead of brightnesses) to be dependent upon bulb type (future lighting code overhaul)
-        if (type == Type.HALOGEN) list.add(tr("Range: %1$ blocks", (nominalP * HALOGEN_RANGE_FACTOR).toInt()))
+        if (type == Type.HALOGEN) list.add(tr("Range: %1$ blocks", range))
         else list.add(tr("Range: %1$ blocks", (nominalLight * 15).toInt()))
         list.add(tr("Power: %1\$W", Utils.plotValue(nominalP)))
         list.add(tr("Resistance: %1$\u2126", Utils.plotValue(r)))
@@ -132,6 +131,7 @@ class LampDescriptor(
     init {
         setDefaultIcon(iconName)
         this.type = type
+        this.range = range
         this.socket = socket
         this.nominalU = nominalU
         this.nominalP = nominalP

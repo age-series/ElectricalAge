@@ -44,39 +44,33 @@ class FloodlightProcess(var element: FloodlightElement) : IProcess {
                 val num: Double = abs(lampVoltage) - lampDescriptor.minimalU
                 val den: Double = lampDescriptor.nominalU - lampDescriptor.minimalU
 
-                lampLightValues.add(((num / den) * lampDescriptor.nominalLight * LampDescriptor.MC_MAX_LIGHT_VALUE).toInt())
+                lampLightValues.add(((num / den) * lampDescriptor.nominalLight * LampDescriptor.MAX_LIGHT_VALUE).toInt())
 
-                if (lampLightValues[idx] < LampDescriptor.MC_MIN_LIGHT_VALUE) lampLightValues[idx] = LampDescriptor.MC_MIN_LIGHT_VALUE
-                else if (lampLightValues[idx] > LampDescriptor.MC_MAX_LIGHT_VALUE) lampLightValues[idx] = LampDescriptor.MC_MAX_LIGHT_VALUE
+                if (lampLightValues[idx] < LampDescriptor.MIN_LIGHT_VALUE) lampLightValues[idx] = LampDescriptor.MIN_LIGHT_VALUE
+                else if (lampLightValues[idx] > LampDescriptor.MAX_LIGHT_VALUE) lampLightValues[idx] = LampDescriptor.MAX_LIGHT_VALUE
 
-                lampLightRanges.add((lampDescriptor.nominalP * LampDescriptor.HALOGEN_RANGE_FACTOR).toInt())
+                lampLightRanges.add(lampDescriptor.range)
 
                 val bulbCanAge = !Eln.halogenLampInfiniteLife && SaveConfig.instance!!.electricalLampAging
 
                 if (bulbCanAge) {
-                    // if (!FloodlightContainer.lockLampAging) {
-                        // FloodlightContainer.lockStackTransfer = true
+                    val currentLife = lampDescriptor.ageLamp(lampStacks[idx]!!, lampVoltage, time)
 
-                        val currentLife = lampDescriptor.ageLamp(lampStacks[idx]!!, lampVoltage, time)
-
-                        if (currentLife <= 0.0) {
-                            element.inventory.setInventorySlotContents(idx, null)
-                            element.inventoryChange(element.inventory)
-                        }
-                    // }
-
-                    // FloodlightContainer.lockStackTransfer = false
+                    if (currentLife <= 0.0) {
+                        element.inventory.setInventorySlotContents(idx, null)
+                        element.inventoryChange(element.inventory)
+                    }
                 }
             }
             else {
-                lampLightValues.add(LampDescriptor.MC_MIN_LIGHT_VALUE)
-                lampLightRanges.add((0.0 * LampDescriptor.HALOGEN_RANGE_FACTOR).toInt())
+                lampLightValues.add(LampDescriptor.MIN_LIGHT_VALUE)
+                lampLightRanges.add(0)
             }
         }
 
         val newLightValue = max(lampLightValues[FloodlightContainer.LAMP_SLOT_1_ID], lampLightValues[FloodlightContainer.LAMP_SLOT_2_ID])
 
-        element.powered = newLightValue > LampDescriptor.MC_MIN_LIGHT_VALUE
+        element.powered = newLightValue > LampDescriptor.MIN_LIGHT_VALUE
         element.lightRange = lampLightRanges[FloodlightContainer.LAMP_SLOT_1_ID] + lampLightRanges[FloodlightContainer.LAMP_SLOT_2_ID]
 
         updateBlockLight(newLightValue)
@@ -127,7 +121,7 @@ class FloodlightProcess(var element: FloodlightElement) : IProcess {
                 lightVectors[idx].zCoord += rotationVectors[idx].zCoord
                 lbCoords[idx].setPosition(lightVectors[idx])
 
-                if (!lbCoords[idx].blockExist) return
+                if (!lbCoords[idx].blockExist) break
 
                 if (jdx % 2 == 1) LightBlockEntity.addLight(Coordinate(lbCoords[idx]), lightValue, 5)
             }
