@@ -15,10 +15,6 @@ class FloodlightContainer(player: EntityPlayer, inventory: IInventory) : BasicCo
         const val LAMP_SLOT_2_ID: Int = 1
 
         val LAMP_SOCKET_TYPE = LampSocketType.Tube
-
-        // var lockLampAging: Boolean = false
-        // var lockStackTransfer: Boolean = false
-        // var transferStackIteration: Int = 0
     }
 
 }
