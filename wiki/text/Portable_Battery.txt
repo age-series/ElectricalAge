@@ -1,0 +1,35 @@
+{{Item
+|itemname=Portable Battery
+|stackable=Yes(64)
+|poweredby=Stored Energy
+}}
+
+The Portable Battery can storage electrical energy and can be used in small portable devices such as the [[Digital Watch]] or to charge up the [[X-Ray Scanner]]. Portable Battery Pack can provide more power to device.<br />
+It can be charged in [[Battery Charger]].
+
+==Crafting and informations==
+
+===Portable Battery===
+* '''Charge power''' : 500W
+* '''Discharge power''' : 100W
+* '''Maximal stored energy''' : 20000J
+{{Crafting_Grid
+|2=Iron_Ingot
+|4=Iron_Ingot|5=Lead_Ingot|6=Iron_Ingot
+|7=Iron_Ingot|8=Lead_Ingot|9=Iron_Ingot
+|result=Portable_Battery}}
+
+===Portable Battery Pack===
+* '''Charge power''' : 1500W
+* '''Discharge power''' : 300W
+* '''Maximal stored energy''' : 60000J
+{{Crafting_Grid
+|1=Portable_Battery|2=Portable_Battery|3=Portable_Battery
+|result=Portable_Battery_Pack}}
+
+==See also==
+* [[Battery Charger]]
+* [[Portable Condensator]]
+* [[X-Ray Scanner]]
+
+[[Category:Items]]

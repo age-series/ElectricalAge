@@ -1,0 +1,18 @@
+{{Item
+|itemname=Cheap Chip
+|stackable=Yes(64)
+}}
+
+The '''Cheap Chip''' is a crafting component used to create a wide variety of items and blocks in Electrical Age.
+
+==Crafting==
+{{Crafting_Grid
+|2=Redstone
+|4=Redstone|5=Silicon_Ingot|6=Redstone
+|8=Redstone
+|result=Cheap_Chip
+}}
+
+The '''Cheap Chip''' is used in 35 different crafting recipes at the time of writing this page and is a very vital component of progression in Electrical Age.
+
+[[Category:Items]]

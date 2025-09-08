@@ -8,6 +8,7 @@ import mods.eln.generic.GenericItemUsingDamageDescriptorWithComment
 import mods.eln.generic.genericArmorItem
 import mods.eln.generic.genericArmorItem.ArmourType
 import mods.eln.i18n.I18N
+import mods.eln.i18n.I18N.tr
 import mods.eln.item.*
 import mods.eln.item.electricalitem.*
 import mods.eln.item.regulator.IRegulatorDescriptor
@@ -746,7 +747,7 @@ object ItemRegistration {
             name = I18N.TR_NAME(I18N.Type.NONE, "Ferrite Ingot")
             element = GenericItemUsingDamageDescriptorWithComment(
                 name,
-                arrayOf("useless", "Really useless")
+                arrayOf(tr("useless"), tr("Really useless"))
             )
             Eln.sharedItem.addElement(completId, element)
             Data.addResource(element.newItemStack())
@@ -768,7 +769,7 @@ object ItemRegistration {
             completId = subId + (id shl 6)
             name = I18N.TR_NAME(I18N.Type.NONE, "Mercury")
             element =
-                GenericItemUsingDamageDescriptorWithComment(name, arrayOf("useless", "miaou"))
+                GenericItemUsingDamageDescriptorWithComment(name, arrayOf(tr("useless"), tr("miaou")))
             Eln.sharedItem.addElement(completId, element)
             Data.addResource(element.newItemStack())
             addToOre("quicksilver", element.newItemStack())
@@ -1497,7 +1498,7 @@ object ItemRegistration {
             subId = 48
             name = I18N.TR_NAME(I18N.Type.NONE, "Wrench")
             val desc = GenericItemUsingDamageDescriptorWithComment(name,
-                I18N.TR("Electrical age wrench,\nCan be used to turn\nsmall wall blocks")
+                tr("Electrical age wrench,\nCan be used to turn\nsmall wall blocks")
                     .split("\n".toRegex()).dropLastWhile { it.isEmpty() }
                     .toTypedArray())
             Eln.sharedItem.addElement(subId + (id shl 6), desc)

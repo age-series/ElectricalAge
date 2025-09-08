@@ -178,11 +178,11 @@ class PowerCapacitorSixElement(SixNode: SixNode, side: Direction, descriptor: Si
 
     override fun getWaila(): Map<String, String> {
         val info: MutableMap<String, String> = HashMap()
-        info[I18N.tr("Capacity")] = Utils.plotValue(capacitor.coulombs, "F")
-        info[I18N.tr("Charge")] = Utils.plotEnergy("", capacitor.energy)
+        info[tr("Capacity")] = Utils.plotValue(capacitor.coulombs, "F")
+        info[tr("Charge")] = Utils.plotEnergy("", capacitor.energy)
         if (Eln.wailaEasyMode) {
-            info[I18N.tr("Voltage drop")] = Utils.plotVolt("", Math.abs(capacitor.voltage))
-            info[I18N.tr("Current")] = Utils.plotAmpere("", Math.abs(capacitor.current))
+            info[tr("Voltage drop")] = Utils.plotVolt("", Math.abs(capacitor.voltage))
+            info[tr("Current")] = Utils.plotAmpere("", Math.abs(capacitor.current))
         }
         return info
     }
@@ -319,8 +319,8 @@ class PowerCapacitorSixGui(player: EntityPlayer, inventory: IInventory, var rend
     }
 
     override fun postDraw(f: Float, x: Int, y: Int) {
-        helper.drawString(8, 8, -0x1000000, I18N.tr("Capacity: %1\$F", Utils.plotValue(render.descriptor.getCValue(render.inventory))))
-        helper.drawString(8, 8 + 8 + 1, -0x1000000, I18N.tr("Nominal voltage: %1\$V", Utils.plotValue(render.descriptor.getUNominalValue(render.inventory))))
+        helper.drawString(8, 8, -0x1000000, tr("Capacity: %1\$F", Utils.plotValue(render.descriptor.getCValue(render.inventory))))
+        helper.drawString(8, 8 + 8 + 1, -0x1000000, tr("Nominal voltage: %1\$V", Utils.plotValue(render.descriptor.getUNominalValue(render.inventory))))
         super.postDraw(f, x, y)
     }
 
@@ -331,9 +331,9 @@ class PowerCapacitorSixGui(player: EntityPlayer, inventory: IInventory, var rend
 
 class PowerCapacitorSixContainer(player: EntityPlayer, inventory: IInventory) : BasicContainer(player, inventory, arrayOf(
     SlotFilter(inventory, redId, 132, 8, 13, arrayOf(ItemStackFilter(Items.redstone)),
-        ISlotSkin.SlotSkin.medium, arrayOf(I18N.tr("Redstone slot"), I18N.tr("(Increases capacity)"))),
+        ISlotSkin.SlotSkin.medium, arrayOf(tr("Redstone slot"), tr("(Increases capacity)"))),
     GenericItemUsingDamageSlot(inventory, dielectricId, 132 + 20, 8, 20, DielectricItem::class.java,
-        ISlotSkin.SlotSkin.medium, arrayOf(I18N.tr("Dielectric slot"), I18N.tr("(Increases maximum voltage)")))
+        ISlotSkin.SlotSkin.medium, arrayOf(tr("Dielectric slot"), tr("(Increases maximum voltage)")))
 )) {
     companion object {
         const val redId = 0

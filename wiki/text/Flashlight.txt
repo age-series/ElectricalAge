@@ -1,0 +1,1 @@
+The flashlight, when held, casts a helpful beam of light around you. This lets you see in the dark with ease. This costs electricity. It can be recharged at a battery charger. It can also accept power from a condensator or battery pack.

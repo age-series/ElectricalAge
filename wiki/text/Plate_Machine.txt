@@ -1,0 +1,43 @@
+{{Machine
+|image={{InvItem|file=Plate_machine50.png|bgcolor={{LowVoltage}}}}
+|voltage=50
+|power=200
+}}
+
+{{Machine
+|image={{InvItem|file=Plate_machine200.png|bgcolor={{MediumVoltage}}}}
+|voltage=200
+|power=400
+}}
+
+The plate machine is used to hammer various ingots into plates.
+
+= Crafting =
+
+{{Crafting Grid
+|1=Iron_Ingot|2=Redstone|3=Iron_Ingot
+|4=Iron_Ingot|5=Machine_Block|6=Iron_Ingot
+|7=Iron_Ingot|8=Electrical_Motor|9=Iron_Ingot
+|result=50V_Plate_Machine
+}}
+
+{{Crafting Grid
+|1=Alloy_Plate|2=Advanced_Chip|3=Alloy_Plate
+|4=Alloy_Plate|5=Advanced_Machine_Block|6=Alloy_Plate
+|7=Alloy_Plate|8=Advanced_Electrical_Motor|9=Alloy_Plate
+|result=200V_Plate_Machine
+}}
+
+= Recipes =
+
+The plate machine takes a configurable number of the resource on the left, and produces the plate on the right. The ratio is configurable, and defaults to 1 item per plate. Regardless of the ratio, all operations take 10kJ of energy.
+
+* [[Copper Ingot]] into [[Copper Plate]];
+* [[Lead Ingot]] into [[Lead Plate]];
+* [[Silicon Ingot]] into [[Silicon Plate]];
+* [[Alloy Ingot]] into [[Alloy Plate]];
+* [[Iron Ingot]] into [[Iron Plate]]; and
+* [[Gold Ingot]] into [[Gold Plate]].
+
+[[Category:50 Volts]]
+[[Category:200 Volts]]

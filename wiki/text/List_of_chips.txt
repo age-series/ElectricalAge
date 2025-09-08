@@ -1,0 +1,27 @@
+== [[:Category:Digital chips|Digital chips]] ==
+* [[NOT (Chip)]]
+* [[AND (Chip)]]
+* [[OR (Chip)]]
+* [[XOR (Chip)]]
+* [[NAND (Chip)]]
+* [[NOR (Chip)]]
+* [[XNOR (Chip)]]
+* [[D Flip-Flop (Chip)]]
+* [[JK Flip-Flop (Chip)]]
+* [[PAL (Chip)]]
+
+== [[:Category:Mixed signal chips|Mixed signal chips]] ==
+* [[Oscillator (Chip)]]
+* [[Schmitt Trigger (Chip)]]
+
+== [[:Category:Analog chips|Analog chips]] ==
+* [[Amplifier (Chip)]]
+* [[Voltage controlled amplifier (Chip)]]
+* [[Voltage controlled sawtooth oscillator (Chip)]]
+* [[Voltage controlled sine oscillator (Chip)]]
+* [[Configurable summing unit (Chip)]]
+* [[OpAmp (Chip)]]
+* [[PID Regulator (Chip)]]
+
+
+[[Category:Chips]]

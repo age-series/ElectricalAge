@@ -1,6 +1,6 @@
 package mods.eln.sixnode.powersocket
 
-import mods.eln.i18n.I18N
+import mods.eln.i18n.I18N.tr
 import mods.eln.misc.*
 import mods.eln.misc.Obj3D.Obj3DPart
 import mods.eln.misc.Utils.setGlColorFromDye
@@ -81,14 +81,14 @@ class PowerSocketDescriptor(subID: Int, name: String, obj: Obj3D) :
     ) {
         super.addInformation(itemStack, entityPlayer, list, par4)
 
-        list?.addAll(I18N.tr("Supplies any device\nplugged in with energy.").split("\n".toRegex())
+        list?.addAll(tr("Supplies any device\nplugged in with energy.").split("\n".toRegex())
             .dropLastWhile { it.isEmpty() }
             .toTypedArray())
     }
 
     override fun addRealismContext(list: MutableList<String?>): RealisticEnum {
         super.addRealismContext(list)
-        list.add(I18N.tr("Homes have power sockets. These are not them."))
+        list.add(tr("Homes have power sockets. These are not them."))
         return RealisticEnum.UNREALISTIC
     }
 

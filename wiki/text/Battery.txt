@@ -1,0 +1,126 @@
+There are 6 different kinds of batteries, and they all have different properties that make them useful.
+
+{| class="wikitable"
+! style="text-align:left;"| Battery Type
+! V (typ)
+! W (typ)
+! kJ
+! mΩ
+|-
+|Cost Oriented
+|50
+|250
+|60
+|400
+|-
+|Capacity Oriented
+|12.5
+|125
+|240
+|50
+|-
+|Voltage Oriented
+|200
+|250
+|60
+|6400
+|-
+|Current Oriented
+|50
+|1000
+|40
+|100
+|-
+|Life Oriented
+|50
+|250
+|60
+|400
+|-
+|Single-Use
+|50
+|500
+|120
+|200
+|}
+
+==Types==
+
+There are six different types of batteries, and each one is good for a particular use.
+
+===Cost Oriented Battery===
+
+Cost oriented batteries are the cheapest to make that can be recharged. Finally, a use for all of that lead!
+
+{{Crafting_Grid
+|1=Low_Voltage_Cable|3=Low Voltage_Cable|4=Lead_Ingot|5=Lead_Ingot|6=Lead_Ingot|7=Lead_Ingot|8=Lead_Ingot|9=Lead_Ingot
+|result=Cost_Oriented_Battery}}
+
+===Capacity Oriented Battery===
+
+Capacity oriented batteries are good for holding lots of charge.
+
+{{Crafting_Grid
+|1=Lead_Ingot|2=Lead_Ingot|3=Lead_Ingot|4=Lead_Ingot|5=Cost_Oriented_Battery|6=Lead_Ingot|7=Lead_Ingot|8=Lead_Ingot|9=Lead_Ingot
+|result=Capacity_Oriented_Battery}}
+
+===Voltage Oriented Battery===
+
+Voltage oriented batteries are 200v batteries (where most are ~50v or less).
+
+{{Crafting_Grid
+|1=Iron Ingot|2=Iron_Ingot|3=Iron_Ingot|4=Iron_Ingot|5=Cost_Oriented_Battery|6=Iron_Ingot|7=Iron_Ingot|8=Iron_Ingot|9=Iron_Ingot
+|result=Voltage_Oriented_Battery}}
+
+===Current Oriented Battery===
+
+Current oriented batteries can provide larger bursts of current (without exploding), and can be (dis)charged quickly.
+
+{{Crafting_Grid
+|1=Copper Ingot|2=Copper_Ingot|3=Copper_Ingot|4=Copper_Ingot|5=Cost_Oriented_Battery|6=Copper_Ingot|7=Copper_Ingot|8=Copper_Ingot|9=Copper_Ingot
+|result=Current_Oriented_Battery}}
+
+===Life Oriented Battery===
+
+Life oriented batteries will last longer than your typical battery.
+
+{{Crafting_Grid
+|1=Gold_Ingot|3=Gold_Ingot|5=Cost_Oriented_Battery|7=Gold_Ingot|9=Gold_Ingot
+|result=Life_Oriented_Battery}}
+
+===Single Use Battery===
+
+Single use batteries, unlike any other battery, come fully charged, and cannot be recharged. They have slightly higher energy capacity than other batteries.
+
+They can be made with coal or with charcoal
+
+{{Crafting_Grid
+|1=Coal|2=Coal|3=Coal|4=Copper_Ingot|5=Copper_Ingot|6=Copper_Ingot|7=Coal|8=Coal|9=Coal
+|result=Single_Use_Battery}}
+
+==Battery Charge Curves==
+
+This is the typical charge/discharge voltage curve per battery charge.
+
+This graph looks very similar for the 12.5v and 200v batteries, just divide or multiply the voltages by 4 respectively.
+
+[[File:Battery charge graph.png]]
+
+Keep in mind that as your battery life dwindles, this graph will become less linear and more curved.
+
+==Internal Resistance==
+
+All real life batteries have internal resistance, which lowers the effective voltage of a battery when current is drawn from it.
+
+[[File:Battery schematic.png]]
+
+To learn more about the internal resistance of batteries, visit the [https://en.wikipedia.org/wiki/Internal_resistance Wikipedia Page on internal resistance]. 
+
+==Battery Life==
+
+Just like real batteries, ELN batteries will slowly lose their life over time, especially when abused. If you charge your batteries at half its rated power, and discharge at its rated value, you can expect your battery to last a long time. If you charge/discharge too quickly or push the battery over its voltage rating, you can expect the battery life to drop off a lot quicker. As it dies, the total storage will drop off and the voltage curve will remain less stable, causing it to drop off more like a capacitor would.
+
+Your battery fully dies at 10%, meaning it will lose 90% of its max storage and will behave exactly like a capacitor would. Battery life will not drop below 10%, so if you won't need to replace them if they're still functioning appropriately.
+
+
+[[Category:Blocks]]

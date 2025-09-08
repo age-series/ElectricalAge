@@ -1,0 +1,11 @@
+A [[machine]] turns electrical power into "useful work"--in Minecraft, this usually is changing a quantity of one item into a quantity of another. For example:
+
+* Smelting, done by the vanilla furnace and [[Electrical Furnace]];
+* Grinding, done by the AE2 Grindstone, BC Pulverizer, and [[Macerator]];
+* Magnetization, done by the [[Magnetizer]];
+
+and so forth.
+
+Various mods may also have other ways of doing "useful work"; for example, OpenComputers adds programmable computers, Applied Energistics adds item storage networks, etc. These mods and others require power from somewhere, and you can use the [[Exporter]] to power them from your Electrical Age grid.
+
+See [[:Category:Machines]] for the list of documented machines in Electrical Age.

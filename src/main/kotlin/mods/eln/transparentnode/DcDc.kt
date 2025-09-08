@@ -9,7 +9,7 @@ import mods.eln.generic.GenericItemUsingDamageSlot
 import mods.eln.gui.GuiContainerEln
 import mods.eln.gui.GuiHelperContainer
 import mods.eln.gui.ISlotSkin.SlotSkin
-import mods.eln.i18n.I18N
+import mods.eln.i18n.I18N.tr
 import mods.eln.item.CaseItemDescriptor
 import mods.eln.item.ConfigCopyToolDescriptor
 import mods.eln.item.CopperCableDescriptor
@@ -83,12 +83,12 @@ class DcDcDescriptor(name: String, objM: Obj3D, coreM: Obj3D, casingM: Obj3D, va
 
     override fun addInformation(itemStack: ItemStack, entityPlayer: EntityPlayer, list: MutableList<String>, par4: Boolean) {
         super.addInformation(itemStack, entityPlayer, list, par4)
-        Collections.addAll(list, *I18N.tr("Transforms an input voltage to\nan output voltage.")!!.split("\n".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray())
+        Collections.addAll(list, *tr("Transforms an input voltage to\nan output voltage.")!!.split("\n".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray())
     }
 
     override fun addRealismContext(list: MutableList<String>?): RealisticEnum {
-        list?.add(I18N.tr("This DC/DC has unrealistic capacitance effects and can sink/source power that violates Newton's laws"))
-        list?.add(I18N.tr("It is made this way to improve the performance of the simulator in large power networks"))
+        list?.add(tr("This DC/DC has unrealistic capacitance effects and can sink/source power that violates Newton's laws"))
+        list?.add(tr("It is made this way to improve the performance of the simulator in large power networks"))
         return RealisticEnum.UNREALISTIC
     }
 
@@ -334,12 +334,12 @@ class DcDcElement(transparentNode: TransparentNode, descriptor: TransparentNodeD
 
     override fun getWaila(): Map<String, String> {
         val info = HashMap<String, String>()
-        info[I18N.tr("Ratio")] = Utils.plotValue(interSystemProcess.ratio)
+        info[tr("Ratio")] = Utils.plotValue(interSystemProcess.ratio)
         if (Eln.wailaEasyMode) {
-            info["Voltages"] = "\u00A7a" + Utils.plotVolt("", primaryLoad.voltage) + " " +
+            info[tr("Voltages")] = "\u00A7a" + Utils.plotVolt("", primaryLoad.voltage) + " " +
                 "\u00A7e" + Utils.plotVolt("", secondaryLoad.voltage)
         }
-        info[I18N.tr("Subsystem Matrix Size: ")] = Utils.renderDoubleSubsystemWaila(primaryLoad.subSystem, secondaryLoad.subSystem)
+        info[tr("Subsystem Matrix Size")] = Utils.renderDoubleSubsystemWaila(primaryLoad.subSystem, secondaryLoad.subSystem)
         return info
     }
 
@@ -526,16 +526,16 @@ class DcDcContainer(player: EntityPlayer, inventory: IInventory) : BasicContaine
     arrayOf(
         GenericItemUsingDamageSlot(inventory, primaryCableSlotId, 58, 30, 16,
             arrayOf<Class<*>>(CopperCableDescriptor::class.java),
-            SlotSkin.medium, arrayOf(I18N.tr("Copper cable slot"))),
+            SlotSkin.medium, arrayOf(tr("Copper cable slot"))),
         GenericItemUsingDamageSlot(inventory, secondaryCableSlotId, 100, 30, 16,
             arrayOf<Class<*>>(CopperCableDescriptor::class.java),
-            SlotSkin.medium, arrayOf(I18N.tr("Copper cable slot"))),
+            SlotSkin.medium, arrayOf(tr("Copper cable slot"))),
         GenericItemUsingDamageSlot(inventory, ferromagneticSlotId, 58 + (100 - 58) / 2, 30, 1,
             arrayOf<Class<*>>(FerromagneticCoreDescriptor::class.java),
-            SlotSkin.medium, arrayOf(I18N.tr("Ferromagnetic core slot"))),
+            SlotSkin.medium, arrayOf(tr("Ferromagnetic core slot"))),
         GenericItemUsingDamageSlot(inventory, CasingSlotId, 130, 74, 1,
             arrayOf<Class<*>>(CaseItemDescriptor::class.java),
-            SlotSkin.medium, arrayOf(I18N.tr("Casing slot")))))
+            SlotSkin.medium, arrayOf(tr("Casing slot")))))
     {
     companion object {
         const val primaryCableSlotId = 0

@@ -1,7 +1,7 @@
 package mods.eln.misc
 
 import mods.eln.Tags
-import mods.eln.i18n.I18N
+import mods.eln.i18n.I18N.tr
 import org.semver4j.Semver
 
 /**
@@ -15,7 +15,8 @@ object Version {
     /**
      * SemVer Version
      */
-    val SEMVER = Semver.parse(Tags.VERSION.replace(".dirty", ""))
+    val SEMVER = Semver.parse(Tags.VERSION.replace(".dirty", "+dirty"))?:
+        Semver.parse("0.0.0-${Tags.VERSION}".replace(".dirty", "+dirty"))
 
     /**
      * Major version code.
@@ -50,12 +51,12 @@ object Version {
     val simpleVersionName = if (!DIRTY) "$MAJOR.$MINOR.$REVISION" else "$MAJOR.$MINOR.$REVISION (Dirty)"
     @JvmStatic
     fun print(): String {
-        return I18N.tr("mod.name") + " " + simpleVersionName
+        return tr("mod.name") + " " + simpleVersionName
     }
 
     @JvmStatic
     fun printColor(): String {
-        return (FC.WHITE + I18N.tr("mod.name") + " version "
+        return (FC.WHITE + tr("mod.name") + " version "
                 + FC.ORANGE + simpleVersionName)
     }
 

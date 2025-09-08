@@ -2,7 +2,7 @@ package mods.eln.node.six
 
 import mods.eln.generic.GenericItemBlockUsingDamageDescriptor
 import mods.eln.ghost.GhostGroup
-import mods.eln.i18n.I18N
+import mods.eln.i18n.I18N.tr
 import mods.eln.misc.Coordinate
 import mods.eln.misc.Direction
 import mods.eln.misc.LRDU
@@ -69,7 +69,7 @@ open class SixNodeDescriptor : GenericItemBlockUsingDamageDescriptor, IItemRende
             for (d in placeDirection!!) {
                 if (d === side) return true
             }
-            addChatMessage(player!!, I18N.tr("You can't place this block at this side"))
+            addChatMessage(player!!, tr("You can't place this block at this side"))
             return false
         }
         return true
@@ -107,10 +107,10 @@ open class SixNodeDescriptor : GenericItemBlockUsingDamageDescriptor, IItemRende
                     break
                 }
             }
-            if (!ok) return I18N.tr("You can't place this block at this side")
+            if (!ok) return tr("You can't place this block at this side")
         }
         val ghostGroup = getGhostGroup(direction, front)
-        return if (ghostGroup != null && !ghostGroup.canBePloted(coord!!)) I18N.tr("Not enough space for this block") else null
+        return if (ghostGroup != null && !ghostGroup.canBePloted(coord!!)) tr("Not enough space for this block") else null
     }
 
     open fun getFrontFromPlace(side: Direction, player: EntityPlayer): LRDU? {

@@ -4,7 +4,7 @@ import mods.eln.gui.GuiHelperContainer
 import mods.eln.gui.GuiScreenEln
 import mods.eln.gui.GuiTextFieldEln
 import mods.eln.gui.IGuiObject
-import mods.eln.i18n.I18N
+import mods.eln.i18n.I18N.tr
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.inventory.IInventory
 
@@ -17,7 +17,7 @@ class PowerSocketGui(private val render: PowerSocketRender, player: EntityPlayer
 
         device = newGuiTextField(8, 8, 138)
         device?.setText(render.channel)
-        device?.setComment(0, I18N.tr("Specify the power channel"))
+        device?.setComment(0, tr("Specify the power channel"))
     }
 
     override fun newHelper(): GuiHelperContainer {

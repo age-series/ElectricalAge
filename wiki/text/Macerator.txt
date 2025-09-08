@@ -1,0 +1,48 @@
+{{Machine
+|image={{InvItem|file=Macerator50.png|bgcolor={{LowVoltage}}}}
+|voltage=50
+|power=200
+}}
+
+{{Machine
+|image={{InvItem|file=Macerator200.png|bgcolor={{MediumVoltage}}}}
+|voltage=200
+|power=400
+}}
+
+The macerator is a [[machine]] that grinds things.
+
+= Crafting =
+
+{{Crafting Grid
+|1=Iron_Ingot|2=Redstone|3=Iron_Ingot
+|4=Flint|5=Machine_Block|6=Flint
+|7=Iron_Ingot|8=Electrical_Motor|9=Iron_Ingot
+|result=50V_Macerator}}
+
+{{Crafting Grid
+|1=Alloy_Ingot|2=Advanced_Chip|3=Alloy_Ingot
+|4=Diamond|5=Advanced_Machine_Block|6=Diamond
+|7=Alloy_Ingot|8=Advanced_Electrical_Motor|9=Alloy_Ingot
+|result=200V_Macerator}}
+
+= Recipes =
+
+The macerator grinds down various ores into two dust, and various ingots into one dust, including most ores/ingots/dusts registered by other mods. This is a form of ore duplication which can be accessed from the very early game!
+
+Additionally:
+
+* Macerating sand yields one [[Silicon Dust|silicon dust]] per block.
+* Macerating coal yields two [[Coal_Dust|coal dust]] per block.
+* Macerating cobblestone yields one gravel per block.
+* Macerating gravel yields one flint per block.
+* Macerating dirt yields one sand per block.
+
+= Power usage =
+
+When not upgraded, the 50V/200V macerators have an internal resistance of 12.5 Ohms and 100 Ohms respectively, drawing 4 and 2 Amperes respectively. With the capacity of [[Low Voltage Cable|low]] and [[Medium Voltage Cable|medium]] voltage cables, it is safe to put only up to 5 macerators on an otherwise-unoccupied circuit.
+
+You can use a [[Machine Booster]] to speed up the '''Macerator''', but this will come at the cost of increased power usage. Details about power usage and machine boosters can be found in the [[Machine Booster]] page.
+
+[[Category:50 Volts]]
+[[Category:200 Volts]]

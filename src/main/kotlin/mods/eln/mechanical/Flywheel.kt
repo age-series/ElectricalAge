@@ -1,6 +1,7 @@
 package mods.eln.mechanical
 
 import mods.eln.Eln
+import mods.eln.i18n.I18N.tr
 import mods.eln.misc.Direction
 import mods.eln.misc.LinearFunction
 import mods.eln.misc.Obj3D
@@ -97,8 +98,8 @@ class FlyWheelElement(node: TransparentNode, desc_: TransparentNodeDescriptor) :
 
     override fun getWaila(): Map<String, String> {
         val info = mutableMapOf<String, String>()
-        info.put("Speed", Utils.plotRads("", shaft.rads))
-        info.put("Energy", Utils.plotEnergy("", shaft.energy))
+        info.put(tr("Speed"), Utils.plotRads("", shaft.rads))
+        info.put(tr("Energy"), Utils.plotEnergy("", shaft.energy))
         return info
     }
 }

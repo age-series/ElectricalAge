@@ -1,0 +1,19 @@
+{{Block
+|blockname=Copper Thermal Cable
+|image=CopperThermalCable
+|poweredby=Thermal Energy
+|type=Single
+}}Copper Thermal Cables are used to transfer heat from one device to another.  They are primarily used in power generation setups to link [[Stone Heat Furnace|heat furnaces]], [[Turbine|turbines]], and [[Thermal Dissipator|dissipators]].  They are also an ingredient in all recipes involving heat energy, making them the thermal equivalent to [[Electrical Cables|electrical cables]].  When run in a series arrangement, copper thermal cables are great at transmitting power.  When run in parallel they offer slight power dissipation.  These facts should be taken into account when working with power generation systems.  Copper thermal cables have the highest max temperature of all heat system components at 1000<sup>o</sup>C, making them nearly impervious to overheating.
+
+==Crafting==
+<b>Copper Thermal Cable</b>
+{{Crafting_Grid
+|1=Cobblestone|2=Cobblestone|3=Cobblestone
+|4=Copper_Ingot|5=Copper_Ingot|6=Copper_Ingot
+|7=Cobblestone|8=Cobblestone|9=Cobblestone
+|result=Copper_Thermal_Cable}}
+{{Crafting_Grid
+|1=Cobblestone
+|4=Copper_Cable
+|result=Copper_Thermal_Cable}}
+[[Category:Blocks]]

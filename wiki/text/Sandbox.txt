@@ -1,0 +1,20 @@
+<math>E=mc^2</math>
+<math>x=frac{-b+sqrt{d}}{2*a}</math>
+
+Some text before. <div style="display: inline-block; vertical-align: bottom; background-color: rgb(80%, 87%, 82%); border: 4px inset #777;"> [[File:Macerator50.png|200px]] </div> Some text after.
+
+
+Some more text before. {{InvItem|bgcolor={{LowVoltage}}}} Some more text after.
+
+{| class="infobox" cellspacing="5" style="width: 26em; font-size: 90%; text-align: left; float: right; border: 1px solid #000;"
+|-
+| colspan="2" style="text-align: center; font-size: 150%;" | '''Title Area'''
+|-
+| '''Property 1'''
+| Value 1
+|-
+| '''Property 2'''
+| Value 2
+|}
+
+{{#if: foo|a|b}}

@@ -1,0 +1,27 @@
+{{Block
+|blockname=Thermal Dissipator
+|requirements=None
+|image=Heat-Dissipators
+|poweredby=Varied Voltages
+|type=Single
+|stackable=Yes
+}}
+
+Thermal Dissipators are blocks that are used to cool down [[Heat Turbine]]s.
+
+They can be passive, and remove heat at a slower speed, or you can have 50v and 200v thermal dissipators, which actively remove heat using a fan.
+
+== Obtaining ==
+
+TODO: Crafting recipes
+
+== Usage ==
+[[File:200V-Active-Thermal-Dissipator.png|300px|thumb|right|200V Active Thermal Dissipator with cooling side (on the left) and [[Electrical Cables|Electrical Cable]] side (on the right)]]
+Place the dissipator with the cooling side facing cold side of the [[Heat Turbine]].
+
+It's required to provide electricity source for active dissipators.
+
+50V/50W for Small Active Thermal Dissipator and 200V/60W for the 200V Active Thermal Dissipator.
+
+[[Category:50 Volts]]
+[[Category:200 Volts]]

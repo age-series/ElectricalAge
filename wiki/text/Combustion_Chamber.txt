@@ -1,0 +1,20 @@
+{{Item
+|itemname=Combustion-Chamber
+|renewable=No
+}}Combustion Chamber is an upgrade for [[Stone Heat Furnace]].
+
+It improves heat up speed of the furnace.
+
+== Obtaining ==
+
+==Crafting==
+<b>Combustion Chamber</b>
+{{Crafting_Grid
+|2=Stone
+|4=Stone|6=Stone
+|8=Stone
+|result=Combustion_Chamber}}
+
+== Usage ==
+[[File:Stone_Heat_Furnace_Interface.png|300px|thumb|right|[[Stone Heat Furnace]] interface, Combustion Chamber slot marked as D]]
+One Combustion Chamber is needed for a [[Stone Heat Furnace]] to work. A second one improves the efficiency.

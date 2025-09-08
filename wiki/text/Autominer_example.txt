@@ -1,0 +1,78 @@
+== Start with a 200V power unit ==
+
+From the '''[[200V example build]]''', we know how to make a 200V power unit.
+
+For this example, you could hook up to an existing 200V line, or make a new power
+unit specially for the [[Autominer]]. 
+
+There are even better ways to get power to an autominer, but those are outside the scope
+of this example. 
+
+[[Image:Example autominer 1.png|800px]]
+
+== Transform up to 800V ==
+We can use a transformer to transform 200V up to 800V.
+
+keep an eye on where the green square and yellow square are in the world
+in our case yellow is on the 200V side, and green on the 800V side.
+
+* Place 4 [[High Voltage Cable]]s in the green side.
+* Place 1 [[Medium Voltage Cable]] in the yellow side.
+* Place a [[Ferromagnetic Core]] of any kind in the middle slot. 
+
+Now the transformer will transform at a ratio of 1:4 . (and 200*4=800)
+
+[[Image:Example autominer 2.png|800px]]
+[[Image:Example autominer 3.png|400px]]
+
+== Set up autominer ==
+
+
+Place the Autominer where you want to mine. Use high voltage cables to connect it to the Transformer.
+
+* The Autominer will mine down to bedrock in a 10 block radius circle.
+* The Autominer will dig an open shaft in the middle, but otherwise replaces everything it digs with cobblestone.
+
+''(If you happen to be familiar with the [https://wiki.aidancbrady.com/wiki/Digital_Miner mekanism digital miner]; the autominer is quite comparable. In comparison: it comes pre-configured for the most common use case; it's cheaper; and it is typically somewhat slower.)'' 
+[[Image:Example autominer 4.png|800px]]
+
+* Place an [[Electrical Drill]] (any kind) in the left slot (top right)
+* Place a stack of [[Mining Pipe]] in the right slot (top right)
+* Leave silk touch off. In this configuration you may not have enough power to use that.
+
+[[Image:Example autominer 5.png|400px]]
+
+* Place a chest (or some other inventory block) at the rear of the autominer.
+
+[[Image:Example autominer 6.png|800px]]
+
+== Breaker (Optional) ==
+
+Use [[Breaker]]s early and often. They will check for overvolt and overheat conditions and hopefully switch off the line before anything really bad happens.
+
+In this case the breaker is also a convenient way to turn the autominer on and off
+
+* Set max voltage to 250V (you can go a little bit over line max voltage without too bad things happening)
+
+[[Image:Example autominer 7.png|800px]]
+[[Image:Example autominer 8.png|400px]]
+
+==Finally ==
+* Feed your 200V powerunit some form of fuel (like charcoal)
+* Switch on the breaker
+* watch as the autominer slowly, but surely, digs up ore for you! 
+[[Image:Example autominer 9.png|800px]]
+
+Overhead view:
+
+[[Image:Example autominer 10.png|800px]]
+
+
+
+* With an operational autominer, life at a survival base can be more relaxed
+* You will still need to occasionally move the autominer, it's no silver bullet.
+
+== Where to next? ==
+See '''[[Examples]]''' for other ideas on what to do
+
+[[Category:Example]]

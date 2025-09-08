@@ -1,0 +1,10 @@
+The OR gate is a digital logic gate that implements logical disjunction. A 1 (high) output results
+if at least one of the inputs to the gate are 1 (high). If all inputs are 0 (low), a 0 (low)
+output results.
+
+If no signal is connected to an input pin, the input is read as 0 (low). This is done by internal
+pull-down resistors that pull the signal to low in the absence of an input signal. Using this
+mechanism the OR gate can be used with 2 or 3 inputs in the exact same way.
+
+Play with the 3 buttons to see the function of the OR gate. You will see that the output is only
+0 (low) if all 3 inputs are 0 (low), in any other case the output will be 1 (high).

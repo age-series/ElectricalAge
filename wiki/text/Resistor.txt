@@ -1,0 +1,18 @@
+A Resistor is a simple component which can be used to influence the voltage and current by making it more difficult for the electricity to pass. This will create heat, causing power loss and failure at higher temperatures.
+
+Ohm's law (Volts / Ohms = Amps) describes how a resistor will act:
+
+1 Volt at 1 Ohm will give a current of 1 Amp
+50 Volts at 50 Ohms will also give a current of 1 Amp
+800 Volts at 50 Ohms will give a current at 16 Amps
+
+
+==Rheostat==
+
+This upgraded Resistor works exactly like the regular resistor, only with one very useful benefit: You can set the % the Rheostat is to run at by using a signal. The smaller the signal is, the less effective the resistor will be. A signal of 50V will make the rheostat behave like an ordinary resistor.
+
+==Large Rheostat==
+
+Rheostats and Resistors are weak and heat up as they work; it's proving to be a real bummer for your now growing factory. Instead of spamming resistors, set up a Large Rheostat instead. This rheostat is an upgrade to the previous rheostat and comes with a cooling fin, and a heat output side. Unlike the previous resistors, this one is more effective giving more resistance per coal dust. Thanks to its heat output even add more cooling fins can be installed, allowing massive amounts of power to be lost without a component failure. It's also possible to set up a few turbines to reclaim up to 75% of the lost power and reintroduce it into your electrical network. This is great for negating losses, as 10kW of power loss is quite significant and reclaiming would reduce that to 3kW.
+
+The Large Rheostat glows more red the hotter it is. If it glows dark red disconnect it immediately.

@@ -1,0 +1,95 @@
+This is the first and simplest setup, a player can start with in survival mode.
+
+It's required for obtaining advanced elements, which are needed in order to progress ingame.
+
+== Setup ==
+A [[50V Heat Turbine]] generates power by exploiting the temperature difference between a hot and a cold side.
+The hot side is marked with a red square and the cold side with a blue one.
+
+We can use a [[Stone Heat Furnace]] to apply heat to one side and a few [[Thermal Dissipator|Small Thermal Dissipators]] to cool the other one down.
+
+[[File:Example_50V_1.png|600px]]
+
+[[File:Stone_Heat_Furnace_Interface.png|thumb|[[Stone Heat Furnace]] interface]]
+Up to two [[Combustion Chamber]] upgrades can be placed inside a [[50V Heat Turbine]], to improve it's efficiency. Valid fuels are the same as for the vanilla furnace.
+
+In this example we'll use charcoal, since it's a very common solid fuel.
+
+After setting the furnace up, we connect a [[50V Macerator]] using [[Low Voltage Cable]] to the [[50V Heat Turbine]].
+
+[[File:Example_50V_3.png|600px]]
+
+== Using machines == 
+[[File:Macerator-Interface.png|thumb|Macerator Interface|right]]
+To reach optimal performance of a consumer device, keep the voltage supply bar in the green area, by using a control gauge next to the heat furnace.<br />
+If you do this by hand, then it can take quite some work! Move to the next section for the automatic way.
+
+For this example, we will use a [[50V Macerator]], but the process is the same for all other machines.
+
+Since the voltage drops, when the Macerator is under a load, you'll need to increase the heat production of the [[50V Heat Turbine]], to counteract it.<br />
+After you remove the load, the furnace will generate too much heat and it might explode.<br />
+So, you will need to decrease the heat.
+
+You can also know if the macerator is in the optimal voltage by listening to the sound it makes.<br />
+The volume and pitch can tell you, if the macerator is running at it's optimal rate.
+
+== Analogic control ==
+[[File:Stone-Heat-Furnace-with-Analogic-Control.png|300px|thumb|right|Stone Heat Furnace with analogic control]]
+
+Instead of controlling the temperature by hand, you can use an [[Analogic Regulator]] to keep it steady.
+
+Use the Temperature gauge to set what temperature you want. 250-300 degrees corresponds to roughly
+50V in our case. The Analogic regulator will use the Control gauge to try to 
+keep the temperature as close as possible to the desired temperature (called "set point").
+
+== External control ==
+[[File:Electrical-Probe-50V-Example.png|300px|thumb|right|[[Electrical Probe]] example for 50V build]]
+Alternately, we can control the furnace by directly measuring the voltage on the line and adjusting temperature automatically.
+
+# Right click on the [[Electrical Probe]] and set measurement to '''Voltage''' (default)
+# In the first input field (100% output) set the value to <code>50</code>
+# In the second input field (0% output) set the value to <code>55</code>
+# Place a single [[Low Voltage Cable]] in the bottom right corner of the probe interface (so that it connects with the rest of the wire)
+# Connect the probe to the furnace using a [[Signal Cable]]
+# Set the Heat furnace to accept External Control (click once on the button labeled Internal Control) 
+
+Image of your build after this step is completed:
+
+[[File:Example_50V_7.png|600px]]
+
+This should keep wire voltage neatly at ~50V. Use of External control is important in more complex builds.
+
+== Finish ==
+
+We can expand out our heat furnaces and heat turbines, so that there are 3 in a row.
+This is the maximum that can safely be put on a single 50V wire without over-powering it.
+
+(It can sometimes make sense to add more, but that may need more sophisticated control)
+
+* Heat turbines allow electricity to pass between them (so no separate cables are required)
+* Heat furnaces allow a signal to pass between them too (so no extra signal wires are needed).
+
+[[File:Example_50V_9.png|800px]]
+
+Finally, we add the other machines needed to continue with next tutorials.
+
+[[File:Example_50V_10.png|800px]]
+
+These are, from left to right:
+* [[50V Magnetizer]]
+* [[50V Compressor]]
+* [[50V Plate Machine]]
+* [[50V Macerator]]
+
+
+You can consider adding [[Machine Booster]]s to make your machines faster, but be careful not to draw too much power though!
+
+== Where to go next ==
+
+In theory, you should be able to make parts for any of the other '''[[Examples]]'''.
+At 50V that is going to take some time though. 
+
+After you make enough [[Alloy Plates]], [[Advanced Motors]] and [[Advanced Machine Blocks]], you can move on to '''[[200V example build]]'''.
+
+
+[[Category:Example]]

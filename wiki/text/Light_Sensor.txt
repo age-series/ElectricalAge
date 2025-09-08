@@ -1,0 +1,22 @@
+{{Block
+|blockname=Light Sensor
+|image=Light_Sensor
+|requirements=Light or daylight
+|type=Single
+|poweredby=Signal
+}}Electrical Light Sensor provides and electrical signal depending on strength of light which lights on the sensor.
+
+If light shines on Light Sensor with strength equals 1, the sensor will give 3,33V (6,6%) of electricity.
+
+The sensor works with light produced by [[Lamp|Lamps]] or Redstone as well as sunlight.
+
+==Crafting==
+{{Crafting_Grid
+|1=Daylightsensor|2=Nether_Quartz|3=RtV_Converter
+|result=Light_Sensor}} 
+
+==See also==
+* [[Daylight Sensor]]
+* [[Signal Cable]]
+
+[[Category:Blocks]]

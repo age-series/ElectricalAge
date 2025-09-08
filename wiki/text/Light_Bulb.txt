@@ -1,0 +1,182 @@
+{{Item
+|itemname=Light Bulb
+|renewable=No
+|poweredby=Varied Voltages
+}}
+
+Light bulbs convert electrical energy into light. They are placed inside [[Lamp]]s in order to work. There are few types of light bulbs which have different purposes and degrees of efficiency.
+
+==Crafting and informations==
+===Small 50V Incandescent Light Bulb===
+
+* '''Technology''' : Incandescent
+* '''Range''' : 12 blocks
+* '''Power''' : 20W
+* '''Resistance''' : 125Ω
+* '''Nominal lifetime''' : 57600h
+
+{{Crafting_Grid
+|2=Glass_Pane
+|4=Glass_Pane|5=Tungsten_Ingot|6=Glass_Pane
+|8=Copper_Cable
+|result=50V_Incandescent_Light_Bulb|number=4}}
+
+===50V Incandescent Light Bulb===
+
+* '''Technology''' : Incandescent
+* '''Range''' : 14 blocks
+* '''Power''' : 30W
+* '''Resistance''' : 83.333Ω
+* '''Nominal lifetime''' : 57600h
+
+{{Crafting_Grid
+|2=Glass_Pane
+|4=Glass_Pane|5=Tungsten_Ingot|6=Glass_Pane
+|8=Low_Voltage_Cable
+|result=50V_Incandescent_Light_Bulb|number=4}}
+
+===200V Incandescent Light Bulb===
+
+* '''Technology''' : Incandescent
+* '''Range''' : 14 blocks
+* '''Power''' : 30W
+* '''Resistance''' : 1333.333Ω
+* '''Nominal lifetime''' : 57600h
+
+{{Crafting_Grid
+|2=Glass_Pane
+|4=Glass_Pane|5=Tungsten_Ingot|6=Glass_Pane
+|8=Medium_Voltage_Cable
+|result=200V_Incandescent_Light_Bulb|number=4}}
+
+===Small 50V Carbon Incandescent Light Bulb===
+
+* '''Technology''' : Incandescent
+* '''Range''' : 11 blocks
+* '''Power''' : 15W
+* '''Resistance''' : 166.666Ω
+* '''Nominal lifetime''' : 21600h
+
+{{Crafting_Grid
+|2=Glass_Pane
+|4=Glass_Pane|5=Coal|6=Glass_Pane
+|8=Copper_Cable
+|result=50V_Carbon_Incandescent_Light_Bulb|number=4}}
+
+===50V Carbon Incandescent Light Bulb===
+
+* '''Technology''' : Incandescent
+* '''Range''' : 13 blocks
+* '''Power''' : 25W
+* '''Resistance''' : 100Ω
+* '''Nominal lifetime''' : 21600h
+
+{{Crafting_Grid
+|2=Glass_Pane
+|4=Glass_Pane|5=Coal|6=Glass_Pane
+|8=Low_Voltage_Cable
+|result=50V_Carbon_Incandescent_Light_Bulb|number=4}}
+
+===Small 50V Economic Light Bulb===
+
+* '''Technology''' : Eco
+* '''Range''' : 12 blocks
+* '''Power''' : 10W
+* '''Resistance''' : 250Ω
+* '''Nominal lifetime''' : 230400h
+
+{{Crafting_Grid
+|2=Glass_Pane
+|4=Glass_Pane|5=Glowstone|6=Glass_Pane
+|8=Copper_Cable
+|result=Economic_Light_Bulb|number=4}}
+
+===50V Economic Light Bulb===
+
+* '''Technology''' : Eco
+* '''Range''' : 14 blocks
+* '''Power''' : 15W
+* '''Resistance''' : 166.666Ω
+* '''Nominal lifetime''' : 230400h
+
+{{Crafting_Grid
+|2=Glass_Pane
+|4=Glass_Pane|5=Glowstone|6=Glass_Pane
+|8=Low_Voltage_Cable
+|result=Economic_Light_Bulb|number=4}}
+
+===200V Economic Light Bulb===
+
+* '''Technology''' : Eco
+* '''Range''' : 14 blocks
+* '''Power''' : 15W
+* '''Resistance''' : 2666.666Ω
+* '''Nominal lifetime''' : 230400h
+
+{{Crafting_Grid
+|2=Glass_Pane
+|4=Glass_Pane|5=Glowstone|6=Glass_Pane
+|8=Medium_Voltage_Cable
+|result=Economic_Light_Bulb|number=4}}
+
+===50V Farming Lamp===
+
+* '''Technology''' : Incandescent
+* '''Range''' : 15 blocks
+* '''Power''' : 120W
+* '''Resistance''' : 20.833Ω
+* '''Nominal lifetime''' : 57600h
+
+{{Crafting_Grid
+|1=Glass_Pane|2=Glass_Pane|3=Glass_Pane
+|4=Tungsten_Ingot|5=Tungsten_Ingot|6=Tungsten_Ingot
+|7=Glass_Pane|8=Low_Voltage_Cable|9=Glass_Pane
+|result=Farming_Lamp|number=2}}
+
+===200V Farming Lamp===
+
+* '''Technology''' : Incandescent
+* '''Range''' : 15 blocks
+* '''Power''' : 120W
+* '''Resistance''' : 333.333Ω
+* '''Nominal lifetime''' : 57600h
+
+{{Crafting_Grid
+|1=Glass_Pane|2=Glass_Pane|3=Glass_Pane
+|4=Tungsten_Ingot|5=Tungsten_Ingot|6=Tungsten_Ingot
+|7=Glass_Pane|8=Medium_Voltage_Cable|9=Glass_Pane
+|result=Farming_Lamp|number=2}}
+
+===50V LED Bulb===
+
+* '''Technology''' : LED
+* '''Range''' : 14 blocks
+* '''Power''' : 15W
+* '''Resistance''' : 166.666Ω
+* '''Nominal lifetime''' : 1843200h
+
+{{Crafting_Grid
+|1=Glass_Pane|2=Glass_Pane|3=Glass_Pane
+|4=Silicon_Ingot|5=Silicon_Ingot|6=Silicon_Ingot
+|8=Low_Voltage_Cable
+|result=LED_Bulb|number=2}}
+
+===200V LED Bulb===
+
+* '''Technology''' : LED
+* '''Range''' : 14 blocks
+* '''Power''' : 15W
+* '''Resistance''' : 2666.666Ω
+* '''Nominal lifetime''' : 1843200h
+
+{{Crafting_Grid
+|1=Glass_Pane|2=Glass_Pane|3=Glass_Pane
+|4=Silicon_Ingot|5=Silicon_Ingot|6=Silicon_Ingot
+|8=Medium_Voltage_Cable
+|result=LED_Bulb|number=2}}
+
+==See also==
+* [[Lamp]]
+* [[Electrical Cables]]
+
+[[Category:Items]]

@@ -1,0 +1,90 @@
+{{Block
+|blockname=Low/Medium/High Power Transmitter Antenna
+|image=Transmitter
+|type=Single
+|poweredby=Varied Voltages
+|requirements=None
+}}
+
+'''Transmitter''' antennas allow you to beam power across the air, to be collected at a reverse-facing '''receiver''' antenna. They have a limited range, and become less efficient the further the distance. Typical ranges are 200m-300m.
+
+
+
+
+==Crafting==
+
+50v Transmitter
+{{Crafting_Grid
+|1=Redstone |3=Iron_Ingot
+|4=Cheap_Chip |5=Iron_Plate
+|7=Redstone |9=Iron_Ingot
+|result= }} 
+
+200v Transmitter
+{{Crafting_Grid
+|1=Cheap_Chip |3=Iron_Plate
+|4=Advanced_Chip |5=Iron_Plate
+|7=Cheap_Chip |9=Iron_Plate
+|result= }} 
+
+800v Transmitter
+{{Crafting_Grid
+|1=Advanced_Chip |3=Iron_Plate
+|4=Advanced_Chip |5=Iron_Plate
+|7=Advanced_Chip |9=Iron_Plate
+|result= }}
+
+""TODO"": Finish
+
+50v Receiver
+|1=Iron_Ingot |3=Iron_Ingot
+|5=Cheap_Chip |6=Iron_Plate
+|7=Redstone |9=Iron_Ingot
+|result= }}
+
+== Ranges ==
+
+{|class="wikitable"
+!Type!!Voltage!!Max Range
+|-
+|Low Power    || 50V  || 200m
+|-
+|Medium Power || 200V || 250m
+|-
+|High Power   || 800V || 300m
+|}
+
+
+* Power drops over distance.
+
+== input/output ==
+
+You can send a signal from the receiver to the transmitter. Typically you'd use this to control the throttle on the transmitter end. This can be especially useful if the receiving end no longer requires power or otherwise gets disconnected from the network as an overloaded receiver will fail.
+
+=== Receiver Antenna ===
+[[File:Receiver connections.png|150px|float|right|thumb|A receiver antenna with S and P visible.]]
+
+* '''S'''ignal: You can set a signal here and it will be sent to the transmitter.
+* '''P'''ower: Power comes from here. The component will fail if it receives more power than it can handle.
+
+{{-}}
+
+=== Transmitter Antenna ===
+[[File:Transmitter connections.png|150px|float|right|thumb|A transmitter antenna with S,C,P visible.]]
+* '''S'''ignal: A received signal from the receiver. Can be used to control the throttle, to prevent the receiver from receiving more power than it can handle. 
+* '''C'''ontrol: Throttle to determine how much power to transmit. Shuts off at 0v.
+* '''P'''ower: Power goes into this, and is transmitted in the direction of the dish, hopefully to be caught by a receiver!
+
+Higher power transmitters can set things on fire.
+
+{{-}}
+
+
+
+
+
+
+[[Category:Blocks]]
+[[Category:50 Volts]]
+[[Category:200 Volts]]
+[[Category:800 Volts]]
