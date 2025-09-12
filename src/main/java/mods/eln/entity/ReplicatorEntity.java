@@ -131,8 +131,9 @@ public class ReplicatorEntity extends EntityMob {
 
     @Override
     protected void dropFewItems(boolean par1, int par2) {
-        this.entityDropItem(dropList.get(new Random().nextInt(dropList.size())).copy(), 0.5f);
-
+        if (!dropList.isEmpty()) {
+            this.entityDropItem(dropList.get(new Random().nextInt(dropList.size())).copy(), 0.5f);
+        }
         if (isSpawnedFromWeather) {
             if (Math.random() < 0.33) {
                 for (Object s : EntityList.IDtoClassMapping.entrySet()) {
