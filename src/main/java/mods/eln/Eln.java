@@ -446,6 +446,11 @@ public class Eln {
         if (Other.ccLoaded) {
             PeripheralHandler.register();
         }
+        registerCraftingRecipes();
+    }
+
+    private static void registerCraftingRecipes() {
+        // Ensure every recipe defined in CraftingRecipes is registered.
         CraftingRecipes.INSTANCE.itemCrafting();
     }
 
