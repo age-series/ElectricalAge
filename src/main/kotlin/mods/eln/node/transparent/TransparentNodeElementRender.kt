@@ -127,6 +127,19 @@ abstract class TransparentNodeElementRender(var tileEntity: TransparentNodeEntit
         }
     }
 
+    fun clientSendDouble(id: Byte, str: Double) {
+        try {
+            val bos = ByteArrayOutputStream()
+            val stream = DataOutputStream(bos)
+            preparePacketForServer(stream)
+            stream.writeByte(id.toInt())
+            stream.writeDouble(str)
+            sendPacketToServer(bos)
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
+    }
+
     fun clientSendInt(id: Byte, str: Int) {
         try {
             val bos = ByteArrayOutputStream()

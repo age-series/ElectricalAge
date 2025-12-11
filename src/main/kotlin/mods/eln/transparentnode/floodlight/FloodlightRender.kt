@@ -19,9 +19,9 @@ class FloodlightRender(tileEntity: TransparentNodeEntity, transparentNodeDescrip
     private var blockFacing = XN
     var motorized = false
     private var powered = false
-    var swivelAngle = 0f
-    var headAngle = 0f
-    var shutterAngle = 0f
+    var swivelAngle = 0.0
+    var headAngle = 0.0
+    var shutterAngle = 0.0
     private var lamp1Stack: ItemStack? = null
     private var lamp2Stack: ItemStack? = null
 /*
@@ -36,9 +36,9 @@ class FloodlightRender(tileEntity: TransparentNodeEntity, transparentNodeDescrip
             blockFacing = HybridNodeDirection.fromInt(stream.readInt())!!
             motorized = stream.readBoolean()
             powered = stream.readBoolean()
-            swivelAngle = stream.readFloat()
-            headAngle = stream.readFloat()
-            shutterAngle = stream.readFloat()
+            swivelAngle = stream.readDouble()
+            headAngle = stream.readDouble()
+            shutterAngle = stream.readDouble()
             lamp1Stack = Utils.unserialiseItemStack(stream)
             lamp2Stack = Utils.unserialiseItemStack(stream)
         } catch (e: IOException) {
@@ -49,7 +49,7 @@ class FloodlightRender(tileEntity: TransparentNodeEntity, transparentNodeDescrip
     override fun draw() {
         glNormalizePlacement(rotationAxis, blockFacing)
         // descriptor.draw(swivelAnimate.get(), headAnimate.get(), lamp1Stack, lamp2Stack, powered)
-        descriptor.draw(swivelAngle / 360f, headAngle / 180f, lamp1Stack, lamp2Stack, powered)
+        descriptor.draw(swivelAngle, headAngle, lamp1Stack, lamp2Stack, powered)
     }
 /*
     override fun refresh(deltaT: Float) {
