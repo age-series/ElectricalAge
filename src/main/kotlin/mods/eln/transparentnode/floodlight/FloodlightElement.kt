@@ -58,9 +58,9 @@ class FloodlightElement(transparentNode: TransparentNode, transparentNodeDescrip
 
     var powered = false
 
-    var swivelAngle by published(0f)
-    var headAngle by published(0f)
-    var shutterAngle by published(0f)
+    var swivelAngle by published(0.0)
+    var headAngle by published(0.0)
+    var shutterAngle by published(0.0)
 
     var lightRange = 0
 
@@ -129,9 +129,9 @@ class FloodlightElement(transparentNode: TransparentNode, transparentNodeDescrip
         rotationAxis = HybridNodeDirection.fromInt(nbt.getInteger("rotationAxis"))!!
         blockFacing = HybridNodeDirection.fromInt(nbt.getInteger("blockFacing"))!!
         powered = nbt.getBoolean("powered")
-        swivelAngle = nbt.getFloat("swivelAngle")
-        headAngle = nbt.getFloat("headAngle")
-        shutterAngle = nbt.getFloat("shutterAngle")
+        swivelAngle = nbt.getDouble("swivelAngle")
+        headAngle = nbt.getDouble("headAngle")
+        shutterAngle = nbt.getDouble("shutterAngle")
         lightRange = nbt.getInteger("lightRange")
     }
 
@@ -141,9 +141,9 @@ class FloodlightElement(transparentNode: TransparentNode, transparentNodeDescrip
         nbt.setInteger("rotationAxis", rotationAxis.int)
         nbt.setInteger("blockFacing", blockFacing.int)
         nbt.setBoolean("powered", powered)
-        nbt.setFloat("swivelAngle", swivelAngle)
-        nbt.setFloat("headAngle", headAngle)
-        nbt.setFloat("shutterAngle", shutterAngle)
+        nbt.setDouble("swivelAngle", swivelAngle)
+        nbt.setDouble("headAngle", headAngle)
+        nbt.setDouble("shutterAngle", shutterAngle)
         nbt.setInteger("lightRange", lightRange)
     }
 
@@ -239,9 +239,9 @@ class FloodlightElement(transparentNode: TransparentNode, transparentNodeDescrip
             stream.writeInt(blockFacing.int)
             stream.writeBoolean(motorized)
             stream.writeBoolean(powered)
-            stream.writeFloat(swivelAngle)
-            stream.writeFloat(headAngle)
-            stream.writeFloat(shutterAngle)
+            stream.writeDouble(swivelAngle)
+            stream.writeDouble(headAngle)
+            stream.writeDouble(shutterAngle)
             Utils.serialiseItemStack(stream, inventory.getStackInSlot(FloodlightContainer.LAMP_SLOT_1_ID))
             Utils.serialiseItemStack(stream, inventory.getStackInSlot(FloodlightContainer.LAMP_SLOT_2_ID))
         }
@@ -252,9 +252,9 @@ class FloodlightElement(transparentNode: TransparentNode, transparentNodeDescrip
 
     override fun networkUnserialize(stream: DataInputStream): Byte {
         when (super.networkUnserialize(stream)) {
-            HORIZONTAL_ADJUST_EVENT -> swivelAngle = stream.readFloat()
-            VERTICAL_ADJUST_EVENT -> headAngle = stream.readFloat()
-            SHUTTER_ADJUST_EVENT -> shutterAngle = stream.readFloat()
+            HORIZONTAL_ADJUST_EVENT -> swivelAngle = stream.readDouble()
+            VERTICAL_ADJUST_EVENT -> headAngle = stream.readDouble()
+            SHUTTER_ADJUST_EVENT -> shutterAngle = stream.readDouble()
         }
         return unserializeNulldId
     }

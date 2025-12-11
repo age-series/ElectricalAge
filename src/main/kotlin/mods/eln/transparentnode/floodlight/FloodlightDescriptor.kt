@@ -58,28 +58,28 @@ class FloodlightDescriptor(val name: String, val obj: Obj3D, val motorized: Bool
     }
 
     private fun drawItem() {
-        GL11.glRotatef(90f, 0f, 1f, 0f)
-        GL11.glTranslatef(-0.5f, -0.5f, 0.5f)
+        GL11.glRotated(90.0, 0.0, 1.0, 0.0)
+        GL11.glTranslated(-0.5, -0.5, 0.5)
         base.draw()
-        GL11.glTranslatef(0.5f, 0.5f, -0.5f)
-        GL11.glRotatef(90f, 0f, 1f, 0f)
-        GL11.glTranslatef(-0.5f, -0.5f, 0.5f)
+        GL11.glTranslated(0.5, 0.5, -0.5)
+        GL11.glRotated(90.0, 0.0, 1.0, 0.0)
+        GL11.glTranslated(-0.5, -0.5, 0.5)
         swivel.draw()
         head.draw()
         bulb1off.draw()
         bulb2off.draw()
     }
 
-    fun draw(swivelAngle: Float, headAngle: Float, bulb1: ItemStack?, bulb2: ItemStack?, powered: Boolean) {
-        GL11.glTranslatef(-0.5f, -0.5f, 0.5f)
+    fun draw(swivelAngle: Double, headAngle: Double, bulb1: ItemStack?, bulb2: ItemStack?, powered: Boolean) {
+        GL11.glTranslated(-0.5, -0.5, 0.5)
         base.draw()
-        GL11.glTranslatef(0.5f, 0.5f, -0.5f)
-        GL11.glRotatef((swivelAngle * 360f) + 90f, 0f, 1f, 0f)
-        GL11.glTranslatef(-0.5f, -0.5f, 0.5f)
+        GL11.glTranslated(0.5, 0.5, -0.5)
+        GL11.glRotated(swivelAngle + 90.0, 0.0, 1.0, 0.0)
+        GL11.glTranslated(-0.5, -0.5, 0.5)
         swivel.draw()
-        GL11.glTranslatef(0.5f, 0.5f, -0.5f)
-        GL11.glRotatef(-headAngle * 180f, 1f, 0f, 0f)
-        GL11.glTranslatef(-0.5f, -0.5f, 0.5f)
+        GL11.glTranslated(0.5, 0.5, -0.5)
+        GL11.glRotated(-headAngle, 1.0, 0.0, 0.0)
+        GL11.glTranslated(-0.5, -0.5, 0.5)
         head.draw()
 
         if (bulb1 != null) {
