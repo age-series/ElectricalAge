@@ -75,7 +75,7 @@ class CurrentCableDescriptor(
         thermalRp = thermalWarmLimit / thermalMaximalPowerDissipated
         thermalRs = 0.5 / thermalC / 2
         thermalSelfHeatingRateLimit =
-            if (Eln.cableHeatingTime > 0)
+            if (Eln.cableThermalSpikeLimiterEnabled && Eln.cableHeatingTime > 0)
                 thermalWarmLimit / Eln.cableHeatingTime * Eln.cableThermalSpikeLimitFactor
             else
                 Double.POSITIVE_INFINITY

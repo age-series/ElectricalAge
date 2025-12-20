@@ -159,6 +159,12 @@ object ConfigHandler {
             Eln.config["balancing", "cablePowerFactor", 1.0, "Multiplication factor for cable power " +
                     "capacity. We recommend 2.0 to 4.0 for larger modpacks, but 1.0 for Eln standalone, or if you like a " +
                     "challenge.", 0.5, 4.0].getDouble(1.0)
+        Eln.cableThermalSpikeLimiterEnabled =
+            Eln.config["simulation", "cableThermalSpikeLimiterEnabled", true, "Clamp how fast cables/transformers heat up (prevents runaway spikes). Set to false to restore legacy behavior."]
+                .getBoolean(true)
+        Eln.cableThermalSpikeLimitFactor =
+            Eln.config["simulation", "cableThermalSpikeLimitFactor", 20.0, "Multiplier applied to nominal heating rate when the spike limiter is enabled."]
+                .getDouble(20.0)
 
         Eln.fuelHeatValueFactor = Eln.config["balancing", "fuelHeatValueFactor", 0.0000675, "Factor to apply when " +
                 "converting real word heat values to Minecraft heat values (1mB = 1l)."].double
