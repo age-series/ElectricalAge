@@ -646,6 +646,51 @@ object CraftingRecipes {
                 "blockSteel", "blockIron"
             ), 'M', findItemStack("Advanced Machine Block")
         )
+        addRecipe(
+            findItemStack("Large Shaft Motor"),
+            "CHC",
+            "RWR",
+            "CMC",
+            'C', findItemStack("Motor Cowling"),
+            'H', findItemStack("High Current Cable"),
+            'R', findItemStack("Reinforced Shaft"),
+            'W', findItemStack("Heavy Winding"),
+            'M', findItemStack("Advanced Machine Block")
+        )
+        addRecipe(
+            findItemStack("Large Generator"),
+            "CMC",
+            "RWR",
+            "CHC",
+            'C', findItemStack("Motor Cowling"),
+            'H', findItemStack("High Current Cable"),
+            'R', findItemStack("Reinforced Shaft"),
+            'W', findItemStack("Heavy Winding"),
+            'M', findItemStack("Advanced Machine Block")
+        )
+        addRecipe(
+            findItemStack("Large Gas Turbine"),
+            "CTC",
+            "RHR",
+            "MAM",
+            'C', findItemStack("Motor Cowling"),
+            'T', findItemStack("Turbine Blade Set"),
+            'R', findItemStack("Reinforced Shaft"),
+            'H', findItemStack("Heavy Winding"),
+            'M', findItemStack("Copper Thermal Cable"),
+            'A', findItemStack("Advanced Machine Block")
+        )
+        addRecipe(
+            findItemStack("Large Steam Turbine"),
+            "TTT",
+            "RMR",
+            "SAS",
+            'T', findItemStack("Turbine Blade Set"),
+            'R', findItemStack("Reinforced Shaft"),
+            'M', findItemStack("Copper Thermal Cable"),
+            'S', firstExistingOre("ingotAluminum", "ingotSteel", "ingotIron"),
+            'A', findItemStack("Advanced Machine Block")
+        )
         addRecipe(findItemStack("Joint"), "   ", "iii", " m ", 'i', "ingotIron", 'm', findItemStack("Machine Block"))
         addRecipe(findItemStack("Crank Shaft"), "  i", "iii", " m ", 'i', "ingotIron", 'm', findItemStack("Machine Block"))
         addRecipe(
@@ -1427,6 +1472,60 @@ object CraftingRecipes {
         addRecipe(findItemStack("Lead Clutch Plate"), " t ", "tLt", " t ", 'L', "plateLead", 't', Eln.dictTungstenDust)
         addRecipe(findItemStack("Coal Clutch Plate"), " t ", "tCt", " t ", 'C', "plateCoal", 't', Eln.dictTungstenDust)
         addRecipe(Eln.findItemStack("Clutch Pin", 4), "s", "s", 's', firstExistingOre("ingotSteel", "ingotAlloy"))
+        addRecipe(
+            findItemStack("Motor Cowling"),
+            "ISI",
+            "MAM",
+            "ISI",
+            'I',
+            findItemStack("Iron Plate"),
+            'S',
+            firstExistingOre("ingotSteel", "ingotAluminum", "ingotAlloy"),
+            'M',
+            findItemStack("Machine Block"),
+            'A',
+            findItemStack("Advanced Machine Block")
+        )
+        addRecipe(
+            findItemStack("Heavy Winding"),
+            "cRc",
+            "RTR",
+            "cRc",
+            'c',
+            findItemStack("Copper Cable"),
+            'R',
+            findItemStack("Tree Resin"),
+            'T',
+            "itemRubber"
+        )
+        addRecipe(
+            findItemStack("Reinforced Shaft"),
+            " s ",
+            "sFs",
+            "AMA",
+            's',
+            firstExistingOre("ingotSteel", "ingotAlloy", "ingotIron"),
+            'F',
+            findItemStack("Fixed Shaft"),
+            'A',
+            findItemStack("Advanced Machine Block"),
+            'M',
+            firstExistingOre("blockSteel", "blockAlloy", "blockIron")
+        )
+        addRecipe(
+            findItemStack("Turbine Blade Set"),
+            "SIS",
+            "BAB",
+            "SIS",
+            'S',
+            firstExistingOre("ingotAluminum", "ingotSteel"),
+            'I',
+            findItemStack("Iron Plate"),
+            'B',
+            "plateAlloy",
+            'A',
+            findItemStack("Advanced Machine Block")
+        )
     }
 
     private fun recipeMacerator() {
