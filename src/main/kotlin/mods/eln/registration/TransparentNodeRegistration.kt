@@ -19,6 +19,7 @@ import mods.eln.misc.SeriesFunction.Companion.newE12
 import mods.eln.misc.SeriesFunction.Companion.newE6
 import mods.eln.misc.Utils.coalEnergyReference
 import mods.eln.misc.Utils.printFunction
+import mods.eln.railroad.OverheadLinesDescriptor
 import mods.eln.sim.ThermalLoadInitializer
 import mods.eln.sim.ThermalLoadInitializerByPowerDrop
 import mods.eln.sound.SoundCommand
@@ -76,6 +77,7 @@ object TransparentNodeRegistration {
         //registerFloodlight(68);
         registerFestive(69)
         registerFab(70)
+        registerRailroad(71)
         registerLargeRheostat() // 96, but from the wrong side.
         registerNixieTube() // 117, but from the wrong side.
         registerGridDevices(123)
@@ -112,6 +114,24 @@ object TransparentNodeRegistration {
             val desc = StreetLightWallDescriptor(name, Eln.obj.getObj("StreetLightWall"))
             transparentNodeItem.addDescriptor(subId + (id shl 6), desc)
         }
+    }
+
+    private fun registerRailroad(id: Int) {
+        var subId: Int
+        run {
+            subId = 0
+            val name = TR_NAME(I18N.Type.NONE, "Overhead Lines")
+            val desc = OverheadLinesDescriptor(name, Eln.obj.getObj("OverheadGantry"))
+            transparentNodeItem.addDescriptor(subId + (id shl 6), desc)
+        }
+        /*
+        run {
+            subId = 1
+            val name = TR_NAME(I18N.Type.NONE, "Under Track Power")
+            val desc = UnderTrackPowerDescriptor(name, Eln.obj.getObj("OverheadGantry"))
+            transparentNodeItem.addDescriptor(subId + (id shl 6), desc)
+        }
+         */
     }
 
     /*

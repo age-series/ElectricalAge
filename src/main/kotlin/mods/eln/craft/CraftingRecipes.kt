@@ -9,6 +9,7 @@ import mods.eln.misc.Recipe
 import mods.eln.misc.Utils.addSmelting
 import mods.eln.misc.Utils.areSame
 import mods.eln.misc.Utils.println
+import mods.eln.railroad.EntityElectricMinecart
 import net.minecraft.init.Blocks
 import net.minecraft.init.Items
 import net.minecraft.item.ItemStack
@@ -27,6 +28,7 @@ object CraftingRecipes {
 
         //
         registerReplicator()
+        registerElectricMinecart()
 
 
         //
@@ -2409,6 +2411,16 @@ object CraftingRecipes {
         ReplicatorEntity.dropList.add(ItemStack(Items.redstone))
         ReplicatorEntity.dropList.add(ItemStack(Items.glowstone_dust))
         // EntityRegistry.addSpawn(ReplicatorEntity.class, 1, 1, 2, EnumCreatureType.monster, BiomeGenBase.plains);
+    }
+
+    private fun registerElectricMinecart() {
+        val electricMinecartId = EntityRegistry.findGlobalUniqueEntityId()
+        println("Electric Minecart registered at $electricMinecartId")
+        EntityRegistry.registerGlobalEntityID(
+            EntityElectricMinecart::class.java,
+            I18N.TR_NAME(I18N.Type.ENTITY, "ElectricMinecart"),
+            electricMinecartId
+        )
     }
     private fun recipeChristmas(){
         addShapelessRecipe(Eln.findItemStack("Christmas Tree", 1), findItemStack("String Lights"), ItemStack(Blocks.sapling, 1, 1), findItemStack("String Lights"))

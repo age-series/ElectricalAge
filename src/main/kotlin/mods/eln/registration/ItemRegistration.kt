@@ -17,6 +17,7 @@ import mods.eln.item.regulator.RegulatorOnOffDescriptor
 import mods.eln.mechanical.ClutchPinItem
 import mods.eln.mechanical.ClutchPlateItem
 import mods.eln.ore.OreDescriptor
+import mods.eln.railroad.ElectricMinecartItem
 import mods.eln.sixnode.electricaldatalogger.DataLogsPrintDescriptor
 import mods.eln.sixnode.lampsocket.LampSocketType
 import mods.eln.sixnode.wirelesssignal.WirelessSignalAnalyserItemDescriptor
@@ -72,6 +73,7 @@ object ItemRegistration {
 
 
         registerBasicItems(126)
+        registerElectricMinecartItems(127)
 
         registerArmor()
         registerTool()
@@ -274,6 +276,16 @@ object ItemRegistration {
                 instance.veryHighVoltageCableDescriptor
             )
             Eln.sharedItem.addElement(completId, element)
+        }
+    }
+
+    private fun registerElectricMinecartItems(id: Int) {
+        var subId: Int
+        run {
+            subId = 0
+            val name = I18N.TR_NAME(I18N.Type.NONE, "Electric Minecart")
+            val minecartItem = ElectricMinecartItem(name)
+            Eln.sharedItem.addElement(subId + (id shl 6), minecartItem)
         }
     }
 

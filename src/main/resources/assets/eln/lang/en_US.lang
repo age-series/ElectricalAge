@@ -1357,3 +1357,5 @@ _Strength= Strength
 _Value= Value
 Control_Voltage=Control Voltage
 Operation=Operation
+Overhead_Lines.name=Overhead Lines
+Under_Track_Power.name=Under Track Power
