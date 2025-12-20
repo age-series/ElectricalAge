@@ -74,7 +74,7 @@ public class ElectricalCableDescriptor extends GenericCableDescriptor {
         this.thermalNominalHeatTime = thermalNominalHeatTime;
         thermalRp = thermalWarmLimit / thermalMaximalPowerDissipated;
         thermalRs = thermalConductivityTao / thermalC / 2;
-        if (thermalNominalHeatTime > 0) {
+        if (Eln.cableThermalSpikeLimiterEnabled && thermalNominalHeatTime > 0) {
             thermalSelfHeatingRateLimit = thermalWarmLimit / thermalNominalHeatTime * Eln.cableThermalSpikeLimitFactor;
         } else {
             thermalSelfHeatingRateLimit = Double.POSITIVE_INFINITY;
