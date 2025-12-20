@@ -200,7 +200,8 @@ abstract class SimpleShaftElement(node: TransparentNode, transparentNodeDescript
         if(net != null) shaft = net
     }
     var destructing = false
-    override fun isDestructing() = destructing
+    override fun isShaftElementDestructing() = destructing
+    private val shaftGhostNodes = mutableListOf<GhostShaftNode>()
 
     override val shaftConnectivity: Array<Direction>
         get() = arrayOf(front.left(), front.right())
@@ -222,6 +223,7 @@ abstract class SimpleShaftElement(node: TransparentNode, transparentNodeDescript
     override fun onBreakElement() {
         super.onBreakElement()
         destructing = true
+        clearGhostShafts()
         shaftConnectivity.forEach {
             shaft.disconnectShaft(this)
         }
@@ -247,5 +249,24 @@ abstract class SimpleShaftElement(node: TransparentNode, transparentNodeDescript
 
     override fun multiMeterString(side: Direction): String {
         return Utils.plotER(shaft.energy, shaft.rads)
+    }
+
+    /**
+     * Creates a ghost shaft node based on a coordinate offset (before rotation is applied),
+     * a local facing (relative to the unrotated block), and the owner's shaft side that it mirrors.
+     *
+     * The descriptor must already have plotted a ghost block at the computed world coordinate.
+     */
+    protected fun spawnGhostShaft(offset: Coordinate, localFacing: Direction, ownerSide: Direction): GhostShaftNode {
+        val ghost = GhostShaftNode(node!!.coordinate, front, offset, this, ownerSide, localFacing)
+        ghost.placeGhost()
+        ghost.attachToOwnerNetwork()
+        shaftGhostNodes.add(ghost)
+        return ghost
+    }
+
+    private fun clearGhostShafts() {
+        shaftGhostNodes.forEach { it.onBreakBlock() }
+        shaftGhostNodes.clear()
     }
 }

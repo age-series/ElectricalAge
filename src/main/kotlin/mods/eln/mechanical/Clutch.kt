@@ -143,7 +143,7 @@ class ClutchElement(node: TransparentNode, desc_: TransparentNodeDescriptor) : S
         super.onBreakElement()
     }
 
-    override fun isDestructing() = destructing
+    override fun isShaftElementDestructing() = destructing
 
     override fun getShaft(dir: Direction) = when(dir) {
         front.left() -> leftShaft
