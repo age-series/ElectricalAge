@@ -8,6 +8,7 @@ import mods.eln.misc.Direction
 import mods.eln.misc.INBTTReady
 import mods.eln.misc.Utils
 import mods.eln.node.NodeManager
+import mods.eln.node.transparent.TransparentNode
 import mods.eln.sim.process.destruct.DelayedDestruction
 import mods.eln.sim.process.destruct.ShaftSpeedWatchdog
 import mods.eln.sim.process.destruct.WorldExplosion
@@ -234,7 +235,7 @@ open class ShaftNetwork() : INBTTReady {
                 queue.remove(next.key);
                 seen.add(next.key)
                 shaft = next.value
-                if(next.key.element.isDestructing()) continue
+                if(next.key.element.isShaftElementDestructing()) continue
                 shaft.parts.add(next.key);
                 next.key.element.setShaft(next.key.side, shaft)
                 // Utils.println("SN.rN visit next = " + next + ", queue.size = " + queue.size)
@@ -276,23 +277,36 @@ open class ShaftNetwork() : INBTTReady {
         for (dir in from.shaftConnectivity) {
             c.copyFrom(from.coordonate())
             c.move(dir)
-            val to = NodeManager.instance!!.getTransparentNodeFromCoordinate(c)
-            if (to is ShaftElement) {
-                for (dir2 in to.shaftConnectivity) {
+            val candidate = findShaftElementAt(c)
+            if (candidate != null) {
+                for (dir2 in candidate.shaftConnectivity) {
                     if (dir2.inverse == dir) {
-                        ret.add(ShaftNeighbour(
-                            ShaftPart(from, dir),
-                            from.getShaft(dir),
-                            dir,
-                            ShaftPart(to, dir2),
-                            to.getShaft(dir2)
-                        ))
+                        ret.add(
+                            ShaftNeighbour(
+                                ShaftPart(from, dir),
+                                from.getShaft(dir),
+                                dir,
+                                ShaftPart(candidate, dir2),
+                                candidate.getShaft(dir2)
+                            )
+                        )
                         break
                     }
                 }
             }
         }
         return ret
+    }
+
+    private fun findShaftElementAt(coordinate: Coordinate): ShaftElement? {
+        val node = NodeManager.instance?.getNodeFromCoordonate(coordinate) ?: return null
+        if (node is TransparentNode) {
+            val element = node.element
+            if (element is ShaftElement) {
+                return element
+            }
+        }
+        return if (node is ShaftElement) node else null
     }
 
     override fun readFromNBT(nbt: NBTTagCompound, str: String) {
@@ -335,7 +349,7 @@ interface ShaftElement {
     fun getShaft(dir: Direction): ShaftNetwork?
     fun setShaft(dir: Direction, net: ShaftNetwork?)
     fun isInternallyConnected(a: Direction, b: Direction): Boolean = true
-    fun isDestructing(): Boolean
+    fun isShaftElementDestructing(): Boolean
 
     fun initialize() {
         shaftConnectivity.forEach {
