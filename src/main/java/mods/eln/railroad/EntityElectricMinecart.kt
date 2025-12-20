@@ -2,7 +2,6 @@ package mods.eln.railroad
 
 import mods.eln.Eln
 import mods.eln.misc.Coordinate
-import mods.eln.misc.Utils
 import mods.eln.node.NodeManager
 import mods.eln.sim.mna.misc.MnaConst
 import net.minecraft.block.Block
@@ -10,7 +9,6 @@ import net.minecraft.entity.item.EntityMinecart
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.init.Blocks
 import net.minecraft.nbt.NBTTagCompound
-import net.minecraft.server.MinecraftServer
 import net.minecraft.world.World
 import kotlin.math.abs
 import kotlin.math.sign
@@ -24,8 +22,6 @@ class EntityElectricMinecart(world: World, x: Double, y: Double, z: Double): Ent
     private val locomotiveMaximumResistance = 200.0
     var energyBufferTargetJoules = 10_000.0
     var energyBufferJoules = 0.0
-
-    var count = 0
 
     override fun onUpdate() {
         super.onUpdate()
@@ -61,15 +57,6 @@ class EntityElectricMinecart(world: World, x: Double, y: Double, z: Double): Ent
             }
             energyBufferJoules += PoweredMinecartSimulationSingleton.cartCollectEnergy(this)
         }
-
-        if (count > 20) count = 0
-        if (count == 0) {
-            MinecraftServer.getServer().entityWorld.playerEntities.forEach {it ->
-                val player = it as EntityPlayer
-                Utils.addChatMessage(player, "Cart Energy: ${Utils.plotEnergy(energyBufferJoules)}")
-            }
-        }
-        count++
 
         lastPowerElement = currentElement
     }

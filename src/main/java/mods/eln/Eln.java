@@ -51,6 +51,7 @@ import mods.eln.registration.ItemRegistration;
 import mods.eln.registration.SingleNodeRegistration;
 import mods.eln.registration.SixNodeRegistration;
 import mods.eln.registration.TransparentNodeRegistration;
+import mods.eln.railroad.ElectricMinecartChargeReporter;
 import mods.eln.server.*;
 import mods.eln.server.console.ElnConsoleCommands;
 import mods.eln.sim.Simulator;
@@ -459,6 +460,7 @@ public class Eln {
         }
         FluidRegistrationKt.registerElnFluids();
         MinecraftForge.EVENT_BUS.register(new ElnForgeEventsHandler());
+        MinecraftForge.EVENT_BUS.register(new ElectricMinecartChargeReporter());
         FMLCommonHandler.instance().bus().register(new ElnFMLEventsHandler());
         MinecraftForge.EVENT_BUS.register(this);
         FMLInterModComms.sendMessage("Waila", "register", "mods.eln.integration.waila.WailaIntegration" +
