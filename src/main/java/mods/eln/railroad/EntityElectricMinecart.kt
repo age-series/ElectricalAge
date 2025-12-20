@@ -9,12 +9,16 @@ import net.minecraft.block.Block
 import net.minecraft.entity.item.EntityMinecart
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.init.Blocks
+import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.server.MinecraftServer
 import net.minecraft.world.World
 import kotlin.math.abs
 import kotlin.math.sign
 
 class EntityElectricMinecart(world: World, x: Double, y: Double, z: Double): EntityMinecart(world, x, y, z) {
+
+    // TODO: Confirm if this is actually needed for anything
+    constructor(world: World): this(world, 0.0, 0.0, 0.0)
 
     private var lastPowerElement: RailroadPowerInterface? = null
     private val locomotiveMaximumResistance = 200.0
@@ -135,8 +139,37 @@ class EntityElectricMinecart(world: World, x: Double, y: Double, z: Double): Ent
         return null
     }
 
+    override fun interactFirst(player: EntityPlayer): Boolean {
+        if (player.isSneaking) return false
+
+        if (riddenByEntity != null && riddenByEntity != player) {
+            return true
+        }
+
+        if (!worldObj.isRemote) {
+            player.mountEntity(this)
+        }
+        return true
+    }
+
+    override fun writeEntityToNBT(tag: NBTTagCompound) {
+        super.writeEntityToNBT(tag)
+        tag.setDouble("EnergyBufferJ", energyBufferJoules)
+        tag.setDouble("EnergyBufferTargetJ", energyBufferTargetJoules)
+    }
+
+    override fun readEntityFromNBT(tag: NBTTagCompound) {
+        super.readEntityFromNBT(tag)
+        if (tag.hasKey("EnergyBufferJ")) {
+            energyBufferJoules = tag.getDouble("EnergyBufferJ")
+        }
+        if (tag.hasKey("EnergyBufferTargetJ")) {
+            energyBufferTargetJoules = tag.getDouble("EnergyBufferTargetJ")
+        }
+    }
+
     override fun getMinecartType(): Int {
-        return -1
+        return 0
     }
 
     override fun func_145817_o(): Block? {
