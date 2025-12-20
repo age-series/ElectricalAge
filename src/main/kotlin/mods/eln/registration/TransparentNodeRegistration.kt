@@ -13,6 +13,7 @@ import mods.eln.i18n.I18N
 import mods.eln.i18n.I18N.TR_NAME
 import mods.eln.mechanical.*
 import mods.eln.misc.Coordinate
+import mods.eln.misc.Direction
 import mods.eln.misc.FunctionTable
 import mods.eln.misc.FunctionTableYProtect
 import mods.eln.misc.SeriesFunction.Companion.newE12
@@ -52,6 +53,30 @@ import net.minecraft.util.Vec3
 import kotlin.math.pow
 
 object TransparentNodeRegistration {
+    private const val LARGE_MACHINE_VOLUME_SCALE = 27f
+    private val LARGE_MACHINE_MODEL_SCALE = Math.cbrt(LARGE_MACHINE_VOLUME_SCALE.toDouble()).toFloat()
+
+    private fun createLargeMachineGhostGroup(): GhostGroup {
+        val g = GhostGroup()
+        for (x in -1..1) {
+            for (y in 0..2) {
+                for (z in -1..1) {
+                    if (x == 0 && y == 0 && z == 0) continue
+                    g.addElement(x, y, z)
+                }
+            }
+        }
+        return g
+    }
+
+    private fun <T : SimpleShaftDescriptor> T.applyLargeMachineLayout(): T {
+        ghostGroup = createLargeMachineGhostGroup()
+        addShaftGhostPort(Coordinate(0, 1, -1, 0), Direction.ZN, Direction.ZN)
+        addShaftGhostPort(Coordinate(0, 1, 1, 0), Direction.ZP, Direction.ZP)
+        modelScale = LARGE_MACHINE_MODEL_SCALE
+        shaftMass *= LARGE_MACHINE_VOLUME_SCALE.toDouble()
+        return this
+    }
 
     fun registerTransparent() {
         registerPowerComponent(1)
@@ -443,6 +468,65 @@ object TransparentNodeRegistration {
                             "Machine"
                 ), Eln.obj.getObj("platemachinea")
             )
+            transparentNodeItem.addDescriptor(subId + (id shl 6), desc)
+        }
+
+        run {
+            subId = 22
+            val desc = SteamTurbineDescriptor(
+                TR_NAME(I18N.Type.NONE, "Large Steam Turbine"),
+                Eln.obj.getObj("Turbine"),
+                LARGE_MACHINE_VOLUME_SCALE
+            ).applyLargeMachineLayout()
+            transparentNodeItem.addDescriptor(subId + (id shl 6), desc)
+        }
+
+        run {
+            subId = 23
+            val desc = GasTurbineDescriptor(
+                TR_NAME(I18N.Type.NONE, "Large Gas Turbine"),
+                Eln.obj.getObj("GasTurbine"),
+                LARGE_MACHINE_VOLUME_SCALE
+            ).applyLargeMachineLayout()
+            transparentNodeItem.addDescriptor(subId + (id shl 6), desc)
+        }
+
+        run {
+            subId = 24
+            val nominalRads = 200f
+            val nominalU = 12800f
+            val nominalP = 4000f * LARGE_MACHINE_VOLUME_SCALE
+
+            val desc = GeneratorDescriptor(
+                TR_NAME(I18N.Type.NONE, "Large Generator"),
+                Eln.obj.getObj("Generator"),
+                instance.highVoltageCableDescriptor,
+                nominalRads,
+                nominalU,
+                nominalP / (nominalU / 25),
+                nominalP,
+                Eln.sixNodeThermalLoadInitializer.copy()
+            ).applyLargeMachineLayout()
+            transparentNodeItem.addDescriptor(subId + (id shl 6), desc)
+        }
+
+        run {
+            subId = 25
+            val nominalRads = 200f
+            val nominalU = 12800f
+            val nominalP = 1200f * LARGE_MACHINE_VOLUME_SCALE
+
+            val desc = MotorDescriptor(
+                TR_NAME(I18N.Type.NONE, "Large Shaft Motor"),
+                Eln.obj.getObj("Motor"),
+                instance.veryHighVoltageCableDescriptor,
+                nominalRads,
+                nominalU,
+                nominalP,
+                25.0f * nominalP / nominalU,
+                25.0f * nominalP / nominalU,
+                Eln.sixNodeThermalLoadInitializer.copy()
+            ).applyLargeMachineLayout()
             transparentNodeItem.addDescriptor(subId + (id shl 6), desc)
         }
     }

@@ -29,7 +29,7 @@ class GhostShaftNode(
         dimension = origin.dimension
     }
 
-    private val facing = rotateFacing(front, localFacing)
+    private val facing = Direction.rotateLocalDirection(front, localFacing)
 
     private var connectionSide: Direction = facing
     private var shaft: ShaftNetwork = ShaftNetwork()
@@ -104,23 +104,4 @@ class GhostShaftNode(
 
     override fun getElectricalLoad(side: Direction, lrdu: LRDU, mask: Int): ElectricalLoad? = null
 
-    private fun rotateFacing(front: Direction, local: Direction): Direction {
-        val vec = when (local) {
-            Direction.XN -> intArrayOf(-1, 0, 0)
-            Direction.XP -> intArrayOf(1, 0, 0)
-            Direction.YN -> intArrayOf(0, -1, 0)
-            Direction.YP -> intArrayOf(0, 1, 0)
-            Direction.ZN -> intArrayOf(0, 0, -1)
-            Direction.ZP -> intArrayOf(0, 0, 1)
-        }
-        front.rotateFromXN(vec)
-        return when {
-            vec[0] > 0 -> Direction.XP
-            vec[0] < 0 -> Direction.XN
-            vec[1] > 0 -> Direction.YP
-            vec[1] < 0 -> Direction.YN
-            vec[2] > 0 -> Direction.ZP
-            else -> Direction.ZN
-        }
-    }
 }
