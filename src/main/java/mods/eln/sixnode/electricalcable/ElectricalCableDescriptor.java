@@ -34,6 +34,7 @@ public class ElectricalCableDescriptor extends GenericCableDescriptor {
     public double dielectricBreakOhmMin = Double.POSITIVE_INFINITY;
 
     String description = "todo cable";
+    public double thermalNominalHeatTime = Eln.cableHeatingTime;
 
     public ElectricalCableDescriptor(String name, CableRenderDescriptor render, String description, boolean signalWire) {
         super(name, ElectricalCableElement.class, ElectricalCableRender.class);
@@ -70,8 +71,14 @@ public class ElectricalCableDescriptor extends GenericCableDescriptor {
         electricalNominalPower = electricalMaximalPower / electricalNominalVoltage;
         double thermalMaximalPowerDissipated = electricalNominalPower * electricalNominalPower * electricalRs * 2;
         thermalC = thermalMaximalPowerDissipated * thermalNominalHeatTime / (thermalWarmLimit);
+        this.thermalNominalHeatTime = thermalNominalHeatTime;
         thermalRp = thermalWarmLimit / thermalMaximalPowerDissipated;
         thermalRs = thermalConductivityTao / thermalC / 2;
+        if (thermalNominalHeatTime > 0) {
+            thermalSelfHeatingRateLimit = thermalWarmLimit / thermalNominalHeatTime * Eln.cableThermalSpikeLimitFactor;
+        } else {
+            thermalSelfHeatingRateLimit = Double.POSITIVE_INFINITY;
+        }
 
         Eln.simulator.checkThermalLoad(thermalRs, thermalRp, thermalC);
 
