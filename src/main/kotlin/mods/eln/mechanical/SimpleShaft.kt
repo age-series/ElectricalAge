@@ -33,6 +33,7 @@ abstract class SimpleShaftDescriptor(name: String, elm: KClass<out TransparentNo
     open var modelTranslationY = 0f
     open var modelTranslationZ = 0f
     open var shaftMass = 5.0
+    open var disableCameraOptimization = false
 
     init {
         voltageLevelColor = VoltageLevelColor.Neutral
@@ -200,6 +201,10 @@ open class ShaftRender(entity: TransparentNodeEntity, desc: TransparentNodeDescr
                 }
             }
         }
+    }
+
+    override fun cameraDrawOptimisation(): Boolean {
+        return !desc.disableCameraOptimization
     }
 
     override fun refresh(deltaT: Float) {
