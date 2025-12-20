@@ -1556,6 +1556,46 @@ object ItemRegistration {
                 true
             )
         )
+        run {
+            subId = 60
+            name = I18N.TR_NAME(I18N.Type.NONE, "Motor Cowling")
+            val desc = GenericItemUsingDamageDescriptorWithComment(
+                name,
+                arrayOf()
+            )
+            Eln.sharedItem.addElement(subId + (id shl 6), desc)
+            Data.addResource(desc.newItemStack())
+        }
+        run {
+            subId = 61
+            name = I18N.TR_NAME(I18N.Type.NONE, "Heavy Winding")
+            val desc = GenericItemUsingDamageDescriptorWithComment(
+                name,
+                arrayOf()
+            )
+            Eln.sharedItem.addElement(subId + (id shl 6), desc)
+            Data.addResource(desc.newItemStack())
+        }
+        run {
+            subId = 62
+            name = I18N.TR_NAME(I18N.Type.NONE, "Reinforced Shaft")
+            val desc = GenericItemUsingDamageDescriptorWithComment(
+                name,
+                arrayOf()
+            )
+            Eln.sharedItem.addElement(subId + (id shl 6), desc)
+            Data.addResource(desc.newItemStack())
+        }
+        run {
+            subId = 63
+            name = I18N.TR_NAME(I18N.Type.NONE, "Turbine Blade Set")
+            val desc = GenericItemUsingDamageDescriptorWithComment(
+                name,
+                arrayOf()
+            )
+            Eln.sharedItem.addElement(subId + (id shl 6), desc)
+            Data.addResource(desc.newItemStack())
+        }
     }
 
     private fun registerBrush(id: Int) {
