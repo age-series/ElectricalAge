@@ -62,6 +62,7 @@ object TransparentNodeRegistration {
             for (y in 0..2) {
                 for (z in -1..1) {
                     if (x == 0 && y == 0 && z == 0) continue
+                    if (y == 0 && x != 0) continue
                     g.addElement(x, y, z)
                 }
             }
@@ -75,6 +76,7 @@ object TransparentNodeRegistration {
         addShaftGhostPort(Coordinate(0, 1, 1, 0), Direction.ZP, Direction.ZP)
         modelScale = LARGE_MACHINE_MODEL_SCALE
         shaftMass *= LARGE_MACHINE_VOLUME_SCALE.toDouble()
+        disableCameraOptimization = true
         return this
     }
 
