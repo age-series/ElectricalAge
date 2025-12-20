@@ -35,6 +35,7 @@ abstract class ValueWatchdog : IProcess {
             timeout = timeoutReset
         }
         if (timeout < 0) {
+            onDestroy(value, overflow)
             println(
                 "%s destroying %s",
                 javaClass.name,
@@ -50,6 +51,7 @@ abstract class ValueWatchdog : IProcess {
     }
 
     abstract fun getValue(): Double
+    protected open fun onDestroy(value: Double, overflow: Double) {}
 
     fun reset() {
         boot = true

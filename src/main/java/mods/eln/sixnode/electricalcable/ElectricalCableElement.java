@@ -48,6 +48,7 @@ public class ElectricalCableElement extends SixNodeElement {
     public ElectricalCableElement(SixNode sixNode, Direction side, SixNodeDescriptor descriptor) {
         super(sixNode, side, descriptor);
         this.descriptor = (ElectricalCableDescriptor) descriptor;
+        heater.limitTemperatureRate(this.descriptor.thermalSelfHeatingRateLimit);
         color = 0;
         colorCare = 1;
         electricalLoad.setCanBeSimplifiedByLine(true);

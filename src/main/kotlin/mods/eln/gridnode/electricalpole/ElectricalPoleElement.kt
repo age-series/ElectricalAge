@@ -51,6 +51,7 @@ class ElectricalPoleElement(node: TransparentNode, descriptor: TransparentNodeDe
         // We put some of it here, thereby allowing the thermal watchdog to work.
         desc.cableDescriptor.applyTo(electricalLoad)
         desc.cableDescriptor.applyTo(thermalLoad)
+        heater.limitTemperatureRate(desc.cableDescriptor.thermalSelfHeatingRateLimit)
         electricalLoadList.add(electricalLoad)
 
         thermalLoadList.add(thermalLoad)

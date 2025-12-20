@@ -137,6 +137,7 @@ public class Eln {
     public static final double cableHeatingTime = 30;
     public static final double cableWarmLimit = 130;
     public static final double cableThermalConductionTao = 0.5;
+    public static final double cableThermalSpikeLimitFactor = 20;
     public static final ThermalLoadInitializer cableThermalLoadInitializer =
      new ThermalLoadInitializer(cableWarmLimit, -100, cableHeatingTime, cableThermalConductionTao);
     public static final ThermalLoadInitializer sixNodeThermalLoadInitializer =
