@@ -18,12 +18,21 @@ import kotlin.reflect.KClass
 abstract class SimpleShaftDescriptor(name: String, elm: KClass<out TransparentNodeElement>, render: KClass<out TransparentNodeElementRender>, tag: EntityMetaTag) :
     TransparentNodeDescriptor(name, elm.java, render.java, tag) {
 
+    data class ShaftGhostPort(val offset: Coordinate, val localFacing: Direction, val localOwnerSide: Direction)
+
+    internal val shaftGhostPorts = mutableListOf<ShaftGhostPort>()
+
     abstract val obj: Obj3D
     abstract val static: Array<out Obj3D.Obj3DPart>
     abstract val rotating: Array<out Obj3D.Obj3DPart>
     // If you set this you should also set volumeSetting in render.
     // (Otherwise it'll stick to 100% volume.)
     internal open val sound: String? = null
+    open var modelScale = 1f
+    open var modelTranslationX = 0f
+    open var modelTranslationY = 0f
+    open var modelTranslationZ = 0f
+    open var shaftMass = 5.0
 
     init {
         voltageLevelColor = VoltageLevelColor.Neutral
@@ -71,6 +80,10 @@ abstract class SimpleShaftDescriptor(name: String, elm: KClass<out TransparentNo
     override fun handleRenderType(item: ItemStack, type: IItemRenderer.ItemRenderType) = true
     override fun shouldUseRenderHelper(type: IItemRenderer.ItemRenderType, item: ItemStack, helper: IItemRenderer.ItemRendererHelper) =
         type != IItemRenderer.ItemRenderType.INVENTORY
+
+    fun addShaftGhostPort(offset: Coordinate, facing: Direction, ownerSide: Direction) {
+        shaftGhostPorts.add(ShaftGhostPort(offset, facing, ownerSide))
+    }
 }
 
 open class ShaftRender(entity: TransparentNodeEntity, desc: TransparentNodeDescriptor) : TransparentNodeElementRender(entity, desc) {
@@ -147,6 +160,19 @@ open class ShaftRender(entity: TransparentNodeEntity, desc: TransparentNodeDescr
     fun draw(extra: () -> Unit) {
         preserveMatrix {
             front!!.glRotateXnRef()
+            val scale = desc.modelScale
+            if (scale != 1f) {
+                GL11.glTranslatef(0f, (scale - 1f) / 2f, 0f)
+            }
+            val offsetX = desc.modelTranslationX
+            val offsetY = desc.modelTranslationY
+            val offsetZ = desc.modelTranslationZ
+            if (offsetX != 0f || offsetY != 0f || offsetZ != 0f) {
+                GL11.glTranslatef(offsetX, offsetY, offsetZ)
+            }
+            if (scale != 1f) {
+                GL11.glScalef(scale, scale, scale)
+            }
             if (front == Direction.XP || front == Direction.ZP)
                 desc.draw(angle)
             else
@@ -193,7 +219,8 @@ open class ShaftRender(entity: TransparentNodeEntity, desc: TransparentNodeDescr
 
 abstract class SimpleShaftElement(node: TransparentNode, transparentNodeDescriptor: TransparentNodeDescriptor) :
     TransparentNodeElement(node, transparentNodeDescriptor), ShaftElement {
-    override val shaftMass = 5.0
+    override val shaftMass: Double
+        get() = (transparentNodeDescriptor as? SimpleShaftDescriptor)?.shaftMass ?: 5.0
     open var shaft: ShaftNetwork = ShaftNetwork()
     override fun getShaft(dir: Direction): ShaftNetwork? = shaft
     override fun setShaft(dir: Direction, net: ShaftNetwork?) {
@@ -218,6 +245,11 @@ abstract class SimpleShaftElement(node: TransparentNode, transparentNodeDescript
         }
         val exp = WorldExplosion(this as ShaftElement).machineExplosion()
         slowProcessList.add(createShaftWatchdog(this).setDestroys(exp))
+
+        val desc = transparentNodeDescriptor as? SimpleShaftDescriptor
+        desc?.shaftGhostPorts?.forEach { port ->
+            spawnGhostShaft(Coordinate(port.offset), port.localFacing, Direction.rotateLocalDirection(front, port.localOwnerSide))
+        }
     }
 
     override fun onBreakElement() {

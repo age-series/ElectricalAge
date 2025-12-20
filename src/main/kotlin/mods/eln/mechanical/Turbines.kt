@@ -75,12 +75,12 @@ abstract class TurbineDescriptor(baseName: String, obj: Obj3D) :
     }
 }
 
-class SteamTurbineDescriptor(baseName: String, obj: Obj3D) :
+class SteamTurbineDescriptor(baseName: String, obj: Obj3D, private val capacityScale: Float = 1f) :
     TurbineDescriptor(baseName, obj) {
     // Steam turbines are for baseload.
     override val inertia = 20f
     // Computed to equal a single 36LP Railcraft boiler, or half of a 36HP.
-    override val fluidConsumption = 7200f
+    override val fluidConsumption = 7200f * capacityScale
     // Computed to equal what you'd get from Railcraft steam engines, plus a small
     // bonus because you're using Electrical Age you crazy person you.
     // This pretty much fills up a VHV line. The generator drag gives us a bit of leeway.
@@ -91,13 +91,13 @@ class SteamTurbineDescriptor(baseName: String, obj: Obj3D) :
     override val sound = "eln:steam_turbine"
 }
 
-class GasTurbineDescriptor(basename: String, obj: Obj3D) :
+class GasTurbineDescriptor(basename: String, obj: Obj3D, private val capacityScale: Float = 1f) :
     TurbineDescriptor(basename, obj) {
     // The main benefit of gas turbines.
     override val inertia = 5f
     // Provides about 8kW of power, given gasoline.
     // Less dense fuels will be proportionally less effective.
-    override val fluidConsumption = 4f
+    override val fluidConsumption = 4f * capacityScale
     override val fluidDescription = "gasoline"
     // It runs on puns.
     override val fluidTypes = FuelRegistry.gasolineList + FuelRegistry.gasList
