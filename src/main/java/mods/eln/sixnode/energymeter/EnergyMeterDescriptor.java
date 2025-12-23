@@ -5,6 +5,8 @@ import mods.eln.misc.Obj3D.Obj3DPart;
 import mods.eln.misc.Utils;
 import mods.eln.misc.VoltageLevelColor;
 import mods.eln.node.six.SixNodeDescriptor;
+import mods.eln.node.six.SixNodeElement;
+import mods.eln.node.six.SixNodeElementRender;
 import mods.eln.wiki.Data;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -20,7 +22,13 @@ public class EnergyMeterDescriptor extends SixNodeDescriptor {
     float alphaOff, alphaOn, speed;
 
     public EnergyMeterDescriptor(String name, Obj3D obj, int energyWheelCount, int timeWheelCount) {
-        super(name, EnergyMeterElement.class, EnergyMeterRender.class);
+        this(name, obj, energyWheelCount, timeWheelCount, EnergyMeterElement.class, EnergyMeterRender.class);
+    }
+
+    public EnergyMeterDescriptor(String name, Obj3D obj, int energyWheelCount, int timeWheelCount,
+                                 Class<? extends SixNodeElement> elementClass,
+                                 Class<? extends SixNodeElementRender> renderClass) {
+        super(name, elementClass, renderClass);
         this.obj = obj;
         if (obj != null) {
             base = obj.getPart("Base");

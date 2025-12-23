@@ -37,6 +37,7 @@ import mods.eln.item.electricalinterface.ItemEnergyInventoryProcess;
 import mods.eln.item.electricalitem.OreColorMapping;
 import mods.eln.item.electricalitem.PortableOreScannerItem.RenderStorage.OreScannerConfigElement;
 import mods.eln.misc.*;
+import mods.eln.mqtt.MqttManager;
 import mods.eln.node.NodeBlockEntity;
 import mods.eln.node.NodeManager;
 import mods.eln.node.NodeManagerNbt;
@@ -362,6 +363,7 @@ public class Eln {
         config = new Configuration(event.getSuggestedConfigurationFile());
 
         ConfigHandler.INSTANCE.loadConfig(this);
+        MqttManager.INSTANCE.init();
 
         eventChannel = NetworkRegistry.INSTANCE.newEventDrivenChannel(channelName);
 
@@ -504,7 +506,7 @@ public class Eln {
         simulator.stop();
         LampSupplyElement.channelMap.clear();
         WirelessSignalTxElement.channelMap.clear();
-
+        MqttManager.INSTANCE.shutdown();
     }
 
     @EventHandler

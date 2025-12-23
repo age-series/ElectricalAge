@@ -844,6 +844,11 @@ object CraftingRecipes {
             findItemStack("Advanced Energy Meter"), " c ", "PRP", " c ", 'c', findItemStack("Copper Cable"),
             'R', Eln.dictAdvancedChip, 'P', findItemStack("Iron Plate")
         )
+        addRecipe(
+            findItemStack("MQTT Energy Meter"), "ICI", "RMR", "ICI",
+            'I', findItemStack("Iron Cable"), 'C', Eln.dictAdvancedChip,
+            'R', ItemStack(Items.redstone), 'M', findItemStack("Advanced Energy Meter")
+        )
     }
 
     private fun recipeAutoMiner() {

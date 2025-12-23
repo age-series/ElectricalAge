@@ -41,6 +41,8 @@ import mods.eln.sixnode.electricalwatch.ElectricalWatchDescriptor
 import mods.eln.sixnode.electricalweathersensor.ElectricalWeatherSensorDescriptor
 import mods.eln.sixnode.electricalwindsensor.ElectricalWindSensorDescriptor
 import mods.eln.sixnode.energymeter.EnergyMeterDescriptor
+import mods.eln.sixnode.mqttmeter.MqttEnergyMeterElement
+import mods.eln.sixnode.mqttmeter.MqttEnergyMeterRender
 import mods.eln.sixnode.groundcable.GroundCableDescriptor
 import mods.eln.sixnode.hub.HubDescriptor
 import mods.eln.sixnode.lampsocket.LampSocketDescriptor
@@ -875,6 +877,19 @@ object SixNodeRegistration {
             subId = 5
             name = I18N.TR_NAME(I18N.Type.NONE, "Advanced Energy Meter")
             val desc = EnergyMeterDescriptor(name, Eln.obj.getObj("AdvancedEnergyMeter"), 7, 8)
+            Eln.sixNodeItem.addDescriptor(subId + (id shl 6), desc)
+        }
+        run {
+            subId = 12
+            name = I18N.TR_NAME(I18N.Type.NONE, "MQTT Energy Meter")
+            val desc = EnergyMeterDescriptor(
+                name,
+                Eln.obj.getObj("MqttEnergyMeter"),
+                8,
+                0,
+                MqttEnergyMeterElement::class.java,
+                MqttEnergyMeterRender::class.java
+            )
             Eln.sixNodeItem.addDescriptor(subId + (id shl 6), desc)
         }
         run {

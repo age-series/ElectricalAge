@@ -53,6 +53,7 @@ AND_Chip.name=AND Chip
 Advanced_Chip.name=Advanced Chip
 Advanced_Electrical_Motor.name=Advanced Electrical Motor
 Advanced_Energy_Meter.name=Advanced Energy Meter
+MQTT_Energy_Meter.name=MQTT Energy Meter
 Advanced_Machine_Block.name=Advanced Machine Block
 Advanced_Magnet.name=Advanced Magnet
 AllMeter.name=Universal-Meter
