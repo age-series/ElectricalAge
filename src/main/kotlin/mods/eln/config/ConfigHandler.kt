@@ -53,6 +53,9 @@ object ConfigHandler {
         Eln.verticalIronCableCrafting = Eln.config["general", "verticalIronCableCrafting", false, "Set this to true " +
                 "to craft with vertical ingots instead of horizontal ones"].boolean
 
+        Eln.mqttEnabled = Eln.config["mqtt", "enable", false, "Enable MQTT devices; configure servers in eln-mqtt.json inside the config folder."]
+            .getBoolean(false)
+
         if (Eln.analyticsEnabled) {
             val p = Eln.config["general", "playerUUID", ""]
             if (p.string.length == 0) {

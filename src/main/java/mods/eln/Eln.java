@@ -186,6 +186,7 @@ public class Eln {
     public static String dictTungstenOre, dictTungstenDust, dictTungstenIngot;
     public static String dictCheapChip, dictAdvancedChip;
     public static boolean modbusEnable = false;
+    public static boolean mqttEnabled = false;
     public static int modbusPort;
     public static boolean explosionEnable;
     public static boolean debugEnabled = false;  // Read from configuration file. Default is `false`.

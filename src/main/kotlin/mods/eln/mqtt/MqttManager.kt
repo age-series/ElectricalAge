@@ -26,13 +26,13 @@ object MqttManager {
     @JvmStatic
     fun init() {
         if (initialized.compareAndSet(false, true)) {
-            configuration = readConfiguration()
+            configuration = applyGlobalToggle(readConfiguration())
         }
     }
 
     @JvmStatic
     fun refreshConfiguration() {
-        configuration = readConfiguration()
+        configuration = applyGlobalToggle(readConfiguration())
         listeners.forEach { listener ->
             try {
                 listener.invoke(configuration)
@@ -53,7 +53,12 @@ object MqttManager {
     }
 
     @JvmStatic
-    fun getConfig(): MqttConfiguration = configuration
+    fun getConfig(): MqttConfiguration {
+        if (!Eln.mqttEnabled && !configuration.disable) {
+            configuration = configuration.copy(disable = true)
+        }
+        return configuration
+    }
 
     @JvmStatic
     fun getServerByName(name: String?): MqttServerConfig? {
@@ -115,5 +120,9 @@ object MqttManager {
         MqttMeterRegistry.writeToNbt(tag)
         val controllers = Utils.newNbtTagCompund(tag, "signalControllers")
         MqttSignalControllerRegistry.writeToNbt(controllers)
+    }
+    private fun applyGlobalToggle(source: MqttConfiguration): MqttConfiguration {
+        if (Eln.mqttEnabled) return source
+        return source.copy(disable = true)
     }
 }
