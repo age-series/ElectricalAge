@@ -15,7 +15,7 @@ class ArcClayBlock : Block(Material.rock) {
     init {
         setBlockName(name)
         setBlockTextureName("eln:$name")
-        setCreativeTab(Eln.creativeTab)
+        setCreativeTab(Eln.creativeTabOresMaterials)
     }
 
     @SideOnly(Side.CLIENT)
@@ -39,7 +39,7 @@ class ArcMetalBlock : Block(Material.rock) {
     init {
         setBlockName(name)
         setBlockTextureName("eln:$name")
-        setCreativeTab(Eln.creativeTab)
+        setCreativeTab(Eln.creativeTabOresMaterials)
     }
 
     @SideOnly(Side.CLIENT)

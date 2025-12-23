@@ -81,6 +81,7 @@ import net.minecraft.command.ICommandManager;
 import net.minecraft.command.ServerCommandManager;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
@@ -159,6 +160,14 @@ public class Eln {
     public static DelayedTaskManager delayedTask;
     public static ItemEnergyInventoryProcess itemEnergyInventoryProcess;
     public static CreativeTabs creativeTab;
+    public static CreativeTabs creativeTabPowerElectronics;
+    public static CreativeTabs creativeTabSignalProcessing;
+    public static CreativeTabs creativeTabLighting;
+    public static CreativeTabs creativeTabToolsArmor;
+    public static CreativeTabs creativeTabOresMaterials;
+    public static CreativeTabs creativeTabMachines;
+    public static CreativeTabs creativeTabCreative;
+    public static CreativeTabs creativeTabOther;
     public static Item swordCopper, hoeCopper, shovelCopper, pickaxeCopper, axeCopper;
     public static GenericItemUsingDamageDescriptorWithComment plateCopper;
     public static ItemArmor helmetCopper, chestplateCopper, legsCopper, bootsCopper;
@@ -385,24 +394,33 @@ public class Eln {
 
         Item itemCreativeTab = new Item().setUnlocalizedName("eln:elncreativetab").setTextureName("eln:elncreativetab");
         GameRegistry.registerItem(itemCreativeTab, "eln.itemCreativeTab");
-        creativeTab = new GenericCreativeTab("Eln", itemCreativeTab);
 
-        oreBlock = (OreBlock) new OreBlock().setCreativeTab(creativeTab).setBlockName("OreEln");
+        creativeTabPowerElectronics = new GenericCreativeTab("ElnPowerElectronics", Items.redstone);
+        creativeTabSignalProcessing = new GenericCreativeTab("ElnSignalProcessing", Items.comparator);
+        creativeTabLighting = new GenericCreativeTab("ElnLighting", Item.getItemFromBlock(Blocks.redstone_lamp));
+        creativeTabToolsArmor = new GenericCreativeTab("ElnToolsArmor", Items.iron_pickaxe);
+        creativeTabOresMaterials = new GenericCreativeTab("ElnOresMaterials", Items.iron_ingot);
+        creativeTabMachines = new GenericCreativeTab("ElnMachines", Item.getItemFromBlock(Blocks.dispenser));
+        creativeTabCreative = new GenericCreativeTab("ElnCreative", Items.nether_star);
+        creativeTabOther = creativeTabOresMaterials;
+        creativeTab = creativeTabOther;
+
+        oreBlock = (OreBlock) new OreBlock().setCreativeTab(creativeTabOresMaterials).setBlockName("OreEln");
 
         arcClayBlock = new ArcClayBlock();
         arcMetalBlock = new ArcMetalBlock();
 
         sharedItem =
-                (SharedItem) new SharedItem().setCreativeTab(creativeTab).setMaxStackSize(64).setUnlocalizedName("sharedItem");
+                (SharedItem) new SharedItem().setCreativeTab(creativeTabOther).setMaxStackSize(64).setUnlocalizedName("sharedItem");
 
         sharedItemStackOne =
-                (SharedItem) new SharedItem().setCreativeTab(creativeTab).setMaxStackSize(1).setUnlocalizedName(
+                (SharedItem) new SharedItem().setCreativeTab(creativeTabOther).setMaxStackSize(1).setUnlocalizedName(
                         "sharedItemStackOne");
 
         transparentNodeBlock = (TransparentNodeBlock) new TransparentNodeBlock(Material.iron,
-                TransparentNodeEntity.class).setCreativeTab(creativeTab).setBlockTextureName("iron_block");
+                TransparentNodeEntity.class).setCreativeTab(creativeTabOther).setBlockTextureName("iron_block");
         sixNodeBlock =
-                (SixNodeBlock) new SixNodeBlock(Material.plants, SixNodeEntity.class).setCreativeTab(creativeTab).setBlockTextureName("iron_block");
+                (SixNodeBlock) new SixNodeBlock(Material.plants, SixNodeEntity.class).setCreativeTab(creativeTabOther).setBlockTextureName("iron_block");
 
         ghostBlock = (GhostBlock) new GhostBlock().setBlockTextureName("iron_block");
         lightBlock = new LightBlock();
@@ -438,6 +456,8 @@ public class Eln {
         TransparentNodeRegistration.INSTANCE.registerTransparent();
         ItemRegistration.INSTANCE.registerItem();
 
+        updateCreativeTabIcons();
+
         OreDictionary.registerOre("blockAluminum", arcClayBlock);
         OreDictionary.registerOre("blockSteel", arcMetalBlock);
 
@@ -465,6 +485,14 @@ public class Eln {
         Collections.addAll(oreNames, names);
         proxy.registerRenderers();
         TR("itemGroup.Eln");
+        TR("itemGroup.ElnPowerElectronics");
+        TR("itemGroup.ElnSignalProcessing");
+        TR("itemGroup.ElnLighting");
+        TR("itemGroup.ElnToolsArmor");
+        TR("itemGroup.ElnOresMaterials");
+        TR("itemGroup.ElnMachines");
+        TR("itemGroup.ElnCreative");
+        TR("itemGroup.ElnOther");
         if (isDevelopmentRun()) {
             Achievements.init();
         }
@@ -609,6 +637,34 @@ public class Eln {
         oreScannerConfig.add(new OreScannerConfigElement(Block.getIdFromBlock(oreBlock) + (4 << 12), 20 / 100f));
         oreScannerConfig.add(new OreScannerConfigElement(Block.getIdFromBlock(oreBlock) + (5 << 12), 20 / 100f));
         oreScannerConfig.add(new OreScannerConfigElement(Block.getIdFromBlock(oreBlock) + (6 << 12), 20 / 100f));
+    }
+
+    private void updateCreativeTabIcons() {
+        setTabIcon(creativeTabPowerElectronics, stack(sixNodeItem, meta(33, 1)));
+        setTabIcon(creativeTabSignalProcessing, stack(sixNodeItem, meta(32, 0)));
+        setTabIcon(creativeTabLighting, stack(sharedItem, meta(4, 37)));
+        setTabIcon(creativeTabToolsArmor, stack(sharedItem, meta(14, 0)));
+        setTabIcon(creativeTabOresMaterials, stack(sharedItem, meta(8, 7)));
+        setTabIcon(creativeTabMachines, stack(transparentNodeItem, meta(33, 4)));
+        setTabIcon(creativeTabCreative, stack(sixNodeItem, meta(3, 0)));
+        if (creativeTabOther != creativeTabOresMaterials) {
+            setTabIcon(creativeTabOther, stack(sharedItem, meta(8, 0)));
+        }
+    }
+
+    private void setTabIcon(CreativeTabs tab, ItemStack stack) {
+        if (tab instanceof GenericCreativeTab && stack != null && stack.getItem() != null) {
+            ((GenericCreativeTab) tab).setIcon(stack);
+        }
+    }
+
+    private static ItemStack stack(Item item, int damage) {
+        if (item == null) return null;
+        return new ItemStack(item, 1, damage);
+    }
+
+    private static int meta(int group, int subId) {
+        return subId + (group << 6);
     }
 
     @SubscribeEvent

@@ -3,6 +3,7 @@ package mods.eln.registration
 import mods.eln.Eln
 import mods.eln.Eln.instance
 import mods.eln.Eln.transparentNodeItem
+import mods.eln.generic.GenericItemBlockUsingDamageDescriptor
 import mods.eln.ghost.GhostBlock
 import mods.eln.ghost.GhostGroup
 import mods.eln.gridnode.GridSwitchDescriptor
@@ -80,7 +81,38 @@ object TransparentNodeRegistration {
         return this
     }
 
+    private fun <T : GenericItemBlockUsingDamageDescriptor> T.machines() = apply {
+        setCreativeTab(Eln.creativeTabMachines)
+    }
+
     fun registerTransparent() {
+        Eln.transparentNodeItem.setCreativeTabForGroup(1, Eln.creativeTabPowerElectronics)
+        Eln.transparentNodeItem.setCreativeTabForGroup(2, Eln.creativeTabPowerElectronics)
+        Eln.transparentNodeItem.setCreativeTabForGroup(3, Eln.creativeTabMachines)
+        Eln.transparentNodeItem.setCreativeTabForGroup(4, Eln.creativeTabPowerElectronics)
+        Eln.transparentNodeItem.setCreativeTabForGroup(7, Eln.creativeTabPowerElectronics)
+        Eln.transparentNodeItem.setCreativeTabForGroup(16, Eln.creativeTabPowerElectronics)
+        Eln.transparentNodeItem.setCreativeTabForGroup(32, Eln.creativeTabMachines)
+        Eln.transparentNodeItem.setCreativeTabForGroup(33, Eln.creativeTabMachines)
+        Eln.transparentNodeItem.setCreativeTabForGroup(34, Eln.creativeTabMachines)
+        Eln.transparentNodeItem.setCreativeTabForGroup(35, Eln.creativeTabMachines)
+        Eln.transparentNodeItem.setCreativeTabForGroup(36, Eln.creativeTabMachines)
+        Eln.transparentNodeItem.setCreativeTabForGroup(37, Eln.creativeTabMachines)
+        Eln.transparentNodeItem.setCreativeTabForGroup(41, Eln.creativeTabMachines)
+        Eln.transparentNodeItem.setCreativeTabForGroup(42, Eln.creativeTabMachines)
+        Eln.transparentNodeItem.setCreativeTabForGroup(48, Eln.creativeTabPowerElectronics)
+        Eln.transparentNodeItem.setCreativeTabForGroup(49, Eln.creativeTabPowerElectronics)
+        Eln.transparentNodeItem.setCreativeTabForGroup(64, Eln.creativeTabPowerElectronics)
+        Eln.transparentNodeItem.setCreativeTabForGroup(65, Eln.creativeTabMachines)
+        Eln.transparentNodeItem.setCreativeTabForGroup(66, Eln.creativeTabMachines)
+        Eln.transparentNodeItem.setCreativeTabForGroup(67, Eln.creativeTabPowerElectronics)
+        Eln.transparentNodeItem.setCreativeTabForGroup(69, Eln.creativeTabLighting)
+        Eln.transparentNodeItem.setCreativeTabForGroup(70, Eln.creativeTabMachines)
+        Eln.transparentNodeItem.setCreativeTabForGroup(71, Eln.creativeTabPowerElectronics)
+        Eln.transparentNodeItem.setCreativeTabForGroup(96, Eln.creativeTabPowerElectronics)
+        Eln.transparentNodeItem.setCreativeTabForGroup(117, Eln.creativeTabSignalProcessing)
+        Eln.transparentNodeItem.setCreativeTabForGroup(123, Eln.creativeTabPowerElectronics)
+
         registerPowerComponent(1)
         registerTransformer(2)
         registerHeatFurnace(3)
@@ -1263,7 +1295,7 @@ object TransparentNodeRegistration {
         run {
             subId = 0
             val desc =
-                FabricatorDescriptor(TR_NAME(I18N.Type.NONE, "Fabricator"))
+                FabricatorDescriptor(TR_NAME(I18N.Type.NONE, "Fabricator")).machines()
             transparentNodeItem.addDescriptor(subId + (id shl 6), desc)
         }
     }

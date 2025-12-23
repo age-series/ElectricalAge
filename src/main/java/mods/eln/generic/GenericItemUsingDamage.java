@@ -4,6 +4,7 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.LanguageRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import mods.eln.Eln;
 import mods.eln.misc.RealisticEnum;
 import mods.eln.misc.UtilsClient;
 import net.minecraft.block.Block;
@@ -18,18 +19,22 @@ import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.Map;
 
 public class GenericItemUsingDamage<Descriptor extends GenericItemUsingDamageDescriptor> extends Item implements IGenericItemUsingDamage {
     public Hashtable<Integer, Descriptor> subItemList = new Hashtable<Integer, Descriptor>();
     ArrayList<Integer> orderList = new ArrayList<Integer>();
+    private final Map<Integer, CreativeTabs> creativeTabByGroup = new HashMap<Integer, CreativeTabs>();
 
     Descriptor defaultElement = null;
 
     public GenericItemUsingDamage() {
         super();
         setHasSubtypes(true);
+        CreativeTabPopulator.register(this);
     }
 
     public void setDefaultElement(Descriptor descriptor) {
@@ -42,6 +47,7 @@ public class GenericItemUsingDamage<Descriptor extends GenericItemUsingDamageDes
         ItemStack stack = new ItemStack(this, 1, damage);
         LanguageRegistry.addName(stack, descriptor.name);
         descriptor.setParent(this, damage);
+        applyDefaultTab(damage, descriptor);
     }
 
     @SuppressWarnings("deprecation")
@@ -51,6 +57,7 @@ public class GenericItemUsingDamage<Descriptor extends GenericItemUsingDamageDes
         LanguageRegistry.addName(stack, descriptor.name);
         orderList.add(damage);
         descriptor.setParent(this, damage);
+        applyDefaultTab(damage, descriptor);
         GameRegistry.registerCustomItemStack(descriptor.name, descriptor.newItemStack(1));
     }
 
@@ -138,7 +145,13 @@ public class GenericItemUsingDamage<Descriptor extends GenericItemUsingDamageDes
     public void getSubItems(Item itemID, CreativeTabs tabs, List list) {
         // You can also take a more direct approach and do each one individual but I prefer the lazy / right way
         for (int id : orderList) {
-            subItemList.get(id).getSubItems(list);
+            Descriptor descriptor = subItemList.get(id);
+            if (descriptor == null || descriptor.isHidden()) continue;
+            CreativeTabs descriptorTab = descriptor.getCreativeTab();
+            if (descriptorTab == null) descriptorTab = Eln.creativeTabOther;
+            if (tabs == null || tabs == descriptorTab || tabs == CreativeTabs.tabAllSearch) {
+                descriptor.getSubItems(list);
+            }
         }
     }
 
@@ -227,5 +240,17 @@ public class GenericItemUsingDamage<Descriptor extends GenericItemUsingDamageDes
         if (d == null)
             return super.onDroppedByPlayer(item, player);
         return d.onDroppedByPlayer(item, player);
+    }
+
+    private void applyDefaultTab(int damage, Descriptor descriptor) {
+        if (descriptor.getCreativeTab() != null) return;
+        CreativeTabs tab = creativeTabByGroup.get(damage >> 6);
+        if (tab != null) {
+            descriptor.setCreativeTab(tab);
+        }
+    }
+
+    public void setCreativeTabForGroup(int group, CreativeTabs tab) {
+        creativeTabByGroup.put(group, tab);
     }
 }

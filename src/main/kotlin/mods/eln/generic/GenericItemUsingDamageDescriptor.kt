@@ -7,6 +7,7 @@ import mods.eln.misc.UtilsClient
 import mods.eln.misc.VoltageLevelColor
 import net.minecraft.block.Block
 import net.minecraft.client.renderer.texture.IIconRegister
+import net.minecraft.creativetab.CreativeTabs
 import net.minecraft.entity.Entity
 import net.minecraft.entity.EntityLivingBase
 import net.minecraft.entity.player.EntityPlayer
@@ -38,6 +39,8 @@ open class GenericItemUsingDamageDescriptor {
     var parentItem: Item? = null
     @JvmField
     var parentItemDamage = 0
+    open var creativeTab: CreativeTabs? = null
+    var hidden: Boolean = false
     fun setDefaultIcon(name: String) {
         IconName = "eln:" + name.replace(" ".toRegex(), "").lowercase()
     }
@@ -69,6 +72,7 @@ open class GenericItemUsingDamageDescriptor {
         parentItemDamage = damage
     }
 
+
     open fun newItemStack(size: Int): ItemStack {
         val stack = ItemStack(parentItem, size, parentItemDamage)
         stack.tagCompound = getDefaultNBT()
@@ -78,6 +82,13 @@ open class GenericItemUsingDamageDescriptor {
     fun newItemStack(): ItemStack {
         return newItemStack(1)
     }
+
+    open fun hideFromCreative(): GenericItemUsingDamageDescriptor {
+        hidden = true
+        return this
+    }
+
+    fun isHidden(): Boolean = hidden
 
     fun checkSameItemStack(stack: ItemStack?): Boolean {
         if (stack == null) return false

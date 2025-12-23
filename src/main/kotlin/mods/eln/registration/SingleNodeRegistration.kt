@@ -38,7 +38,7 @@ object SingleNodeRegistration {
 
 
             val conduitBlock = ConduitBlock()
-            conduitBlock.setCreativeTab(Eln.creativeTab).setBlockName(entityName)
+            conduitBlock.setCreativeTab(null).setBlockName(entityName)
             GameRegistry.registerBlock(conduitBlock, SimpleNodeItem::class.java, entityName)
         }
     }
@@ -60,7 +60,7 @@ object SingleNodeRegistration {
                     "EnergyConverterElnToOtherLVU", Eln.instance.ELN_CONVERTER_MAX_POWER
                 )
                 Eln.instance.elnToOtherBlockConverter = EnergyConverterElnToOtherBlock(desc)
-                Eln.instance.elnToOtherBlockConverter.setCreativeTab(Eln.creativeTab).setBlockName(blockName)
+                Eln.instance.elnToOtherBlockConverter.setCreativeTab(Eln.creativeTabPowerElectronics).setBlockName(blockName)
                 GameRegistry.registerBlock(Eln.instance.elnToOtherBlockConverter, SimpleNodeItem::class.java, blockName)
             }
         }
@@ -75,7 +75,7 @@ object SingleNodeRegistration {
 
 
             Eln.instance.computerProbeBlock = ComputerProbeBlock()
-            Eln.instance.computerProbeBlock.setCreativeTab(Eln.creativeTab).setBlockName(entityName)
+            Eln.instance.computerProbeBlock.setCreativeTab(Eln.creativeTabSignalProcessing).setBlockName(entityName)
             GameRegistry.registerBlock(Eln.instance.computerProbeBlock, SimpleNodeItem::class.java, entityName)
         }
         /*
