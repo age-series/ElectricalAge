@@ -2,6 +2,7 @@ package mods.eln.mqtt
 
 import com.google.gson.GsonBuilder
 import mods.eln.Eln
+import mods.eln.misc.Utils
 import net.minecraft.nbt.NBTTagCompound
 import java.io.File
 import java.io.FileReader
@@ -106,9 +107,13 @@ object MqttManager {
 
     fun readWorldData(tag: NBTTagCompound?) {
         MqttMeterRegistry.readFromNbt(tag)
+        val controllers = tag?.getCompoundTag("signalControllers")
+        MqttSignalControllerRegistry.readFromNbt(controllers)
     }
 
     fun writeWorldData(tag: NBTTagCompound) {
         MqttMeterRegistry.writeToNbt(tag)
+        val controllers = Utils.newNbtTagCompund(tag, "signalControllers")
+        MqttSignalControllerRegistry.writeToNbt(controllers)
     }
 }

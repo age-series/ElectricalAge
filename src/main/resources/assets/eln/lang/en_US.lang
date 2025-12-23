@@ -267,6 +267,7 @@ Signal_Button.name=Signal Button
 Signal_Cable.name=Signal Cable
 Signal_Diode.name=Signal Diode
 Signal_Processor.name=Signal Processor
+MQTT_Signal_Controller.name=MQTT Signal Controller
 Signal_Relay.name=Signal Relay
 Signal_Source.name=Signal Source
 Signal_Switch.name=Signal Switch
