@@ -120,7 +120,7 @@ object ItemRegistration {
             subId = 0
             completId = subId + (id shl 6)
             element = HeatingCorpElement(
-                I18N.TR_NAME(I18N.Type.NONE, "Small 50V Copper Heating Corp"),
+                I18N.TR_NAME(I18N.Type.NONE, "Small 50V Copper Heating Element"),
                 Eln.LVU,
                 150.0,
                 190.0,
@@ -132,7 +132,7 @@ object ItemRegistration {
             subId = 1
             completId = subId + (id shl 6)
             element = HeatingCorpElement(
-                I18N.TR_NAME(I18N.Type.NONE, "50V Copper Heating Corp"),
+                I18N.TR_NAME(I18N.Type.NONE, "50V Copper Heating Element"),
                 Eln.LVU,
                 250.0,
                 320.0,
@@ -144,7 +144,7 @@ object ItemRegistration {
             subId = 2
             completId = subId + (id shl 6)
             element = HeatingCorpElement(
-                I18N.TR_NAME(I18N.Type.NONE, "Small 200V Copper Heating Corp"),
+                I18N.TR_NAME(I18N.Type.NONE, "Small 200V Copper Heating Element"),
                 Eln.MVU,
                 400.0,
                 500.0,
@@ -156,7 +156,7 @@ object ItemRegistration {
             subId = 3
             completId = subId + (id shl 6)
             element = HeatingCorpElement(
-                I18N.TR_NAME(I18N.Type.NONE, "200V Copper Heating Corp"),
+                I18N.TR_NAME(I18N.Type.NONE, "200V Copper Heating Element"),
                 Eln.MVU,
                 600.0,
                 750.0,
@@ -168,7 +168,7 @@ object ItemRegistration {
             subId = 4
             completId = subId + (id shl 6)
             element = HeatingCorpElement(
-                I18N.TR_NAME(I18N.Type.NONE, "Small 50V Iron Heating Corp"),
+                I18N.TR_NAME(I18N.Type.NONE, "Small 50V Iron Heating Element"),
                 Eln.LVU,
                 180.0,
                 225.0,
@@ -180,7 +180,7 @@ object ItemRegistration {
             subId = 5
             completId = subId + (id shl 6)
             element = HeatingCorpElement(
-                I18N.TR_NAME(I18N.Type.NONE, "50V Iron Heating Corp"),
+                I18N.TR_NAME(I18N.Type.NONE, "50V Iron Heating Element"),
                 Eln.LVU,
                 375.0,
                 480.0,
@@ -192,7 +192,7 @@ object ItemRegistration {
             subId = 6
             completId = subId + (id shl 6)
             element = HeatingCorpElement(
-                I18N.TR_NAME(I18N.Type.NONE, "Small 200V Iron Heating Corp"),
+                I18N.TR_NAME(I18N.Type.NONE, "Small 200V Iron Heating Element"),
                 Eln.MVU,
                 600.0,
                 750.0,
@@ -204,7 +204,7 @@ object ItemRegistration {
             subId = 7
             completId = subId + (id shl 6)
             element = HeatingCorpElement(
-                I18N.TR_NAME(I18N.Type.NONE, "200V Iron Heating Corp"),
+                I18N.TR_NAME(I18N.Type.NONE, "200V Iron Heating Element"),
                 Eln.MVU,
                 900.0,
                 1050.0,
@@ -216,7 +216,7 @@ object ItemRegistration {
             subId = 8
             completId = subId + (id shl 6)
             element = HeatingCorpElement(
-                I18N.TR_NAME(I18N.Type.NONE, "Small 50V Tungsten Heating Corp"),
+                I18N.TR_NAME(I18N.Type.NONE, "Small 50V Tungsten Heating Element"),
                 Eln.LVU,
                 240.0,
                 300.0,
@@ -228,7 +228,7 @@ object ItemRegistration {
             subId = 9
             completId = subId + (id shl 6)
             element = HeatingCorpElement(
-                I18N.TR_NAME(I18N.Type.NONE, "50V Tungsten Heating Corp"),
+                I18N.TR_NAME(I18N.Type.NONE, "50V Tungsten Heating Element"),
                 Eln.LVU,
                 500.0,
                 640.0,
@@ -240,7 +240,7 @@ object ItemRegistration {
             subId = 10
             completId = subId + (id shl 6)
             element = HeatingCorpElement(
-                I18N.TR_NAME(I18N.Type.NONE, "Small 200V Tungsten Heating Corp"),
+                I18N.TR_NAME(I18N.Type.NONE, "Small 200V Tungsten Heating Element"),
                 Eln.MVU,
                 800.0,
                 1000.0,
@@ -252,7 +252,7 @@ object ItemRegistration {
             subId = 11
             completId = subId + (id shl 6)
             element = HeatingCorpElement(
-                I18N.TR_NAME(I18N.Type.NONE, "200V Tungsten Heating Corp"),
+                I18N.TR_NAME(I18N.Type.NONE, "200V Tungsten Heating Element"),
                 Eln.MVU,
                 1200.0,
                 1500.0,
@@ -264,7 +264,7 @@ object ItemRegistration {
             subId = 12
             completId = subId + (id shl 6)
             element = HeatingCorpElement(
-                I18N.TR_NAME(I18N.Type.NONE, "Small 800V Tungsten Heating Corp"),
+                I18N.TR_NAME(I18N.Type.NONE, "Small 800V Tungsten Heating Element"),
                 Eln.HVU,
                 3600.0,
                 4800.0,
@@ -276,7 +276,7 @@ object ItemRegistration {
             subId = 13
             completId = subId + (id shl 6)
             element = HeatingCorpElement(
-                I18N.TR_NAME(I18N.Type.NONE, "800V Tungsten Heating Corp"),
+                I18N.TR_NAME(I18N.Type.NONE, "800V Tungsten Heating Element"),
                 Eln.HVU,
                 4812.0,
                 6015.0,
@@ -288,7 +288,7 @@ object ItemRegistration {
             subId = 14
             completId = subId + (id shl 6)
             element = HeatingCorpElement(
-                I18N.TR_NAME(I18N.Type.NONE, "Small 3.2kV Tungsten Heating Corp"),
+                I18N.TR_NAME(I18N.Type.NONE, "Small 3.2kV Tungsten Heating Element"),
                 Eln.VVU,
                 4000.0,
                 6000.0,
@@ -300,7 +300,7 @@ object ItemRegistration {
             subId = 15
             completId = subId + (id shl 6)
             element = HeatingCorpElement(
-                I18N.TR_NAME(I18N.Type.NONE, "3.2kV Tungsten Heating Corp"),
+                I18N.TR_NAME(I18N.Type.NONE, "3.2kV Tungsten Heating Element"),
                 Eln.VVU,
                 12000.0,
                 15000.0,

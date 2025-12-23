@@ -952,69 +952,60 @@ object CraftingRecipes {
 
     private fun recipeHeatingCorp() {
         addRecipe(
-            findItemStack("Small 50V Copper Heating Corp"), "C C", "CCC", "C C", 'C', findItemStack(
+            findItemStack("Small 50V Copper Heating Element"), "C C", "CCC", "C C", 'C', findItemStack(
                 "Copper " +
                         "Cable"
             )
         )
-        addRecipe(findItemStack("50V Copper Heating Corp"), "CC", 'C', findItemStack("Small 50V Copper Heating Corp"))
-        addRecipe(findItemStack("Small 200V Copper Heating Corp"), "CC", 'C', findItemStack("50V Copper Heating Corp"))
+        addRecipe(findItemStack("50V Copper Heating Element"), "CC", 'C', findItemStack("Small 50V Copper Heating Element"))
+        addRecipe(findItemStack("Small 200V Copper Heating Element"), "CC", 'C', findItemStack("50V Copper Heating Element"))
         addRecipe(
-            findItemStack("200V Copper Heating Corp"), "CC", 'C', findItemStack(
-                "Small 200V Copper Heating " +
-                        "Corp"
-            )
+            findItemStack("200V Copper Heating Element"), "CC", 'C', findItemStack("Small 200V Copper Heating Element")
         )
-        addRecipe(findItemStack("Small 50V Iron Heating Corp"), "C C", "CCC", "C C", 'C', findItemStack("Iron Cable"))
-        addRecipe(findItemStack("50V Iron Heating Corp"), "CC", 'C', findItemStack("Small 50V Iron Heating Corp"))
-        addRecipe(findItemStack("Small 200V Iron Heating Corp"), "CC", 'C', findItemStack("50V Iron Heating Corp"))
-        addRecipe(findItemStack("200V Iron Heating Corp"), "CC", 'C', findItemStack("Small 200V Iron Heating Corp"))
+        addRecipe(findItemStack("Small 50V Iron Heating Element"), "C C", "CCC", "C C", 'C', findItemStack("Iron Cable"))
+        addRecipe(findItemStack("50V Iron Heating Element"), "CC", 'C', findItemStack("Small 50V Iron Heating Element"))
+        addRecipe(findItemStack("Small 200V Iron Heating Element"), "CC", 'C', findItemStack("50V Iron Heating Element"))
+        addRecipe(findItemStack("200V Iron Heating Element"), "CC", 'C', findItemStack("Small 200V Iron Heating Element"))
         addRecipe(
-            findItemStack("Small 50V Tungsten Heating Corp"), "C C", "CCC", "C C", 'C', findItemStack(
+            findItemStack("Small 50V Tungsten Heating Element"), "C C", "CCC", "C C", 'C', findItemStack(
                 "Tungsten" +
                         " Cable"
             )
         )
         addRecipe(
-            findItemStack("50V Tungsten Heating Corp"), "CC", 'C', findItemStack(
-                "Small 50V Tungsten Heating " +
-                        "Corp"
+            findItemStack("50V Tungsten Heating Element"), "CC", 'C', findItemStack(
+                "Small 50V Tungsten Heating Element"
             )
         )
         addRecipe(
-            findItemStack("Small 200V Tungsten Heating Corp"), "CC", 'C', findItemStack(
-                "50V Tungsten Heating " +
-                        "Corp"
+            findItemStack("Small 200V Tungsten Heating Element"), "CC", 'C', findItemStack(
+                "50V Tungsten Heating Element"
             )
         )
         addRecipe(
-            findItemStack("200V Tungsten Heating Corp"), "CC", 'C', findItemStack(
-                "Small 200V Tungsten Heating " +
-                        "Corp"
+            findItemStack("200V Tungsten Heating Element"), "CC", 'C', findItemStack(
+                "Small 200V Tungsten Heating Element"
             )
         )
         addRecipe(
-            findItemStack("Small 800V Tungsten Heating Corp"), "CC", 'C', findItemStack(
-                "200V Tungsten Heating " +
-                        "Corp"
+            findItemStack("Small 800V Tungsten Heating Element"), "CC", 'C', findItemStack(
+                "200V Tungsten Heating Element"
             )
         )
         addRecipe(
-            findItemStack("800V Tungsten Heating Corp"), "CC", 'C', findItemStack(
-                "Small 800V Tungsten Heating " +
-                        "Corp"
+            findItemStack("800V Tungsten Heating Element"), "CC", 'C', findItemStack(
+                "Small 800V Tungsten Heating Element"
             )
         )
         addRecipe(
-            findItemStack("Small 3.2kV Tungsten Heating Corp"), "CC", 'C', findItemStack(
-                "800V Tungsten Heating" +
-                        " Corp"
+            findItemStack("Small 3.2kV Tungsten Heating Element"), "CC", 'C', findItemStack(
+                "800V Tungsten Heating Element"
             )
         )
         addRecipe(
-            findItemStack("3.2kV Tungsten Heating Corp"), "CC", 'C', findItemStack(
+            findItemStack("3.2kV Tungsten Heating Element"), "CC", 'C', findItemStack(
                 "Small 3.2kV Tungsten " +
-                        "Heating Corp"
+                        "Heating Element"
             )
         )
     }
@@ -2436,7 +2427,7 @@ object CraftingRecipes {
     private fun recipeEggIncubator() {
         addRecipe(
             Eln.findItemStack("50V Egg Incubator", 1), "IGG", "E G", "CII", 'C', Eln.dictCheapChip, 'E', findItemStack(
-                "Small 50V Tungsten Heating Corp"
+                "Small 50V Tungsten Heating Element"
             ), 'I', ItemStack(Items.iron_ingot), 'G',
             ItemStack(Blocks.glass_pane)
         )
