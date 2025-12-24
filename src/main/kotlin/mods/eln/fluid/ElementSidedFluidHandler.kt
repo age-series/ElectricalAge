@@ -136,7 +136,8 @@ open class ElementSidedFluidHandler: IFluidHandler, INBTTReady {
     override fun canDrain(from: ForgeDirection?, fluid: Fluid?): Boolean {
         if (from == null || fluid == null) return false
         val tank = tanks[from]?: return false
-        return tank.tank.fluid.getFluid().id == fluid.id
+        val currentFluid = tank.tank.fluid?.getFluid() ?: return false
+        return currentFluid.id == fluid.id
     }
 
     override fun readFromNBT(nbt: NBTTagCompound, str: String) {
