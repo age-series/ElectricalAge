@@ -38,6 +38,14 @@ object ItemRegistration {
         Eln.sharedItem.setCreativeTabForGroup(id, tab)
         Eln.sharedItemStackOne.setCreativeTabForGroup(id, tab)
     }
+
+    private fun <T : GenericItemUsingDamageDescriptor> T.inOresAndMaterialsTab() = apply {
+        creativeTab = Eln.creativeTabOresMaterials
+    }
+
+    private fun <T : GenericItemUsingDamageDescriptor> T.inToolsAndArmorTab() = apply {
+        creativeTab = Eln.creativeTabToolsArmor
+    }
     fun registerItem() {
         mapSharedGroup(1, Eln.creativeTabMachines)
         mapSharedGroup(3, Eln.creativeTabSignalProcessing)
@@ -1306,7 +1314,7 @@ object ItemRegistration {
             val desc = GenericItemUsingDamageDescriptorWithComment(
                 name,
                 arrayOf()
-            )
+            ).inOresAndMaterialsTab()
             Eln.sharedItem.addElement(subId + (id shl 6), desc)
             Data.addResource(desc.newItemStack())
             OreDictionary.registerOre(Eln.dictCheapChip, desc.newItemStack())
@@ -1317,7 +1325,7 @@ object ItemRegistration {
             val desc = GenericItemUsingDamageDescriptorWithComment(
                 name,
                 arrayOf()
-            )
+            ).inOresAndMaterialsTab()
             Eln.sharedItem.addElement(subId + (id shl 6), desc)
             Data.addResource(desc.newItemStack())
             OreDictionary.registerOre(Eln.dictAdvancedChip, desc.newItemStack())
@@ -1328,7 +1336,7 @@ object ItemRegistration {
             val desc = GenericItemUsingDamageDescriptorWithComment(
                 name,
                 arrayOf()
-            )
+            ).inOresAndMaterialsTab()
             Eln.sharedItem.addElement(subId + (id shl 6), desc)
             Data.addResource(desc.newItemStack())
             addToOre("casingMachine", desc.newItemStack())
@@ -1339,7 +1347,7 @@ object ItemRegistration {
             val desc = GenericItemUsingDamageDescriptorWithComment(
                 name,
                 arrayOf()
-            )
+            ).inOresAndMaterialsTab()
             Eln.sharedItem.addElement(subId + (id shl 6), desc)
             Data.addResource(desc.newItemStack())
         }
@@ -1349,7 +1357,7 @@ object ItemRegistration {
             val desc = GenericItemUsingDamageDescriptorWithComment(
                 name,
                 arrayOf()
-            )
+            ).inOresAndMaterialsTab()
             Eln.sharedItem.addElement(subId + (id shl 6), desc)
             Data.addResource(desc.newItemStack())
         }
@@ -1360,7 +1368,7 @@ object ItemRegistration {
             val desc = GenericItemUsingDamageDescriptorWithComment(
                 name,
                 arrayOf()
-            )
+            ).inOresAndMaterialsTab()
             Eln.sharedItem.addElement(subId + (id shl 6), desc)
             Data.addResource(desc.newItemStack())
             Eln.plateCopper = desc
@@ -1372,7 +1380,7 @@ object ItemRegistration {
             val desc = GenericItemUsingDamageDescriptorWithComment(
                 name,
                 arrayOf()
-            )
+            ).inOresAndMaterialsTab()
             Eln.sharedItem.addElement(subId + (id shl 6), desc)
             Data.addResource(desc.newItemStack())
             addToOre("plateIron", desc.newItemStack())
@@ -1383,7 +1391,7 @@ object ItemRegistration {
             val desc = GenericItemUsingDamageDescriptorWithComment(
                 name,
                 arrayOf()
-            )
+            ).inOresAndMaterialsTab()
             Eln.sharedItem.addElement(subId + (id shl 6), desc)
             Data.addResource(desc.newItemStack())
             addToOre("plateGold", desc.newItemStack())
@@ -1394,7 +1402,7 @@ object ItemRegistration {
             val desc = GenericItemUsingDamageDescriptorWithComment(
                 name,
                 arrayOf()
-            )
+            ).inOresAndMaterialsTab()
             Eln.sharedItem.addElement(subId + (id shl 6), desc)
             Data.addResource(desc.newItemStack())
             addToOre("plateLead", desc.newItemStack())
@@ -1405,7 +1413,7 @@ object ItemRegistration {
             val desc = GenericItemUsingDamageDescriptorWithComment(
                 name,
                 arrayOf()
-            )
+            ).inOresAndMaterialsTab()
             Eln.sharedItem.addElement(subId + (id shl 6), desc)
             Data.addResource(desc.newItemStack())
             addToOre("plateSilicon", desc.newItemStack())
@@ -1417,7 +1425,7 @@ object ItemRegistration {
             val desc = GenericItemUsingDamageDescriptorWithComment(
                 name,
                 arrayOf()
-            )
+            ).inOresAndMaterialsTab()
             Eln.sharedItem.addElement(subId + (id shl 6), desc)
             Data.addResource(desc.newItemStack())
             addToOre("plateAlloy", desc.newItemStack())
@@ -1428,7 +1436,7 @@ object ItemRegistration {
             val desc = GenericItemUsingDamageDescriptorWithComment(
                 name,
                 arrayOf()
-            )
+            ).inOresAndMaterialsTab()
             Eln.sharedItem.addElement(subId + (id shl 6), desc)
             Data.addResource(desc.newItemStack())
             addToOre("plateCoal", desc.newItemStack())
@@ -1440,7 +1448,7 @@ object ItemRegistration {
             val desc = GenericItemUsingDamageDescriptorWithComment(
                 name,
                 arrayOf()
-            )
+            ).inOresAndMaterialsTab()
             Eln.sharedItem.addElement(subId + (id shl 6), desc)
             Data.addResource(desc.newItemStack())
             addToOre("dustSilicon", desc.newItemStack())
@@ -1451,7 +1459,7 @@ object ItemRegistration {
             val desc = GenericItemUsingDamageDescriptorWithComment(
                 name,
                 arrayOf()
-            )
+            ).inOresAndMaterialsTab()
             Eln.sharedItem.addElement(subId + (id shl 6), desc)
             Data.addResource(desc.newItemStack())
             addToOre("ingotSilicon", desc.newItemStack())
@@ -1469,7 +1477,7 @@ object ItemRegistration {
                 GenericItemUsingDamageDescriptorWithComment(
                     I18N.TR_NAME(I18N.Type.NONE, "Advanced Machine Block"),
                     arrayOf()
-                ) // TODO: Description.
+                ).inOresAndMaterialsTab() // TODO: Description.
             Eln.sharedItem.addElement(subId + (id shl 6), desc)
             Data.addResource(desc.newItemStack())
             addToOre("casingMachineAdvanced", desc.newItemStack())
@@ -1480,7 +1488,7 @@ object ItemRegistration {
             val desc = GenericItemUsingDamageDescriptorWithComment(
                 name,
                 arrayOf()
-            )
+            ).inOresAndMaterialsTab()
             Eln.sharedItem.addElement(subId + (id shl 6), desc)
             Data.addResource(desc.newItemStack())
         }
@@ -1490,7 +1498,7 @@ object ItemRegistration {
             val desc = GenericItemUsingDamageDescriptorWithComment(
                 name,
                 arrayOf()
-            )
+            ).inOresAndMaterialsTab()
             Eln.sharedItem.addElement(subId + (id shl 6), desc)
             Data.addResource(desc.newItemStack())
         }
@@ -1509,7 +1517,7 @@ object ItemRegistration {
             val desc = GenericItemUsingDamageDescriptorWithComment(
                 name,
                 arrayOf()
-            )
+            ).inOresAndMaterialsTab()
             Eln.sharedItem.addElement(subId + (id shl 6), desc)
             Data.addResource(desc.newItemStack())
         }
@@ -1543,7 +1551,7 @@ object ItemRegistration {
             val desc = GenericItemUsingDamageDescriptorWithComment(name,
                 tr("Electrical age wrench,\nCan be used to turn\nsmall wall blocks")
                     .split("\n".toRegex()).dropLastWhile { it.isEmpty() }
-                    .toTypedArray())
+                    .toTypedArray()).inToolsAndArmorTab()
             Eln.sharedItem.addElement(subId + (id shl 6), desc)
             Eln.wrenchItemStack = desc.newItemStack()
         }
@@ -1551,41 +1559,42 @@ object ItemRegistration {
         run {
             subId = 52
             name = I18N.TR_NAME(I18N.Type.NONE, "Dielectric")
-            val desc = DielectricItem(name, Eln.LVU)
+            val desc = DielectricItem(name, Eln.LVU).inOresAndMaterialsTab()
             Eln.sharedItem.addElement(subId + (id shl 6), desc)
         }
 
-        Eln.sharedItem.addElement(53 + (id shl 6), CaseItemDescriptor(I18N.TR_NAME(I18N.Type.NONE, "Casing")))
+        val casingDesc = CaseItemDescriptor(I18N.TR_NAME(I18N.Type.NONE, "Casing")).inOresAndMaterialsTab()
+        Eln.sharedItem.addElement(53 + (id shl 6), casingDesc)
         Eln.sharedItem.addElement(
             54 + (id shl 6), ClutchPlateItem(
                 "Iron Clutch Plate", 5120f, 640f, 640f, 160f,
                 0.0001f, false
-            )
+            ).inOresAndMaterialsTab()
         )
-        Eln.sharedItem.addElement(55 + (id shl 6), ClutchPinItem("Clutch Pin"))
+        Eln.sharedItem.addElement(55 + (id shl 6), ClutchPinItem("Clutch Pin").inOresAndMaterialsTab())
         Eln.sharedItem.addElement(
             56 + (id shl 6), ClutchPlateItem(
                 "Gold Clutch Plate", 10240f, 2048f, 1024f, 512f,
                 0.001f, false
-            )
+            ).inOresAndMaterialsTab()
         )
         Eln.sharedItem.addElement(
             57 + (id shl 6), ClutchPlateItem(
                 "Copper Clutch Plate", 8192f, 4096f, 1024f, 512f,
                 0.0003f, false
-            )
+            ).inOresAndMaterialsTab()
         )
         Eln.sharedItem.addElement(
             58 + (id shl 6), ClutchPlateItem(
                 "Lead Clutch Plate", 15360f, 1024f, 1536f, 768f,
                 0.0015f, false
-            )
+            ).inOresAndMaterialsTab()
         )
         Eln.sharedItem.addElement(
             59 + (id shl 6), ClutchPlateItem(
                 "Coal Clutch Plate", 1024f, 128f, 128f, 32f, 0.1f,
                 true
-            )
+            ).inOresAndMaterialsTab()
         )
         run {
             subId = 60
@@ -1593,7 +1602,7 @@ object ItemRegistration {
             val desc = GenericItemUsingDamageDescriptorWithComment(
                 name,
                 arrayOf()
-            )
+            ).inOresAndMaterialsTab()
             Eln.sharedItem.addElement(subId + (id shl 6), desc)
             Data.addResource(desc.newItemStack())
         }
@@ -1603,7 +1612,7 @@ object ItemRegistration {
             val desc = GenericItemUsingDamageDescriptorWithComment(
                 name,
                 arrayOf()
-            )
+            ).inOresAndMaterialsTab()
             Eln.sharedItem.addElement(subId + (id shl 6), desc)
             Data.addResource(desc.newItemStack())
         }
@@ -1613,7 +1622,7 @@ object ItemRegistration {
             val desc = GenericItemUsingDamageDescriptorWithComment(
                 name,
                 arrayOf()
-            )
+            ).inOresAndMaterialsTab()
             Eln.sharedItem.addElement(subId + (id shl 6), desc)
             Data.addResource(desc.newItemStack())
         }
@@ -1623,7 +1632,7 @@ object ItemRegistration {
             val desc = GenericItemUsingDamageDescriptorWithComment(
                 name,
                 arrayOf()
-            )
+            ).inOresAndMaterialsTab()
             Eln.sharedItem.addElement(subId + (id shl 6), desc)
             Data.addResource(desc.newItemStack())
         }
