@@ -3,6 +3,7 @@ package mods.eln.railroad
 import mods.eln.Eln
 import mods.eln.misc.Coordinate
 import mods.eln.node.NodeManager
+import mods.eln.node.transparent.TransparentNode
 import mods.eln.sim.mna.misc.MnaConst
 import net.minecraft.block.Block
 import net.minecraft.entity.item.EntityMinecart
@@ -103,25 +104,48 @@ class EntityElectricMinecart(world: World, x: Double, y: Double, z: Double): Ent
         pushZ = 0.0
     }
 
-    private fun getOverheadWires(coordinate: Coordinate): OverheadLinesElement? {
-        // Pass coordinate of tracks and check vertically the next 3 blocks (4 up looks visually weird)
-        val originalY = coordinate.y
-        while (coordinate.y <= (originalY + 3)) {
-            coordinate.y
-            val node = NodeManager.instance!!.getTransparentNodeFromCoordinate(coordinate)
-            if (node is OverheadLinesElement) {
-                return node
+    private fun getOverheadWires(coordinate: Coordinate): RailroadPowerInterface? {
+        val base = Coordinate(coordinate)
+        val startY = base.y
+        for (offset in 1..3) {
+            val current = Coordinate(base)
+            current.y = startY + offset
+            val candidate = getRailroadPowerInterfaceAt(current)
+            if (candidate != null) {
+                return candidate
             }
-            coordinate.y++
         }
         return null
     }
 
-    private fun getUnderTrackWires(coordinate: Coordinate): UnderTrackPowerElement? {
-        coordinate.y -= 1 // check the block below the cart
-        val node = NodeManager.instance!!.getTransparentNodeFromCoordinate(coordinate)
-        if (node is UnderTrackPowerElement) {
+    private fun getUnderTrackWires(coordinate: Coordinate): RailroadPowerInterface? {
+        val trackCoord = Coordinate(coordinate)
+        getRailroadPowerInterfaceAt(trackCoord)?.let { return it }
+
+        val below = Coordinate(coordinate)
+        below.y -= 1
+        return getRailroadPowerInterfaceAt(below)
+    }
+
+    private fun getRailroadPowerInterfaceAt(coordinate: Coordinate): RailroadPowerInterface? {
+        val node = NodeManager.instance!!.getNodeFromCoordonate(coordinate)
+        if (node is RailroadPowerInterface) {
             return node
+        }
+        if (node is TransparentNode) {
+            val element = node.element
+            if (element is RailroadPowerInterface) {
+                return element
+            }
+        }
+        if (coordinate.dimension == worldObj.provider.dimensionId) {
+            val tile = worldObj.getTileEntity(coordinate.x, coordinate.y, coordinate.z)
+            if (tile is ThirdRailTileEntity) {
+                val thirdRailNode = tile.node
+                if (thirdRailNode is RailroadPowerInterface) {
+                    return thirdRailNode
+                }
+            }
         }
         return null
     }

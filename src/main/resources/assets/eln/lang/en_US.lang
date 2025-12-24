@@ -373,6 +373,7 @@ tile.arc_clay_block.name=Arc Clay Block
 tile.arc_metal_block.name=Arc Metal Block
 tile.eln.ElnProbe.name=Eln Computer Probe
 tile.eln.EnergyConverter.name=Energy Exporter
+tile.eln.thirdRail.name=Third Rail (800V)
 tile.hot_water.name=Hot Water
 fluid.hot_water=Hot Water
 item.hot_water_bucket.name=Hot Water Bucket
