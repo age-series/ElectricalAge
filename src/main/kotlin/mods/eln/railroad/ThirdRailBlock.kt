@@ -10,6 +10,7 @@ import net.minecraft.block.BlockRail
 import net.minecraft.entity.EntityLivingBase
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.entity.player.EntityPlayerMP
+import net.minecraft.item.ItemStack
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.world.World
 
@@ -80,5 +81,19 @@ class ThirdRailBlock : BlockRail(), ITileEntityProvider {
     override fun onBlockActivated(world: World, x: Int, y: Int, z: Int, player: EntityPlayer, side: Int, vx: Float, vy: Float, vz: Float): Boolean {
         val entity = world.getTileEntity(x, y, z) as? ThirdRailTileEntity ?: return false
         return entity.onBlockActivated(player, fromIntMinecraftSide(side), vx, vy, vz)
+    }
+
+    override fun onBlockPlacedBy(world: World, x: Int, y: Int, z: Int, entityLiving: EntityLivingBase?, stack: ItemStack?) {
+        super.onBlockPlacedBy(world, x, y, z, entityLiving, stack)
+        if (entityLiving != null) {
+            val te = world.getTileEntity(x, y, z) as? ThirdRailTileEntity ?: return
+            val front = getFrontForPlacement(entityLiving)
+            if (front != null) {
+                te.front = front
+                if (!world.isRemote) {
+                    world.markBlockForUpdate(x, y, z)
+                }
+            }
+        }
     }
 }
