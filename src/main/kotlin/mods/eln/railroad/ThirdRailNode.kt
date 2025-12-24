@@ -3,6 +3,7 @@ package mods.eln.railroad
 import mods.eln.Eln
 import mods.eln.misc.Direction
 import mods.eln.misc.LRDU
+import mods.eln.misc.Utils
 import mods.eln.node.simple.SimpleNode
 import mods.eln.railroad.PoweredMinecartSimulationData
 import mods.eln.railroad.PoweredMinecartSimulationSingleton.poweredMinecartSimulationData
@@ -55,40 +56,54 @@ class ThirdRailNode : SimpleNode(), RailroadPowerInterface {
         }
     }
 
-    override fun registerCart(cart: EntityElectricMinecart) {
-        if (cart !in poweredMinecartSimulationData.map { it.minecart }) {
-            val resistor = Resistor()
-            val resistorLoad = ElectricalLoad().apply { setAsPrivate() }
-            val connection = ElectricalConnection(electricalLoad, resistorLoad)
-
-            resistor.connectTo(resistorLoad, null)
-            resistor.resistance = MnaConst.highImpedance
-            resistorLoad.serialResistance = MnaConst.noImpedance
-            connection.resistance = MnaConst.noImpedance
-
-            electricalLoadList.add(resistorLoad)
-            electricalComponentList.add(connection)
-            electricalComponentList.add(resistor)
-            Eln.simulator.addElectricalLoad(resistorLoad)
-            Eln.simulator.addElectricalComponent(connection)
-            Eln.simulator.addElectricalComponent(resistor)
-
-            val slowProcess = RailroadResistorSlowProcess(this, cart, 0.05)
-            Eln.simulator.addSlowProcess(slowProcess)
-
-            poweredMinecartSimulationData.add(
-                PoweredMinecartSimulationData(
-                    cart,
-                    resistor,
-                    resistorLoad,
-                    connection,
-                    slowProcess,
-                    this
-                )
-            )
-            electricalLoad.subSystem?.invalidate()
-            needPublish()
+    override fun multiMeterString(side: Direction): String {
+        return if (side in HORIZONTAL_SIDES) {
+            Utils.plotUIP(electricalLoad.voltage, electricalLoad.current, electricalLoad.serialResistance)
+        } else {
+            ""
         }
+    }
+
+    override fun registerCart(cart: EntityElectricMinecart) {
+        val existing = poweredMinecartSimulationData.firstOrNull { it.minecart == cart }
+        if (existing != null) {
+            if (existing.owningElement === this) {
+                return
+            }
+            existing.owningElement.deregisterCart(cart)
+        }
+
+        val resistor = Resistor()
+        val resistorLoad = ElectricalLoad().apply { setAsPrivate() }
+        val connection = ElectricalConnection(electricalLoad, resistorLoad)
+
+        resistor.connectTo(resistorLoad, null)
+        resistor.resistance = MnaConst.highImpedance
+        resistorLoad.serialResistance = MnaConst.noImpedance
+        connection.resistance = MnaConst.noImpedance
+
+        electricalLoadList.add(resistorLoad)
+        electricalComponentList.add(connection)
+        electricalComponentList.add(resistor)
+        Eln.simulator.addElectricalLoad(resistorLoad)
+        Eln.simulator.addElectricalComponent(connection)
+        Eln.simulator.addElectricalComponent(resistor)
+
+        val slowProcess = RailroadResistorSlowProcess(this, cart, 0.05)
+        Eln.simulator.addSlowProcess(slowProcess)
+
+        poweredMinecartSimulationData.add(
+            PoweredMinecartSimulationData(
+                cart,
+                resistor,
+                resistorLoad,
+                connection,
+                slowProcess,
+                this
+            )
+        )
+        electricalLoad.subSystem?.invalidate()
+        needPublish()
     }
 
     override fun deregisterCart(cart: EntityElectricMinecart) {
