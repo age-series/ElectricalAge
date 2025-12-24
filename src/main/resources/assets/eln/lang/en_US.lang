@@ -250,6 +250,7 @@ Power_Inductor.name=Power Inductor
 Power_Resistor.name=Power Resistor
 Power_capacitor.name=Power capacitor
 Power_inductor.name=Power inductor
+Variable_inductor.name=Variable Inductor
 Purple_Brush.name=Purple Brush
 Red_Brush.name=Red Brush
 Redstone-to-Voltage_Converter.name=Redstone-to-Voltage Converter

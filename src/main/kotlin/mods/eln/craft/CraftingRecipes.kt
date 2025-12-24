@@ -378,6 +378,10 @@ object CraftingRecipes {
             findItemStack("Copper Cable")
         )
         addRecipe(
+            findItemStack("Variable inductor"), " S ", "cIc", " c ", 'I', ItemStack(Items.iron_ingot), 'c',
+            findItemStack("Copper Cable"), 'S', findItemStack("Signal Cable")
+        )
+        addRecipe(
             findItemStack("Power Resistor"), "   ", "cCc", "   ", 'c', findItemStack("Copper Cable"), 'C',
             findItemStack("Coal Dust")
         )

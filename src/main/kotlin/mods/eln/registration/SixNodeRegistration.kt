@@ -740,6 +740,18 @@ object SixNodeRegistration {
         }
 
         run {
+            subId = 35
+            name = I18N.TR_NAME(I18N.Type.NONE, "Variable inductor")
+            val desc = VariableInductorSixDescriptor(
+                name,
+                Eln.obj.getObj("PowerElectricPrimitives"),
+                newE6(-1.0),
+                PowerInductorSixContainer.cableStackLimit
+            ).power()
+            Eln.sixNodeItem.addDescriptor(subId + (id shl 6), desc)
+        }
+
+        run {
             subId = 36
             name = I18N.TR_NAME(I18N.Type.NONE, "Power Resistor")
             val desc = ResistorDescriptor(
