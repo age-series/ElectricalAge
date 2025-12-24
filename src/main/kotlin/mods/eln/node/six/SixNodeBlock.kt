@@ -384,8 +384,7 @@ class SixNodeBlock  // public static ArrayList<Integer> repertoriedItemStackId =
     }
 
     override fun getLightOpacity(w: IBlockAccess, x: Int, y: Int, z: Int): Int {
-        val e = w.getTileEntity(x, y, z) ?: return 0
-        val sne = e as SixNodeEntity
+        val sne = w.getTileEntity(x, y, z) as? SixNodeEntity ?: return 0
         val b = sne.sixNodeCacheBlock
         return if (b === Blocks.air) 0 else try {
             b.lightOpacity
