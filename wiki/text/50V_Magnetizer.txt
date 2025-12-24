@@ -1,6 +1,0 @@
-The magnetizer is only used in the creation of magnets.
-
-Basic magnets are created by combining 2 iron ingot
-Advanced magnets are created by combining 2 alloy ingot
-
-Basic magnets serve no use, while the Advanced magnets are used to create the Advanced Electrical Motor; an important component in making 200V machinery.

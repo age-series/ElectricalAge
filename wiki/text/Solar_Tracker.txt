@@ -1,5 +1,0 @@
-This upgrade can be installed into any Rotating [[Solar Panel]] to make it track the sun automatically.
-
-This will dramatically increase the performance of your panels by ensuring that they always face the sun during the day, so that the panels output their full potential.
-
-[[Category:Renewable Energy]]

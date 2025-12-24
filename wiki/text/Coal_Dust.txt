@@ -1,2 +1,0 @@
-Created in the [[Macerator]] from grinding coal or charcoal. Also, ore-dictionary variants work find if enabled in the config.
-It is used to add resistance to resistors and rheostats, as well as the filaments of some light bulbs. Compressing it together can be done to create a Diamond.

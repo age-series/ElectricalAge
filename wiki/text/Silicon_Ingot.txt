@@ -1,6 +1,0 @@
-== Obtaining ==
-<br />
-Silicon ingots can be obtained by smelting [[Silicon_Dust]]
-<br />
-== Usage ==
-<Insert usage here>
