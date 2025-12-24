@@ -10,6 +10,7 @@ import net.minecraft.entity.item.EntityMinecart
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.init.Blocks
 import net.minecraft.nbt.NBTTagCompound
+import net.minecraft.util.MathHelper
 import net.minecraft.world.World
 import kotlin.math.abs
 import kotlin.math.sign
@@ -26,7 +27,12 @@ class EntityElectricMinecart(world: World, x: Double, y: Double, z: Double): Ent
 
     override fun onUpdate() {
         super.onUpdate()
-        val cartCoordinate = Coordinate(posX.toInt(), posY.toInt(), posZ.toInt(), worldObj)
+        val cartCoordinate = Coordinate(
+            MathHelper.floor_double(posX),
+            MathHelper.floor_double(posY),
+            MathHelper.floor_double(posZ),
+            worldObj
+        )
         val overheadWires = getOverheadWires(cartCoordinate)
         val underTrackWires = getUnderTrackWires(cartCoordinate)
 
@@ -51,8 +57,15 @@ class EntityElectricMinecart(world: World, x: Double, y: Double, z: Double): Ent
             }
 
             if (energyBufferJoules < energyBufferTargetJoules) {
-                val chargeRateInv = energyBufferTargetJoules / (abs(energyBufferTargetJoules - energyBufferJoules) * 2)
-                PoweredMinecartSimulationSingleton.powerCart(this, chargeRateInv * locomotiveMaximumResistance, 0.1)
+                val deficit = abs(energyBufferTargetJoules - energyBufferJoules)
+                val rawChargeRateInv = if (deficit < 1e-6) {
+                    0.0
+                } else {
+                    energyBufferTargetJoules / (deficit * 2)
+                }
+                val requestedResistance = (rawChargeRateInv * locomotiveMaximumResistance)
+                    .coerceAtLeast(PoweredMinecartSimulationSingleton.MINIMUM_CART_RESISTANCE)
+                PoweredMinecartSimulationSingleton.powerCart(this, requestedResistance, 0.1)
             } else {
                 PoweredMinecartSimulationSingleton.powerCart(this, MnaConst.highImpedance, 0.1)
             }
@@ -190,4 +203,5 @@ class EntityElectricMinecart(world: World, x: Double, y: Double, z: Double): Ent
     override fun func_145820_n(): Block? {
         return Blocks.iron_block
     }
+
 }
