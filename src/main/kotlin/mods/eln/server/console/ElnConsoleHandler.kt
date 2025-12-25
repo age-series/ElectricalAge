@@ -31,7 +31,8 @@ class ElnConsoleCommands: ICommand {
             ElnWailaEasyModeCommand(),
             ElnDebugCommand(),
             ElnExplosionsCommand(),
-            ElnIconsCommand()
+            ElnIconsCommand(),
+            ElnPoleMapCommand()
         ))
     }
 
