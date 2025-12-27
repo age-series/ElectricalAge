@@ -244,7 +244,7 @@ object TransparentNodeRegistration {
 
     private fun registerTransformer(id: Int) {
         var subId: Int
-        var name = ""
+        var name: String
 
         run {
             subId = 0
@@ -280,7 +280,7 @@ object TransparentNodeRegistration {
 
     private fun registerHeatFurnace(id: Int) {
         var subId: Int
-        var name = ""
+        var name: String
         run {
             subId = 0
             name = TR_NAME(I18N.Type.NONE, "Stone Heat Furnace")
@@ -758,15 +758,6 @@ object TransparentNodeRegistration {
         var subId: Int
         var ghostGroup: GhostGroup
         var name: String?
-        val diodeIfUBase: FunctionTable =
-            FunctionTableYProtect(
-                doubleArrayOf(
-                    0.0, 0.002, 0.005, 0.01, 0.015, 0.02, 0.025, 0.03,
-                    0.035, 0.04, 0.045, 0.05, 0.06, 0.07, 0.08, 0.09, 0.10, 0.11, 0.12, 0.13, 1.0
-                ), 1.0, 0.0, 1.0
-            )
-        val solarIfSBase =
-            FunctionTable(doubleArrayOf(0.0, 0.1, 0.4, 0.6, 0.8, 1.0), 1.0)
 
         val LVSolarU = 59.0
 
@@ -917,7 +908,7 @@ object TransparentNodeRegistration {
 
     private fun registerBattery(id: Int) {
         var subId: Int
-        var name = ""
+        var name: String
         val heatTIme = 30.0
         val voltageFunctionTable = doubleArrayOf(0.000, 0.9, 1.0, 1.025, 1.04, 1.05, 2.0)
         val voltageFunction = FunctionTable(voltageFunctionTable, 6.0 / 5)

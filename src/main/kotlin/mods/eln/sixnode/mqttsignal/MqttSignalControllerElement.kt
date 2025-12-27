@@ -74,7 +74,7 @@ class MqttSignalControllerElement(
     }
 
     override fun getElectricalLoad(lrdu: LRDU, mask: Int): ElectricalLoad? {
-        val facing = front ?: return null
+        val facing = front
         return when (lrdu) {
             facing -> portLoads[SignalPort.D.ordinal]
             facing.right() -> portLoads[SignalPort.A.ordinal]
@@ -87,7 +87,7 @@ class MqttSignalControllerElement(
     override fun getThermalLoad(lrdu: LRDU, mask: Int): ThermalLoad? = null
 
     override fun getConnectionMask(lrdu: LRDU): Int {
-        val facing = front ?: return 0
+        val facing = front
         return if (lrdu == facing || lrdu == facing.right() || lrdu == facing.inverse() || lrdu == facing.left()) {
             NodeBase.maskElectricalGate
         } else {

@@ -469,9 +469,9 @@ abstract class NodeBase {
             return block === Blocks.redstone_wire
         }
 
-        var beepUploaded = SoundCommand("eln:beep_accept_2").smallRange()!!
-        var beepDownloaded = SoundCommand("eln:beep_accept").smallRange()!!
-        var beepError = SoundCommand("eln:beep_error").smallRange()!!
+        var beepUploaded = SoundCommand("eln:beep_accept_2").smallRange()
+        var beepDownloaded = SoundCommand("eln:beep_accept").smallRange()
+        var beepError = SoundCommand("eln:beep_error").smallRange()
 
         fun tryConnectTwoNode(nodeA: NodeBase, directionA: Direction, lrduA: LRDU, nodeB: NodeBase, directionB: Direction, lrduB: LRDU) {
             val mskA = nodeA.getSideConnectionMask(directionA, lrduA)

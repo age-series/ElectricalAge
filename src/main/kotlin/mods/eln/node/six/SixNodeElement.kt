@@ -65,10 +65,10 @@ abstract class SixNodeElement(sixNode: SixNode, @JvmField var side: Direction, d
 
     open fun inventoryChanged() {}
 
-    override fun play(s: SoundCommand) {
-        s.addUuid(getUuid())
-        s.set(sixNode!!.coordinate)
-        s.play()
+    override fun play(cmd: SoundCommand) {
+        cmd.addUuid(getUuid())
+        cmd.set(sixNode!!.coordinate)
+        cmd.play()
     }
 
     open val coordinate: Coordinate?

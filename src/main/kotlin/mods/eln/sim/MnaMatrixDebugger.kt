@@ -76,7 +76,7 @@ object MnaMatrixDebugger {
                 "MNA matrix dump for {} (reason: {}) saved to {}",
                 describe(target),
                 reason ?: "n/a",
-                textFile!!.absolutePath
+                textFile.absolutePath
             )
         }
 

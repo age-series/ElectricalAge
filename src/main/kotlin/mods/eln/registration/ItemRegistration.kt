@@ -31,6 +31,8 @@ import net.minecraft.item.Item.ToolMaterial
 import net.minecraft.item.ItemArmor.ArmorMaterial
 import net.minecraftforge.common.util.EnumHelper
 import net.minecraftforge.oredict.OreDictionary
+import kotlin.ExperimentalUnsignedTypes
+import kotlin.OptIn
 
 object ItemRegistration {
 
@@ -562,7 +564,6 @@ object ItemRegistration {
     private fun registerProtection(id: Int) {
         var subId: Int
         var completId: Int
-        var name: String
 
         run {
             subId = 0
@@ -652,7 +653,8 @@ object ItemRegistration {
     }
 
     private fun registerDust(id: Int) {
-        var id = id
+        var currentId = id
+        // TODO: Breaking change! We should really not be modifying ID. When we re-assign these to be subId, it will break existing registered items
         var subId: Int
         var completId: Int
         var name: String?
@@ -660,7 +662,7 @@ object ItemRegistration {
 
         run {
             subId = 1
-            completId = subId + (id shl 6)
+            completId = subId + (currentId shl 6)
             name = I18N.TR_NAME(I18N.Type.NONE, "Copper Dust")
             element = GenericItemUsingDamageDescriptorWithComment(name, arrayOf())
             Eln.dustCopper = element
@@ -670,7 +672,7 @@ object ItemRegistration {
         }
         run {
             subId = 2
-            completId = subId + (id shl 6)
+            completId = subId + (currentId shl 6)
             name = I18N.TR_NAME(I18N.Type.NONE, "Iron Dust")
             element = GenericItemUsingDamageDescriptorWithComment(name, arrayOf())
             Eln.dustCopper = element
@@ -680,7 +682,7 @@ object ItemRegistration {
         }
         run {
             subId = 3
-            completId = subId + (id shl 6)
+            completId = subId + (currentId shl 6)
             name = I18N.TR_NAME(I18N.Type.NONE, "Lapis Dust")
             element = GenericItemUsingDamageDescriptorWithComment(name, arrayOf())
             Eln.dustCopper = element
@@ -690,7 +692,7 @@ object ItemRegistration {
         }
         run {
             subId = 4
-            completId = subId + (id shl 6)
+            completId = subId + (currentId shl 6)
             name = I18N.TR_NAME(I18N.Type.NONE, "Diamond Dust")
             element = GenericItemUsingDamageDescriptorWithComment(name, arrayOf())
             Eln.dustCopper = element
@@ -700,53 +702,53 @@ object ItemRegistration {
         }
 
         run {
-            id = 5
+            currentId = 5
             name = I18N.TR_NAME(I18N.Type.NONE, "Lead Dust")
             element = GenericItemUsingDamageDescriptorWithComment(name, arrayOf())
-            Eln.sharedItem.addElement(id, element)
+            Eln.sharedItem.addElement(currentId, element)
             Data.addResource(element.newItemStack())
             addToOre("dustLead", element.newItemStack())
         }
         run {
-            id = 6
+            currentId = 6
             name = I18N.TR_NAME(I18N.Type.NONE, "Tungsten Dust")
             element = GenericItemUsingDamageDescriptorWithComment(name, arrayOf())
-            Eln.sharedItem.addElement(id, element)
+            Eln.sharedItem.addElement(currentId, element)
             Data.addResource(element.newItemStack())
             addToOre(Eln.dictTungstenDust, element.newItemStack())
         }
 
         run {
-            id = 7
+            currentId = 7
             name = I18N.TR_NAME(I18N.Type.NONE, "Gold Dust")
             element = GenericItemUsingDamageDescriptorWithComment(name, arrayOf())
-            Eln.sharedItem.addElement(id, element)
+            Eln.sharedItem.addElement(currentId, element)
             Data.addResource(element.newItemStack())
             addToOre("dustGold", element.newItemStack())
         }
 
         run {
-            id = 8
+            currentId = 8
             name = I18N.TR_NAME(I18N.Type.NONE, "Coal Dust")
             element = GenericItemUsingDamageDescriptorWithComment(name, arrayOf())
-            Eln.sharedItem.addElement(id, element)
+            Eln.sharedItem.addElement(currentId, element)
             Data.addResource(element.newItemStack())
             addToOre("dustCoal", element.newItemStack())
         }
         run {
-            id = 9
+            currentId = 9
             name = I18N.TR_NAME(I18N.Type.NONE, "Alloy Dust")
             element = GenericItemUsingDamageDescriptorWithComment(name, arrayOf())
-            Eln.sharedItem.addElement(id, element)
+            Eln.sharedItem.addElement(currentId, element)
             Data.addResource(element.newItemStack())
             addToOre("dustAlloy", element.newItemStack())
         }
 
         run {
-            id = 10
+            currentId = 10
             name = I18N.TR_NAME(I18N.Type.NONE, "Cinnabar Dust")
             element = GenericItemUsingDamageDescriptorWithComment(name, arrayOf())
-            Eln.sharedItem.addElement(id, element)
+            Eln.sharedItem.addElement(currentId, element)
             Data.addResource(element.newItemStack())
             addToOre("dustCinnabar", element.newItemStack())
         }
@@ -1241,6 +1243,7 @@ object ItemRegistration {
         }
     }
 
+    @OptIn(ExperimentalUnsignedTypes::class)
     private fun registerPortableItem(id: Int) {
         var subId: Int
         var name: String

@@ -362,10 +362,10 @@ abstract class TransparentNodeElement(@JvmField var node: TransparentNode?, @Jvm
         return uuid != 0
     }
 
-    override fun play(s: SoundCommand) {
-        s.addUuid(getUuid())
-        s.set(node!!.coordinate)
-        s.play()
+    override fun play(cmd: SoundCommand) {
+        cmd.addUuid(getUuid())
+        cmd.set(node!!.coordinate)
+        cmd.play()
     }
 
     open fun unload() {}

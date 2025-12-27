@@ -174,7 +174,7 @@ class PacketHandler {
         }
     }
 
-    private fun packetPlayerKey(stream: DataInputStream, @Suppress("UNUSED_PARAMETER") manager: NetworkManager, player: EntityPlayer?) {
+    private fun packetPlayerKey(stream: DataInputStream, @Suppress("UNUSED_PARAMETER") manager: NetworkManager, @Suppress("UNUSED_PARAMETER") player: EntityPlayer?) {
         try {
             val name = stream.readUTF()
             val state = stream.readBoolean()

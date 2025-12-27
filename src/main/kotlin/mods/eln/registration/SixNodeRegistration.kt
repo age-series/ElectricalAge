@@ -149,18 +149,17 @@ object SixNodeRegistration {
 
     private fun registerGround(id: Int) {
         var subId: Int
-        var name = ""
 
         run {
             subId = 0
-            name = I18N.TR_NAME(I18N.Type.NONE, "Ground Cable")
+            val name = I18N.TR_NAME(I18N.Type.NONE, "Ground Cable")
             val desc = GroundCableDescriptor(name, Eln.obj.getObj("groundcable")).power()
             desc.hideFromCreative()
             Eln.sixNodeItem.addDescriptor(subId + (id shl 6), desc)
         }
         run {
             subId = 8
-            name = I18N.TR_NAME(I18N.Type.NONE, "Hub")
+            val name = I18N.TR_NAME(I18N.Type.NONE, "Hub")
             val desc = HubDescriptor(name, Eln.obj.getObj("hub")).power()
             Eln.sixNodeItem.addDescriptor(subId + (id shl 6), desc)
         }
@@ -168,25 +167,24 @@ object SixNodeRegistration {
 
     private fun registerElectricalSource(id: Int) {
         var subId: Int
-        var name = ""
 
         run {
             subId = 0
-            name = I18N.TR_NAME(I18N.Type.NONE, "Electrical Source")
+            val name = I18N.TR_NAME(I18N.Type.NONE, "Electrical Source")
             val desc = ElectricalSourceDescriptor(name, Eln.obj.getObj("voltagesource"), false).creative()
             Eln.sixNodeItem.addDescriptor(subId + (id shl 6), desc)
         }
 
         run {
             subId = 1
-            name = I18N.TR_NAME(I18N.Type.NONE, "Signal Source")
+            val name = I18N.TR_NAME(I18N.Type.NONE, "Signal Source")
             val desc =
                 ElectricalSourceDescriptor(name, Eln.obj.getObj("signalsource"), true).creative()
             Eln.sixNodeItem.addDescriptor(subId + (id shl 6), desc)
         }
         run {
             subId = 2
-            name = I18N.TR_NAME(I18N.Type.NONE, "Current Source")
+            val name = I18N.TR_NAME(I18N.Type.NONE, "Current Source")
             val desc = CurrentSourceDescriptor(name, Eln.obj.getObj("currentsource")).creative()
             Eln.sixNodeItem.addDescriptor(subId + (id shl 6), desc)
         }
@@ -600,11 +598,10 @@ object SixNodeRegistration {
 
     private fun registerLampSupply(id: Int) {
         var subId: Int
-        var name = ""
 
         run {
             subId = 0
-            name = I18N.TR_NAME(I18N.Type.NONE, "Lamp Supply")
+            val name = I18N.TR_NAME(I18N.Type.NONE, "Lamp Supply")
             val desc = LampSupplyDescriptor(name, Eln.obj.getObj("DistributionBoard"), 32).lighting()
             Eln.sixNodeItem.addDescriptor(subId + (id shl 6), desc)
         }
@@ -612,11 +609,10 @@ object SixNodeRegistration {
 
     private fun registerPowerSocket(id: Int) {
         var subId: Int
-        var name = ""
         var desc: PowerSocketDescriptor
         run {
             subId = 1
-            name = I18N.TR_NAME(I18N.Type.NONE, "Type J Socket")
+            val name = I18N.TR_NAME(I18N.Type.NONE, "Type J Socket")
             desc = PowerSocketDescriptor(subId, name, Eln.obj.getObj("PowerSocket")).power()
             desc.setPlaceDirection(
                 arrayOf(
@@ -630,7 +626,7 @@ object SixNodeRegistration {
         }
         run {
             subId = 2
-            name = I18N.TR_NAME(I18N.Type.NONE, "Type E Socket")
+            val name = I18N.TR_NAME(I18N.Type.NONE, "Type E Socket")
             desc = PowerSocketDescriptor(subId, name, Eln.obj.getObj("PowerSocket")).power()
             desc.setPlaceDirection(
                 arrayOf(
@@ -646,7 +642,7 @@ object SixNodeRegistration {
 
     private fun registerPassiveComponent(id: Int) {
         var subId: Int
-        var name = ""
+        var name: String
         var function: IFunction
         val baseFunction = FunctionTableYProtect(
             doubleArrayOf(
@@ -860,7 +856,7 @@ object SixNodeRegistration {
 
     private fun registerSixNodeMisc(id: Int) {
         var subId: Int
-        var name = ""
+        var name: String
         run {
             subId = 0
             name = I18N.TR_NAME(I18N.Type.NONE, "Modbus RTU")
@@ -919,7 +915,7 @@ object SixNodeRegistration {
 
     private fun registerElectricalManager(id: Int) {
         var subId: Int
-        var name = ""
+        var name: String
 
         run {
             subId = 0
@@ -1048,7 +1044,7 @@ object SixNodeRegistration {
 
     private fun registerElectricalVuMeter(id: Int) {
         var subId: Int
-        var name = ""
+        var name: String
         var desc: ElectricalVuMeterDescriptor
         run {
             subId = 0
@@ -1093,7 +1089,7 @@ object SixNodeRegistration {
 
     private fun registerElectricalEnvironmentalSensor(id: Int) {
         var subId: Int
-        var name = ""
+        var name: String
         run {
             var desc: ElectricalLightSensorDescriptor
             run {
@@ -1439,19 +1435,19 @@ object SixNodeRegistration {
     }
 
     private fun registerAnalogChips(id: Int) {
-        var id = id
-        id = id shl 6
+        val baseId = id shl 6
+        // TODO: Breaking change! These should be using a subId; the numbers here are not being shifted properly and might overlap.
 
         val model = Eln.obj.getObj("AnalogChips")
         Eln.sixNodeItem.addDescriptor(
-            id + 0, AnalogChipDescriptor(
+            baseId + 0, AnalogChipDescriptor(
                 I18N.TR_NAME(I18N.Type.NONE, "OpAmp"), model, "OP",
                 OpAmp::class.java
             )
         )
 
         Eln.sixNodeItem.addDescriptor(
-            id + 1, AnalogChipDescriptor(
+            baseId + 1, AnalogChipDescriptor(
                 I18N.TR_NAME(I18N.Type.NONE, "PID Regulator"), model, "PID",
                 PIDRegulator::class.java,
                 PIDRegulatorElement::class.java,
@@ -1460,7 +1456,7 @@ object SixNodeRegistration {
         )
 
         Eln.sixNodeItem.addDescriptor(
-            id + 2, AnalogChipDescriptor(
+            baseId + 2, AnalogChipDescriptor(
                 I18N.TR_NAME(
                     I18N.Type.NONE, "Voltage controlled sawtooth " +
                             "oscillator"
@@ -1469,7 +1465,7 @@ object SixNodeRegistration {
         )
 
         Eln.sixNodeItem.addDescriptor(
-            id + 3, AnalogChipDescriptor(
+            baseId + 3, AnalogChipDescriptor(
                 I18N.TR_NAME(
                     I18N.Type.NONE, "Voltage controlled sine " +
                             "oscillator"
@@ -1478,7 +1474,7 @@ object SixNodeRegistration {
         )
 
         Eln.sixNodeItem.addDescriptor(
-            id + 4, AnalogChipDescriptor(
+            baseId + 4, AnalogChipDescriptor(
                 I18N.TR_NAME(I18N.Type.NONE, "Amplifier"), model, "AMP",
                 Amplifier::class.java,
                 AmplifierElement::class.java,
@@ -1487,7 +1483,7 @@ object SixNodeRegistration {
         )
 
         Eln.sixNodeItem.addDescriptor(
-            id + 5, AnalogChipDescriptor(
+            baseId + 5, AnalogChipDescriptor(
                 I18N.TR_NAME(I18N.Type.NONE, "Voltage controlled amplifier"),
                 model, "VCA", VoltageControlledAmplifier::class.java
             )
