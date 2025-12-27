@@ -164,7 +164,7 @@ public class ElectricalBreakerElement extends SixNodeElement {
         ItemStack cable = inventory.getStackInSlot(ElectricalBreakerContainer.cableSlotId);
         ElectricalCableDescriptor cableDescriptor = (ElectricalCableDescriptor) Eln.sixNodeItem.getDescriptor(cable);
         if (cableDescriptor == null || !switchState) {
-            switchResistor.ultraImpedance();
+            switchResistor.highImpedance();
         } else {
             cableDescriptor.applyTo(switchResistor);
         }

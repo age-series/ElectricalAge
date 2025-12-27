@@ -109,6 +109,7 @@ public class Eln {
     public static Eln instance;
     @SidedProxy(clientSide = "mods.eln.client.ClientProxy", serverSide = "mods.eln.CommonProxy")
     public static CommonProxy proxy;
+    public final static Logger LOGGER = LogManager.getLogger("Eln");
     public final static String MODID = Tags.MODID;
     public final static String NAME = Tags.MODNAME;
     public final static String MODDESC = "Electricity in your base!";

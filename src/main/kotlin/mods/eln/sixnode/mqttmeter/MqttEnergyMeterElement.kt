@@ -79,7 +79,6 @@ class MqttEnergyMeterElement(sixNode: SixNode, side: Direction, descriptor: SixN
     }
 
     init {
-        shunt.mustUseUltraImpedance()
         electricalLoadList.add(aLoad)
         electricalLoadList.add(bLoad)
         electricalComponentList.add(shunt)

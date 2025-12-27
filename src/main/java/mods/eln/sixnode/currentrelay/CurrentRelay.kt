@@ -272,7 +272,7 @@ class CurrentRelayElement(sixNode: SixNode, side: Direction, descriptor: SixNode
 
     private fun refreshSwitchResistor() {
         if (!switchState) {
-            switchResistor.ultraImpedance()
+            switchResistor.highImpedance()
         } else {
             currentRelayDescriptor.applyTo(switchResistor)
         }
