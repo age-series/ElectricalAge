@@ -137,12 +137,6 @@ class UnderTrackPowerRender(tileEntity: TransparentNodeEntity, transparentNodeDe
     val desc = transparentNodeDescriptor as UnderTrackPowerDescriptor
     private val eConn = LRDUMask()
 
-    init {
-        val x = tileEntity.xCoord
-        val y = tileEntity.yCoord
-        val z = tileEntity.zCoord
-    }
-
     override fun draw() {
         desc.drawBase()
     }
