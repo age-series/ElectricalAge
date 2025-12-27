@@ -57,7 +57,7 @@ object AnalyticsHandler {
     */
     fun submitAgeSeriesAnalytics() {
         val ageSeriesAnalyticsThread = Thread {
-            var url: String? = ""
+            var url: String?
             val version = simpleVersionName.replace("\\s+".toRegex(), "")
             val lang = I18N.getCurrentLanguage()
 
