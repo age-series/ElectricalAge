@@ -34,7 +34,9 @@ class ElnConsoleCommands: ICommand {
             ElnExplosionsCommand(),
             ElnIconsCommand(),
             ElnPoleMapCommand(),
-            ElnZoneDumpCommand()
+            ElnZoneDumpCommand(),
+            ElnZoneCleanCommand(),
+            ElnZoneRemoveCommand()
         ))
     }
 

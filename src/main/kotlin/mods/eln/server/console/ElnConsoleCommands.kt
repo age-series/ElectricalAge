@@ -12,6 +12,7 @@ import mods.eln.misc.FC
 import mods.eln.misc.Version
 import mods.eln.node.NodeBase
 import mods.eln.node.NodeManager
+import mods.eln.node.GhostNode
 import mods.eln.node.six.SixNode
 import mods.eln.node.transparent.TransparentNode
 import mods.eln.server.SaveConfig
@@ -20,6 +21,7 @@ import mods.eln.server.console.ElnConsoleCommands.Companion.cprint
 import mods.eln.server.console.ElnConsoleCommands.Companion.getArgBool
 import net.minecraft.command.ICommandSender
 import net.minecraft.entity.player.EntityPlayerMP
+import net.minecraft.world.World
 import java.io.BufferedWriter
 import java.io.File
 import java.io.FileWriter
@@ -476,6 +478,7 @@ class ElnZoneDumpCommand : IConsoleCommand {
                 val expectedBlock = when (node) {
                     is SixNode -> Eln.sixNodeBlock
                     is TransparentNode -> Eln.transparentNodeBlock
+                    is GhostNode -> Eln.ghostBlock
                     else -> null
                 }
                 val actualBlock = world.getBlock(coord.x, coord.y, coord.z)
@@ -494,7 +497,7 @@ class ElnZoneDumpCommand : IConsoleCommand {
                     val tile = world.getTileEntity(x, y, z)
                     builder.append("  ($x,$y,$z): ${block.unlocalizedName} meta=$meta tile=${tile?.javaClass?.simpleName}\n")
                     val coord = Coordinate(x, y, z, dim)
-                    if ((block == Eln.sixNodeBlock || block == Eln.transparentNodeBlock) && !coordToNode.containsKey(coord)) {
+                    if ((block == Eln.sixNodeBlock || block == Eln.transparentNodeBlock || block == Eln.ghostBlock) && !coordToNode.containsKey(coord)) {
                         warnings.add("Block ${block.unlocalizedName} at $coord has no registered node")
                     }
                 }
@@ -525,6 +528,234 @@ class ElnZoneDumpCommand : IConsoleCommand {
         cprint(ics, "Dump Eln nodes and world blocks in a rectangular zone to a zonedump-<timestamp>.txt file.", indent = 1)
         cprint(ics, "Usage: /eln zonedump x1 y1 z1 x2 y2 z2", indent = 1)
         cprint(ics, "")
+    }
+}
+
+class ElnZoneCleanCommand : IConsoleCommand {
+    override val name = "zoneclean"
+
+    override fun runCommand(ics: ICommandSender, args: List<String>) {
+        if (ics !is EntityPlayerMP) {
+            cprint(ics, "${FC.BRIGHT_RED}This command can only be run by a player.", indent = 1)
+            return
+        }
+        if (args.size != 6) {
+            cprint(ics, "${FC.BRIGHT_YELLOW}Usage: /eln zoneclean x1 y1 z1 x2 y2 z2", indent = 1)
+            return
+        }
+        val coords = IntArray(6)
+        for (i in 0 until 6) {
+            val value = args[i].toIntOrNull()
+            if (value == null) {
+                cprint(ics, "${FC.BRIGHT_RED}Invalid coordinate '${args[i]}'", indent = 1)
+                return
+            }
+            coords[i] = value
+        }
+        val minX = min(coords[0], coords[3])
+        val maxX = max(coords[0], coords[3])
+        val minY = min(coords[1], coords[4])
+        val maxY = max(coords[1], coords[4])
+        val minZ = min(coords[2], coords[5])
+        val maxZ = max(coords[2], coords[5])
+
+        val world = ics.worldObj
+        val dim = world.provider.dimensionId
+        val nodeManager = NodeManager.instance
+        val nodes = nodeManager?.nodeList ?: emptyList()
+        val nodesToProcess = nodes.filter {
+            val c = it.coordinate
+            c.dimension == dim &&
+                c.x in minX..maxX &&
+                c.y in minY..maxY &&
+                c.z in minZ..maxZ
+        }
+        val coordKeyedNodes = HashMap<Coordinate, NodeBase>()
+        nodesToProcess.forEach { coordKeyedNodes[Coordinate(it.coordinate)] = it }
+
+        var nodesRemoved = 0
+        for (node in nodesToProcess) {
+            val coord = node.coordinate
+            val expectedBlock = when (node) {
+                is SixNode -> Eln.sixNodeBlock
+                is TransparentNode -> Eln.transparentNodeBlock
+                is GhostNode -> Eln.ghostBlock
+                else -> null
+            }
+            val actualBlock = world.getBlock(coord.x, coord.y, coord.z)
+            val needsRemoval =
+                node is GhostNode ||
+                    expectedBlock == null ||
+                    actualBlock != expectedBlock
+            if (needsRemoval) {
+                try {
+                    node.onBreakBlock()
+                } catch (e: Exception) {
+                    println("zonerepair: onBreakBlock failed for $coord : ${e.message}")
+                }
+                nodeManager?.removeNode(node)
+                if (expectedBlock != null && actualBlock == expectedBlock) {
+                    world.setBlockToAir(coord.x, coord.y, coord.z)
+                }
+                nodesRemoved++
+            }
+        }
+
+        var orphanBlocks = 0
+        for (x in minX..maxX) {
+            for (y in minY..maxY) {
+                for (z in minZ..maxZ) {
+                    val block = world.getBlock(x, y, z)
+                    val isNodeBlock = block == Eln.sixNodeBlock || block == Eln.transparentNodeBlock || block == Eln.ghostBlock
+                    if (!isNodeBlock) continue
+                    val coord = Coordinate(x, y, z, dim)
+                    if (coordKeyedNodes.containsKey(coord)) continue
+                    world.removeTileEntity(x, y, z)
+                    world.setBlockToAir(x, y, z)
+                    orphanBlocks++
+                }
+            }
+        }
+
+        cprint(
+            ics,
+            "${FC.BRIGHT_GREEN}Zone clean complete: removed $nodesRemoved ghost nodes and cleared $orphanBlocks orphan blocks.",
+            indent = 1
+        )
+    }
+
+    override fun getManPage(ics: ICommandSender, args: List<String>) {
+        cprint(ics, "Removes ghost nodes and orphaned Eln blocks within a rectangular zone.", indent = 1)
+        cprint(ics, "Usage: /eln zoneclean x1 y1 z1 x2 y2 z2", indent = 1)
+        cprint(ics, "Blocks removed this way must be rebuilt manually.", indent = 1)
+        cprint(ics, "")
+    }
+}
+
+class ElnZoneRemoveCommand : IConsoleCommand {
+    override val name = "zoneremove"
+
+    override fun runCommand(ics: ICommandSender, args: List<String>) {
+        if (ics !is EntityPlayerMP) {
+            cprint(ics, "${FC.BRIGHT_RED}This command can only be run by a player.", indent = 1)
+            return
+        }
+        if (args.size != 6) {
+            cprint(ics, "${FC.BRIGHT_YELLOW}Usage: /eln zoneremove x1 y1 z1 x2 y2 z2", indent = 1)
+            return
+        }
+        val coords = IntArray(6)
+        for (i in 0 until 6) {
+            val parsed = args[i].toIntOrNull()
+            if (parsed == null) {
+                cprint(ics, "${FC.BRIGHT_RED}Invalid coordinate '${args[i]}'", indent = 1)
+                return
+            }
+            coords[i] = parsed
+        }
+        val minX = min(coords[0], coords[3])
+        val maxX = max(coords[0], coords[3])
+        val minY = min(coords[1], coords[4])
+        val maxY = max(coords[1], coords[4])
+        val minZ = min(coords[2], coords[5])
+        val maxZ = max(coords[2], coords[5])
+
+        val world = ics.worldObj
+        val dim = world.provider.dimensionId
+        val nodeManager = NodeManager.instance
+        if (nodeManager == null) {
+            cprint(ics, "${FC.BRIGHT_RED}Node manager unavailable, cannot run zoneremove.", indent = 1)
+            return
+        }
+        val targetNodes = nodeManager.nodeList.filter {
+            val c = it.coordinate
+            c.dimension == dim &&
+                c.x in minX..maxX &&
+                c.y in minY..maxY &&
+                c.z in minZ..maxZ
+        }
+        val ownerNotifications = LinkedHashSet<Coordinate>()
+        var nodesRemoved = 0
+        for (node in targetNodes) {
+            val coord = node.coordinate
+            var removed = false
+            if (node is GhostNode) {
+                val ghost = Eln.ghostManager.getGhost(coord)
+                if (ghost != null) {
+                    removed = try {
+                        ghost.breakBlock()
+                        if (isOnBoundary(coord, minX, maxX, minY, maxY, minZ, maxZ)) {
+                            ghost.observatorCoordonate?.let { ownerNotifications.add(Coordinate(it)) }
+                        }
+                        true
+                    } catch (e: Exception) {
+                        println("zoneremove: ghost break failed at $coord : ${e.message}")
+                        false
+                    }
+                }
+            }
+            if (!removed) {
+                try {
+                    node.onBreakBlock()
+                    removed = true
+                } catch (e: Exception) {
+                    println("zoneremove: onBreakBlock failed for $coord : ${e.message}")
+                }
+            }
+            if (removed) {
+                nodesRemoved++
+            }
+        }
+
+        var blocksCleared = 0
+        for (x in minX..maxX) {
+            for (y in minY..maxY) {
+                for (z in minZ..maxZ) {
+                    if (clearElnBlock(world, x, y, z)) {
+                        blocksCleared++
+                    }
+                }
+            }
+        }
+
+        cprint(
+            ics,
+            "${FC.BRIGHT_GREEN}Zone remove complete: removed $nodesRemoved nodes, cleared $blocksCleared blocks, notified ${ownerNotifications.size} owners.",
+            indent = 1
+        )
+    }
+
+    override fun getManPage(ics: ICommandSender, args: List<String>) {
+        cprint(ics, "Removes all Eln nodes and blocks within a rectangular zone.", indent = 1)
+        cprint(ics, "Ghost nodes on the zone boundary notify their owners before removal.", indent = 1)
+        cprint(ics, "Usage: /eln zoneremove x1 y1 z1 x2 y2 z2", indent = 1)
+        cprint(ics, "")
+    }
+
+    private fun isOnBoundary(
+        coord: Coordinate,
+        minX: Int,
+        maxX: Int,
+        minY: Int,
+        maxY: Int,
+        minZ: Int,
+        maxZ: Int
+    ): Boolean {
+        return coord.x == minX || coord.x == maxX ||
+            coord.y == minY || coord.y == maxY ||
+            coord.z == minZ || coord.z == maxZ
+    }
+
+    private fun clearElnBlock(world: World, x: Int, y: Int, z: Int): Boolean {
+        val block = world.getBlock(x, y, z)
+        val isElnBlock =
+            block == Eln.sixNodeBlock ||
+                block == Eln.transparentNodeBlock ||
+                block == Eln.ghostBlock
+        if (!isElnBlock) return false
+        world.removeTileEntity(x, y, z)
+        world.setBlockToAir(x, y, z)
+        return true
     }
 }
 
