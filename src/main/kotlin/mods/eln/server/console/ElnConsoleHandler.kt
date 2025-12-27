@@ -33,7 +33,8 @@ class ElnConsoleCommands: ICommand {
             ElnSimSnapshotCommand(),
             ElnExplosionsCommand(),
             ElnIconsCommand(),
-            ElnPoleMapCommand()
+            ElnPoleMapCommand(),
+            ElnZoneDumpCommand()
         ))
     }
 

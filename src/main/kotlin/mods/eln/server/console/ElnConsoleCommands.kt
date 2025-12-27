@@ -12,15 +12,19 @@ import mods.eln.misc.FC
 import mods.eln.misc.Version
 import mods.eln.node.NodeBase
 import mods.eln.node.NodeManager
+import mods.eln.node.six.SixNode
 import mods.eln.node.transparent.TransparentNode
 import mods.eln.server.SaveConfig
 import mods.eln.server.console.ElnConsoleCommands.Companion.boolToStr
 import mods.eln.server.console.ElnConsoleCommands.Companion.cprint
 import mods.eln.server.console.ElnConsoleCommands.Companion.getArgBool
 import net.minecraft.command.ICommandSender
+import net.minecraft.entity.player.EntityPlayerMP
 import java.io.BufferedWriter
 import java.io.File
 import java.io.FileWriter
+import java.text.SimpleDateFormat
+import java.util.Date
 import java.util.Locale
 import java.util.LinkedHashSet
 import kotlin.math.PI
@@ -399,6 +403,128 @@ class ElnManCommand: IConsoleCommand {
         } else {
             return ElnConsoleCommandList.filter {it.name.startsWith(args[0], ignoreCase = true)}.map{it.name}.toMutableList()
         }
+    }
+}
+
+class ElnZoneDumpCommand : IConsoleCommand {
+    override val name = "zonedump"
+
+    override fun runCommand(ics: ICommandSender, args: List<String>) {
+        if (ics !is EntityPlayerMP) {
+            cprint(ics, "${FC.BRIGHT_RED}This command can only be run by a player.", indent = 1)
+            return
+        }
+        if (args.size != 6) {
+            cprint(ics, "${FC.BRIGHT_YELLOW}Usage: /eln zonedump x1 y1 z1 x2 y2 z2", indent = 1)
+            return
+        }
+        val values = IntArray(6)
+        for (i in 0 until 6) {
+            val v = args[i].toIntOrNull()
+            if (v == null) {
+                cprint(ics, "${FC.BRIGHT_RED}Invalid coordinate '${args[i]}'", indent = 1)
+                return
+            }
+            values[i] = v
+        }
+        val minX = min(values[0], values[3])
+        val maxX = max(values[0], values[3])
+        val minY = min(values[1], values[4])
+        val maxY = max(values[1], values[4])
+        val minZ = min(values[2], values[5])
+        val maxZ = max(values[2], values[5])
+
+        val world = ics.worldObj
+        val dim = world.provider.dimensionId
+        val rangeDescription = "($minX,$minY,$minZ) -> ($maxX,$maxY,$maxZ) in dim $dim"
+
+        val nodeManager = NodeManager.instance
+        val coordToNode = HashMap<Coordinate, NodeBase>()
+        val nodesInZone = if (nodeManager != null) {
+            nodeManager.nodeList.filter {
+                val c = it.coordinate
+                c.dimension == dim &&
+                    c.x in minX..maxX &&
+                    c.y in minY..maxY &&
+                    c.z in minZ..maxZ
+            }
+        } else emptyList()
+        nodesInZone.forEach {
+            coordToNode[Coordinate(it.coordinate)] = it
+        }
+
+        val warnings = mutableListOf<String>()
+        val builder = StringBuilder()
+        builder.append("Zone dump for $rangeDescription\n")
+        builder.append("Player: ${ics.commandSenderName}\n")
+        builder.append("Generated: ${Date()}\n\n")
+
+        builder.append("Nodes:\n")
+        if (nodesInZone.isEmpty()) {
+            builder.append("  <none>\n")
+        } else {
+            for (node in nodesInZone) {
+                val coord = node.coordinate
+                builder.append("  ${coord}: ${node.javaClass.simpleName}")
+                if (node is TransparentNode) {
+                    builder.append(" element=${node.element?.javaClass?.simpleName}")
+                } else if (node is SixNode) {
+                    builder.append(" sixNode")
+                }
+                builder.append('\n')
+
+                val expectedBlock = when (node) {
+                    is SixNode -> Eln.sixNodeBlock
+                    is TransparentNode -> Eln.transparentNodeBlock
+                    else -> null
+                }
+                val actualBlock = world.getBlock(coord.x, coord.y, coord.z)
+                if (expectedBlock != null && actualBlock != expectedBlock) {
+                    warnings.add("Node ${coord} (${node.javaClass.simpleName}) expected ${expectedBlock.unlocalizedName} but found ${actualBlock.unlocalizedName}")
+                }
+            }
+        }
+
+        builder.append("\nBlocks:\n")
+        for (x in minX..maxX) {
+            for (y in minY..maxY) {
+                for (z in minZ..maxZ) {
+                    val block = world.getBlock(x, y, z)
+                    val meta = world.getBlockMetadata(x, y, z)
+                    val tile = world.getTileEntity(x, y, z)
+                    builder.append("  ($x,$y,$z): ${block.unlocalizedName} meta=$meta tile=${tile?.javaClass?.simpleName}\n")
+                    val coord = Coordinate(x, y, z, dim)
+                    if ((block == Eln.sixNodeBlock || block == Eln.transparentNodeBlock) && !coordToNode.containsKey(coord)) {
+                        warnings.add("Block ${block.unlocalizedName} at $coord has no registered node")
+                    }
+                }
+            }
+        }
+
+        if (warnings.isEmpty()) {
+            builder.append("\nNo ghost nodes detected.\n")
+        } else {
+            builder.append("\nWarnings:\n")
+            warnings.forEach { builder.append("  - ").append(it).append('\n') }
+        }
+
+        val timestamp = SimpleDateFormat("yyyyMMdd-HHmmss-SSS", Locale.ROOT).format(Date())
+        val file = File("zonedump-$timestamp.txt")
+        try {
+            BufferedWriter(FileWriter(file)).use { it.write(builder.toString()) }
+            cprint(ics, "${FC.BRIGHT_GREEN}Zone dump written to ${file.absolutePath}", indent = 1)
+        } catch (e: Exception) {
+            cprint(ics, "${FC.BRIGHT_RED}Failed to write zone dump: ${e.message}", indent = 1)
+        }
+        if (warnings.isNotEmpty()) {
+            warnings.forEach { cprint(ics, "${FC.BRIGHT_RED}$it", indent = 1) }
+        }
+    }
+
+    override fun getManPage(ics: ICommandSender, args: List<String>) {
+        cprint(ics, "Dump Eln nodes and world blocks in a rectangular zone to a zonedump-<timestamp>.txt file.", indent = 1)
+        cprint(ics, "Usage: /eln zonedump x1 y1 z1 x2 y2 z2", indent = 1)
+        cprint(ics, "")
     }
 }
 
