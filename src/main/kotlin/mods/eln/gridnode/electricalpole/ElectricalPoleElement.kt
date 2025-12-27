@@ -61,6 +61,7 @@ class ElectricalPoleElement(node: TransparentNode, descriptor: TransparentNodeDe
         thermalWatchdog
                 .setTemperatureLimits(desc.cableDescriptor.thermalWarmLimit, desc.cableDescriptor.thermalCoolLimit)
                 .setDestroys(WorldExplosion(this).cableExplosion())
+        thermalWatchdog.dumpMatrixOnTrip("ElectricalPoleElement thermal trip") { this }
 
         slowProcessList.add(voltageWatchdog)
         // Electrical poles can handle higher voltages, due to air insulation.

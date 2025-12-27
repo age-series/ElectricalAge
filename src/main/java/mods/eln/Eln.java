@@ -200,6 +200,7 @@ public class Eln {
     public static int modbusPort;
     public static boolean explosionEnable;
     public static boolean debugEnabled = false;  // Read from configuration file. Default is `false`.
+    public static boolean simSnapshotEnabled = false;
     public static boolean debugExplosions = false;
     public static boolean versionCheckEnabled = true; // Read from configuration file. Default is `true`.
     public static boolean analyticsEnabled = true; // Read from configuration file. Default is `true`.

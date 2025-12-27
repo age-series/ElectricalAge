@@ -198,6 +198,7 @@ class CurrentRelayElement(sixNode: SixNode, side: Direction, descriptor: SixNode
         thermalWatchdog
             .setTemperatureLimits(Eln.cableWarmLimit, -10.0)
             .setDestroys(WorldExplosion(this).cableExplosion())
+        thermalWatchdog.dumpMatrixOnTrip("CurrentRelayElement thermal trip") { this }
     }
 
     @Suppress("UNUSED_PARAMETER")

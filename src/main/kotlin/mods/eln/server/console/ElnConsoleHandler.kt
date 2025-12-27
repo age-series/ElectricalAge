@@ -30,6 +30,7 @@ class ElnConsoleCommands: ICommand {
             ElnManCommand(),
             ElnWailaEasyModeCommand(),
             ElnDebugCommand(),
+            ElnSimSnapshotCommand(),
             ElnExplosionsCommand(),
             ElnIconsCommand(),
             ElnPoleMapCommand()
@@ -81,9 +82,9 @@ class ElnConsoleCommands: ICommand {
             return if (lowerArg.isEmpty()) {
                 cprint(ics, "Error: Empty argument.", indent = 1)
                 null
-            }else if (lowerArg == "0" || lowerArg == "false" || lowerArg == "no" || lowerArg == "disabled") {
+            }else if (lowerArg == "0" || lowerArg == "false" || lowerArg == "no" || lowerArg == "disabled" || lowerArg == "disable") {
                 false
-            } else if (lowerArg == "1" || lowerArg == "true" || lowerArg == "yes" || lowerArg == "enabled") {
+            } else if (lowerArg == "1" || lowerArg == "true" || lowerArg == "yes" || lowerArg == "enabled" || lowerArg == "enable") {
                 true
             } else {
                 cprint(ics, "Error: Expected (true/false), got $arg",  indent = 1)

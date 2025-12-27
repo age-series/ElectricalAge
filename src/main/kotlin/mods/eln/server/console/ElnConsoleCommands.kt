@@ -476,6 +476,42 @@ class ElnDebugCommand: IConsoleCommand {
     }
 }
 
+class ElnSimSnapshotCommand: IConsoleCommand {
+    override val name = "sim-snapshot"
+
+    override fun runCommand(ics: ICommandSender, args: List<String>) {
+        if (args.size == 1) {
+            val enableSnapshots = getArgBool(ics, args[0]) ?: return
+            Eln.simSnapshotEnabled = enableSnapshots
+            val nonsense = false
+            Eln.config.get("debug", "simSnapshot", nonsense).set(Eln.simSnapshotEnabled)
+            Eln.config.save()
+            cprint(ics, "Simulation snapshots: ${FC.DARK_GREEN}${boolToStr(enableSnapshots)}", indent = 1)
+            cprint(ics, "Requires debug logging to be enabled as well.", indent = 1)
+        } else {
+            cprint(ics, "Usage: /eln sim-snapshot <enable|disable>", indent = 1)
+        }
+    }
+
+    override fun getManPage(ics: ICommandSender, args: List<String>) {
+        cprint(ics, "Enables/disables saving circuit MNA snapshots to disk.", indent = 1)
+        cprint(ics, "This will save to the server config file.", indent = 1)
+        cprint(ics, "")
+        cprint(ics, "Parameters:", indent = 1)
+        cprint(ics, "@0:bool : enable/disable snapshotting.", indent = 2)
+        cprint(ics, "Debug mode must also be enabled to write files.", indent = 1)
+        cprint(ics, "")
+    }
+
+    override fun requiredPermission() = listOf(UserPermission.IS_OPERATOR)
+
+    override fun getTabCompletion(args: List<String>): List<String> {
+        val options = listOf("enable", "disable", "true", "false")
+        if (args.isEmpty() || args[0].isEmpty()) return options
+        return options.filter { it.startsWith(args[0], ignoreCase = true) }
+    }
+}
+
 class ElnExplosionsCommand: IConsoleCommand {
     override val name = "explosions"
 

@@ -1,13 +1,17 @@
 package mods.eln.sim.process.destruct
 
 import mods.eln.misc.Utils.println
+import mods.eln.sim.MnaMatrixDebugger
 import mods.eln.sim.ThermalLoad
 import mods.eln.sim.ThermalLoadInitializer
 import mods.eln.sim.ThermalLoadInitializerByPowerDrop
+import java.util.Locale
 
 class ThermalLoadWatchDog(var state: ThermalLoad): ValueWatchdog() {
     private var lastTemperature = state.temperature
     private var lastDeltaPerSecond = 0.0
+    private var matrixDumpSupplier: (() -> Any?)? = null
+    private var matrixDumpReason: String? = null
 
     override fun getValue(): Double {
         return state.temperature
@@ -34,6 +38,16 @@ class ThermalLoadWatchDog(var state: ThermalLoad): ValueWatchdog() {
             state.Pc,
             state.heatCapacity
         )
+        matrixDumpSupplier?.let { supplier ->
+            runCatching { supplier() }.getOrNull()?.let { target ->
+                val reason = matrixDumpReason ?: String.format(
+                    Locale.ROOT,
+                    "Thermal watchdog %.1f°C",
+                    value
+                )
+                MnaMatrixDebugger.dump(target, reason)
+            }
+        }
     }
 
     fun setMaximumTemperature(maximumTemperature: Double): ThermalLoadWatchDog {
@@ -62,6 +76,12 @@ class ThermalLoadWatchDog(var state: ThermalLoad): ValueWatchdog() {
         max = t.maximumTemperature
         min = t.minimumTemperature
         timeoutReset = max * 0.1 * 10
+        return this
+    }
+
+    fun dumpMatrixOnTrip(reason: String? = null, supplier: () -> Any?): ThermalLoadWatchDog {
+        matrixDumpReason = reason
+        matrixDumpSupplier = supplier
         return this
     }
 }

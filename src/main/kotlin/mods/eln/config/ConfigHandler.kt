@@ -36,6 +36,8 @@ object ConfigHandler {
         Eln.modbusEnable = Eln.config["modbus", "enable", false, "Enable Modbus RTU"].getBoolean(false)
         Eln.modbusPort = Eln.config["modbus", "port", 1502, "TCP Port for Modbus RTU"].getInt(1502)
         Eln.debugEnabled = Eln.config["debug", "enable", false, "Enables debug printing spam"].getBoolean(false)
+        Eln.simSnapshotEnabled =
+            Eln.config["debug", "simSnapshot", false, "Enable circuit snapshot logging (requires debug.enable)."].getBoolean(false)
         Eln.debugExplosions = Eln.config["debug", "watchdog", false, "Watchdog Impl. check"].getBoolean(false)
         Eln.explosionEnable =
             Eln.config["gameplay", "explosion", false, "Make explosions a bit bigger"].getBoolean(true)
