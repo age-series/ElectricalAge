@@ -8,7 +8,9 @@ public class SubSystemDebugSnapshot {
     private final double[][] conductanceMatrix;
     private final double[] rhsVector;
     private final String[] stateLabels;
+    private final String[] stateOwners;
     private final String[] componentLabels;
+    private final String[] componentOwners;
     private final int[][] componentConnections;
     private final boolean singular;
 
@@ -16,14 +18,18 @@ public class SubSystemDebugSnapshot {
         double[][] conductanceMatrix,
         double[] rhsVector,
         String[] stateLabels,
+        String[] stateOwners,
         String[] componentLabels,
+        String[] componentOwners,
         int[][] componentConnections,
         boolean singular
     ) {
         this.conductanceMatrix = conductanceMatrix;
         this.rhsVector = rhsVector;
         this.stateLabels = stateLabels;
+        this.stateOwners = stateOwners;
         this.componentLabels = componentLabels;
+        this.componentOwners = componentOwners;
         this.componentConnections = componentConnections;
         this.singular = singular;
     }
@@ -40,8 +46,16 @@ public class SubSystemDebugSnapshot {
         return stateLabels;
     }
 
+    public String[] getStateOwners() {
+        return stateOwners;
+    }
+
     public String[] getComponentLabels() {
         return componentLabels;
+    }
+
+    public String[] getComponentOwners() {
+        return componentOwners;
     }
 
     public int[][] getComponentConnections() {

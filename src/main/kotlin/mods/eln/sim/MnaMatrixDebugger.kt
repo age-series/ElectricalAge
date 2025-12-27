@@ -130,6 +130,9 @@ object MnaMatrixDebugger {
             builder.append("    RHS: ").append(rhsText).appendLine()
         }
         builder.appendLine()
+        appendOwnershipSummary(builder, "States by owner", snapshot.stateLabels, snapshot.stateOwners)
+        appendOwnershipSummary(builder, "Components by owner", snapshot.componentLabels, snapshot.componentOwners)
+        builder.appendLine()
     }
 
     private fun buildHeader(
@@ -213,7 +216,7 @@ object MnaMatrixDebugger {
                     append("    ")
                         .append(nodeId)
                         .append(" [shape=ellipse,label=\"")
-                        .append(escapeDotLabel(label))
+                        .append(escapeDotLabel(withOwnerLabel(label, entry.snapshot.stateOwners.getOrNull(idx))))
                         .append("\"];")
                         .appendLine()
                 }
@@ -222,7 +225,7 @@ object MnaMatrixDebugger {
                     append("    ")
                         .append(nodeId)
                         .append(" [shape=box,label=\"")
-                        .append(escapeDotLabel(label))
+                        .append(escapeDotLabel(withOwnerLabel(label, entry.snapshot.componentOwners.getOrNull(idx))))
                         .append("\"];")
                         .appendLine()
                     val connections = entry.snapshot.componentConnections.getOrNull(idx) ?: IntArray(0)
@@ -257,6 +260,31 @@ object MnaMatrixDebugger {
         val snapshot: SubSystemDebugSnapshot,
         val index: Int
     )
+
+    private fun appendOwnershipSummary(
+        builder: StringBuilder,
+        title: String,
+        labels: Array<String>,
+        owners: Array<String>?
+    ) {
+        if (owners == null) return
+        val grouped = linkedMapOf<String, MutableList<String>>()
+        owners.forEachIndexed { idx, owner ->
+            if (!owner.isNullOrBlank()) {
+                grouped.getOrPut(owner) { mutableListOf() }.add(labels.getOrElse(idx) { "?" })
+            }
+        }
+        if (grouped.isEmpty()) return
+        builder.append("  ").append(title).append(':').appendLine()
+        grouped.forEach { (owner, entries) ->
+            builder.append("    ").append(owner).append(" -> ").append(entries.joinToString(", ")).appendLine()
+        }
+    }
+
+    private fun withOwnerLabel(label: String, owner: String?): String {
+        if (owner.isNullOrBlank()) return label
+        return "$label [$owner]"
+    }
 
     private fun collectSubsystems(source: Any?, out: MutableSet<SubSystem>) {
         when (source) {

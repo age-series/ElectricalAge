@@ -59,9 +59,18 @@ abstract class TransparentNodeElement(@JvmField var node: TransparentNode?, @Jvm
         Utils.serialiseItemStack(stream!!, stack)
     }
 
+    protected fun describeSimOwner(): String {
+        val coord = node?.coordinate
+        val coordStr = coord?.toString() ?: "unknown"
+        return "${javaClass.simpleName}@$coordStr"
+    }
+
     open fun connectJob() {
         // If we are about to destruct ourselves, do not add any elements to the simulation anymore.
         if (node != null && node!!.isDestructing) return
+        val ownerTag = describeSimOwner()
+        electricalComponentList.forEach { it.setOwner(ownerTag) }
+        electricalLoadList.forEach { it.setOwner(ownerTag) }
         Eln.simulator.addAllSlowProcess(slowProcessList)
         for (p in slowPreProcessList) Eln.simulator.addSlowPreProcess(p)
         for (p in slowPostProcessList) Eln.simulator.addSlowPostProcess(p)

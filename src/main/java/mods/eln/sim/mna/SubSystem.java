@@ -155,16 +155,20 @@ public class SubSystem {
         double[] rhsCopy = Idata != null ? Idata.clone() : new double[0];
 
         String[] stateDescriptions = new String[stateCount];
+        String[] stateOwners = new String[stateCount];
         for (int idx = 0; idx < stateCount; idx++) {
             State state = states.get(idx);
             stateDescriptions[idx] = describeState(state);
+            stateOwners[idx] = state != null ? state.getOwner() : null;
         }
 
         String[] componentDescriptions = new String[component.size()];
+        String[] componentOwners = new String[component.size()];
         int[][] componentConnections = new int[component.size()][];
         for (int idx = 0; idx < component.size(); idx++) {
             Component c = component.get(idx);
             componentDescriptions[idx] = describeComponent(c);
+            componentOwners[idx] = c != null ? c.getOwner() : null;
             State[] connected = c.getConnectedStates();
             if (connected == null) {
                 componentConnections[idx] = new int[0];
@@ -179,12 +183,14 @@ public class SubSystem {
         }
 
         return new SubSystemDebugSnapshot(
-            matrixCopy,
-            rhsCopy,
-            stateDescriptions,
-            componentDescriptions,
-            componentConnections,
-            singularMatrix
+                matrixCopy,
+                rhsCopy,
+                stateDescriptions,
+                stateOwners,
+                componentDescriptions,
+                componentOwners,
+                componentConnections,
+                singularMatrix
         );
     }
 
@@ -194,6 +200,10 @@ public class SubSystem {
         }
         StringBuilder builder = new StringBuilder();
         builder.append('#').append(state.getId()).append(' ').append(state.getClass().getSimpleName());
+        String owner = state.getOwner();
+        if (owner != null && !owner.isEmpty()) {
+            builder.append(" [").append(owner).append(']');
+        }
         if (state instanceof VoltageState) {
             builder.append(String.format(" %.4fV", ((VoltageState) state).getVoltage()));
         }
@@ -204,7 +214,12 @@ public class SubSystem {
         if (component == null) {
             return "null";
         }
-        return component.getClass().getSimpleName();
+        StringBuilder builder = new StringBuilder(component.getClass().getSimpleName());
+        String owner = component.getOwner();
+        if (owner != null && !owner.isEmpty()) {
+            builder.append(" [").append(owner).append(']');
+        }
+        return builder.toString();
     }
 
     public void addToA(State a, State b, double v) {
