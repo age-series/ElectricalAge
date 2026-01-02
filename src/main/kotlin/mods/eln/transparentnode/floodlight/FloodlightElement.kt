@@ -38,7 +38,7 @@ class FloodlightElement(transparentNode: TransparentNode, transparentNodeDescrip
     companion object {
         const val HORIZONTAL_ADJUST_EVENT: Byte = 0
         const val VERTICAL_ADJUST_EVENT: Byte = 1
-        const val SHUTTER_ADJUST_EVENT: Byte = 2
+        const val BEAM_ADJUST_EVENT: Byte = 2
     }
 
     override val inventory = TransparentNodeElementInventory(2, 64, this)
@@ -60,7 +60,7 @@ class FloodlightElement(transparentNode: TransparentNode, transparentNodeDescrip
 
     var swivelAngle by published(0.0)
     var headAngle by published(0.0)
-    var shutterAngle by published(0.0)
+    var beamWidth by published(0.0)
 
     var lightRange = 0
 
@@ -70,7 +70,7 @@ class FloodlightElement(transparentNode: TransparentNode, transparentNodeDescrip
 
     val swivelControl = NbtElectricalGateInput("swivelControl")
     val headControl = NbtElectricalGateInput("headControl")
-    val shutterControl = NbtElectricalGateInput("shutterControl")
+    val beamControl = NbtElectricalGateInput("beamControl")
 
     private val voltageWatchdog = VoltageStateWatchDog(electricalLoad)
 
@@ -82,7 +82,7 @@ class FloodlightElement(transparentNode: TransparentNode, transparentNodeDescrip
         if (motorized) {
             electricalLoadList.add(swivelControl)
             electricalLoadList.add(headControl)
-            electricalLoadList.add(shutterControl)
+            electricalLoadList.add(beamControl)
         }
 
         electricalLoad.serialResistance = ((Eln.MVU * Eln.MVU) / Eln.instance.MVP()) * 0.005 // NOTE: power factor comes from MV cable registration
@@ -131,7 +131,7 @@ class FloodlightElement(transparentNode: TransparentNode, transparentNodeDescrip
         powered = nbt.getBoolean("powered")
         swivelAngle = nbt.getDouble("swivelAngle")
         headAngle = nbt.getDouble("headAngle")
-        shutterAngle = nbt.getDouble("shutterAngle")
+        beamWidth = nbt.getDouble("beamWidth")
         lightRange = nbt.getInteger("lightRange")
     }
 
@@ -143,7 +143,7 @@ class FloodlightElement(transparentNode: TransparentNode, transparentNodeDescrip
         nbt.setBoolean("powered", powered)
         nbt.setDouble("swivelAngle", swivelAngle)
         nbt.setDouble("headAngle", headAngle)
-        nbt.setDouble("shutterAngle", shutterAngle)
+        nbt.setDouble("beamWidth", beamWidth)
         nbt.setInteger("lightRange", lightRange)
     }
 
@@ -203,7 +203,7 @@ class FloodlightElement(transparentNode: TransparentNode, transparentNodeDescrip
             blockFacing.back() -> electricalLoad
             blockFacing.right(rotationAxis) -> headControl
             blockFacing.left(rotationAxis) -> swivelControl
-            blockFacing.front() -> shutterControl
+            blockFacing.front() -> beamControl
             else -> null
         }
         else when (side.toHybridNodeDirection()) {
@@ -241,7 +241,7 @@ class FloodlightElement(transparentNode: TransparentNode, transparentNodeDescrip
             stream.writeBoolean(powered)
             stream.writeDouble(swivelAngle)
             stream.writeDouble(headAngle)
-            stream.writeDouble(shutterAngle)
+            stream.writeDouble(beamWidth)
             Utils.serialiseItemStack(stream, inventory.getStackInSlot(FloodlightContainer.LAMP_SLOT_1_ID))
             Utils.serialiseItemStack(stream, inventory.getStackInSlot(FloodlightContainer.LAMP_SLOT_2_ID))
         }
@@ -254,7 +254,7 @@ class FloodlightElement(transparentNode: TransparentNode, transparentNodeDescrip
         when (super.networkUnserialize(stream)) {
             HORIZONTAL_ADJUST_EVENT -> swivelAngle = stream.readDouble()
             VERTICAL_ADJUST_EVENT -> headAngle = stream.readDouble()
-            SHUTTER_ADJUST_EVENT -> shutterAngle = stream.readDouble()
+            BEAM_ADJUST_EVENT -> beamWidth = stream.readDouble()
         }
         return unserializeNulldId
     }

@@ -15,6 +15,7 @@ import java.io.ByteArrayOutputStream
 import java.io.DataOutputStream
 import java.io.IOException
 import kotlin.math.abs
+import kotlin.math.acos
 import kotlin.math.atan
 import kotlin.math.cos
 import kotlin.math.max
@@ -30,7 +31,7 @@ class FloodlightProcess(var element: FloodlightElement) : IProcess {
         if (element.motorized) {
             element.swivelAngle = (element.swivelControl.normalized) * FloodlightGui.MAX_HORIZONTAL_ANGLE
             element.headAngle = (element.headControl.normalized) * FloodlightGui.MAX_VERTICAL_ANGLE
-            element.shutterAngle = (element.shutterControl.normalized) * FloodlightGui.MAX_SHUTTER_ANGLE
+            element.beamWidth = (element.beamControl.normalized) * FloodlightGui.MAX_BEAM_WIDTH
         }
 
         val lampStacks = mutableListOf<ItemStack?>()
@@ -39,7 +40,6 @@ class FloodlightProcess(var element: FloodlightElement) : IProcess {
 
         lampStacks.add(element.inventory.getStackInSlot(FloodlightContainer.LAMP_SLOT_1_ID))
         lampStacks.add(element.inventory.getStackInSlot(FloodlightContainer.LAMP_SLOT_2_ID))
-
 
         for (idx in 0 until lampStacks.size) {
             if (lampStacks[idx] != null) {
@@ -102,46 +102,66 @@ class FloodlightProcess(var element: FloodlightElement) : IProcess {
     }
 
     private fun placeSpots(lightValue: Int) {
-        val offsetAngle = (element.shutterAngle / 2.0)
+        val rotationVectors = mutableListOf<Pair<Vec3, Double>>()
 
-        val rotationVectors = mutableListOf<Vec3>()
-        val lightVectors = mutableListOf<Vec3>()
-        val lbCoords = mutableListOf<Coordinate>()
+        val rotationAxis = element.rotationAxis
+        val facingDirection = element.blockFacing
 
-        val (h1, k1) = calculateAdjustments(element.headAngle, offsetAngle)
-        val (h2, k2) = calculateAdjustments(element.headAngle, (offsetAngle / 2.0))
+        val horzAngle = element.swivelAngle
+        val vertAngle = element.headAngle
+        val offsetAngle = element.beamWidth / 2.0
 
         // Central spot
-        rotationVectors.add(createRotationVector(element.swivelAngle, element.headAngle, element.rotationAxis, element.blockFacing))
-
-        // Horizontal spots
-        rotationVectors.add(createRotationVector((element.swivelAngle + h1), k1, element.rotationAxis, element.blockFacing))
-        rotationVectors.add(createRotationVector((element.swivelAngle - h1), k1, element.rotationAxis, element.blockFacing))
-        rotationVectors.add(createRotationVector((element.swivelAngle + h2), k2, element.rotationAxis, element.blockFacing))
-        rotationVectors.add(createRotationVector((element.swivelAngle - h2), k2, element.rotationAxis, element.blockFacing))
+        rotationVectors.add(Pair(createRotationVector(horzAngle, vertAngle, rotationAxis, facingDirection), 0.0))
 
         // Vertical spots
-        rotationVectors.add(createRotationVector(element.swivelAngle, (element.headAngle + offsetAngle), element.rotationAxis, element.blockFacing))
-        rotationVectors.add(createRotationVector(element.swivelAngle, (element.headAngle - offsetAngle), element.rotationAxis, element.blockFacing))
-        rotationVectors.add(createRotationVector(element.swivelAngle, (element.headAngle + (offsetAngle / 2.0)), element.rotationAxis, element.blockFacing))
-        rotationVectors.add(createRotationVector(element.swivelAngle, (element.headAngle - (offsetAngle / 2.0)), element.rotationAxis, element.blockFacing))
+        rotationVectors.add(Pair(createRotationVector(horzAngle, vertAngle + offsetAngle, rotationAxis, facingDirection), offsetAngle))
+        rotationVectors.add(Pair(createRotationVector(horzAngle, vertAngle - offsetAngle, rotationAxis, facingDirection), offsetAngle))
+        rotationVectors.add(Pair(createRotationVector(horzAngle, vertAngle + (offsetAngle / 2.0), rotationAxis, facingDirection), offsetAngle / 2.0))
+        rotationVectors.add(Pair(createRotationVector(horzAngle, vertAngle - (offsetAngle / 2.0), rotationAxis, facingDirection), offsetAngle / 2.0))
+
+        // Horizontal spots
+        val (hAdj1, kAdj1) = calculateAngleAdjustments(vertAngle, offsetAngle, 0)
+        val (hAdj2, kAdj2) = calculateAngleAdjustments(vertAngle, offsetAngle / 2.0, 0)
+
+        rotationVectors.add(Pair(createRotationVector(horzAngle + hAdj1, kAdj1, rotationAxis, facingDirection), offsetAngle))
+        rotationVectors.add(Pair(createRotationVector(horzAngle - hAdj1, kAdj1, rotationAxis, facingDirection), offsetAngle))
+        rotationVectors.add(Pair(createRotationVector(horzAngle + hAdj2, kAdj2, rotationAxis, facingDirection), offsetAngle / 2.0))
+        rotationVectors.add(Pair(createRotationVector(horzAngle - hAdj2, kAdj2, rotationAxis, facingDirection), offsetAngle / 2.0))
+
+        // Upper diagonal spots
+        val (hAdj3, kAdj3) = calculateAngleAdjustments(vertAngle, offsetAngle, 1)
+        val (hAdj4, kAdj4) = calculateAngleAdjustments(vertAngle, offsetAngle / 2.0, 1)
+
+        rotationVectors.add(Pair(createRotationVector(horzAngle + hAdj3, kAdj3, rotationAxis, facingDirection), offsetAngle))
+        rotationVectors.add(Pair(createRotationVector(horzAngle - hAdj3, kAdj3, rotationAxis, facingDirection), offsetAngle))
+        rotationVectors.add(Pair(createRotationVector(horzAngle + hAdj4, kAdj4, rotationAxis, facingDirection), offsetAngle / 2.0))
+        rotationVectors.add(Pair(createRotationVector(horzAngle - hAdj4, kAdj4, rotationAxis, facingDirection), offsetAngle / 2.0))
+
+        // Lower diagonal spots
+        val (hAdj5, kAdj5) = calculateAngleAdjustments(vertAngle, offsetAngle, -1)
+        val (hAdj6, kAdj6) = calculateAngleAdjustments(vertAngle, offsetAngle / 2.0, -1)
+
+        rotationVectors.add(Pair(createRotationVector(horzAngle + hAdj5, kAdj5, rotationAxis, facingDirection), offsetAngle))
+        rotationVectors.add(Pair(createRotationVector(horzAngle - hAdj5, kAdj5, rotationAxis, facingDirection), offsetAngle))
+        rotationVectors.add(Pair(createRotationVector(horzAngle + hAdj6, kAdj6, rotationAxis, facingDirection), offsetAngle / 2.0))
+        rotationVectors.add(Pair(createRotationVector(horzAngle - hAdj6, kAdj6, rotationAxis, facingDirection), offsetAngle / 2.0))
 
         for (idx in 0 until rotationVectors.size) {
-            lightVectors.add(element.node!!.coordinate.toVec3())
+            val lightVector = element.node!!.coordinate.toVec3()
+            val lbCoordinate = Coordinate(lightVector)
 
-            lbCoords.add(Coordinate(lightVectors[idx]))
+            val throwDistance = element.lightRange / cos(toRadians(rotationVectors[idx].second))
 
-            for (jdx in 0 until element.lightRange) {
-                if (lbCoords[idx].block.isOpaqueCube) break
+            for (jdx in 0 until throwDistance.toInt()) {
+                if (!lbCoordinate.blockExist || lbCoordinate.block.isOpaqueCube) break
 
-                lightVectors[idx].xCoord += rotationVectors[idx].xCoord
-                lightVectors[idx].yCoord += rotationVectors[idx].yCoord
-                lightVectors[idx].zCoord += rotationVectors[idx].zCoord
-                lbCoords[idx].setPosition(lightVectors[idx])
+                lightVector.xCoord += rotationVectors[idx].first.xCoord
+                lightVector.yCoord += rotationVectors[idx].first.yCoord
+                lightVector.zCoord += rotationVectors[idx].first.zCoord
+                lbCoordinate.setPosition(lightVector)
 
-                if (!lbCoords[idx].blockExist) break
-
-                if (jdx % 2 == 1) LightBlockEntity.addLight(Coordinate(lbCoords[idx]), lightValue, 5)
+                if (jdx % 4 == 1) LightBlockEntity.addLight(Coordinate(lbCoordinate), lightValue, 5)
             }
         }
     }
@@ -154,17 +174,26 @@ class FloodlightProcess(var element: FloodlightElement) : IProcess {
         return angle * (180.0 / Math.PI)
     }
 
-    private fun calculateAdjustments(vertAngle: Double, offsetAngle: Double): Pair<Double, Double> {
-        val a = sqrt(cos(toRadians(offsetAngle)).pow(2) / (1 + tan(toRadians(vertAngle)).pow(2)))
+    private fun calculateAngleAdjustments(vertAngle: Double, offsetAngle: Double, diagonal: Int): Pair<Double, Double> {
+        val k0 = toRadians(vertAngle)
+        val o0 = toRadians(offsetAngle)
 
-        val h = toRadians(90.0) - atan(sign(cos(toRadians(vertAngle))) * (a / sin(toRadians(offsetAngle))))
+        var o = o0
+        var b = 0.0
 
-        val num = cos(toRadians(offsetAngle)).pow(2) - a.pow(2)
-        val den = sin(toRadians(offsetAngle)).pow(2) + a.pow(2)
+        if (diagonal != 0) {
+            o = acos(sqrt((cos(o0).pow(2) + 1.0) / 2.0))
+            b = atan(sqrt((cos(o).pow(2) / (cos(o).pow(2) - sin(o).pow(2))) - 1.0))
 
-        val k = atan(sign(sin(toRadians(vertAngle))) * sqrt(num / den))
+            b *= diagonal.toDouble()
+        }
 
-        return Pair(toDegrees(h), toDegrees(k))
+        val a = sqrt(cos(o).pow(2) / (1.0 + tan(k0 + b).pow(2)))
+
+        val hAdj = toRadians(90.0) - atan(sign(cos(k0 + b)) * (a / sin(o)))
+        val kAdj = atan(sign(sin(k0 + b)) * sqrt((cos(o).pow(2) - a.pow(2)) / (sin(o).pow(2) + a.pow(2))))
+
+        return Pair(toDegrees(hAdj), toDegrees(kAdj))
     }
 
     private fun getRawRotationVector(horzAngle: Double, vertAngle: Double): Vec3 {
@@ -185,7 +214,6 @@ class FloodlightProcess(var element: FloodlightElement) : IProcess {
 
     private fun createRotationVector(horzAngle: Double, vertAngle: Double, axis: HybridNodeDirection, facing: HybridNodeDirection): Vec3 {
         val oldV = getRawRotationVector(horzAngle, vertAngle)
-
         val newV = Vec3.createVectorHelper(0.0, 0.0, 0.0)
 
         when (axis) {
