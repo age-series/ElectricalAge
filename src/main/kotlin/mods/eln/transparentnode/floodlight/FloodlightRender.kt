@@ -21,7 +21,7 @@ class FloodlightRender(tileEntity: TransparentNodeEntity, transparentNodeDescrip
     private var powered = false
     var swivelAngle = 0.0
     var headAngle = 0.0
-    var shutterAngle = 0.0
+    var beamWidth = 0.0
     private var lamp1Stack: ItemStack? = null
     private var lamp2Stack: ItemStack? = null
 /*
@@ -38,7 +38,7 @@ class FloodlightRender(tileEntity: TransparentNodeEntity, transparentNodeDescrip
             powered = stream.readBoolean()
             swivelAngle = stream.readDouble()
             headAngle = stream.readDouble()
-            shutterAngle = stream.readDouble()
+            beamWidth = stream.readDouble()
             lamp1Stack = Utils.unserialiseItemStack(stream)
             lamp2Stack = Utils.unserialiseItemStack(stream)
         } catch (e: IOException) {
