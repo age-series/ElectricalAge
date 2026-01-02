@@ -12,13 +12,13 @@ class FloodlightGui(player: EntityPlayer, inventory: IInventory, val render: Flo
         const val MAX_HORIZONTAL_ANGLE: Double = 360.0
         const val MIN_VERTICAL_ANGLE: Double = 0.0
         const val MAX_VERTICAL_ANGLE: Double = 180.0
-        const val MIN_SHUTTER_ANGLE: Double = 0.0
-        const val MAX_SHUTTER_ANGLE: Double = 180.0
+        const val MIN_BEAM_WIDTH: Double = 0.0
+        const val MAX_BEAM_WIDTH: Double = 45.0
     }
 
     private lateinit var horizontalAdjust: GuiHorizontalTrackBar
     private lateinit var verticalAdjust: GuiHorizontalTrackBar
-    private lateinit var shutterAdjust: GuiHorizontalTrackBar
+    private lateinit var beamAdjust: GuiHorizontalTrackBar
 
     override fun newHelper(): GuiHelperContainer {
         return HelperStdContainer(this)
@@ -37,15 +37,15 @@ class FloodlightGui(player: EntityPlayer, inventory: IInventory, val render: Flo
         verticalAdjust.setStepIdMax(180)
         verticalAdjust.value = render.headAngle.toFloat()
 
-        shutterAdjust = newGuiHorizontalTrackBar(7, 44, 162, 12)
-        shutterAdjust.setRange(MIN_SHUTTER_ANGLE.toFloat(), MAX_SHUTTER_ANGLE.toFloat())
-        shutterAdjust.setStepIdMax(180)
-        shutterAdjust.value = render.shutterAngle.toFloat()
+        beamAdjust = newGuiHorizontalTrackBar(7, 44, 162, 12)
+        beamAdjust.setRange(MIN_BEAM_WIDTH.toFloat(), MAX_BEAM_WIDTH.toFloat())
+        beamAdjust.setStepIdMax(180)
+        beamAdjust.value = render.beamWidth.toFloat()
 
         if (render.motorized) {
             horizontalAdjust.setEnable(false)
             verticalAdjust.setEnable(false)
-            shutterAdjust.setEnable(false)
+            beamAdjust.setEnable(false)
         }
     }
 
@@ -55,12 +55,12 @@ class FloodlightGui(player: EntityPlayer, inventory: IInventory, val render: Flo
         if (render.motorized) {
             horizontalAdjust.value = render.swivelAngle.toFloat()
             verticalAdjust.value = render.headAngle.toFloat()
-            shutterAdjust.value = render.shutterAngle.toFloat()
+            beamAdjust.value = render.beamWidth.toFloat()
         }
 
         horizontalAdjust.setComment(0, I18N.tr("Horizontal angle: ${(horizontalAdjust.value).toInt()}°"))
         verticalAdjust.setComment(0, I18N.tr("Vertical angle: ${(verticalAdjust.value).toInt()}°"))
-        shutterAdjust.setComment(0, I18N.tr("Shutter angle: ${(shutterAdjust.value).toInt()}°"))
+        beamAdjust.setComment(0, I18N.tr("Beam width: ${(beamAdjust.value).toInt()}°"))
     }
 
     override fun guiObjectEvent(obj: IGuiObject) {
@@ -69,7 +69,7 @@ class FloodlightGui(player: EntityPlayer, inventory: IInventory, val render: Flo
         when (obj) {
             horizontalAdjust -> render.clientSendDouble(FloodlightElement.HORIZONTAL_ADJUST_EVENT, horizontalAdjust.value.toDouble())
             verticalAdjust -> render.clientSendDouble(FloodlightElement.VERTICAL_ADJUST_EVENT, verticalAdjust.value.toDouble())
-            shutterAdjust -> render.clientSendDouble(FloodlightElement.SHUTTER_ADJUST_EVENT, shutterAdjust.value.toDouble())
+            beamAdjust -> render.clientSendDouble(FloodlightElement.BEAM_ADJUST_EVENT, beamAdjust.value.toDouble())
         }
     }
 
