@@ -83,7 +83,7 @@ class LampDescriptor(
 
     fun ageLamp(lampStack: ItemStack, voltage: Double, time: Double): Double {
         val ageFactor = (0.000008 * voltage.pow(3.0)) - (0.003225 * voltage.pow(2.0)) + (0.33 * voltage)
-        val lifeLost = (ageFactor * time) / 3600.0
+        val lifeLost = (ageFactor * time) / 3600.0 // Life lost in hours, per tick
 
         val currentLife = this.getLifeInTag(lampStack)
 
