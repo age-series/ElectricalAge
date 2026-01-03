@@ -18,6 +18,13 @@ import kotlin.math.*
 
 class FloodlightProcess(var element: FloodlightElement) : IProcess {
 
+    companion object {
+        // Number of light rays to be produced in each direction. Must be a mathematical integer!
+        const val MAX_LIGHT_BEAM_COUNT = 4.0
+        // How often to create a light block within a given beam of light
+        const val LIGHT_BLOCK_FREQUENCY = 2
+    }
+
     override fun process(time: Double) {
         if (element.motorized) {
             element.swivelAngle = (element.swivelControl.normalized) * FloodlightGui.MAX_HORIZONTAL_ANGLE
@@ -71,6 +78,8 @@ class FloodlightProcess(var element: FloodlightElement) : IProcess {
         element.lightRange = lampLightRanges[FloodlightContainer.LAMP_SLOT_1_ID] + lampLightRanges[FloodlightContainer.LAMP_SLOT_2_ID]
 
         updateBlockLight(newLightValue)
+
+        // Only run raytracing when the floodlight is actually on.
         if (newLightValue != 0) placeSpots(newLightValue)
     }
 
@@ -92,6 +101,12 @@ class FloodlightProcess(var element: FloodlightElement) : IProcess {
         element.sendPacketToAllClient(bos)
     }
 
+    /**
+     * WARNING! DO NOT EDIT THIS FUNCTION!
+     * The math is very complex and any small change will likely break EVERYTHING.
+     * See the math docs (to be uploaded at some point) for a guide to the derivation process.
+     * Also see https://www.desmos.com/3d/xqi6ov3fpn for a visualization of the raytracing results.
+     */
     private fun placeSpots(lightValue: Int) {
         val rotationVectors = mutableListOf<Pair<Vec3, Double>>()
         val fractionTable = mutableListOf<Double>()
@@ -103,7 +118,8 @@ class FloodlightProcess(var element: FloodlightElement) : IProcess {
         val vertAngle = element.headAngle
         val offsetAngle = element.beamWidth / 2.0
 
-        val beamCount = ceil(offsetAngle * (2.0 / 11.25)).toInt()
+        // Number of light rays to be produced in each cardinal direction, also extrapolated into the empty spaces between them.
+        val beamCount = ceil((offsetAngle * 2.0) * (MAX_LIGHT_BEAM_COUNT / FloodlightGui.MAX_BEAM_WIDTH)).toInt()
 
         if (beamCount != 0) {
             for (idx in beamCount downTo -beamCount) {
@@ -115,7 +131,7 @@ class FloodlightProcess(var element: FloodlightElement) : IProcess {
         for (idx in fractionTable.indices) {
             val offsetAngleFraction = offsetAngle * fractionTable[idx]
 
-            // Central and vertical spots
+            // Unit vectors for the central and vertical spots
             rotationVectors.add(Pair(createRotationVector(horzAngle, vertAngle + offsetAngleFraction, rotationAxis, facingDirection), offsetAngleFraction))
 
             if (fractionTable[idx] > 0.0) {
@@ -125,7 +141,7 @@ class FloodlightProcess(var element: FloodlightElement) : IProcess {
 
                         val (hAdj, kAdj) = calculateAngleAdjustments(vertAngle, offsetAngleFraction, diagonalAngle)
 
-                        // Horizontal and diagonal spots (mirrored across vertical axis)
+                        // Unit vectors for the horizontal and diagonal spots (mirrored across vertical axis)
                         rotationVectors.add(Pair(createRotationVector(horzAngle + hAdj, kAdj, rotationAxis, facingDirection), offsetAngleFraction))
                         rotationVectors.add(Pair(createRotationVector(horzAngle - hAdj, kAdj, rotationAxis, facingDirection), offsetAngleFraction))
                     }
@@ -147,7 +163,11 @@ class FloodlightProcess(var element: FloodlightElement) : IProcess {
                 lbCoordinate.setPosition(lightVector)
 
                 if (!lbCoordinate.blockExist || lbCoordinate.block.isOpaqueCube) break
-                else if (jdx % 2 == 1 || throwDistance.toInt() - jdx == 1) LightBlockEntity.addLight(Coordinate(lbCoordinate), lightValue, 5)
+
+                // Place light blocks every few blocks along the path of a beam, as well as always at the beam's endpoint.
+                if (jdx % LIGHT_BLOCK_FREQUENCY == (LIGHT_BLOCK_FREQUENCY - 1) || throwDistance.toInt() - jdx == 1) {
+                    LightBlockEntity.addLight(Coordinate(lbCoordinate), lightValue, 5)
+                }
             }
         }
     }
@@ -160,10 +180,11 @@ class FloodlightProcess(var element: FloodlightElement) : IProcess {
         return angle * (180.0 / Math.PI)
     }
 
-    /** DO NOT TOUCH THIS FUNCTION!!!!!
-    * Any edits to the math require re-deriving nearly every equation from scratch!
-    * See a visual of the equations at https://www.desmos.com/3d/xqi6ov3fpn.
-    * Trust me, the math is right! Any bugs that may arise result from improper usage.
+    /**
+     * DO NOT TOUCH THIS FUNCTION!!!!!
+     * Any edits to the math require re-deriving nearly every equation from scratch!
+     * See a visual of the equations/results at https://www.desmos.com/3d/xqi6ov3fpn.
+     * Trust me, the math is right! Any bugs that may arise result from improper usage.
     */
     private fun calculateAngleAdjustments(vertAngle: Double, offsetAngle: Double, diagonalAngle: Double): Pair<Double, Double> {
         val k0 = toRadians(vertAngle)
@@ -206,8 +227,8 @@ class FloodlightProcess(var element: FloodlightElement) : IProcess {
                 newV.xCoord = -oldV.yCoord
 
                 when (facing) {
-                    XN -> TODO("unused - impossible facing direction")
-                    XP -> TODO("unused - impossible facing direction")
+                    XN -> TODO("Unused - impossible facing direction. If you get this message there's a bug in the code.")
+                    XP -> TODO("Unused - impossible facing direction. If you get this message there's a bug in the code.")
                     YN -> {
                         newV.yCoord = -oldV.zCoord
                         newV.zCoord = oldV.xCoord
@@ -230,8 +251,8 @@ class FloodlightProcess(var element: FloodlightElement) : IProcess {
                 newV.xCoord = oldV.yCoord
 
                 when (facing) {
-                    XN -> TODO("unused - impossible facing direction")
-                    XP -> TODO("unused - impossible facing direction")
+                    XN -> TODO("Unused - impossible facing direction. If you get this message there's a bug in the code.")
+                    XP -> TODO("Unused - impossible facing direction. If you get this message there's a bug in the code.")
                     YN -> {
                         newV.yCoord = -oldV.zCoord
                         newV.zCoord = -oldV.xCoord
@@ -262,8 +283,8 @@ class FloodlightProcess(var element: FloodlightElement) : IProcess {
                         newV.xCoord = oldV.zCoord
                         newV.zCoord = oldV.xCoord
                     }
-                    YN -> TODO("unused - impossible facing direction")
-                    YP -> TODO("unused - impossible facing direction")
+                    YN -> TODO("Unused - impossible facing direction. If you get this message there's a bug in the code.")
+                    YP -> TODO("Unused - impossible facing direction. If you get this message there's a bug in the code.")
                     ZN -> {
                         newV.xCoord = oldV.xCoord
                         newV.zCoord = -oldV.zCoord
@@ -286,8 +307,8 @@ class FloodlightProcess(var element: FloodlightElement) : IProcess {
                         newV.xCoord = oldV.zCoord
                         newV.zCoord = -oldV.xCoord
                     }
-                    YN -> TODO("unused - impossible facing direction")
-                    YP -> TODO("unused - impossible facing direction")
+                    YN -> TODO("Unused - impossible facing direction. If you get this message there's a bug in the code.")
+                    YP -> TODO("Unused - impossible facing direction. If you get this message there's a bug in the code.")
                     ZN -> {
                         newV.xCoord = -oldV.xCoord
                         newV.zCoord = -oldV.zCoord
@@ -318,8 +339,8 @@ class FloodlightProcess(var element: FloodlightElement) : IProcess {
                         newV.xCoord = oldV.xCoord
                         newV.yCoord = oldV.zCoord
                     }
-                    ZN -> TODO("unused - impossible facing direction")
-                    ZP -> TODO("unused - impossible facing direction")
+                    ZN -> TODO("Unused - impossible facing direction. If you get this message there's a bug in the code.")
+                    ZP -> TODO("Unused - impossible facing direction. If you get this message there's a bug in the code.")
                 }
             }
             ZP -> {
@@ -342,8 +363,8 @@ class FloodlightProcess(var element: FloodlightElement) : IProcess {
                         newV.xCoord = -oldV.xCoord
                         newV.yCoord = oldV.zCoord
                     }
-                    ZN -> TODO("unused - impossible facing direction")
-                    ZP -> TODO("unused - impossible facing direction")
+                    ZN -> TODO("Unused - impossible facing direction. If you get this message there's a bug in the code.")
+                    ZP -> TODO("Unused - impossible facing direction. If you get this message there's a bug in the code.")
                 }
             }
         }
