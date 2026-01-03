@@ -3,6 +3,7 @@ package mods.eln.transparentnode.floodlight
 import mods.eln.Eln
 import mods.eln.i18n.I18N
 import mods.eln.item.ConfigCopyToolDescriptor
+import mods.eln.item.IConfigurable
 import mods.eln.item.LampDescriptor
 import mods.eln.misc.*
 import mods.eln.misc.Utils.getItemObject
@@ -33,7 +34,7 @@ import java.io.DataInputStream
 import java.io.DataOutputStream
 import java.io.IOException
 
-class FloodlightElement(transparentNode: TransparentNode, transparentNodeDescriptor: TransparentNodeDescriptor) : TransparentNodeElement(transparentNode, transparentNodeDescriptor) {
+class FloodlightElement(transparentNode: TransparentNode, transparentNodeDescriptor: TransparentNodeDescriptor) : TransparentNodeElement(transparentNode, transparentNodeDescriptor), IConfigurable {
 
     companion object {
         const val HORIZONTAL_ADJUST_EVENT: Byte = 0
@@ -298,14 +299,14 @@ class FloodlightElement(transparentNode: TransparentNode, transparentNodeDescrip
         return info
     }
 
-    fun readConfigTool(compound: NBTTagCompound, invoker: EntityPlayer) {
-        if (ConfigCopyToolDescriptor.readGenDescriptor(compound, "lamp", inventory, FloodlightContainer.LAMP_SLOT_1_ID, invoker)) inventoryChange(inventory)
-        if (ConfigCopyToolDescriptor.readGenDescriptor(compound, "lamp", inventory, FloodlightContainer.LAMP_SLOT_2_ID, invoker)) inventoryChange(inventory)
+    override fun readConfigTool(compound: NBTTagCompound, invoker: EntityPlayer) {
+        if (ConfigCopyToolDescriptor.readGenDescriptor(compound, "lamp1", inventory, FloodlightContainer.LAMP_SLOT_1_ID, invoker)) inventoryChange(inventory)
+        if (ConfigCopyToolDescriptor.readGenDescriptor(compound, "lamp2", inventory, FloodlightContainer.LAMP_SLOT_2_ID, invoker)) inventoryChange(inventory)
     }
 
-    fun writeConfigTool(compound: NBTTagCompound) {
-        ConfigCopyToolDescriptor.writeGenDescriptor(compound, "lamp", inventory.getStackInSlot(FloodlightContainer.LAMP_SLOT_1_ID))
-        ConfigCopyToolDescriptor.writeGenDescriptor(compound, "lamp", inventory.getStackInSlot(FloodlightContainer.LAMP_SLOT_2_ID))
+    override fun writeConfigTool(compound: NBTTagCompound, invoker: EntityPlayer) {
+        ConfigCopyToolDescriptor.writeGenDescriptor(compound, "lamp1", inventory.getStackInSlot(FloodlightContainer.LAMP_SLOT_1_ID))
+        ConfigCopyToolDescriptor.writeGenDescriptor(compound, "lamp2", inventory.getStackInSlot(FloodlightContainer.LAMP_SLOT_2_ID))
     }
 
 }
