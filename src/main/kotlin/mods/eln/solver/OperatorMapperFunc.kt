@@ -12,7 +12,7 @@ class OperatorMapperFunc(private val key: String, private val argCount: Int, pri
         try {
             o = operator.newInstance() as IOperator
 
-            val operatorArg = (0 until argCount).mapIndexed { index, i ->  arg[argOffset + 2 * (i + 1)] as IValue}.toTypedArray()
+            val operatorArg = (0 until argCount).map { i -> arg[argOffset + 2 * (i + 1)] as IValue }.toTypedArray()
             o.setOperator(operatorArg)
             arg[argOffset] = o
             removeFunc(arg, argOffset)
@@ -31,20 +31,20 @@ class OperatorMapperFunc(private val key: String, private val argCount: Int, pri
     }
 
     private fun isFuncReady(list: List<Any?>, argOffset: Int): Boolean {
-        var argOffset = argOffset
+        var offset = argOffset
         var counter = 0
 
-        argOffset++
+        offset++
 
-        val end = argOffset + 2 + argCount * 2 - 1
-        while (argOffset < end) {
-            if (argOffset >= list.size) return false
-            val o = list[argOffset]
+        val end = offset + 2 + argCount * 2 - 1
+        while (offset < end) {
+            if (offset >= list.size) return false
+            val o = list[offset]
             var str: String? = null
             if (o is String) str = o
             if (counter == 0) {
                 if (str == null || str != "(") return false
-            } else if (argOffset == end - 1) {
+            } else if (offset == end - 1) {
                 if (str == null || str != ")") return false
             } else if ((counter % 2) == 1) {
                 if (o !is IValue) return false
@@ -52,7 +52,7 @@ class OperatorMapperFunc(private val key: String, private val argCount: Int, pri
                 if (str == null || str != ",") return false
             }
             counter++
-            argOffset++
+            offset++
         }
         return true
     }

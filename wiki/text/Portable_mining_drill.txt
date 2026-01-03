@@ -1,3 +1,0 @@
-This drill runs off of electricity instead of durability and is pretty fast at digging. It can be charged in a Battery Charger, just like the other electric tools.
-
-The drill is capable of mining any block a diamond pickaxe can, and also shares its dig speed. However it cannot be enchanted, even by an anvil, which dramatically reduces its usefulness in the late game. Due to how cheap the drill is to create, it is very useful to use it until you gain the ability to enchant.

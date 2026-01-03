@@ -9,6 +9,7 @@ import mods.eln.misc.Recipe
 import mods.eln.misc.Utils.addSmelting
 import mods.eln.misc.Utils.areSame
 import mods.eln.misc.Utils.println
+import mods.eln.railroad.EntityElectricMinecart
 import net.minecraft.init.Blocks
 import net.minecraft.init.Items
 import net.minecraft.item.ItemStack
@@ -27,6 +28,7 @@ object CraftingRecipes {
 
         //
         registerReplicator()
+        registerElectricMinecart()
 
 
         //
@@ -387,6 +389,10 @@ object CraftingRecipes {
             findItemStack("Copper Cable")
         )
         addRecipe(
+            findItemStack("Variable inductor"), " S ", "cIc", " c ", 'I', ItemStack(Items.iron_ingot), 'c',
+            findItemStack("Copper Cable"), 'S', findItemStack("Signal Cable")
+        )
+        addRecipe(
             findItemStack("Power Resistor"), "   ", "cCc", "   ", 'c', findItemStack("Copper Cable"), 'C',
             findItemStack("Coal Dust")
         )
@@ -655,6 +661,51 @@ object CraftingRecipes {
                 "blockSteel", "blockIron"
             ), 'M', findItemStack("Advanced Machine Block")
         )
+        addRecipe(
+            findItemStack("Large Shaft Motor"),
+            "CHC",
+            "RWR",
+            "CMC",
+            'C', findItemStack("Motor Cowling"),
+            'H', findItemStack("High Current Cable"),
+            'R', findItemStack("Reinforced Shaft"),
+            'W', findItemStack("Heavy Winding"),
+            'M', findItemStack("Advanced Machine Block")
+        )
+        addRecipe(
+            findItemStack("Large Generator"),
+            "CMC",
+            "RWR",
+            "CHC",
+            'C', findItemStack("Motor Cowling"),
+            'H', findItemStack("High Current Cable"),
+            'R', findItemStack("Reinforced Shaft"),
+            'W', findItemStack("Heavy Winding"),
+            'M', findItemStack("Advanced Machine Block")
+        )
+        addRecipe(
+            findItemStack("Large Gas Turbine"),
+            "CTC",
+            "RHR",
+            "MAM",
+            'C', findItemStack("Motor Cowling"),
+            'T', findItemStack("Turbine Blade Set"),
+            'R', findItemStack("Reinforced Shaft"),
+            'H', findItemStack("Heavy Winding"),
+            'M', findItemStack("Copper Thermal Cable"),
+            'A', findItemStack("Advanced Machine Block")
+        )
+        addRecipe(
+            findItemStack("Large Steam Turbine"),
+            "TTT",
+            "RMR",
+            "SAS",
+            'T', findItemStack("Turbine Blade Set"),
+            'R', findItemStack("Reinforced Shaft"),
+            'M', findItemStack("Copper Thermal Cable"),
+            'S', firstExistingOre("ingotAluminum", "ingotSteel", "ingotIron"),
+            'A', findItemStack("Advanced Machine Block")
+        )
         addRecipe(findItemStack("Joint"), "   ", "iii", " m ", 'i', "ingotIron", 'm', findItemStack("Machine Block"))
         addRecipe(findItemStack("Crank Shaft"), "  i", "iii", " m ", 'i', "ingotIron", 'm', findItemStack("Machine Block"))
         addRecipe(
@@ -808,6 +859,11 @@ object CraftingRecipes {
             findItemStack("Advanced Energy Meter"), " c ", "PRP", " c ", 'c', findItemStack("Copper Cable"),
             'R', Eln.dictAdvancedChip, 'P', findItemStack("Iron Plate")
         )
+        addRecipe(
+            findItemStack("MQTT Energy Meter"), "ICI", "RMR", "ICI",
+            'I', findItemStack("Iron Cable"), 'C', Eln.dictAdvancedChip,
+            'R', ItemStack(Items.redstone), 'M', findItemStack("Advanced Energy Meter")
+        )
     }
 
     private fun recipeAutoMiner() {
@@ -911,69 +967,60 @@ object CraftingRecipes {
 
     private fun recipeHeatingCorp() {
         addRecipe(
-            findItemStack("Small 50V Copper Heating Corp"), "C C", "CCC", "C C", 'C', findItemStack(
+            findItemStack("Small 50V Copper Heating Element"), "C C", "CCC", "C C", 'C', findItemStack(
                 "Copper " +
                         "Cable"
             )
         )
-        addRecipe(findItemStack("50V Copper Heating Corp"), "CC", 'C', findItemStack("Small 50V Copper Heating Corp"))
-        addRecipe(findItemStack("Small 200V Copper Heating Corp"), "CC", 'C', findItemStack("50V Copper Heating Corp"))
+        addRecipe(findItemStack("50V Copper Heating Element"), "CC", 'C', findItemStack("Small 50V Copper Heating Element"))
+        addRecipe(findItemStack("Small 200V Copper Heating Element"), "CC", 'C', findItemStack("50V Copper Heating Element"))
         addRecipe(
-            findItemStack("200V Copper Heating Corp"), "CC", 'C', findItemStack(
-                "Small 200V Copper Heating " +
-                        "Corp"
-            )
+            findItemStack("200V Copper Heating Element"), "CC", 'C', findItemStack("Small 200V Copper Heating Element")
         )
-        addRecipe(findItemStack("Small 50V Iron Heating Corp"), "C C", "CCC", "C C", 'C', findItemStack("Iron Cable"))
-        addRecipe(findItemStack("50V Iron Heating Corp"), "CC", 'C', findItemStack("Small 50V Iron Heating Corp"))
-        addRecipe(findItemStack("Small 200V Iron Heating Corp"), "CC", 'C', findItemStack("50V Iron Heating Corp"))
-        addRecipe(findItemStack("200V Iron Heating Corp"), "CC", 'C', findItemStack("Small 200V Iron Heating Corp"))
+        addRecipe(findItemStack("Small 50V Iron Heating Element"), "C C", "CCC", "C C", 'C', findItemStack("Iron Cable"))
+        addRecipe(findItemStack("50V Iron Heating Element"), "CC", 'C', findItemStack("Small 50V Iron Heating Element"))
+        addRecipe(findItemStack("Small 200V Iron Heating Element"), "CC", 'C', findItemStack("50V Iron Heating Element"))
+        addRecipe(findItemStack("200V Iron Heating Element"), "CC", 'C', findItemStack("Small 200V Iron Heating Element"))
         addRecipe(
-            findItemStack("Small 50V Tungsten Heating Corp"), "C C", "CCC", "C C", 'C', findItemStack(
+            findItemStack("Small 50V Tungsten Heating Element"), "C C", "CCC", "C C", 'C', findItemStack(
                 "Tungsten" +
                         " Cable"
             )
         )
         addRecipe(
-            findItemStack("50V Tungsten Heating Corp"), "CC", 'C', findItemStack(
-                "Small 50V Tungsten Heating " +
-                        "Corp"
+            findItemStack("50V Tungsten Heating Element"), "CC", 'C', findItemStack(
+                "Small 50V Tungsten Heating Element"
             )
         )
         addRecipe(
-            findItemStack("Small 200V Tungsten Heating Corp"), "CC", 'C', findItemStack(
-                "50V Tungsten Heating " +
-                        "Corp"
+            findItemStack("Small 200V Tungsten Heating Element"), "CC", 'C', findItemStack(
+                "50V Tungsten Heating Element"
             )
         )
         addRecipe(
-            findItemStack("200V Tungsten Heating Corp"), "CC", 'C', findItemStack(
-                "Small 200V Tungsten Heating " +
-                        "Corp"
+            findItemStack("200V Tungsten Heating Element"), "CC", 'C', findItemStack(
+                "Small 200V Tungsten Heating Element"
             )
         )
         addRecipe(
-            findItemStack("Small 800V Tungsten Heating Corp"), "CC", 'C', findItemStack(
-                "200V Tungsten Heating " +
-                        "Corp"
+            findItemStack("Small 800V Tungsten Heating Element"), "CC", 'C', findItemStack(
+                "200V Tungsten Heating Element"
             )
         )
         addRecipe(
-            findItemStack("800V Tungsten Heating Corp"), "CC", 'C', findItemStack(
-                "Small 800V Tungsten Heating " +
-                        "Corp"
+            findItemStack("800V Tungsten Heating Element"), "CC", 'C', findItemStack(
+                "Small 800V Tungsten Heating Element"
             )
         )
         addRecipe(
-            findItemStack("Small 3.2kV Tungsten Heating Corp"), "CC", 'C', findItemStack(
-                "800V Tungsten Heating" +
-                        " Corp"
+            findItemStack("Small 3.2kV Tungsten Heating Element"), "CC", 'C', findItemStack(
+                "800V Tungsten Heating Element"
             )
         )
         addRecipe(
-            findItemStack("3.2kV Tungsten Heating Corp"), "CC", 'C', findItemStack(
+            findItemStack("3.2kV Tungsten Heating Element"), "CC", 'C', findItemStack(
                 "Small 3.2kV Tungsten " +
-                        "Heating Corp"
+                        "Heating Element"
             )
         )
     }
@@ -1445,6 +1492,60 @@ object CraftingRecipes {
         addRecipe(findItemStack("Lead Clutch Plate"), " t ", "tLt", " t ", 'L', "plateLead", 't', Eln.dictTungstenDust)
         addRecipe(findItemStack("Coal Clutch Plate"), " t ", "tCt", " t ", 'C', "plateCoal", 't', Eln.dictTungstenDust)
         addRecipe(Eln.findItemStack("Clutch Pin", 4), "s", "s", 's', firstExistingOre("ingotSteel", "ingotAlloy"))
+        addRecipe(
+            findItemStack("Motor Cowling"),
+            "ISI",
+            "MAM",
+            "ISI",
+            'I',
+            findItemStack("Iron Plate"),
+            'S',
+            firstExistingOre("ingotSteel", "ingotAluminum", "ingotAlloy"),
+            'M',
+            findItemStack("Machine Block"),
+            'A',
+            findItemStack("Advanced Machine Block")
+        )
+        addRecipe(
+            findItemStack("Heavy Winding"),
+            "cRc",
+            "RTR",
+            "cRc",
+            'c',
+            findItemStack("Copper Cable"),
+            'R',
+            findItemStack("Tree Resin"),
+            'T',
+            "itemRubber"
+        )
+        addRecipe(
+            findItemStack("Reinforced Shaft"),
+            " s ",
+            "sFs",
+            "AMA",
+            's',
+            firstExistingOre("ingotSteel", "ingotAlloy", "ingotIron"),
+            'F',
+            findItemStack("Fixed Shaft"),
+            'A',
+            findItemStack("Advanced Machine Block"),
+            'M',
+            firstExistingOre("blockSteel", "blockAlloy", "blockIron")
+        )
+        addRecipe(
+            findItemStack("Turbine Blade Set"),
+            "SIS",
+            "BAB",
+            "SIS",
+            'S',
+            firstExistingOre("ingotAluminum", "ingotSteel"),
+            'I',
+            findItemStack("Iron Plate"),
+            'B',
+            "plateAlloy",
+            'A',
+            findItemStack("Advanced Machine Block")
+        )
     }
 
     private fun recipeMacerator() {
@@ -2350,7 +2451,7 @@ object CraftingRecipes {
     private fun recipeEggIncubator() {
         addRecipe(
             Eln.findItemStack("50V Egg Incubator", 1), "IGG", "E G", "CII", 'C', Eln.dictCheapChip, 'E', findItemStack(
-                "Small 50V Tungsten Heating Corp"
+                "Small 50V Tungsten Heating Element"
             ), 'I', ItemStack(Items.iron_ingot), 'G',
             ItemStack(Blocks.glass_pane)
         )
@@ -2429,6 +2530,16 @@ object CraftingRecipes {
         ReplicatorEntity.dropList.add(ItemStack(Items.redstone))
         ReplicatorEntity.dropList.add(ItemStack(Items.glowstone_dust))
         // EntityRegistry.addSpawn(ReplicatorEntity.class, 1, 1, 2, EnumCreatureType.monster, BiomeGenBase.plains);
+    }
+
+    private fun registerElectricMinecart() {
+        val electricMinecartId = EntityRegistry.findGlobalUniqueEntityId()
+        println("Electric Minecart registered at $electricMinecartId")
+        EntityRegistry.registerGlobalEntityID(
+            EntityElectricMinecart::class.java,
+            I18N.TR_NAME(I18N.Type.ENTITY, "ElectricMinecart"),
+            electricMinecartId
+        )
     }
     private fun recipeChristmas(){
         addShapelessRecipe(Eln.findItemStack("Christmas Tree", 1), findItemStack("String Lights"), ItemStack(Blocks.sapling, 1, 1), findItemStack("String Lights"))

@@ -1,1 +1,0 @@
-The Digital Watch (similar to the [[Analog Watch]]) takes [[Portable Battery]] and is used to tell the time of day.

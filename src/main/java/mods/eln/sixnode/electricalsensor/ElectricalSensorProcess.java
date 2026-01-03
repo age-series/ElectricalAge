@@ -13,7 +13,7 @@ public class ElectricalSensorProcess implements IProcess {
 
     @Override
     public void process(double time) {
-        if (sensor.typeOfSensor == sensor.voltageType) {
+        if (sensor.typeOfSensor == sensor.voltageType || sensor.resistor == null) {
             setOutput(sensor.aLoad.getVoltage());
         } else if (sensor.typeOfSensor == sensor.currantType) {
             double output = 0;

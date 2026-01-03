@@ -6,28 +6,25 @@ This is an open source project. We appreciate any help from the community to imp
 
 Did you found a bug or do you have an idea how to improve the mod? We are happy to hear from you.
 
-- [IRC Channel](https://qchat.rizon.net/?channels=electricalage)
-- [Bug Tracker](https://github.com/jrddunbr/ElectricalAge/issues)
+- Report issues or propose features through the [GitHub issue tracker](https://github.com/age-series/ElectricalAge/issues).
+- Chat with the team in the [Discord server](https://discord.gg/YjK2JAD) if you want help reproducing or validating an idea before opening a pull request.
+- Pull requests are reviewed via GitHub—please include links to any relevant issues or design discussions.
 
-Contributions via [pull request](https://github.com/jrddunbr/ElectricalAge/pulls),
-and [bug reports](https://github.com/jrddunbr/ElectricalAge/issues) are welcome!
-Please submit your pull request to the `base` branch and use the GitHub issue tracker to report issues.
+## Building from source and adding new features
 
-## Development
+If you would like to test changes locally, you can build and run the mod with Gradle:
 
-The **"base"** branch, is where commits during development are integrated into. It is where our team pushes or merges
-their actual changes together and where contributions from the community (Pull requests) are integrated into the
-development version of the mod. Anyone who wish to try the cutting edge version of Electrical Age can download the
-develop branch and build the mod for themselves.
+```bash
+git clone https://github.com/age-series/ElectricalAge.git
+cd ElectricalAge
+./gradlew setupDecompWorkspace
+./gradlew runClient
+```
 
-Pull requests are always merged into the **"base"** branch. If you are willing to contribute, make sure sending us
-pull requests against the develop branch.
+`setupDecompWorkspace` only needs to be executed the first time (or after updating Forge/Minecraft dependencies). After that you can iterate using `./gradlew runClient` or other Gradle tasks as needed.
 
 ## Translations
 
-Is the mod not available in your language or are some translations missing?
-Well you can change that by adding or modifying a translation! Just ask us how you can help!
+Is the mod not available in your language or are some translations missing? You can change that by editing the localization files under [`src/main/resources/assets/eln/lang`](src/main/resources/assets/eln/lang) or by following any language-specific notes on the [GitHub wiki](https://github.com/age-series/ElectricalAge/wiki/Translations).
 
-Some translation strings might contain placeholders for runtime arguments in order to include numbers or other runtime
-objects into the sentence. These are identified by **%N$** whereas *N* is the number of the argument in the argument
-list (at runtime). A translation string should include these placeholders too at the appropriate position in the text.
+Some translation strings might contain placeholders for runtime arguments in order to include numbers or other runtime objects into the sentence. These are identified by **%N$** whereas *N* is the number of the argument in the argument list (at runtime). A translation string should include these placeholders too at the appropriate position in the text.

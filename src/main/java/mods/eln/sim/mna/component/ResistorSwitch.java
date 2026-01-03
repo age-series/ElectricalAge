@@ -7,7 +7,6 @@ import net.minecraft.nbt.NBTTagCompound;
 
 public class ResistorSwitch extends Resistor implements INBTTReady {
 
-    boolean ultraImpedance = false;
     String name;
 
     boolean state = false;
@@ -27,7 +26,7 @@ public class ResistorSwitch extends Resistor implements INBTTReady {
     @Override
     public Resistor setResistance(double resistance) {
         baseResistance = resistance;
-        return super.setResistance(state ? resistance : (ultraImpedance ? MnaConst.ultraImpedance : MnaConst.highImpedance));
+        return super.setResistance(state ? resistance : MnaConst.highImpedance);
     }
 
     public boolean getState() {
@@ -38,9 +37,8 @@ public class ResistorSwitch extends Resistor implements INBTTReady {
     public void readFromNBT(NBTTagCompound nbt, String str) {
         str += name;
         setResistance(nbt.getDouble(str + "R"));
-        if (Double.isNaN(baseResistance) || baseResistance == 0) {
-            if (ultraImpedance) ultraImpedance();
-            else highImpedance();
+        if (!Double.isFinite(baseResistance) || baseResistance == 0) {
+            highImpedance();
         }
         setState(nbt.getBoolean(str + "State"));
     }
@@ -50,9 +48,5 @@ public class ResistorSwitch extends Resistor implements INBTTReady {
         str += name;
         nbt.setDouble(str + "R", baseResistance);
         nbt.setBoolean(str + "State", getState());
-    }
-
-    public void mustUseUltraImpedance() {
-        ultraImpedance = true;
     }
 }

@@ -1,7 +1,0 @@
-The [https://en.wikipedia.org/wiki/Flip-flop_(electronics)#D_flip-flop D flip-flop] captures the value of the D-input at a rising edge portion of the clock cycle .
-That captured value becomes the D flip-flop's output. At other times, the output 0does not change.
-The D flip-flop can be viewed as a memory cell where the clock input triggers the saving process.
-
-Change the D input by clicking on the button left to the chip and save the state to the
-D flip-flop by bushing the button below the chip.
-[[Category:Digital chips]]

@@ -26,7 +26,7 @@ public class ElectricalFurnaceContainer extends BasicContainer implements INodeC
             new SlotWithSkin(inventory, ElectricalFurnaceElement.inSlotId, 7, 58, SlotSkin.medium),
 
             new GenericItemUsingDamageSlot(inventory, 2, 70, 6 + 20 + 6, 1, HeatingCorpElement.class, SlotSkin.medium,
-                new String[]{tr("Heating corp slot")}),
+                new String[]{tr("Heating element slot")}),
             new GenericItemUsingDamageSlot(inventory, 3, 80 + 18, -2000, 1, ThermalIsolatorElement.class, SlotSkin
                 .medium, new String[]{tr("Thermal isolator slot")}),
             new RegulatorSlot(inventory, 4, 70 + 18, 6 + 20 + 6, 1, new RegulatorType[]{RegulatorType.OnOff,

@@ -1,1 +1,0 @@
-The Configurable summing Unit can be used to calculate the sum of multiple input signals. The gain for each input is configurable (GUI) and defaults to 1. Negative gains are possible in order to subtract the given input voltage from the others.

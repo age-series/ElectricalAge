@@ -146,6 +146,82 @@ public class SubSystem {
         Utils.println(p);
     }
 
+    public synchronized SubSystemDebugSnapshot captureDebugSnapshot() {
+        if (!matrixValid || A == null) {
+            generateMatrix();
+        }
+
+        double[][] matrixCopy = A != null ? A.getData() : new double[0][0];
+        double[] rhsCopy = Idata != null ? Idata.clone() : new double[0];
+
+        String[] stateDescriptions = new String[stateCount];
+        String[] stateOwners = new String[stateCount];
+        for (int idx = 0; idx < stateCount; idx++) {
+            State state = states.get(idx);
+            stateDescriptions[idx] = describeState(state);
+            stateOwners[idx] = state != null ? state.getOwner() : null;
+        }
+
+        String[] componentDescriptions = new String[component.size()];
+        String[] componentOwners = new String[component.size()];
+        int[][] componentConnections = new int[component.size()][];
+        for (int idx = 0; idx < component.size(); idx++) {
+            Component c = component.get(idx);
+            componentDescriptions[idx] = describeComponent(c);
+            componentOwners[idx] = c != null ? c.getOwner() : null;
+            State[] connected = c.getConnectedStates();
+            if (connected == null) {
+                componentConnections[idx] = new int[0];
+            } else {
+                int[] connectionIds = new int[connected.length];
+                for (int sIdx = 0; sIdx < connected.length; sIdx++) {
+                    State state = connected[sIdx];
+                    connectionIds[sIdx] = state != null ? state.getId() : -1;
+                }
+                componentConnections[idx] = connectionIds;
+            }
+        }
+
+        return new SubSystemDebugSnapshot(
+                matrixCopy,
+                rhsCopy,
+                stateDescriptions,
+                stateOwners,
+                componentDescriptions,
+                componentOwners,
+                componentConnections,
+                singularMatrix
+        );
+    }
+
+    private String describeState(State state) {
+        if (state == null) {
+            return "null";
+        }
+        StringBuilder builder = new StringBuilder();
+        builder.append('#').append(state.getId()).append(' ').append(state.getClass().getSimpleName());
+        String owner = state.getOwner();
+        if (owner != null && !owner.isEmpty()) {
+            builder.append(" [").append(owner).append(']');
+        }
+        if (state instanceof VoltageState) {
+            builder.append(String.format(" %.4fV", ((VoltageState) state).getVoltage()));
+        }
+        return builder.toString();
+    }
+
+    private String describeComponent(Component component) {
+        if (component == null) {
+            return "null";
+        }
+        StringBuilder builder = new StringBuilder(component.getClass().getSimpleName());
+        String owner = component.getOwner();
+        if (owner != null && !owner.isEmpty()) {
+            builder.append(" [").append(owner).append(']');
+        }
+        return builder.toString();
+    }
+
     public void addToA(State a, State b, double v) {
         if (a == null || b == null)
             return;

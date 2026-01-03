@@ -58,7 +58,7 @@ class SoundCommand {
         rangeNominal = s.rangeNominal
         rangeMax = s.rangeMax
         blockFactor = s.blockFactor
-        uuid = s.uuid.clone() as ArrayList<Int>
+        uuid = ArrayList(s.uuid)
     }
 
     fun copy(): SoundCommand {
@@ -74,7 +74,7 @@ class SoundCommand {
         c.rangeNominal = rangeNominal
         c.rangeMax = rangeMax
         c.blockFactor = blockFactor
-        c.uuid = uuid.clone() as ArrayList<Int>
+        c.uuid = ArrayList(uuid)
         return c
     }
 

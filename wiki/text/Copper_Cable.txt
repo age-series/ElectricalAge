@@ -1,4 +1,0 @@
-Just a crafting material 
-{{Crafting_Grid
-|4=Copper_Ingot|5=Copper_Ingot|6=Copper_Ingot
-|result=Copper_Cable}}

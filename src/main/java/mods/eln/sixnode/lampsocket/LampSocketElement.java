@@ -17,6 +17,7 @@ import mods.eln.sim.ElectricalLoad;
 import mods.eln.sim.MonsterPopFreeProcess;
 import mods.eln.sim.ThermalLoad;
 import mods.eln.sim.mna.component.Resistor;
+import mods.eln.sim.mna.misc.MnaConst;
 import mods.eln.sim.nbt.NbtElectricalLoad;
 import mods.eln.sixnode.electricalcable.ElectricalCableDescriptor;
 import net.minecraft.entity.player.EntityPlayer;
@@ -286,7 +287,7 @@ public class LampSocketElement extends SixNodeElement implements IConfigurable {
         lampDescriptor = (LampDescriptor) Utils.getItemObject(lamp);
 
         if (lampDescriptor == null) {
-            lampResistor.setResistance(Double.POSITIVE_INFINITY);
+            lampResistor.setResistance(MnaConst.highImpedance);
         } else {
             lampDescriptor.applyTo(lampResistor);
         }

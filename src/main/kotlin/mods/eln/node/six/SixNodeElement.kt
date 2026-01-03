@@ -65,10 +65,10 @@ abstract class SixNodeElement(sixNode: SixNode, @JvmField var side: Direction, d
 
     open fun inventoryChanged() {}
 
-    override fun play(s: SoundCommand) {
-        s.addUuid(getUuid())
-        s.set(sixNode!!.coordinate)
-        s.play()
+    override fun play(cmd: SoundCommand) {
+        cmd.addUuid(getUuid())
+        cmd.set(sixNode!!.coordinate)
+        cmd.play()
     }
 
     open val coordinate: Coordinate?
@@ -99,6 +99,12 @@ abstract class SixNodeElement(sixNode: SixNode, @JvmField var side: Direction, d
         sixNode!!.sendPacketToClient(bos, player)
     }
 
+    protected fun describeSimOwner(): String {
+        val coord = sixNode?.coordinate
+        val coordStr = coord?.toString() ?: "unknown"
+        return "${javaClass.simpleName}@$coordStr"
+    }
+
     fun notifyNeighbor() {
         sixNode!!.notifyNeighbor()
     }
@@ -106,6 +112,9 @@ abstract class SixNodeElement(sixNode: SixNode, @JvmField var side: Direction, d
     open fun connectJob() {
         // If we are about to destruct ourselves, do not add any elements to the simulation anymore.
         if (sixNode != null && sixNode!!.isDestructing) return
+        val ownerTag = describeSimOwner()
+        electricalComponentList.forEach { it.setOwner(ownerTag) }
+        electricalLoadList.forEach { it.setOwner(ownerTag) }
         Eln.simulator.addAllElectricalComponent(electricalComponentList)
         Eln.simulator.addAllThermalConnection(thermalConnectionList)
         for (load in electricalLoadList) Eln.simulator.addElectricalLoad(load)

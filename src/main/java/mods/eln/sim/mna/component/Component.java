@@ -11,6 +11,7 @@ public abstract class Component {
     public IAbstractor abstractedBy;
 
     public Component() {}
+    private String owner;
 
     public void addToSubsystem(SubSystem s) {
         this.subSystem = s;
@@ -58,5 +59,14 @@ public abstract class Component {
 
     public String toString() {
         return "(" + this.getClass().getSimpleName() + ")";
+    }
+
+    public Component setOwner(String owner) {
+        this.owner = owner;
+        return this;
+    }
+
+    public String getOwner() {
+        return owner;
     }
 }

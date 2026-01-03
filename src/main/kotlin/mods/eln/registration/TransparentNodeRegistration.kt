@@ -3,6 +3,7 @@ package mods.eln.registration
 import mods.eln.Eln
 import mods.eln.Eln.instance
 import mods.eln.Eln.transparentNodeItem
+import mods.eln.generic.GenericItemBlockUsingDamageDescriptor
 import mods.eln.ghost.GhostBlock
 import mods.eln.ghost.GhostGroup
 import mods.eln.gridnode.GridSwitchDescriptor
@@ -13,12 +14,14 @@ import mods.eln.i18n.I18N
 import mods.eln.i18n.I18N.TR_NAME
 import mods.eln.mechanical.*
 import mods.eln.misc.Coordinate
+import mods.eln.misc.Direction
 import mods.eln.misc.FunctionTable
 import mods.eln.misc.FunctionTableYProtect
 import mods.eln.misc.SeriesFunction.Companion.newE12
 import mods.eln.misc.SeriesFunction.Companion.newE6
 import mods.eln.misc.Utils.coalEnergyReference
 import mods.eln.misc.Utils.printFunction
+import mods.eln.railroad.OverheadLinesDescriptor
 import mods.eln.sim.ThermalLoadInitializer
 import mods.eln.sim.ThermalLoadInitializerByPowerDrop
 import mods.eln.sound.SoundCommand
@@ -52,8 +55,65 @@ import net.minecraft.util.Vec3
 import kotlin.math.pow
 
 object TransparentNodeRegistration {
+    private const val LARGE_MACHINE_VOLUME_SCALE = 27f
+    private val LARGE_MACHINE_MODEL_SCALE = Math.cbrt(LARGE_MACHINE_VOLUME_SCALE.toDouble()).toFloat()
+
+    private fun createLargeMachineGhostGroup(): GhostGroup {
+        val g = GhostGroup()
+        for (x in -1..1) {
+            for (y in 0..2) {
+                for (z in -1..1) {
+                    if (x == 0 && y == 0 && z == 0) continue
+                    if (y == 0 && x != 0) continue
+                    g.addElement(x, y, z)
+                }
+            }
+        }
+        return g
+    }
+
+    private fun <T : SimpleShaftDescriptor> T.applyLargeMachineLayout(): T {
+        ghostGroup = createLargeMachineGhostGroup()
+        addShaftGhostPort(Coordinate(0, 1, -1, 0), Direction.ZN, Direction.ZN)
+        addShaftGhostPort(Coordinate(0, 1, 1, 0), Direction.ZP, Direction.ZP)
+        modelScale = LARGE_MACHINE_MODEL_SCALE
+        shaftMass *= LARGE_MACHINE_VOLUME_SCALE.toDouble()
+        disableCameraOptimization = true
+        return this
+    }
+
+    private fun <T : GenericItemBlockUsingDamageDescriptor> T.machines() = apply {
+        setCreativeTab(Eln.creativeTabMachines)
+    }
 
     fun registerTransparent() {
+        Eln.transparentNodeItem.setCreativeTabForGroup(1, Eln.creativeTabPowerElectronics)
+        Eln.transparentNodeItem.setCreativeTabForGroup(2, Eln.creativeTabPowerElectronics)
+        Eln.transparentNodeItem.setCreativeTabForGroup(3, Eln.creativeTabMachines)
+        Eln.transparentNodeItem.setCreativeTabForGroup(4, Eln.creativeTabPowerElectronics)
+        Eln.transparentNodeItem.setCreativeTabForGroup(7, Eln.creativeTabPowerElectronics)
+        Eln.transparentNodeItem.setCreativeTabForGroup(16, Eln.creativeTabPowerElectronics)
+        Eln.transparentNodeItem.setCreativeTabForGroup(32, Eln.creativeTabMachines)
+        Eln.transparentNodeItem.setCreativeTabForGroup(33, Eln.creativeTabMachines)
+        Eln.transparentNodeItem.setCreativeTabForGroup(34, Eln.creativeTabMachines)
+        Eln.transparentNodeItem.setCreativeTabForGroup(35, Eln.creativeTabMachines)
+        Eln.transparentNodeItem.setCreativeTabForGroup(36, Eln.creativeTabMachines)
+        Eln.transparentNodeItem.setCreativeTabForGroup(37, Eln.creativeTabMachines)
+        Eln.transparentNodeItem.setCreativeTabForGroup(41, Eln.creativeTabMachines)
+        Eln.transparentNodeItem.setCreativeTabForGroup(42, Eln.creativeTabMachines)
+        Eln.transparentNodeItem.setCreativeTabForGroup(48, Eln.creativeTabPowerElectronics)
+        Eln.transparentNodeItem.setCreativeTabForGroup(49, Eln.creativeTabPowerElectronics)
+        Eln.transparentNodeItem.setCreativeTabForGroup(64, Eln.creativeTabPowerElectronics)
+        Eln.transparentNodeItem.setCreativeTabForGroup(65, Eln.creativeTabMachines)
+        Eln.transparentNodeItem.setCreativeTabForGroup(66, Eln.creativeTabMachines)
+        Eln.transparentNodeItem.setCreativeTabForGroup(67, Eln.creativeTabPowerElectronics)
+        Eln.transparentNodeItem.setCreativeTabForGroup(69, Eln.creativeTabLighting)
+        Eln.transparentNodeItem.setCreativeTabForGroup(70, Eln.creativeTabMachines)
+        Eln.transparentNodeItem.setCreativeTabForGroup(71, Eln.creativeTabPowerElectronics)
+        Eln.transparentNodeItem.setCreativeTabForGroup(96, Eln.creativeTabPowerElectronics)
+        Eln.transparentNodeItem.setCreativeTabForGroup(117, Eln.creativeTabSignalProcessing)
+        Eln.transparentNodeItem.setCreativeTabForGroup(123, Eln.creativeTabPowerElectronics)
+
         registerPowerComponent(1)
         registerTransformer(2)
         registerHeatFurnace(3)
@@ -77,6 +137,7 @@ object TransparentNodeRegistration {
         registerFloodlight(68)
         registerFestive(69)
         registerFab(70)
+        registerRailroad(71)
         registerLargeRheostat() // 96, but from the wrong side.
         registerNixieTube() // 117, but from the wrong side.
         registerGridDevices(123)
@@ -115,6 +176,24 @@ object TransparentNodeRegistration {
         }
     }
 
+    private fun registerRailroad(id: Int) {
+        var subId: Int
+        run {
+            subId = 0
+            val name = TR_NAME(I18N.Type.NONE, "Overhead Lines")
+            val desc = OverheadLinesDescriptor(name, Eln.obj.getObj("OverheadGantry"))
+            transparentNodeItem.addDescriptor(subId + (id shl 6), desc)
+        }
+        /*
+        run {
+            subId = 1
+            val name = TR_NAME(I18N.Type.NONE, "Under Track Power")
+            val desc = UnderTrackPowerDescriptor(name, Eln.obj.getObj("OverheadGantry"))
+            transparentNodeItem.addDescriptor(subId + (id shl 6), desc)
+        }
+         */
+    }
+
     private fun registerFloodlight(id: Int) {
         var subId: Int
         var name: String
@@ -132,7 +211,6 @@ object TransparentNodeRegistration {
             val desc = FloodlightDescriptor(name, Eln.obj.getObj("FloodlightMotor"), true)
             transparentNodeItem.addDescriptor(subId + (id shl 6), desc)
         }
-
     }
 
     private fun registerLargeRheostat() {
@@ -165,7 +243,7 @@ object TransparentNodeRegistration {
 
     private fun registerTransformer(id: Int) {
         var subId: Int
-        var name = ""
+        var name: String
 
         run {
             subId = 0
@@ -201,7 +279,7 @@ object TransparentNodeRegistration {
 
     private fun registerHeatFurnace(id: Int) {
         var subId: Int
-        var name = ""
+        var name: String
         run {
             subId = 0
             name = TR_NAME(I18N.Type.NONE, "Stone Heat Furnace")
@@ -425,6 +503,65 @@ object TransparentNodeRegistration {
             )
             transparentNodeItem.addDescriptor(subId + (id shl 6), desc)
         }
+
+        run {
+            subId = 22
+            val desc = SteamTurbineDescriptor(
+                TR_NAME(I18N.Type.NONE, "Large Steam Turbine"),
+                Eln.obj.getObj("Turbine"),
+                LARGE_MACHINE_VOLUME_SCALE
+            ).applyLargeMachineLayout()
+            transparentNodeItem.addDescriptor(subId + (id shl 6), desc)
+        }
+
+        run {
+            subId = 23
+            val desc = GasTurbineDescriptor(
+                TR_NAME(I18N.Type.NONE, "Large Gas Turbine"),
+                Eln.obj.getObj("GasTurbine"),
+                LARGE_MACHINE_VOLUME_SCALE
+            ).applyLargeMachineLayout()
+            transparentNodeItem.addDescriptor(subId + (id shl 6), desc)
+        }
+
+        run {
+            subId = 24
+            val nominalRads = 200f
+            val nominalU = 12800f
+            val nominalP = 4000f * LARGE_MACHINE_VOLUME_SCALE
+
+            val desc = GeneratorDescriptor(
+                TR_NAME(I18N.Type.NONE, "Large Generator"),
+                Eln.obj.getObj("Generator"),
+                instance.highVoltageCableDescriptor,
+                nominalRads,
+                nominalU,
+                nominalP / (nominalU / 25),
+                nominalP,
+                Eln.sixNodeThermalLoadInitializer.copy()
+            ).applyLargeMachineLayout()
+            transparentNodeItem.addDescriptor(subId + (id shl 6), desc)
+        }
+
+        run {
+            subId = 25
+            val nominalRads = 200f
+            val nominalU = 12800f
+            val nominalP = 1200f * LARGE_MACHINE_VOLUME_SCALE
+
+            val desc = MotorDescriptor(
+                TR_NAME(I18N.Type.NONE, "Large Shaft Motor"),
+                Eln.obj.getObj("Motor"),
+                instance.veryHighVoltageCableDescriptor,
+                nominalRads,
+                nominalU,
+                nominalP,
+                25.0f * nominalP / nominalU,
+                25.0f * nominalP / nominalU,
+                Eln.sixNodeThermalLoadInitializer.copy()
+            ).applyLargeMachineLayout()
+            transparentNodeItem.addDescriptor(subId + (id shl 6), desc)
+        }
     }
 
     private fun registerElectricalFurnace(id: Int) {
@@ -620,15 +757,6 @@ object TransparentNodeRegistration {
         var subId: Int
         var ghostGroup: GhostGroup
         var name: String?
-        val diodeIfUBase: FunctionTable =
-            FunctionTableYProtect(
-                doubleArrayOf(
-                    0.0, 0.002, 0.005, 0.01, 0.015, 0.02, 0.025, 0.03,
-                    0.035, 0.04, 0.045, 0.05, 0.06, 0.07, 0.08, 0.09, 0.10, 0.11, 0.12, 0.13, 1.0
-                ), 1.0, 0.0, 1.0
-            )
-        val solarIfSBase =
-            FunctionTable(doubleArrayOf(0.0, 0.1, 0.4, 0.6, 0.8, 1.0), 1.0)
 
         val LVSolarU = 59.0
 
@@ -779,7 +907,7 @@ object TransparentNodeRegistration {
 
     private fun registerBattery(id: Int) {
         var subId: Int
-        var name = ""
+        var name: String
         val heatTIme = 30.0
         val voltageFunctionTable = doubleArrayOf(0.000, 0.9, 1.0, 1.025, 1.04, 1.05, 2.0)
         val voltageFunction = FunctionTable(voltageFunctionTable, 6.0 / 5)
@@ -1157,7 +1285,7 @@ object TransparentNodeRegistration {
         run {
             subId = 0
             val desc =
-                FabricatorDescriptor(TR_NAME(I18N.Type.NONE, "Fabricator"))
+                FabricatorDescriptor(TR_NAME(I18N.Type.NONE, "Fabricator")).machines()
             transparentNodeItem.addDescriptor(subId + (id shl 6), desc)
         }
     }

@@ -1,8 +1,0 @@
-An OP (Operational Amplifier or OpAmp) is a DC-coupled high-gain electronic voltage amplifier with a differential input and, usually, a single-ended output.
-
-Without external components like resistors, capacitors or inductors, it's high gain allow it only to be used as a comparator. A comparator basically compares two voltages - in the case of an OpAmp the + input voltage and the - input voltage. If the + voltage is higher than the - voltage, the output of the OpAmp is 50V (1 or true), if the - voltage is higher than the + input voltage, then the output is 0V (0 or false).
-
-In the current version of the mod resistors, capacitors and inductors for signal voltage do not exist yet, so the use of an OpAmp is limited to comparator function.
-
-== See also ==
-* [[wikipedia:Operational_amplifier]]

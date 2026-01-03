@@ -8,6 +8,7 @@ import mods.eln.Eln
 import mods.eln.item.electricalitem.TreeCapitation.process
 import mods.eln.misc.Coordinate
 import mods.eln.misc.Utils
+import mods.eln.mqtt.MqttManager
 import mods.eln.node.NodeManager
 import mods.eln.server.ElnWorldStorage.Companion.forWorld
 import net.minecraft.entity.effect.EntityLightningBolt
@@ -161,6 +162,11 @@ class ServerEventListener {
             } catch (e: Exception) {
                 e.printStackTrace()
             }
+            try {
+                MqttManager.readWorldData(nbt.getCompoundTag("mqtt"))
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
         }
 
         fun writeToEaWorldNBT(nbt: NBTTagCompound?, dim: Int) {
@@ -171,6 +177,12 @@ class ServerEventListener {
             }
             try {
                 Eln.ghostManager.saveToNBT(Utils.newNbtTagCompund(nbt, "ghost"), dim)
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+            try {
+                val tag = Utils.newNbtTagCompund(nbt, "mqtt")
+                MqttManager.writeWorldData(tag)
             } catch (e: Exception) {
                 e.printStackTrace()
             }

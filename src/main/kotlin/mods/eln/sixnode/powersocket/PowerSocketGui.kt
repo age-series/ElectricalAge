@@ -8,7 +8,11 @@ import mods.eln.i18n.I18N.tr
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.inventory.IInventory
 
-class PowerSocketGui(private val render: PowerSocketRender, player: EntityPlayer?, inventory: IInventory?) :
+class PowerSocketGui(
+    private val render: PowerSocketRender,
+    @Suppress("UNUSED_PARAMETER") player: EntityPlayer?,
+    @Suppress("UNUSED_PARAMETER") inventory: IInventory?
+) :
     GuiScreenEln() {
 
         var device: GuiTextFieldEln? = null

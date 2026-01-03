@@ -196,7 +196,7 @@ class GridSwitchElement(node: TransparentNode, descriptor: TransparentNodeDescri
             if(closed) {
                 if(interp.get() > desc.separationHigh * (maxU / desc.nominalGridU)) {
                     closed = false
-                    transfer.ultraImpedance()
+                    transfer.highImpedance()
                 }
             } else {
                 if(interp.get() < desc.separationLow * (maxU / desc.nominalGridU)) {

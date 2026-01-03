@@ -179,7 +179,7 @@ class ElectricalFuseHolderElement(sixNode: SixNode, side: Direction, descriptor:
     }
 
     fun refreshSwitchResistor() {
-        installedFuse?.cableDescriptor?.applyTo(fuseResistor) ?: fuseResistor.ultraImpedance()
+        installedFuse?.cableDescriptor?.applyTo(fuseResistor) ?: fuseResistor.highImpedance()
     }
 
     override fun initialize() {

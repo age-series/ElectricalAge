@@ -48,13 +48,18 @@ class GridTransformerElement(node: TransparentNode, descriptor: TransparentNodeD
 
     internal val thermalLoad = NbtThermalLoad("thermal").apply {
         desc.cableDescriptor.applyTo(this)
+        heatCapacity = TRANSFORMER_HEAT_CAPACITY
         setAsSlow()
-        slowProcessList.add(ElectricalLoadHeatThermalLoad(secondaryLoad, this))
+        slowProcessList.add(
+            ElectricalLoadHeatThermalLoad(secondaryLoad, this)
+                .limitTemperatureRate(desc.cableDescriptor.thermalSelfHeatingRateLimit)
+        )
         thermalLoadList.add(this)
     }
     internal val thermalWatchdog = ThermalLoadWatchDog(thermalLoad).apply {
         setTemperatureLimits(desc.cableDescriptor.thermalWarmLimit, desc.cableDescriptor.thermalCoolLimit)
         setDestroys(explosion)
+        dumpMatrixOnTrip("GridTransformerElement thermal trip") { this@GridTransformerElement }
         slowProcessList.add(this)
     }
 
@@ -128,6 +133,10 @@ class GridTransformerElement(node: TransparentNode, descriptor: TransparentNodeD
         stream.writeFloat((secondaryLoad.current / maxCurrent).toFloat())
     }
 
+    companion object {
+        private const val TRANSFORMER_HEAT_CAPACITY = 20_000.0
+    }
+
     /*
     // TODO : Fix this?
     override fun getLightOpacity(): Float {
@@ -135,5 +144,3 @@ class GridTransformerElement(node: TransparentNode, descriptor: TransparentNodeD
     }
      */
 }
-
-

@@ -174,7 +174,7 @@ abstract class NodeBase {
                 }
                 val act: String
                 var snd = beepError
-                if (entityPlayer.isSneaking && ServerKeyHandler.get(ServerKeyHandler.WRENCH)) {
+                if (entityPlayer.isSneaking) {
                     if (writeConfigTool(side, equipped.tagCompound, entityPlayer)) snd = beepDownloaded
                     act = "write"
                 } else {
@@ -469,9 +469,9 @@ abstract class NodeBase {
             return block === Blocks.redstone_wire
         }
 
-        var beepUploaded = SoundCommand("eln:beep_accept_2").smallRange()!!
-        var beepDownloaded = SoundCommand("eln:beep_accept").smallRange()!!
-        var beepError = SoundCommand("eln:beep_error").smallRange()!!
+        var beepUploaded = SoundCommand("eln:beep_accept_2").smallRange()
+        var beepDownloaded = SoundCommand("eln:beep_accept").smallRange()
+        var beepError = SoundCommand("eln:beep_error").smallRange()
 
         fun tryConnectTwoNode(nodeA: NodeBase, directionA: Direction, lrduA: LRDU, nodeB: NodeBase, directionB: Direction, lrduB: LRDU) {
             val mskA = nodeA.getSideConnectionMask(directionA, lrduA)

@@ -590,10 +590,7 @@ object UtilsClient {
         dst.listLengthFormatter(24)
     }
 
-    private fun List<String>.listLengthFormatter(length: Int) {
-        val chars: Sequence<Char> = "abcd".asSequence()
-        val str: String = chars.joinToString()
-    }
+    private fun List<String>.listLengthFormatter(@Suppress("UNUSED_PARAMETER") length: Int) {}
 
     private fun isShiftHeld(): Boolean {
         return Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_RSHIFT)

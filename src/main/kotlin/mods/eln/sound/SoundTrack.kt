@@ -36,7 +36,7 @@ class SoundTrack {
         c.rangeNominal = rangeNominal
         c.rangeMax = rangeMax
         c.blockFactor = blockFactor
-        c.uuid = uuid.clone() as ArrayList<Int>
+        c.uuid = ArrayList(uuid)
         return c
     }
 

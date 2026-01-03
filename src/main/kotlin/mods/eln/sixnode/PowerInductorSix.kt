@@ -305,7 +305,7 @@ class PowerInductorSixGui(player: EntityPlayer, inventory: IInventory, var rende
 
 
 class PowerInductorSixContainer(player: EntityPlayer, inventory: IInventory) : BasicContainer(player, inventory, arrayOf<Slot>(
-    GenericItemUsingDamageSlot(inventory, cableId, 132, 8, 19, CopperCableDescriptor::class.java,
+    GenericItemUsingDamageSlot(inventory, cableId, 132, 8, cableStackLimit, CopperCableDescriptor::class.java,
         ISlotSkin.SlotSkin.medium, arrayOf(tr("Copper cable slot"), tr("(Increases inductance)"))),
     GenericItemUsingDamageSlot(inventory, coreId, 132 + 20, 8, 1, FerromagneticCoreDescriptor::class.java,
         ISlotSkin.SlotSkin.medium, arrayOf(tr("Ferromagnetic core slot")))
@@ -313,5 +313,6 @@ class PowerInductorSixContainer(player: EntityPlayer, inventory: IInventory) : B
     companion object {
         const val cableId = 0
         const val coreId = 1
+        const val cableStackLimit = 19
     }
 }

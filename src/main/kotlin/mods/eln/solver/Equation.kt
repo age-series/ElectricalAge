@@ -44,25 +44,25 @@ class Equation : IValue, INBTTReady {
         this.symbolList.addAll(symbolList!!)
     }
 
-    fun preProcess(exp: String) {
-        var exp = exp
+    fun preProcess(expressionInput: String) {
+        var expression = expressionInput
         var idx: Int
-        exp = exp.replace(" ", "")
+        expression = expression.replace(" ", "")
 
         stringList.clear()
         val list = LinkedList<Any>()
         var stack = ""
         idx = 0
-        while (idx != exp.length) {
-            if (separatorList.contains(exp.subSequence(idx, idx + 1))) {
+        while (idx != expression.length) {
+            if (separatorList.contains(expression.subSequence(idx, idx + 1))) {
                 if (stack !== "") {
                     list.add(stack)
                     stringList.add(stack)
                     stack = ""
                 }
-                list.add(exp.substring(idx, idx + 1))
+                list.add(expression.substring(idx, idx + 1))
             } else {
-                stack += exp[idx]
+                stack += expression[idx]
             }
 
             idx++
@@ -109,8 +109,6 @@ class Equation : IValue, INBTTReady {
 
         while (list.size > 1 && iterationLimit != 0) {
             iterationLimit--
-            var a: IValue
-            var b: IValue
             idx = 0
             depth = 0
             val i: Iterator<Any> = list.iterator()

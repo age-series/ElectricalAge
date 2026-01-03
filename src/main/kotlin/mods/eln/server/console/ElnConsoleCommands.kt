@@ -1,16 +1,41 @@
 package mods.eln.server.console
 
 import mods.eln.Eln
+import mods.eln.gridnode.GridElement
+import mods.eln.gridnode.GridLink
+import mods.eln.gridnode.GridSwitchElement
+import mods.eln.gridnode.electricalpole.ElectricalPoleDescriptor
+import mods.eln.gridnode.electricalpole.ElectricalPoleElement
+import mods.eln.gridnode.transformer.GridTransformerElement
+import mods.eln.misc.Coordinate
 import mods.eln.misc.FC
 import mods.eln.misc.Version
+import mods.eln.node.NodeBase
+import mods.eln.node.NodeManager
+import mods.eln.node.GhostNode
+import mods.eln.node.six.SixNode
+import mods.eln.node.transparent.TransparentNode
 import mods.eln.server.SaveConfig
 import mods.eln.server.console.ElnConsoleCommands.Companion.boolToStr
 import mods.eln.server.console.ElnConsoleCommands.Companion.cprint
 import mods.eln.server.console.ElnConsoleCommands.Companion.getArgBool
 import net.minecraft.command.ICommandSender
+import net.minecraft.entity.player.EntityPlayerMP
+import net.minecraft.world.World
 import java.io.BufferedWriter
 import java.io.File
 import java.io.FileWriter
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
+import java.util.LinkedHashSet
+import kotlin.math.PI
+import kotlin.math.ceil
+import kotlin.math.cos
+import kotlin.math.hypot
+import kotlin.math.min
+import kotlin.math.max
+import kotlin.math.sin
 
 class ElnLsCommand: IConsoleCommand {
     override val name = "ls"
@@ -383,6 +408,357 @@ class ElnManCommand: IConsoleCommand {
     }
 }
 
+class ElnZoneDumpCommand : IConsoleCommand {
+    override val name = "zonedump"
+
+    override fun runCommand(ics: ICommandSender, args: List<String>) {
+        if (ics !is EntityPlayerMP) {
+            cprint(ics, "${FC.BRIGHT_RED}This command can only be run by a player.", indent = 1)
+            return
+        }
+        if (args.size != 6) {
+            cprint(ics, "${FC.BRIGHT_YELLOW}Usage: /eln zonedump x1 y1 z1 x2 y2 z2", indent = 1)
+            return
+        }
+        val values = IntArray(6)
+        for (i in 0 until 6) {
+            val v = args[i].toIntOrNull()
+            if (v == null) {
+                cprint(ics, "${FC.BRIGHT_RED}Invalid coordinate '${args[i]}'", indent = 1)
+                return
+            }
+            values[i] = v
+        }
+        val minX = min(values[0], values[3])
+        val maxX = max(values[0], values[3])
+        val minY = min(values[1], values[4])
+        val maxY = max(values[1], values[4])
+        val minZ = min(values[2], values[5])
+        val maxZ = max(values[2], values[5])
+
+        val world = ics.worldObj
+        val dim = world.provider.dimensionId
+        val rangeDescription = "($minX,$minY,$minZ) -> ($maxX,$maxY,$maxZ) in dim $dim"
+
+        val nodeManager = NodeManager.instance
+        val coordToNode = HashMap<Coordinate, NodeBase>()
+        val nodesInZone = if (nodeManager != null) {
+            nodeManager.nodeList.filter {
+                val c = it.coordinate
+                c.dimension == dim &&
+                    c.x in minX..maxX &&
+                    c.y in minY..maxY &&
+                    c.z in minZ..maxZ
+            }
+        } else emptyList()
+        nodesInZone.forEach {
+            coordToNode[Coordinate(it.coordinate)] = it
+        }
+
+        val warnings = mutableListOf<String>()
+        val builder = StringBuilder()
+        builder.append("Zone dump for $rangeDescription\n")
+        builder.append("Player: ${ics.commandSenderName}\n")
+        builder.append("Generated: ${Date()}\n\n")
+
+        builder.append("Nodes:\n")
+        if (nodesInZone.isEmpty()) {
+            builder.append("  <none>\n")
+        } else {
+            for (node in nodesInZone) {
+                val coord = node.coordinate
+                builder.append("  ${coord}: ${node.javaClass.simpleName}")
+                if (node is TransparentNode) {
+                    builder.append(" element=${node.element?.javaClass?.simpleName}")
+                } else if (node is SixNode) {
+                    builder.append(" sixNode")
+                }
+                builder.append('\n')
+
+                val expectedBlock = when (node) {
+                    is SixNode -> Eln.sixNodeBlock
+                    is TransparentNode -> Eln.transparentNodeBlock
+                    is GhostNode -> Eln.ghostBlock
+                    else -> null
+                }
+                val actualBlock = world.getBlock(coord.x, coord.y, coord.z)
+                if (expectedBlock != null && actualBlock != expectedBlock) {
+                    warnings.add("Node ${coord} (${node.javaClass.simpleName}) expected ${expectedBlock.unlocalizedName} but found ${actualBlock.unlocalizedName}")
+                }
+            }
+        }
+
+        builder.append("\nBlocks:\n")
+        for (x in minX..maxX) {
+            for (y in minY..maxY) {
+                for (z in minZ..maxZ) {
+                    val block = world.getBlock(x, y, z)
+                    val meta = world.getBlockMetadata(x, y, z)
+                    val tile = world.getTileEntity(x, y, z)
+                    builder.append("  ($x,$y,$z): ${block.unlocalizedName} meta=$meta tile=${tile?.javaClass?.simpleName}\n")
+                    val coord = Coordinate(x, y, z, dim)
+                    if ((block == Eln.sixNodeBlock || block == Eln.transparentNodeBlock || block == Eln.ghostBlock) && !coordToNode.containsKey(coord)) {
+                        warnings.add("Block ${block.unlocalizedName} at $coord has no registered node")
+                    }
+                }
+            }
+        }
+
+        if (warnings.isEmpty()) {
+            builder.append("\nNo ghost nodes detected.\n")
+        } else {
+            builder.append("\nWarnings:\n")
+            warnings.forEach { builder.append("  - ").append(it).append('\n') }
+        }
+
+        val timestamp = SimpleDateFormat("yyyyMMdd-HHmmss-SSS", Locale.ROOT).format(Date())
+        val file = File("zonedump-$timestamp.txt")
+        try {
+            BufferedWriter(FileWriter(file)).use { it.write(builder.toString()) }
+            cprint(ics, "${FC.BRIGHT_GREEN}Zone dump written to ${file.absolutePath}", indent = 1)
+        } catch (e: Exception) {
+            cprint(ics, "${FC.BRIGHT_RED}Failed to write zone dump: ${e.message}", indent = 1)
+        }
+        if (warnings.isNotEmpty()) {
+            warnings.forEach { cprint(ics, "${FC.BRIGHT_RED}$it", indent = 1) }
+        }
+    }
+
+    override fun getManPage(ics: ICommandSender, args: List<String>) {
+        cprint(ics, "Dump Eln nodes and world blocks in a rectangular zone to a zonedump-<timestamp>.txt file.", indent = 1)
+        cprint(ics, "Usage: /eln zonedump x1 y1 z1 x2 y2 z2", indent = 1)
+        cprint(ics, "")
+    }
+}
+
+class ElnZoneCleanCommand : IConsoleCommand {
+    override val name = "zoneclean"
+
+    override fun runCommand(ics: ICommandSender, args: List<String>) {
+        if (ics !is EntityPlayerMP) {
+            cprint(ics, "${FC.BRIGHT_RED}This command can only be run by a player.", indent = 1)
+            return
+        }
+        if (args.size != 6) {
+            cprint(ics, "${FC.BRIGHT_YELLOW}Usage: /eln zoneclean x1 y1 z1 x2 y2 z2", indent = 1)
+            return
+        }
+        val coords = IntArray(6)
+        for (i in 0 until 6) {
+            val value = args[i].toIntOrNull()
+            if (value == null) {
+                cprint(ics, "${FC.BRIGHT_RED}Invalid coordinate '${args[i]}'", indent = 1)
+                return
+            }
+            coords[i] = value
+        }
+        val minX = min(coords[0], coords[3])
+        val maxX = max(coords[0], coords[3])
+        val minY = min(coords[1], coords[4])
+        val maxY = max(coords[1], coords[4])
+        val minZ = min(coords[2], coords[5])
+        val maxZ = max(coords[2], coords[5])
+
+        val world = ics.worldObj
+        val dim = world.provider.dimensionId
+        val nodeManager = NodeManager.instance
+        val nodes = nodeManager?.nodeList ?: emptyList()
+        val nodesToProcess = nodes.filter {
+            val c = it.coordinate
+            c.dimension == dim &&
+                c.x in minX..maxX &&
+                c.y in minY..maxY &&
+                c.z in minZ..maxZ
+        }
+        val coordKeyedNodes = HashMap<Coordinate, NodeBase>()
+        nodesToProcess.forEach { coordKeyedNodes[Coordinate(it.coordinate)] = it }
+
+        var nodesRemoved = 0
+        for (node in nodesToProcess) {
+            val coord = node.coordinate
+            val expectedBlock = when (node) {
+                is SixNode -> Eln.sixNodeBlock
+                is TransparentNode -> Eln.transparentNodeBlock
+                is GhostNode -> Eln.ghostBlock
+                else -> null
+            }
+            val actualBlock = world.getBlock(coord.x, coord.y, coord.z)
+            val needsRemoval =
+                node is GhostNode ||
+                    expectedBlock == null ||
+                    actualBlock != expectedBlock
+            if (needsRemoval) {
+                try {
+                    node.onBreakBlock()
+                } catch (e: Exception) {
+                    println("zonerepair: onBreakBlock failed for $coord : ${e.message}")
+                }
+                nodeManager?.removeNode(node)
+                if (expectedBlock != null && actualBlock == expectedBlock) {
+                    world.setBlockToAir(coord.x, coord.y, coord.z)
+                }
+                nodesRemoved++
+            }
+        }
+
+        var orphanBlocks = 0
+        for (x in minX..maxX) {
+            for (y in minY..maxY) {
+                for (z in minZ..maxZ) {
+                    val block = world.getBlock(x, y, z)
+                    val isNodeBlock = block == Eln.sixNodeBlock || block == Eln.transparentNodeBlock || block == Eln.ghostBlock
+                    if (!isNodeBlock) continue
+                    val coord = Coordinate(x, y, z, dim)
+                    if (coordKeyedNodes.containsKey(coord)) continue
+                    world.removeTileEntity(x, y, z)
+                    world.setBlockToAir(x, y, z)
+                    orphanBlocks++
+                }
+            }
+        }
+
+        cprint(
+            ics,
+            "${FC.BRIGHT_GREEN}Zone clean complete: removed $nodesRemoved ghost nodes and cleared $orphanBlocks orphan blocks.",
+            indent = 1
+        )
+    }
+
+    override fun getManPage(ics: ICommandSender, args: List<String>) {
+        cprint(ics, "Removes ghost nodes and orphaned Eln blocks within a rectangular zone.", indent = 1)
+        cprint(ics, "Usage: /eln zoneclean x1 y1 z1 x2 y2 z2", indent = 1)
+        cprint(ics, "Blocks removed this way must be rebuilt manually.", indent = 1)
+        cprint(ics, "")
+    }
+}
+
+class ElnZoneRemoveCommand : IConsoleCommand {
+    override val name = "zoneremove"
+
+    override fun runCommand(ics: ICommandSender, args: List<String>) {
+        if (ics !is EntityPlayerMP) {
+            cprint(ics, "${FC.BRIGHT_RED}This command can only be run by a player.", indent = 1)
+            return
+        }
+        if (args.size != 6) {
+            cprint(ics, "${FC.BRIGHT_YELLOW}Usage: /eln zoneremove x1 y1 z1 x2 y2 z2", indent = 1)
+            return
+        }
+        val coords = IntArray(6)
+        for (i in 0 until 6) {
+            val parsed = args[i].toIntOrNull()
+            if (parsed == null) {
+                cprint(ics, "${FC.BRIGHT_RED}Invalid coordinate '${args[i]}'", indent = 1)
+                return
+            }
+            coords[i] = parsed
+        }
+        val minX = min(coords[0], coords[3])
+        val maxX = max(coords[0], coords[3])
+        val minY = min(coords[1], coords[4])
+        val maxY = max(coords[1], coords[4])
+        val minZ = min(coords[2], coords[5])
+        val maxZ = max(coords[2], coords[5])
+
+        val world = ics.worldObj
+        val dim = world.provider.dimensionId
+        val nodeManager = NodeManager.instance
+        if (nodeManager == null) {
+            cprint(ics, "${FC.BRIGHT_RED}Node manager unavailable, cannot run zoneremove.", indent = 1)
+            return
+        }
+        val targetNodes = nodeManager.nodeList.filter {
+            val c = it.coordinate
+            c.dimension == dim &&
+                c.x in minX..maxX &&
+                c.y in minY..maxY &&
+                c.z in minZ..maxZ
+        }
+        val ownerNotifications = LinkedHashSet<Coordinate>()
+        var nodesRemoved = 0
+        for (node in targetNodes) {
+            val coord = node.coordinate
+            var removed = false
+            if (node is GhostNode) {
+                val ghost = Eln.ghostManager.getGhost(coord)
+                if (ghost != null) {
+                    removed = try {
+                        ghost.breakBlock()
+                        if (isOnBoundary(coord, minX, maxX, minY, maxY, minZ, maxZ)) {
+                            ghost.observatorCoordonate?.let { ownerNotifications.add(Coordinate(it)) }
+                        }
+                        true
+                    } catch (e: Exception) {
+                        println("zoneremove: ghost break failed at $coord : ${e.message}")
+                        false
+                    }
+                }
+            }
+            if (!removed) {
+                try {
+                    node.onBreakBlock()
+                    removed = true
+                } catch (e: Exception) {
+                    println("zoneremove: onBreakBlock failed for $coord : ${e.message}")
+                }
+            }
+            if (removed) {
+                nodesRemoved++
+            }
+        }
+
+        var blocksCleared = 0
+        for (x in minX..maxX) {
+            for (y in minY..maxY) {
+                for (z in minZ..maxZ) {
+                    if (clearElnBlock(world, x, y, z)) {
+                        blocksCleared++
+                    }
+                }
+            }
+        }
+
+        cprint(
+            ics,
+            "${FC.BRIGHT_GREEN}Zone remove complete: removed $nodesRemoved nodes, cleared $blocksCleared blocks, notified ${ownerNotifications.size} owners.",
+            indent = 1
+        )
+    }
+
+    override fun getManPage(ics: ICommandSender, args: List<String>) {
+        cprint(ics, "Removes all Eln nodes and blocks within a rectangular zone.", indent = 1)
+        cprint(ics, "Ghost nodes on the zone boundary notify their owners before removal.", indent = 1)
+        cprint(ics, "Usage: /eln zoneremove x1 y1 z1 x2 y2 z2", indent = 1)
+        cprint(ics, "")
+    }
+
+    private fun isOnBoundary(
+        coord: Coordinate,
+        minX: Int,
+        maxX: Int,
+        minY: Int,
+        maxY: Int,
+        minZ: Int,
+        maxZ: Int
+    ): Boolean {
+        return coord.x == minX || coord.x == maxX ||
+            coord.y == minY || coord.y == maxY ||
+            coord.z == minZ || coord.z == maxZ
+    }
+
+    private fun clearElnBlock(world: World, x: Int, y: Int, z: Int): Boolean {
+        val block = world.getBlock(x, y, z)
+        val isElnBlock =
+            block == Eln.sixNodeBlock ||
+                block == Eln.transparentNodeBlock ||
+                block == Eln.ghostBlock
+        if (!isElnBlock) return false
+        world.removeTileEntity(x, y, z)
+        world.setBlockToAir(x, y, z)
+        return true
+    }
+}
+
 class ElnWailaEasyModeCommand: IConsoleCommand {
     override val name = "wailaEasyMode"
 
@@ -454,6 +830,42 @@ class ElnDebugCommand: IConsoleCommand {
         } else {
             return options.filter {it.startsWith(args[0], ignoreCase = true)}
         }
+    }
+}
+
+class ElnSimSnapshotCommand: IConsoleCommand {
+    override val name = "sim-snapshot"
+
+    override fun runCommand(ics: ICommandSender, args: List<String>) {
+        if (args.size == 1) {
+            val enableSnapshots = getArgBool(ics, args[0]) ?: return
+            Eln.simSnapshotEnabled = enableSnapshots
+            val nonsense = false
+            Eln.config.get("debug", "simSnapshot", nonsense).set(Eln.simSnapshotEnabled)
+            Eln.config.save()
+            cprint(ics, "Simulation snapshots: ${FC.DARK_GREEN}${boolToStr(enableSnapshots)}", indent = 1)
+            cprint(ics, "Requires debug logging to be enabled as well.", indent = 1)
+        } else {
+            cprint(ics, "Usage: /eln sim-snapshot <enable|disable>", indent = 1)
+        }
+    }
+
+    override fun getManPage(ics: ICommandSender, args: List<String>) {
+        cprint(ics, "Enables/disables saving circuit MNA snapshots to disk.", indent = 1)
+        cprint(ics, "This will save to the server config file.", indent = 1)
+        cprint(ics, "")
+        cprint(ics, "Parameters:", indent = 1)
+        cprint(ics, "@0:bool : enable/disable snapshotting.", indent = 2)
+        cprint(ics, "Debug mode must also be enabled to write files.", indent = 1)
+        cprint(ics, "")
+    }
+
+    override fun requiredPermission() = listOf(UserPermission.IS_OPERATOR)
+
+    override fun getTabCompletion(args: List<String>): List<String> {
+        val options = listOf("enable", "disable", "true", "false")
+        if (args.isEmpty() || args[0].isEmpty()) return options
+        return options.filter { it.startsWith(args[0], ignoreCase = true) }
     }
 }
 
@@ -539,5 +951,278 @@ class ElnIconsCommand: IConsoleCommand {
         } else {
             return options.filter {it.startsWith(args[0], ignoreCase = true)}
         }
+    }
+}
+
+class ElnPoleMapCommand: IConsoleCommand {
+    override val name = "poleMap"
+
+    override fun runCommand(ics: ICommandSender, args: List<String>) {
+        val outputName = args.getOrNull(0)?.takeIf { it.isNotBlank() } ?: "eln_power_poles.svg"
+        val dimensionFilter = args.getOrNull(1)?.let {
+            it.toIntOrNull() ?: run {
+                cprint(ics, "${FC.DARK_RED}Invalid dimension id: $it", indent = 1)
+                return
+            }
+        }
+        val nodeManager = NodeManager.instance ?: run {
+            cprint(ics, "${FC.DARK_RED}Grid data is not available yet.", indent = 1)
+            return
+        }
+        val snapshot = nodeManager.nodeList.toList()
+        val svgData = gatherFeatures(snapshot, dimensionFilter)
+        if (svgData.points.isEmpty()) {
+            val extra = dimensionFilter?.let { " in dimension $it" } ?: ""
+            cprint(ics, "${FC.DARK_YELLOW}No T1/T2 poles or grid transformers were found$extra.", indent = 1)
+            return
+        }
+        val svgBody = buildSvg(svgData)
+        val outputFile = File(outputName)
+        try {
+            outputFile.parentFile?.let { parent ->
+                if (!parent.exists() && !parent.mkdirs()) {
+                    cprint(ics, "${FC.DARK_RED}Unable to create directory ${parent.absolutePath}", indent = 1)
+                    return
+                }
+            }
+            outputFile.writeText(svgBody)
+            cprint(ics, "${FC.BRIGHT_GREEN}Saved ${svgData.points.size} grid features to ${outputFile.absolutePath}", indent = 1)
+        } catch (ex: Exception) {
+            cprint(ics, "${FC.DARK_RED}Failed to write SVG: ${ex.message}", indent = 1)
+        }
+    }
+
+    override fun getManPage(ics: ICommandSender, args: List<String>) {
+        cprint(ics, "Creates an SVG map of every T1/T2 pole and grid transformer in the loaded world.", indent = 1)
+        cprint(ics, "Altitude is ignored so you get a plan view of the grid layout.", indent = 1)
+        cprint(ics, "")
+        cprint(ics, "Parameters:", indent = 1)
+        cprint(ics, "@0:string? : Optional output path. Defaults to eln_power_poles.svg.", indent = 2)
+        cprint(ics, "@1:int? : Optional dimension id filter. When omitted every dimension is included.", indent = 2)
+        cprint(ics, "")
+        cprint(ics, "Each pole style is rendered with a different color and includes a tooltip with its location.", indent = 1)
+    }
+
+    override fun requiredPermission() = listOf(UserPermission.IS_OPERATOR)
+
+    override fun getTabCompletion(args: List<String>) = listOf<String>()
+
+    private fun gatherFeatures(nodes: Collection<NodeBase>, dimensionFilter: Int?): SvgData {
+        val points = mutableListOf<SvgPoint>()
+        val pointIndex = mutableMapOf<CoordKey, SvgPoint>()
+        val links = LinkedHashSet<GridLink>()
+        for (node in nodes) {
+            if (node !is TransparentNode) continue
+            val coordinate = node.coordinate
+            if (dimensionFilter != null && coordinate.dimension != dimensionFilter) continue
+            val element = node.element ?: continue
+            when (element) {
+                is ElectricalPoleElement -> {
+                    val descriptor = element.descriptor as? ElectricalPoleDescriptor ?: continue
+                    val style = poleStyle(descriptor) ?: continue
+                    val label = "${style.displayName} (dim ${coordinate.dimension}, x=${coordinate.x}, z=${coordinate.z})"
+                    val point = SvgPoint(coordinate.x, coordinate.z, coordinate.dimension, style, label)
+                    points.add(point)
+                    pointIndex[coordKey(coordinate)] = point
+                    links.addAll(element.gridLinkList)
+                }
+                is GridTransformerElement -> {
+                    val style = transformerStyle
+                    val label = "${style.displayName} (dim ${coordinate.dimension}, x=${coordinate.x}, z=${coordinate.z})"
+                    val point = SvgPoint(coordinate.x, coordinate.z, coordinate.dimension, style, label)
+                    points.add(point)
+                    pointIndex[coordKey(coordinate)] = point
+                    links.addAll(element.gridLinkList)
+                }
+                is GridSwitchElement -> {
+                    val style = gridSwitchStyle
+                    val label = "${style.displayName} (dim ${coordinate.dimension}, x=${coordinate.x}, z=${coordinate.z})"
+                    val point = SvgPoint(coordinate.x, coordinate.z, coordinate.dimension, style, label)
+                    points.add(point)
+                    pointIndex[coordKey(coordinate)] = point
+                    links.addAll(element.gridLinkList)
+                }
+                is GridElement -> {
+                    // Non-pole grid element: track links if it participates
+                    links.addAll(element.gridLinkList)
+                }
+            }
+        }
+        val edges = mutableListOf<SvgEdge>()
+        for (link in links) {
+            val start = pointIndex[coordKey(link.a)]
+            val end = pointIndex[coordKey(link.b)]
+            if (start != null && end != null) {
+                edges.add(SvgEdge(start, end, defaultEdgeStyle))
+            }
+        }
+        distributePoints(points)
+        scalePoints(points)
+        return SvgData(points, edges)
+    }
+
+    private fun poleStyle(descriptor: ElectricalPoleDescriptor): TypeStyle? {
+        val key = descriptor.name?.lowercase(Locale.ROOT) ?: return null
+        return poleStyles[key]
+    }
+
+    private fun distributePoints(points: List<SvgPoint>) {
+        if (points.isEmpty()) return
+        val minSpacing = 3.5
+        val step = 1.5
+        val maxRadius = 12.0
+        for ((_, group) in points.groupBy { it.dimension }) {
+            val settled = mutableListOf<SvgPoint>()
+            for (point in group) {
+                var placed = false
+                var radius = 0.0
+                while (!placed && radius <= maxRadius) {
+                    val samples = if (radius == 0.0) 1 else 12
+                    for (i in 0 until samples) {
+                        val angle = if (radius == 0.0) 0.0 else (2 * PI * i / samples)
+                        val dx = if (radius == 0.0) 0.0 else cos(angle) * radius
+                        val dz = if (radius == 0.0) 0.0 else sin(angle) * radius
+                        val candidateX = point.x + dx
+                        val candidateZ = point.z + dz
+                        val ok = settled.all {
+                            val dist = hypot(it.drawX - candidateX, it.drawZ - candidateZ)
+                            dist >= minSpacing
+                        }
+                        if (ok) {
+                            point.drawX = candidateX
+                            point.drawZ = candidateZ
+                            placed = true
+                            break
+                        }
+                    }
+                    radius += step
+                }
+                settled.add(point)
+            }
+        }
+    }
+
+    private fun scalePoints(points: List<SvgPoint>) {
+        if (points.isEmpty() || MAP_SPACING_SCALE <= 1.0) return
+        val baseX = points.minOf { it.drawX }
+        val baseZ = points.minOf { it.drawZ }
+        for (point in points) {
+            point.drawX = baseX + (point.drawX - baseX) * MAP_SPACING_SCALE
+            point.drawZ = baseZ + (point.drawZ - baseZ) * MAP_SPACING_SCALE
+        }
+    }
+
+    private fun buildSvg(data: SvgData): String {
+        val points = data.points
+        val edges = data.edges
+        val drawMinX = points.minOf { it.drawX }
+        val drawMaxX = points.maxOf { it.drawX }
+        val drawMinZ = points.minOf { it.drawZ }
+        val drawMaxZ = points.maxOf { it.drawZ }
+        val padding = 16.0
+        val mapWidth = max(ceil(drawMaxX - drawMinX), 8.0) + padding * 2
+        val mapHeight = max(ceil(drawMaxZ - drawMinZ), 8.0) + padding * 2
+        val contentWidth = mapWidth
+        val contentHeight = mapHeight
+        val usedStyles = points.map { it.style }.distinctBy { it.displayName }
+        val legendSpacing = if (usedStyles.isEmpty()) 0.0 else 12.0
+        val estimatedLegendWidth = if (usedStyles.isEmpty()) 0.0 else usedStyles.maxOf { it.displayName.length * 4 + 28 }.toDouble()
+        val legendWidth = if (usedStyles.isEmpty()) 0.0 else max(estimatedLegendWidth, 110.0)
+        val legendHeight = if (usedStyles.isEmpty()) 0.0 else (usedStyles.size * 7 + 10).toDouble()
+        val legendAreaWidth = if (usedStyles.isEmpty()) 0.0 else legendWidth + legendSpacing
+        val minSvgWidth = 260.0
+        val minSvgHeight = 220.0
+        val viewWidth = max(contentWidth + legendAreaWidth + padding, minSvgWidth)
+        val viewHeight = max(contentHeight, max(legendHeight + padding * 2, minSvgHeight))
+        val viewMinX = drawMinX - padding
+        val viewMinZ = drawMinZ - padding
+        val mapOriginX = drawMinX - padding
+        val mapOriginZ = drawMinZ - padding
+        val builder = StringBuilder()
+        builder.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n")
+        builder.append("<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"$viewMinX $viewMinZ $viewWidth $viewHeight\" width=\"$viewWidth\" height=\"$viewHeight\">\n")
+        builder.append("<style>.pole{stroke:#111827;stroke-width:0.4;opacity:0.95;} .link{stroke-linecap:round;fill:none;} text{font-family:monospace;} .legend text{font-size:5px;fill:#0f172a;} .legend rect{fill:#f8fafc;stroke:#94a3b8;stroke-width:0.4;} .legend circle{stroke:#1e293b;stroke-width:0.3;}</style>\n")
+        builder.append("<rect x=\"$mapOriginX\" y=\"$mapOriginZ\" width=\"$contentWidth\" height=\"$contentHeight\" fill=\"#e2e8f0\" stroke=\"#94a3b8\" stroke-width=\"0.4\" />\n")
+        builder.append("<g class=\"links\">\n")
+        for (edge in edges) {
+            builder.append("<line class=\"link\" x1=\"${edge.a.drawX}\" y1=\"${edge.a.drawZ}\" x2=\"${edge.b.drawX}\" y2=\"${edge.b.drawZ}\" stroke=\"${edge.style.color}\" stroke-width=\"${edge.style.width}\" opacity=\"${edge.style.opacity}\" />\n")
+        }
+        builder.append("</g>\n")
+        for ((dimension, group) in points.groupBy { it.dimension }) {
+            builder.append("<g class=\"dimension\" data-dimension=\"$dimension\">\n")
+            for (point in group) {
+                builder.append("<circle class=\"pole\" cx=\"${point.drawX}\" cy=\"${point.drawZ}\" r=\"${point.style.radius}\" fill=\"${point.style.color}\">")
+                builder.append("<title>${point.label}</title>")
+                builder.append("</circle>\n")
+            }
+            builder.append("</g>\n")
+        }
+        if (usedStyles.isNotEmpty()) {
+            val legendX = mapOriginX + contentWidth + legendSpacing
+            val legendY = viewMinZ + 6
+            builder.append("<g class=\"legend\">\n")
+            builder.append("<rect x=\"$legendX\" y=\"$legendY\" width=\"$legendWidth\" height=\"$legendHeight\" />\n")
+            var rowY = legendY + 6
+            for (style in usedStyles) {
+                builder.append("<circle class=\"pole\" cx=\"${legendX + 4}\" cy=\"$rowY\" r=\"${style.radius}\" fill=\"${style.color}\" />\n")
+                builder.append("<text x=\"${legendX + 10}\" y=\"${rowY + 1.5}\">${style.displayName}</text>\n")
+                rowY += 7
+            }
+            builder.append("</g>\n")
+        }
+        builder.append("</svg>\n")
+        return builder.toString()
+    }
+
+    private data class SvgPoint(
+        val x: Int,
+        val z: Int,
+        val dimension: Int,
+        val style: TypeStyle,
+        val label: String,
+        var drawX: Double = x.toDouble(),
+        var drawZ: Double = z.toDouble()
+    )
+
+    private data class SvgEdge(
+        val a: SvgPoint,
+        val b: SvgPoint,
+        val style: EdgeStyle
+    )
+
+    private data class EdgeStyle(
+        val color: String,
+        val width: Double,
+        val opacity: Double
+    )
+
+    private data class SvgData(
+        val points: List<SvgPoint>,
+        val edges: List<SvgEdge>
+    )
+
+    private data class CoordKey(val dimension: Int, val x: Int, val z: Int)
+
+    private fun coordKey(coord: Coordinate) = CoordKey(coord.dimension, coord.x, coord.z)
+
+    private data class TypeStyle(
+        val key: String,
+        val displayName: String,
+        val color: String,
+        val radius: Double
+    )
+
+    companion object {
+        private const val MAP_SPACING_SCALE = 4.0
+        private val poleStyles = mapOf(
+            "utility pole" to TypeStyle("utility pole", "T1 Utility Pole", "#2563eb", 2.6),
+            "utility pole w/dc-dc converter" to TypeStyle("utility pole w/dc-dc converter", "T1 Utility Pole w/Transformer", "#f97316", 3.0),
+            "direct utility pole" to TypeStyle("direct utility pole", "Direct Utility Pole", "#16a34a", 2.4),
+            "transmission tower" to TypeStyle("transmission tower", "T2 Transmission Tower", "#dc2626", 3.2)
+        )
+
+        private val transformerStyle = TypeStyle("grid transformer", "Grid Transformer", "#9333ea", 3.4)
+        private val gridSwitchStyle = TypeStyle("grid switch", "Grid Switch", "#0ea5e9", 3.0)
+        private val defaultEdgeStyle = EdgeStyle("#475569", 0.8, 0.65)
     }
 }

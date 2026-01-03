@@ -1,8 +1,0 @@
-{{Block
-|blockname=Electrical Fire Buzzer
-|image=firebuzzer
-|poweredby=Portable Battery
-|type=Single
-}}The Electrical Fire Buzzer is a device that detects fire within it's range and emits a buzzing noise when detected. Takes batteries.
-== How to use ==
-To use, simply place a charged portable battery in the slot after right-clicking the Electrical Fire Buzzer. The Buzzer will activate after fire is detected.

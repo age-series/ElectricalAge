@@ -1,9 +1,0 @@
-== Obtaining ==
-Process sand through a [[Compressor]]
-== Usage ==
-Can be used to craft: <br />
-[[Capacitors]]
-<br />
-[[Oscillator_(Chip)]]
-<br/>
-[[Lowpass_filter]]

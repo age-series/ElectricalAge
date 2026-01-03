@@ -17,6 +17,7 @@ import mods.eln.item.regulator.RegulatorOnOffDescriptor
 import mods.eln.mechanical.ClutchPinItem
 import mods.eln.mechanical.ClutchPlateItem
 import mods.eln.ore.OreDescriptor
+import mods.eln.railroad.ElectricMinecartItem
 import mods.eln.sixnode.electricaldatalogger.DataLogsPrintDescriptor
 import mods.eln.sixnode.lampsocket.LampSocketType
 import mods.eln.sixnode.wirelesssignal.WirelessSignalAnalyserItemDescriptor
@@ -24,14 +25,55 @@ import mods.eln.wiki.Data
 import net.minecraft.entity.monster.IMob
 import net.minecraft.entity.passive.EntityAnimal
 import net.minecraft.entity.player.EntityPlayer
+import net.minecraft.creativetab.CreativeTabs
 import net.minecraft.item.*
 import net.minecraft.item.Item.ToolMaterial
 import net.minecraft.item.ItemArmor.ArmorMaterial
 import net.minecraftforge.common.util.EnumHelper
 import net.minecraftforge.oredict.OreDictionary
+import kotlin.ExperimentalUnsignedTypes
+import kotlin.OptIn
 
 object ItemRegistration {
+
+    private fun mapSharedGroup(id: Int, tab: CreativeTabs) {
+        Eln.sharedItem.setCreativeTabForGroup(id, tab)
+        Eln.sharedItemStackOne.setCreativeTabForGroup(id, tab)
+    }
+
+    private fun <T : GenericItemUsingDamageDescriptor> T.inOresAndMaterialsTab() = apply {
+        creativeTab = Eln.creativeTabOresMaterials
+    }
+
+    private fun <T : GenericItemUsingDamageDescriptor> T.inToolsAndArmorTab() = apply {
+        creativeTab = Eln.creativeTabToolsArmor
+    }
     fun registerItem() {
+        mapSharedGroup(1, Eln.creativeTabMachines)
+        mapSharedGroup(3, Eln.creativeTabSignalProcessing)
+        mapSharedGroup(4, Eln.creativeTabLighting)
+        mapSharedGroup(5, Eln.creativeTabOresMaterials)
+        mapSharedGroup(6, Eln.creativeTabOresMaterials)
+        mapSharedGroup(7, Eln.creativeTabOresMaterials)
+        mapSharedGroup(8, Eln.creativeTabOresMaterials)
+        mapSharedGroup(9, Eln.creativeTabOresMaterials)
+        mapSharedGroup(10, Eln.creativeTabOresMaterials)
+        mapSharedGroup(11, Eln.creativeTabPowerElectronics)
+        mapSharedGroup(14, Eln.creativeTabToolsArmor)
+        mapSharedGroup(15, Eln.creativeTabMachines)
+        mapSharedGroup(16, Eln.creativeTabMachines)
+        mapSharedGroup(17, Eln.creativeTabMachines)
+        mapSharedGroup(64, Eln.creativeTabOresMaterials)
+        mapSharedGroup(65, Eln.creativeTabOresMaterials)
+        mapSharedGroup(69, Eln.creativeTabOresMaterials)
+        mapSharedGroup(119, Eln.creativeTabToolsArmor)
+        mapSharedGroup(120, Eln.creativeTabMachines)
+        mapSharedGroup(121, Eln.creativeTabToolsArmor)
+        mapSharedGroup(122, Eln.creativeTabToolsArmor)
+        mapSharedGroup(124, Eln.creativeTabPowerElectronics)
+        mapSharedGroup(126, Eln.creativeTabOresMaterials)
+        mapSharedGroup(127, Eln.creativeTabToolsArmor)
+
         //ITEM REGISTRATION
         //Sub-UID must be unique in this section only.
         //============================================
@@ -72,6 +114,7 @@ object ItemRegistration {
 
 
         registerBasicItems(126)
+        registerElectricMinecartItems(127)
 
         registerArmor()
         registerTool()
@@ -87,7 +130,7 @@ object ItemRegistration {
             subId = 0
             completId = subId + (id shl 6)
             element = HeatingCorpElement(
-                I18N.TR_NAME(I18N.Type.NONE, "Small 50V Copper Heating Corp"),
+                I18N.TR_NAME(I18N.Type.NONE, "Small 50V Copper Heating Element"),
                 Eln.LVU,
                 150.0,
                 190.0,
@@ -99,7 +142,7 @@ object ItemRegistration {
             subId = 1
             completId = subId + (id shl 6)
             element = HeatingCorpElement(
-                I18N.TR_NAME(I18N.Type.NONE, "50V Copper Heating Corp"),
+                I18N.TR_NAME(I18N.Type.NONE, "50V Copper Heating Element"),
                 Eln.LVU,
                 250.0,
                 320.0,
@@ -111,7 +154,7 @@ object ItemRegistration {
             subId = 2
             completId = subId + (id shl 6)
             element = HeatingCorpElement(
-                I18N.TR_NAME(I18N.Type.NONE, "Small 200V Copper Heating Corp"),
+                I18N.TR_NAME(I18N.Type.NONE, "Small 200V Copper Heating Element"),
                 Eln.MVU,
                 400.0,
                 500.0,
@@ -123,7 +166,7 @@ object ItemRegistration {
             subId = 3
             completId = subId + (id shl 6)
             element = HeatingCorpElement(
-                I18N.TR_NAME(I18N.Type.NONE, "200V Copper Heating Corp"),
+                I18N.TR_NAME(I18N.Type.NONE, "200V Copper Heating Element"),
                 Eln.MVU,
                 600.0,
                 750.0,
@@ -135,7 +178,7 @@ object ItemRegistration {
             subId = 4
             completId = subId + (id shl 6)
             element = HeatingCorpElement(
-                I18N.TR_NAME(I18N.Type.NONE, "Small 50V Iron Heating Corp"),
+                I18N.TR_NAME(I18N.Type.NONE, "Small 50V Iron Heating Element"),
                 Eln.LVU,
                 180.0,
                 225.0,
@@ -147,7 +190,7 @@ object ItemRegistration {
             subId = 5
             completId = subId + (id shl 6)
             element = HeatingCorpElement(
-                I18N.TR_NAME(I18N.Type.NONE, "50V Iron Heating Corp"),
+                I18N.TR_NAME(I18N.Type.NONE, "50V Iron Heating Element"),
                 Eln.LVU,
                 375.0,
                 480.0,
@@ -159,7 +202,7 @@ object ItemRegistration {
             subId = 6
             completId = subId + (id shl 6)
             element = HeatingCorpElement(
-                I18N.TR_NAME(I18N.Type.NONE, "Small 200V Iron Heating Corp"),
+                I18N.TR_NAME(I18N.Type.NONE, "Small 200V Iron Heating Element"),
                 Eln.MVU,
                 600.0,
                 750.0,
@@ -171,7 +214,7 @@ object ItemRegistration {
             subId = 7
             completId = subId + (id shl 6)
             element = HeatingCorpElement(
-                I18N.TR_NAME(I18N.Type.NONE, "200V Iron Heating Corp"),
+                I18N.TR_NAME(I18N.Type.NONE, "200V Iron Heating Element"),
                 Eln.MVU,
                 900.0,
                 1050.0,
@@ -183,7 +226,7 @@ object ItemRegistration {
             subId = 8
             completId = subId + (id shl 6)
             element = HeatingCorpElement(
-                I18N.TR_NAME(I18N.Type.NONE, "Small 50V Tungsten Heating Corp"),
+                I18N.TR_NAME(I18N.Type.NONE, "Small 50V Tungsten Heating Element"),
                 Eln.LVU,
                 240.0,
                 300.0,
@@ -195,7 +238,7 @@ object ItemRegistration {
             subId = 9
             completId = subId + (id shl 6)
             element = HeatingCorpElement(
-                I18N.TR_NAME(I18N.Type.NONE, "50V Tungsten Heating Corp"),
+                I18N.TR_NAME(I18N.Type.NONE, "50V Tungsten Heating Element"),
                 Eln.LVU,
                 500.0,
                 640.0,
@@ -207,7 +250,7 @@ object ItemRegistration {
             subId = 10
             completId = subId + (id shl 6)
             element = HeatingCorpElement(
-                I18N.TR_NAME(I18N.Type.NONE, "Small 200V Tungsten Heating Corp"),
+                I18N.TR_NAME(I18N.Type.NONE, "Small 200V Tungsten Heating Element"),
                 Eln.MVU,
                 800.0,
                 1000.0,
@@ -219,7 +262,7 @@ object ItemRegistration {
             subId = 11
             completId = subId + (id shl 6)
             element = HeatingCorpElement(
-                I18N.TR_NAME(I18N.Type.NONE, "200V Tungsten Heating Corp"),
+                I18N.TR_NAME(I18N.Type.NONE, "200V Tungsten Heating Element"),
                 Eln.MVU,
                 1200.0,
                 1500.0,
@@ -231,7 +274,7 @@ object ItemRegistration {
             subId = 12
             completId = subId + (id shl 6)
             element = HeatingCorpElement(
-                I18N.TR_NAME(I18N.Type.NONE, "Small 800V Tungsten Heating Corp"),
+                I18N.TR_NAME(I18N.Type.NONE, "Small 800V Tungsten Heating Element"),
                 Eln.HVU,
                 3600.0,
                 4800.0,
@@ -243,7 +286,7 @@ object ItemRegistration {
             subId = 13
             completId = subId + (id shl 6)
             element = HeatingCorpElement(
-                I18N.TR_NAME(I18N.Type.NONE, "800V Tungsten Heating Corp"),
+                I18N.TR_NAME(I18N.Type.NONE, "800V Tungsten Heating Element"),
                 Eln.HVU,
                 4812.0,
                 6015.0,
@@ -255,7 +298,7 @@ object ItemRegistration {
             subId = 14
             completId = subId + (id shl 6)
             element = HeatingCorpElement(
-                I18N.TR_NAME(I18N.Type.NONE, "Small 3.2kV Tungsten Heating Corp"),
+                I18N.TR_NAME(I18N.Type.NONE, "Small 3.2kV Tungsten Heating Element"),
                 Eln.VVU,
                 4000.0,
                 6000.0,
@@ -267,13 +310,23 @@ object ItemRegistration {
             subId = 15
             completId = subId + (id shl 6)
             element = HeatingCorpElement(
-                I18N.TR_NAME(I18N.Type.NONE, "3.2kV Tungsten Heating Corp"),
+                I18N.TR_NAME(I18N.Type.NONE, "3.2kV Tungsten Heating Element"),
                 Eln.VVU,
                 12000.0,
                 15000.0,
                 instance.veryHighVoltageCableDescriptor
             )
             Eln.sharedItem.addElement(completId, element)
+        }
+    }
+
+    private fun registerElectricMinecartItems(id: Int) {
+        var subId: Int
+        run {
+            subId = 0
+            val name = I18N.TR_NAME(I18N.Type.NONE, "Electric Minecart")
+            val minecartItem = ElectricMinecartItem(name)
+            Eln.sharedItem.addElement(subId + (id shl 6), minecartItem)
         }
     }
 
@@ -557,7 +610,6 @@ object ItemRegistration {
     private fun registerProtection(id: Int) {
         var subId: Int
         var completId: Int
-        var name: String
 
         run {
             subId = 0
@@ -647,7 +699,8 @@ object ItemRegistration {
     }
 
     private fun registerDust(id: Int) {
-        var id = id
+        var currentId = id
+        // TODO: Breaking change! We should really not be modifying ID. When we re-assign these to be subId, it will break existing registered items
         var subId: Int
         var completId: Int
         var name: String?
@@ -655,7 +708,7 @@ object ItemRegistration {
 
         run {
             subId = 1
-            completId = subId + (id shl 6)
+            completId = subId + (currentId shl 6)
             name = I18N.TR_NAME(I18N.Type.NONE, "Copper Dust")
             element = GenericItemUsingDamageDescriptorWithComment(name, arrayOf())
             Eln.dustCopper = element
@@ -665,7 +718,7 @@ object ItemRegistration {
         }
         run {
             subId = 2
-            completId = subId + (id shl 6)
+            completId = subId + (currentId shl 6)
             name = I18N.TR_NAME(I18N.Type.NONE, "Iron Dust")
             element = GenericItemUsingDamageDescriptorWithComment(name, arrayOf())
             Eln.dustCopper = element
@@ -675,7 +728,7 @@ object ItemRegistration {
         }
         run {
             subId = 3
-            completId = subId + (id shl 6)
+            completId = subId + (currentId shl 6)
             name = I18N.TR_NAME(I18N.Type.NONE, "Lapis Dust")
             element = GenericItemUsingDamageDescriptorWithComment(name, arrayOf())
             Eln.dustCopper = element
@@ -685,7 +738,7 @@ object ItemRegistration {
         }
         run {
             subId = 4
-            completId = subId + (id shl 6)
+            completId = subId + (currentId shl 6)
             name = I18N.TR_NAME(I18N.Type.NONE, "Diamond Dust")
             element = GenericItemUsingDamageDescriptorWithComment(name, arrayOf())
             Eln.dustCopper = element
@@ -695,53 +748,53 @@ object ItemRegistration {
         }
 
         run {
-            id = 5
+            currentId = 5
             name = I18N.TR_NAME(I18N.Type.NONE, "Lead Dust")
             element = GenericItemUsingDamageDescriptorWithComment(name, arrayOf())
-            Eln.sharedItem.addElement(id, element)
+            Eln.sharedItem.addElement(currentId, element)
             Data.addResource(element.newItemStack())
             addToOre("dustLead", element.newItemStack())
         }
         run {
-            id = 6
+            currentId = 6
             name = I18N.TR_NAME(I18N.Type.NONE, "Tungsten Dust")
             element = GenericItemUsingDamageDescriptorWithComment(name, arrayOf())
-            Eln.sharedItem.addElement(id, element)
+            Eln.sharedItem.addElement(currentId, element)
             Data.addResource(element.newItemStack())
             addToOre(Eln.dictTungstenDust, element.newItemStack())
         }
 
         run {
-            id = 7
+            currentId = 7
             name = I18N.TR_NAME(I18N.Type.NONE, "Gold Dust")
             element = GenericItemUsingDamageDescriptorWithComment(name, arrayOf())
-            Eln.sharedItem.addElement(id, element)
+            Eln.sharedItem.addElement(currentId, element)
             Data.addResource(element.newItemStack())
             addToOre("dustGold", element.newItemStack())
         }
 
         run {
-            id = 8
+            currentId = 8
             name = I18N.TR_NAME(I18N.Type.NONE, "Coal Dust")
             element = GenericItemUsingDamageDescriptorWithComment(name, arrayOf())
-            Eln.sharedItem.addElement(id, element)
+            Eln.sharedItem.addElement(currentId, element)
             Data.addResource(element.newItemStack())
             addToOre("dustCoal", element.newItemStack())
         }
         run {
-            id = 9
+            currentId = 9
             name = I18N.TR_NAME(I18N.Type.NONE, "Alloy Dust")
             element = GenericItemUsingDamageDescriptorWithComment(name, arrayOf())
-            Eln.sharedItem.addElement(id, element)
+            Eln.sharedItem.addElement(currentId, element)
             Data.addResource(element.newItemStack())
             addToOre("dustAlloy", element.newItemStack())
         }
 
         run {
-            id = 10
+            currentId = 10
             name = I18N.TR_NAME(I18N.Type.NONE, "Cinnabar Dust")
             element = GenericItemUsingDamageDescriptorWithComment(name, arrayOf())
-            Eln.sharedItem.addElement(id, element)
+            Eln.sharedItem.addElement(currentId, element)
             Data.addResource(element.newItemStack())
             addToOre("dustCinnabar", element.newItemStack())
         }
@@ -1236,6 +1289,7 @@ object ItemRegistration {
         }
     }
 
+    @OptIn(ExperimentalUnsignedTypes::class)
     private fun registerPortableItem(id: Int) {
         var subId: Int
         var name: String
@@ -1309,7 +1363,7 @@ object ItemRegistration {
             val desc = GenericItemUsingDamageDescriptorWithComment(
                 name,
                 arrayOf()
-            )
+            ).inOresAndMaterialsTab()
             Eln.sharedItem.addElement(subId + (id shl 6), desc)
             Data.addResource(desc.newItemStack())
             OreDictionary.registerOre(Eln.dictCheapChip, desc.newItemStack())
@@ -1320,7 +1374,7 @@ object ItemRegistration {
             val desc = GenericItemUsingDamageDescriptorWithComment(
                 name,
                 arrayOf()
-            )
+            ).inOresAndMaterialsTab()
             Eln.sharedItem.addElement(subId + (id shl 6), desc)
             Data.addResource(desc.newItemStack())
             OreDictionary.registerOre(Eln.dictAdvancedChip, desc.newItemStack())
@@ -1331,7 +1385,7 @@ object ItemRegistration {
             val desc = GenericItemUsingDamageDescriptorWithComment(
                 name,
                 arrayOf()
-            )
+            ).inOresAndMaterialsTab()
             Eln.sharedItem.addElement(subId + (id shl 6), desc)
             Data.addResource(desc.newItemStack())
             addToOre("casingMachine", desc.newItemStack())
@@ -1342,7 +1396,7 @@ object ItemRegistration {
             val desc = GenericItemUsingDamageDescriptorWithComment(
                 name,
                 arrayOf()
-            )
+            ).inOresAndMaterialsTab()
             Eln.sharedItem.addElement(subId + (id shl 6), desc)
             Data.addResource(desc.newItemStack())
         }
@@ -1352,7 +1406,7 @@ object ItemRegistration {
             val desc = GenericItemUsingDamageDescriptorWithComment(
                 name,
                 arrayOf()
-            )
+            ).inOresAndMaterialsTab()
             Eln.sharedItem.addElement(subId + (id shl 6), desc)
             Data.addResource(desc.newItemStack())
         }
@@ -1363,7 +1417,7 @@ object ItemRegistration {
             val desc = GenericItemUsingDamageDescriptorWithComment(
                 name,
                 arrayOf()
-            )
+            ).inOresAndMaterialsTab()
             Eln.sharedItem.addElement(subId + (id shl 6), desc)
             Data.addResource(desc.newItemStack())
             Eln.plateCopper = desc
@@ -1375,7 +1429,7 @@ object ItemRegistration {
             val desc = GenericItemUsingDamageDescriptorWithComment(
                 name,
                 arrayOf()
-            )
+            ).inOresAndMaterialsTab()
             Eln.sharedItem.addElement(subId + (id shl 6), desc)
             Data.addResource(desc.newItemStack())
             addToOre("plateIron", desc.newItemStack())
@@ -1386,7 +1440,7 @@ object ItemRegistration {
             val desc = GenericItemUsingDamageDescriptorWithComment(
                 name,
                 arrayOf()
-            )
+            ).inOresAndMaterialsTab()
             Eln.sharedItem.addElement(subId + (id shl 6), desc)
             Data.addResource(desc.newItemStack())
             addToOre("plateGold", desc.newItemStack())
@@ -1397,7 +1451,7 @@ object ItemRegistration {
             val desc = GenericItemUsingDamageDescriptorWithComment(
                 name,
                 arrayOf()
-            )
+            ).inOresAndMaterialsTab()
             Eln.sharedItem.addElement(subId + (id shl 6), desc)
             Data.addResource(desc.newItemStack())
             addToOre("plateLead", desc.newItemStack())
@@ -1408,7 +1462,7 @@ object ItemRegistration {
             val desc = GenericItemUsingDamageDescriptorWithComment(
                 name,
                 arrayOf()
-            )
+            ).inOresAndMaterialsTab()
             Eln.sharedItem.addElement(subId + (id shl 6), desc)
             Data.addResource(desc.newItemStack())
             addToOre("plateSilicon", desc.newItemStack())
@@ -1420,7 +1474,7 @@ object ItemRegistration {
             val desc = GenericItemUsingDamageDescriptorWithComment(
                 name,
                 arrayOf()
-            )
+            ).inOresAndMaterialsTab()
             Eln.sharedItem.addElement(subId + (id shl 6), desc)
             Data.addResource(desc.newItemStack())
             addToOre("plateAlloy", desc.newItemStack())
@@ -1431,7 +1485,7 @@ object ItemRegistration {
             val desc = GenericItemUsingDamageDescriptorWithComment(
                 name,
                 arrayOf()
-            )
+            ).inOresAndMaterialsTab()
             Eln.sharedItem.addElement(subId + (id shl 6), desc)
             Data.addResource(desc.newItemStack())
             addToOre("plateCoal", desc.newItemStack())
@@ -1443,7 +1497,7 @@ object ItemRegistration {
             val desc = GenericItemUsingDamageDescriptorWithComment(
                 name,
                 arrayOf()
-            )
+            ).inOresAndMaterialsTab()
             Eln.sharedItem.addElement(subId + (id shl 6), desc)
             Data.addResource(desc.newItemStack())
             addToOre("dustSilicon", desc.newItemStack())
@@ -1454,7 +1508,7 @@ object ItemRegistration {
             val desc = GenericItemUsingDamageDescriptorWithComment(
                 name,
                 arrayOf()
-            )
+            ).inOresAndMaterialsTab()
             Eln.sharedItem.addElement(subId + (id shl 6), desc)
             Data.addResource(desc.newItemStack())
             addToOre("ingotSilicon", desc.newItemStack())
@@ -1472,7 +1526,7 @@ object ItemRegistration {
                 GenericItemUsingDamageDescriptorWithComment(
                     I18N.TR_NAME(I18N.Type.NONE, "Advanced Machine Block"),
                     arrayOf()
-                ) // TODO: Description.
+                ).inOresAndMaterialsTab() // TODO: Description.
             Eln.sharedItem.addElement(subId + (id shl 6), desc)
             Data.addResource(desc.newItemStack())
             addToOre("casingMachineAdvanced", desc.newItemStack())
@@ -1483,7 +1537,7 @@ object ItemRegistration {
             val desc = GenericItemUsingDamageDescriptorWithComment(
                 name,
                 arrayOf()
-            )
+            ).inOresAndMaterialsTab()
             Eln.sharedItem.addElement(subId + (id shl 6), desc)
             Data.addResource(desc.newItemStack())
         }
@@ -1493,7 +1547,7 @@ object ItemRegistration {
             val desc = GenericItemUsingDamageDescriptorWithComment(
                 name,
                 arrayOf()
-            )
+            ).inOresAndMaterialsTab()
             Eln.sharedItem.addElement(subId + (id shl 6), desc)
             Data.addResource(desc.newItemStack())
         }
@@ -1512,7 +1566,7 @@ object ItemRegistration {
             val desc = GenericItemUsingDamageDescriptorWithComment(
                 name,
                 arrayOf()
-            )
+            ).inOresAndMaterialsTab()
             Eln.sharedItem.addElement(subId + (id shl 6), desc)
             Data.addResource(desc.newItemStack())
         }
@@ -1546,7 +1600,7 @@ object ItemRegistration {
             val desc = GenericItemUsingDamageDescriptorWithComment(name,
                 tr("Electrical age wrench,\nCan be used to turn\nsmall wall blocks")
                     .split("\n".toRegex()).dropLastWhile { it.isEmpty() }
-                    .toTypedArray())
+                    .toTypedArray()).inToolsAndArmorTab()
             Eln.sharedItem.addElement(subId + (id shl 6), desc)
             Eln.wrenchItemStack = desc.newItemStack()
         }
@@ -1554,42 +1608,83 @@ object ItemRegistration {
         run {
             subId = 52
             name = I18N.TR_NAME(I18N.Type.NONE, "Dielectric")
-            val desc = DielectricItem(name, Eln.LVU)
+            val desc = DielectricItem(name, Eln.LVU).inOresAndMaterialsTab()
             Eln.sharedItem.addElement(subId + (id shl 6), desc)
         }
 
-        Eln.sharedItem.addElement(53 + (id shl 6), CaseItemDescriptor(I18N.TR_NAME(I18N.Type.NONE, "Casing")))
+        val casingDesc = CaseItemDescriptor(I18N.TR_NAME(I18N.Type.NONE, "Casing")).inOresAndMaterialsTab()
+        Eln.sharedItem.addElement(53 + (id shl 6), casingDesc)
         Eln.sharedItem.addElement(
             54 + (id shl 6), ClutchPlateItem(
                 "Iron Clutch Plate", 5120f, 640f, 640f, 160f,
                 0.0001f, false
-            )
+            ).inOresAndMaterialsTab()
         )
-        Eln.sharedItem.addElement(55 + (id shl 6), ClutchPinItem("Clutch Pin"))
+        Eln.sharedItem.addElement(55 + (id shl 6), ClutchPinItem("Clutch Pin").inOresAndMaterialsTab())
         Eln.sharedItem.addElement(
             56 + (id shl 6), ClutchPlateItem(
                 "Gold Clutch Plate", 10240f, 2048f, 1024f, 512f,
                 0.001f, false
-            )
+            ).inOresAndMaterialsTab()
         )
         Eln.sharedItem.addElement(
             57 + (id shl 6), ClutchPlateItem(
                 "Copper Clutch Plate", 8192f, 4096f, 1024f, 512f,
                 0.0003f, false
-            )
+            ).inOresAndMaterialsTab()
         )
         Eln.sharedItem.addElement(
             58 + (id shl 6), ClutchPlateItem(
                 "Lead Clutch Plate", 15360f, 1024f, 1536f, 768f,
                 0.0015f, false
-            )
+            ).inOresAndMaterialsTab()
         )
         Eln.sharedItem.addElement(
             59 + (id shl 6), ClutchPlateItem(
                 "Coal Clutch Plate", 1024f, 128f, 128f, 32f, 0.1f,
                 true
-            )
+            ).inOresAndMaterialsTab()
         )
+        run {
+            subId = 60
+            name = I18N.TR_NAME(I18N.Type.NONE, "Motor Cowling")
+            val desc = GenericItemUsingDamageDescriptorWithComment(
+                name,
+                arrayOf()
+            ).inOresAndMaterialsTab()
+            Eln.sharedItem.addElement(subId + (id shl 6), desc)
+            Data.addResource(desc.newItemStack())
+        }
+        run {
+            subId = 61
+            name = I18N.TR_NAME(I18N.Type.NONE, "Heavy Winding")
+            val desc = GenericItemUsingDamageDescriptorWithComment(
+                name,
+                arrayOf()
+            ).inOresAndMaterialsTab()
+            Eln.sharedItem.addElement(subId + (id shl 6), desc)
+            Data.addResource(desc.newItemStack())
+        }
+        run {
+            subId = 62
+            name = I18N.TR_NAME(I18N.Type.NONE, "Reinforced Shaft")
+            val desc = GenericItemUsingDamageDescriptorWithComment(
+                name,
+                arrayOf()
+            ).inOresAndMaterialsTab()
+            Eln.sharedItem.addElement(subId + (id shl 6), desc)
+            Data.addResource(desc.newItemStack())
+        }
+        run {
+            subId = 63
+            name = I18N.TR_NAME(I18N.Type.NONE, "Turbine Blade Set")
+            val desc = GenericItemUsingDamageDescriptorWithComment(
+                name,
+                arrayOf()
+            ).inOresAndMaterialsTab()
+            Eln.sharedItem.addElement(subId + (id shl 6), desc)
+            Data.addResource(desc.newItemStack())
+        }
     }
 
     private fun registerBrush(id: Int) {
@@ -1642,6 +1737,7 @@ object ItemRegistration {
     public fun registerOre() {
         var id: Int
         var name: String?
+        Eln.oreItem.setCreativeTabForGroup(0, Eln.creativeTabOresMaterials)
 
         run {
             id = 1
@@ -1687,7 +1783,7 @@ object ItemRegistration {
             Eln.helmetCopper = genericArmorItem(
                 ArmorMaterial.IRON, 2, ArmourType.Helmet, "eln:textures" +
                         "/armor/copper_layer_1.png", "eln:textures/armor/copper_layer_2.png"
-            ).setUnlocalizedName(name).setTextureName("eln:copper_helmet").setCreativeTab(Eln.creativeTab) as ItemArmor
+            ).setUnlocalizedName(name).setTextureName("eln:copper_helmet").setCreativeTab(Eln.creativeTabToolsArmor) as ItemArmor
             GameRegistry.registerItem(Eln.helmetCopper, "Eln.$name")
             GameRegistry.registerCustomItemStack(name, ItemStack(Eln.helmetCopper))
         }
@@ -1697,7 +1793,7 @@ object ItemRegistration {
                 ArmorMaterial.IRON, 2, ArmourType.Chestplate, "eln" +
                         ":textures/armor/copper_layer_1.png", "eln:textures/armor/copper_layer_2.png"
             ).setUnlocalizedName(name).setTextureName("eln:copper_chestplate")
-                .setCreativeTab(Eln.creativeTab) as ItemArmor
+                .setCreativeTab(Eln.creativeTabToolsArmor) as ItemArmor
             GameRegistry.registerItem(Eln.chestplateCopper, "Eln.$name")
             GameRegistry.registerCustomItemStack(name, ItemStack(Eln.chestplateCopper))
         }
@@ -1707,7 +1803,7 @@ object ItemRegistration {
                 ArmorMaterial.IRON, 2, ArmourType.Leggings, "eln:textures" +
                         "/armor/copper_layer_1.png", "eln:textures/armor/copper_layer_2.png"
             ).setUnlocalizedName(name).setTextureName("eln:copper_leggings")
-                .setCreativeTab(Eln.creativeTab) as ItemArmor
+                .setCreativeTab(Eln.creativeTabToolsArmor) as ItemArmor
             GameRegistry.registerItem(Eln.legsCopper, "Eln.$name")
             GameRegistry.registerCustomItemStack(name, ItemStack(Eln.legsCopper))
         }
@@ -1716,7 +1812,7 @@ object ItemRegistration {
             Eln.bootsCopper = genericArmorItem(
                 ArmorMaterial.IRON, 2, ArmourType.Boots, "eln:textures" +
                         "/armor/copper_layer_1.png", "eln:textures/armor/copper_layer_2.png"
-            ).setUnlocalizedName(name).setTextureName("eln:copper_boots").setCreativeTab(Eln.creativeTab) as ItemArmor
+            ).setUnlocalizedName(name).setTextureName("eln:copper_boots").setCreativeTab(Eln.creativeTabToolsArmor) as ItemArmor
             GameRegistry.registerItem(Eln.bootsCopper, "Eln.$name")
             GameRegistry.registerCustomItemStack(name, ItemStack(Eln.bootsCopper))
         }
@@ -1737,7 +1833,7 @@ object ItemRegistration {
             ).setUnlocalizedName(name).setTextureName(
                 "eln" +
                         ":ecoal_helmet"
-            ).setCreativeTab(Eln.creativeTab) as ItemArmor
+            ).setCreativeTab(Eln.creativeTabToolsArmor) as ItemArmor
             GameRegistry.registerItem(Eln.helmetECoal, "Eln.$name")
             GameRegistry.registerCustomItemStack(name, ItemStack(Eln.helmetECoal))
         }
@@ -1748,7 +1844,7 @@ object ItemRegistration {
                 eCoalMaterial, 2, ArmourType.Chestplate, t1, t2, 8000.0,
                 2000.0, armor / 20.0, armor * energyPerDamage, energyPerDamage
             ).setUnlocalizedName(name).setTextureName("eln:ecoal_chestplate")
-                .setCreativeTab(Eln.creativeTab) as ItemArmor
+                .setCreativeTab(Eln.creativeTabToolsArmor) as ItemArmor
             GameRegistry.registerItem(Eln.plateECoal, "Eln.$name")
             GameRegistry.registerCustomItemStack(name, ItemStack(Eln.plateECoal))
         }
@@ -1761,7 +1857,7 @@ object ItemRegistration {
             ).setUnlocalizedName(name).setTextureName(
                 "eln" +
                         ":ecoal_leggings"
-            ).setCreativeTab(Eln.creativeTab) as ItemArmor
+            ).setCreativeTab(Eln.creativeTabToolsArmor) as ItemArmor
             GameRegistry.registerItem(Eln.legsECoal, "Eln.$name")
             GameRegistry.registerCustomItemStack(name, ItemStack(Eln.legsECoal))
         }
@@ -1774,7 +1870,7 @@ object ItemRegistration {
             ).setUnlocalizedName(name).setTextureName(
                 "eln" +
                         ":ecoal_boots"
-            ).setCreativeTab(Eln.creativeTab) as ItemArmor
+            ).setCreativeTab(Eln.creativeTabToolsArmor) as ItemArmor
             GameRegistry.registerItem(Eln.bootsECoal, "Eln.$name")
             GameRegistry.registerCustomItemStack(name, ItemStack(Eln.bootsECoal))
         }
@@ -1787,7 +1883,7 @@ object ItemRegistration {
             Eln.swordCopper = ItemSword(ToolMaterial.IRON).setUnlocalizedName(name).setTextureName(
                 "eln" +
                         ":copper_sword"
-            ).setCreativeTab(Eln.creativeTab)
+            ).setCreativeTab(Eln.creativeTabToolsArmor)
             GameRegistry.registerItem(Eln.swordCopper, "Eln.$name")
             GameRegistry.registerCustomItemStack(name, ItemStack(Eln.swordCopper))
         }
@@ -1795,7 +1891,7 @@ object ItemRegistration {
             name = I18N.TR_NAME(I18N.Type.ITEM, "Copper Hoe")
             Eln.hoeCopper =
                 ItemHoe(ToolMaterial.IRON).setUnlocalizedName(name).setTextureName("eln:copper_hoe")
-                    .setCreativeTab(Eln.creativeTab)
+                    .setCreativeTab(Eln.creativeTabToolsArmor)
             GameRegistry.registerItem(Eln.hoeCopper, "Eln.$name")
             GameRegistry.registerCustomItemStack(name, ItemStack(Eln.hoeCopper))
         }
@@ -1804,7 +1900,7 @@ object ItemRegistration {
             Eln.shovelCopper = ItemSpade(ToolMaterial.IRON).setUnlocalizedName(name).setTextureName(
                 "eln" +
                         ":copper_shovel"
-            ).setCreativeTab(Eln.creativeTab)
+            ).setCreativeTab(Eln.creativeTabToolsArmor)
             GameRegistry.registerItem(Eln.shovelCopper, "Eln.$name")
             GameRegistry.registerCustomItemStack(name, ItemStack(Eln.shovelCopper))
         }
@@ -1813,7 +1909,7 @@ object ItemRegistration {
             Eln.pickaxeCopper = ItemPickaxeEln(ToolMaterial.IRON).setUnlocalizedName(name).setTextureName(
                 "eln" +
                         ":copper_pickaxe"
-            ).setCreativeTab(Eln.creativeTab)
+            ).setCreativeTab(Eln.creativeTabToolsArmor)
             GameRegistry.registerItem(Eln.pickaxeCopper, "Eln.$name")
             GameRegistry.registerCustomItemStack(name, ItemStack(Eln.pickaxeCopper))
         }
@@ -1821,7 +1917,7 @@ object ItemRegistration {
             name = I18N.TR_NAME(I18N.Type.ITEM, "Copper Axe")
             Eln.axeCopper =
                 ItemAxeEln(ToolMaterial.IRON).setUnlocalizedName(name).setTextureName("eln:copper_axe")
-                    .setCreativeTab(Eln.creativeTab)
+                    .setCreativeTab(Eln.creativeTabToolsArmor)
             GameRegistry.registerItem(Eln.axeCopper, "Eln.$name")
             GameRegistry.registerCustomItemStack(name, ItemStack(Eln.axeCopper))
         }

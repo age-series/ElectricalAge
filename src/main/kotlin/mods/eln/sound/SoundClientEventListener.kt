@@ -16,6 +16,7 @@ class SoundClientEventListener(var uuidManager: UuidManager) {
     }
 
     @SubscribeEvent
+    @Suppress("DEPRECATION")
     fun event(e: PlaySoundSourceEvent) {
         if (currentUuid == null) return
         uuidManager.add(currentUuid!!, SoundClientEntity(e.manager, e.sound))

@@ -38,10 +38,10 @@ class OreBlock : Block(Material.rock) {
     }
 
     fun getBlockDropped(
-        w: World?,
-        x: Int,
-        y: Int,
-        z: Int,
+        @Suppress("UNUSED_PARAMETER") w: World?,
+        @Suppress("UNUSED_PARAMETER") x: Int,
+        @Suppress("UNUSED_PARAMETER") y: Int,
+        @Suppress("UNUSED_PARAMETER") z: Int,
         meta: Int,
         fortune: Int
     ): ArrayList<ItemStack> {

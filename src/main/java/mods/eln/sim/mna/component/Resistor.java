@@ -1,5 +1,6 @@
 package mods.eln.sim.mna.component;
 
+import mods.eln.Eln;
 import mods.eln.misc.Utils;
 import mods.eln.sim.mna.SubSystem;
 import mods.eln.sim.mna.misc.MnaConst;
@@ -31,10 +32,12 @@ public class Resistor extends Bipole {
     }
 
     public Resistor setResistance(double resistance) {
-        if (Double.isNaN(resistance) || Double.isInfinite(resistance)) {
+        if (!Double.isFinite(resistance)) {
             Utils.println("Error! Resistor cannot be set to " + resistance);
-            // Call stack for debugging
-            //new Throwable().printStackTrace();
+            // Call stack for debugging which node type it comes from;
+            // this typically results in a cable going boom! somewhere
+            if (Eln.debugEnabled)
+                Eln.LOGGER.error("Error! Resistor cannot be set to {}", resistance, new Throwable());
             return this;
         }
         if (this.resistance != resistance) {
@@ -47,10 +50,6 @@ public class Resistor extends Bipole {
 
     public void highImpedance() {
         setResistance(MnaConst.highImpedance);
-    }
-
-    public void ultraImpedance() {
-        setResistance(MnaConst.ultraImpedance);
     }
 
     public Resistor pullDown() {

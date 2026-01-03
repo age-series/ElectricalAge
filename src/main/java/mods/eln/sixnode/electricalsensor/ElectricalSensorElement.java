@@ -65,6 +65,16 @@ public class ElectricalSensorElement extends SixNodeElement implements IConfigur
     public static final byte setValueId = 2;
     public static final byte setDirType = 3;
 
+    private int sanitizeSensorType(int requestedType) {
+        if (descriptor != null && descriptor.voltageOnly) {
+            return voltageType;
+        }
+        if (requestedType < powerType || requestedType > voltageType) {
+            return voltageType;
+        }
+        return requestedType;
+    }
+
     public ElectricalSensorElement(SixNode sixNode, Direction side, SixNodeDescriptor descriptor) {
         super(sixNode, side, descriptor);
         this.descriptor = (ElectricalSensorDescriptor) descriptor;
@@ -110,7 +120,7 @@ public class ElectricalSensorElement extends SixNodeElement implements IConfigur
         super.readFromNBT(nbt);
         byte value = nbt.getByte("front");
         front = LRDU.fromInt((value >> 0) & 0x3);
-        typeOfSensor = nbt.getByte("typeOfSensor");
+        typeOfSensor = sanitizeSensorType(nbt.getByte("typeOfSensor"));
         lowValue = nbt.getFloat("lowValue");
         highValue = nbt.getFloat("highValue");
         dirType = nbt.getByte("dirType");
@@ -254,7 +264,7 @@ public class ElectricalSensorElement extends SixNodeElement implements IConfigur
         try {
             switch (stream.readByte()) {
                 case setTypeOfSensorId:
-                    typeOfSensor = stream.readByte();
+                    typeOfSensor = sanitizeSensorType(stream.readByte());
                     needPublish();
                     break;
                 case setValueId:
@@ -264,8 +274,11 @@ public class ElectricalSensorElement extends SixNodeElement implements IConfigur
                     needPublish();
                     break;
                 case setDirType:
-                    dirType = stream.readByte();
-                    needPublish();
+                    byte requestedDir = stream.readByte();
+                    if (!descriptor.voltageOnly) {
+                        dirType = requestedDir;
+                        needPublish();
+                    }
                     break;
             }
         } catch (IOException e) {
@@ -304,6 +317,7 @@ public class ElectricalSensorElement extends SixNodeElement implements IConfigur
                     break;
             }
         }
+        typeOfSensor = sanitizeSensorType(typeOfSensor);
         if(compound.hasKey("dir") && !descriptor.voltageOnly)
             dirType = compound.getByte("dir");
         ConfigCopyToolDescriptor.readCableType(compound, getInventory(), 0, invoker);

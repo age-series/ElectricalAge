@@ -51,6 +51,7 @@ class ElectricalPoleElement(node: TransparentNode, descriptor: TransparentNodeDe
         // We put some of it here, thereby allowing the thermal watchdog to work.
         desc.cableDescriptor.applyTo(electricalLoad)
         desc.cableDescriptor.applyTo(thermalLoad)
+        heater.limitTemperatureRate(desc.cableDescriptor.thermalSelfHeatingRateLimit)
         electricalLoadList.add(electricalLoad)
 
         thermalLoadList.add(thermalLoad)
@@ -60,6 +61,7 @@ class ElectricalPoleElement(node: TransparentNode, descriptor: TransparentNodeDe
         thermalWatchdog
                 .setTemperatureLimits(desc.cableDescriptor.thermalWarmLimit, desc.cableDescriptor.thermalCoolLimit)
                 .setDestroys(WorldExplosion(this).cableExplosion())
+        thermalWatchdog.dumpMatrixOnTrip("ElectricalPoleElement thermal trip") { this }
 
         slowProcessList.add(voltageWatchdog)
         // Electrical poles can handle higher voltages, due to air insulation.

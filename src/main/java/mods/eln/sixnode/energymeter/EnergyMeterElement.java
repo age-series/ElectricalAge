@@ -73,7 +73,6 @@ public class EnergyMeterElement extends SixNodeElement {
 
     public EnergyMeterElement(SixNode sixNode, Direction side, SixNodeDescriptor descriptor) {
         super(sixNode, side, descriptor);
-        shunt.mustUseUltraImpedance();
 
         voltageWatchDogA = new VoltageStateWatchDog(aLoad);
         voltageWatchDogB = new VoltageStateWatchDog(bLoad);
@@ -316,7 +315,7 @@ public class EnergyMeterElement extends SixNodeElement {
                     break;
             }
 
-            if (highImp) shunt.ultraImpedance();
+            if (highImp) shunt.highImpedance();
             else Eln.applySmallRs(shunt);
 
             publishTimeout -= time;

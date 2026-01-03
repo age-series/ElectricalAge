@@ -47,6 +47,7 @@ abstract class TurbineDescriptor(baseName: String, obj: Obj3D) :
     val minFluidPower: Double by lazy {
         power.min()
     }
+    open val displayFluidUsageInBuckets = false
 
     override val obj = obj
     override val static = arrayOf(
@@ -61,7 +62,8 @@ abstract class TurbineDescriptor(baseName: String, obj: Obj3D) :
     override fun addInformation(stack: ItemStack, player: EntityPlayer, list: MutableList<String>, par4: Boolean) {
         list.add(tr("Converts %1$ into mechanical energy.",fluidDescription))
         list.add(tr("Nominal usage ->"))
-        list.add("  "+tr("%1$ input: %2$ mB/s",fluidDescription.replaceFirstChar { if (it.isLowerCase()) it.titlecase() else it.toString() },fluidConsumption))
+        val formattedRate = formatFluidRate(fluidConsumption)
+        list.add("  "+tr("%1$ input: %2$",fluidDescription.replaceFirstChar { if (it.isLowerCase()) it.titlecase() else it.toString() },formattedRate))
         if (power.isEmpty()) {
             list.add("  "+tr("No valid fluids for this turbine!"))
         } else if (power.size == 1) {
@@ -73,14 +75,20 @@ abstract class TurbineDescriptor(baseName: String, obj: Obj3D) :
         list.add(Utils.plotRads(tr("Max rads:  "),absoluteMaximumShaftSpeed))
 
     }
+
+    open fun formatFluidRate(rate: Float): String {
+        val scaled = if (displayFluidUsageInBuckets) rate / 1000f else rate
+        val unit = if (displayFluidUsageInBuckets) "B/s" else "mB/s"
+        return Utils.plotValue(scaled.toDouble()) + " " + unit
+    }
 }
 
-class SteamTurbineDescriptor(baseName: String, obj: Obj3D) :
+class SteamTurbineDescriptor(baseName: String, obj: Obj3D, private val capacityScale: Float = 1f) :
     TurbineDescriptor(baseName, obj) {
     // Steam turbines are for baseload.
     override val inertia = 20f
     // Computed to equal a single 36LP Railcraft boiler, or half of a 36HP.
-    override val fluidConsumption = 7200f
+    override val fluidConsumption = 7200f * capacityScale
     // Computed to equal what you'd get from Railcraft steam engines, plus a small
     // bonus because you're using Electrical Age you crazy person you.
     // This pretty much fills up a VHV line. The generator drag gives us a bit of leeway.
@@ -89,15 +97,16 @@ class SteamTurbineDescriptor(baseName: String, obj: Obj3D) :
     // Steam turbines can, just barely, be started without power.
     override val efficiencyCurve = 1.1f
     override val sound = "eln:steam_turbine"
+    override val displayFluidUsageInBuckets = true
 }
 
-class GasTurbineDescriptor(basename: String, obj: Obj3D) :
+class GasTurbineDescriptor(basename: String, obj: Obj3D, private val capacityScale: Float = 1f) :
     TurbineDescriptor(basename, obj) {
     // The main benefit of gas turbines.
     override val inertia = 5f
     // Provides about 8kW of power, given gasoline.
     // Less dense fuels will be proportionally less effective.
-    override val fluidConsumption = 4f
+    override val fluidConsumption = 4f * capacityScale
     override val fluidDescription = "gasoline"
     // It runs on puns.
     override val fluidTypes = FuelRegistry.gasolineList + FuelRegistry.gasList
@@ -173,7 +182,8 @@ class TurbineElement(node: TransparentNode, desc_: TransparentNodeDescriptor) :
         return 0
     }
 
-    override fun thermoMeterString(side: Direction): String = Utils.plotPercent(" Eff:", efficiency.toDouble()) + fluidRate.toString() + "mB/s"
+    override fun thermoMeterString(side: Direction): String =
+        Utils.plotPercent(" Eff:", efficiency.toDouble()) + " " + desc.formatFluidRate(fluidRate)
 
     override fun writeToNBT(nbt: NBTTagCompound) {
         super.writeToNBT(nbt)
@@ -193,7 +203,7 @@ class TurbineElement(node: TransparentNode, desc_: TransparentNodeDescriptor) :
         info.put(tr("Energy"), Utils.plotEnergy("", shaft.energy))
         if (Eln.wailaEasyMode) {
             info.put(tr("Efficiency"), Utils.plotPercent("", efficiency.toDouble()))
-            info.put(tr("Fuel usage"), Utils.plotBuckets("", fluidRate / 1000.0) + "/s")
+            info.put(tr("Fuel usage"), desc.formatFluidRate(fluidRate))
         }
         return info
     }

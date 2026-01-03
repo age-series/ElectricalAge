@@ -5,6 +5,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import mods.eln.Eln;
 import mods.eln.misc.RealisticEnum;
 import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -77,6 +78,8 @@ public class GenericItemBlockUsingDamageDescriptor {
         return name;
     }
 
+    private boolean hidden = false;
+
     public void setParent(Item item, int damage) {
         this.parentItem = item;
         this.parentItemDamage = damage;
@@ -117,5 +120,25 @@ public class GenericItemBlockUsingDamageDescriptor {
 
     public boolean onItemUseFirst(ItemStack stack, EntityPlayer player) {
         return false;
+    }
+
+    private CreativeTabs creativeTab;
+
+    public GenericItemBlockUsingDamageDescriptor setCreativeTab(CreativeTabs creativeTab) {
+        this.creativeTab = creativeTab;
+        return this;
+    }
+
+    public CreativeTabs getCreativeTab() {
+        return creativeTab;
+    }
+
+    public GenericItemBlockUsingDamageDescriptor hideFromCreative() {
+        this.hidden = true;
+        return this;
+    }
+
+    public boolean isHidden() {
+        return hidden;
     }
 }

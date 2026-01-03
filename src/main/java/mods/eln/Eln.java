@@ -37,6 +37,7 @@ import mods.eln.item.electricalinterface.ItemEnergyInventoryProcess;
 import mods.eln.item.electricalitem.OreColorMapping;
 import mods.eln.item.electricalitem.PortableOreScannerItem.RenderStorage.OreScannerConfigElement;
 import mods.eln.misc.*;
+import mods.eln.mqtt.MqttManager;
 import mods.eln.node.NodeBlockEntity;
 import mods.eln.node.NodeManager;
 import mods.eln.node.NodeManagerNbt;
@@ -51,6 +52,7 @@ import mods.eln.registration.ItemRegistration;
 import mods.eln.registration.SingleNodeRegistration;
 import mods.eln.registration.SixNodeRegistration;
 import mods.eln.registration.TransparentNodeRegistration;
+import mods.eln.railroad.ElectricMinecartChargeReporter;
 import mods.eln.server.*;
 import mods.eln.server.console.ElnConsoleCommands;
 import mods.eln.sim.Simulator;
@@ -79,6 +81,7 @@ import net.minecraft.command.ICommandManager;
 import net.minecraft.command.ServerCommandManager;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
@@ -106,6 +109,7 @@ public class Eln {
     public static Eln instance;
     @SidedProxy(clientSide = "mods.eln.client.ClientProxy", serverSide = "mods.eln.CommonProxy")
     public static CommonProxy proxy;
+    public final static Logger LOGGER = LogManager.getLogger("Eln");
     public final static String MODID = Tags.MODID;
     public final static String NAME = Tags.MODNAME;
     public final static String MODDESC = "Electricity in your base!";
@@ -136,6 +140,8 @@ public class Eln {
     public static final double cableHeatingTime = 30;
     public static final double cableWarmLimit = 130;
     public static final double cableThermalConductionTao = 0.5;
+    public static double cableThermalSpikeLimitFactor = 20;
+    public static boolean cableThermalSpikeLimiterEnabled = true;
     public static final ThermalLoadInitializer cableThermalLoadInitializer =
      new ThermalLoadInitializer(cableWarmLimit, -100, cableHeatingTime, cableThermalConductionTao);
     public static final ThermalLoadInitializer sixNodeThermalLoadInitializer =
@@ -155,6 +161,14 @@ public class Eln {
     public static DelayedTaskManager delayedTask;
     public static ItemEnergyInventoryProcess itemEnergyInventoryProcess;
     public static CreativeTabs creativeTab;
+    public static CreativeTabs creativeTabPowerElectronics;
+    public static CreativeTabs creativeTabSignalProcessing;
+    public static CreativeTabs creativeTabLighting;
+    public static CreativeTabs creativeTabToolsArmor;
+    public static CreativeTabs creativeTabOresMaterials;
+    public static CreativeTabs creativeTabMachines;
+    public static CreativeTabs creativeTabCreative;
+    public static CreativeTabs creativeTabOther;
     public static Item swordCopper, hoeCopper, shovelCopper, pickaxeCopper, axeCopper;
     public static GenericItemUsingDamageDescriptorWithComment plateCopper;
     public static ItemArmor helmetCopper, chestplateCopper, legsCopper, bootsCopper;
@@ -182,9 +196,11 @@ public class Eln {
     public static String dictTungstenOre, dictTungstenDust, dictTungstenIngot;
     public static String dictCheapChip, dictAdvancedChip;
     public static boolean modbusEnable = false;
+    public static boolean mqttEnabled = false;
     public static int modbusPort;
     public static boolean explosionEnable;
     public static boolean debugEnabled = false;  // Read from configuration file. Default is `false`.
+    public static boolean simSnapshotEnabled = false;
     public static boolean debugExplosions = false;
     public static boolean versionCheckEnabled = true; // Read from configuration file. Default is `true`.
     public static boolean analyticsEnabled = true; // Read from configuration file. Default is `true`.
@@ -361,6 +377,7 @@ public class Eln {
         config = new Configuration(event.getSuggestedConfigurationFile());
 
         ConfigHandler.INSTANCE.loadConfig(this);
+        MqttManager.INSTANCE.init();
 
         eventChannel = NetworkRegistry.INSTANCE.newEventDrivenChannel(channelName);
 
@@ -381,24 +398,33 @@ public class Eln {
 
         Item itemCreativeTab = new Item().setUnlocalizedName("eln:elncreativetab").setTextureName("eln:elncreativetab");
         GameRegistry.registerItem(itemCreativeTab, "eln.itemCreativeTab");
-        creativeTab = new GenericCreativeTab("Eln", itemCreativeTab);
 
-        oreBlock = (OreBlock) new OreBlock().setCreativeTab(creativeTab).setBlockName("OreEln");
+        creativeTabPowerElectronics = new GenericCreativeTab("ElnPowerElectronics", Items.redstone);
+        creativeTabSignalProcessing = new GenericCreativeTab("ElnSignalProcessing", Items.comparator);
+        creativeTabLighting = new GenericCreativeTab("ElnLighting", Item.getItemFromBlock(Blocks.redstone_lamp));
+        creativeTabToolsArmor = new GenericCreativeTab("ElnToolsArmor", Items.iron_pickaxe);
+        creativeTabOresMaterials = new GenericCreativeTab("ElnOresMaterials", Items.iron_ingot);
+        creativeTabMachines = new GenericCreativeTab("ElnMachines", Item.getItemFromBlock(Blocks.dispenser));
+        creativeTabCreative = new GenericCreativeTab("ElnCreative", Items.nether_star);
+        creativeTabOther = creativeTabOresMaterials;
+        creativeTab = creativeTabOther;
+
+        oreBlock = (OreBlock) new OreBlock().setCreativeTab(creativeTabOresMaterials).setBlockName("OreEln");
 
         arcClayBlock = new ArcClayBlock();
         arcMetalBlock = new ArcMetalBlock();
 
         sharedItem =
-                (SharedItem) new SharedItem().setCreativeTab(creativeTab).setMaxStackSize(64).setUnlocalizedName("sharedItem");
+                (SharedItem) new SharedItem().setCreativeTab(creativeTabOther).setMaxStackSize(64).setUnlocalizedName("sharedItem");
 
         sharedItemStackOne =
-                (SharedItem) new SharedItem().setCreativeTab(creativeTab).setMaxStackSize(1).setUnlocalizedName(
+                (SharedItem) new SharedItem().setCreativeTab(creativeTabOther).setMaxStackSize(1).setUnlocalizedName(
                         "sharedItemStackOne");
 
         transparentNodeBlock = (TransparentNodeBlock) new TransparentNodeBlock(Material.iron,
-                TransparentNodeEntity.class).setCreativeTab(creativeTab).setBlockTextureName("iron_block");
+                TransparentNodeEntity.class).setCreativeTab(creativeTabOther).setBlockTextureName("iron_block");
         sixNodeBlock =
-                (SixNodeBlock) new SixNodeBlock(Material.plants, SixNodeEntity.class).setCreativeTab(creativeTab).setBlockTextureName("iron_block");
+                (SixNodeBlock) new SixNodeBlock(Material.plants, SixNodeEntity.class).setCreativeTab(creativeTabOther).setBlockTextureName("iron_block");
 
         ghostBlock = (GhostBlock) new GhostBlock().setBlockTextureName("iron_block");
         lightBlock = new LightBlock();
@@ -434,6 +460,8 @@ public class Eln {
         TransparentNodeRegistration.INSTANCE.registerTransparent();
         ItemRegistration.INSTANCE.registerItem();
 
+        updateCreativeTabIcons();
+
         OreDictionary.registerOre("blockAluminum", arcClayBlock);
         OreDictionary.registerOre("blockSteel", arcMetalBlock);
 
@@ -447,6 +475,11 @@ public class Eln {
         if (Other.ccLoaded) {
             PeripheralHandler.register();
         }
+        registerCraftingRecipes();
+    }
+
+    private static void registerCraftingRecipes() {
+        // Ensure every recipe defined in CraftingRecipes is registered.
         CraftingRecipes.INSTANCE.itemCrafting();
     }
 
@@ -456,11 +489,20 @@ public class Eln {
         Collections.addAll(oreNames, names);
         proxy.registerRenderers();
         TR("itemGroup.Eln");
+        TR("itemGroup.ElnPowerElectronics");
+        TR("itemGroup.ElnSignalProcessing");
+        TR("itemGroup.ElnLighting");
+        TR("itemGroup.ElnToolsArmor");
+        TR("itemGroup.ElnOresMaterials");
+        TR("itemGroup.ElnMachines");
+        TR("itemGroup.ElnCreative");
+        TR("itemGroup.ElnOther");
         if (isDevelopmentRun()) {
             Achievements.init();
         }
         FluidRegistrationKt.registerElnFluids();
         MinecraftForge.EVENT_BUS.register(new ElnForgeEventsHandler());
+        MinecraftForge.EVENT_BUS.register(new ElectricMinecartChargeReporter());
         FMLCommonHandler.instance().bus().register(new ElnFMLEventsHandler());
         MinecraftForge.EVENT_BUS.register(this);
         FMLInterModComms.sendMessage("Waila", "register", "mods.eln.integration.waila.WailaIntegration" +
@@ -497,7 +539,7 @@ public class Eln {
         simulator.stop();
         LampSupplyElement.channelMap.clear();
         WirelessSignalTxElement.channelMap.clear();
-
+        MqttManager.INSTANCE.shutdown();
     }
 
     @EventHandler
@@ -599,6 +641,34 @@ public class Eln {
         oreScannerConfig.add(new OreScannerConfigElement(Block.getIdFromBlock(oreBlock) + (4 << 12), 20 / 100f));
         oreScannerConfig.add(new OreScannerConfigElement(Block.getIdFromBlock(oreBlock) + (5 << 12), 20 / 100f));
         oreScannerConfig.add(new OreScannerConfigElement(Block.getIdFromBlock(oreBlock) + (6 << 12), 20 / 100f));
+    }
+
+    private void updateCreativeTabIcons() {
+        setTabIcon(creativeTabPowerElectronics, stack(sixNodeItem, meta(33, 1)));
+        setTabIcon(creativeTabSignalProcessing, stack(sixNodeItem, meta(32, 0)));
+        setTabIcon(creativeTabLighting, stack(sharedItem, meta(4, 37)));
+        setTabIcon(creativeTabToolsArmor, stack(sharedItem, meta(14, 0)));
+        setTabIcon(creativeTabOresMaterials, stack(sharedItem, meta(8, 7)));
+        setTabIcon(creativeTabMachines, stack(transparentNodeItem, meta(33, 4)));
+        setTabIcon(creativeTabCreative, stack(sixNodeItem, meta(3, 0)));
+        if (creativeTabOther != creativeTabOresMaterials) {
+            setTabIcon(creativeTabOther, stack(sharedItem, meta(8, 0)));
+        }
+    }
+
+    private void setTabIcon(CreativeTabs tab, ItemStack stack) {
+        if (tab instanceof GenericCreativeTab && stack != null && stack.getItem() != null) {
+            ((GenericCreativeTab) tab).setIcon(stack);
+        }
+    }
+
+    private static ItemStack stack(Item item, int damage) {
+        if (item == null) return null;
+        return new ItemStack(item, 1, damage);
+    }
+
+    private static int meta(int group, int subId) {
+        return subId + (group << 6);
     }
 
     @SubscribeEvent

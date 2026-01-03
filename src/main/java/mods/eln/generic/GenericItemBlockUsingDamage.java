@@ -3,6 +3,7 @@ package mods.eln.generic;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import mods.eln.Eln;
 import mods.eln.misc.RealisticEnum;
 import mods.eln.misc.Utils;
 import mods.eln.misc.UtilsClient;
@@ -19,19 +20,23 @@ import net.minecraft.world.World;
 
 import java.util.ArrayList;
 import java.util.Hashtable;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class GenericItemBlockUsingDamage<Descriptor extends GenericItemBlockUsingDamageDescriptor> extends ItemBlock {
 
     public Hashtable<Integer, Descriptor> subItemList = new Hashtable<Integer, Descriptor>();
     public ArrayList<Integer> orderList = new ArrayList<Integer>();
     public ArrayList<Descriptor> descriptors = new ArrayList<Descriptor>();
+    private final Map<Integer, CreativeTabs> creativeTabByGroup = new HashMap<Integer, CreativeTabs>();
 
     public Descriptor defaultElement = null;
 
     public GenericItemBlockUsingDamage(Block b) {
         super(b);
         setHasSubtypes(true);
+        CreativeTabPopulator.register(this);
     }
 
     public void setDefaultElement(Descriptor descriptor) {
@@ -50,6 +55,7 @@ public class GenericItemBlockUsingDamage<Descriptor extends GenericItemBlockUsin
         orderList.add(damage);
         descriptors.add(descriptor);
         descriptor.setParent(this, damage);
+        applyDefaultTab(damage, descriptor);
         GameRegistry.registerCustomItemStack(descriptor.name, descriptor.newItemStack(1));
     }
 
@@ -58,6 +64,7 @@ public class GenericItemBlockUsingDamage<Descriptor extends GenericItemBlockUsin
         ItemStack stack = new ItemStack(this, 1, damage);
         stack.setTagCompound(descriptor.getDefaultNBT());
         descriptor.setParent(this, damage);
+        applyDefaultTab(damage, descriptor);
     }
 
     public Descriptor getDescriptor(int damage) {
@@ -126,9 +133,15 @@ public class GenericItemBlockUsingDamage<Descriptor extends GenericItemBlockUsin
         // You can also take a more direct approach and do each one individual but I prefer the lazy / right way
         //for(Entry<Integer, Descriptor> entry : subItemList.entrySet())
         for (int id : orderList) {
-            ItemStack stack = Utils.newItemStack(itemID, 1, id);
-            stack.setTagCompound(subItemList.get(id).getDefaultNBT());
-            list.add(stack);
+            Descriptor descriptor = subItemList.get(id);
+            if (descriptor == null || descriptor.isHidden()) continue;
+            CreativeTabs descriptorTab = descriptor.getCreativeTab();
+            if (descriptorTab == null) descriptorTab = Eln.creativeTabOther;
+            if (tabs == null || tabs == descriptorTab || tabs == CreativeTabs.tabAllSearch) {
+                ItemStack stack = Utils.newItemStack(itemID, 1, id);
+                stack.setTagCompound(descriptor.getDefaultNBT());
+                list.add(stack);
+            }
         }
     }
 
@@ -153,5 +166,17 @@ public class GenericItemBlockUsingDamage<Descriptor extends GenericItemBlockUsin
         Descriptor desc = getDescriptor(stack);
         if (desc != null) return desc.onItemUseFirst(stack, player);
         return false;
+    }
+
+    private void applyDefaultTab(int damage, Descriptor descriptor) {
+        if (descriptor.getCreativeTab() != null) return;
+        CreativeTabs tab = creativeTabByGroup.get(damage >> 6);
+        if (tab != null) {
+            descriptor.setCreativeTab(tab);
+        }
+    }
+
+    public void setCreativeTabForGroup(int group, CreativeTabs tab) {
+        creativeTabByGroup.put(group, tab);
     }
 }

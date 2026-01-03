@@ -74,6 +74,11 @@ class CurrentCableDescriptor(
         thermalC = thermalMaximalPowerDissipated * Eln.cableHeatingTime / thermalWarmLimit
         thermalRp = thermalWarmLimit / thermalMaximalPowerDissipated
         thermalRs = 0.5 / thermalC / 2
+        thermalSelfHeatingRateLimit =
+            if (Eln.cableThermalSpikeLimiterEnabled && Eln.cableHeatingTime > 0)
+                thermalWarmLimit / Eln.cableHeatingTime * Eln.cableThermalSpikeLimitFactor
+            else
+                Double.POSITIVE_INFINITY
         voltageLevelColor = VoltageLevelColor.Neutral
     }
 
@@ -139,6 +144,7 @@ open class CurrentCableElement(sixNode: SixNode?, side: Direction?, descriptor: 
 
     init {
         this.descriptor = descriptor as CurrentCableDescriptor
+        heater.limitTemperatureRate(this.descriptor.thermalSelfHeatingRateLimit)
         color = 0
         colorCare = 1
         electricalLoad.setCanBeSimplifiedByLine(true)

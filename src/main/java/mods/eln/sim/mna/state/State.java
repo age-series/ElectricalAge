@@ -20,6 +20,7 @@ public class State {
     boolean mustBeFarFromInterSystem = false;
 
     public IAbstractor abstractedBy;
+    private String owner;
 
     public int getId() {
         return id;
@@ -95,6 +96,15 @@ public class State {
 
     public boolean isNotSimulated() {
         return subSystem == null && abstractedBy == null;
+    }
+
+    public State setOwner(String owner) {
+        this.owner = owner;
+        return this;
+    }
+
+    public String getOwner() {
+        return owner;
     }
 
     @Override

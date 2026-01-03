@@ -19,7 +19,7 @@ class OreDescriptor(
     var spawnRate: Int, var spawnSizeMin: Int, var spawnSizeMax: Int, var spawnHeightMin: Int, var spawnHeightMax: Int
 ) : GenericItemBlockUsingDamageDescriptor(name), IWorldGenerator {
 
-    fun getBlockIconId(side: Int, damage: Int): IIcon {
+    fun getBlockIconId(@Suppress("UNUSED_PARAMETER") side: Int, @Suppress("UNUSED_PARAMETER") damage: Int): IIcon {
         return icon
     }
 
@@ -28,7 +28,7 @@ class OreDescriptor(
         Data.addOre(newItemStack())
     }
 
-    fun getBlockDropped(fortune: Int): ArrayList<ItemStack> {
+    fun getBlockDropped(@Suppress("UNUSED_PARAMETER") fortune: Int): ArrayList<ItemStack> {
         val list = ArrayList<ItemStack>()
         list.add(ItemStack(Eln.oreItem, 1, metadata))
         return list

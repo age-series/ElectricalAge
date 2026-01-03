@@ -23,6 +23,7 @@ public abstract class GenericCableDescriptor extends SixNodeDescriptor {
     public double thermalRs;
     public double thermalWarmLimit;
     public double thermalCoolLimit;
+    public double thermalSelfHeatingRateLimit = Double.POSITIVE_INFINITY;
 
     public CableRenderDescriptor render;
 
