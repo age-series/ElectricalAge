@@ -85,7 +85,8 @@ class FloodlightElement(transparentNode: TransparentNode, transparentNodeDescrip
             electricalLoadList.add(beamControl)
         }
 
-        electricalLoad.serialResistance = ((Eln.MVU * Eln.MVU) / Eln.instance.MVP()) * 0.005 // NOTE: power factor comes from MV cable registration
+        // NOTE: Power factor (0.005) comes from MV cable registration
+        electricalLoad.serialResistance = ((Eln.MVU * Eln.MVU) / Eln.instance.MVP()) * 0.005
         voltageWatchdog.setNominalVoltage(Eln.MVU)
 
         slowProcessList.add(watchdogProcess)
