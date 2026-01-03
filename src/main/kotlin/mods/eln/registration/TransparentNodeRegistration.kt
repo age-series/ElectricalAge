@@ -107,6 +107,7 @@ object TransparentNodeRegistration {
         Eln.transparentNodeItem.setCreativeTabForGroup(65, Eln.creativeTabMachines)
         Eln.transparentNodeItem.setCreativeTabForGroup(66, Eln.creativeTabMachines)
         Eln.transparentNodeItem.setCreativeTabForGroup(67, Eln.creativeTabPowerElectronics)
+        Eln.transparentNodeItem.setCreativeTabForGroup(68, Eln.creativeTabLighting)
         Eln.transparentNodeItem.setCreativeTabForGroup(69, Eln.creativeTabLighting)
         Eln.transparentNodeItem.setCreativeTabForGroup(70, Eln.creativeTabMachines)
         Eln.transparentNodeItem.setCreativeTabForGroup(71, Eln.creativeTabPowerElectronics)
