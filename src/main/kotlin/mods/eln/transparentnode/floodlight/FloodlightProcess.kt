@@ -14,16 +14,7 @@ import net.minecraft.util.Vec3
 import java.io.ByteArrayOutputStream
 import java.io.DataOutputStream
 import java.io.IOException
-import kotlin.math.abs
-import kotlin.math.acos
-import kotlin.math.atan
-import kotlin.math.cos
-import kotlin.math.max
-import kotlin.math.pow
-import kotlin.math.sign
-import kotlin.math.sin
-import kotlin.math.sqrt
-import kotlin.math.tan
+import kotlin.math.*
 
 class FloodlightProcess(var element: FloodlightElement) : IProcess {
 
@@ -80,7 +71,7 @@ class FloodlightProcess(var element: FloodlightElement) : IProcess {
         element.lightRange = lampLightRanges[FloodlightContainer.LAMP_SLOT_1_ID] + lampLightRanges[FloodlightContainer.LAMP_SLOT_2_ID]
 
         updateBlockLight(newLightValue)
-        placeSpots(newLightValue)
+        if (newLightValue != 0) placeSpots(newLightValue)
     }
 
     private fun updateBlockLight(newLight: Int) {
@@ -103,6 +94,7 @@ class FloodlightProcess(var element: FloodlightElement) : IProcess {
 
     private fun placeSpots(lightValue: Int) {
         val rotationVectors = mutableListOf<Pair<Vec3, Double>>()
+        val fractionTable = mutableListOf<Double>()
 
         val rotationAxis = element.rotationAxis
         val facingDirection = element.blockFacing
@@ -111,57 +103,51 @@ class FloodlightProcess(var element: FloodlightElement) : IProcess {
         val vertAngle = element.headAngle
         val offsetAngle = element.beamWidth / 2.0
 
-        // Central spot
-        rotationVectors.add(Pair(createRotationVector(horzAngle, vertAngle, rotationAxis, facingDirection), 0.0))
+        val beamCount = ceil(offsetAngle * (2.0 / 11.25)).toInt()
 
-        // Vertical spots
-        rotationVectors.add(Pair(createRotationVector(horzAngle, vertAngle + offsetAngle, rotationAxis, facingDirection), offsetAngle))
-        rotationVectors.add(Pair(createRotationVector(horzAngle, vertAngle - offsetAngle, rotationAxis, facingDirection), offsetAngle))
-        rotationVectors.add(Pair(createRotationVector(horzAngle, vertAngle + (offsetAngle / 2.0), rotationAxis, facingDirection), offsetAngle / 2.0))
-        rotationVectors.add(Pair(createRotationVector(horzAngle, vertAngle - (offsetAngle / 2.0), rotationAxis, facingDirection), offsetAngle / 2.0))
+        if (beamCount != 0) {
+            for (idx in beamCount downTo -beamCount) {
+                fractionTable.add(idx.toDouble() / beamCount.toDouble())
+            }
+        }
+        else fractionTable.add(0.0)
 
-        // Horizontal spots
-        val (hAdj1, kAdj1) = calculateAngleAdjustments(vertAngle, offsetAngle, 0)
-        val (hAdj2, kAdj2) = calculateAngleAdjustments(vertAngle, offsetAngle / 2.0, 0)
+        for (idx in fractionTable.indices) {
+            val offsetAngleFraction = offsetAngle * fractionTable[idx]
 
-        rotationVectors.add(Pair(createRotationVector(horzAngle + hAdj1, kAdj1, rotationAxis, facingDirection), offsetAngle))
-        rotationVectors.add(Pair(createRotationVector(horzAngle - hAdj1, kAdj1, rotationAxis, facingDirection), offsetAngle))
-        rotationVectors.add(Pair(createRotationVector(horzAngle + hAdj2, kAdj2, rotationAxis, facingDirection), offsetAngle / 2.0))
-        rotationVectors.add(Pair(createRotationVector(horzAngle - hAdj2, kAdj2, rotationAxis, facingDirection), offsetAngle / 2.0))
+            // Central and vertical spots
+            rotationVectors.add(Pair(createRotationVector(horzAngle, vertAngle + offsetAngleFraction, rotationAxis, facingDirection), offsetAngleFraction))
 
-        // Upper diagonal spots
-        val (hAdj3, kAdj3) = calculateAngleAdjustments(vertAngle, offsetAngle, 1)
-        val (hAdj4, kAdj4) = calculateAngleAdjustments(vertAngle, offsetAngle / 2.0, 1)
+            if (fractionTable[idx] > 0.0) {
+                for (jdx in fractionTable.indices) {
+                    if (abs(fractionTable[jdx]) != 1.0) {
+                        val diagonalAngle = 90.0 * fractionTable[jdx]
 
-        rotationVectors.add(Pair(createRotationVector(horzAngle + hAdj3, kAdj3, rotationAxis, facingDirection), offsetAngle))
-        rotationVectors.add(Pair(createRotationVector(horzAngle - hAdj3, kAdj3, rotationAxis, facingDirection), offsetAngle))
-        rotationVectors.add(Pair(createRotationVector(horzAngle + hAdj4, kAdj4, rotationAxis, facingDirection), offsetAngle / 2.0))
-        rotationVectors.add(Pair(createRotationVector(horzAngle - hAdj4, kAdj4, rotationAxis, facingDirection), offsetAngle / 2.0))
+                        val (hAdj, kAdj) = calculateAngleAdjustments(vertAngle, offsetAngleFraction, diagonalAngle)
 
-        // Lower diagonal spots
-        val (hAdj5, kAdj5) = calculateAngleAdjustments(vertAngle, offsetAngle, -1)
-        val (hAdj6, kAdj6) = calculateAngleAdjustments(vertAngle, offsetAngle / 2.0, -1)
-
-        rotationVectors.add(Pair(createRotationVector(horzAngle + hAdj5, kAdj5, rotationAxis, facingDirection), offsetAngle))
-        rotationVectors.add(Pair(createRotationVector(horzAngle - hAdj5, kAdj5, rotationAxis, facingDirection), offsetAngle))
-        rotationVectors.add(Pair(createRotationVector(horzAngle + hAdj6, kAdj6, rotationAxis, facingDirection), offsetAngle / 2.0))
-        rotationVectors.add(Pair(createRotationVector(horzAngle - hAdj6, kAdj6, rotationAxis, facingDirection), offsetAngle / 2.0))
+                        // Horizontal and diagonal spots (mirrored across vertical axis)
+                        rotationVectors.add(Pair(createRotationVector(horzAngle + hAdj, kAdj, rotationAxis, facingDirection), offsetAngleFraction))
+                        rotationVectors.add(Pair(createRotationVector(horzAngle - hAdj, kAdj, rotationAxis, facingDirection), offsetAngleFraction))
+                    }
+                }
+            }
+        }
 
         for (idx in 0 until rotationVectors.size) {
             val lightVector = element.node!!.coordinate.toVec3()
             val lbCoordinate = Coordinate(lightVector)
 
+            // This forces the light cone to be "flat" on the end, instead of curved.
             val throwDistance = element.lightRange / cos(toRadians(rotationVectors[idx].second))
 
             for (jdx in 0 until throwDistance.toInt()) {
-                if (!lbCoordinate.blockExist || lbCoordinate.block.isOpaqueCube) break
-
                 lightVector.xCoord += rotationVectors[idx].first.xCoord
                 lightVector.yCoord += rotationVectors[idx].first.yCoord
                 lightVector.zCoord += rotationVectors[idx].first.zCoord
                 lbCoordinate.setPosition(lightVector)
 
-                if (jdx % 4 == 1) LightBlockEntity.addLight(Coordinate(lbCoordinate), lightValue, 5)
+                if (!lbCoordinate.blockExist || lbCoordinate.block.isOpaqueCube) break
+                else if (jdx % 2 == 1 || throwDistance.toInt() - jdx == 1) LightBlockEntity.addLight(Coordinate(lbCoordinate), lightValue, 5)
             }
         }
     }
@@ -174,20 +160,19 @@ class FloodlightProcess(var element: FloodlightElement) : IProcess {
         return angle * (180.0 / Math.PI)
     }
 
-    private fun calculateAngleAdjustments(vertAngle: Double, offsetAngle: Double, diagonal: Int): Pair<Double, Double> {
+    /** DO NOT TOUCH THIS FUNCTION!!!!!
+    * Any edits to the math require re-deriving nearly every equation from scratch!
+    * See a visual of the equations at https://www.desmos.com/3d/xqi6ov3fpn.
+    * Trust me, the math is right! Any bugs that may arise result from improper usage.
+    */
+    private fun calculateAngleAdjustments(vertAngle: Double, offsetAngle: Double, diagonalAngle: Double): Pair<Double, Double> {
         val k0 = toRadians(vertAngle)
         val o0 = toRadians(offsetAngle)
+        val d0 = toRadians(diagonalAngle)
 
-        var o = o0
-        var b = 0.0
-
-        if (diagonal != 0) {
-            o = acos(sqrt((cos(o0).pow(2) + 1.0) / 2.0))
-            b = atan(sqrt((cos(o).pow(2) / (cos(o).pow(2) - sin(o).pow(2))) - 1.0))
-
-            b *= diagonal.toDouble()
-        }
-
+        val d = sin(d0) / cos(d0)
+        val o = acos(sqrt((cos(o0).pow(2) + d.pow(2)) / (1.0 + d.pow(2))))
+        val b = atan(sqrt((cos(o).pow(2) / (cos(o).pow(2) - (d.pow(2) * sin(o).pow(2)))) - 1.0)) * sign(d0)
         val a = sqrt(cos(o).pow(2) / (1.0 + tan(k0 + b).pow(2)))
 
         val hAdj = toRadians(90.0) - atan(sign(cos(k0 + b)) * (a / sin(o)))
