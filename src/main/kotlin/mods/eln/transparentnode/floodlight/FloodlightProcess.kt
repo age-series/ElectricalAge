@@ -191,7 +191,7 @@ class FloodlightProcess(var element: FloodlightElement) : IProcess {
         val o0 = toRadians(offsetAngle)
         val d0 = toRadians(diagonalAngle)
 
-        val d = sin(d0) / cos(d0)
+        val d = tan(d0)
         val o = acos(sqrt((cos(o0).pow(2) + d.pow(2)) / (1.0 + d.pow(2))))
         val b = atan(sqrt((cos(o).pow(2) / (cos(o).pow(2) - (d.pow(2) * sin(o).pow(2)))) - 1.0)) * sign(d0)
         val a = sqrt(cos(o).pow(2) / (1.0 + tan(k0 + b).pow(2)))

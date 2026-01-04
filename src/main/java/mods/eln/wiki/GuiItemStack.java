@@ -144,6 +144,7 @@ public class GuiItemStack extends Gui implements IGuiObject {
         this.posY += y;
     }
 
+
     @Override
     public int getYMax() {
 
