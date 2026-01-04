@@ -39,8 +39,8 @@ enum class HybridNodeDirection(val int: Int) {
         return when (axis) {
             XN -> {
                 when (this) {
-                    XN -> TODO("unused - impossible facing direction")
-                    XP -> TODO("unused - impossible facing direction")
+                    XN -> TODO("Unused - impossible facing direction. If you get this message there's a bug in the code.")
+                    XP -> TODO("Unused - impossible facing direction. If you get this message there's a bug in the code.")
                     YN -> ZP
                     YP -> ZN
                     ZN -> YN
@@ -49,8 +49,8 @@ enum class HybridNodeDirection(val int: Int) {
             }
             XP -> {
                 when (this) {
-                    XN -> TODO("unused - impossible facing direction")
-                    XP -> TODO("unused - impossible facing direction")
+                    XN -> TODO("Unused - impossible facing direction. If you get this message there's a bug in the code.")
+                    XP -> TODO("Unused - impossible facing direction. If you get this message there's a bug in the code.")
                     YN -> ZN
                     YP -> ZP
                     ZN -> YP
@@ -61,8 +61,8 @@ enum class HybridNodeDirection(val int: Int) {
                 when (this) {
                     XN -> ZN
                     XP -> ZP
-                    YN -> TODO("unused - impossible facing direction")
-                    YP -> TODO("unused - impossible facing direction")
+                    YN -> TODO("Unused - impossible facing direction. If you get this message there's a bug in the code.")
+                    YP -> TODO("Unused - impossible facing direction. If you get this message there's a bug in the code.")
                     ZN -> XP
                     ZP -> XN
                 }
@@ -71,8 +71,8 @@ enum class HybridNodeDirection(val int: Int) {
                 when (this) {
                     XN -> ZP
                     XP -> ZN
-                    YN -> TODO("unused - impossible facing direction")
-                    YP -> TODO("unused - impossible facing direction")
+                    YN -> TODO("Unused - impossible facing direction. If you get this message there's a bug in the code.")
+                    YP -> TODO("Unused - impossible facing direction. If you get this message there's a bug in the code.")
                     ZN -> XN
                     ZP -> XP
                 }
@@ -83,8 +83,8 @@ enum class HybridNodeDirection(val int: Int) {
                     XP -> YN
                     YN -> XN
                     YP -> XP
-                    ZN -> TODO("unused - impossible facing direction")
-                    ZP -> TODO("unused - impossible facing direction")
+                    ZN -> TODO("Unused - impossible facing direction. If you get this message there's a bug in the code.")
+                    ZP -> TODO("Unused - impossible facing direction. If you get this message there's a bug in the code.")
                 }
             }
             ZP -> {
@@ -93,8 +93,8 @@ enum class HybridNodeDirection(val int: Int) {
                     XP -> YP
                     YN -> XP
                     YP -> XN
-                    ZN -> TODO("unused - impossible facing direction")
-                    ZP -> TODO("unused - impossible facing direction")
+                    ZN -> TODO("Unused - impossible facing direction. If you get this message there's a bug in the code.")
+                    ZP -> TODO("Unused - impossible facing direction. If you get this message there's a bug in the code.")
                 }
             }
         }

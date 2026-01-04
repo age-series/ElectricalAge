@@ -13,6 +13,7 @@ import net.minecraft.world.World
 import net.minecraftforge.client.MinecraftForgeClient
 import net.minecraftforge.common.DimensionManager
 import kotlin.math.abs
+import kotlin.math.floor
 
 class Coordinate : INBTTReady {
     @JvmField
@@ -44,9 +45,9 @@ class Coordinate : INBTTReady {
 
     // Emulates the default Minecraft behavior for determining block coordinates
     constructor(v: Vec3) {
-        x = kotlin.math.floor(v.xCoord).toInt()
-        y = kotlin.math.floor(v.yCoord).toInt()
-        z = kotlin.math.floor(v.zCoord).toInt()
+        x = floor(v.xCoord).toInt()
+        y = floor(v.yCoord).toInt()
+        z = floor(v.zCoord).toInt()
         dimension = 0
     }
 
@@ -179,9 +180,9 @@ class Coordinate : INBTTReady {
 
     // Emulates the default Minecraft behavior for determining block coordinates
     fun setPosition(vp: Vec3) {
-        x = kotlin.math.floor(vp.xCoord).toInt()
-        y = kotlin.math.floor(vp.yCoord).toInt()
-        z = kotlin.math.floor(vp.zCoord).toInt()
+        x = floor(vp.xCoord).toInt()
+        y = floor(vp.yCoord).toInt()
+        z = floor(vp.zCoord).toInt()
     }
 
     val tileEntity: TileEntity?
