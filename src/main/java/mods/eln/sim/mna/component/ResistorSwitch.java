@@ -13,6 +13,8 @@ public class ResistorSwitch extends Resistor implements INBTTReady {
 
     protected double baseResistance = 1;
 
+    protected double offResistance = MnaConst.highImpedance;
+
     public ResistorSwitch(String name, State aPin, State bPin) {
         super(aPin, bPin);
         this.name = name;
@@ -23,10 +25,20 @@ public class ResistorSwitch extends Resistor implements INBTTReady {
         setResistance(baseResistance);
     }
 
+    public void setOffResistance(double resistance) {
+        offResistance = resistance;
+        setResistance(baseResistance);
+    }
+
+    @Override
+    public void highImpedance() {
+        setResistance(offResistance);
+    }
+
     @Override
     public Resistor setResistance(double resistance) {
         baseResistance = resistance;
-        return super.setResistance(state ? resistance : MnaConst.highImpedance);
+        return super.setResistance(state ? resistance : offResistance);
     }
 
     public boolean getState() {
