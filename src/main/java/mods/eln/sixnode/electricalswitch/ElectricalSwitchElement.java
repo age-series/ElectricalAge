@@ -13,6 +13,7 @@ import mods.eln.sim.ElectricalLoad;
 import mods.eln.sim.ThermalLoad;
 import mods.eln.sim.mna.component.Resistor;
 import mods.eln.sim.mna.component.ResistorSwitch;
+import mods.eln.sim.mna.misc.MnaConst;
 import mods.eln.sim.nbt.NbtElectricalLoad;
 import mods.eln.sim.process.destruct.VoltageStateWatchDog;
 import mods.eln.sim.process.destruct.WorldExplosion;
@@ -159,6 +160,7 @@ public class ElectricalSwitchElement extends SixNodeElement {
         descriptor.applyTo(bLoad);
 
         switchResistor.setResistance(descriptor.electricalRs);
+        if (descriptor.signalSwitch) switchResistor.setOffResistance(MnaConst.ultraImpedance);
 
         setSwitchState(switchState);
     }

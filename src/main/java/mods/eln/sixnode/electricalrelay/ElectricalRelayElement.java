@@ -163,7 +163,8 @@ public class ElectricalRelayElement extends SixNodeElement implements IConfigura
 
     public void refreshSwitchResistor() {
         if (!switchState) {
-            switchResistor.highImpedance();
+            if (descriptor.cable.signalWire) switchResistor.setResistance(mods.eln.sim.mna.misc.MnaConst.ultraImpedance);
+            else switchResistor.highImpedance();
         } else {
             descriptor.applyTo(switchResistor);
         }
