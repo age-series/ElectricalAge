@@ -7,6 +7,7 @@ import mods.eln.node.six.SixNodeDescriptor;
 import mods.eln.node.six.SixNodeElementInventory;
 import mods.eln.node.six.SixNodeElementRender;
 import mods.eln.node.six.SixNodeEntity;
+import mods.eln.sound.BeepLoopedSound;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import org.jetbrains.annotations.NotNull;
@@ -28,6 +29,11 @@ public class ElectricalMathRender extends SixNodeElementRender {
 
     public int redstoneRequired;
     public boolean equationIsValid;
+
+    boolean beepActive;
+    float beepPitch = 1f;
+    float beepVolume = 0.5f;
+    BeepLoopedSound beepSound;
 
     float ledTime = 0f;
     boolean[] ledOn = new boolean[8];
@@ -54,6 +60,9 @@ public class ElectricalMathRender extends SixNodeElementRender {
             expression = stream.readUTF();
             redstoneRequired = stream.readInt();
             equationIsValid = stream.readBoolean();
+            beepActive = stream.readBoolean();
+            beepPitch = stream.readFloat();
+            beepVolume = stream.readFloat();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -91,6 +100,7 @@ public class ElectricalMathRender extends SixNodeElementRender {
 
     @Override
     public void refresh(float deltaT) {
+        super.refresh(deltaT);
         ledTime += deltaT;
 
         if (ledTime > 0.4) {
@@ -109,6 +119,25 @@ public class ElectricalMathRender extends SixNodeElementRender {
             interpolator.setTarget(1f);
 
         interpolator.step(deltaT);
+
+        updateBeepSound();
+    }
+
+    private void updateBeepSound() {
+        if (beepActive) {
+            if (beepSound == null) {
+                beepSound = new BeepLoopedSound(coord, beepVolume, beepPitch);
+                addLoopedSound(beepSound);
+            } else {
+                beepSound.setActiveState(true);
+                beepSound.setVolume(beepVolume);
+                beepSound.setPitch(beepPitch);
+            }
+        } else if (beepSound != null) {
+            beepSound.setVolume(0f);
+            beepSound.setPitch(0f);
+            beepSound.setActiveState(false);
+        }
     }
 
     @Nullable
