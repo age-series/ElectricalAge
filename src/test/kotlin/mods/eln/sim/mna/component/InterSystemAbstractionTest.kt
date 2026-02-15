@@ -1,5 +1,6 @@
 package mods.eln.sim.mna.component
 
+import mods.eln.disableLog4jJmx
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import mods.eln.sim.mna.RootSystem
@@ -9,7 +10,7 @@ import mods.eln.sim.mna.state.VoltageState
 class InterSystemAbstractionBehaviorTest {
     @Test
     fun dirtyRecalibratesDelaysAndResistors() {
-        mods.eln.sim.mna.disableLog4jJmx()
+        mods.eln.disableLog4jJmx()
         val root = RootSystem(0.1, 1)
         val aSystem = SubSystem(root, 0.1)
         val bSystem = SubSystem(root, 0.1)
@@ -36,7 +37,7 @@ class InterSystemAbstractionBehaviorTest {
 
     @Test
     fun rootSystemPreStepProcessKeepsDelayVoltagesAligned() {
-        mods.eln.sim.mna.disableLog4jJmx()
+        mods.eln.disableLog4jJmx()
         val root = RootSystem(0.1, 1)
         val aSystem = SubSystem(root, 0.1)
         val bSystem = SubSystem(root, 0.1)
@@ -60,7 +61,7 @@ class InterSystemAbstractionBehaviorTest {
 
     @Test
     fun abstractorSubsystemAndNaNVoltageFallback() {
-        mods.eln.sim.mna.disableLog4jJmx()
+        mods.eln.disableLog4jJmx()
         val root = RootSystem(0.1, 1)
         val aSystem = SubSystem(root, 0.1)
         val bSystem = SubSystem(root, 0.1)

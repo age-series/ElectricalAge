@@ -1,5 +1,6 @@
 package mods.eln.sim.mna.component
 
+import mods.eln.disableLog4jJmx
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
@@ -65,7 +66,7 @@ class LineBehaviorTest {
 
     @Test
     fun addToSubsystemRegistersProcessAndQuitIsNoOp() {
-        mods.eln.sim.mna.disableLog4jJmx()
+        mods.eln.disableLog4jJmx()
         val a = VoltageState()
         val b = VoltageState()
         val line = object : Line() {

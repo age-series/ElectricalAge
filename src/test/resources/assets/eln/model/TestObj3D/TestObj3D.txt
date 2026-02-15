@@ -1,0 +1,9 @@
+o hinge
+f originX 0.25
+f originY 0.5
+f originZ 0.75
+f openAngle 45
+s type testFixture
+s mode enabled
+r 0
+bad line for warning

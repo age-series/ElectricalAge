@@ -1,5 +1,6 @@
 package mods.eln.sim.mna
 
+import mods.eln.disableLog4jJmx
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNull

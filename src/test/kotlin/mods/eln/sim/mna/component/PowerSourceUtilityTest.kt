@@ -4,7 +4,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import mods.eln.sim.mna.RootSystem
 import mods.eln.sim.mna.SubSystem
-import mods.eln.sim.mna.disableLog4jJmx
+import mods.eln.disableLog4jJmx
 import mods.eln.sim.mna.state.VoltageState
 
 class PowerSourceUtilityTest {

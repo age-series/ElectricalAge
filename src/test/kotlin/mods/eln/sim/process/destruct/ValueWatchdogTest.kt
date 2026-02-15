@@ -2,7 +2,7 @@ package mods.eln.sim.process.destruct
 
 import kotlin.test.Test
 import kotlin.test.assertTrue
-import mods.eln.sim.mna.disableLog4jJmx
+import mods.eln.disableLog4jJmx
 
 private class StubDestructible : IDestructible {
     var destroyed = false

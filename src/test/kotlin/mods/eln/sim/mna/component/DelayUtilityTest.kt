@@ -1,5 +1,6 @@
 package mods.eln.sim.mna.component
 
+import mods.eln.disableLog4jJmx
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import mods.eln.sim.mna.SubSystem
@@ -8,7 +9,7 @@ import mods.eln.sim.mna.state.VoltageState
 class DelayUtilityTest {
     @Test
     fun setImpedanceUpdatesConductanceAndCurrent() {
-        mods.eln.sim.mna.disableLog4jJmx()
+        mods.eln.disableLog4jJmx()
         val a = VoltageState()
         val b = VoltageState()
         val delay = Delay()
