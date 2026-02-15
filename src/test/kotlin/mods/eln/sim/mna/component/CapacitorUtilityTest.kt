@@ -1,5 +1,6 @@
 package mods.eln.sim.mna.component
 
+import mods.eln.disableLog4jJmx
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import mods.eln.sim.mna.SubSystem
@@ -15,7 +16,7 @@ class CapacitorUtilityTest {
 
     @Test
     fun quitSubSystemRemovesProcess() {
-        mods.eln.sim.mna.disableLog4jJmx()
+        mods.eln.disableLog4jJmx()
         val a = VoltageState()
         val b = VoltageState()
         val capacitor = Capacitor(a, b)

@@ -3,7 +3,7 @@ package mods.eln.sim.mna.process
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import mods.eln.sim.mna.SubSystem
-import mods.eln.sim.mna.disableLog4jJmx
+import mods.eln.disableLog4jJmx
 import mods.eln.sim.mna.component.Resistor
 import mods.eln.sim.mna.component.VoltageSource
 import mods.eln.sim.mna.state.VoltageState

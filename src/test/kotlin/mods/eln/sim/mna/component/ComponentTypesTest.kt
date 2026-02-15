@@ -1,5 +1,6 @@
 package mods.eln.sim.mna.component
 
+import mods.eln.disableLog4jJmx
 import kotlin.math.abs
 import kotlin.math.sqrt
 import kotlin.test.Test
@@ -469,7 +470,7 @@ class TransformerTest {
 
     @Test
     fun quitSubSystemRemovesCurrentStates() {
-        mods.eln.sim.mna.disableLog4jJmx()
+        mods.eln.disableLog4jJmx()
         val a = VoltageState()
         val b = VoltageState()
         val transformer = Transformer(a, b)
