@@ -9,7 +9,7 @@ public class ResistorSwitch extends Resistor implements INBTTReady {
 
     String name;
 
-    boolean state = false;
+    private boolean state = false;
 
     protected double baseResistance = 1;
 
