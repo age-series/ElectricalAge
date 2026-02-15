@@ -1042,7 +1042,7 @@ class Equation : IValue, INBTTReady {
             val high = input!!.getValue() > 0.5
             if (lastHigh == null || high != lastHigh) {
                 lastHigh = high
-                counter = 0.0
+                counter = time
             } else {
                 counter += time
             }
