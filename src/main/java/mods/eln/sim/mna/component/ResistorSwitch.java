@@ -22,17 +22,17 @@ public class ResistorSwitch extends Resistor implements INBTTReady {
 
     public void setState(boolean state) {
         this.state = state;
-        setResistance(baseResistance);
+        super.setResistance(state ? baseResistance : offResistance);
     }
 
     public void setOffResistance(double resistance) {
         offResistance = resistance;
-        setResistance(baseResistance);
+        super.setResistance(state ? baseResistance : offResistance);
     }
 
     @Override
     public void highImpedance() {
-        setResistance(offResistance);
+        super.setResistance(offResistance);
     }
 
     @Override
@@ -48,11 +48,14 @@ public class ResistorSwitch extends Resistor implements INBTTReady {
     @Override
     public void readFromNBT(NBTTagCompound nbt, String str) {
         str += name;
-        setResistance(nbt.getDouble(str + "R"));
-        if (!Double.isFinite(baseResistance) || baseResistance == 0) {
-            highImpedance();
+        double resistance = nbt.getDouble(str + "R");
+        if (!Double.isFinite(resistance) || resistance == 0) {
+            baseResistance = offResistance;
+        } else {
+            baseResistance = resistance;
         }
-        setState(nbt.getBoolean(str + "State"));
+        state = nbt.getBoolean(str + "State");
+        super.setResistance(state ? baseResistance : offResistance);
     }
 
     @Override
