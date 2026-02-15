@@ -1,6 +1,6 @@
 package mods.eln.misc;
 
-import cpw.mods.fml.common.FMLLog;
+import mods.eln.Eln;
 import net.minecraft.util.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.opengl.GL11;
@@ -561,8 +561,8 @@ public class Obj3D {
                             }, refresh, refresh);
                         }
                     } else {
-                        FMLLog.warning("Invalid syntax in EA model text file %1$s on line %2$d: %3$s",
-                            txtPath, lineNumber, line);
+                        Eln.logger.warn(String.format("Invalid syntax in EA model text file %1$s on line %2$d: %3$s",
+                            txtPath, lineNumber, line));
                     }
                 }
             }
