@@ -6,7 +6,7 @@ import mods.eln.sim.mna.state.State;
 
 public abstract class Component {
 
-    SubSystem subSystem;
+    private SubSystem subSystem;
 
     public IAbstractor abstractedBy;
 
@@ -19,6 +19,10 @@ public abstract class Component {
 
     public SubSystem getSubSystem() {
         if (isAbstracted()) return abstractedBy.getAbstractorSubSystem();
+        return subSystem;
+    }
+
+    protected SubSystem getLocalSubSystem() {
         return subSystem;
     }
 

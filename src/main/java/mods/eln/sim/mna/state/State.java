@@ -12,7 +12,7 @@ public class State {
     private int id = -1;
 
     public double state;
-    SubSystem subSystem;
+    private SubSystem subSystem;
 
     ArrayList<Component> components = new ArrayList<Component>();
 

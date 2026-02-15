@@ -68,8 +68,11 @@ public class Inductor extends Bipole implements ISubSystemProcessI, INBTTReady {
 
     @Override
     public void quitSubSystem() {
-        subSystem.states.remove(getCurrentState());
-        subSystem.removeProcess(this);
+        SubSystem localSubSystem = getLocalSubSystem();
+        if (localSubSystem != null) {
+            localSubSystem.states.remove(getCurrentState());
+            localSubSystem.removeProcess(this);
+        }
         super.quitSubSystem();
     }
 

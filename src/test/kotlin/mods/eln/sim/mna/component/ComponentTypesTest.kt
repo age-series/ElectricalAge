@@ -458,6 +458,36 @@ class TransformerTest {
         assertClose(2.0, matrixValue(snapshot, aCurrent, bCurrent))
         assertClose(2.0, matrixValue(snapshot, bCurrent, bCurrent))
     }
+
+    @Test
+    fun ratioAccessorsAndCurrentDefault() {
+        val transformer = Transformer()
+        transformer.ratio = 3.0
+        assertClose(3.0, transformer.ratio)
+        assertClose(0.0, transformer.current)
+    }
+
+    @Test
+    fun quitSubSystemRemovesCurrentStates() {
+        mods.eln.sim.mna.disableLog4jJmx()
+        val a = VoltageState()
+        val b = VoltageState()
+        val transformer = Transformer(a, b)
+
+        val subSystem = SubSystem(null, 0.1)
+        subSystem.addState(a)
+        subSystem.addState(b)
+        subSystem.addComponent(transformer)
+        subSystem.generateMatrix()
+
+        val aId = transformer.aCurrentState.id
+        val bId = transformer.bCurrentState.id
+
+        transformer.quitSubSystem()
+
+        assertTrue(subSystem.states.none { it.id == aId })
+        assertTrue(subSystem.states.none { it.id == bId })
+    }
 }
 
 class LineAndInterSystemTest {
