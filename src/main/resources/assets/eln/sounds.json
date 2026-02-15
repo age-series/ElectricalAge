@@ -8,6 +8,15 @@
             }
         ]
     },
+    "beep_loop": {
+        "category": "block",
+        "sounds": [
+            {
+                "name": "beep_loop",
+                "stream": false
+            }
+        ]
+    },
     "alarma": {
         "category": "record",
         "sounds": [
