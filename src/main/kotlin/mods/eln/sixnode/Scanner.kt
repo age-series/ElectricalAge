@@ -19,6 +19,8 @@ import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.tileentity.TileEntity
 import net.minecraftforge.common.util.ForgeDirection
 import net.minecraftforge.fluids.IFluidHandler
+import java.lang.reflect.Array
+import java.lang.reflect.Method
 import java.io.DataInputStream
 import java.io.DataOutputStream
 import java.util.*
@@ -103,10 +105,13 @@ class ScannerElement(sixNode: SixNode, side: Direction, descriptor: SixNodeDescr
 
     private fun scanTileEntity(te: TileEntity, targetSide: ForgeDirection): Double? {
         if (te is IFluidHandler) {
-            val info = te.getTankInfo(targetSide)
+            val info = te.getTankInfo(targetSide)?.filter { it.capacity > 0 } ?: return 0.0
+            if (info.isEmpty()) return 0.0
             return info.sumOf {
                 (it.fluid?.amount ?: 0).toDouble() / it.capacity
             } / info.size
+        } else if (hbmFluidUserClass?.isInstance(te) == true) {
+            return scanHbmFluidUser(te)
         } else if (te is ISidedInventory) {
             var sum = 0
             var limit = 0
@@ -137,6 +142,45 @@ class ScannerElement(sixNode: SixNode, side: Direction, descriptor: SixNodeDescr
         } else {
             return null
         }
+    }
+
+    private fun scanHbmFluidUser(te: TileEntity): Double? {
+        val method = hbmGetAllTanksMethod ?: return null
+        val tanks = try {
+            method.invoke(te)
+        } catch (_: Exception) {
+            return null
+        } ?: return 0.0
+
+        val tankCount = Array.getLength(tanks)
+        if (tankCount == 0) return 0.0
+
+        var sum = 0.0
+        var count = 0
+        for (idx in 0 until tankCount) {
+            val tank = Array.get(tanks, idx) ?: continue
+            val (fillMethod, maxFillMethod) = hbmTankMethodCache.getOrPut(tank.javaClass) {
+                val fill = tank.javaClass.getMethod("getFill")
+                val max = tank.javaClass.getMethod("getMaxFill")
+                fill to max
+            }
+            val maxFill = (maxFillMethod.invoke(tank) as? Number)?.toDouble() ?: continue
+            if (maxFill <= 0.0) continue
+            val fill = (fillMethod.invoke(tank) as? Number)?.toDouble() ?: 0.0
+            sum += fill / maxFill
+            count++
+        }
+        return if (count == 0) 0.0 else sum / count
+    }
+
+    companion object {
+        private val hbmFluidUserClass: Class<*>? by lazy {
+            runCatching { Class.forName("api.hbm.fluidmk2.IFluidUserMK2") }.getOrNull()
+        }
+        private val hbmGetAllTanksMethod: Method? by lazy {
+            hbmFluidUserClass?.getMethod("getAllTanks")
+        }
+        private val hbmTankMethodCache = mutableMapOf<Class<*>, Pair<Method, Method>>()
     }
 
     override fun onBlockActivated(entityPlayer: EntityPlayer, side: Direction, vx: Float, vy: Float, vz: Float): Boolean {
