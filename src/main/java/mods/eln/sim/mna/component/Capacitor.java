@@ -44,7 +44,10 @@ public class Capacitor extends Bipole implements ISubSystemProcessI {
 
     @Override
     public void quitSubSystem() {
-        subSystem.removeProcess(this);
+        SubSystem localSubSystem = getLocalSubSystem();
+        if (localSubSystem != null) {
+            localSubSystem.removeProcess(this);
+        }
         super.quitSubSystem();
     }
 
