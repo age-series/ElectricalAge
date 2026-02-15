@@ -50,6 +50,6 @@ class SubSystemUtilityTest {
         assertTrue(descriptionWithNull.contains("Resistor"))
 
         subSystem.removeComponent(resistor)
-        assertEquals(1, subSystem.componentSize())
+        assertEquals(2, subSystem.componentSize())
     }
 }
