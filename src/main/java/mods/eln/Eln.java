@@ -36,6 +36,7 @@ import mods.eln.item.*;
 import mods.eln.item.electricalinterface.ItemEnergyInventoryProcess;
 import mods.eln.item.electricalitem.OreColorMapping;
 import mods.eln.item.electricalitem.PortableOreScannerItem.RenderStorage.OreScannerConfigElement;
+import mods.eln.integration.fmp.PartNodeFmpBootstrap;
 import mods.eln.misc.*;
 import mods.eln.mqtt.MqttManager;
 import mods.eln.node.NodeBlockEntity;
@@ -48,6 +49,7 @@ import mods.eln.ore.OreBlock;
 import mods.eln.ore.OreDescriptor;
 import mods.eln.ore.OreItem;
 import mods.eln.packets.*;
+import mods.eln.partnode.PartNodeRegistry;
 import mods.eln.registration.ItemRegistration;
 import mods.eln.registration.SingleNodeRegistration;
 import mods.eln.registration.SixNodeRegistration;
@@ -451,6 +453,7 @@ public class Eln {
 
         SingleNodeRegistration.INSTANCE.registerSingle();
         SixNodeRegistration.INSTANCE.registerSix();
+        PartNodeRegistry.INSTANCE.registerPartNodes();
         TransparentNodeRegistration.INSTANCE.registerTransparent();
         ItemRegistration.INSTANCE.registerItem();
 
@@ -466,6 +469,7 @@ public class Eln {
     @EventHandler
     public void modsLoaded(FMLPostInitializationEvent event) {
         Other.check();
+        PartNodeFmpBootstrap.registerIfPresent();
         if (Other.ccLoaded) {
             PeripheralHandler.register();
         }
