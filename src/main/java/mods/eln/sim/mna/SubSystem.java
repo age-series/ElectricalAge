@@ -13,6 +13,7 @@ import org.apache.commons.math3.linear.MatrixUtils;
 import org.apache.commons.math3.linear.QRDecomposition;
 import org.apache.commons.math3.linear.RealMatrix;
 
+import mods.eln.Eln;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -330,8 +331,8 @@ public class SubSystem {
 
         s.step();
 
-        System.out.println("R: U = " + r1.getVoltage() + ", I = " + r1.getCurrent());
-        System.out.println("CS: U = " + cs1.getVoltage());
+        Eln.logger.info("R: U = " + r1.getVoltage() + ", I = " + r1.getCurrent());
+        Eln.logger.info("CS: U = " + cs1.getVoltage());
     }
 
     public boolean containe(State state) {
