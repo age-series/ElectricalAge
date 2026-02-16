@@ -7,15 +7,18 @@ import mods.eln.gridnode.GridSwitchElement
 import mods.eln.gridnode.electricalpole.ElectricalPoleDescriptor
 import mods.eln.gridnode.electricalpole.ElectricalPoleElement
 import mods.eln.gridnode.transformer.GridTransformerElement
+import mods.eln.mechanical.ShaftElement
 import mods.eln.misc.Coordinate
 import mods.eln.misc.FC
 import mods.eln.misc.Version
 import mods.eln.node.NodeBase
 import mods.eln.node.NodeManager
 import mods.eln.node.GhostNode
+import mods.eln.node.simple.SimpleNode
 import mods.eln.node.six.SixNode
 import mods.eln.node.transparent.TransparentNode
 import mods.eln.server.SaveConfig
+import mods.eln.sim.PhysicalConstant
 import mods.eln.server.console.ElnConsoleCommands.Companion.boolToStr
 import mods.eln.server.console.ElnConsoleCommands.Companion.cprint
 import mods.eln.server.console.ElnConsoleCommands.Companion.getArgBool
@@ -756,6 +759,167 @@ class ElnZoneRemoveCommand : IConsoleCommand {
         world.removeTileEntity(x, y, z)
         world.setBlockToAir(x, y, z)
         return true
+    }
+}
+
+class ElnStopShaftCommand : IConsoleCommand {
+    override val name = "stop-shaft"
+
+    override fun runCommand(ics: ICommandSender, args: List<String>) {
+        if (ics !is EntityPlayerMP) {
+            cprint(ics, "${FC.BRIGHT_RED}This command can only be run by a player.", indent = 1)
+            return
+        }
+        if (args.isNotEmpty()) {
+            cprint(ics, "${FC.BRIGHT_YELLOW}Usage: /eln stop-shaft", indent = 1)
+            return
+        }
+
+        val radius = 3.0
+        val radiusSq = radius * radius
+        val nodeManager = NodeManager.instance
+        if (nodeManager == null) {
+            cprint(ics, "${FC.BRIGHT_RED}Node manager unavailable.", indent = 1)
+            return
+        }
+
+        val world = ics.worldObj
+        val dim = world.provider.dimensionId
+        var bestDistanceSq = Double.MAX_VALUE
+        var bestShaftElement: ShaftElement? = null
+
+        nodeManager.nodeList.forEach { node ->
+            if (node.coordinate.dimension != dim) return@forEach
+            if (node !is TransparentNode) return@forEach
+
+            val shaftElement = node.element as? ShaftElement ?: return@forEach
+            val dx = (node.coordinate.x + 0.5) - ics.posX
+            val dy = (node.coordinate.y + 0.5) - ics.posY
+            val dz = (node.coordinate.z + 0.5) - ics.posZ
+            val distanceSq = dx * dx + dy * dy + dz * dz
+            if (distanceSq <= radiusSq && distanceSq < bestDistanceSq) {
+                bestDistanceSq = distanceSq
+                bestShaftElement = shaftElement
+            }
+        }
+
+        if (bestShaftElement == null) {
+            cprint(ics, "${FC.BRIGHT_YELLOW}No shaft network found within ${radius.toInt()} blocks.", indent = 1)
+            return
+        }
+
+        val network = bestShaftElement!!
+            .shaftConnectivity
+            .asSequence()
+            .mapNotNull { bestShaftElement!!.getShaft(it) }
+            .firstOrNull()
+
+        if (network == null) {
+            cprint(ics, "${FC.BRIGHT_YELLOW}Nearest shaft has no connected network.", indent = 1)
+            return
+        }
+
+        network.energy = 0.0
+        network.elements.forEach { it.needPublish() }
+
+        val coord = bestShaftElement!!.coordonate()
+        cprint(
+            ics,
+            "${FC.BRIGHT_GREEN}Stopped shaft network at (${coord.x}, ${coord.y}, ${coord.z}) in dimension ${coord.dimension}. Energy set to 0 J.",
+            indent = 1
+        )
+    }
+
+    override fun getManPage(ics: ICommandSender, args: List<String>) {
+        cprint(ics, "Sets the nearest shaft network energy to 0 J within a 3-block radius.", indent = 1)
+        cprint(ics, "Usage: /eln stop-shaft", indent = 1)
+        cprint(ics, "")
+    }
+}
+
+class ElnResetAmbientTempsCommand : IConsoleCommand {
+    override val name = "reset-ambient-temps"
+
+    override fun runCommand(ics: ICommandSender, args: List<String>) {
+        if (ics !is EntityPlayerMP) {
+            cprint(ics, "${FC.BRIGHT_RED}This command can only be run by a player.", indent = 1)
+            return
+        }
+        if (args.size != 1) {
+            cprint(ics, "${FC.BRIGHT_YELLOW}Usage: /eln reset-ambient-temps <range 1..32>", indent = 1)
+            return
+        }
+
+        val range = args[0].toIntOrNull()
+        if (range == null || range < 1 || range > 32) {
+            cprint(ics, "${FC.BRIGHT_RED}Range must be an integer between 1 and 32.", indent = 1)
+            return
+        }
+
+        val nodeManager = NodeManager.instance
+        if (nodeManager == null) {
+            cprint(ics, "${FC.BRIGHT_RED}Node manager unavailable.", indent = 1)
+            return
+        }
+
+        val rangeSq = range.toDouble() * range.toDouble()
+        val targetTempC = PhysicalConstant.ambientTemperatureCelsius
+        val dim = ics.worldObj.provider.dimensionId
+        var devicesTouched = 0
+        var thermalLoadsReset = 0
+
+        nodeManager.nodeList.forEach { node ->
+            if (node.coordinate.dimension != dim) return@forEach
+
+            val dx = (node.coordinate.x + 0.5) - ics.posX
+            val dy = (node.coordinate.y + 0.5) - ics.posY
+            val dz = (node.coordinate.z + 0.5) - ics.posZ
+            val distanceSq = dx * dx + dy * dy + dz * dz
+            if (distanceSq > rangeSq) return@forEach
+
+            var changedForNode = 0
+            when (node) {
+                is TransparentNode -> {
+                    val element = node.element
+                    element?.thermalLoadList?.forEach { load ->
+                        load.temperatureCelsius = targetTempC
+                        changedForNode++
+                    }
+                }
+                is SixNode -> {
+                    node.sideElementList.filterNotNull().forEach { element ->
+                        element.thermalLoadList.forEach { load ->
+                            load.temperatureCelsius = targetTempC
+                            changedForNode++
+                        }
+                    }
+                }
+                is SimpleNode -> {
+                    node.thermalLoadList.forEach { load ->
+                        load.temperatureCelsius = targetTempC
+                        changedForNode++
+                    }
+                }
+            }
+
+            if (changedForNode > 0) {
+                thermalLoadsReset += changedForNode
+                devicesTouched++
+                node.needPublish = true
+            }
+        }
+
+        cprint(
+            ics,
+            "${FC.BRIGHT_GREEN}Reset $thermalLoadsReset thermal loads on $devicesTouched devices to ${targetTempC.toInt()}°C within range $range.",
+            indent = 1
+        )
+    }
+
+    override fun getManPage(ics: ICommandSender, args: List<String>) {
+        cprint(ics, "Resets nearby Eln device temperatures to ambient (20°C).", indent = 1)
+        cprint(ics, "Usage: /eln reset-ambient-temps <range 1..32>", indent = 1)
+        cprint(ics, "")
     }
 }
 
