@@ -563,6 +563,45 @@ object TransparentNodeRegistration {
             ).applyLargeMachineLayout()
             transparentNodeItem.addDescriptor(subId + (id shl 6), desc)
         }
+
+        run {
+            subId = 26
+            val nominalRads = 200f
+            val nominalU = 3200f
+            val nominalP = 4000f
+            val desc = GeneratorDescriptor(
+                TR_NAME(I18N.Type.NONE, "Polarized Shaft Generator"),
+                Eln.obj.getObj("PolarizedShaftGenerator"),
+                instance.highVoltageCableDescriptor,
+                nominalRads,
+                nominalU,
+                nominalP / (nominalU / 25),
+                nominalP,
+                Eln.sixNodeThermalLoadInitializer.copy(),
+                bipolarTerminals = true
+            )
+            transparentNodeItem.addDescriptor(subId + (id shl 6), desc)
+        }
+
+        run {
+            subId = 27
+            val nominalRads = 200f
+            val nominalU = 3200f
+            val nominalP = 1200f
+            val desc = MotorDescriptor(
+                TR_NAME(I18N.Type.NONE, "Polarized Shaft Motor"),
+                Eln.obj.getObj("PolarizedShaftMotor"),
+                instance.veryHighVoltageCableDescriptor,
+                nominalRads,
+                nominalU,
+                nominalP,
+                25.0f * nominalP / nominalU,
+                25.0f * nominalP / nominalU,
+                Eln.sixNodeThermalLoadInitializer.copy(),
+                bipolarTerminals = true
+            )
+            transparentNodeItem.addDescriptor(subId + (id shl 6), desc)
+        }
     }
 
     private fun registerElectricalFurnace(id: Int) {
