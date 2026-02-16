@@ -1382,3 +1382,5 @@ Overhead_Lines.name=Overhead Lines
 Under_Track_Power.name=Under Track Power
 # ./src/main/kotlin/mods/eln/railroad/ElectricMinecartChargeReporter.kt
 Cart_Energy\:_=Cart Energy: 
+Polarized_Shaft_Generator.name=Polarized Shaft Generator
+Polarized_Shaft_Motor.name=Polarized Shaft Motor

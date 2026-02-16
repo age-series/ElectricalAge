@@ -39,7 +39,8 @@ class MotorDescriptor(
     nominalP: Float,
     elecPPerDU: Float,
     shaftPPerDU: Float,
-    thermalLoadInitializer: ThermalLoadInitializer
+    thermalLoadInitializer: ThermalLoadInitializer,
+    val bipolarTerminals: Boolean = false
 ) : SimpleShaftDescriptor(
     name,
     MotorElement::class,
@@ -155,7 +156,10 @@ class MotorRender(entity: TransparentNodeEntity, desc_: TransparentNodeDescripto
     }
 
     override fun getCableRenderSide(side: Direction, lrdu: LRDU): CableRenderDescriptor? {
-        if(lrdu == LRDU.Down && side == front) return Eln.instance.stdCableRender3200V
+        val f = front ?: return null
+        if (lrdu == LRDU.Down && (side == f || (desc.bipolarTerminals && side == f.back()))) {
+            return Eln.instance.stdCableRender3200V
+        }
         return null
     }
 
@@ -173,9 +177,10 @@ class MotorElement(node: TransparentNode, desc_: TransparentNodeDescriptor) :
     val desc = desc_ as MotorDescriptor
 
     internal val wireLoad = NbtElectricalLoad("wireLoad")
+    internal val negativeLoad = NbtElectricalLoad("negativeLoad")
     internal val shaftLoad = NbtElectricalLoad("shaftLoad")
     internal val wireShaftResistor = Resistor(wireLoad, shaftLoad)
-    internal val powerSource = VoltageSource("powerSource", shaftLoad, null)
+    internal val powerSource = VoltageSource("powerSource", shaftLoad, if (desc.bipolarTerminals) negativeLoad else null)
 
     internal val electricalProcess = MotorElectricalProcess()
     internal val shaftProcess = MotorShaftProcess()
@@ -186,6 +191,10 @@ class MotorElement(node: TransparentNode, desc_: TransparentNodeDescriptor) :
 
     init {
         electricalLoadList.addAll(arrayOf(wireLoad, shaftLoad))
+        if (desc.bipolarTerminals) {
+            electricalLoadList.add(negativeLoad)
+            desc.cable.applyTo(negativeLoad)
+        }
         electricalComponentList.addAll(arrayOf(wireShaftResistor, powerSource))
 
         electricalProcessList.add(shaftProcess)
@@ -278,7 +287,7 @@ class MotorElement(node: TransparentNode, desc_: TransparentNodeDescriptor) :
         if(lrdu != LRDU.Down) return null;
         return when(side) {
             front -> wireLoad
-            front.back() -> wireLoad
+            front.back() -> if (desc.bipolarTerminals) negativeLoad else wireLoad
             else -> null
         }
     }
