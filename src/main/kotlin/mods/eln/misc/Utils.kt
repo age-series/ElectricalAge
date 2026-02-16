@@ -194,8 +194,32 @@ object Utils {
                 String.format("%1.2fM", value / 1_000_000.0)
             valueAbs < 99999999 ->
                 String.format("%2.1fM", value / 1_000_000.0)
-            else ->
+            valueAbs < 999999999 ->
                 String.format("%3.0fM", value / 1_000_000.0)
+            valueAbs < 9999999999 ->
+                String.format("%1.2fG", value / 1_000_000_000.0)
+            valueAbs < 99999999999 ->
+                String.format("%2.1fG", value / 1_000_000_000.0)
+            valueAbs < 999999999999 ->
+                String.format("%3.0fG", value / 1_000_000_000.0)
+            valueAbs < 9999999999999 ->
+                String.format("%1.2fT", value / 1_000_000_000_000.0)
+            valueAbs < 99999999999999 ->
+                String.format("%2.1fT", value / 1_000_000_000_000.0)
+            valueAbs < 999999999999999 ->
+                String.format("%3.0fT", value / 1_000_000_000_000.0)
+            valueAbs < 9999999999999999 ->
+                String.format("%1.2fP", value / 1_000_000_000_000_000.0)
+            valueAbs < 99999999999999999 ->
+                String.format("%2.1fP", value / 1_000_000_000_000_000.0)
+            valueAbs < 999999999999999999 ->
+                String.format("%3.0fP", value / 1_000_000_000_000_000.0)
+            valueAbs < 9999999999999999999.0 ->
+                String.format("%1.2fE", value / 1_000_000_000_000_000_000.0)
+            valueAbs < 99999999999999999999.0 ->
+                String.format("%2.1fE", value / 1_000_000_000_000_000_000.0)
+            else ->
+                String.format("%3.0fE", value / 1_000_000_000_000_000_000.0)
         }
     }
 
