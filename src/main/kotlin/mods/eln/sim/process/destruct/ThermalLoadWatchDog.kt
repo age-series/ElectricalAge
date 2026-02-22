@@ -53,29 +53,28 @@ class ThermalLoadWatchDog(var state: ThermalLoad): ValueWatchdog() {
     fun setMaximumTemperature(maximumTemperature: Double): ThermalLoadWatchDog {
         max = maximumTemperature
         min = -40.0
-        // TODO: Abstract 0.1 as step time or seconds?
-        timeoutReset = maximumTemperature * 0.1 * 10
+        timeoutReset = maximumTemperature
         return this
     }
 
     fun setThermalLoad(t: ThermalLoadInitializer): ThermalLoadWatchDog {
         max = t.maximumTemperature
         min = t.minimumTemperature
-        timeoutReset = max * 0.1 * 10
+        timeoutReset = max
         return this
     }
 
     fun setTemperatureLimits(maximumTemperature: Double, minimumTemperature: Double): ThermalLoadWatchDog {
         max = maximumTemperature
         min = minimumTemperature
-        timeoutReset = max * 0.1 * 10
+        timeoutReset = max
         return this
     }
 
     fun setTemperatureLimits(t: ThermalLoadInitializerByPowerDrop): ThermalLoadWatchDog {
         max = t.maximumTemperature
         min = t.minimumTemperature
-        timeoutReset = max * 0.1 * 10
+        timeoutReset = max
         return this
     }
 
