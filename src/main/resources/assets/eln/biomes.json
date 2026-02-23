@@ -7,7 +7,8 @@
     "NightLow_F": 57.2,
     "DayRH_%": 75,
     "NightRH_%": 85,
-    "Precipitation": "rain"
+    "Precipitation": "rain",
+    "Mod": "minecraft"
   },
   {
     "Biome": "Plains",
@@ -17,7 +18,8 @@
     "NightLow_F": 59,
     "DayRH_%": 45,
     "NightRH_%": 65,
-    "Precipitation": "rain"
+    "Precipitation": "rain",
+    "Mod": "minecraft"
   },
   {
     "Biome": "Lake",
@@ -27,7 +29,8 @@
     "NightLow_F": 60.8,
     "DayRH_%": 55,
     "NightRH_%": 80,
-    "Precipitation": "rain"
+    "Precipitation": "rain",
+    "Mod": "unknown"
   },
   {
     "Biome": "High Hills",
@@ -37,7 +40,8 @@
     "NightLow_F": 53.6,
     "DayRH_%": 50,
     "NightRH_%": 70,
-    "Precipitation": "rain"
+    "Precipitation": "rain",
+    "Mod": "minecraft"
   },
   {
     "Biome": "Forest",
@@ -47,7 +51,8 @@
     "NightLow_F": 57.2,
     "DayRH_%": 55,
     "NightRH_%": 75,
-    "Precipitation": "rain"
+    "Precipitation": "rain",
+    "Mod": "minecraft"
   },
   {
     "Biome": "Taiga",
@@ -57,7 +62,8 @@
     "NightLow_F": 46.4,
     "DayRH_%": 55,
     "NightRH_%": 75,
-    "Precipitation": "rain"
+    "Precipitation": "rain",
+    "Mod": "minecraft"
   },
   {
     "Biome": "Swamp",
@@ -67,7 +73,8 @@
     "NightLow_F": 71.6,
     "DayRH_%": 70,
     "NightRH_%": 90,
-    "Precipitation": "rain"
+    "Precipitation": "rain",
+    "Mod": "minecraft"
   },
   {
     "Biome": "River",
@@ -77,7 +84,8 @@
     "NightLow_F": 60.8,
     "DayRH_%": 55,
     "NightRH_%": 80,
-    "Precipitation": "rain"
+    "Precipitation": "rain",
+    "Mod": "minecraft"
   },
   {
     "Biome": "Hell",
@@ -87,7 +95,8 @@
     "NightLow_F": 95,
     "DayRH_%": 10,
     "NightRH_%": 20,
-    "Precipitation": "none"
+    "Precipitation": "none",
+    "Mod": "minecraft"
   },
   {
     "Biome": "Sky",
@@ -97,7 +106,8 @@
     "NightLow_F": 32,
     "DayRH_%": 30,
     "NightRH_%": 50,
-    "Precipitation": "none"
+    "Precipitation": "none",
+    "Mod": "minecraft"
   },
   {
     "Biome": "FrozenOcean",
@@ -107,7 +117,8 @@
     "NightLow_F": 14,
     "DayRH_%": 80,
     "NightRH_%": 90,
-    "Precipitation": "snow"
+    "Precipitation": "snow",
+    "Mod": "minecraft"
   },
   {
     "Biome": "FrozenRiver",
@@ -117,7 +128,8 @@
     "NightLow_F": 3.2,
     "DayRH_%": 65,
     "NightRH_%": 80,
-    "Precipitation": "snow"
+    "Precipitation": "snow",
+    "Mod": "minecraft"
   },
   {
     "Biome": "Ice Plains",
@@ -127,7 +139,8 @@
     "NightLow_F": 5,
     "DayRH_%": 65,
     "NightRH_%": 80,
-    "Precipitation": "snow"
+    "Precipitation": "snow",
+    "Mod": "minecraft"
   },
   {
     "Biome": "Ice Mountains",
@@ -137,7 +150,8 @@
     "NightLow_F": -0.4,
     "DayRH_%": 60,
     "NightRH_%": 75,
-    "Precipitation": "snow"
+    "Precipitation": "snow",
+    "Mod": "minecraft"
   },
   {
     "Biome": "MushroomIsland",
@@ -147,7 +161,8 @@
     "NightLow_F": 60.8,
     "DayRH_%": 80,
     "NightRH_%": 90,
-    "Precipitation": "none"
+    "Precipitation": "none",
+    "Mod": "minecraft"
   },
   {
     "Biome": "MushroomIslandShore",
@@ -157,7 +172,8 @@
     "NightLow_F": 60.8,
     "DayRH_%": 80,
     "NightRH_%": 90,
-    "Precipitation": "none"
+    "Precipitation": "none",
+    "Mod": "minecraft"
   },
   {
     "Biome": "Beach",
@@ -167,7 +183,8 @@
     "NightLow_F": 64.4,
     "DayRH_%": 70,
     "NightRH_%": 85,
-    "Precipitation": "rain"
+    "Precipitation": "rain",
+    "Mod": "minecraft"
   },
   {
     "Biome": "Gravel Beach",
@@ -177,7 +194,8 @@
     "NightLow_F": 64.4,
     "DayRH_%": 70,
     "NightRH_%": 85,
-    "Precipitation": "rain"
+    "Precipitation": "rain",
+    "Mod": "minecraft"
   },
   {
     "Biome": "ForestHills",
@@ -187,7 +205,8 @@
     "NightLow_F": 53.6,
     "DayRH_%": 50,
     "NightRH_%": 70,
-    "Precipitation": "rain"
+    "Precipitation": "rain",
+    "Mod": "minecraft"
   },
   {
     "Biome": "TaigaHills",
@@ -197,7 +216,8 @@
     "NightLow_F": 46.4,
     "DayRH_%": 55,
     "NightRH_%": 75,
-    "Precipitation": "rain"
+    "Precipitation": "rain",
+    "Mod": "minecraft"
   },
   {
     "Biome": "High Hills Edge",
@@ -207,7 +227,8 @@
     "NightLow_F": 50,
     "DayRH_%": 50,
     "NightRH_%": 75,
-    "Precipitation": "rain"
+    "Precipitation": "rain",
+    "Mod": "minecraft"
   },
   {
     "Biome": "Jungle",
@@ -217,7 +238,8 @@
     "NightLow_F": 71.6,
     "DayRH_%": 80,
     "NightRH_%": 95,
-    "Precipitation": "rain"
+    "Precipitation": "rain",
+    "Mod": "minecraft"
   },
   {
     "Biome": "JungleHills",
@@ -227,7 +249,8 @@
     "NightLow_F": 71.6,
     "DayRH_%": 80,
     "NightRH_%": 95,
-    "Precipitation": "rain"
+    "Precipitation": "rain",
+    "Mod": "minecraft"
   },
   {
     "Biome": "JungleEdge",
@@ -237,7 +260,8 @@
     "NightLow_F": 71.6,
     "DayRH_%": 80,
     "NightRH_%": 95,
-    "Precipitation": "rain"
+    "Precipitation": "rain",
+    "Mod": "minecraft"
   },
   {
     "Biome": "Deep Ocean",
@@ -247,7 +271,8 @@
     "NightLow_F": 57.2,
     "DayRH_%": 75,
     "NightRH_%": 85,
-    "Precipitation": "rain"
+    "Precipitation": "rain",
+    "Mod": "minecraft"
   },
   {
     "Biome": "Stone Beach",
@@ -257,7 +282,8 @@
     "NightLow_F": 64.4,
     "DayRH_%": 70,
     "NightRH_%": 85,
-    "Precipitation": "rain"
+    "Precipitation": "rain",
+    "Mod": "minecraft"
   },
   {
     "Biome": "Cold Beach",
@@ -267,7 +293,8 @@
     "NightLow_F": 19.4,
     "DayRH_%": 75,
     "NightRH_%": 90,
-    "Precipitation": "snow"
+    "Precipitation": "snow",
+    "Mod": "minecraft"
   },
   {
     "Biome": "Birch Forest",
@@ -277,7 +304,8 @@
     "NightLow_F": 57.2,
     "DayRH_%": 55,
     "NightRH_%": 75,
-    "Precipitation": "rain"
+    "Precipitation": "rain",
+    "Mod": "minecraft"
   },
   {
     "Biome": "Birch Forest Hills",
@@ -287,7 +315,8 @@
     "NightLow_F": 53.6,
     "DayRH_%": 50,
     "NightRH_%": 70,
-    "Precipitation": "rain"
+    "Precipitation": "rain",
+    "Mod": "minecraft"
   },
   {
     "Biome": "Roofed Forest",
@@ -297,7 +326,8 @@
     "NightLow_F": 57.2,
     "DayRH_%": 55,
     "NightRH_%": 75,
-    "Precipitation": "rain"
+    "Precipitation": "rain",
+    "Mod": "minecraft"
   },
   {
     "Biome": "Rolling Hills",
@@ -307,7 +337,8 @@
     "NightLow_F": 53.6,
     "DayRH_%": 50,
     "NightRH_%": 70,
-    "Precipitation": "rain"
+    "Precipitation": "rain",
+    "Mod": "unknown"
   },
   {
     "Biome": "Mountains",
@@ -317,7 +348,8 @@
     "NightLow_F": 41,
     "DayRH_%": 45,
     "NightRH_%": 70,
-    "Precipitation": "rain"
+    "Precipitation": "rain",
+    "Mod": "minecraft"
   },
   {
     "Biome": "Mountains Edge",
@@ -327,7 +359,8 @@
     "NightLow_F": 50,
     "DayRH_%": 50,
     "NightRH_%": 75,
-    "Precipitation": "rain"
+    "Precipitation": "rain",
+    "Mod": "minecraft"
   },
   {
     "Biome": "Mega Taiga Hills",
@@ -337,7 +370,8 @@
     "NightLow_F": 46.4,
     "DayRH_%": 55,
     "NightRH_%": 75,
-    "Precipitation": "rain"
+    "Precipitation": "rain",
+    "Mod": "minecraft"
   },
   {
     "Biome": "Extreme Hills+",
@@ -347,7 +381,8 @@
     "NightLow_F": 41,
     "DayRH_%": 45,
     "NightRH_%": 70,
-    "Precipitation": "rain"
+    "Precipitation": "rain",
+    "Mod": "minecraft"
   },
   {
     "Biome": "High Plains",
@@ -357,7 +392,8 @@
     "NightLow_F": 59,
     "DayRH_%": 45,
     "NightRH_%": 65,
-    "Precipitation": "rain"
+    "Precipitation": "rain",
+    "Mod": "minecraft"
   },
   {
     "Biome": "Mountain Range",
@@ -367,7 +403,8 @@
     "NightLow_F": 41,
     "DayRH_%": 45,
     "NightRH_%": 70,
-    "Precipitation": "rain"
+    "Precipitation": "rain",
+    "Mod": "minecraft"
   },
   {
     "Biome": "Mountain Range Edge",
@@ -377,7 +414,8 @@
     "NightLow_F": 50,
     "DayRH_%": 50,
     "NightRH_%": 75,
-    "Precipitation": "rain"
+    "Precipitation": "rain",
+    "Mod": "minecraft"
   },
   {
     "Biome": "Foothills",
@@ -387,7 +425,8 @@
     "NightLow_F": 50,
     "DayRH_%": 50,
     "NightRH_%": 75,
-    "Precipitation": "rain"
+    "Precipitation": "rain",
+    "Mod": "minecraft"
   },
   {
     "Biome": "Storage Cell",
@@ -397,7 +436,8 @@
     "NightLow_F": 68,
     "DayRH_%": 35,
     "NightRH_%": 45,
-    "Precipitation": "none"
+    "Precipitation": "none",
+    "Mod": "appliedenergistics2"
   },
   {
     "Biome": "Salt Swamp",
@@ -407,7 +447,8 @@
     "NightLow_F": 71.6,
     "DayRH_%": 75,
     "NightRH_%": 95,
-    "Precipitation": "rain"
+    "Precipitation": "rain",
+    "Mod": "unknown"
   },
   {
     "Biome": "Lakeshore",
@@ -417,7 +458,8 @@
     "NightLow_F": 60.8,
     "DayRH_%": 55,
     "NightRH_%": 80,
-    "Precipitation": "rain"
+    "Precipitation": "rain",
+    "Mod": "unknown"
   },
   {
     "Biome": "Riverbank",
@@ -427,7 +469,8 @@
     "NightLow_F": 60.8,
     "DayRH_%": 55,
     "NightRH_%": 80,
-    "Precipitation": "rain"
+    "Precipitation": "rain",
+    "Mod": "unknown"
   },
   {
     "Biome": "River Source",
@@ -437,7 +480,8 @@
     "NightLow_F": 50,
     "DayRH_%": 60,
     "NightRH_%": 85,
-    "Precipitation": "rain"
+    "Precipitation": "rain",
+    "Mod": "unknown"
   },
   {
     "Biome": "Estuary",
@@ -447,7 +491,8 @@
     "NightLow_F": 60.8,
     "DayRH_%": 55,
     "NightRH_%": 80,
-    "Precipitation": "rain"
+    "Precipitation": "rain",
+    "Mod": "unknown"
   },
   {
     "Biome": "Peat Bog",
@@ -457,7 +502,8 @@
     "NightLow_F": 53.6,
     "DayRH_%": 80,
     "NightRH_%": 95,
-    "Precipitation": "rain"
+    "Precipitation": "rain",
+    "Mod": "unknown"
   },
   {
     "Biome": "Ocean Oil Field",
@@ -467,7 +513,8 @@
     "NightLow_F": 57.2,
     "DayRH_%": 75,
     "NightRH_%": 85,
-    "Precipitation": "rain"
+    "Precipitation": "rain",
+    "Mod": "BuildCraft|Energy"
   },
   {
     "Biome": "Desert Oil Field",
@@ -477,7 +524,8 @@
     "NightLow_F": 64.4,
     "DayRH_%": 20,
     "NightRH_%": 35,
-    "Precipitation": "none"
+    "Precipitation": "none",
+    "Mod": "BuildCraft|Energy"
   },
   {
     "Biome": "Sunflower Plains",
@@ -487,7 +535,8 @@
     "NightLow_F": 59,
     "DayRH_%": 45,
     "NightRH_%": 65,
-    "Precipitation": "rain"
+    "Precipitation": "rain",
+    "Mod": "minecraft"
   },
   {
     "Biome": "Desert M",
@@ -497,7 +546,8 @@
     "NightLow_F": 64.4,
     "DayRH_%": 20,
     "NightRH_%": 35,
-    "Precipitation": "none"
+    "Precipitation": "none",
+    "Mod": "minecraft"
   },
   {
     "Biome": "Extreme Hills M",
@@ -507,7 +557,8 @@
     "NightLow_F": 41,
     "DayRH_%": 45,
     "NightRH_%": 70,
-    "Precipitation": "rain"
+    "Precipitation": "rain",
+    "Mod": "minecraft"
   },
   {
     "Biome": "Flower Forest",
@@ -517,7 +568,8 @@
     "NightLow_F": 57.2,
     "DayRH_%": 55,
     "NightRH_%": 75,
-    "Precipitation": "rain"
+    "Precipitation": "rain",
+    "Mod": "minecraft"
   },
   {
     "Biome": "Taiga M",
@@ -527,7 +579,8 @@
     "NightLow_F": 46.4,
     "DayRH_%": 55,
     "NightRH_%": 75,
-    "Precipitation": "rain"
+    "Precipitation": "rain",
+    "Mod": "minecraft"
   },
   {
     "Biome": "Swampland M",
@@ -537,7 +590,8 @@
     "NightLow_F": 71.6,
     "DayRH_%": 70,
     "NightRH_%": 90,
-    "Precipitation": "rain"
+    "Precipitation": "rain",
+    "Mod": "minecraft"
   },
   {
     "Biome": "Ice Plains Spikes",
@@ -547,7 +601,8 @@
     "NightLow_F": -0.4,
     "DayRH_%": 60,
     "NightRH_%": 75,
-    "Precipitation": "snow"
+    "Precipitation": "snow",
+    "Mod": "minecraft"
   },
   {
     "Biome": "Jungle M",
@@ -557,7 +612,8 @@
     "NightLow_F": 71.6,
     "DayRH_%": 80,
     "NightRH_%": 95,
-    "Precipitation": "rain"
+    "Precipitation": "rain",
+    "Mod": "minecraft"
   },
   {
     "Biome": "JungleEdge M",
@@ -567,7 +623,8 @@
     "NightLow_F": 71.6,
     "DayRH_%": 80,
     "NightRH_%": 95,
-    "Precipitation": "rain"
+    "Precipitation": "rain",
+    "Mod": "minecraft"
   },
   {
     "Biome": "Birch Forest M",
@@ -577,7 +634,8 @@
     "NightLow_F": 57.2,
     "DayRH_%": 55,
     "NightRH_%": 75,
-    "Precipitation": "rain"
+    "Precipitation": "rain",
+    "Mod": "minecraft"
   },
   {
     "Biome": "Birch Forest Hills M",
@@ -587,7 +645,8 @@
     "NightLow_F": 53.6,
     "DayRH_%": 50,
     "NightRH_%": 70,
-    "Precipitation": "rain"
+    "Precipitation": "rain",
+    "Mod": "minecraft"
   },
   {
     "Biome": "Roofed Forest M",
@@ -597,7 +656,8 @@
     "NightLow_F": 57.2,
     "DayRH_%": 55,
     "NightRH_%": 75,
-    "Precipitation": "rain"
+    "Precipitation": "rain",
+    "Mod": "minecraft"
   },
   {
     "Biome": "Cold Taiga M",
@@ -607,7 +667,8 @@
     "NightLow_F": 46.4,
     "DayRH_%": 55,
     "NightRH_%": 75,
-    "Precipitation": "snow"
+    "Precipitation": "snow",
+    "Mod": "minecraft"
   },
   {
     "Biome": "Mega Spruce Taiga",
@@ -617,7 +678,8 @@
     "NightLow_F": 46.4,
     "DayRH_%": 55,
     "NightRH_%": 75,
-    "Precipitation": "rain"
+    "Precipitation": "rain",
+    "Mod": "minecraft"
   },
   {
     "Biome": "Extreme Hills+ M",
@@ -627,7 +689,8 @@
     "NightLow_F": 41,
     "DayRH_%": 45,
     "NightRH_%": 70,
-    "Precipitation": "rain"
+    "Precipitation": "rain",
+    "Mod": "minecraft"
   },
   {
     "Biome": "Savanna M",
@@ -637,7 +700,8 @@
     "NightLow_F": 68,
     "DayRH_%": 40,
     "NightRH_%": 70,
-    "Precipitation": "none"
+    "Precipitation": "none",
+    "Mod": "minecraft"
   },
   {
     "Biome": "Savanna Plateau M",
@@ -647,7 +711,8 @@
     "NightLow_F": 68,
     "DayRH_%": 40,
     "NightRH_%": 70,
-    "Precipitation": "none"
+    "Precipitation": "none",
+    "Mod": "minecraft"
   },
   {
     "Biome": "Mesa (Bryce)",
@@ -657,7 +722,8 @@
     "NightLow_F": 62.6,
     "DayRH_%": 20,
     "NightRH_%": 40,
-    "Precipitation": "none"
+    "Precipitation": "none",
+    "Mod": "minecraft"
   },
   {
     "Biome": "Mesa Plateau F M",
@@ -667,7 +733,8 @@
     "NightLow_F": 62.6,
     "DayRH_%": 20,
     "NightRH_%": 40,
-    "Precipitation": "none"
+    "Precipitation": "none",
+    "Mod": "minecraft"
   },
   {
     "Biome": "Mesa Plateau M",
@@ -677,7 +744,8 @@
     "NightLow_F": 62.6,
     "DayRH_%": 20,
     "NightRH_%": 40,
-    "Precipitation": "none"
+    "Precipitation": "none",
+    "Mod": "minecraft"
   },
   {
     "Biome": "Storage Cell",
@@ -687,6 +755,7 @@
     "NightLow_F": -459.67,
     "DayRH_%": 0,
     "NightRH_%": 0,
-    "Precipitation": "none"
+    "Precipitation": "none",
+    "Mod": "appliedenergistics2"
   }
 ]
