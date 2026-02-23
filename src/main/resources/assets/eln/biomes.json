@@ -1,0 +1,692 @@
+[
+  {
+    "Biome": "Ocean",
+    "DayHigh_C": 18,
+    "DayHigh_F": 64.4,
+    "NightLow_C": 14,
+    "NightLow_F": 57.2,
+    "DayRH_%": 75,
+    "NightRH_%": 85,
+    "Precipitation": "rain"
+  },
+  {
+    "Biome": "Plains",
+    "DayHigh_C": 27,
+    "DayHigh_F": 80.6,
+    "NightLow_C": 15,
+    "NightLow_F": 59,
+    "DayRH_%": 45,
+    "NightRH_%": 65,
+    "Precipitation": "rain"
+  },
+  {
+    "Biome": "Lake",
+    "DayHigh_C": 26,
+    "DayHigh_F": 78.8,
+    "NightLow_C": 16,
+    "NightLow_F": 60.8,
+    "DayRH_%": 55,
+    "NightRH_%": 80,
+    "Precipitation": "rain"
+  },
+  {
+    "Biome": "High Hills",
+    "DayHigh_C": 24,
+    "DayHigh_F": 75.2,
+    "NightLow_C": 12,
+    "NightLow_F": 53.6,
+    "DayRH_%": 50,
+    "NightRH_%": 70,
+    "Precipitation": "rain"
+  },
+  {
+    "Biome": "Forest",
+    "DayHigh_C": 25,
+    "DayHigh_F": 77,
+    "NightLow_C": 14,
+    "NightLow_F": 57.2,
+    "DayRH_%": 55,
+    "NightRH_%": 75,
+    "Precipitation": "rain"
+  },
+  {
+    "Biome": "Taiga",
+    "DayHigh_C": 18,
+    "DayHigh_F": 64.4,
+    "NightLow_C": 8,
+    "NightLow_F": 46.4,
+    "DayRH_%": 55,
+    "NightRH_%": 75,
+    "Precipitation": "rain"
+  },
+  {
+    "Biome": "Swamp",
+    "DayHigh_C": 30,
+    "DayHigh_F": 86,
+    "NightLow_C": 22,
+    "NightLow_F": 71.6,
+    "DayRH_%": 70,
+    "NightRH_%": 90,
+    "Precipitation": "rain"
+  },
+  {
+    "Biome": "River",
+    "DayHigh_C": 26,
+    "DayHigh_F": 78.8,
+    "NightLow_C": 16,
+    "NightLow_F": 60.8,
+    "DayRH_%": 55,
+    "NightRH_%": 80,
+    "Precipitation": "rain"
+  },
+  {
+    "Biome": "Hell",
+    "DayHigh_C": 45,
+    "DayHigh_F": 113,
+    "NightLow_C": 35,
+    "NightLow_F": 95,
+    "DayRH_%": 10,
+    "NightRH_%": 20,
+    "Precipitation": "none"
+  },
+  {
+    "Biome": "Sky",
+    "DayHigh_C": 10,
+    "DayHigh_F": 50,
+    "NightLow_C": 0,
+    "NightLow_F": 32,
+    "DayRH_%": 30,
+    "NightRH_%": 50,
+    "Precipitation": "none"
+  },
+  {
+    "Biome": "FrozenOcean",
+    "DayHigh_C": -2,
+    "DayHigh_F": 28.4,
+    "NightLow_C": -10,
+    "NightLow_F": 14,
+    "DayRH_%": 80,
+    "NightRH_%": 90,
+    "Precipitation": "snow"
+  },
+  {
+    "Biome": "FrozenRiver",
+    "DayHigh_C": -6,
+    "DayHigh_F": 21.2,
+    "NightLow_C": -16,
+    "NightLow_F": 3.2,
+    "DayRH_%": 65,
+    "NightRH_%": 80,
+    "Precipitation": "snow"
+  },
+  {
+    "Biome": "Ice Plains",
+    "DayHigh_C": -5,
+    "DayHigh_F": 23,
+    "NightLow_C": -15,
+    "NightLow_F": 5,
+    "DayRH_%": 65,
+    "NightRH_%": 80,
+    "Precipitation": "snow"
+  },
+  {
+    "Biome": "Ice Mountains",
+    "DayHigh_C": -8,
+    "DayHigh_F": 17.6,
+    "NightLow_C": -18,
+    "NightLow_F": -0.4,
+    "DayRH_%": 60,
+    "NightRH_%": 75,
+    "Precipitation": "snow"
+  },
+  {
+    "Biome": "MushroomIsland",
+    "DayHigh_C": 20,
+    "DayHigh_F": 68,
+    "NightLow_C": 16,
+    "NightLow_F": 60.8,
+    "DayRH_%": 80,
+    "NightRH_%": 90,
+    "Precipitation": "none"
+  },
+  {
+    "Biome": "MushroomIslandShore",
+    "DayHigh_C": 20,
+    "DayHigh_F": 68,
+    "NightLow_C": 16,
+    "NightLow_F": 60.8,
+    "DayRH_%": 80,
+    "NightRH_%": 90,
+    "Precipitation": "none"
+  },
+  {
+    "Biome": "Beach",
+    "DayHigh_C": 24,
+    "DayHigh_F": 75.2,
+    "NightLow_C": 18,
+    "NightLow_F": 64.4,
+    "DayRH_%": 70,
+    "NightRH_%": 85,
+    "Precipitation": "rain"
+  },
+  {
+    "Biome": "Gravel Beach",
+    "DayHigh_C": 24,
+    "DayHigh_F": 75.2,
+    "NightLow_C": 18,
+    "NightLow_F": 64.4,
+    "DayRH_%": 70,
+    "NightRH_%": 85,
+    "Precipitation": "rain"
+  },
+  {
+    "Biome": "ForestHills",
+    "DayHigh_C": 24,
+    "DayHigh_F": 75.2,
+    "NightLow_C": 12,
+    "NightLow_F": 53.6,
+    "DayRH_%": 50,
+    "NightRH_%": 70,
+    "Precipitation": "rain"
+  },
+  {
+    "Biome": "TaigaHills",
+    "DayHigh_C": 18,
+    "DayHigh_F": 64.4,
+    "NightLow_C": 8,
+    "NightLow_F": 46.4,
+    "DayRH_%": 55,
+    "NightRH_%": 75,
+    "Precipitation": "rain"
+  },
+  {
+    "Biome": "High Hills Edge",
+    "DayHigh_C": 20,
+    "DayHigh_F": 68,
+    "NightLow_C": 10,
+    "NightLow_F": 50,
+    "DayRH_%": 50,
+    "NightRH_%": 75,
+    "Precipitation": "rain"
+  },
+  {
+    "Biome": "Jungle",
+    "DayHigh_C": 26,
+    "DayHigh_F": 78.8,
+    "NightLow_C": 22,
+    "NightLow_F": 71.6,
+    "DayRH_%": 80,
+    "NightRH_%": 95,
+    "Precipitation": "rain"
+  },
+  {
+    "Biome": "JungleHills",
+    "DayHigh_C": 26,
+    "DayHigh_F": 78.8,
+    "NightLow_C": 22,
+    "NightLow_F": 71.6,
+    "DayRH_%": 80,
+    "NightRH_%": 95,
+    "Precipitation": "rain"
+  },
+  {
+    "Biome": "JungleEdge",
+    "DayHigh_C": 26,
+    "DayHigh_F": 78.8,
+    "NightLow_C": 22,
+    "NightLow_F": 71.6,
+    "DayRH_%": 80,
+    "NightRH_%": 95,
+    "Precipitation": "rain"
+  },
+  {
+    "Biome": "Deep Ocean",
+    "DayHigh_C": 18,
+    "DayHigh_F": 64.4,
+    "NightLow_C": 14,
+    "NightLow_F": 57.2,
+    "DayRH_%": 75,
+    "NightRH_%": 85,
+    "Precipitation": "rain"
+  },
+  {
+    "Biome": "Stone Beach",
+    "DayHigh_C": 24,
+    "DayHigh_F": 75.2,
+    "NightLow_C": 18,
+    "NightLow_F": 64.4,
+    "DayRH_%": 70,
+    "NightRH_%": 85,
+    "Precipitation": "rain"
+  },
+  {
+    "Biome": "Cold Beach",
+    "DayHigh_C": -1,
+    "DayHigh_F": 30.2,
+    "NightLow_C": -7,
+    "NightLow_F": 19.4,
+    "DayRH_%": 75,
+    "NightRH_%": 90,
+    "Precipitation": "snow"
+  },
+  {
+    "Biome": "Birch Forest",
+    "DayHigh_C": 25,
+    "DayHigh_F": 77,
+    "NightLow_C": 14,
+    "NightLow_F": 57.2,
+    "DayRH_%": 55,
+    "NightRH_%": 75,
+    "Precipitation": "rain"
+  },
+  {
+    "Biome": "Birch Forest Hills",
+    "DayHigh_C": 24,
+    "DayHigh_F": 75.2,
+    "NightLow_C": 12,
+    "NightLow_F": 53.6,
+    "DayRH_%": 50,
+    "NightRH_%": 70,
+    "Precipitation": "rain"
+  },
+  {
+    "Biome": "Roofed Forest",
+    "DayHigh_C": 25,
+    "DayHigh_F": 77,
+    "NightLow_C": 14,
+    "NightLow_F": 57.2,
+    "DayRH_%": 55,
+    "NightRH_%": 75,
+    "Precipitation": "rain"
+  },
+  {
+    "Biome": "Rolling Hills",
+    "DayHigh_C": 24,
+    "DayHigh_F": 75.2,
+    "NightLow_C": 12,
+    "NightLow_F": 53.6,
+    "DayRH_%": 50,
+    "NightRH_%": 70,
+    "Precipitation": "rain"
+  },
+  {
+    "Biome": "Mountains",
+    "DayHigh_C": 15,
+    "DayHigh_F": 59,
+    "NightLow_C": 5,
+    "NightLow_F": 41,
+    "DayRH_%": 45,
+    "NightRH_%": 70,
+    "Precipitation": "rain"
+  },
+  {
+    "Biome": "Mountains Edge",
+    "DayHigh_C": 20,
+    "DayHigh_F": 68,
+    "NightLow_C": 10,
+    "NightLow_F": 50,
+    "DayRH_%": 50,
+    "NightRH_%": 75,
+    "Precipitation": "rain"
+  },
+  {
+    "Biome": "Mega Taiga Hills",
+    "DayHigh_C": 18,
+    "DayHigh_F": 64.4,
+    "NightLow_C": 8,
+    "NightLow_F": 46.4,
+    "DayRH_%": 55,
+    "NightRH_%": 75,
+    "Precipitation": "rain"
+  },
+  {
+    "Biome": "Extreme Hills+",
+    "DayHigh_C": 15,
+    "DayHigh_F": 59,
+    "NightLow_C": 5,
+    "NightLow_F": 41,
+    "DayRH_%": 45,
+    "NightRH_%": 70,
+    "Precipitation": "rain"
+  },
+  {
+    "Biome": "High Plains",
+    "DayHigh_C": 27,
+    "DayHigh_F": 80.6,
+    "NightLow_C": 15,
+    "NightLow_F": 59,
+    "DayRH_%": 45,
+    "NightRH_%": 65,
+    "Precipitation": "rain"
+  },
+  {
+    "Biome": "Mountain Range",
+    "DayHigh_C": 15,
+    "DayHigh_F": 59,
+    "NightLow_C": 5,
+    "NightLow_F": 41,
+    "DayRH_%": 45,
+    "NightRH_%": 70,
+    "Precipitation": "rain"
+  },
+  {
+    "Biome": "Mountain Range Edge",
+    "DayHigh_C": 20,
+    "DayHigh_F": 68,
+    "NightLow_C": 10,
+    "NightLow_F": 50,
+    "DayRH_%": 50,
+    "NightRH_%": 75,
+    "Precipitation": "rain"
+  },
+  {
+    "Biome": "Foothills",
+    "DayHigh_C": 20,
+    "DayHigh_F": 68,
+    "NightLow_C": 10,
+    "NightLow_F": 50,
+    "DayRH_%": 50,
+    "NightRH_%": 75,
+    "Precipitation": "rain"
+  },
+  {
+    "Biome": "Storage Cell",
+    "DayHigh_C": 22,
+    "DayHigh_F": 71.6,
+    "NightLow_C": 20,
+    "NightLow_F": 68,
+    "DayRH_%": 35,
+    "NightRH_%": 45,
+    "Precipitation": "none"
+  },
+  {
+    "Biome": "Salt Swamp",
+    "DayHigh_C": 28,
+    "DayHigh_F": 82.4,
+    "NightLow_C": 22,
+    "NightLow_F": 71.6,
+    "DayRH_%": 75,
+    "NightRH_%": 95,
+    "Precipitation": "rain"
+  },
+  {
+    "Biome": "Lakeshore",
+    "DayHigh_C": 26,
+    "DayHigh_F": 78.8,
+    "NightLow_C": 16,
+    "NightLow_F": 60.8,
+    "DayRH_%": 55,
+    "NightRH_%": 80,
+    "Precipitation": "rain"
+  },
+  {
+    "Biome": "Riverbank",
+    "DayHigh_C": 26,
+    "DayHigh_F": 78.8,
+    "NightLow_C": 16,
+    "NightLow_F": 60.8,
+    "DayRH_%": 55,
+    "NightRH_%": 80,
+    "Precipitation": "rain"
+  },
+  {
+    "Biome": "River Source",
+    "DayHigh_C": 20,
+    "DayHigh_F": 68,
+    "NightLow_C": 10,
+    "NightLow_F": 50,
+    "DayRH_%": 60,
+    "NightRH_%": 85,
+    "Precipitation": "rain"
+  },
+  {
+    "Biome": "Estuary",
+    "DayHigh_C": 26,
+    "DayHigh_F": 78.8,
+    "NightLow_C": 16,
+    "NightLow_F": 60.8,
+    "DayRH_%": 55,
+    "NightRH_%": 80,
+    "Precipitation": "rain"
+  },
+  {
+    "Biome": "Peat Bog",
+    "DayHigh_C": 18,
+    "DayHigh_F": 64.4,
+    "NightLow_C": 12,
+    "NightLow_F": 53.6,
+    "DayRH_%": 80,
+    "NightRH_%": 95,
+    "Precipitation": "rain"
+  },
+  {
+    "Biome": "Ocean Oil Field",
+    "DayHigh_C": 18,
+    "DayHigh_F": 64.4,
+    "NightLow_C": 14,
+    "NightLow_F": 57.2,
+    "DayRH_%": 75,
+    "NightRH_%": 85,
+    "Precipitation": "rain"
+  },
+  {
+    "Biome": "Desert Oil Field",
+    "DayHigh_C": 38,
+    "DayHigh_F": 100.4,
+    "NightLow_C": 18,
+    "NightLow_F": 64.4,
+    "DayRH_%": 20,
+    "NightRH_%": 35,
+    "Precipitation": "none"
+  },
+  {
+    "Biome": "Sunflower Plains",
+    "DayHigh_C": 27,
+    "DayHigh_F": 80.6,
+    "NightLow_C": 15,
+    "NightLow_F": 59,
+    "DayRH_%": 45,
+    "NightRH_%": 65,
+    "Precipitation": "rain"
+  },
+  {
+    "Biome": "Desert M",
+    "DayHigh_C": 38,
+    "DayHigh_F": 100.4,
+    "NightLow_C": 18,
+    "NightLow_F": 64.4,
+    "DayRH_%": 20,
+    "NightRH_%": 35,
+    "Precipitation": "none"
+  },
+  {
+    "Biome": "Extreme Hills M",
+    "DayHigh_C": 15,
+    "DayHigh_F": 59,
+    "NightLow_C": 5,
+    "NightLow_F": 41,
+    "DayRH_%": 45,
+    "NightRH_%": 70,
+    "Precipitation": "rain"
+  },
+  {
+    "Biome": "Flower Forest",
+    "DayHigh_C": 25,
+    "DayHigh_F": 77,
+    "NightLow_C": 14,
+    "NightLow_F": 57.2,
+    "DayRH_%": 55,
+    "NightRH_%": 75,
+    "Precipitation": "rain"
+  },
+  {
+    "Biome": "Taiga M",
+    "DayHigh_C": 18,
+    "DayHigh_F": 64.4,
+    "NightLow_C": 8,
+    "NightLow_F": 46.4,
+    "DayRH_%": 55,
+    "NightRH_%": 75,
+    "Precipitation": "rain"
+  },
+  {
+    "Biome": "Swampland M",
+    "DayHigh_C": 30,
+    "DayHigh_F": 86,
+    "NightLow_C": 22,
+    "NightLow_F": 71.6,
+    "DayRH_%": 70,
+    "NightRH_%": 90,
+    "Precipitation": "rain"
+  },
+  {
+    "Biome": "Ice Plains Spikes",
+    "DayHigh_C": -7,
+    "DayHigh_F": 19.4,
+    "NightLow_C": -18,
+    "NightLow_F": -0.4,
+    "DayRH_%": 60,
+    "NightRH_%": 75,
+    "Precipitation": "snow"
+  },
+  {
+    "Biome": "Jungle M",
+    "DayHigh_C": 26,
+    "DayHigh_F": 78.8,
+    "NightLow_C": 22,
+    "NightLow_F": 71.6,
+    "DayRH_%": 80,
+    "NightRH_%": 95,
+    "Precipitation": "rain"
+  },
+  {
+    "Biome": "JungleEdge M",
+    "DayHigh_C": 26,
+    "DayHigh_F": 78.8,
+    "NightLow_C": 22,
+    "NightLow_F": 71.6,
+    "DayRH_%": 80,
+    "NightRH_%": 95,
+    "Precipitation": "rain"
+  },
+  {
+    "Biome": "Birch Forest M",
+    "DayHigh_C": 25,
+    "DayHigh_F": 77,
+    "NightLow_C": 14,
+    "NightLow_F": 57.2,
+    "DayRH_%": 55,
+    "NightRH_%": 75,
+    "Precipitation": "rain"
+  },
+  {
+    "Biome": "Birch Forest Hills M",
+    "DayHigh_C": 24,
+    "DayHigh_F": 75.2,
+    "NightLow_C": 12,
+    "NightLow_F": 53.6,
+    "DayRH_%": 50,
+    "NightRH_%": 70,
+    "Precipitation": "rain"
+  },
+  {
+    "Biome": "Roofed Forest M",
+    "DayHigh_C": 25,
+    "DayHigh_F": 77,
+    "NightLow_C": 14,
+    "NightLow_F": 57.2,
+    "DayRH_%": 55,
+    "NightRH_%": 75,
+    "Precipitation": "rain"
+  },
+  {
+    "Biome": "Cold Taiga M",
+    "DayHigh_C": 18,
+    "DayHigh_F": 64.4,
+    "NightLow_C": 8,
+    "NightLow_F": 46.4,
+    "DayRH_%": 55,
+    "NightRH_%": 75,
+    "Precipitation": "snow"
+  },
+  {
+    "Biome": "Mega Spruce Taiga",
+    "DayHigh_C": 18,
+    "DayHigh_F": 64.4,
+    "NightLow_C": 8,
+    "NightLow_F": 46.4,
+    "DayRH_%": 55,
+    "NightRH_%": 75,
+    "Precipitation": "rain"
+  },
+  {
+    "Biome": "Extreme Hills+ M",
+    "DayHigh_C": 15,
+    "DayHigh_F": 59,
+    "NightLow_C": 5,
+    "NightLow_F": 41,
+    "DayRH_%": 45,
+    "NightRH_%": 70,
+    "Precipitation": "rain"
+  },
+  {
+    "Biome": "Savanna M",
+    "DayHigh_C": 32,
+    "DayHigh_F": 89.6,
+    "NightLow_C": 20,
+    "NightLow_F": 68,
+    "DayRH_%": 40,
+    "NightRH_%": 70,
+    "Precipitation": "none"
+  },
+  {
+    "Biome": "Savanna Plateau M",
+    "DayHigh_C": 32,
+    "DayHigh_F": 89.6,
+    "NightLow_C": 20,
+    "NightLow_F": 68,
+    "DayRH_%": 40,
+    "NightRH_%": 70,
+    "Precipitation": "none"
+  },
+  {
+    "Biome": "Mesa (Bryce)",
+    "DayHigh_C": 35,
+    "DayHigh_F": 95,
+    "NightLow_C": 17,
+    "NightLow_F": 62.6,
+    "DayRH_%": 20,
+    "NightRH_%": 40,
+    "Precipitation": "none"
+  },
+  {
+    "Biome": "Mesa Plateau F M",
+    "DayHigh_C": 35,
+    "DayHigh_F": 95,
+    "NightLow_C": 17,
+    "NightLow_F": 62.6,
+    "DayRH_%": 20,
+    "NightRH_%": 40,
+    "Precipitation": "none"
+  },
+  {
+    "Biome": "Mesa Plateau M",
+    "DayHigh_C": 35,
+    "DayHigh_F": 95,
+    "NightLow_C": 17,
+    "NightLow_F": 62.6,
+    "DayRH_%": 20,
+    "NightRH_%": 40,
+    "Precipitation": "none"
+  },
+  {
+    "Biome": "Storage Cell",
+    "DayHigh_C": -273.15,
+    "DayHigh_F": -459.67,
+    "NightLow_C": -273.15,
+    "NightLow_F": -459.67,
+    "DayRH_%": 0,
+    "NightRH_%": 0,
+    "Precipitation": "none"
+  }
+]
