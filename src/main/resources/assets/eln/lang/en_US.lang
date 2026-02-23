@@ -1225,6 +1225,7 @@ Has_a_signal_output.=Has a signal output.
 Inductance\:_%1$H=Inductance: %1$H
 Input=Input
 Input_voltage=Input voltage
+Current_value=Current value
 Internal_control=Internal control
 Internal_resistance\:_%1$Ω=Internal resistance: %1$Ω
 Is_off=Is off
@@ -1348,6 +1349,11 @@ Slots=Slots
 Inputs=Inputs
 Min=Min
 Max=Max
+0_Line=0 Line
+0_Line\:_On=0 Line: On
+0_Line\:_Off=0 Line: Off
+0_Line_On=0 Line On
+0_Line_Off=0 Line Off
 Speed=Speed
 Speeds=Speeds
 Energies=Energies
@@ -1384,3 +1390,27 @@ Under_Track_Power.name=Under Track Power
 Cart_Energy\:_=Cart Energy: 
 Polarized_Shaft_Generator.name=Polarized Shaft Generator
 Polarized_Shaft_Motor.name=Polarized Shaft Motor
+
+# ./src/main/kotlin/mods/eln/sixnode/electricalhumiditysensor/*
+Humidity_Sensor.name=Humidity Sensor
+Provides_an_electrical_signal\nfor_biome_relative_humidity.=Provides an electrical signal\nfor biome relative humidity.
+Humidity_follows_day_night\nand_rises_during_rain_or_snow.=Humidity follows day/night\nand rises during rain or snow.
+0%%_RH\:_%1\$V=0%% RH: %1\$V
+100%%_RH\:_%1\$V=100%% RH: %1\$V
+Ambient_temperature=Ambient temperature
+Relative_humidity=Relative humidity
+Precipitation=Precipitation
+
+# ./src/main/kotlin/mods/eln/sixnode/thermometersensor/*
+Thermometer_Sensor.name=Thermometer Sensor
+Provides_an_electrical_signal\nfor_biome_temperature.=Provides an electrical signal\nfor biome temperature.
+Set_min_max_values_in_GUI\nto_map_temperature_to_output.=Set min/max values in GUI\nto map temperature to output.
+Default_range\:_-40C_to_50C=Default range: -40C to 50C
+0%%_output\:_%1\$V=0%% output: %1\$V
+100%%_output\:_%1\$V=100%% output: %1\$V
+Biome_temperature=Biome temperature
+
+# ./src/main/java/mods/eln/sixnode/electricaldatalogger/ElectricalDataLoggerGui.java
+Temp_[C]=Temp [C]
+Temp_[F]=Temp [F]
+Humidity_[%%]=Humidity [%%]

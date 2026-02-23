@@ -19,9 +19,18 @@ import static mods.eln.i18n.I18N.tr;
 
 public class ElectricalDataLoggerGui extends GuiContainerEln implements GuiTextFieldElnObserver {
 
-    GuiButton resetBt, voltageType, energyType, currentType, powerType, celsiusType, percentType, noType, config, printBt, pause;
+    GuiButton resetBt, voltageType, energyType, currentType, powerType, celsiusType, temperatureType, humidityType, percentType, noType, zeroLineToggle, config, printBt, pause;
     GuiTextFieldEln samplingPeriod, maxValue, minValue, yCursorValue;
     ElectricalDataLoggerRender render;
+    private static final int GUI_WIDTH = 176;
+    private static final int GUI_HEIGHT = 286;
+    private static final int PLAYER_INV_X = 8;
+    private static final int PLAYER_INV_Y = 204;
+    private static final int GRAPH_TOP = 53;
+    private static final int PRINT_BUTTON_Y = 179;
+    private static final int CONFIG_FIELDS_Y = 157;
+    private static final float TEMPERATURE_F_DEFAULT_MIN = -40f;
+    private static final float TEMPERATURE_F_DEFAULT_MAX = 122f;
 
     enum State {display, config}
 
@@ -44,6 +53,9 @@ public class ElectricalDataLoggerGui extends GuiContainerEln implements GuiTextF
         currentType.visible = false;
         powerType.visible = false;
         celsiusType.visible = false;
+        temperatureType.visible = false;
+        humidityType.visible = false;
+        zeroLineToggle.visible = false;
         samplingPeriod.setVisible(false);
         maxValue.setVisible(false);
         minValue.setVisible(false);
@@ -56,7 +68,7 @@ public class ElectricalDataLoggerGui extends GuiContainerEln implements GuiTextF
         config.visible = true;
         config.displayString = tr("Back to display");
         resetBt.visible = false;
-        printBt.visible = true;
+        printBt.visible = false;
         voltageType.visible = true;
         energyType.visible = true;
         percentType.visible = true;
@@ -64,6 +76,9 @@ public class ElectricalDataLoggerGui extends GuiContainerEln implements GuiTextF
         currentType.visible = true;
         powerType.visible = true;
         celsiusType.visible = true;
+        temperatureType.visible = true;
+        humidityType.visible = true;
+        zeroLineToggle.visible = true;
         samplingPeriod.setVisible(true);
         maxValue.setVisible(true);
         minValue.setVisible(true);
@@ -74,31 +89,34 @@ public class ElectricalDataLoggerGui extends GuiContainerEln implements GuiTextF
     public void initGui() {
         super.initGui();
 
-        config = newGuiButton(176 / 2 - 50, 8 - 2, 100, "");
+        config = newGuiButton(GUI_WIDTH / 2 - 50, 8 - 2, 100, "");
 
         //@devs: Do not translate the following elements. Please.
-        voltageType = newGuiButton(176 / 2 - 75 - 2, 8 + 20 + 2 - 2, 75, tr("Voltage [V]"));
-        currentType = newGuiButton(176 / 2 + 2, 8 + 20 + 2 - 2, 75, tr("Current [A]"));
-        powerType = newGuiButton(176 / 2 - 75 - 2, 8 + 40 + 4 - 2, 75, tr("Power [W]"));
-        celsiusType = newGuiButton(176 / 2 + 2, 8 + 40 + 4 - 2, 75, tr("Temp. [*C]"));
-        percentType = newGuiButton(176 / 2 - 75 - 2, 8 + 60 + 6 - 2, 75, tr("Percent [-]%"));
-        energyType = newGuiButton(176 / 2 + 2, 8 + 60 + 6 - 2, 75, tr("Energy [J]"));
-        noType = newGuiButton(176 / 2 - 75 / 2 - 2, 8 + 80 + 8 - 2, 75, tr("Unit"));
+        voltageType = newGuiButton(GUI_WIDTH / 2 - 75 - 2, 8 + 20 + 2 - 2, 75, tr("Voltage [V]"));
+        currentType = newGuiButton(GUI_WIDTH / 2 + 2, 8 + 20 + 2 - 2, 75, tr("Current [A]"));
+        powerType = newGuiButton(GUI_WIDTH / 2 - 75 - 2, 8 + 40 + 4 - 2, 75, tr("Power [W]"));
+        celsiusType = newGuiButton(GUI_WIDTH / 2 + 2, 8 + 40 + 4 - 2, 75, tr("Temp [C]"));
+        percentType = newGuiButton(GUI_WIDTH / 2 - 75 - 2, 8 + 60 + 6 - 2, 75, tr("Percent [-]%"));
+        energyType = newGuiButton(GUI_WIDTH / 2 + 2, 8 + 60 + 6 - 2, 75, tr("Energy [J]"));
+        temperatureType = newGuiButton(GUI_WIDTH / 2 - 75 - 2, 8 + 80 + 8 - 2, 75, tr("Temp [F]"));
+        humidityType = newGuiButton(GUI_WIDTH / 2 + 2, 8 + 80 + 8 - 2, 75, tr("Humidity [%%]"));
+        noType = newGuiButton(GUI_WIDTH / 2 - 75 - 2, 8 + 100 + 10 - 2, 75, tr("Unit"));
+        zeroLineToggle = newGuiButton(GUI_WIDTH / 2 + 2, 8 + 100 + 10 - 2, 75, tr("0 Line"));
 
-        resetBt = newGuiButton(176 / 2 - 50, 8 + 20 + 2 - 2, 48, tr("Reset"));
-        pause = newGuiButton(176 / 2 + 2, 8 + 20 + 2 - 2, 48, "");
+        resetBt = newGuiButton(GUI_WIDTH / 2 - 50, 8 + 20 + 2 - 2, 48, tr("Reset"));
+        pause = newGuiButton(GUI_WIDTH / 2 + 2, 8 + 20 + 2 - 2, 48, "");
 
-        printBt = newGuiButton(176 / 2 - 48 / 2, 146, 48, tr("Print"));
+        printBt = newGuiButton(GUI_WIDTH / 2 - 48 / 2, PRINT_BUTTON_Y, 48, tr("Print"));
 
-        samplingPeriod = newGuiTextField(30, 124, 50);
+        samplingPeriod = newGuiTextField(30, CONFIG_FIELDS_Y, 50);
         samplingPeriod.setText(render.log.samplingPeriod);
         samplingPeriod.setComment(new String[]{tr("Sampling period")});
 
-        maxValue = newGuiTextField(176 - 50 - 30, 124 - 7, 50);
+        maxValue = newGuiTextField(GUI_WIDTH - 50 - 30, CONFIG_FIELDS_Y - 5, 50);
         maxValue.setText(render.log.maxValue);
         maxValue.setComment(new String[]{tr("Y-axis max")});
 
-        minValue = newGuiTextField(176 - 50 - 30, 124 + 8, 50);
+        minValue = newGuiTextField(GUI_WIDTH - 50 - 30, CONFIG_FIELDS_Y + 10, 50);
         minValue.setText(render.log.minValue);
         minValue.setComment(new String[]{tr("Y-axis min")});
 
@@ -129,6 +147,19 @@ public class ElectricalDataLoggerGui extends GuiContainerEln implements GuiTextF
                 render.clientSetByte(ElectricalDataLoggerElement.setUnitId, DataLogs.powerType);
             } else if (object == celsiusType) {
                 render.clientSetByte(ElectricalDataLoggerElement.setUnitId, DataLogs.celsiusType);
+            } else if (object == temperatureType) {
+                render.clientSetByte(ElectricalDataLoggerElement.setUnitId, DataLogs.temperatureType);
+                render.clientSetFloat(ElectricalDataLoggerElement.setMinValue, TEMPERATURE_F_DEFAULT_MIN);
+                render.clientSetFloat(ElectricalDataLoggerElement.setMaxValue, TEMPERATURE_F_DEFAULT_MAX);
+                render.log.minValue = TEMPERATURE_F_DEFAULT_MIN;
+                render.log.maxValue = TEMPERATURE_F_DEFAULT_MAX;
+                minValue.setText(TEMPERATURE_F_DEFAULT_MIN);
+                maxValue.setText(TEMPERATURE_F_DEFAULT_MAX);
+            } else if (object == humidityType) {
+                render.clientSetByte(ElectricalDataLoggerElement.setUnitId, DataLogs.humidityType);
+            } else if (object == zeroLineToggle) {
+                render.log.showZeroLine = !render.log.showZeroLine;
+                render.clientSetByte(ElectricalDataLoggerElement.setShowZeroLineId, (byte) (render.log.showZeroLine ? 1 : 0));
             } else if (object == config) {
                 switch (state) {
                     case config:
@@ -164,6 +195,8 @@ public class ElectricalDataLoggerGui extends GuiContainerEln implements GuiTextF
         celsiusType.enabled = true;
         percentType.enabled = true;
         energyType.enabled = true;
+        temperatureType.enabled = true;
+        humidityType.enabled = true;
 
         switch (render.log.unitType) {
             case DataLogs.currentType:
@@ -187,12 +220,19 @@ public class ElectricalDataLoggerGui extends GuiContainerEln implements GuiTextF
             case DataLogs.noType:
                 noType.enabled = false;
                 break;
+            case DataLogs.temperatureType:
+                temperatureType.enabled = false;
+                break;
+            case DataLogs.humidityType:
+                humidityType.enabled = false;
+                break;
         }
 
         if (render.pause)
             pause.displayString = FC.DARK_YELLOW + "Paused";
         else
             pause.displayString = FC.BRIGHT_GREEN + "Running";
+        zeroLineToggle.displayString = render.log.showZeroLine ? tr("0 Line On") : tr("0 Line Off");
 
         boolean a = inventorySlots.getSlot(ElectricalDataLoggerContainer.paperSlotId).getStack() != null;
         boolean b = inventorySlots.getSlot(ElectricalDataLoggerContainer.printSlotId).getStack() == null;
@@ -207,7 +247,7 @@ public class ElectricalDataLoggerGui extends GuiContainerEln implements GuiTextF
         if (state == State.display) {
 
             GL11.glPushMatrix();
-            GL11.glTranslatef(guiLeft + 8, guiTop + 53, 0);
+            GL11.glTranslatef(guiLeft + 8, guiTop + GRAPH_TOP, 0);
             GL11.glScalef(50, 50, 1f);
 
             GL11.glColor4f(0.15f, 0.15f, 0.15f, 1.0f);
@@ -230,6 +270,6 @@ public class ElectricalDataLoggerGui extends GuiContainerEln implements GuiTextF
 
     @Override
     protected GuiHelperContainer newHelper() {
-        return new GuiHelperContainer(this, 176, 253, 8, 171);
+        return new GuiHelperContainer(this, GUI_WIDTH, GUI_HEIGHT, PLAYER_INV_X, PLAYER_INV_Y);
     }
 }

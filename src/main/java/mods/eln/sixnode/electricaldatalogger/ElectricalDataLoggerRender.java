@@ -73,6 +73,7 @@ public class ElectricalDataLoggerRender extends SixNodeElementRender {
             log.samplingPeriod = stream.readFloat();
             log.maxValue = stream.readFloat();
             log.minValue = stream.readFloat();
+            log.showZeroLine = stream.readBoolean();
             color = stream.readByte();
         } catch (IOException e) {
             e.printStackTrace();

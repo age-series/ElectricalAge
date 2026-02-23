@@ -2228,8 +2228,12 @@ object CraftingRecipes {
             ItemStack(Items.quartz), findItemStack("Redstone-to-Voltage Converter")
         )
         addRecipe(
-            findItemStack("Electrical Weather Sensor"), " r ", "rRr", " r ", 'R', ItemStack(Items.redstone),
+            findItemStack("Humidity Sensor"), " r ", "rRr", " r ", 'R', ItemStack(Items.redstone),
             'r', "itemRubber"
+        )
+        addRecipe(
+            findItemStack("Thermometer Sensor"), " q ", "rRr", " r ", 'R', ItemStack(Items.redstone),
+            'r', "itemRubber", 'q', ItemStack(Items.quartz)
         )
         addRecipe(
             findItemStack("Electrical Anemometer Sensor"), " I ", " R ", "I I", 'R',

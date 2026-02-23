@@ -1,5 +1,6 @@
 package mods.eln.sixnode.electricaldatalogger;
 
+import mods.eln.Eln;
 import mods.eln.generic.GenericItemUsingDamageDescriptor;
 import mods.eln.i18n.I18N;
 import mods.eln.item.BrushDescriptor;
@@ -57,6 +58,7 @@ public class ElectricalDataLoggerElement extends SixNodeElement implements IConf
     public static final byte printId = 6;
     public static final byte tooglePauseId = 7;
     public static final byte setMinValue = 8;
+    public static final byte setShowZeroLineId = 9;
 
     public static final byte toClientLogsClear = 1;
     public static final byte toClientLogsAdd = 2;
@@ -144,6 +146,14 @@ public class ElectricalDataLoggerElement extends SixNodeElement implements IConf
     public Map<String, String> getWaila() {
         Map<String, String> info = new HashMap<String, String>();
         info.put(I18N.tr("Input"), Utils.plotVolt("", inputGate.getVoltage()));
+        if (Eln.wailaEasyMode && logs.size() > 0) {
+            info.put(I18N.tr("Current value"), DataLogs.getValueString(
+                logs.read(0),
+                logs.maxValue,
+                logs.minValue,
+                logs.unitType
+            ));
+        }
         return info;
     }
 
@@ -162,6 +172,7 @@ public class ElectricalDataLoggerElement extends SixNodeElement implements IConf
             stream.writeFloat((float) logs.samplingPeriod);
             stream.writeFloat((float) logs.maxValue);
             stream.writeFloat((float) logs.minValue);
+            stream.writeBoolean(logs.showZeroLine);
             stream.writeByte(color);
         } catch (IOException e) {
             e.printStackTrace();
@@ -200,6 +211,10 @@ public class ElectricalDataLoggerElement extends SixNodeElement implements IConf
                     break;
                 case setMinValue:
                     logs.minValue = stream.readFloat();
+                    needPublish();
+                    break;
+                case setShowZeroLineId:
+                    logs.showZeroLine = stream.readByte() != 0;
                     needPublish();
                     break;
                 case setUnitId:

@@ -923,7 +923,7 @@ object ItemRegistration {
         run {
             subId = 1
             completId = subId + (id shl 6)
-            element = GenericItemUsingDamageDescriptor(
+            element = ThermometerDescriptor(
                 I18N.TR_NAME(
                     I18N.Type.NONE,
                     "Thermometer"
