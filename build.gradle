@@ -37,8 +37,7 @@ buildscript {
         maven {
             // GTNH RetroFuturaGradle and ASM Fork
             name "GTNH Maven"
-            url "http://jenkins.usrv.eu:8081/nexus/content/groups/public/"
-            allowInsecureProtocol = true
+            url "https://nexus.gtnewhorizons.com/repository/public/"
         }
         maven {
             name 'sonatype'
@@ -175,18 +174,18 @@ pluginManager.withPlugin('org.jetbrains.kotlin.jvm') {
     }
     // Kotlin hacks our source sets, so we hack Kotlin's tasks
     def disabledKotlinTaskList = [
-        "kaptGenerateStubsMcLauncherKotlin",
-        "kaptGenerateStubsPatchedMcKotlin",
-        "kaptGenerateStubsInjectedTagsKotlin",
-        "compileMcLauncherKotlin",
-        "compilePatchedMcKotlin",
-        "compileInjectedTagsKotlin",
-        "kaptMcLauncherKotlin",
-        "kaptPatchedMcKotlin",
-        "kaptInjectedTagsKotlin",
-        "kspMcLauncherKotlin",
-        "kspPatchedMcKotlin",
-        "kspInjectedTagsKotlin",
+            "kaptGenerateStubsMcLauncherKotlin",
+            "kaptGenerateStubsPatchedMcKotlin",
+            "kaptGenerateStubsInjectedTagsKotlin",
+            "compileMcLauncherKotlin",
+            "compilePatchedMcKotlin",
+            "compileInjectedTagsKotlin",
+            "kaptMcLauncherKotlin",
+            "kaptPatchedMcKotlin",
+            "kaptInjectedTagsKotlin",
+            "kspMcLauncherKotlin",
+            "kspPatchedMcKotlin",
+            "kspInjectedTagsKotlin",
     ]
     tasks.configureEach { task ->
         if (task.name in disabledKotlinTaskList) {
@@ -361,9 +360,9 @@ try {
 }
 catch (Exception ignored) {
     out.style(Style.Failure).text(
-        'This mod must be version controlled by Git AND the repository must provide at least one tag,\n' +
-            'or the VERSION override must be set! ').style(Style.SuccessHeader).text('(Do NOT download from GitHub using the ZIP option, instead\n' +
-        'clone the repository, see ').style(Style.Info).text('https://gtnh.miraheze.org/wiki/Development').style(Style.SuccessHeader).println(' for details.)'
+            'This mod must be version controlled by Git AND the repository must provide at least one tag,\n' +
+                    'or the VERSION override must be set! ').style(Style.SuccessHeader).text('(Do NOT download from GitHub using the ZIP option, instead\n' +
+            'clone the repository, see ').style(Style.Info).text('https://gtnh.miraheze.org/wiki/Development').style(Style.SuccessHeader).println(' for details.)'
     )
     versionOverride = 'NO-GIT-TAG-SET'
     identifiedVersion = versionOverride
@@ -417,9 +416,9 @@ minecraft {
     if (usesMixins.toBoolean() || forceEnableMixins.toBoolean()) {
         if (usesMixinDebug.toBoolean()) {
             extraRunJvmArguments.addAll([
-                "-Dmixin.debug.countInjections=true",
-                "-Dmixin.debug.verbose=true",
-                "-Dmixin.debug.export=true"
+                    "-Dmixin.debug.countInjections=true",
+                    "-Dmixin.debug.verbose=true",
+                    "-Dmixin.debug.export=true"
             ])
         }
     }
@@ -526,8 +525,7 @@ repositories {
     }
     maven {
         name = "GTNH Maven"
-        url = "http://jenkins.usrv.eu:8081/nexus/content/groups/public/"
-        allowInsecureProtocol = true
+        url = "https://nexus.gtnewhorizons.com/repository/public/"
     }
     maven {
         name 'sonatype'
@@ -656,12 +654,12 @@ if (usesMixins.toBoolean()) {
             new File(mixinTmpDir).mkdirs()
         }
         options.compilerArgs += [
-            "-AreobfSrgFile=${tasks.reobfJar.srg.get().asFile}",
-            "-AoutSrgFile=${mixinSrg}",
-            "-AoutRefMapFile=${refMap}",
-            // Elan: from what I understand they are just some linter configs so you get some warning on how to properly code
-            "-XDenableSunApiLintControl",
-            "-XDignore.symbol.file"
+                "-AreobfSrgFile=${tasks.reobfJar.srg.get().asFile}",
+                "-AoutSrgFile=${mixinSrg}",
+                "-AoutRefMapFile=${refMap}",
+                // Elan: from what I understand they are just some linter configs so you get some warning on how to properly code
+                "-XDenableSunApiLintControl",
+                "-XDignore.symbol.file"
         ]
     }
 
@@ -694,9 +692,9 @@ tasks.named("processResources", ProcessResources).configure {
     // replace stuff in mcmod.info, nothing else. replaces ${key} with value in text
     filesMatching("mcmod.info")  {
         expand "minecraftVersion": project.minecraft.mcVersion,
-            "modVersion": modVersion,
-            "modId": modId,
-            "modName": modName
+                "modVersion": modVersion,
+                "modId": modId,
+                "modName": modName
     }
 
     if (usesMixins.toBoolean()) {
@@ -740,32 +738,32 @@ dependencies {
 }
 
 ext.java17JvmArgs = [
-    // Java 9+ support
-    "--illegal-access=warn",
-    "-Djava.security.manager=allow",
-    "-Dfile.encoding=UTF-8",
-    "--add-opens", "java.base/jdk.internal.loader=ALL-UNNAMED",
-    "--add-opens", "java.base/java.net=ALL-UNNAMED",
-    "--add-opens", "java.base/java.nio=ALL-UNNAMED",
-    "--add-opens", "java.base/java.io=ALL-UNNAMED",
-    "--add-opens", "java.base/java.lang=ALL-UNNAMED",
-    "--add-opens", "java.base/java.lang.reflect=ALL-UNNAMED",
-    "--add-opens", "java.base/java.text=ALL-UNNAMED",
-    "--add-opens", "java.base/java.util=ALL-UNNAMED",
-    "--add-opens", "java.base/jdk.internal.reflect=ALL-UNNAMED",
-    "--add-opens", "java.base/sun.nio.ch=ALL-UNNAMED",
-    "--add-opens", "jdk.naming.dns/com.sun.jndi.dns=ALL-UNNAMED,java.naming",
-    "--add-opens", "java.desktop/sun.awt.image=ALL-UNNAMED",
-    "--add-modules", "jdk.dynalink",
-    "--add-opens", "jdk.dynalink/jdk.dynalink.beans=ALL-UNNAMED",
-    "--add-modules", "java.sql.rowset",
-    "--add-opens", "java.sql.rowset/javax.sql.rowset.serial=ALL-UNNAMED"
+        // Java 9+ support
+        "--illegal-access=warn",
+        "-Djava.security.manager=allow",
+        "-Dfile.encoding=UTF-8",
+        "--add-opens", "java.base/jdk.internal.loader=ALL-UNNAMED",
+        "--add-opens", "java.base/java.net=ALL-UNNAMED",
+        "--add-opens", "java.base/java.nio=ALL-UNNAMED",
+        "--add-opens", "java.base/java.io=ALL-UNNAMED",
+        "--add-opens", "java.base/java.lang=ALL-UNNAMED",
+        "--add-opens", "java.base/java.lang.reflect=ALL-UNNAMED",
+        "--add-opens", "java.base/java.text=ALL-UNNAMED",
+        "--add-opens", "java.base/java.util=ALL-UNNAMED",
+        "--add-opens", "java.base/jdk.internal.reflect=ALL-UNNAMED",
+        "--add-opens", "java.base/sun.nio.ch=ALL-UNNAMED",
+        "--add-opens", "jdk.naming.dns/com.sun.jndi.dns=ALL-UNNAMED,java.naming",
+        "--add-opens", "java.desktop/sun.awt.image=ALL-UNNAMED",
+        "--add-modules", "jdk.dynalink",
+        "--add-opens", "jdk.dynalink/jdk.dynalink.beans=ALL-UNNAMED",
+        "--add-modules", "java.sql.rowset",
+        "--add-opens", "java.sql.rowset/javax.sql.rowset.serial=ALL-UNNAMED"
 ]
 
 ext.hotswapJvmArgs = [
-    // DCEVM advanced hot reload
-    "-XX:+AllowEnhancedClassRedefinition",
-    "-XX:HotswapAgent=fatjar"
+        // DCEVM advanced hot reload
+        "-XX:+AllowEnhancedClassRedefinition",
+        "-XX:HotswapAgent=fatjar"
 ]
 
 ext.setupHotswapAgentTask = tasks.register("setupHotswapAgent") {
@@ -869,9 +867,9 @@ def getManifestAttributes() {
 
     if (usesMixins.toBoolean()) {
         manifestAttributes += [
-            "TweakClass"    : "org.spongepowered.asm.launch.MixinTweaker",
-            "MixinConfigs"  : "mixins." + modId + ".json",
-            "ForceLoadAsMod": !containsMixinsAndOrCoreModOnly.toBoolean()
+                "TweakClass"    : "org.spongepowered.asm.launch.MixinTweaker",
+                "MixinConfigs"  : "mixins." + modId + ".json",
+                "ForceLoadAsMod": !containsMixinsAndOrCoreModOnly.toBoolean()
         ]
     }
     return manifestAttributes
@@ -893,9 +891,9 @@ if (usesShadowedDependencies.toBoolean()) {
             minimize()  // This will only allow shading for actually used classes
         }
         configurations = [
-            project.configurations.shadowImplementation,
-            project.configurations.shadowCompile,
-            project.configurations.shadeCompile
+                project.configurations.shadowImplementation,
+                project.configurations.shadowCompile,
+                project.configurations.shadeCompile
         ]
         archiveClassifier.set('dev')
         if (relocateShadowedDependencies.toBoolean()) {
@@ -1016,8 +1014,8 @@ idea {
                         workingDirectory = tasks.runClient.workingDir.absolutePath
                         programParameters = tasks.runClient.calculateArgs(project).collect { '"' + it + '"' }.join(' ')
                         jvmArgs = tasks.runClient.calculateJvmArgs(project).collect { '"' + it + '"' }.join(' ') +
-                            ' ' + tasks.runClient.systemProperties.collect { '"-D' + it.key + '=' + it.value.toString() + '"' }.join(' ') +
-                            coreModArgs
+                                ' ' + tasks.runClient.systemProperties.collect { '"-D' + it.key + '=' + it.value.toString() + '"' }.join(' ') +
+                                coreModArgs
                     }
                 }
                 "Run Server (IJ Native)"(Application) {
@@ -1027,8 +1025,8 @@ idea {
                         workingDirectory = tasks.runServer.workingDir.absolutePath
                         programParameters = tasks.runServer.calculateArgs(project).collect { '"' + it + '"' }.join(' ')
                         jvmArgs = tasks.runServer.calculateJvmArgs(project).collect { '"' + it + '"' }.join(' ') +
-                            ' ' + tasks.runServer.systemProperties.collect { '"-D' + it.key + '=' + it.value.toString() + '"' }.join(' ') +
-                            coreModArgs
+                                ' ' + tasks.runServer.systemProperties.collect { '"-D' + it.key + '=' + it.value.toString() + '"' }.join(' ') +
+                                coreModArgs
                     }
                 }
             }
@@ -1036,7 +1034,7 @@ idea {
                 afterEvaluate {
                     javacAdditionalOptions = "-encoding utf8"
                     moduleJavacAdditionalOptions = [
-                        (project.name + ".main"): tasks.compileJava.options.compilerArgs.collect { '"' + it + '"' }.join(' ')
+                            (project.name + ".main"): tasks.compileJava.options.compilerArgs.collect { '"' + it + '"' }.join(' ')
                     ]
                 }
             }
@@ -1053,7 +1051,7 @@ idea {
                         miscTransformer.addAction { root ->
                             Node rootNode = root.asNode()
                             def rootManager = rootNode
-                                .component.find { it.@name == 'ProjectRootManager' }
+                                    .component.find { it.@name == 'ProjectRootManager' }
                             if (!rootManager) {
                                 rootManager = rootNode.appendNode('component', ['name': 'ProjectRootManager', 'version': '2'])
                                 dirty = true
@@ -1114,8 +1112,7 @@ publishing {
 
     repositories {
         maven {
-            url = "http://jenkins.usrv.eu:8081/nexus/content/repositories/releases"
-            allowInsecureProtocol = true
+            url = "https://nexus.gtnewhorizons.com/repository/releases/"
             credentials {
                 username = System.getenv("MAVEN_USER") ?: "NONE"
                 password = System.getenv("MAVEN_PASSWORD") ?: "NONE"
@@ -1272,13 +1269,13 @@ tasks.register('faq') {
 
     doLast {
         print("If your build fails to fetch dependencies, run './gradlew updateDependencies'. " +
-            "Or you can manually check if the versions are still on the distributing sites - " +
-            "the links can be found in repositories.gradle and build.gradle:repositories, " +
-            "but not build.gradle:buildscript.repositories - those ones are for gradle plugin metadata.\n\n" +
-            "If your build fails to recognize the syntax of new Java versions, enable Jabel in your " +
-            "gradle.properties. See how it's done in GTNH ExampleMod/gradle.properties. " +
-            "However, keep in mind that Jabel enables only syntax features, but not APIs that were introduced in " +
-            "Java 9 or later.")
+                "Or you can manually check if the versions are still on the distributing sites - " +
+                "the links can be found in repositories.gradle and build.gradle:repositories, " +
+                "but not build.gradle:buildscript.repositories - those ones are for gradle plugin metadata.\n\n" +
+                "If your build fails to recognize the syntax of new Java versions, enable Jabel in your " +
+                "gradle.properties. See how it's done in GTNH ExampleMod/gradle.properties. " +
+                "However, keep in mind that Jabel enables only syntax features, but not APIs that were introduced in " +
+                "Java 9 or later.")
     }
 }
 
