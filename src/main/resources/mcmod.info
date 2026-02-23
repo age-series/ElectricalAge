@@ -1,14 +1,21 @@
-[
-	{
-		"modid":"${modId}",
+{
+	"modListVersion": 2,
+	"modList": [{
+		"modid": "${modId}",
+		"name": "${modName}",
+		"description": "This gets overwritten in Eln.java with a translated version. You should look there because that's not all it does.",
 		"version": "${modVersion}",
 		"mcversion": "${minecraftVersion}",
-		"name":"${modName}",
-		"url":"http://eln.ja13.org/",
-		"credits": "The Electrical Age Team",
+		"url": "https://github.com/age-series/ElectricalAge",
+		"updateUrl": "",
+		"authorList": ["jrddunbr"],
+		"credits": "The Age Series Team",
 		"logoFile": "assets/eln/logo.png",
-		"requiredMods":[
-			"Forge"
-		]
-	}
-]
+		"screenshots": [],
+		"parent": "",
+		"requiredMods": [],
+		"dependencies": [],
+		"dependants": [],
+		"useDependencyInformation": false
+	}]
+}
