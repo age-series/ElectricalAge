@@ -89,6 +89,7 @@ import net.minecraft.launchwrapper.Launch;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.WorldServer;
+import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
@@ -580,6 +581,66 @@ public class Eln {
             manager.registerCommand(new ElnConsoleCommands());
         }
         regenOreScannerFactors();
+        logRegisteredBiomes();
+    }
+
+    private void logRegisteredBiomes() {
+        BiomeGenBase[] biomes = BiomeGenBase.getBiomeGenArray();
+        int registeredBiomes = 0;
+
+        for (BiomeGenBase biome : biomes) {
+            if (biome == null) continue;
+            registeredBiomes++;
+        }
+
+        logger.info("Registered biomes at startup: {}", registeredBiomes);
+        for (BiomeGenBase biome : biomes) {
+            if (biome == null) continue;
+
+            float temperature;
+            float humidity;
+            try {
+                temperature = biome.getFloatTemperature(0, 64, 0);
+                humidity = biome.getFloatRainfall();
+            } catch (Throwable ignored) {
+                temperature = Float.NaN;
+                humidity = Float.NaN;
+            }
+
+            logger.info(
+                    "Biome id={} modid='{}' name='{}' temperature={} humidity={}",
+                    biome.biomeID,
+                    resolveBiomeModId(biome),
+                    biome.biomeName,
+                    Float.isNaN(temperature) ? "unknown" : temperature,
+                    Float.isNaN(humidity) ? "unknown" : humidity
+            );
+        }
+    }
+
+    private String resolveBiomeModId(BiomeGenBase biome) {
+        Class<?> biomeClass = biome.getClass();
+        Package biomePackage = biomeClass.getPackage();
+        String packageName = biomePackage != null ? biomePackage.getName() : "";
+
+        if (packageName.startsWith("net.minecraft.")) {
+            return "minecraft";
+        }
+
+        String resolvedModId = null;
+        int resolvedPackageLength = -1;
+        for (ModContainer modContainer : Loader.instance().getModList()) {
+            for (String ownedPackage : modContainer.getOwnedPackages()) {
+                if (packageName.equals(ownedPackage) || packageName.startsWith(ownedPackage + ".")) {
+                    if (ownedPackage.length() > resolvedPackageLength) {
+                        resolvedModId = modContainer.getModId();
+                        resolvedPackageLength = ownedPackage.length();
+                    }
+                }
+            }
+        }
+
+        return resolvedModId != null ? resolvedModId : "unknown";
     }
 
     public double LVP() {
