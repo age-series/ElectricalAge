@@ -23,9 +23,10 @@ object BiomeClimateService {
 
     private val profilesByBiomeName = HashMap<String, BiomeClimateProfile>()
     private val profilesByBiomeId = HashMap<Int, BiomeClimateProfile>()
+    private val missingProfileBiomeKeys = HashSet<String>()
     private val weatherByDimension = HashMap<Int, WeatherSnapshot>()
-    private val warnedFallbackCallsites = HashSet<String>()
     @Volatile private var loaded = false
+    @Volatile private var startupAuditComplete = false
 
     @JvmStatic
     fun sample(world: World, x: Int, y: Int, z: Int): ClimateState {
@@ -84,7 +85,12 @@ object BiomeClimateService {
 
         val biomeName = biome?.biomeName
         val resolved = if (!biomeName.isNullOrBlank()) {
-            profilesByBiomeName[normalizeKey(biomeName)] ?: createFallbackProfile()
+            findProfileForBiomeName(biomeName) ?: run {
+                synchronized(this) {
+                    missingProfileBiomeKeys.add(normalizeKey(biomeName))
+                }
+                createFallbackProfile()
+            }
         } else {
             createFallbackProfile()
         }
@@ -111,31 +117,98 @@ object BiomeClimateService {
     @JvmStatic
     @JvmOverloads
     fun fallbackAmbientTemperatureCelsius(worldTime: Long = DEFAULT_WORLD_TIME_TICKS): Double {
-        warnFallbackCallsite(worldTime)
         ensureLoaded()
         val profile = createFallbackProfile()
         val dayBlend = dayBlendForWorldTicks(worldTime)
         return interpolateTemperature(profile.dayHighCelsius, profile.nightLowCelsius, dayBlend)
     }
 
-    private fun warnFallbackCallsite(worldTime: Long) {
-        val caller = Throwable().stackTrace
-            .firstOrNull { frame ->
-                !frame.className.startsWith("mods.eln.environment.BiomeClimateService")
+    @JvmStatic
+    fun auditMissingBiomeProfilesAtStartup() {
+        ensureLoaded()
+        synchronized(this) {
+            if (startupAuditComplete) {
+                return
             }
-            ?.let { "${it.className}.${it.methodName}:${it.lineNumber}" }
-            ?: "unknown"
 
-        val shouldLog = synchronized(this) {
-            warnedFallbackCallsites.add(caller)
+            val missingEntries = ArrayList<Pair<Int, String>>()
+            BiomeGenBase.getBiomeGenArray()
+                .filterNotNull()
+                .forEach { biome ->
+                    val name = biome.biomeName ?: return@forEach
+                    if (findProfileForBiomeName(name) == null) {
+                        missingProfileBiomeKeys.add(normalizeKey(name))
+                        missingEntries.add(biome.biomeID to name)
+                    }
+                }
+
+            if (missingEntries.isEmpty()) {
+                Eln.logger.info("Biome climate startup audit: all registered biomes have climate profiles.")
+            } else {
+                Eln.logger.warn(
+                    "Biome climate startup audit: {} registered biomes have no climate profile and will use Plains fallback.",
+                    missingEntries.size
+                )
+                missingEntries
+                    .sortedBy { it.first }
+                    .forEach { (id, name) ->
+                        Eln.logger.warn("Missing biome climate profile for biome id={} name='{}'", id, name)
+                    }
+            }
+
+            startupAuditComplete = true
         }
-        if (shouldLog) {
-            Eln.logger.warn(
-                "Using fallback ambient temperature profile at {} (worldTime={}). This may indicate missing world/coordinate context.",
-                caller,
-                worldTime
-            )
+    }
+
+    private fun findProfileForBiomeName(biomeName: String): BiomeClimateProfile? {
+        val candidates = biomeNameCandidates(biomeName)
+        candidates.forEach { key ->
+            profilesByBiomeName[key]?.let { return it }
         }
+        return null
+    }
+
+    private fun biomeNameCandidates(rawName: String): List<String> {
+        val base = normalizeKey(rawName)
+        if (base.isBlank()) return emptyList()
+
+        val yielded = HashSet<String>()
+        val out = ArrayList<String>()
+        fun emit(candidate: String) {
+            val normalized = normalizeKey(candidate)
+            if (normalized.isNotBlank() && yielded.add(normalized)) {
+                out.add(normalized)
+            }
+        }
+
+        emit(base)
+        emit(base.replace('_', ' '))
+
+        if (base.endsWith(" m")) {
+            emit(base.removeSuffix(" m"))
+        } else {
+            emit("$base m")
+        }
+
+        emit(base.replace("swampland", "swamp"))
+        emit(base.replace("extreme hills edge", "high hills edge"))
+        emit(base.replace("extreme hills", "high hills"))
+        emit(base.replace("extreme hills edge", "mountains edge"))
+        emit(base.replace("extreme hills", "mountains"))
+
+        if (base.startsWith("mesa")) {
+            emit("$base m")
+        }
+        if (base == "savanna" || base == "savanna plateau") {
+            emit("$base m")
+        }
+        if (base == "cold taiga" || base == "cold taiga hills" || base == "mega taiga" || base == "mega taiga hills") {
+            emit("$base m")
+        }
+        if (base == "desert hills") {
+            emit("desert")
+        }
+        return out
     }
 
     private fun isSnowBiome(biome: BiomeGenBase?, x: Int, y: Int, z: Int): Boolean {
@@ -281,8 +354,14 @@ object BiomeClimateService {
                         return@forEach
                     }
                     val obj = entry.asJsonObject
-                    val biomeName = obj.string("Biome") ?: return@forEach
-                    if (biomeName.isBlank()) {
+                    val biomeNames = linkedSetOf<String>()
+                    obj.stringArray("Biomes")
+                        .filter { it.isNotBlank() }
+                        .forEach { biomeNames.add(it) }
+                    obj.string("Biome")
+                        ?.takeIf { it.isNotBlank() }
+                        ?.let { biomeNames.add(it) }
+                    if (biomeNames.isEmpty()) {
                         return@forEach
                     }
 
@@ -293,7 +372,9 @@ object BiomeClimateService {
                         nightHumidityPercent = obj.double("NightRH_%", 70.0).coerceIn(0.0, 100.0),
                         precipitationType = normalizePrecipitation(obj.string("Precipitation") ?: "none")
                     )
-                    profilesByBiomeName[normalizeKey(biomeName)] = profile
+                    biomeNames.forEach { biomeName ->
+                        profilesByBiomeName[normalizeKey(biomeName)] = profile
+                    }
                 }
 
                 Eln.logger.info("Loaded {} biome climate profiles from {}.", profilesByBiomeName.size, path)
@@ -330,6 +411,25 @@ object BiomeClimateService {
             if (value.isJsonNull) fallback else value.asDouble
         } catch (_: Exception) {
             fallback
+        }
+    }
+
+    private fun JsonObject.stringArray(key: String): List<String> {
+        val value = get(key) ?: return emptyList()
+        return try {
+            if (!value.isJsonArray) {
+                emptyList()
+            } else {
+                value.asJsonArray.mapNotNull {
+                    try {
+                        if (it.isJsonNull) null else it.asString
+                    } catch (_: Exception) {
+                        null
+                    }
+                }
+            }
+        } catch (_: Exception) {
+            emptyList()
         }
     }
 }
