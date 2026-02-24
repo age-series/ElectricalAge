@@ -2,7 +2,6 @@ package mods.eln.sixnode.electricaldatalogger;
 
 import mods.eln.misc.INBTTReady;
 import mods.eln.misc.Utils;
-import mods.eln.sim.PhysicalConstant;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.nbt.NBTTagCompound;
@@ -204,7 +203,7 @@ public class DataLogs implements INBTTReady {
 
         switch (unitType) {
             case celsiusType:
-                str = Utils.plotCelsius("", factor * (maxValue - minValue) + minValue - PhysicalConstant.ambientTemperatureCelsius);
+                str = Utils.plotCelsius("", factor * (maxValue - minValue) + minValue);
                 break;
             case voltageType:
                 str = Utils.plotVolt("", factor * (maxValue - minValue) + minValue);

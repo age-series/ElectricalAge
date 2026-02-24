@@ -6,7 +6,6 @@ import net.minecraft.entity.EntityLivingBase
 import net.minecraft.util.MathHelper
 import net.minecraft.item.ItemStack
 import net.minecraft.tileentity.TileEntityFurnace
-import mods.eln.sim.PhysicalConstant
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.inventory.IInventory
 import net.minecraft.nbt.NBTTagList
@@ -255,8 +254,6 @@ object Utils {
     @JvmStatic
     fun plotCelsius(header: String, value: Double): String {
         var header = header
-        var value = value
-        value += PhysicalConstant.ambientTemperatureKelvin - PhysicalConstant.zeroCelsiusInKelvin
         if (header != "") header += " "
         return header + plotValue(value, "\u00B0C ")
     }

@@ -94,7 +94,7 @@ class ThermometerSensorElement(sixNode: SixNode, side: Direction, descriptor: Si
                 node.coordinate.y,
                 node.coordinate.z
             )
-            info[I18N.tr("Biome temperature")] = Utils.plotValue(climate.temperatureCelsius, "°C ")
+            info[I18N.tr("Biome temperature")] = Utils.plotCelsius("", climate.temperatureCelsius)
             info[I18N.tr("Relative humidity")] = String.format("%.0f%%", climate.relativeHumidityPercent)
         }
         return info
