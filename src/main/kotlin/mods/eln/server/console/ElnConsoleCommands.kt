@@ -8,6 +8,7 @@ import mods.eln.gridnode.electricalpole.ElectricalPoleDescriptor
 import mods.eln.gridnode.electricalpole.ElectricalPoleElement
 import mods.eln.gridnode.transformer.GridTransformerElement
 import mods.eln.mechanical.ShaftElement
+import mods.eln.environment.BiomeClimateService
 import mods.eln.misc.Coordinate
 import mods.eln.misc.FC
 import mods.eln.misc.Version
@@ -18,7 +19,6 @@ import mods.eln.node.simple.SimpleNode
 import mods.eln.node.six.SixNode
 import mods.eln.node.transparent.TransparentNode
 import mods.eln.server.SaveConfig
-import mods.eln.sim.PhysicalConstant
 import mods.eln.server.console.ElnConsoleCommands.Companion.boolToStr
 import mods.eln.server.console.ElnConsoleCommands.Companion.cprint
 import mods.eln.server.console.ElnConsoleCommands.Companion.getArgBool
@@ -863,10 +863,11 @@ class ElnResetAmbientTempsCommand : IConsoleCommand {
         }
 
         val rangeSq = range.toDouble() * range.toDouble()
-        val targetTempC = PhysicalConstant.ambientTemperatureCelsius
         val dim = ics.worldObj.provider.dimensionId
         var devicesTouched = 0
         var thermalLoadsReset = 0
+        var minAmbientC = Double.POSITIVE_INFINITY
+        var maxAmbientC = Double.NEGATIVE_INFINITY
 
         nodeManager.nodeList.forEach { node ->
             if (node.coordinate.dimension != dim) return@forEach
@@ -876,6 +877,10 @@ class ElnResetAmbientTempsCommand : IConsoleCommand {
             val dz = (node.coordinate.z + 0.5) - ics.posZ
             val distanceSq = dx * dx + dy * dy + dz * dz
             if (distanceSq > rangeSq) return@forEach
+
+            val coordinate = node.coordinate
+            val world = coordinate.world()
+            val targetTempC = BiomeClimateService.sample(world, coordinate.x, coordinate.y, coordinate.z).temperatureCelsius
 
             var changedForNode = 0
             when (node) {
@@ -905,19 +910,30 @@ class ElnResetAmbientTempsCommand : IConsoleCommand {
             if (changedForNode > 0) {
                 thermalLoadsReset += changedForNode
                 devicesTouched++
+                minAmbientC = min(minAmbientC, targetTempC)
+                maxAmbientC = max(maxAmbientC, targetTempC)
                 node.needPublish = true
             }
         }
 
+        if (thermalLoadsReset == 0) {
+            cprint(
+                ics,
+                "${FC.BRIGHT_YELLOW}No thermal loads found within range $range.",
+                indent = 1
+            )
+            return
+        }
+
         cprint(
             ics,
-            "${FC.BRIGHT_GREEN}Reset $thermalLoadsReset thermal loads on $devicesTouched devices to ${targetTempC.toInt()}°C within range $range.",
+            "${FC.BRIGHT_GREEN}Reset $thermalLoadsReset thermal loads on $devicesTouched devices to local ambient temperatures within range $range (${String.format(Locale.US, "%.1f", minAmbientC)}°C to ${String.format(Locale.US, "%.1f", maxAmbientC)}°C).",
             indent = 1
         )
     }
 
     override fun getManPage(ics: ICommandSender, args: List<String>) {
-        cprint(ics, "Resets nearby Eln device temperatures to ambient (20°C).", indent = 1)
+        cprint(ics, "Resets nearby Eln device temperatures to local biome ambient temperature.", indent = 1)
         cprint(ics, "Usage: /eln reset-ambient-temps <range 1..32>", indent = 1)
         cprint(ics, "")
     }

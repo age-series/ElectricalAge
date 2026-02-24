@@ -2,6 +2,7 @@ package mods.eln.transparentnode.turbine;
 
 import mods.eln.Eln;
 import mods.eln.i18n.I18N;
+import mods.eln.environment.BiomeClimateService;
 import mods.eln.misc.Direction;
 import mods.eln.misc.LRDU;
 import mods.eln.misc.Utils;
@@ -11,6 +12,7 @@ import mods.eln.node.transparent.TransparentNode;
 import mods.eln.node.transparent.TransparentNodeDescriptor;
 import mods.eln.node.transparent.TransparentNodeElement;
 import mods.eln.sim.ElectricalLoad;
+import mods.eln.sim.PhysicalConstant;
 import mods.eln.sim.ThermalLoad;
 import mods.eln.sim.mna.component.Resistor;
 import mods.eln.sim.mna.component.VoltageSource;
@@ -149,6 +151,14 @@ public class TurbineElement extends TransparentNodeElement {
     @Override
     public boolean onBlockActivated(EntityPlayer player, Direction side, float vx, float vy, float vz) {
         return false;
+    }
+
+    public double getAmbientTemperatureKelvin() {
+        if (node == null || node.coordinate == null) {
+            return PhysicalConstant.zeroCelsiusInKelvin + BiomeClimateService.fallbackAmbientTemperatureCelsius(6000L);
+        }
+        double ambientCelsius = BiomeClimateService.sample(node.coordinate.world(), node.coordinate.x, node.coordinate.y, node.coordinate.z).getTemperatureCelsius();
+        return ambientCelsius + PhysicalConstant.zeroCelsiusInKelvin;
     }
 
     public float getLightOpacity() {
