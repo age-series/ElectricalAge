@@ -8,7 +8,7 @@ class ElnWorldStorage(str: String?) : WorldSavedData(str) {
     private var dim = 0
     override fun readFromNBT(nbt: NBTTagCompound) {
         dim = nbt.getInteger("dim")
-        ServerEventListener.readFromEaWorldNBT(nbt)
+        ServerEventListener.readFromEaWorldNBT(nbt, dim)
     }
 
     override fun writeToNBT(nbt: NBTTagCompound) {

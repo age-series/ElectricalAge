@@ -5,6 +5,7 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent
 import cpw.mods.fml.common.gameevent.TickEvent
 import cpw.mods.fml.common.gameevent.TickEvent.ServerTickEvent
 import mods.eln.Eln
+import mods.eln.environment.RoomThermalManager
 import mods.eln.item.electricalitem.TreeCapitation.process
 import mods.eln.misc.Coordinate
 import mods.eln.misc.Utils
@@ -66,13 +67,14 @@ class ServerEventListener {
         if (e.world.isRemote) return
         loadedWorlds.add(e.world.provider.dimensionId)
         val fileNames = FileNames(e)
+        val dimension = e.world.provider.dimensionId
         try {
-            readSave(fileNames.worldSave)
+            readSave(fileNames.worldSave, dimension)
         } catch (ex: Exception) {
             try {
                 ex.printStackTrace()
                 println("Using BACKUP Electrical Age save: " + fileNames.backupSave)
-                readSave(fileNames.backupSave)
+                readSave(fileNames.backupSave, dimension)
             } catch (ex2: Exception) {
                 ex2.printStackTrace()
                 println("Failed to read backup save!")
@@ -82,10 +84,10 @@ class ServerEventListener {
     }
 
     @Throws(IOException::class)
-    private fun readSave(worldSave: Path) {
+    private fun readSave(worldSave: Path, dimension: Int) {
         val inputStream = ByteArrayInputStream(Files.readAllBytes(worldSave))
         val nbt = CompressedStreamTools.readCompressed(inputStream)
-        readFromEaWorldNBT(nbt)
+        readFromEaWorldNBT(nbt, dimension)
     }
 
     @SubscribeEvent
@@ -95,6 +97,7 @@ class ServerEventListener {
         try {
             NodeManager.instance!!.unload(e.world.provider.dimensionId)
             Eln.ghostManager.unload(e.world.provider.dimensionId)
+            RoomThermalManager.unloadDimension(e.world.provider.dimensionId)
         } catch (ex: Exception) {
             ex.printStackTrace()
         }
@@ -151,7 +154,7 @@ class ServerEventListener {
     }
 
     companion object {
-        fun readFromEaWorldNBT(nbt: NBTTagCompound) {
+        fun readFromEaWorldNBT(nbt: NBTTagCompound, dim: Int) {
             try {
                 NodeManager.instance!!.loadFromNbt(nbt.getCompoundTag("nodes"))
             } catch (e: Exception) {
@@ -164,6 +167,11 @@ class ServerEventListener {
             }
             try {
                 MqttManager.readWorldData(nbt.getCompoundTag("mqtt"))
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+            try {
+                RoomThermalManager.readFromNbt(nbt, dim)
             } catch (e: Exception) {
                 e.printStackTrace()
             }
@@ -183,6 +191,11 @@ class ServerEventListener {
             try {
                 val tag = Utils.newNbtTagCompund(nbt, "mqtt")
                 MqttManager.writeWorldData(tag)
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+            try {
+                RoomThermalManager.writeToNbt(nbt!!, dim)
             } catch (e: Exception) {
                 e.printStackTrace()
             }

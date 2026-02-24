@@ -23,6 +23,7 @@ import mods.eln.craft.CraftingRecipes;
 import mods.eln.entity.ReplicatorPopProcess;
 import mods.eln.eventhandlers.ElnFMLEventsHandler;
 import mods.eln.eventhandlers.ElnForgeEventsHandler;
+import mods.eln.eventhandlers.RoomThermalBlockEventsHandler;
 import mods.eln.fluid.ElnFluidRegistry;
 import mods.eln.fluid.FluidRegistrationKt;
 import mods.eln.environment.BiomeClimateService;
@@ -232,6 +233,8 @@ public class Eln {
     public static Map<ElnFluidRegistry, Block> fluidBlocks = new EnumMap(ElnFluidRegistry.class);
     public static WindProcess wind;
     public static int wirelessTxRange = 32;
+    public static int roomMaxAxisSpanBlocks = 24;
+    public static int roomMaxVolumeBlocks = 4096;
     public static boolean ledLampInfiniteLife = false;
     static public GenericItemUsingDamageDescriptor multiMeterElement, thermometerElement, allMeterElement;
     static public GenericItemUsingDamageDescriptor configCopyToolElement;
@@ -497,6 +500,7 @@ public class Eln {
         }
         FluidRegistrationKt.registerElnFluids();
         MinecraftForge.EVENT_BUS.register(new ElnForgeEventsHandler());
+        MinecraftForge.EVENT_BUS.register(new RoomThermalBlockEventsHandler());
         MinecraftForge.EVENT_BUS.register(new ElectricMinecartChargeReporter());
         FMLCommonHandler.instance().bus().register(new ElnFMLEventsHandler());
         MinecraftForge.EVENT_BUS.register(this);
