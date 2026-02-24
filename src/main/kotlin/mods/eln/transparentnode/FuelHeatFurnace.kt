@@ -143,7 +143,7 @@ class FuelHeatFurnaceElement(transparentNode: TransparentNode, descriptor: Trans
         }
     }
 
-    private val thermalWatchdog = ThermalLoadWatchDog(thermalLoad)
+    private val thermalWatchdog = ambientAwareThermalWatchdog(ThermalLoadWatchDog(thermalLoad))
 
     init {
         thermalLoadList.add(thermalLoad)

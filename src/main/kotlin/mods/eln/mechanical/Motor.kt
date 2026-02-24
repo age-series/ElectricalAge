@@ -187,7 +187,7 @@ class MotorElement(node: TransparentNode, desc_: TransparentNodeDescriptor) :
 
     internal val thermal = NbtThermalLoad("thermal")
     internal val heater: ElectricalLoadHeatThermalLoad
-    internal val thermalWatchdog = ThermalLoadWatchDog(thermal)
+    internal val thermalWatchdog = ambientAwareThermalWatchdog(ThermalLoadWatchDog(thermal))
 
     init {
         electricalLoadList.addAll(arrayOf(wireLoad, shaftLoad))

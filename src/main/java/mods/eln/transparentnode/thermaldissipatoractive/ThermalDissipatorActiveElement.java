@@ -58,7 +58,7 @@ public class ThermalDissipatorActiveElement extends TransparentNodeElement {
     }
 
     VoltageStateWatchDog voltageWatchdog = new VoltageStateWatchDog(positiveLoad);
-    ThermalLoadWatchDog thermalWatchdog = new ThermalLoadWatchDog(thermalLoad);
+    ThermalLoadWatchDog thermalWatchdog = ambientAwareThermalWatchdog(new ThermalLoadWatchDog(thermalLoad));
 
     @Override
     public ElectricalLoad getElectricalLoad(Direction side, LRDU lrdu) {

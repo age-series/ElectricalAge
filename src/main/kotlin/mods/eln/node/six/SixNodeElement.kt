@@ -22,6 +22,7 @@ import mods.eln.sim.ThermalLoad
 import mods.eln.sim.mna.component.Component
 import mods.eln.sim.nbt.NbtElectricalLoad
 import mods.eln.sim.nbt.NbtThermalLoad
+import mods.eln.sim.process.destruct.ThermalLoadWatchDog
 import mods.eln.sound.IPlayer
 import mods.eln.sound.SoundCommand
 import net.minecraft.entity.player.EntityPlayer
@@ -169,6 +170,10 @@ abstract class SixNodeElement(sixNode: SixNode, @JvmField var side: Direction, d
 
     fun plotAmbientCelsius(header: String, thermalDeltaCelsius: Double): String {
         return Utils.plotCelsius(header, thermalDeltaCelsius + getAmbientTemperatureCelsius())
+    }
+
+    fun ambientAwareThermalWatchdog(watchdog: ThermalLoadWatchDog): ThermalLoadWatchDog {
+        return watchdog.setAmbientTemperatureProvider { getAmbientTemperatureCelsius() }
     }
 
     @JvmField

@@ -137,7 +137,7 @@ open class CurrentCableElement(sixNode: SixNode?, side: Direction?, descriptor: 
     var electricalLoad = NbtElectricalLoad("electricalLoad")
     var thermalLoad = NbtThermalLoad("thermalLoad")
     var heater = ElectricalLoadHeatThermalLoad(electricalLoad, thermalLoad)
-    var thermalWatchdog = ThermalLoadWatchDog(thermalLoad)
+    var thermalWatchdog = ambientAwareThermalWatchdog(ThermalLoadWatchDog(thermalLoad))
     var voltageWatchdog = VoltageStateWatchDog(electricalLoad)
     var color: Int
     var colorCare: Int

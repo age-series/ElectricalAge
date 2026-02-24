@@ -106,7 +106,7 @@ class ThermalHeatExchangerElement(
     private val thermalLoad = NbtThermalLoad("thermalLoad")
     val tankMap = mapOf(Pair(INPUT_SIDE, TankData(FluidTank(1000))), Pair(OUTPUT_SIDE, TankData(FluidTank(1000))))
     private val tank = ElementSidedFluidHandler(tankMap)
-    private val thermalWatchdog = ThermalLoadWatchDog(thermalLoad)
+    private val thermalWatchdog = ambientAwareThermalWatchdog(ThermalLoadWatchDog(thermalLoad))
     private val fluidRegulatorProcess = IProcess {
         val inputFluid = tank.getFluidType(INPUT_SIDE)
         var joulesPerMb = 0.0

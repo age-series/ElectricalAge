@@ -56,7 +56,7 @@ class GridTransformerElement(node: TransparentNode, descriptor: TransparentNodeD
         )
         thermalLoadList.add(this)
     }
-    internal val thermalWatchdog = ThermalLoadWatchDog(thermalLoad).apply {
+    internal val thermalWatchdog = ambientAwareThermalWatchdog(ThermalLoadWatchDog(thermalLoad)).apply {
         setTemperatureLimits(desc.cableDescriptor.thermalWarmLimit, desc.cableDescriptor.thermalCoolLimit)
         setDestroys(explosion)
         dumpMatrixOnTrip("GridTransformerElement thermal trip") { this@GridTransformerElement }

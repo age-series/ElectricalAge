@@ -39,7 +39,7 @@ public class ElectricalCableElement extends SixNodeElement {
     NbtThermalLoad thermalLoad = new NbtThermalLoad("thermalLoad");
 
     ElectricalLoadHeatThermalLoad heater = new ElectricalLoadHeatThermalLoad(electricalLoad, thermalLoad);
-    ThermalLoadWatchDog thermalWatchdog = new ThermalLoadWatchDog(thermalLoad);
+    ThermalLoadWatchDog thermalWatchdog = ambientAwareThermalWatchdog(new ThermalLoadWatchDog(thermalLoad));
     VoltageStateWatchDog voltageWatchdog = new VoltageStateWatchDog(electricalLoad);
 
     int color;

@@ -39,7 +39,7 @@ class ElectricalPoleElement(node: TransparentNode, descriptor: TransparentNodeDe
     var electricalLoad = NbtElectricalLoad("electricalLoad")
     var thermalLoad = NbtThermalLoad("thermalLoad")
     internal var heater = ElectricalLoadHeatThermalLoad(electricalLoad, thermalLoad)
-    internal var thermalWatchdog = ThermalLoadWatchDog(thermalLoad)
+    internal var thermalWatchdog = ambientAwareThermalWatchdog(ThermalLoadWatchDog(thermalLoad))
     internal var voltageWatchdog = VoltageStateWatchDog(electricalLoad)
     internal var secondaryMaxCurrent = 0f
 

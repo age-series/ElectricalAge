@@ -45,7 +45,7 @@ public class ThermalDissipatorPassiveElement extends TransparentNodeElement {
     }
 
 
-    ThermalLoadWatchDog thermalWatchdog = new ThermalLoadWatchDog(thermalLoad);
+    ThermalLoadWatchDog thermalWatchdog = ambientAwareThermalWatchdog(new ThermalLoadWatchDog(thermalLoad));
 
     @Nullable
     @Override

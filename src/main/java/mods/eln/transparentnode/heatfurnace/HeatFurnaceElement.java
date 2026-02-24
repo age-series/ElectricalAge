@@ -49,7 +49,7 @@ public class HeatFurnaceElement extends TransparentNodeElement {
 
     HeatFurnaceDescriptor descriptor;
 
-    ThermalLoadWatchDog thermalWatchdog = new ThermalLoadWatchDog(thermalLoad);
+    ThermalLoadWatchDog thermalWatchdog = ambientAwareThermalWatchdog(new ThermalLoadWatchDog(thermalLoad));
 
     public static final byte unserializeGain = 1;
     public static final byte unserializeTemperatureTarget = 2;

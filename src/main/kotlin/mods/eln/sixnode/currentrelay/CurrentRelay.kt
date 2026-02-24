@@ -155,7 +155,7 @@ class CurrentRelayElement(sixNode: SixNode, side: Direction, descriptor: SixNode
 
     private var voltageWatchDogA = VoltageStateWatchDog(aLoad)
     private var voltageWatchDogB = VoltageStateWatchDog(bLoad)
-    private var thermalWatchdog = ThermalLoadWatchDog(thermalLoad)
+    private var thermalWatchdog = ambientAwareThermalWatchdog(ThermalLoadWatchDog(thermalLoad))
 
     var switchState = false
         set(value) {

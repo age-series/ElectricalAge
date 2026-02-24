@@ -3,6 +3,7 @@ package mods.eln.sim.process.destruct
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertSame
+import kotlin.test.assertTrue
 import mods.eln.sim.ThermalLoad
 import mods.eln.sim.ThermalLoadInitializer
 import mods.eln.sim.ThermalLoadInitializerByPowerDrop
@@ -39,5 +40,24 @@ class ThermalLoadWatchDogTest {
         val watchdog = ThermalLoadWatchDog(load)
         val returned = watchdog.dumpMatrixOnTrip("reason") { load }
         assertSame(watchdog, returned)
+    }
+
+    @Test
+    fun getValueIncludesAmbientWhenConfigured() {
+        val load = ThermalLoad().apply { temperatureCelsius = 40.0 }
+        val watchdog = ThermalLoadWatchDog(load)
+            .setAmbientTemperatureProvider { 25.0 }
+
+        assertEquals(65.0, watchdog.getValue())
+    }
+
+    @Test
+    fun ambientProviderCanMakeWatchdogTripAtAbsoluteLimit() {
+        val load = ThermalLoad().apply { temperatureCelsius = 80.0 }
+        val watchdog = ThermalLoadWatchDog(load)
+            .setAmbientTemperatureProvider { 40.0 }
+            .setTemperatureLimits(100.0, -40.0)
+
+        assertTrue(watchdog.getValue() > watchdog.max, "Absolute temperature should exceed configured max.")
     }
 }

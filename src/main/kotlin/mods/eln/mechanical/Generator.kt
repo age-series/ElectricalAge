@@ -167,7 +167,7 @@ class GeneratorElement(node: TransparentNode, desc_: TransparentNodeDescriptor) 
 
     internal val thermal = NbtThermalLoad("thermal")
     internal val heater: ElectricalLoadHeatThermalLoad
-    internal val thermalLoadWatchDog = ThermalLoadWatchDog(thermal)
+    internal val thermalLoadWatchDog = ambientAwareThermalWatchdog(ThermalLoadWatchDog(thermal))
 
     init {
         electricalLoadList.add(positiveLoad)
