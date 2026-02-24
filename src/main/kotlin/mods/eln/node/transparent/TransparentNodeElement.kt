@@ -73,6 +73,10 @@ abstract class TransparentNodeElement(@JvmField var node: TransparentNode?, @Jvm
         val ownerTag = describeSimOwner()
         electricalComponentList.forEach { it.setOwner(ownerTag) }
         electricalLoadList.forEach { it.setOwner(ownerTag) }
+        val coord = node?.coordinate
+        if (coord != null) {
+            thermalLoadList.forEach { it.setSimCoordinate(coord.dimension, coord.x, coord.y, coord.z) }
+        }
         Eln.simulator.addAllSlowProcess(slowProcessList)
         for (p in slowPreProcessList) Eln.simulator.addSlowPreProcess(p)
         for (p in slowPostProcessList) Eln.simulator.addSlowPostProcess(p)
@@ -85,6 +89,7 @@ abstract class TransparentNodeElement(@JvmField var node: TransparentNode?, @Jvm
     }
 
     open fun disconnectJob() {
+        for (load in thermalLoadList) load.clearSimCoordinate()
         Eln.simulator.removeAllSlowProcess(slowProcessList)
         for (p in slowPreProcessList) Eln.simulator.removeSlowPreProcess(p)
         for (p in slowPostProcessList) Eln.simulator.removeSlowPostProcess(p)

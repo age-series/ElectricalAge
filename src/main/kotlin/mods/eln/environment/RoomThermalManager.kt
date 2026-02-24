@@ -1,12 +1,12 @@
 package mods.eln.environment
 
-import cpw.mods.fml.common.FMLCommonHandler
 import mods.eln.Eln
 import mods.eln.misc.Coordinate
 import mods.eln.misc.Direction
 import mods.eln.node.NodeManager
 import mods.eln.node.six.SixNode
 import mods.eln.node.transparent.TransparentNode
+import net.minecraft.block.BlockDoor
 import net.minecraft.entity.player.EntityPlayerMP
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.server.MinecraftServer
@@ -14,11 +14,11 @@ import net.minecraft.world.World
 import java.util.ArrayDeque
 import java.util.HashMap
 import java.util.HashSet
+import kotlin.math.abs
 import kotlin.math.floor
 
 object RoomThermalManager {
     private const val ROOM_SCAN_INTERVAL_TICKS = 40
-    private const val ROOM_STALE_TIMEOUT_TICKS = 20 * 30
 
     // Defaults if config is unavailable very early in lifecycle.
     private const val DEFAULT_ROOM_MAX_AXIS_SPAN_BLOCKS = 24
@@ -26,6 +26,11 @@ object RoomThermalManager {
 
     private const val PLAYER_AIR_SEED_SEARCH_RADIUS = 2
     private const val AIR_HEAT_CAPACITY_J_PER_BLOCK_C = 1200.0
+    private const val ROOM_WALL_LEAK_CONDUCTANCE_W_PER_BLOCK_C = 0.12
+    private const val ROOM_OPEN_DOOR_EXTRA_CONDUCTANCE_W_PER_DOOR_C = 30.0
+    private const val ROOM_DOOR_SCAN_INTERVAL_TICKS = 10L
+    private const val EXCHANGE_LOG_INTERVAL_TICKS = 40L
+    private const val EXCHANGE_LOG_MIN_POWER_W = 100.0
     private const val ROOM_NBT_VERSION = 1
     private const val NBT_ROOT = "roomThermal"
     private const val NBT_VERSION = "version"
@@ -48,6 +53,9 @@ object RoomThermalManager {
 
     private val roomsById = HashMap<RoomId, SimulatedRoom>()
     private val roomByInteriorCellByDimension = HashMap<Int, MutableMap<CellPos, RoomId>>()
+    private val roomByThermalAnchorByDimension = HashMap<Int, MutableMap<CellPos, RoomId>>()
+    private val recentExchangeByAnchorByDimension = HashMap<Int, MutableMap<CellPos, ExchangeDebugSnapshot>>()
+    private val lastExchangeLogTickByAnchor = HashMap<AnchorKey, Long>()
     private val pendingImmediateScanDimensions = HashSet<Int>()
     private var tickCounter = 0L
 
@@ -68,15 +76,15 @@ object RoomThermalManager {
             scanPlayersForRooms(server, immediateScanDims)
         } else if (tickCounter % ROOM_SCAN_INTERVAL_TICKS == 0L) {
             scanPlayersForRooms(server, null)
-            pruneStaleRooms()
         }
-
-        simulateRoomTemperatureStep()
     }
 
     fun clear() {
         roomsById.clear()
         roomByInteriorCellByDimension.clear()
+        roomByThermalAnchorByDimension.clear()
+        recentExchangeByAnchorByDimension.clear()
+        lastExchangeLogTickByAnchor.clear()
         pendingImmediateScanDimensions.clear()
         tickCounter = 0L
     }
@@ -90,6 +98,9 @@ object RoomThermalManager {
             iterator.remove()
         }
         roomByInteriorCellByDimension.remove(dimension)
+        roomByThermalAnchorByDimension.remove(dimension)
+        recentExchangeByAnchorByDimension.remove(dimension)
+        lastExchangeLogTickByAnchor.keys.removeIf { it.dimension == dimension }
         pendingImmediateScanDimensions.remove(dimension)
     }
 
@@ -141,6 +152,63 @@ object RoomThermalManager {
     fun getRoomAt(coord: Coordinate): RoomLookup? {
         if (!coord.worldExist) return null
         return getRoomAt(coord.world(), coord.x, coord.y, coord.z)
+    }
+
+    data class ExchangeDebugInfo(
+        val roomId: String,
+        val roomVolumeBlocks: Int,
+        val roomTemperatureCelsius: Double,
+        val loadToRoomWatts: Double,
+        val sampleTick: Long
+    )
+
+    fun getExchangeDebugAt(dimension: Int, x: Int, y: Int, z: Int): ExchangeDebugInfo? {
+        val snapshot = recentExchangeByAnchorByDimension[dimension]?.get(CellPos(x, y, z)) ?: return null
+        val room = roomsById[snapshot.roomId] ?: return null
+        return ExchangeDebugInfo(
+            roomId = room.id.signature,
+            roomVolumeBlocks = room.interiorCellCount,
+            roomTemperatureCelsius = room.temperatureCelsius,
+            loadToRoomWatts = snapshot.loadToRoomWatts,
+            sampleTick = snapshot.tick
+        )
+    }
+
+    fun exchangeLoadWithRoom(
+        dimension: Int,
+        x: Int,
+        y: Int,
+        z: Int,
+        loadTemperatureDeltaCelsius: Double,
+        loadRp: Double,
+        dt: Double
+    ): Double? {
+        if (loadRp <= 0.0 || loadRp.isNaN() || loadRp.isInfinite()) return null
+        val query = CellPos(x, y, z)
+        val roomId = roomByInteriorCellByDimension[dimension]?.get(query)
+            ?: roomByThermalAnchorByDimension[dimension]?.get(query)
+            ?: return null
+        val room = roomsById[roomId] ?: return null
+        if (room.airHeatCapacityJoulesPerCelsius <= 0.0) return null
+
+        // Positive value means heat leaves the load and enters room air.
+        val powerLoadToRoom = (loadTemperatureDeltaCelsius - room.temperatureCelsius) / loadRp
+        room.temperatureCelsius += (powerLoadToRoom * dt) / room.airHeatCapacityJoulesPerCelsius
+        rememberExchangeSample(dimension, x, y, z, room.id, powerLoadToRoom)
+        maybeLogExchange(dimension, x, y, z, room.id, powerLoadToRoom, loadTemperatureDeltaCelsius, room.temperatureCelsius)
+        return powerLoadToRoom
+    }
+
+    fun advanceRoomAmbientExchange(dt: Double) {
+        if (dt <= 0.0 || dt.isNaN() || dt.isInfinite()) return
+        for (room in roomsById.values) {
+            if (room.airHeatCapacityJoulesPerCelsius <= 0.0) continue
+            refreshOpenDoorCount(room)
+            val wallConductance = room.bounds.surfaceAreaEstimate * ROOM_WALL_LEAK_CONDUCTANCE_W_PER_BLOCK_C
+            val doorConductance = room.openDoorCount * ROOM_OPEN_DOOR_EXTRA_CONDUCTANCE_W_PER_DOOR_C
+            val leakPower = room.temperatureCelsius * (wallConductance + doorConductance)
+            room.temperatureCelsius -= (leakPower * dt) / room.airHeatCapacityJoulesPerCelsius
+        }
     }
 
     fun writeToNbt(nbt: NBTTagCompound, dimension: Int) {
@@ -212,7 +280,7 @@ object RoomThermalManager {
             val containedThermalNodes = findThermalNodesInRoom(candidate, thermalNodes)
             if (containedThermalNodes.isEmpty()) continue
 
-            registerOrRefreshRoom(candidate, containedThermalNodes, world)
+            registerOrRefreshRoom(candidate, containedThermalNodes)
         }
     }
 
@@ -361,22 +429,23 @@ object RoomThermalManager {
         return false
     }
 
-    private fun registerOrRefreshRoom(candidate: RoomCandidate, thermalNodes: Set<CellPos>, world: World) {
+    private fun registerOrRefreshRoom(candidate: RoomCandidate, thermalNodes: Set<CellPos>) {
         val roomId = createRoomId(candidate)
         val existing = roomsById[roomId]
 
         if (existing == null) {
-            val initialTemperature = sampleRoomAmbient(world, candidate.bounds)
             val room = SimulatedRoom(
                 id = roomId,
                 dimension = candidate.dimension,
                 bounds = candidate.bounds,
                 interiorCellCount = candidate.interiorCells.size,
                 thermalNodeAnchors = thermalNodes,
-                temperatureCelsius = initialTemperature,
+                temperatureCelsius = 0.0,
                 lastSeenTick = tickCounter,
                 interiorCells = candidate.interiorCells,
-                airHeatCapacityJoulesPerCelsius = candidate.interiorCells.size * AIR_HEAT_CAPACITY_J_PER_BLOCK_C
+                airHeatCapacityJoulesPerCelsius = candidate.interiorCells.size * AIR_HEAT_CAPACITY_J_PER_BLOCK_C,
+                openDoorCount = 0,
+                lastDoorScanTick = Long.MIN_VALUE
             )
             roomsById[roomId] = room
             indexRoom(room)
@@ -395,13 +464,16 @@ object RoomThermalManager {
         } else {
             existing.lastSeenTick = tickCounter
             if (existing.thermalNodeAnchors != thermalNodes) {
+                deindexRoomThermalAnchors(existing)
                 existing.thermalNodeAnchors = thermalNodes
+                indexRoomThermalAnchors(existing)
             }
             if (existing.interiorCells != candidate.interiorCells) {
                 deindexRoom(existing)
                 existing.interiorCells = candidate.interiorCells
                 existing.interiorCellCount = candidate.interiorCells.size
                 existing.airHeatCapacityJoulesPerCelsius = candidate.interiorCells.size * AIR_HEAT_CAPACITY_J_PER_BLOCK_C
+                existing.lastDoorScanTick = Long.MIN_VALUE
                 indexRoom(existing)
             } else {
                 existing.interiorCellCount = candidate.interiorCells.size
@@ -411,9 +483,70 @@ object RoomThermalManager {
         }
     }
 
+    private fun refreshOpenDoorCount(room: SimulatedRoom) {
+        if (tickCounter - room.lastDoorScanTick < ROOM_DOOR_SCAN_INTERVAL_TICKS) return
+        room.lastDoorScanTick = tickCounter
+
+        val server = MinecraftServer.getServer() ?: return
+        val world = server.worldServerForDimension(room.dimension) ?: return
+        if (world.isRemote) return
+
+        room.openDoorCount = countOpenBoundaryDoors(world, room.interiorCells)
+    }
+
+    private fun countOpenBoundaryDoors(world: World, interiorCells: Set<CellPos>): Int {
+        var openDoors = 0
+        val seenDoorBottomCells = HashSet<CellPos>()
+
+        for (cell in interiorCells) {
+            for (direction in Direction.values()) {
+                val neighbor = CellPos(
+                    x = cell.x + deltaX(direction),
+                    y = cell.y + deltaY(direction),
+                    z = cell.z + deltaZ(direction)
+                )
+                if (interiorCells.contains(neighbor)) continue
+                if (!world.blockExists(neighbor.x, neighbor.y, neighbor.z)) continue
+
+                val block = world.getBlock(neighbor.x, neighbor.y, neighbor.z)
+                if (block !is BlockDoor) continue
+
+                val bottomCell = toDoorBottomCell(world, neighbor) ?: continue
+                if (!seenDoorBottomCells.add(bottomCell)) continue
+                if (isDoorOpen(world, bottomCell)) openDoors++
+            }
+        }
+
+        return openDoors
+    }
+
+    private fun toDoorBottomCell(world: World, cell: CellPos): CellPos? {
+        if (!world.blockExists(cell.x, cell.y, cell.z)) return null
+        val metadata = world.getBlockMetadata(cell.x, cell.y, cell.z)
+        if ((metadata and 8) == 0) return cell
+        if (cell.y <= 0) return null
+        val bottom = CellPos(cell.x, cell.y - 1, cell.z)
+        if (!world.blockExists(bottom.x, bottom.y, bottom.z)) return null
+        val bottomBlock = world.getBlock(bottom.x, bottom.y, bottom.z)
+        return if (bottomBlock is BlockDoor) bottom else null
+    }
+
+    private fun isDoorOpen(world: World, doorBottomCell: CellPos): Boolean {
+        if (!world.blockExists(doorBottomCell.x, doorBottomCell.y, doorBottomCell.z)) return false
+        val block = world.getBlock(doorBottomCell.x, doorBottomCell.y, doorBottomCell.z)
+        if (block !is BlockDoor) return false
+        val metadata = world.getBlockMetadata(doorBottomCell.x, doorBottomCell.y, doorBottomCell.z)
+        return (metadata and 4) != 0
+    }
+
     private fun createRoomId(candidate: RoomCandidate): RoomId {
         var hash = 1469598103934665603L
-        for (cell in candidate.interiorCells) {
+        val orderedCells = candidate.interiorCells.sortedWith(
+            compareBy<CellPos> { it.x }
+                .thenBy { it.y }
+                .thenBy { it.z }
+        )
+        for (cell in orderedCells) {
             hash = hash xor mixCell(cell)
             hash *= 1099511628211L
         }
@@ -429,43 +562,6 @@ object RoomThermalManager {
         value = (value xor cell.y.toLong()) * 1099511628211L
         value = (value xor cell.z.toLong()) * 1099511628211L
         return value
-    }
-
-    private fun pruneStaleRooms() {
-        val iterator = roomsById.entries.iterator()
-        while (iterator.hasNext()) {
-            val (_, room) = iterator.next()
-            if (tickCounter - room.lastSeenTick <= ROOM_STALE_TIMEOUT_TICKS) continue
-
-            deindexRoom(room)
-            Eln.logger.info(
-                "[room-thermal] room-removed id={} dim={} ageTicks={}",
-                room.id.signature,
-                room.dimension,
-                tickCounter - room.lastSeenTick
-            )
-            iterator.remove()
-        }
-    }
-
-    private fun simulateRoomTemperatureStep() {
-        for (room in roomsById.values) {
-            val world = FMLCommonHandler.instance().minecraftServerInstance
-                ?.worldServerForDimension(room.dimension)
-                ?: continue
-
-            val ambient = sampleRoomAmbient(world, room.bounds)
-
-            // Placeholder room thermal model: relax toward outdoor biome ambient.
-            room.temperatureCelsius += (ambient - room.temperatureCelsius) * 0.02
-        }
-    }
-
-    private fun sampleRoomAmbient(world: World, bounds: RoomBounds): Double {
-        val centerX = (bounds.minX + bounds.maxX) / 2
-        val centerY = (bounds.minY + bounds.maxY) / 2
-        val centerZ = (bounds.minZ + bounds.maxZ) / 2
-        return BiomeClimateService.sample(world, centerX, centerY, centerZ).temperatureCelsius
     }
 
     private fun isAir(world: World, cell: CellPos): Boolean {
@@ -500,9 +596,52 @@ object RoomThermalManager {
     }
 
     private data class CellPos(val x: Int, val y: Int, val z: Int)
+    private data class AnchorKey(val dimension: Int, val cell: CellPos)
+    private data class ExchangeDebugSnapshot(val roomId: RoomId, val loadToRoomWatts: Double, val tick: Long)
+
+    private fun rememberExchangeSample(dimension: Int, x: Int, y: Int, z: Int, roomId: RoomId, loadToRoomWatts: Double) {
+        val byAnchor = recentExchangeByAnchorByDimension.getOrPut(dimension) { HashMap() }
+        byAnchor[CellPos(x, y, z)] = ExchangeDebugSnapshot(
+            roomId = roomId,
+            loadToRoomWatts = loadToRoomWatts,
+            tick = tickCounter
+        )
+    }
+
+    private fun maybeLogExchange(
+        dimension: Int,
+        x: Int,
+        y: Int,
+        z: Int,
+        roomId: RoomId,
+        loadToRoomWatts: Double,
+        loadTemperatureDeltaCelsius: Double,
+        roomTemperatureCelsius: Double
+    ) {
+        if (abs(loadToRoomWatts) < EXCHANGE_LOG_MIN_POWER_W) return
+        val key = AnchorKey(dimension, CellPos(x, y, z))
+        val lastTick = lastExchangeLogTickByAnchor[key] ?: Long.MIN_VALUE
+        if (tickCounter - lastTick < EXCHANGE_LOG_INTERVAL_TICKS) return
+        lastExchangeLogTickByAnchor[key] = tickCounter
+        Eln.logger.info(
+            "[room-thermal] load-room-exchange dim={} coord={},{},{} room={} pW={} loadDeltaC={} roomDeltaC={}",
+            dimension,
+            x,
+            y,
+            z,
+            roomId.signature,
+            String.format("%.2f", loadToRoomWatts),
+            String.format("%.2f", loadTemperatureDeltaCelsius),
+            String.format("%.2f", roomTemperatureCelsius)
+        )
+    }
 
     private fun roomIndexForDimension(dimension: Int): MutableMap<CellPos, RoomId> {
         return roomByInteriorCellByDimension.getOrPut(dimension) { HashMap() }
+    }
+
+    private fun thermalAnchorIndexForDimension(dimension: Int): MutableMap<CellPos, RoomId> {
+        return roomByThermalAnchorByDimension.getOrPut(dimension) { HashMap() }
     }
 
     private fun indexRoom(room: SimulatedRoom) {
@@ -510,11 +649,29 @@ object RoomThermalManager {
         for (cell in room.interiorCells) {
             index[cell] = room.id
         }
+        indexRoomThermalAnchors(room)
     }
 
     private fun deindexRoom(room: SimulatedRoom) {
         val index = roomByInteriorCellByDimension[room.dimension] ?: return
         for (cell in room.interiorCells) {
+            if (index[cell] == room.id) {
+                index.remove(cell)
+            }
+        }
+        deindexRoomThermalAnchors(room)
+    }
+
+    private fun indexRoomThermalAnchors(room: SimulatedRoom) {
+        val index = thermalAnchorIndexForDimension(room.dimension)
+        for (cell in room.thermalNodeAnchors) {
+            index[cell] = room.id
+        }
+    }
+
+    private fun deindexRoomThermalAnchors(room: SimulatedRoom) {
+        val index = roomByThermalAnchorByDimension[room.dimension] ?: return
+        for (cell in room.thermalNodeAnchors) {
             if (index[cell] == room.id) {
                 index.remove(cell)
             }
@@ -609,7 +766,9 @@ object RoomThermalManager {
             temperatureCelsius = roomTag.getDouble(NBT_TEMPERATURE),
             lastSeenTick = tickCounter,
             interiorCells = interiorCells,
-            airHeatCapacityJoulesPerCelsius = (roomTag.getInteger(NBT_INTERIOR_COUNT).takeIf { it > 0 } ?: interiorCells.size) * AIR_HEAT_CAPACITY_J_PER_BLOCK_C
+            airHeatCapacityJoulesPerCelsius = (roomTag.getInteger(NBT_INTERIOR_COUNT).takeIf { it > 0 } ?: interiorCells.size) * AIR_HEAT_CAPACITY_J_PER_BLOCK_C,
+            openDoorCount = 0,
+            lastDoorScanTick = Long.MIN_VALUE
         )
     }
 
@@ -632,6 +791,7 @@ object RoomThermalManager {
         val width: Int get() = maxX - minX + 1
         val height: Int get() = maxY - minY + 1
         val depth: Int get() = maxZ - minZ + 1
+        val surfaceAreaEstimate: Int get() = 2 * (width * height + width * depth + height * depth)
 
         fun contains(x: Int, y: Int, z: Int): Boolean {
             return x in minX..maxX && y in minY..maxY && z in minZ..maxZ
@@ -658,6 +818,8 @@ object RoomThermalManager {
         var temperatureCelsius: Double,
         var lastSeenTick: Long,
         var interiorCells: Set<CellPos>,
-        var airHeatCapacityJoulesPerCelsius: Double
+        var airHeatCapacityJoulesPerCelsius: Double,
+        var openDoorCount: Int,
+        var lastDoorScanTick: Long
     )
 }

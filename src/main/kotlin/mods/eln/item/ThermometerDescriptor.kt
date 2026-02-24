@@ -33,28 +33,34 @@ class ThermometerDescriptor(name: String) : GenericItemUsingDamageDescriptor(nam
             return false
         }
 
-        val climate = BiomeClimateService.sample(world, x, y, z)
-        val tempC = climate.temperatureCelsius
-        val tempF = tempC * 9.0 / 5.0 + 32.0
+        val playerX = floor(player.posX).toInt()
+        val playerY = floor(player.posY).toInt()
+        val playerZ = floor(player.posZ).toInt()
+        val climateAtClick = BiomeClimateService.sample(world, x, y, z)
+        val climateAtPlayer = BiomeClimateService.sample(world, playerX, playerY, playerZ)
+        val biomeTempC = climateAtClick.temperatureCelsius
+        val biomeTempF = biomeTempC * 9.0 / 5.0 + 32.0
+        val room = RoomThermalManager.getRoomAt(world, playerX, playerY, playerZ)
         val message = buildString {
-            append(I18N.tr("Biome T:"))
-            append(" ")
-            append(Utils.plotCelsius("", tempC))
-            append("(")
-            append(Utils.plotValue(tempF, "°F "))
-            append(")")
-            append(" ")
-            append(I18N.tr("RH:"))
-            append(String.format("%.0f%%", climate.relativeHumidityPercent))
-            val playerX = floor(player.posX).toInt()
-            val playerY = floor(player.posY).toInt()
-            val playerZ = floor(player.posZ).toInt()
-            val roomVolume = RoomThermalManager.getRoomVolumeAt(world, playerX, playerY, playerZ)
-            if (roomVolume != null) {
+            if (room != null) {
+                val absoluteRoomTempC = climateAtPlayer.temperatureCelsius + room.temperatureCelsius
+                val roomTempF = absoluteRoomTempC * 9.0 / 5.0 + 32.0
+                append(I18N.tr("Room T:"))
                 append(" ")
-                append("[debug roomV=")
-                append(roomVolume)
-                append("]")
+                append(Utils.plotCelsius("", absoluteRoomTempC))
+                append("(")
+                append(Utils.plotValue(roomTempF, "°F "))
+                append(")")
+            } else {
+                append(I18N.tr("Biome T:"))
+                append(" ")
+                append(Utils.plotCelsius("", biomeTempC))
+                append("(")
+                append(Utils.plotValue(biomeTempF, "°F "))
+                append(")")
+                append(" ")
+                append(I18N.tr("RH:"))
+                append(String.format("%.0f%%", climateAtClick.relativeHumidityPercent))
             }
         }
         Utils.addChatMessage(player, message)

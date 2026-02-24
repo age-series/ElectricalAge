@@ -117,6 +117,10 @@ abstract class SixNodeElement(sixNode: SixNode, @JvmField var side: Direction, d
         val ownerTag = describeSimOwner()
         electricalComponentList.forEach { it.setOwner(ownerTag) }
         electricalLoadList.forEach { it.setOwner(ownerTag) }
+        val coord = coordinate
+        if (coord != null) {
+            thermalLoadList.forEach { it.setSimCoordinate(coord.dimension, coord.x, coord.y, coord.z) }
+        }
         Eln.simulator.addAllElectricalComponent(electricalComponentList)
         Eln.simulator.addAllThermalConnection(thermalConnectionList)
         for (load in electricalLoadList) Eln.simulator.addElectricalLoad(load)
@@ -291,6 +295,7 @@ abstract class SixNodeElement(sixNode: SixNode, @JvmField var side: Direction, d
     }
 
     open fun disconnectJob() {
+        for (load in thermalLoadList) load.clearSimCoordinate()
         Eln.simulator.removeAllElectricalComponent(electricalComponentList)
         Eln.simulator.removeAllThermalConnection(thermalConnectionList)
         for (load in electricalLoadList) Eln.simulator.removeElectricalLoad(load)
