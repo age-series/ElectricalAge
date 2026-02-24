@@ -59,4 +59,17 @@ class BiomeClimateServiceTest {
         assertEquals(23.0, rain)
         assertEquals(22.0, storm)
     }
+
+    @Test
+    fun fallbackAmbientUsesPlainsProfileCurve() {
+        val preSunrise = BiomeClimateService.fallbackAmbientTemperatureCelsius(23000)
+        val noon = BiomeClimateService.fallbackAmbientTemperatureCelsius(6000)
+        val afternoonPeak = BiomeClimateService.fallbackAmbientTemperatureCelsius(10000)
+
+        assertTrue(preSunrise in 15.0..27.0, "Fallback ambient should stay in fallback profile bounds.")
+        assertTrue(noon in 15.0..27.0, "Fallback ambient should stay in fallback profile bounds.")
+        assertTrue(afternoonPeak in 15.0..27.0, "Fallback ambient should stay in fallback profile bounds.")
+        assertTrue(afternoonPeak > noon, "Fallback curve should still peak in late afternoon.")
+        assertTrue(noon > preSunrise, "Fallback curve should warm from pre-sunrise to noon.")
+    }
 }

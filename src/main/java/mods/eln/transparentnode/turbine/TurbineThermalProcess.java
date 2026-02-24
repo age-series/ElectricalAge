@@ -2,7 +2,6 @@ package mods.eln.transparentnode.turbine;
 
 import mods.eln.Eln;
 import mods.eln.sim.IProcess;
-import mods.eln.sim.PhysicalConstant;
 import mods.eln.sim.mna.component.VoltageSource;
 
 
@@ -19,14 +18,27 @@ public class TurbineThermalProcess implements IProcess {
         return efficiency;
     }
 
+    static double computeEfficiency(double warmDeltaCelsius, double coolDeltaCelsius, double ambientKelvin) {
+        double warmAbsoluteKelvin = warmDeltaCelsius + ambientKelvin;
+        double coolAbsoluteKelvin = coolDeltaCelsius + ambientKelvin;
+        if (warmAbsoluteKelvin <= 1e-6 || coolAbsoluteKelvin <= 1e-6) {
+            return 0.05;
+        }
+        double computed = Math.abs(1 - coolAbsoluteKelvin / warmAbsoluteKelvin);
+        return Math.max(0.05, computed);
+    }
+
     @Override
     public void process(double time) {
         TurbineDescriptor descriptor = turbine.descriptor;
 
         VoltageSource src = turbine.electricalPowerSourceProcess;
 
-        efficiency = Math.abs(1 - (turbine.coolLoad.temperatureCelsius + PhysicalConstant.ambientTemperatureKelvin) / (turbine.warmLoad.temperatureCelsius + PhysicalConstant.ambientTemperatureKelvin));
-        if (efficiency < 0.05) efficiency = 0.05;
+        efficiency = computeEfficiency(
+            turbine.warmLoad.temperatureCelsius,
+            turbine.coolLoad.temperatureCelsius,
+            turbine.getAmbientTemperatureKelvin()
+        );
 
         double E = src.getPower() * time / Eln.instance.heatTurbinePowerFactor;
 

@@ -11,6 +11,7 @@ import java.util.Locale
 
 object BiomeClimateService {
     private const val TICKS_PER_DAY = 24000.0
+    private const val DEFAULT_WORLD_TIME_TICKS = 6000L
     private const val RAIN_HUMIDITY_BOOST_PERCENT = 20.0
     private const val SNOW_HUMIDITY_BOOST_PERCENT = 15.0
     private const val THUNDER_HUMIDITY_BOOST_PERCENT = 10.0
@@ -104,6 +105,14 @@ object BiomeClimateService {
                 nightHumidityPercent = 65.0,
                 precipitationType = "rain"
             )
+    }
+
+    @JvmStatic
+    fun fallbackAmbientTemperatureCelsius(worldTime: Long = DEFAULT_WORLD_TIME_TICKS): Double {
+        ensureLoaded()
+        val profile = createFallbackProfile()
+        val dayBlend = dayBlendForWorldTicks(worldTime)
+        return interpolateTemperature(profile.dayHighCelsius, profile.nightLowCelsius, dayBlend)
     }
 
     private fun isSnowBiome(biome: BiomeGenBase?, x: Int, y: Int, z: Int): Boolean {
