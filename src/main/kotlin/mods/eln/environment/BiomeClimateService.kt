@@ -349,20 +349,17 @@ object BiomeClimateService {
                     return
                 }
 
-                root.asJsonArray.forEach { entry ->
+                root.asJsonArray.forEachIndexed { index, entry ->
                     if (!entry.isJsonObject) {
-                        return@forEach
+                        throw IllegalStateException("Invalid biome climate entry at index $index: expected JSON object.")
                     }
                     val obj = entry.asJsonObject
                     val biomeNames = linkedSetOf<String>()
                     obj.stringArray("Biomes")
                         .filter { it.isNotBlank() }
                         .forEach { biomeNames.add(it) }
-                    obj.string("Biome")
-                        ?.takeIf { it.isNotBlank() }
-                        ?.let { biomeNames.add(it) }
                     if (biomeNames.isEmpty()) {
-                        return@forEach
+                        throw IllegalStateException("Invalid biome climate entry at index $index: missing/empty 'Biomes' array.")
                     }
 
                     val profile = BiomeClimateProfile(
