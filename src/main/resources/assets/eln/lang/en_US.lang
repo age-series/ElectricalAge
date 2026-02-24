@@ -1400,6 +1400,8 @@ Humidity_follows_day_night\nand_rises_during_rain_or_snow.=Humidity follows day/
 Ambient_temperature=Ambient temperature
 Relative_humidity=Relative humidity
 Precipitation=Precipitation
+Rain=Rain
+Snow=Snow
 
 # ./src/main/kotlin/mods/eln/sixnode/thermometersensor/*
 Thermometer_Sensor.name=Thermometer Sensor
@@ -1409,6 +1411,8 @@ Default_range\:_-40C_to_50C=Default range: -40C to 50C
 0%%_output\:_%1\$V=0%% output: %1\$V
 100%%_output\:_%1\$V=100%% output: %1\$V
 Biome_temperature=Biome temperature
+Biome_T\:=Biome T:
+RH\:=RH:
 
 # ./src/main/java/mods/eln/sixnode/electricaldatalogger/ElectricalDataLoggerGui.java
 Temp_[C]=Temp [C]
