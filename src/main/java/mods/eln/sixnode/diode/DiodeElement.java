@@ -103,7 +103,7 @@ public class DiodeElement extends SixNodeElement {
         info.put(I18N.tr("Current"), Utils.plotAmpere("", anodeLoad.getCurrent()));
         if (Eln.wailaEasyMode) {
             info.put(I18N.tr("Forward Voltage"), Utils.plotVolt("", anodeLoad.getVoltage() - catodeLoad.getVoltage()));
-            info.put(I18N.tr("Temperature"), Utils.plotCelsius("", thermalLoad.getTemperature()));
+            info.put(I18N.tr("Temperature"), plotAmbientCelsius("", thermalLoad.getTemperature()));
         }
         return info;
     }
@@ -111,7 +111,7 @@ public class DiodeElement extends SixNodeElement {
     @NotNull
     @Override
     public String thermoMeterString() {
-        return Utils.plotCelsius("T:", thermalLoad.temperatureCelsius);
+        return plotAmbientCelsius("T:", thermalLoad.temperatureCelsius);
     }
 
     @Override

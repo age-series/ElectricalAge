@@ -131,9 +131,9 @@ public class TurbineElement extends TransparentNodeElement {
     @Override
     public String thermoMeterString(@NotNull Direction side) {
         if (side == front.left())
-            return Utils.plotCelsius("T+:", warmLoad.temperatureCelsius) + Utils.plotPower("P+:", warmLoad.getPower());
+            return plotAmbientCelsius("T+:", warmLoad.temperatureCelsius) + Utils.plotPower("P+:", warmLoad.getPower());
         if (side == front.right())
-            return Utils.plotCelsius("T-:", coolLoad.temperatureCelsius) + Utils.plotPower("P-:", coolLoad.getPower());
+            return plotAmbientCelsius("T-:", coolLoad.temperatureCelsius) + Utils.plotPower("P-:", coolLoad.getPower());
         return Utils.plotCelsius("dT:", warmLoad.temperatureCelsius - coolLoad.temperatureCelsius) + Utils.plotPercent("Eff:", turbineThermaltProcess.getEfficiency());
 
     }
@@ -155,7 +155,7 @@ public class TurbineElement extends TransparentNodeElement {
 
     public double getAmbientTemperatureKelvin() {
         if (node == null || node.coordinate == null) {
-            return PhysicalConstant.zeroCelsiusInKelvin + BiomeClimateService.fallbackAmbientTemperatureCelsius(6000L);
+            return PhysicalConstant.zeroCelsiusInKelvin + BiomeClimateService.fallbackAmbientTemperatureCelsius();
         }
         double ambientCelsius = BiomeClimateService.sample(node.coordinate.world(), node.coordinate.x, node.coordinate.y, node.coordinate.z).getTemperatureCelsius();
         return ambientCelsius + PhysicalConstant.zeroCelsiusInKelvin;

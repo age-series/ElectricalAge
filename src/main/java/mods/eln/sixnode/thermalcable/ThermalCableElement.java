@@ -95,14 +95,14 @@ public class ThermalCableElement extends SixNodeElement {
         Map<String, String> info = new HashMap<String, String>();
 
         info.put(I18N.tr("Thermic power"), Utils.plotPower("", thermalLoad.getPower()));
-        info.put(I18N.tr("Temperature"), Utils.plotCelsius("", thermalLoad.getTemperature()));
+        info.put(I18N.tr("Temperature"), plotAmbientCelsius("", thermalLoad.getTemperature()));
         return info;
     }
 
     @NotNull
     @Override
     public String thermoMeterString() {
-        return Utils.plotCelsius("T", thermalLoad.temperatureCelsius) + Utils.plotPower("P", thermalLoad.getPower());
+        return plotAmbientCelsius("T", thermalLoad.temperatureCelsius) + Utils.plotPower("P", thermalLoad.getPower());
     }
 
     @Override

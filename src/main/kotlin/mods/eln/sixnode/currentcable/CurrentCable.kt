@@ -199,7 +199,7 @@ open class CurrentCableElement(sixNode: SixNode?, side: Direction?, descriptor: 
     override fun getWaila(): Map<String, String> {
         val info: MutableMap<String, String> = HashMap()
         info[tr("Current")] = plotAmpere("", electricalLoad.current)
-        info[tr("Temperature")] = plotCelsius("", thermalLoad.temperature)
+        info[tr("Temperature")] = plotAmbientCelsius("", thermalLoad.temperature)
         if (Eln.wailaEasyMode) {
             info[tr("Voltage")] = plotVolt("", electricalLoad.voltage)
         }
@@ -208,7 +208,7 @@ open class CurrentCableElement(sixNode: SixNode?, side: Direction?, descriptor: 
     }
 
     override fun thermoMeterString(): String {
-        return plotCelsius("T", thermalLoad.temperatureCelsius)
+        return plotAmbientCelsius("T", thermalLoad.temperatureCelsius)
     }
 
     override fun networkSerialize(stream: DataOutputStream) {
