@@ -35,7 +35,7 @@ class ThermometerDescriptor(name: String) : GenericItemUsingDamageDescriptor(nam
         val tempF = tempC * 9.0 / 5.0 + 32.0
         val message = buildString {
             append("Biome T: ")
-            append(Utils.plotValue(tempC, "°C "))
+            append(Utils.plotCelsius("", tempC))
             append("(")
             append(Utils.plotValue(tempF, "°F "))
             append(")")
