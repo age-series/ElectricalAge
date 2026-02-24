@@ -6,6 +6,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertNotNull
+import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
 class RoomThermalManagerTest {
@@ -111,6 +112,136 @@ class RoomThermalManagerTest {
         assertTrue(roomsById().isEmpty(), "Malformed room entries should be discarded.")
     }
 
+    @Test
+    fun exchangeLoadWithRoomTransfersPowerAndWarmsRoomAir() {
+        val nbt = NBTTagCompound()
+        nbt.setTag("roomThermal", buildRootNbt(version = 1, rooms = listOf(
+            roomTag(
+                id = "room-exchange",
+                dim = 0,
+                tempC = 0.0,
+                interiorCount = 1,
+                bounds = intArrayOf(8, 64, 8, 8, 64, 8),
+                interiorCells = intArrayOf(8, 64, 8),
+                thermalNodes = intArrayOf(8, 64, 7)
+            )
+        )))
+        RoomThermalManager.readFromNbt(nbt, 0)
+
+        val exchangedPower = RoomThermalManager.exchangeLoadWithRoom(
+            dimension = 0,
+            x = 8,
+            y = 64,
+            z = 8,
+            loadTemperatureDeltaCelsius = 120.0,
+            loadRp = 60.0,
+            dt = 1.0
+        )
+        assertNotNull(exchangedPower)
+        assertTrue(exchangedPower > 0.0, "Hotter load should dump heat into room.")
+
+        val room = roomsById().values.first()
+        val temperatureField = room.javaClass.getDeclaredField("temperatureCelsius")
+        temperatureField.isAccessible = true
+        val roomTempAfter = temperatureField.getDouble(room)
+        assertTrue(roomTempAfter > 0.0, "Room air should warm up after receiving heat.")
+    }
+
+    @Test
+    fun exchangeLoadWithRoomReturnsNullOutsideRoom() {
+        val nbt = NBTTagCompound()
+        nbt.setTag("roomThermal", buildRootNbt(version = 1, rooms = listOf(
+            roomTag(
+                id = "room-nonhit",
+                dim = 2,
+                tempC = 0.0,
+                interiorCount = 1,
+                bounds = intArrayOf(0, 64, 0, 0, 64, 0),
+                interiorCells = intArrayOf(0, 64, 0),
+                thermalNodes = intArrayOf()
+            )
+        )))
+        RoomThermalManager.readFromNbt(nbt, 2)
+
+        val power = RoomThermalManager.exchangeLoadWithRoom(
+            dimension = 2,
+            x = 1,
+            y = 64,
+            z = 0,
+            loadTemperatureDeltaCelsius = 100.0,
+            loadRp = 50.0,
+            dt = 1.0
+        )
+
+        assertNull(power)
+    }
+
+    @Test
+    fun exchangeLoadWithRoomWorksForThermalAnchorAdjacentToInteriorAir() {
+        val nbt = NBTTagCompound()
+        nbt.setTag("roomThermal", buildRootNbt(version = 1, rooms = listOf(
+            roomTag(
+                id = "room-anchor",
+                dim = 7,
+                tempC = 0.0,
+                interiorCount = 1,
+                bounds = intArrayOf(20, 70, 20, 20, 70, 20),
+                interiorCells = intArrayOf(20, 70, 20),
+                thermalNodes = intArrayOf(20, 70, 19)
+            )
+        )))
+        RoomThermalManager.readFromNbt(nbt, 7)
+
+        val exchangedPower = RoomThermalManager.exchangeLoadWithRoom(
+            dimension = 7,
+            x = 20,
+            y = 70,
+            z = 19,
+            loadTemperatureDeltaCelsius = 80.0,
+            loadRp = 40.0,
+            dt = 1.0
+        )
+
+        assertNotNull(exchangedPower, "Thermal anchor blocks should exchange heat with room air.")
+        assertTrue(exchangedPower > 0.0)
+
+        val debug = RoomThermalManager.getExchangeDebugAt(7, 20, 70, 19)
+        assertNotNull(debug, "Exchange debug should be available at anchor coordinate.")
+        assertEquals("room-anchor", debug.roomId)
+    }
+
+    @Test
+    fun advanceRoomAmbientExchangeLeaksFasterWhenDoorCountIsHigher() {
+        val nbt = NBTTagCompound()
+        nbt.setTag("roomThermal", buildRootNbt(version = 1, rooms = listOf(
+            roomTag(
+                id = "room-door-leak",
+                dim = 4,
+                tempC = 100.0,
+                interiorCount = 1,
+                bounds = intArrayOf(0, 64, 0, 0, 64, 0),
+                interiorCells = intArrayOf(0, 64, 0),
+                thermalNodes = intArrayOf()
+            )
+        )))
+        RoomThermalManager.readFromNbt(nbt, 4)
+
+        val room = roomsById().values.first()
+        setRoomField(room, "lastDoorScanTick", 0L)
+
+        setRoomField(room, "temperatureCelsius", 100.0)
+        setRoomField(room, "openDoorCount", 0)
+        RoomThermalManager.advanceRoomAmbientExchange(1.0)
+        val closedTemp = getRoomDoubleField(room, "temperatureCelsius")
+
+        setRoomField(room, "temperatureCelsius", 100.0)
+        setRoomField(room, "openDoorCount", 1)
+        RoomThermalManager.advanceRoomAmbientExchange(1.0)
+        val openTemp = getRoomDoubleField(room, "temperatureCelsius")
+
+        assertTrue(openTemp < closedTemp, "Open doors should increase room-to-ambient heat loss.")
+    }
+
     private fun buildRootNbt(version: Int, rooms: List<NBTTagCompound>): NBTTagCompound {
         val root = NBTTagCompound()
         root.setInteger("version", version)
@@ -161,5 +292,17 @@ class RoomThermalManagerTest {
         val field = RoomThermalManager::class.java.getDeclaredField("roomByInteriorCellByDimension")
         field.isAccessible = true
         return field.get(RoomThermalManager) as MutableMap<Int, MutableMap<Any, Any>>
+    }
+
+    private fun setRoomField(room: Any, name: String, value: Any) {
+        val field = room.javaClass.getDeclaredField(name)
+        field.isAccessible = true
+        field.set(room, value)
+    }
+
+    private fun getRoomDoubleField(room: Any, name: String): Double {
+        val field = room.javaClass.getDeclaredField(name)
+        field.isAccessible = true
+        return field.getDouble(room)
     }
 }

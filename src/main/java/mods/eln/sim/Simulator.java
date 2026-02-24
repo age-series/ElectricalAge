@@ -4,6 +4,7 @@ import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.Phase;
 import cpw.mods.fml.common.gameevent.TickEvent.ServerTickEvent;
+import mods.eln.environment.RoomThermalManager;
 import mods.eln.misc.Utils;
 import mods.eln.sim.mna.RootSystem;
 import mods.eln.sim.mna.component.Component;
@@ -475,8 +476,28 @@ public class Simulator /* ,IPacketHandler */ {
                 process.process(dt);
             }
         }
+
+        RoomThermalManager.INSTANCE.advanceRoomAmbientExchange(dt);
+
         for (ThermalLoad load : loadList) {
-            load.PcTemp -= load.temperatureCelsius / load.Rp;
+            Double roomPower = null;
+            if (load.hasSimCoordinate()) {
+                roomPower = RoomThermalManager.INSTANCE.exchangeLoadWithRoom(
+                    load.getSimDimension(),
+                    load.getSimX(),
+                    load.getSimY(),
+                    load.getSimZ(),
+                    load.temperatureCelsius,
+                    load.Rp,
+                    dt
+                );
+            }
+
+            if (roomPower != null) {
+                load.PcTemp -= roomPower;
+            } else {
+                load.PcTemp -= load.temperatureCelsius / load.Rp;
+            }
 
             load.temperatureCelsius += load.PcTemp * dt / load.heatCapacity;
 
