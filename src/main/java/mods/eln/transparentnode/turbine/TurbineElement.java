@@ -2,7 +2,6 @@ package mods.eln.transparentnode.turbine;
 
 import mods.eln.Eln;
 import mods.eln.i18n.I18N;
-import mods.eln.environment.BiomeClimateService;
 import mods.eln.misc.Direction;
 import mods.eln.misc.LRDU;
 import mods.eln.misc.Utils;
@@ -154,10 +153,7 @@ public class TurbineElement extends TransparentNodeElement {
     }
 
     public double getAmbientTemperatureKelvin() {
-        if (node == null || node.coordinate == null) {
-            return PhysicalConstant.zeroCelsiusInKelvin + BiomeClimateService.fallbackAmbientTemperatureCelsius();
-        }
-        double ambientCelsius = BiomeClimateService.sample(node.coordinate.world(), node.coordinate.x, node.coordinate.y, node.coordinate.z).getTemperatureCelsius();
+        double ambientCelsius = getAmbientTemperatureCelsius();
         return ambientCelsius + PhysicalConstant.zeroCelsiusInKelvin;
     }
 

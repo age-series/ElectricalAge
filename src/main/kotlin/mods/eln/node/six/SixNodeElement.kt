@@ -158,9 +158,10 @@ abstract class SixNodeElement(sixNode: SixNode, @JvmField var side: Direction, d
     open fun thermoMeterString(): String = ""
 
     fun getAmbientTemperatureCelsius(): Double {
-        val coord = coordinate ?: return BiomeClimateService.fallbackAmbientTemperatureCelsius()
+        val coord = coordinate
+            ?: throw IllegalStateException("Missing coordinate for ${javaClass.name} while sampling ambient temperature.")
         if (!coord.worldExist) {
-            return BiomeClimateService.fallbackAmbientTemperatureCelsius()
+            throw IllegalStateException("World not loaded for coordinate $coord in ${javaClass.name} while sampling ambient temperature.")
         }
         val world = coord.world()
         return BiomeClimateService.sample(world, coord.x, coord.y, coord.z).temperatureCelsius
