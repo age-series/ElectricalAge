@@ -247,7 +247,7 @@ class CurrentRelayElement(sixNode: SixNode, side: Direction, descriptor: SixNode
         val info: MutableMap<String, String> = HashMap()
         info[tr("Position")] = if (switchState) tr("Closed") else tr("Open")
         info[tr("Current")] = plotAmpere("", aLoad.current)
-        info[tr("Temperature")] = Utils.plotCelsius("", thermalLoad.temperatureCelsius)
+        info[tr("Temperature")] = plotAmbientCelsius("", thermalLoad.temperatureCelsius)
         if (Eln.wailaEasyMode) {
             info[tr("Default position")] = if (defaultOutput) tr("Closed") else tr("Open")
             info[tr("Voltages")] =
@@ -258,7 +258,7 @@ class CurrentRelayElement(sixNode: SixNode, side: Direction, descriptor: SixNode
     }
 
     override fun thermoMeterString(): String {
-        return Utils.plotCelsius("T", thermalLoad.temperatureCelsius)
+        return plotAmbientCelsius("T", thermalLoad.temperatureCelsius)
     }
 
     override fun networkSerialize(stream: DataOutputStream) {

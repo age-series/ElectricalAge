@@ -23,7 +23,7 @@ import static mods.eln.i18n.I18N.tr;
 
 public class TurbineDescriptor extends TransparentNodeDescriptor {
     final CableRenderDescriptor eRender;
-    private static final double REFERENCE_AMBIENT_KELVIN = PhysicalConstant.zeroCelsiusInKelvin + BiomeClimateService.fallbackAmbientTemperatureCelsius(6000L);
+    private static final double REFERENCE_AMBIENT_KELVIN = PhysicalConstant.zeroCelsiusInKelvin + BiomeClimateService.fallbackAmbientTemperatureCelsius();
 
     public TurbineDescriptor(String name, String modelName, CableRenderDescriptor eRender,
                              FunctionTable TtoU, FunctionTable PoutToPin, double nominalDeltaT, double nominalU,

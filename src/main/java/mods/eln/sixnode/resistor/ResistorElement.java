@@ -140,7 +140,7 @@ public class ResistorElement extends SixNodeElement {
     @NotNull
     @Override
     public String thermoMeterString() {
-        return Utils.plotCelsius("T", thermalLoad.temperatureCelsius);
+        return plotAmbientCelsius("T", thermalLoad.temperatureCelsius);
     }
 
     @Override

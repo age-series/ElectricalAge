@@ -12,6 +12,7 @@ import mods.eln.misc.Utils.isPlayerUsingWrench
 import mods.eln.misc.Utils.mustDropItem
 import mods.eln.misc.Utils.readFromNBT
 import mods.eln.misc.Utils.writeToNBT
+import mods.eln.environment.BiomeClimateService
 import mods.eln.node.INodeElement
 import mods.eln.node.NodeConnection
 import mods.eln.sim.ElectricalLoad
@@ -155,6 +156,19 @@ abstract class SixNodeElement(sixNode: SixNode, @JvmField var side: Direction, d
     open fun newConnectionAt(connection: NodeConnection?, isA: Boolean) {}
     open fun multiMeterString(): String = ""
     open fun thermoMeterString(): String = ""
+
+    fun getAmbientTemperatureCelsius(): Double {
+        val coord = coordinate ?: return BiomeClimateService.fallbackAmbientTemperatureCelsius()
+        if (!coord.worldExist) {
+            return BiomeClimateService.fallbackAmbientTemperatureCelsius()
+        }
+        val world = coord.world()
+        return BiomeClimateService.sample(world, coord.x, coord.y, coord.z).temperatureCelsius
+    }
+
+    fun plotAmbientCelsius(header: String, thermalDeltaCelsius: Double): String {
+        return Utils.plotCelsius(header, thermalDeltaCelsius + getAmbientTemperatureCelsius())
+    }
 
     @JvmField
     var front = LRDU.Up

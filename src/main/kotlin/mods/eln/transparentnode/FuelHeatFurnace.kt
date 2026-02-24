@@ -180,7 +180,7 @@ class FuelHeatFurnaceElement(transparentNode: TransparentNode, descriptor: Trans
 
     override fun multiMeterString(side: Direction) = Utils.plotPower("P:", thermalLoad.power)
 
-    override fun thermoMeterString(side: Direction) = Utils.plotCelsius("T:", thermalLoad.temperatureCelsius)
+    override fun thermoMeterString(side: Direction) = plotAmbientCelsius("T:", thermalLoad.temperatureCelsius)
 
     override fun initialize() {
         (descriptor as FuelHeatFurnaceDescriptor).thermal.applyToThermalLoad(thermalLoad)
@@ -246,7 +246,7 @@ class FuelHeatFurnaceElement(transparentNode: TransparentNode, descriptor: Trans
 
     override fun getWaila(): MutableMap<String, String> {
         val info = HashMap<String, String>()
-        info.put(tr("Temperature"), Utils.plotCelsius("", thermalLoad.temperatureCelsius))
+        info.put(tr("Temperature"), plotAmbientCelsius("", thermalLoad.temperatureCelsius))
         info.put(tr("Power"), Utils.plotPower("", actualHeatPower))
         return info
     }

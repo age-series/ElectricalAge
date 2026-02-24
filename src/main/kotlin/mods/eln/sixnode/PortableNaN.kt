@@ -110,14 +110,14 @@ class PortableNaNElement(sixNode: SixNode, side: Direction, descriptor: SixNodeD
     }
 
     override fun thermoMeterString(): String {
-        return Utils.plotCelsius("T", thermalLoad.temperatureCelsius)
+        return plotAmbientCelsius("T", thermalLoad.temperatureCelsius)
     }
 
     override fun getWaila(): Map<String, String> {
         val info = HashMap<String, String>()
 
         info[tr("Current")] = Utils.plotAmpere("", electricalLoad.current)
-        info[tr("Temperature")] = Utils.plotCelsius("", thermalLoad.temperature)
+        info[tr("Temperature")] = plotAmbientCelsius("", thermalLoad.temperature)
         if (Eln.wailaEasyMode) {
             info[tr("Voltage")] = Utils.plotVolt("", electricalLoad.voltage)
         }

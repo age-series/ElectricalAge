@@ -155,7 +155,7 @@ public class ThermalSensorElement extends SixNodeElement implements IConfigurabl
         if (Eln.wailaEasyMode) {
             switch (typeOfSensor) {
                 case temperatureType:
-                    info.put(I18N.tr("Measured temperature"), Utils.plotCelsius("", thermalLoad.getTemperature()));
+                    info.put(I18N.tr("Measured temperature"), plotAmbientCelsius("", thermalLoad.getTemperature()));
                     break;
 
                 case powerType:
@@ -169,7 +169,7 @@ public class ThermalSensorElement extends SixNodeElement implements IConfigurabl
     @NotNull
     @Override
     public String thermoMeterString() {
-        return Utils.plotCelsius("T :", thermalLoad.temperatureCelsius);
+        return plotAmbientCelsius("T :", thermalLoad.temperatureCelsius);
     }
 
     @Override

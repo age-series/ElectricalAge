@@ -281,7 +281,7 @@ class GeneratorElement(node: TransparentNode, desc_: TransparentNodeDescriptor) 
     override fun multiMeterString(side: Direction) =
         Utils.plotER(shaft.energy, shaft.rads) + Utils.plotUIP(electricalPowerSource.getVoltage(), electricalPowerSource.getCurrent())
 
-    override fun thermoMeterString(side: Direction): String = Utils.plotCelsius("T", thermal.getTemperature())
+    override fun thermoMeterString(side: Direction): String = plotAmbientCelsius("T", thermal.getTemperature())
 
     override fun onBlockActivated(player: EntityPlayer, side: Direction, vx: Float, vy: Float, vz: Float): Boolean {
         return false
@@ -299,7 +299,7 @@ class GeneratorElement(node: TransparentNode, desc_: TransparentNodeDescriptor) 
         if (Eln.wailaEasyMode) {
             info.put(tr("Voltage"), Utils.plotVolt("", electricalPowerSource.getVoltage()))
             info.put(tr("Current"), Utils.plotAmpere("", electricalPowerSource.getCurrent()))
-            info.put(tr("Temperature"), Utils.plotCelsius("", thermal.temperature))
+            info.put(tr("Temperature"), plotAmbientCelsius("", thermal.temperature))
         }
         return info
     }

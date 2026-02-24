@@ -10,6 +10,7 @@ import mods.eln.misc.LRDU
 import mods.eln.misc.Utils
 import mods.eln.misc.Utils.readFromNBT
 import mods.eln.misc.Utils.writeToNBT
+import mods.eln.environment.BiomeClimateService
 import mods.eln.node.INodeElement
 import mods.eln.sim.ElectricalLoad
 import mods.eln.sim.IProcess
@@ -238,6 +239,20 @@ abstract class TransparentNodeElement(@JvmField var node: TransparentNode?, @Jvm
     open fun getConnectionMask(side: Direction, lrdu: LRDU): Int = 0
     open fun multiMeterString(side: Direction): String = ""
     open fun thermoMeterString(side: Direction): String = ""
+
+    fun getAmbientTemperatureCelsius(): Double {
+        val coord = node?.coordinate ?: return BiomeClimateService.fallbackAmbientTemperatureCelsius()
+        if (!coord.worldExist) {
+            return BiomeClimateService.fallbackAmbientTemperatureCelsius()
+        }
+        val world = coord.world()
+        return BiomeClimateService.sample(world, coord.x, coord.y, coord.z).temperatureCelsius
+    }
+
+    fun plotAmbientCelsius(header: String, thermalDeltaCelsius: Double): String {
+        return Utils.plotCelsius(header, thermalDeltaCelsius + getAmbientTemperatureCelsius())
+    }
+
     open fun networkSerialize(stream: DataOutputStream) {
         try {
             stream.writeByte(front.int + if (grounded) 8 else 0)

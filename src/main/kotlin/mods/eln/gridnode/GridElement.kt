@@ -276,7 +276,7 @@ abstract class GridElement(transparentNode: TransparentNode, descriptor: Transpa
 
     override fun thermoMeterString(side: Direction): String {
         val thermalLoad = getThermalLoad(side, LRDU.Up)
-        return Utils.plotCelsius("T", thermalLoad!!.temperatureCelsius)
+        return plotAmbientCelsius("T", thermalLoad!!.temperatureCelsius)
     }
 
     companion object {

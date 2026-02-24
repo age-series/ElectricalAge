@@ -24,6 +24,7 @@ object BiomeClimateService {
     private val profilesByBiomeName = HashMap<String, BiomeClimateProfile>()
     private val profilesByBiomeId = HashMap<Int, BiomeClimateProfile>()
     private val weatherByDimension = HashMap<Int, WeatherSnapshot>()
+    private val warnedFallbackCallsites = HashSet<String>()
     @Volatile private var loaded = false
 
     @JvmStatic
@@ -108,11 +109,33 @@ object BiomeClimateService {
     }
 
     @JvmStatic
+    @JvmOverloads
     fun fallbackAmbientTemperatureCelsius(worldTime: Long = DEFAULT_WORLD_TIME_TICKS): Double {
+        warnFallbackCallsite(worldTime)
         ensureLoaded()
         val profile = createFallbackProfile()
         val dayBlend = dayBlendForWorldTicks(worldTime)
         return interpolateTemperature(profile.dayHighCelsius, profile.nightLowCelsius, dayBlend)
+    }
+
+    private fun warnFallbackCallsite(worldTime: Long) {
+        val caller = Throwable().stackTrace
+            .firstOrNull { frame ->
+                !frame.className.startsWith("mods.eln.environment.BiomeClimateService")
+            }
+            ?.let { "${it.className}.${it.methodName}:${it.lineNumber}" }
+            ?: "unknown"
+
+        val shouldLog = synchronized(this) {
+            warnedFallbackCallsites.add(caller)
+        }
+        if (shouldLog) {
+            Eln.logger.warn(
+                "Using fallback ambient temperature profile at {} (worldTime={}). This may indicate missing world/coordinate context.",
+                caller,
+                worldTime
+            )
+        }
     }
 
     private fun isSnowBiome(biome: BiomeGenBase?, x: Int, y: Int, z: Int): Boolean {

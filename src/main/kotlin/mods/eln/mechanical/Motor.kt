@@ -303,7 +303,7 @@ class MotorElement(node: TransparentNode, desc_: TransparentNodeDescriptor) :
         Utils.plotER(shaft.energy, shaft.rads) +
             Utils.plotUIP(powerSource.voltage, powerSource.current)
 
-    override fun thermoMeterString(side: Direction): String = Utils.plotCelsius("T", thermal.temperature)
+    override fun thermoMeterString(side: Direction): String = plotAmbientCelsius("T", thermal.temperature)
 
     override fun onBlockActivated(player: EntityPlayer, side: Direction, vx: Float, vy: Float, vz: Float) =
         false
@@ -320,7 +320,7 @@ class MotorElement(node: TransparentNode, desc_: TransparentNodeDescriptor) :
         if(Eln.wailaEasyMode) {
             info.put(tr("Voltage"), Utils.plotVolt("", powerSource.voltage))
             info.put(tr("Current"), Utils.plotAmpere("", powerSource.current))
-            info.put(tr("Temperature"), Utils.plotCelsius("", thermal.temperature))
+            info.put(tr("Temperature"), plotAmbientCelsius("", thermal.temperature))
         }
         return info
     }

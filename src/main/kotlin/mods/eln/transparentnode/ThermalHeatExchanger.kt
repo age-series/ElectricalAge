@@ -232,7 +232,7 @@ class ThermalHeatExchangerElement(
 
     // This would be thermalLoad.power but it's not accurate.
     override fun multiMeterString(side: Direction): String = Utils.plotPercent("Ctl:", electricalControlLoad.normalized)
-    override fun thermoMeterString(side: Direction): String = Utils.plotCelsius("T:", thermalLoad.temperatureCelsius) + " " + Utils.plotPower(joulesPerTick * 20)
+    override fun thermoMeterString(side: Direction): String = plotAmbientCelsius("T:", thermalLoad.temperatureCelsius) + " " + Utils.plotPower(joulesPerTick * 20)
 
     override fun getWaila(): Map<String, String> = mutableMapOf(
         Pair(tr("Control"), Utils.plotPercent("", electricalControlLoad.normalized)),

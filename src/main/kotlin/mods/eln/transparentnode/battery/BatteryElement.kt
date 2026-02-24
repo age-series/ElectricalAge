@@ -71,7 +71,7 @@ class BatteryElement(transparentNode: TransparentNode, descriptor: TransparentNo
     }
 
     override fun thermoMeterString(side: Direction): String {
-        return Utils.plotCelsius("Tbat:", thermalLoad.temperatureCelsius)
+        return plotAmbientCelsius("Tbat:", thermalLoad.temperatureCelsius)
     }
 
     override fun networkSerialize(stream: DataOutputStream) {
@@ -137,7 +137,7 @@ class BatteryElement(transparentNode: TransparentNode, descriptor: TransparentNo
         if (Eln.wailaEasyMode) {
             info[tr("Voltage")] = Utils.plotVolt("", batteryProcess.u)
             info[tr("Current")] = Utils.plotAmpere("", batteryProcess.dischargeCurrent)
-            info[tr("Temperature")] = Utils.plotCelsius("", thermalLoad.temperatureCelsius)
+            info[tr("Temperature")] = plotAmbientCelsius("", thermalLoad.temperatureCelsius)
         }
         info[tr("Subsystem Matrix Size")] = Utils.renderSubSystemWaila(positiveLoad.subSystem)
         return info
