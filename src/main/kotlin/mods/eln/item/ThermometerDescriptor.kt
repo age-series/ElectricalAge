@@ -2,6 +2,7 @@ package mods.eln.item
 
 import mods.eln.environment.BiomeClimateService
 import mods.eln.generic.GenericItemUsingDamageDescriptor
+import mods.eln.i18n.I18N
 import mods.eln.misc.Utils
 import mods.eln.node.NodeBlock
 import net.minecraft.entity.player.EntityPlayer
@@ -34,13 +35,14 @@ class ThermometerDescriptor(name: String) : GenericItemUsingDamageDescriptor(nam
         val tempC = climate.temperatureCelsius
         val tempF = tempC * 9.0 / 5.0 + 32.0
         val message = buildString {
-            append("Biome T: ")
+            append(I18N.tr("Biome T:"))
+            append(" ")
             append(Utils.plotCelsius("", tempC))
             append("(")
             append(Utils.plotValue(tempF, "°F "))
             append(")")
             append(" ")
-            append("RH:")
+            append(I18N.tr("RH:"))
             append(String.format("%.0f%%", climate.relativeHumidityPercent))
         }
         Utils.addChatMessage(player, message)

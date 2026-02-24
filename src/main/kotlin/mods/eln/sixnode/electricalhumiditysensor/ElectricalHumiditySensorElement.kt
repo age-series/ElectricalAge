@@ -64,7 +64,13 @@ class ElectricalHumiditySensorElement(sixNode: SixNode, side: Direction, descrip
             )
             info[I18N.tr("Ambient temperature")] = Utils.plotCelsius("", climate.temperatureCelsius)
             info[I18N.tr("Relative humidity")] = String.format("%.0f%%", climate.relativeHumidityPercent)
-            info[I18N.tr("Precipitation")] = climate.precipitationType
+            info[I18N.tr("Precipitation")] = I18N.tr(
+                when (climate.precipitationType) {
+                    "rain" -> "Rain"
+                    "snow" -> "Snow"
+                    else -> "None"
+                }
+            )
         }
         return info
     }
