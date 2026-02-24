@@ -1,6 +1,7 @@
 package mods.eln.item
 
 import mods.eln.environment.BiomeClimateService
+import mods.eln.environment.RoomThermalManager
 import mods.eln.generic.GenericItemUsingDamageDescriptor
 import mods.eln.i18n.I18N
 import mods.eln.misc.Utils
@@ -8,6 +9,7 @@ import mods.eln.node.NodeBlock
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.ItemStack
 import net.minecraft.world.World
+import kotlin.math.floor
 
 class ThermometerDescriptor(name: String) : GenericItemUsingDamageDescriptor(name) {
     override fun onItemUse(
@@ -44,6 +46,16 @@ class ThermometerDescriptor(name: String) : GenericItemUsingDamageDescriptor(nam
             append(" ")
             append(I18N.tr("RH:"))
             append(String.format("%.0f%%", climate.relativeHumidityPercent))
+            val playerX = floor(player.posX).toInt()
+            val playerY = floor(player.posY).toInt()
+            val playerZ = floor(player.posZ).toInt()
+            val roomVolume = RoomThermalManager.getRoomVolumeAt(world, playerX, playerY, playerZ)
+            if (roomVolume != null) {
+                append(" ")
+                append("[debug roomV=")
+                append(roomVolume)
+                append("]")
+            }
         }
         Utils.addChatMessage(player, message)
         return false
