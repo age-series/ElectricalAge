@@ -35,7 +35,7 @@ public class DiodeElement extends SixNodeElement {
     public ResistorSwitch resistorSwitch = new ResistorSwitch("resistorSwitch", anodeLoad, catodeLoad);
     public NbtThermalLoad thermalLoad = new NbtThermalLoad("thermalLoad");
     public DiodeHeatThermalLoad heater = new DiodeHeatThermalLoad(resistorSwitch, thermalLoad);
-    public ThermalLoadWatchDog thermalWatchdog = new ThermalLoadWatchDog(thermalLoad);
+    public ThermalLoadWatchDog thermalWatchdog = ambientAwareThermalWatchdog(new ThermalLoadWatchDog(thermalLoad));
     public DiodeProcess diodeProcess = new DiodeProcess(resistorSwitch);
 
     public DiodeElement(SixNode sixNode, Direction side, SixNodeDescriptor descriptor) {

@@ -54,7 +54,7 @@ public class ResistorElement extends SixNodeElement {
         super(SixNode, side, descriptor);
         this.descriptor = (ResistorDescriptor) descriptor;
 
-        thermalWatchdog = new ThermalLoadWatchDog(thermalLoad);
+        thermalWatchdog = ambientAwareThermalWatchdog(new ThermalLoadWatchDog(thermalLoad));
 
         electricalLoadList.add(aLoad);
         electricalLoadList.add(bLoad);

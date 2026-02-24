@@ -93,7 +93,7 @@ class LargeRheostatElement(node: TransparentNode, desc_: TransparentNodeDescript
 
     val thermalLoad = NbtThermalLoad("thermalLoad")
     val heater = ResistorHeatThermalLoad(resistor, thermalLoad)
-    val thermalWatchdog = ThermalLoadWatchDog(thermalLoad)
+    val thermalWatchdog = ambientAwareThermalWatchdog(ThermalLoadWatchDog(thermalLoad))
 
     init {
         // Electrics

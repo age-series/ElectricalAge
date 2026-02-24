@@ -887,21 +887,21 @@ class ElnResetAmbientTempsCommand : IConsoleCommand {
                 is TransparentNode -> {
                     val element = node.element
                     element?.thermalLoadList?.forEach { load ->
-                        load.temperatureCelsius = targetTempC
+                        load.temperatureCelsius = 0.0
                         changedForNode++
                     }
                 }
                 is SixNode -> {
                     node.sideElementList.filterNotNull().forEach { element ->
                         element.thermalLoadList.forEach { load ->
-                            load.temperatureCelsius = targetTempC
+                            load.temperatureCelsius = 0.0
                             changedForNode++
                         }
                     }
                 }
                 is SimpleNode -> {
                     node.thermalLoadList.forEach { load ->
-                        load.temperatureCelsius = targetTempC
+                        load.temperatureCelsius = 0.0
                         changedForNode++
                     }
                 }

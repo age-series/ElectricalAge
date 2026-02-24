@@ -61,7 +61,7 @@ public class TurbineElement extends TransparentNodeElement {
 
         WorldExplosion exp = new WorldExplosion(this).machineExplosion();
 
-        ThermalLoadWatchDog thermalWatchdog = new ThermalLoadWatchDog(warmLoad);
+        ThermalLoadWatchDog thermalWatchdog = ambientAwareThermalWatchdog(new ThermalLoadWatchDog(warmLoad));
         slowProcessList.add(thermalWatchdog);
 
         thermalWatchdog

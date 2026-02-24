@@ -19,6 +19,7 @@ import mods.eln.sim.ThermalLoad
 import mods.eln.sim.mna.component.Component
 import mods.eln.sim.mna.state.State
 import mods.eln.sim.nbt.NbtThermalLoad
+import mods.eln.sim.process.destruct.ThermalLoadWatchDog
 import mods.eln.sound.IPlayer
 import mods.eln.sound.SoundCommand
 import net.minecraft.entity.EntityLivingBase
@@ -252,6 +253,10 @@ abstract class TransparentNodeElement(@JvmField var node: TransparentNode?, @Jvm
 
     fun plotAmbientCelsius(header: String, thermalDeltaCelsius: Double): String {
         return Utils.plotCelsius(header, thermalDeltaCelsius + getAmbientTemperatureCelsius())
+    }
+
+    fun ambientAwareThermalWatchdog(watchdog: ThermalLoadWatchDog): ThermalLoadWatchDog {
+        return watchdog.setAmbientTemperatureProvider { getAmbientTemperatureCelsius() }
     }
 
     open fun networkSerialize(stream: DataOutputStream) {

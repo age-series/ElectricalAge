@@ -32,7 +32,7 @@ public class ThermalCableElement extends SixNodeElement {
 
     NbtThermalLoad thermalLoad = new NbtThermalLoad("thermalLoad");
 
-    ThermalLoadWatchDog thermalWatchdog = new ThermalLoadWatchDog(thermalLoad);
+    ThermalLoadWatchDog thermalWatchdog = ambientAwareThermalWatchdog(new ThermalLoadWatchDog(thermalLoad));
 
     int color = 0;
     int colorCare = 1;

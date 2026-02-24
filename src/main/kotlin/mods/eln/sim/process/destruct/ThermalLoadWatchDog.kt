@@ -12,9 +12,10 @@ class ThermalLoadWatchDog(var state: ThermalLoad): ValueWatchdog() {
     private var lastDeltaPerSecond = 0.0
     private var matrixDumpSupplier: (() -> Any?)? = null
     private var matrixDumpReason: String? = null
+    private var ambientTemperatureProvider: (() -> Double)? = null
 
     override fun getValue(): Double {
-        return state.temperature
+        return state.temperature + (ambientTemperatureProvider?.invoke() ?: 0.0)
     }
 
     override fun process(time: Double) {
@@ -28,9 +29,13 @@ class ThermalLoadWatchDog(var state: ThermalLoad): ValueWatchdog() {
     }
 
     override fun onDestroy(value: Double, overflow: Double) {
+        val ambientCelsius = ambientTemperatureProvider?.invoke() ?: 0.0
+        val thermalDeltaCelsius = state.temperature
         println(
-            "Thermal watchdog trip at %.2f°C (limits %.2f/%.2f, overflow %.2f°C, dT %.2f°C/s, Pc %.1fW, heatCapacity %.1fJ/K)",
+            "Thermal watchdog trip at %.2f°C abs (%.2f°C delta, %.2f°C ambient; limits %.2f/%.2f, overflow %.2f°C, dT %.2f°C/s, Pc %.1fW, heatCapacity %.1fJ/K)",
             value,
+            thermalDeltaCelsius,
+            ambientCelsius,
             max,
             min,
             overflow,
@@ -81,6 +86,11 @@ class ThermalLoadWatchDog(var state: ThermalLoad): ValueWatchdog() {
     fun dumpMatrixOnTrip(reason: String? = null, supplier: () -> Any?): ThermalLoadWatchDog {
         matrixDumpReason = reason
         matrixDumpSupplier = supplier
+        return this
+    }
+
+    fun setAmbientTemperatureProvider(provider: () -> Double): ThermalLoadWatchDog {
+        ambientTemperatureProvider = provider
         return this
     }
 }

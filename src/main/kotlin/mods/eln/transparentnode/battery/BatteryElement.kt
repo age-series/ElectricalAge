@@ -35,7 +35,7 @@ class BatteryElement(transparentNode: TransparentNode, descriptor: TransparentNo
     var voltageSource = VoltageSource("volSrc", positiveLoad, negativeLoad)
     var thermalLoad = NbtThermalLoad("thermalLoad")
     var negativeETProcess = ElectricalLoadHeatThermalLoad(negativeLoad, thermalLoad)
-    var thermalWatchdog = ThermalLoadWatchDog(thermalLoad)
+    var thermalWatchdog = ambientAwareThermalWatchdog(ThermalLoadWatchDog(thermalLoad))
     var batteryProcess = NbtBatteryProcess(positiveLoad, negativeLoad, this.descriptor.UfCharge, 0.0, voltageSource, thermalLoad)
     var dischargeResistor = Resistor(positiveLoad, negativeLoad)
     var batterySlowProcess = NbtBatterySlowProcess(node!!, batteryProcess, thermalLoad)
