@@ -104,15 +104,28 @@ abstract class NodeBlockEntity : TileEntity(), ITileEntitySpawnClient, INodeEnti
 
     @SideOnly(Side.CLIENT)
     override fun getRenderBoundingBox(): AxisAlignedBB {
-        return if (cameraDrawOptimisation()) {
-            AxisAlignedBB.getBoundingBox((xCoord - 1).toDouble(), (yCoord - 1).toDouble(), (zCoord - 1).toDouble(), (xCoord + 1).toDouble(), (yCoord + 1).toDouble(), (zCoord + 1).toDouble())
-        } else {
-            INFINITE_EXTENT_AABB
-        }
+        return if (cameraDrawOptimisation()) localRenderBoundingBox() else unoptimizedRenderBoundingBox()
     }
 
     open fun cameraDrawOptimisation(): Boolean {
         return true
+    }
+
+    @SideOnly(Side.CLIENT)
+    protected fun localRenderBoundingBox(): AxisAlignedBB {
+        return AxisAlignedBB.getBoundingBox(
+            (xCoord - 1).toDouble(),
+            (yCoord - 1).toDouble(),
+            (zCoord - 1).toDouble(),
+            (xCoord + 1).toDouble(),
+            (yCoord + 1).toDouble(),
+            (zCoord + 1).toDouble()
+        )
+    }
+
+    @SideOnly(Side.CLIENT)
+    open fun unoptimizedRenderBoundingBox(): AxisAlignedBB {
+        return localRenderBoundingBox()
     }
 
     val lightValue: Int
