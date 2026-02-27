@@ -55,6 +55,9 @@ public class ElectricalMathElement extends SixNodeElement implements IConfigurab
 
     int redstoneRequired;
     boolean redstoneReady = false;
+    boolean beepActive = false;
+    float beepPitch = 1f;
+    float beepVolume = 0.5f;
 
     SixNodeElementInventory inventory = new SixNodeElementInventory(1, 64, this);
 
@@ -106,10 +109,14 @@ public class ElectricalMathElement extends SixNodeElement implements IConfigurab
 
         @Override
         public void process(double time) {
-            if (e.redstoneReady)
-                e.gateOutputProcess.setOutputNormalizedSafe(e.equation.getValue(time));
-            else
+            if (e.redstoneReady) {
+                double value = e.equation.getValue(time);
+                e.gateOutputProcess.setOutputNormalizedSafe(value);
+                e.updateBeepState();
+            } else {
                 e.gateOutputProcess.setOutputNormalized(0.0);
+                e.updateBeepInactive();
+            }
         }
     }
 
@@ -215,6 +222,36 @@ public class ElectricalMathElement extends SixNodeElement implements IConfigurab
         needPublish();
     }
 
+    void updateBeepState() {
+        boolean nextActive = false;
+        float nextPitch = 1f;
+        float nextVolume = 0.5f;
+
+        for (Equation.Beep beep : equation.beepList) {
+            if (beep.getActive()) {
+                nextActive = true;
+                nextPitch = Math.max(nextPitch, (float) beep.getPitch());
+                nextVolume = Math.max(nextVolume, (float) beep.getVolume());
+            }
+        }
+
+        if (nextActive != beepActive || Math.abs(nextPitch - beepPitch) > 0.01f || Math.abs(nextVolume - beepVolume) > 0.01f) {
+            beepActive = nextActive;
+            beepPitch = nextPitch;
+            beepVolume = nextVolume;
+            needPublish();
+        }
+    }
+
+    void updateBeepInactive() {
+        if (beepActive) {
+            beepActive = false;
+            beepPitch = 1f;
+            beepVolume = 0.5f;
+            needPublish();
+        }
+    }
+
     @Override
     public IInventory getInventory() {
         return inventory;
@@ -255,6 +292,9 @@ public class ElectricalMathElement extends SixNodeElement implements IConfigurab
             stream.writeUTF(expression);
             stream.writeInt(redstoneRequired);
             stream.writeBoolean(equationIsValid);
+            stream.writeBoolean(beepActive);
+            stream.writeFloat(beepPitch);
+            stream.writeFloat(beepVolume);
         } catch (IOException e) {
             e.printStackTrace();
         }

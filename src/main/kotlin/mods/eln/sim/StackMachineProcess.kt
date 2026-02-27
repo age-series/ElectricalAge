@@ -1,5 +1,6 @@
 package mods.eln.sim
 
+import mods.eln.Eln
 import mods.eln.misc.RecipesList
 import mods.eln.misc.Utils
 import net.minecraft.inventory.IInventory
@@ -37,7 +38,7 @@ class StackMachineProcess(
             val energyConsumed = getAvailablePower() * time
             energyCounter += energyConsumed
             energyConsumerFunction(energyConsumed)
-            println("consuming power $energyConsumed")
+            Eln.logger.info("consuming power $energyConsumed")
             if (energyCounter > energyNeeded) {
                 energyCounter -= energyNeeded
                 smeltItem()

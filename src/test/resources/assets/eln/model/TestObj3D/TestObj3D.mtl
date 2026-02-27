@@ -1,0 +1,17 @@
+newmtl PanelMat
+Ns 0
+Ka 0.000000 0.000000 0.000000
+Kd 1.0 1.0 1.0
+Ks 0.000000 0.000000 0.000000
+d 1
+illum 2
+map_Kd Panel.png
+
+newmtl HingeMat
+Ns 0
+Ka 0.000000 0.000000 0.000000
+Kd 0.5 0.5 0.5
+Ks 0.000000 0.000000 0.000000
+d 1
+illum 2
+map_Kd Hinge.png

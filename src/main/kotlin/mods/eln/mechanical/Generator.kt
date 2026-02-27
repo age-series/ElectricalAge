@@ -37,7 +37,8 @@ class GeneratorDescriptor(
     nominalU: Float,
     powerOutPerDeltaU: Float,
     nominalP: Float,
-    thermalLoadInitializer: ThermalLoadInitializer) :
+    thermalLoadInitializer: ThermalLoadInitializer,
+    val bipolarTerminals: Boolean = false) :
     SimpleShaftDescriptor(name, GeneratorElement::class, GeneratorRender::class, EntityMetaTag.Basic) {
 
     val RtoU = LinearFunction(0f, 0f, nominalRads, nominalU)
@@ -137,7 +138,10 @@ class GeneratorRender(entity: TransparentNodeEntity, desc_: TransparentNodeDescr
     }
 
     override fun getCableRenderSide(side: Direction, lrdu: LRDU): CableRenderDescriptor? {
-        if (lrdu == LRDU.Down && side == front) return Eln.instance.stdCableRender3200V
+        val f = front ?: return null
+        if (lrdu == LRDU.Down && (side == f || (desc.bipolarTerminals && side == f.back()))) {
+            return Eln.instance.stdCableRender3200V
+        }
         return null
     }
 
@@ -154,19 +158,24 @@ class GeneratorElement(node: TransparentNode, desc_: TransparentNodeDescriptor) 
     val desc = desc_ as GeneratorDescriptor
 
     internal val inputLoad = NbtElectricalLoad("inputLoad")
+    internal val negativeLoad = NbtElectricalLoad("negativeLoad")
     internal val positiveLoad = NbtElectricalLoad("positiveLoad")
     internal val inputToPositiveResistor = Resistor(inputLoad, positiveLoad)
-    internal val electricalPowerSource = VoltageSource("PowerSource", positiveLoad, null)
+    internal val electricalPowerSource = VoltageSource("PowerSource", positiveLoad, if (desc.bipolarTerminals) negativeLoad else null)
     internal val electricalProcess = GeneratorElectricalProcess()
     internal val shaftProcess = GeneratorShaftProcess()
 
     internal val thermal = NbtThermalLoad("thermal")
     internal val heater: ElectricalLoadHeatThermalLoad
-    internal val thermalLoadWatchDog = ThermalLoadWatchDog(thermal)
+    internal val thermalLoadWatchDog = ambientAwareThermalWatchdog(ThermalLoadWatchDog(thermal))
 
     init {
         electricalLoadList.add(positiveLoad)
         electricalLoadList.add(inputLoad)
+        if (desc.bipolarTerminals) {
+            electricalLoadList.add(negativeLoad)
+            desc.cable.applyTo(negativeLoad)
+        }
         electricalComponentList.add(electricalPowerSource)
         electricalComponentList.add(inputToPositiveResistor)
 
@@ -257,7 +266,7 @@ class GeneratorElement(node: TransparentNode, desc_: TransparentNodeDescriptor) 
         if (lrdu != LRDU.Down) return null;
         return when (side) {
             front -> inputLoad
-            front.back() -> inputLoad
+            front.back() -> if (desc.bipolarTerminals) negativeLoad else inputLoad
             else -> null
         }
     }
@@ -272,7 +281,7 @@ class GeneratorElement(node: TransparentNode, desc_: TransparentNodeDescriptor) 
     override fun multiMeterString(side: Direction) =
         Utils.plotER(shaft.energy, shaft.rads) + Utils.plotUIP(electricalPowerSource.getVoltage(), electricalPowerSource.getCurrent())
 
-    override fun thermoMeterString(side: Direction): String = Utils.plotCelsius("T", thermal.getTemperature())
+    override fun thermoMeterString(side: Direction): String = plotAmbientCelsius("T", thermal.getTemperature())
 
     override fun onBlockActivated(player: EntityPlayer, side: Direction, vx: Float, vy: Float, vz: Float): Boolean {
         return false
@@ -290,7 +299,7 @@ class GeneratorElement(node: TransparentNode, desc_: TransparentNodeDescriptor) 
         if (Eln.wailaEasyMode) {
             info.put(tr("Voltage"), Utils.plotVolt("", electricalPowerSource.getVoltage()))
             info.put(tr("Current"), Utils.plotAmpere("", electricalPowerSource.getCurrent()))
-            info.put(tr("Temperature"), Utils.plotCelsius("", thermal.temperature))
+            info.put(tr("Temperature"), plotAmbientCelsius("", thermal.temperature))
         }
         return info
     }

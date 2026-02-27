@@ -4,3 +4,9 @@ apply plugin: 'org.jetbrains.kotlin.jvm'
 tasks.named("processResources", ProcessResources).configure {
     exclude(["**/_Common", "**/_TEMPLATES", "**/export_*.png", "**/*.blend*", "**/temp/**/*", "**/model-to-be-integrated/**/*"])
 }
+
+// Checkstyle currently resolves a Java 11+ artifact while parts of this build still execute on Java 8.
+// Disable it here to avoid class-version failures (55 vs 52) during migration.
+tasks.withType(org.gradle.api.plugins.quality.Checkstyle).configureEach {
+    enabled = false
+}

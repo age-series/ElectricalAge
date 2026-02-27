@@ -1,5 +1,6 @@
 package mods.eln.sim
 
+import mods.eln.Eln
 import mods.eln.misc.FunctionTable
 import mods.eln.sim.mna.component.VoltageSource
 import mods.eln.sim.mna.state.VoltageState
@@ -25,11 +26,15 @@ open class BatteryProcess(
     override fun process(time: Double) {
         val lastQ = Q
         var wasteQ = 0.0
-        Q = Math.max(Q - voltageSource.current * time / QNominal, 0.0)
-        if (Q > lastQ && !isRechargeable) {
-            println("Battery is recharging when it shouldn't!")
-            wasteQ = Q - lastQ
+        val deltaQ = voltageSource.current * time / QNominal
+        if (!isRechargeable && deltaQ < 0.0) {
+            if (Eln.debugEnabled) {
+                Eln.logger.warn("Battery is recharging when it shouldn't! current=${voltageSource.current}")
+            }
+            wasteQ = -deltaQ
             Q = lastQ
+        } else {
+            Q = Math.max(Q - deltaQ, 0.0)
         }
         val voltage = computeVoltage()
         voltageSource.voltage = voltage

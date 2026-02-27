@@ -39,7 +39,7 @@ public class ElectricalCableElement extends SixNodeElement {
     NbtThermalLoad thermalLoad = new NbtThermalLoad("thermalLoad");
 
     ElectricalLoadHeatThermalLoad heater = new ElectricalLoadHeatThermalLoad(electricalLoad, thermalLoad);
-    ThermalLoadWatchDog thermalWatchdog = new ThermalLoadWatchDog(thermalLoad);
+    ThermalLoadWatchDog thermalWatchdog = ambientAwareThermalWatchdog(new ThermalLoadWatchDog(thermalLoad));
     VoltageStateWatchDog voltageWatchdog = new VoltageStateWatchDog(electricalLoad);
 
     int color;
@@ -122,7 +122,7 @@ public class ElectricalCableElement extends SixNodeElement {
             info.put(I18N.tr("Signal Voltage"), Utils.plotVolt("", electricalLoad.getVoltage()));
         } else {
             info.put(I18N.tr("Current"), Utils.plotAmpere("", electricalLoad.getCurrent()));
-            info.put(I18N.tr("Temperature"), Utils.plotCelsius("", thermalLoad.getTemperature()));
+            info.put(I18N.tr("Temperature"), plotAmbientCelsius("", thermalLoad.getTemperature()));
             if (Eln.wailaEasyMode) {
                 info.put(I18N.tr("Voltage"), Utils.plotVolt("", electricalLoad.getVoltage()));
             }
@@ -135,7 +135,7 @@ public class ElectricalCableElement extends SixNodeElement {
     @Override
     public String thermoMeterString() {
         if (!descriptor.signalWire)
-            return Utils.plotCelsius("T", thermalLoad.temperatureCelsius);
+            return plotAmbientCelsius("T", thermalLoad.temperatureCelsius);
         else
             return null;
     }

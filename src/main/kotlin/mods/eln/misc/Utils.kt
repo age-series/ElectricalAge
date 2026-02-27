@@ -6,7 +6,6 @@ import net.minecraft.entity.EntityLivingBase
 import net.minecraft.util.MathHelper
 import net.minecraft.item.ItemStack
 import net.minecraft.tileentity.TileEntityFurnace
-import mods.eln.sim.PhysicalConstant
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.inventory.IInventory
 import net.minecraft.nbt.NBTTagList
@@ -194,8 +193,32 @@ object Utils {
                 String.format("%1.2fM", value / 1_000_000.0)
             valueAbs < 99999999 ->
                 String.format("%2.1fM", value / 1_000_000.0)
-            else ->
+            valueAbs < 999999999 ->
                 String.format("%3.0fM", value / 1_000_000.0)
+            valueAbs < 9999999999 ->
+                String.format("%1.2fG", value / 1_000_000_000.0)
+            valueAbs < 99999999999 ->
+                String.format("%2.1fG", value / 1_000_000_000.0)
+            valueAbs < 999999999999 ->
+                String.format("%3.0fG", value / 1_000_000_000.0)
+            valueAbs < 9999999999999 ->
+                String.format("%1.2fT", value / 1_000_000_000_000.0)
+            valueAbs < 99999999999999 ->
+                String.format("%2.1fT", value / 1_000_000_000_000.0)
+            valueAbs < 999999999999999 ->
+                String.format("%3.0fT", value / 1_000_000_000_000.0)
+            valueAbs < 9999999999999999 ->
+                String.format("%1.2fP", value / 1_000_000_000_000_000.0)
+            valueAbs < 99999999999999999 ->
+                String.format("%2.1fP", value / 1_000_000_000_000_000.0)
+            valueAbs < 999999999999999999 ->
+                String.format("%3.0fP", value / 1_000_000_000_000_000.0)
+            valueAbs < 9999999999999999999.0 ->
+                String.format("%1.2fE", value / 1_000_000_000_000_000_000.0)
+            valueAbs < 99999999999999999999.0 ->
+                String.format("%2.1fE", value / 1_000_000_000_000_000_000.0)
+            else ->
+                String.format("%3.0fE", value / 1_000_000_000_000_000_000.0)
         }
     }
 
@@ -231,8 +254,6 @@ object Utils {
     @JvmStatic
     fun plotCelsius(header: String, value: Double): String {
         var header = header
-        var value = value
-        value += PhysicalConstant.ambientTemperatureKelvin - PhysicalConstant.zeroCelsiusInKelvin
         if (header != "") header += " "
         return header + plotValue(value, "\u00B0C ")
     }
@@ -377,23 +398,23 @@ object Utils {
     @JvmStatic
     fun setGlColorFromDye(damage: Int, gain: Float, bias: Float) {
         when (damage) {
-            0 -> GL11.glColor3f(0.2f * gain + bias, 0.2f * gain + bias, 0.2f * gain + bias)
-            1 -> GL11.glColor3f(1.0f * gain + bias, 0.05f * gain + bias, 0.05f * gain + bias)
-            2 -> GL11.glColor3f(0.2f * gain + bias, 0.5f * gain + bias, 0.1f * gain + bias)
-            3 -> GL11.glColor3f(0.3f * gain + bias, 0.2f * gain + bias, 0.1f * gain + bias)
-            4 -> GL11.glColor3f(0.2f * gain + bias, 0.2f * gain + bias, 1.0f * gain + bias)
-            5 -> GL11.glColor3f(0.7f * gain + bias, 0.05f * gain + bias, 1.0f * gain + bias)
-            6 -> GL11.glColor3f(0.2f * gain + bias, 0.7f * gain + bias, 0.9f * gain + bias)
-            7 -> GL11.glColor3f(0.7f * gain + bias, 0.7f * gain + bias, 0.7f * gain + bias)
-            8 -> GL11.glColor3f(0.4f * gain + bias, 0.4f * gain + bias, 0.4f * gain + bias)
-            9 -> GL11.glColor3f(1.0f * gain + bias, 0.5f * gain + bias, 0.5f * gain + bias)
-            10 -> GL11.glColor3f(0.05f * gain + bias, 1.0f * gain + bias, 0.05f * gain + bias)
-            11 -> GL11.glColor3f(0.9f * gain + bias, 0.8f * gain + bias, 0.1f * gain + bias)
-            12 -> GL11.glColor3f(0.4f * gain + bias, 0.5f * gain + bias, 1.0f * gain + bias)
-            13 -> GL11.glColor3f(0.9f * gain + bias, 0.3f * gain + bias, 0.9f * gain + bias)
-            14 -> GL11.glColor3f(1.0f * gain + bias, 0.6f * gain + bias, 0.3f * gain + bias)
-            15 -> GL11.glColor3f(1.0f * gain + bias, 1.0f * gain + bias, 1.0f * gain + bias)
-            else -> GL11.glColor3f(0.05f * gain + bias, 0.05f * gain + bias, 0.05f * gain + bias)
+            0 -> GL11.glColor4f(0.2f * gain + bias, 0.2f * gain + bias, 0.2f * gain + bias, 1.0f)
+            1 -> GL11.glColor4f(1.0f * gain + bias, 0.05f * gain + bias, 0.05f * gain + bias, 1.0f)
+            2 -> GL11.glColor4f(0.2f * gain + bias, 0.5f * gain + bias, 0.1f * gain + bias, 1.0f)
+            3 -> GL11.glColor4f(0.3f * gain + bias, 0.2f * gain + bias, 0.1f * gain + bias, 1.0f)
+            4 -> GL11.glColor4f(0.2f * gain + bias, 0.2f * gain + bias, 1.0f * gain + bias, 1.0f)
+            5 -> GL11.glColor4f(0.7f * gain + bias, 0.05f * gain + bias, 1.0f * gain + bias, 1.0f)
+            6 -> GL11.glColor4f(0.2f * gain + bias, 0.7f * gain + bias, 0.9f * gain + bias, 1.0f)
+            7 -> GL11.glColor4f(0.7f * gain + bias, 0.7f * gain + bias, 0.7f * gain + bias, 1.0f)
+            8 -> GL11.glColor4f(0.4f * gain + bias, 0.4f * gain + bias, 0.4f * gain + bias, 1.0f)
+            9 -> GL11.glColor4f(1.0f * gain + bias, 0.5f * gain + bias, 0.5f * gain + bias, 1.0f)
+            10 -> GL11.glColor4f(0.05f * gain + bias, 1.0f * gain + bias, 0.05f * gain + bias, 1.0f)
+            11 -> GL11.glColor4f(0.9f * gain + bias, 0.8f * gain + bias, 0.1f * gain + bias, 1.0f)
+            12 -> GL11.glColor4f(0.4f * gain + bias, 0.5f * gain + bias, 1.0f * gain + bias, 1.0f)
+            13 -> GL11.glColor4f(0.9f * gain + bias, 0.3f * gain + bias, 0.9f * gain + bias, 1.0f)
+            14 -> GL11.glColor4f(1.0f * gain + bias, 0.6f * gain + bias, 0.3f * gain + bias, 1.0f)
+            15 -> GL11.glColor4f(1.0f * gain + bias, 1.0f * gain + bias, 1.0f * gain + bias, 1.0f)
+            else -> GL11.glColor4f(0.05f * gain + bias, 0.05f * gain + bias, 0.05f * gain + bias, 1.0f)
         }
     }
 

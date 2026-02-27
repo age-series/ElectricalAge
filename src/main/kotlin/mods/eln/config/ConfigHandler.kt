@@ -155,6 +155,12 @@ object ConfigHandler {
                 "don't want to set this lower than 50."].getInt(50)
         eln.thermalFrequency =
             Eln.config["simulation", "thermalFrequency", 400, "I wouldn't touch this one either"].getDouble(400.0)
+        Eln.roomMaxAxisSpanBlocks =
+            Eln.config["simulation", "roomMaxAxisSpanBlocks", 24, "Maximum allowed room span on any axis (X/Y/Z) for room detection. Lower values improve performance."]
+                .getInt(24)
+        Eln.roomMaxVolumeBlocks =
+            Eln.config["simulation", "roomMaxVolumeBlocks", 4096, "Maximum allowed enclosed-air room volume in blocks for room detection. Lower values improve performance."]
+                .getInt(4096)
 
         Eln.wirelessTxRange = Eln.config["wireless", "txRange", 32, "Maximum range for wireless transmitters to be " +
                 "recieved, as well as lamp supplies"].int

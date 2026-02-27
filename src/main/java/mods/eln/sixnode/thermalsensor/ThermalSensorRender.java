@@ -10,7 +10,6 @@ import mods.eln.node.six.SixNodeDescriptor;
 import mods.eln.node.six.SixNodeElementInventory;
 import mods.eln.node.six.SixNodeElementRender;
 import mods.eln.node.six.SixNodeEntity;
-import mods.eln.sim.PhysicalConstant;
 import mods.eln.sixnode.currentcable.CurrentCableDescriptor;
 import mods.eln.sixnode.electricalcable.ElectricalCableDescriptor;
 import mods.eln.sixnode.thermalcable.ThermalCableDescriptor;
@@ -66,8 +65,8 @@ public class ThermalSensorRender extends SixNodeElementRender {
             b = stream.readByte();
             front = LRDU.fromInt((b >> 4) & 3);
             typeOfSensor = b & 0x3;
-            lowValue = (float) (stream.readFloat() + PhysicalConstant.ambientTemperatureCelsius);
-            highValue = (float) (stream.readFloat() + PhysicalConstant.ambientTemperatureCelsius);
+            lowValue = stream.readFloat();
+            highValue = stream.readFloat();
             ItemStack stack = Utils.unserialiseItemStack(stream);
             GenericItemBlockUsingDamageDescriptor desc = ThermalCableDescriptor.getDescriptor(stack);
             if (desc instanceof ThermalCableDescriptor) cable = (ThermalCableDescriptor) desc;

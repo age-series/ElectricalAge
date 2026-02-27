@@ -308,6 +308,10 @@ public class LampSocketElement extends SixNodeElement implements IConfigurable {
             GenericItemUsingDamageDescriptor itemDescriptor = GenericItemUsingDamageDescriptor.getDescriptor(currentItemStack);
             if (itemDescriptor != null) {
                 if (itemDescriptor instanceof BrushDescriptor) {
+                    if (!socketDescriptor.paintable) {
+                        // Ignore brush use on non-paintable sockets (e.g. Street Light).
+                        return true;
+                    }
                     BrushDescriptor brush = (BrushDescriptor) itemDescriptor;
                     int brushColor = brush.getColor(currentItemStack);
                     if (brushColor != paintColor && brush.use(currentItemStack, entityPlayer)) {

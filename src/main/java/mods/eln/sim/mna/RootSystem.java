@@ -296,7 +296,7 @@ public class RootSystem {
         }
     }
 
-    private SubSystem findSubSystemWith(State state) {
+    SubSystem findSubSystemWith(State state) {
         for (SubSystem s : systems) {
             if (s.containe(state)) return s;
         }

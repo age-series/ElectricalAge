@@ -140,7 +140,7 @@ public class LampSocketSuspendedObjRender implements LampSocketObjRender {
                 UtilsClient.disableBlend();
             }
         }
-
+        GL11.glEnable(GL11.GL_CULL_FACE);
 
     }
 }

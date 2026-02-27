@@ -11,7 +11,7 @@ class VoltageStateWatchDog(var state: VoltageState): ValueWatchdog() {
     fun setNominalVoltage(nominalVoltage: Double): VoltageStateWatchDog {
         max = nominalVoltage * 1.3
         min = -nominalVoltage * 1.3
-        timeoutReset = nominalVoltage * 0.05 * 5
+        timeoutReset = nominalVoltage * 0.25
         return this
     }
 }

@@ -54,7 +54,7 @@ public class ResistorElement extends SixNodeElement {
         super(SixNode, side, descriptor);
         this.descriptor = (ResistorDescriptor) descriptor;
 
-        thermalWatchdog = new ThermalLoadWatchDog(thermalLoad);
+        thermalWatchdog = ambientAwareThermalWatchdog(new ThermalLoadWatchDog(thermalLoad));
 
         electricalLoadList.add(aLoad);
         electricalLoadList.add(bLoad);
@@ -140,7 +140,7 @@ public class ResistorElement extends SixNodeElement {
     @NotNull
     @Override
     public String thermoMeterString() {
-        return Utils.plotCelsius("T", thermalLoad.temperatureCelsius);
+        return plotAmbientCelsius("T", thermalLoad.temperatureCelsius);
     }
 
     @Override

@@ -4,6 +4,7 @@ import cpw.mods.fml.common.FMLCommonHandler
 import cpw.mods.fml.common.eventhandler.SubscribeEvent
 import cpw.mods.fml.common.gameevent.TickEvent
 import cpw.mods.fml.common.gameevent.TickEvent.ServerTickEvent
+import mods.eln.environment.RoomThermalManager
 import net.minecraft.entity.player.EntityPlayerMP
 
 class NodeServer {
@@ -13,6 +14,7 @@ class NodeServer {
 
     fun stop() {
         //	NodeBlockEntity.nodeAddedList.clear();
+        RoomThermalManager.clear()
     }
 
     var counter = 0
@@ -21,6 +23,7 @@ class NodeServer {
         if (event.phase != TickEvent.Phase.START) return
         val server = FMLCommonHandler.instance().minecraftServerInstance
         if (server != null) {
+            RoomThermalManager.tick(server)
             for (node in NodeManager.instance!!.nodeList) {
                 if (node.needPublish) {
                     node.publishToAllPlayer()

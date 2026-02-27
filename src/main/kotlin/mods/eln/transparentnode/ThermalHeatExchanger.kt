@@ -106,7 +106,7 @@ class ThermalHeatExchangerElement(
     private val thermalLoad = NbtThermalLoad("thermalLoad")
     val tankMap = mapOf(Pair(INPUT_SIDE, TankData(FluidTank(1000))), Pair(OUTPUT_SIDE, TankData(FluidTank(1000))))
     private val tank = ElementSidedFluidHandler(tankMap)
-    private val thermalWatchdog = ThermalLoadWatchDog(thermalLoad)
+    private val thermalWatchdog = ambientAwareThermalWatchdog(ThermalLoadWatchDog(thermalLoad))
     private val fluidRegulatorProcess = IProcess {
         val inputFluid = tank.getFluidType(INPUT_SIDE)
         var joulesPerMb = 0.0
@@ -232,7 +232,7 @@ class ThermalHeatExchangerElement(
 
     // This would be thermalLoad.power but it's not accurate.
     override fun multiMeterString(side: Direction): String = Utils.plotPercent("Ctl:", electricalControlLoad.normalized)
-    override fun thermoMeterString(side: Direction): String = Utils.plotCelsius("T:", thermalLoad.temperatureCelsius) + " " + Utils.plotPower(joulesPerTick * 20)
+    override fun thermoMeterString(side: Direction): String = plotAmbientCelsius("T:", thermalLoad.temperatureCelsius) + " " + Utils.plotPower(joulesPerTick * 20)
 
     override fun getWaila(): Map<String, String> = mutableMapOf(
         Pair(tr("Control"), Utils.plotPercent("", electricalControlLoad.normalized)),

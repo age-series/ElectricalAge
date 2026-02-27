@@ -58,7 +58,7 @@ public class ThermalDissipatorActiveElement extends TransparentNodeElement {
     }
 
     VoltageStateWatchDog voltageWatchdog = new VoltageStateWatchDog(positiveLoad);
-    ThermalLoadWatchDog thermalWatchdog = new ThermalLoadWatchDog(thermalLoad);
+    ThermalLoadWatchDog thermalWatchdog = ambientAwareThermalWatchdog(new ThermalLoadWatchDog(thermalLoad));
 
     @Override
     public ElectricalLoad getElectricalLoad(Direction side, LRDU lrdu) {
@@ -94,7 +94,7 @@ public class ThermalDissipatorActiveElement extends TransparentNodeElement {
     @Override
     public String thermoMeterString(@NotNull Direction side) {
 
-        return Utils.plotCelsius("T : ", thermalLoad.temperatureCelsius) + Utils.plotPower("P : ", thermalLoad.getPower());
+        return plotAmbientCelsius("T : ", thermalLoad.temperatureCelsius) + Utils.plotPower("P : ", thermalLoad.getPower());
     }
 
     @Override
@@ -131,7 +131,7 @@ public class ThermalDissipatorActiveElement extends TransparentNodeElement {
     @Override
     public Map<String, String> getWaila() {
         Map<String, String> info = new HashMap<String, String>();
-        info.put(I18N.tr("Temperature"), Utils.plotCelsius("", thermalLoad.temperatureCelsius));
+        info.put(I18N.tr("Temperature"), plotAmbientCelsius("", thermalLoad.temperatureCelsius));
         if (Eln.wailaEasyMode) {
             info.put(I18N.tr("Thermal power"), Utils.plotPower("", thermalLoad.getPower()));
         }

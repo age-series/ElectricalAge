@@ -23,57 +23,62 @@ public class WailaCache {
         .maximumSize(20)
         .refreshAfterWrite(2, TimeUnit.SECONDS)
         .build(
-            new CacheLoader<Coordinate, Map<String, String>>() {
-                public Map<String, String> load(Coordinate key) throws Exception {
+            cacheLoader(
+                key -> {
                     Eln.elnNetwork.sendToServer(new TransparentNodeRequestPacket(key));
                     return null;
                 }
-
-                @Override
-                public ListenableFuture<Map<String, String>> reload(Coordinate key,
-                                                                    Map<String, String> oldValue) throws Exception {
-                    load(key);
-                    return Futures.immediateFuture(oldValue);
-                }
-            }
+            )
         );
 
     public static LoadingCache<SixNodeCoordonate, SixNodeWailaData> sixNodes = CacheBuilder.newBuilder()
         .maximumSize(20)
         .refreshAfterWrite(2, TimeUnit.SECONDS)
         .build(
-            new CacheLoader<SixNodeCoordonate, SixNodeWailaData>() {
-                public SixNodeWailaData load(SixNodeCoordonate key) throws Exception {
+            cacheLoader(
+                key -> {
                     Eln.elnNetwork.sendToServer(new SixNodeWailaRequestPacket(key.getCoord(), key.getSide()));
                     return null;
                 }
-
-                @Override
-                public ListenableFuture<SixNodeWailaData> reload(SixNodeCoordonate key,
-                                                                 SixNodeWailaData oldValue) throws Exception {
-                    load(key);
-                    return Futures.immediateFuture(oldValue);
-                }
-            }
+            )
         );
 
     public static LoadingCache<Coordinate, GhostNodeWailaData> ghostNodes = CacheBuilder.newBuilder()
         .maximumSize(20)
         .refreshAfterWrite(10, TimeUnit.SECONDS)
         .build(
-            new CacheLoader<Coordinate, GhostNodeWailaData>() {
-                public GhostNodeWailaData load(Coordinate key) throws Exception {
+            cacheLoader(
+                key -> {
                     Eln.elnNetwork.sendToServer(new GhostNodeWailaRequestPacket(key));
                     return null;
                 }
-
-                @Override
-                public ListenableFuture<GhostNodeWailaData> reload(Coordinate key,
-                                                                   GhostNodeWailaData oldValue) throws Exception {
-                    load(key);
-                    return Futures.immediateFuture(oldValue);
-                }
-            }
+            )
         );
 
+    private static <K, V> CacheLoader<K, V> cacheLoader(LoaderFunction<K, V> loader) {
+        return new WailaDelegatingCacheLoader<>(loader);
+    }
+}
+
+interface LoaderFunction<K, V> {
+    V load(K key) throws Exception;
+}
+
+final class WailaDelegatingCacheLoader<K, V> extends CacheLoader<K, V> {
+    private final LoaderFunction<K, V> loader;
+
+    WailaDelegatingCacheLoader(LoaderFunction<K, V> loader) {
+        this.loader = loader;
+    }
+
+    @Override
+    public V load(K key) throws Exception {
+        return loader.load(key);
+    }
+
+    @Override
+    public ListenableFuture<V> reload(K key, V oldValue) throws Exception {
+        loader.load(key);
+        return Futures.immediateFuture(oldValue);
+    }
 }

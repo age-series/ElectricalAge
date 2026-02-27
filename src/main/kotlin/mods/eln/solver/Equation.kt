@@ -25,6 +25,8 @@ class Equation : IValue, INBTTReady {
 
     @JvmField
     var operatorCount: Int = 0 // Juste a counter for fun
+    @JvmField
+    var beepList: ArrayList<Beep> = ArrayList()
 
     fun setUpDefaultOperatorAndMapper() {
         operatorList.putAll(staticOperatorList)
@@ -50,6 +52,7 @@ class Equation : IValue, INBTTReady {
         expression = expression.replace(" ", "")
 
         stringList.clear()
+        beepList.clear()
         val list = LinkedList<Any>()
         var stack = ""
         idx = 0
@@ -126,6 +129,7 @@ class Equation : IValue, INBTTReady {
                             if ((mapper.newOperator(str, depthDelta, list, idx).also { operator = it }) != null) {
                                 if (operator is IProcess) processList.add(operator as IProcess)
                                 if (operator is INBTTReady) nbtList.add(operator as INBTTReady)
+                                if (operator is Beep) beepList.add(operator as Beep)
                                 operatorCount += operator!!.redstoneCost
                                 resetPriority = true
                                 break
@@ -379,6 +383,21 @@ class Equation : IValue, INBTTReady {
             get() = 2
     }
 
+    class Tan : IOperator {
+        var a: IValue? = null
+
+        override fun getValue(): Double {
+            return tan(a!!.getValue())
+        }
+
+        override fun setOperator(values: Array<IValue>) {
+            this.a = values[0]
+        }
+
+        override val redstoneCost: Int
+            get() = 2
+    }
+
     class Asin : IOperator {
         var a: IValue? = null
 
@@ -394,12 +413,103 @@ class Equation : IValue, INBTTReady {
             get() = 2
     }
 
+    class Atan : IOperator {
+        var a: IValue? = null
+
+        override fun getValue(): Double {
+            return atan(a!!.getValue())
+        }
+
+        override fun setOperator(values: Array<IValue>) {
+            this.a = values[0]
+        }
+
+        override val redstoneCost: Int
+            get() = 2
+    }
+
+    class Atan2 : IOperator {
+        var y: IValue? = null
+        var x: IValue? = null
+
+        override fun getValue(): Double {
+            return atan2(y!!.getValue(), x!!.getValue())
+        }
+
+        override fun setOperator(values: Array<IValue>) {
+            this.y = values[0]
+            this.x = values[1]
+        }
+
+        override val redstoneCost: Int
+            get() = 2
+    }
 
     class Acos : IOperator {
         var a: IValue? = null
 
         override fun getValue(): Double {
             return acos(a!!.getValue())
+        }
+
+        override fun setOperator(values: Array<IValue>) {
+            this.a = values[0]
+        }
+
+        override val redstoneCost: Int
+            get() = 2
+    }
+
+    class Log : IOperator {
+        var a: IValue? = null
+
+        override fun getValue(): Double {
+            return ln(a!!.getValue())
+        }
+
+        override fun setOperator(values: Array<IValue>) {
+            this.a = values[0]
+        }
+
+        override val redstoneCost: Int
+            get() = 2
+    }
+
+    class Log10 : IOperator {
+        var a: IValue? = null
+
+        override fun getValue(): Double {
+            return log10(a!!.getValue())
+        }
+
+        override fun setOperator(values: Array<IValue>) {
+            this.a = values[0]
+        }
+
+        override val redstoneCost: Int
+            get() = 2
+    }
+
+    class Exp : IOperator {
+        var a: IValue? = null
+
+        override fun getValue(): Double {
+            return exp(a!!.getValue())
+        }
+
+        override fun setOperator(values: Array<IValue>) {
+            this.a = values[0]
+        }
+
+        override val redstoneCost: Int
+            get() = 2
+    }
+
+    class Sqrt : IOperator {
+        var a: IValue? = null
+
+        override fun getValue(): Double {
+            return sqrt(a!!.getValue())
         }
 
         override fun setOperator(values: Array<IValue>) {
@@ -426,6 +536,532 @@ class Equation : IValue, INBTTReady {
 
         override val redstoneCost: Int
             get() = 2
+    }
+
+    class Clamp : IOperator {
+        var x: IValue? = null
+        var min: IValue? = null
+        var max: IValue? = null
+
+        override fun getValue(): Double {
+            return max(min!!.getValue(), min(max!!.getValue(), x!!.getValue()))
+        }
+
+        override fun setOperator(values: Array<IValue>) {
+            this.x = values[0]
+            this.min = values[1]
+            this.max = values[2]
+        }
+
+        override val redstoneCost: Int
+            get() = 3
+    }
+
+    class Lerp : IOperator {
+        var a: IValue? = null
+        var b: IValue? = null
+        var t: IValue? = null
+
+        /**
+         * Linear interpolation: a + (b - a) * t.
+         */
+        override fun getValue(): Double {
+            val av = a!!.getValue()
+            return av + (b!!.getValue() - av) * t!!.getValue()
+        }
+
+        override fun setOperator(values: Array<IValue>) {
+            this.a = values[0]
+            this.b = values[1]
+            this.t = values[2]
+        }
+
+        override val redstoneCost: Int
+            get() = 3
+    }
+
+    class Step : IOperator {
+        var edge: IValue? = null
+        var x: IValue? = null
+
+        /**
+         * Hard threshold: 0 if x < edge, else 1.
+         */
+        override fun getValue(): Double {
+            return if (x!!.getValue() < edge!!.getValue()) 0.0 else 1.0
+        }
+
+        override fun setOperator(values: Array<IValue>) {
+            this.edge = values[0]
+            this.x = values[1]
+        }
+
+        override val redstoneCost: Int
+            get() = 1
+    }
+
+    class SmoothStep : IOperator {
+        var edge0: IValue? = null
+        var edge1: IValue? = null
+        var x: IValue? = null
+
+        /**
+         * Smooth transition between 0 and 1 with a cubic Hermite curve.
+         */
+        override fun getValue(): Double {
+            val e0 = edge0!!.getValue()
+            val e1 = edge1!!.getValue()
+            val t = ((x!!.getValue() - e0) / (e1 - e0)).coerceIn(0.0, 1.0)
+            return t * t * (3.0 - 2.0 * t)
+        }
+
+        override fun setOperator(values: Array<IValue>) {
+            this.edge0 = values[0]
+            this.edge1 = values[1]
+            this.x = values[2]
+        }
+
+        override val redstoneCost: Int
+            get() = 3
+    }
+
+    class Round : IOperator {
+        var a: IValue? = null
+
+        override fun getValue(): Double {
+            return round(a!!.getValue())
+        }
+
+        override fun setOperator(values: Array<IValue>) {
+            this.a = values[0]
+        }
+
+        override val redstoneCost: Int
+            get() = 1
+    }
+
+    class Floor : IOperator {
+        var a: IValue? = null
+
+        override fun getValue(): Double {
+            return floor(a!!.getValue())
+        }
+
+        override fun setOperator(values: Array<IValue>) {
+            this.a = values[0]
+        }
+
+        override val redstoneCost: Int
+            get() = 1
+    }
+
+    class Ceil : IOperator {
+        var a: IValue? = null
+
+        override fun getValue(): Double {
+            return ceil(a!!.getValue())
+        }
+
+        override fun setOperator(values: Array<IValue>) {
+            this.a = values[0]
+        }
+
+        override val redstoneCost: Int
+            get() = 1
+    }
+
+    class Fract : IOperator {
+        var a: IValue? = null
+
+        override fun getValue(): Double {
+            val v = a!!.getValue()
+            return v - floor(v)
+        }
+
+        override fun setOperator(values: Array<IValue>) {
+            this.a = values[0]
+        }
+
+        override val redstoneCost: Int
+            get() = 1
+    }
+
+    class Sign : IOperator {
+        var a: IValue? = null
+
+        override fun getValue(): Double {
+            val v = a!!.getValue()
+            return if (v > 0.0) 1.0 else if (v < 0.0) -1.0 else 0.0
+        }
+
+        override fun setOperator(values: Array<IValue>) {
+            this.a = values[0]
+        }
+
+        override val redstoneCost: Int
+            get() = 1
+    }
+
+    class Beep : IOperator {
+        var value: IValue? = null
+        var condition: IValue? = null
+        var active: Boolean = false
+        var pitch: Double = 1.0
+        var volume: Double = 0.5
+
+        /**
+         * Pass-through value; updates active/pitch/volume based on condition and value.
+         */
+        override fun getValue(): Double {
+            val v = value!!.getValue()
+            active = condition!!.getValue() > 0.5
+            pitch = 1.0
+            volume = 1.0
+            return v
+        }
+
+        override fun setOperator(values: Array<IValue>) {
+            this.value = values[0]
+            this.condition = values[1]
+        }
+
+        override val redstoneCost: Int
+            get() = 1
+    }
+
+    class Saturate : IOperator {
+        var a: IValue? = null
+
+        override fun getValue(): Double {
+            return a!!.getValue().coerceIn(0.0, 1.0)
+        }
+
+        override fun setOperator(values: Array<IValue>) {
+            this.a = values[0]
+        }
+
+        override val redstoneCost: Int
+            get() = 1
+    }
+
+    class DeadZone : IOperator {
+        var x: IValue? = null
+        var min: IValue? = null
+        var max: IValue? = null
+
+        /**
+         * Zero output inside [min, max], passthrough otherwise.
+         */
+        override fun getValue(): Double {
+            val v = x!!.getValue()
+            return if (v >= min!!.getValue() && v <= max!!.getValue()) 0.0 else v
+        }
+
+        override fun setOperator(values: Array<IValue>) {
+            this.x = values[0]
+            this.min = values[1]
+            this.max = values[2]
+        }
+
+        override val redstoneCost: Int
+            get() = 2
+    }
+
+    class Pulse : IOperator {
+        var edge0: IValue? = null
+        var edge1: IValue? = null
+        var x: IValue? = null
+
+        /**
+         * Returns 1 when x is within [edge0, edge1], else 0.
+         */
+        override fun getValue(): Double {
+            val v = x!!.getValue()
+            return if (v >= edge0!!.getValue() && v <= edge1!!.getValue()) 1.0 else 0.0
+        }
+
+        override fun setOperator(values: Array<IValue>) {
+            this.edge0 = values[0]
+            this.edge1 = values[1]
+            this.x = values[2]
+        }
+
+        override val redstoneCost: Int
+            get() = 2
+    }
+
+    class Square : IOperator {
+        var phase: IValue? = null
+        var duty: IValue? = null
+
+        /**
+         * Square wave from phase (0..1) and duty (0..1).
+         */
+        override fun getValue(): Double {
+            val t = phase!!.getValue()
+            val fract = t - floor(t)
+            return if (fract < duty!!.getValue()) 1.0 else 0.0
+        }
+
+        override fun setOperator(values: Array<IValue>) {
+            this.phase = values[0]
+            this.duty = values[1]
+        }
+
+        override val redstoneCost: Int
+            get() = 2
+    }
+
+    class Saw : IOperator {
+        var phase: IValue? = null
+
+        /**
+         * Sawtooth wave: fract(phase).
+         */
+        override fun getValue(): Double {
+            val t = phase!!.getValue()
+            return t - floor(t)
+        }
+
+        override fun setOperator(values: Array<IValue>) {
+            this.phase = values[0]
+        }
+
+        override val redstoneCost: Int
+            get() = 1
+    }
+
+    class Triangle : IOperator {
+        var phase: IValue? = null
+
+        /**
+         * Triangle wave in [0,1].
+         */
+        override fun getValue(): Double {
+            val t = phase!!.getValue()
+            val f = t - floor(t)
+            return 1.0 - abs(2.0 * f - 1.0)
+        }
+
+        override fun setOperator(values: Array<IValue>) {
+            this.phase = values[0]
+        }
+
+        override val redstoneCost: Int
+            get() = 1
+    }
+
+    class GenSquare : IOperator, IProcess {
+        var freq: IValue? = null
+        var duty: IValue? = null
+        private var phase: Double = 0.0
+
+        /**
+         * Time-domain square generator: phase += freq * dt; output uses duty in [0,1].
+         */
+        override fun process(time: Double) {
+            phase += freq!!.getValue() * time
+        }
+
+        override fun getValue(): Double {
+            val f = phase - floor(phase)
+            return if (f < duty!!.getValue()) 1.0 else 0.0
+        }
+
+        override fun setOperator(values: Array<IValue>) {
+            this.freq = values[0]
+            this.duty = values[1]
+        }
+
+        override val redstoneCost: Int
+            get() = 3
+    }
+
+    class GenSaw : IOperator, IProcess {
+        var freq: IValue? = null
+        private var phase: Double = 0.0
+
+        /**
+         * Time-domain saw generator: phase += freq * dt; output is fract(phase).
+         */
+        override fun process(time: Double) {
+            phase += freq!!.getValue() * time
+        }
+
+        override fun getValue(): Double {
+            return phase - floor(phase)
+        }
+
+        override fun setOperator(values: Array<IValue>) {
+            this.freq = values[0]
+        }
+
+        override val redstoneCost: Int
+            get() = 2
+    }
+
+    class GenTriangle : IOperator, IProcess {
+        var freq: IValue? = null
+        private var phase: Double = 0.0
+
+        /**
+         * Time-domain triangle generator: phase += freq * dt; output in [0,1].
+         */
+        override fun process(time: Double) {
+            phase += freq!!.getValue() * time
+        }
+
+        override fun getValue(): Double {
+            val f = phase - floor(phase)
+            return 1.0 - abs(2.0 * f - 1.0)
+        }
+
+        override fun setOperator(values: Array<IValue>) {
+            this.freq = values[0]
+        }
+
+        override val redstoneCost: Int
+            get() = 2
+    }
+
+    class Impulse : IOperator {
+        var k: IValue? = null
+        var x: IValue? = null
+
+        /**
+         * Smooth impulse response for 0..1 input: k*x*exp(1 - k*x).
+         */
+        override fun getValue(): Double {
+            val xv = x!!.getValue()
+            if (xv <= 0.0) return 0.0
+            val kv = k!!.getValue()
+            return kv * xv * exp(1.0 - kv * xv)
+        }
+
+        override fun setOperator(values: Array<IValue>) {
+            this.k = values[0]
+            this.x = values[1]
+        }
+
+        override val redstoneCost: Int
+            get() = 2
+    }
+
+    class LowPass : IOperator, IProcess {
+        var input: IValue? = null
+        var alpha: IValue? = null
+        private var state: Double = 0.0
+
+        /**
+         * Single-pole low-pass: state += (input - state) * alpha.
+         */
+        override fun process(time: Double) {
+            val a = alpha!!.getValue().coerceIn(0.0, 1.0)
+            state += (input!!.getValue() - state) * a
+        }
+
+        override fun getValue(): Double {
+            return state
+        }
+
+        override fun setOperator(values: Array<IValue>) {
+            this.input = values[0]
+            this.alpha = values[1]
+        }
+
+        override val redstoneCost: Int
+            get() = 2
+    }
+
+    class HighPass : IOperator, IProcess {
+        var input: IValue? = null
+        var alpha: IValue? = null
+        private var lowState: Double = 0.0
+        private var output: Double = 0.0
+
+        /**
+         * High-pass using internal low-pass state: output = input - lowState.
+         */
+        override fun process(time: Double) {
+            val a = alpha!!.getValue().coerceIn(0.0, 1.0)
+            val inputValue = input!!.getValue()
+            lowState += (inputValue - lowState) * a
+            output = inputValue - lowState
+        }
+
+        override fun getValue(): Double {
+            return output
+        }
+
+        override fun setOperator(values: Array<IValue>) {
+            this.input = values[0]
+            this.alpha = values[1]
+        }
+
+        override val redstoneCost: Int
+            get() = 2
+    }
+
+    class Hysteresis : IOperator {
+        var input: IValue? = null
+        var low: IValue? = null
+        var high: IValue? = null
+        private var state: Double = 0.0
+
+        /**
+         * Latches high when input >= high, low when input <= low.
+         */
+        override fun getValue(): Double {
+            val v = input!!.getValue()
+            if (v >= high!!.getValue()) state = 1.0
+            if (v <= low!!.getValue()) state = 0.0
+            return state
+        }
+
+        override fun setOperator(values: Array<IValue>) {
+            this.input = values[0]
+            this.low = values[1]
+            this.high = values[2]
+        }
+
+        override val redstoneCost: Int
+            get() = 2
+    }
+
+    class Debounce : IOperator, IProcess {
+        var input: IValue? = null
+        var tau: IValue? = null
+        private var state: Double = 0.0
+        private var counter: Double = 0.0
+        private var lastHigh: Boolean? = null
+
+        /**
+         * Only changes output when input has been stable for tau seconds.
+         */
+        override fun process(time: Double) {
+            val high = input!!.getValue() > 0.5
+            if (lastHigh == null || high != lastHigh) {
+                lastHigh = high
+                counter = time
+            } else {
+                counter += time
+            }
+            if (counter >= tau!!.getValue()) {
+                state = if (high) 1.0 else 0.0
+            }
+        }
+
+        override fun getValue(): Double {
+            return state
+        }
+
+        override fun setOperator(values: Array<IValue>) {
+            this.input = values[0]
+            this.tau = values[1]
+        }
+
+        override val redstoneCost: Int
+            get() = 3
     }
 
     class Ramp : IOperator, INBTTReady, IProcess {
@@ -851,9 +1487,16 @@ class Equation : IValue, INBTTReady {
                 list.add(OperatorMapperFunc("max", 2, Max::class.java))
                 list.add(OperatorMapperFunc("sin", 1, Sin::class.java))
                 list.add(OperatorMapperFunc("cos", 1, Cos::class.java))
+                list.add(OperatorMapperFunc("tan", 1, Tan::class.java))
                 list.add(OperatorMapperFunc("asin", 1, Asin::class.java))
                 list.add(OperatorMapperFunc("acos", 1, Acos::class.java))
+                list.add(OperatorMapperFunc("atan", 1, Atan::class.java))
+                list.add(OperatorMapperFunc("atan2", 2, Atan2::class.java))
                 list.add(OperatorMapperFunc("abs", 1, Abs::class.java))
+                list.add(OperatorMapperFunc("log", 1, Log::class.java))
+                list.add(OperatorMapperFunc("log10", 1, Log10::class.java))
+                list.add(OperatorMapperFunc("exp", 1, Exp::class.java))
+                list.add(OperatorMapperFunc("sqrt", 1, Sqrt::class.java))
                 list.add(OperatorMapperFunc("ramp", 1, Ramp::class.java))
                 list.add(OperatorMapperFunc("integrate", 2, Integrator::class.java))
                 list.add(OperatorMapperFunc("integrate", 3, IntegratorMinMax::class.java))
@@ -866,6 +1509,30 @@ class Equation : IValue, INBTTReady {
                 list.add(OperatorMapperFunc("rc", 2, RC::class.java))
                 list.add(OperatorMapperFunc("if", 3, If::class.java))
                 list.add(OperatorMapperFunc("scale", 5, Scale::class.java))
+                list.add(OperatorMapperFunc("clamp", 3, Clamp::class.java))
+                list.add(OperatorMapperFunc("lerp", 3, Lerp::class.java))
+                list.add(OperatorMapperFunc("step", 2, Step::class.java))
+                list.add(OperatorMapperFunc("smoothstep", 3, SmoothStep::class.java))
+                list.add(OperatorMapperFunc("round", 1, Round::class.java))
+                list.add(OperatorMapperFunc("floor", 1, Floor::class.java))
+                list.add(OperatorMapperFunc("ceil", 1, Ceil::class.java))
+                list.add(OperatorMapperFunc("fract", 1, Fract::class.java))
+                list.add(OperatorMapperFunc("sign", 1, Sign::class.java))
+                list.add(OperatorMapperFunc("beep", 2, Beep::class.java))
+                list.add(OperatorMapperFunc("saturate", 1, Saturate::class.java))
+                list.add(OperatorMapperFunc("deadzone", 3, DeadZone::class.java))
+                list.add(OperatorMapperFunc("pulse", 3, Pulse::class.java))
+                list.add(OperatorMapperFunc("square", 2, Square::class.java))
+                list.add(OperatorMapperFunc("saw", 1, Saw::class.java))
+                list.add(OperatorMapperFunc("triangle", 1, Triangle::class.java))
+                list.add(OperatorMapperFunc("gensquare", 2, GenSquare::class.java))
+                list.add(OperatorMapperFunc("gensaw", 1, GenSaw::class.java))
+                list.add(OperatorMapperFunc("gentriangle", 1, GenTriangle::class.java))
+                list.add(OperatorMapperFunc("impulse", 2, Impulse::class.java))
+                list.add(OperatorMapperFunc("lowpass", 2, LowPass::class.java))
+                list.add(OperatorMapperFunc("highpass", 2, HighPass::class.java))
+                list.add(OperatorMapperFunc("hysteresis", 3, Hysteresis::class.java))
+                list.add(OperatorMapperFunc("debounce", 2, Debounce::class.java))
                 // Added mod here becuase % wasn't working. $%^&@#!
                 list.add(OperatorMapperFunc("mod", 2, Mod::class.java))
                 list.add(OperatorMapperBracket())

@@ -28,8 +28,11 @@ public class Transformer extends Bipole {
 
     @Override
     public void quitSubSystem() {
-        subSystem.states.remove(aCurrentState);
-        subSystem.states.remove(bCurrentState);
+        SubSystem localSubSystem = getLocalSubSystem();
+        if (localSubSystem != null) {
+            localSubSystem.states.remove(aCurrentState);
+            localSubSystem.states.remove(bCurrentState);
+        }
         super.quitSubSystem();
     }
 

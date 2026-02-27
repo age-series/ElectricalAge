@@ -35,8 +35,11 @@ public class VoltageSource extends Bipole implements ISubSystemProcessI, INBTTRe
 
     @Override
     public void quitSubSystem() {
-        subSystem.states.remove(getCurrentState());
-        subSystem.removeProcess(this);
+        SubSystem localSubSystem = getLocalSubSystem();
+        if (localSubSystem != null) {
+            localSubSystem.states.remove(getCurrentState());
+            localSubSystem.removeProcess(this);
+        }
         super.quitSubSystem();
     }
 

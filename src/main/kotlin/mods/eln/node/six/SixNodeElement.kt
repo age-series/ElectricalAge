@@ -12,6 +12,7 @@ import mods.eln.misc.Utils.isPlayerUsingWrench
 import mods.eln.misc.Utils.mustDropItem
 import mods.eln.misc.Utils.readFromNBT
 import mods.eln.misc.Utils.writeToNBT
+import mods.eln.environment.BiomeClimateService
 import mods.eln.node.INodeElement
 import mods.eln.node.NodeConnection
 import mods.eln.sim.ElectricalLoad
@@ -21,6 +22,7 @@ import mods.eln.sim.ThermalLoad
 import mods.eln.sim.mna.component.Component
 import mods.eln.sim.nbt.NbtElectricalLoad
 import mods.eln.sim.nbt.NbtThermalLoad
+import mods.eln.sim.process.destruct.ThermalLoadWatchDog
 import mods.eln.sound.IPlayer
 import mods.eln.sound.SoundCommand
 import net.minecraft.entity.player.EntityPlayer
@@ -115,6 +117,10 @@ abstract class SixNodeElement(sixNode: SixNode, @JvmField var side: Direction, d
         val ownerTag = describeSimOwner()
         electricalComponentList.forEach { it.setOwner(ownerTag) }
         electricalLoadList.forEach { it.setOwner(ownerTag) }
+        val coord = coordinate
+        if (coord != null) {
+            thermalLoadList.forEach { it.setSimCoordinate(coord.dimension, coord.x, coord.y, coord.z) }
+        }
         Eln.simulator.addAllElectricalComponent(electricalComponentList)
         Eln.simulator.addAllThermalConnection(thermalConnectionList)
         for (load in electricalLoadList) Eln.simulator.addElectricalLoad(load)
@@ -155,6 +161,24 @@ abstract class SixNodeElement(sixNode: SixNode, @JvmField var side: Direction, d
     open fun newConnectionAt(connection: NodeConnection?, isA: Boolean) {}
     open fun multiMeterString(): String = ""
     open fun thermoMeterString(): String = ""
+
+    fun getAmbientTemperatureCelsius(): Double {
+        val coord = coordinate
+            ?: throw IllegalStateException("Missing coordinate for ${javaClass.name} while sampling ambient temperature.")
+        if (!coord.worldExist) {
+            throw IllegalStateException("World not loaded for coordinate $coord in ${javaClass.name} while sampling ambient temperature.")
+        }
+        val world = coord.world()
+        return BiomeClimateService.sample(world, coord.x, coord.y, coord.z).temperatureCelsius
+    }
+
+    fun plotAmbientCelsius(header: String, thermalDeltaCelsius: Double): String {
+        return Utils.plotCelsius(header, thermalDeltaCelsius + getAmbientTemperatureCelsius())
+    }
+
+    fun ambientAwareThermalWatchdog(watchdog: ThermalLoadWatchDog): ThermalLoadWatchDog {
+        return watchdog.setAmbientTemperatureProvider { getAmbientTemperatureCelsius() }
+    }
 
     @JvmField
     var front = LRDU.Up
@@ -271,6 +295,7 @@ abstract class SixNodeElement(sixNode: SixNode, @JvmField var side: Direction, d
     }
 
     open fun disconnectJob() {
+        for (load in thermalLoadList) load.clearSimCoordinate()
         Eln.simulator.removeAllElectricalComponent(electricalComponentList)
         Eln.simulator.removeAllThermalConnection(thermalConnectionList)
         for (load in electricalLoadList) Eln.simulator.removeElectricalLoad(load)
@@ -293,7 +318,10 @@ abstract class SixNodeElement(sixNode: SixNode, @JvmField var side: Direction, d
 
     override fun ghostBlockActivated(UUID: Int, entityPlayer: EntityPlayer, side: Direction, vx: Float, vy: Float, vz: Float): Boolean {
         if (UUID == sixNodeElementDescriptor.ghostGroupUuid) {
+            // A click inside a ghost volume should never leak through to normal item use,
+            // otherwise players can place/paint blocks "inside" multiblock bounds.
             sixNode!!.onBlockActivated(entityPlayer, this.side, vx, vy, vz)
+            return true
         }
         return false
     }

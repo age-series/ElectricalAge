@@ -17,6 +17,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.EnumSkyBlock;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -217,5 +218,18 @@ public class LampSocketRender extends SixNodeElementRender {
     @Override
     public boolean cameraDrawOptimisation() {
         return descriptor.cameraOpt;
+    }
+
+    @Override
+    public AxisAlignedBB getRenderBoundingBox(SixNodeEntity tileEntity) {
+        if (!descriptor.extendedRenderBounds) return null;
+        return AxisAlignedBB.getBoundingBox(
+            tileEntity.xCoord - 1.0,
+            tileEntity.yCoord,
+            tileEntity.zCoord - 1.0,
+            tileEntity.xCoord + 2.0,
+            tileEntity.yCoord + 4.0,
+            tileEntity.zCoord + 2.0
+        );
     }
 }

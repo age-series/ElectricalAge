@@ -4,6 +4,7 @@ import mods.eln.misc.UtilsClient
 import mods.eln.node.transparent.TransparentNodeDescriptor
 import mods.eln.node.transparent.TransparentNodeElementRender
 import mods.eln.node.transparent.TransparentNodeEntity
+import net.minecraft.util.AxisAlignedBB
 import net.minecraft.util.ResourceLocation
 import net.minecraft.util.Vec3
 
@@ -81,6 +82,18 @@ abstract class GridRender(tileEntity: TransparentNodeEntity, descriptor: Transpa
 
     override fun cameraDrawOptimisation(): Boolean {
         return false
+    }
+
+    override fun unoptimizedRenderBoundingBox(): AxisAlignedBB {
+        val margin = 16.0
+        val extent = descriptor.connectRange + margin
+        val cx = tileEntity.xCoord + 0.5
+        val cy = tileEntity.yCoord + 0.5
+        val cz = tileEntity.zCoord + 0.5
+        return AxisAlignedBB.getBoundingBox(
+            cx - extent, cy - extent, cz - extent,
+            cx + extent, cy + extent, cz + extent
+        )
     }
 
     private inner class Catenary

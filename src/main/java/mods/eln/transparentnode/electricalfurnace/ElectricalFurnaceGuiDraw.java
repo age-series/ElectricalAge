@@ -4,7 +4,6 @@ import mods.eln.gui.*;
 import mods.eln.item.HeatingCorpElement;
 import mods.eln.misc.Utils;
 import mods.eln.node.transparent.TransparentNodeElementInventory;
-import mods.eln.sim.PhysicalConstant;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
@@ -66,8 +65,8 @@ public class ElectricalFurnaceGuiDraw extends GuiContainerEln {
         if (render.temperatureTargetSyncNew) syncVumeter();
         vuMeterTemperature.temperatureHit = render.temperature;
 
-        vuMeterTemperature.setComment(1, tr("Actual: %1$°C", Utils.plotValue(render.temperature + PhysicalConstant.ambientTemperatureCelsius)));
-        vuMeterTemperature.setComment(2, tr("Set point: %1$°C", Utils.plotValue(vuMeterTemperature.getValue() + PhysicalConstant.ambientTemperatureCelsius)));
+        vuMeterTemperature.setComment(1, tr("Actual: %1$", Utils.plotCelsius("", render.temperature)));
+        vuMeterTemperature.setComment(2, tr("Set point: %1$", Utils.plotCelsius("", vuMeterTemperature.getValue())));
     }
 
     @Override

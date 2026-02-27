@@ -39,7 +39,8 @@ class MotorDescriptor(
     nominalP: Float,
     elecPPerDU: Float,
     shaftPPerDU: Float,
-    thermalLoadInitializer: ThermalLoadInitializer
+    thermalLoadInitializer: ThermalLoadInitializer,
+    val bipolarTerminals: Boolean = false
 ) : SimpleShaftDescriptor(
     name,
     MotorElement::class,
@@ -155,7 +156,10 @@ class MotorRender(entity: TransparentNodeEntity, desc_: TransparentNodeDescripto
     }
 
     override fun getCableRenderSide(side: Direction, lrdu: LRDU): CableRenderDescriptor? {
-        if(lrdu == LRDU.Down && side == front) return Eln.instance.stdCableRender3200V
+        val f = front ?: return null
+        if (lrdu == LRDU.Down && (side == f || (desc.bipolarTerminals && side == f.back()))) {
+            return Eln.instance.stdCableRender3200V
+        }
         return null
     }
 
@@ -173,19 +177,24 @@ class MotorElement(node: TransparentNode, desc_: TransparentNodeDescriptor) :
     val desc = desc_ as MotorDescriptor
 
     internal val wireLoad = NbtElectricalLoad("wireLoad")
+    internal val negativeLoad = NbtElectricalLoad("negativeLoad")
     internal val shaftLoad = NbtElectricalLoad("shaftLoad")
     internal val wireShaftResistor = Resistor(wireLoad, shaftLoad)
-    internal val powerSource = VoltageSource("powerSource", shaftLoad, null)
+    internal val powerSource = VoltageSource("powerSource", shaftLoad, if (desc.bipolarTerminals) negativeLoad else null)
 
     internal val electricalProcess = MotorElectricalProcess()
     internal val shaftProcess = MotorShaftProcess()
 
     internal val thermal = NbtThermalLoad("thermal")
     internal val heater: ElectricalLoadHeatThermalLoad
-    internal val thermalWatchdog = ThermalLoadWatchDog(thermal)
+    internal val thermalWatchdog = ambientAwareThermalWatchdog(ThermalLoadWatchDog(thermal))
 
     init {
         electricalLoadList.addAll(arrayOf(wireLoad, shaftLoad))
+        if (desc.bipolarTerminals) {
+            electricalLoadList.add(negativeLoad)
+            desc.cable.applyTo(negativeLoad)
+        }
         electricalComponentList.addAll(arrayOf(wireShaftResistor, powerSource))
 
         electricalProcessList.add(shaftProcess)
@@ -278,7 +287,7 @@ class MotorElement(node: TransparentNode, desc_: TransparentNodeDescriptor) :
         if(lrdu != LRDU.Down) return null;
         return when(side) {
             front -> wireLoad
-            front.back() -> wireLoad
+            front.back() -> if (desc.bipolarTerminals) negativeLoad else wireLoad
             else -> null
         }
     }
@@ -294,7 +303,7 @@ class MotorElement(node: TransparentNode, desc_: TransparentNodeDescriptor) :
         Utils.plotER(shaft.energy, shaft.rads) +
             Utils.plotUIP(powerSource.voltage, powerSource.current)
 
-    override fun thermoMeterString(side: Direction): String = Utils.plotCelsius("T", thermal.temperature)
+    override fun thermoMeterString(side: Direction): String = plotAmbientCelsius("T", thermal.temperature)
 
     override fun onBlockActivated(player: EntityPlayer, side: Direction, vx: Float, vy: Float, vz: Float) =
         false
@@ -311,7 +320,7 @@ class MotorElement(node: TransparentNode, desc_: TransparentNodeDescriptor) :
         if(Eln.wailaEasyMode) {
             info.put(tr("Voltage"), Utils.plotVolt("", powerSource.voltage))
             info.put(tr("Current"), Utils.plotAmpere("", powerSource.current))
-            info.put(tr("Temperature"), Utils.plotCelsius("", thermal.temperature))
+            info.put(tr("Temperature"), plotAmbientCelsius("", thermal.temperature))
         }
         return info
     }

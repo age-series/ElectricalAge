@@ -29,6 +29,7 @@ import mods.eln.sixnode.electricalentitysensor.ElectricalEntitySensorDescriptor
 import mods.eln.sixnode.electricalfiredetector.ElectricalFireDetectorDescriptor
 import mods.eln.sixnode.electricalgatesource.ElectricalGateSourceDescriptor
 import mods.eln.sixnode.electricalgatesource.ElectricalGateSourceRenderObj
+import mods.eln.sixnode.electricalhumiditysensor.ElectricalHumiditySensorDescriptor
 import mods.eln.sixnode.electricallightsensor.ElectricalLightSensorDescriptor
 import mods.eln.sixnode.electricalmath.ElectricalMathDescriptor
 import mods.eln.sixnode.electricalredstoneinput.ElectricalRedstoneInputDescriptor
@@ -58,6 +59,7 @@ import mods.eln.sixnode.powersocket.PowerSocketDescriptor
 import mods.eln.sixnode.resistor.ResistorDescriptor
 import mods.eln.sixnode.thermalcable.ThermalCableDescriptor
 import mods.eln.sixnode.thermalsensor.ThermalSensorDescriptor
+import mods.eln.sixnode.thermometersensor.ThermometerSensorDescriptor
 import mods.eln.sixnode.tutorialsign.TutorialSignDescriptor
 import mods.eln.sixnode.wirelesssignal.repeater.WirelessSignalRepeaterDescriptor
 import mods.eln.sixnode.wirelesssignal.rx.WirelessSignalRxDescriptor
@@ -153,8 +155,7 @@ object SixNodeRegistration {
         run {
             subId = 0
             val name = I18N.TR_NAME(I18N.Type.NONE, "Ground Cable")
-            val desc = GroundCableDescriptor(name, Eln.obj.getObj("groundcable")).power()
-            desc.hideFromCreative()
+            val desc = GroundCableDescriptor(name, Eln.obj.getObj("groundcable")).creative()
             Eln.sixNodeItem.addDescriptor(subId + (id shl 6), desc)
         }
         run {
@@ -490,6 +491,7 @@ object SixNodeRegistration {
             desc.renderIconInHand = true
             Eln.sixNodeItem.addDescriptor(subId + (id shl 6), desc)
             desc.cameraOpt = false
+            desc.extendedRenderBounds = true
         }
         run {
             subId = 9
@@ -1111,6 +1113,24 @@ object SixNodeRegistration {
                 subId = 4
                 name = I18N.TR_NAME(I18N.Type.NONE, "Electrical Weather Sensor")
                 desc = ElectricalWeatherSensorDescriptor(name, Eln.obj.getObj("electricalweathersensor"))
+                Eln.sixNodeItem.addDescriptor(subId + (id shl 6), desc)
+            }
+        }
+        run {
+            var desc: ElectricalHumiditySensorDescriptor
+            run {
+                subId = 5
+                name = I18N.TR_NAME(I18N.Type.NONE, "Humidity Sensor")
+                desc = ElectricalHumiditySensorDescriptor(name, Eln.obj.getObj("electricalweathersensor"))
+                Eln.sixNodeItem.addDescriptor(subId + (id shl 6), desc)
+            }
+        }
+        run {
+            var desc: ThermometerSensorDescriptor
+            run {
+                subId = 6
+                name = I18N.TR_NAME(I18N.Type.NONE, "Thermometer Sensor")
+                desc = ThermometerSensorDescriptor(name, Eln.obj.getObj("electricalweathersensor"))
                 Eln.sixNodeItem.addDescriptor(subId + (id shl 6), desc)
             }
         }

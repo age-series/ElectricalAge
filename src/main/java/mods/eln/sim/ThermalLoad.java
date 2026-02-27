@@ -42,6 +42,11 @@ public class ThermalLoad {
     public double PcTemp;
 
     boolean isSlow;
+    private boolean hasSimCoordinate = false;
+    private int simDimension;
+    private int simX;
+    private int simY;
+    private int simZ;
 
     public ThermalLoad() {
         setHighImpedance();
@@ -129,5 +134,38 @@ public class ThermalLoad {
 
     public void setAsFast() {
         isSlow = false;
+    }
+
+    public ThermalLoad setSimCoordinate(int dimension, int x, int y, int z) {
+        this.hasSimCoordinate = true;
+        this.simDimension = dimension;
+        this.simX = x;
+        this.simY = y;
+        this.simZ = z;
+        return this;
+    }
+
+    public void clearSimCoordinate() {
+        this.hasSimCoordinate = false;
+    }
+
+    public boolean hasSimCoordinate() {
+        return hasSimCoordinate;
+    }
+
+    public int getSimDimension() {
+        return simDimension;
+    }
+
+    public int getSimX() {
+        return simX;
+    }
+
+    public int getSimY() {
+        return simY;
+    }
+
+    public int getSimZ() {
+        return simZ;
     }
 }

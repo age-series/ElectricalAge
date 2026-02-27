@@ -8,7 +8,6 @@ import mcp.mobius.waila.api.IWailaDataProvider
 import mcp.mobius.waila.api.SpecialChars
 import mods.eln.misc.Coordinate
 import mods.eln.misc.Direction
-import mods.eln.misc.Utils
 import mods.eln.packets.GhostNodeWailaResponsePacket
 import net.minecraft.entity.player.EntityPlayerMP
 import net.minecraft.item.ItemStack
@@ -35,10 +34,7 @@ class GhostNodeWailaProvider(private val transparentNodeProvider: TransparentNod
         override fun getRenderingPosition() = accessor.renderingPosition
         override fun getNBTData() = accessor.nbtData
         override fun getTileEntity() = accessor.tileEntity
-        override fun getWorld(): World {
-            Utils.println("Debugging WAILA, getWorld: $coord ${coord.x} ${coord.y} ${coord.z} ${coord.dimension} ${coord.world()}")
-            return coord.world()
-        }
+        override fun getWorld(): World = accessor.world
         override fun getBlock() = accessor.block
         override fun getNBTInteger(tag: NBTTagCompound?, keyname: String?) = accessor.getNBTInteger(tag, keyname)
     }

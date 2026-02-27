@@ -14,10 +14,14 @@ public class ThermalSensorProcess implements IProcess {
     @Override
     public void process(double time) {
         if (sensor.typeOfSensor == sensor.temperatureType) {
-            setOutput(sensor.thermalLoad.temperatureCelsius);
+            setOutput(toMeasuredTemperature(sensor.thermalLoad.temperatureCelsius, sensor.getAmbientTemperatureCelsius()));
         } else if (sensor.typeOfSensor == sensor.powerType) {
             setOutput(sensor.thermalLoad.getPower());
         }
+    }
+
+    static double toMeasuredTemperature(double thermalDeltaCelsius, double ambientCelsius) {
+        return thermalDeltaCelsius + ambientCelsius;
     }
 
     void setOutput(double physical) {

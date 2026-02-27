@@ -11,6 +11,7 @@ import mods.eln.node.transparent.TransparentNode;
 import mods.eln.node.transparent.TransparentNodeDescriptor;
 import mods.eln.node.transparent.TransparentNodeElement;
 import mods.eln.sim.ElectricalLoad;
+import mods.eln.sim.PhysicalConstant;
 import mods.eln.sim.ThermalLoad;
 import mods.eln.sim.mna.component.Resistor;
 import mods.eln.sim.mna.component.VoltageSource;
@@ -60,7 +61,7 @@ public class TurbineElement extends TransparentNodeElement {
 
         WorldExplosion exp = new WorldExplosion(this).machineExplosion();
 
-        ThermalLoadWatchDog thermalWatchdog = new ThermalLoadWatchDog(warmLoad);
+        ThermalLoadWatchDog thermalWatchdog = ambientAwareThermalWatchdog(new ThermalLoadWatchDog(warmLoad));
         slowProcessList.add(thermalWatchdog);
 
         thermalWatchdog
@@ -129,9 +130,9 @@ public class TurbineElement extends TransparentNodeElement {
     @Override
     public String thermoMeterString(@NotNull Direction side) {
         if (side == front.left())
-            return Utils.plotCelsius("T+:", warmLoad.temperatureCelsius) + Utils.plotPower("P+:", warmLoad.getPower());
+            return plotAmbientCelsius("T+:", warmLoad.temperatureCelsius) + Utils.plotPower("P+:", warmLoad.getPower());
         if (side == front.right())
-            return Utils.plotCelsius("T-:", coolLoad.temperatureCelsius) + Utils.plotPower("P-:", coolLoad.getPower());
+            return plotAmbientCelsius("T-:", coolLoad.temperatureCelsius) + Utils.plotPower("P-:", coolLoad.getPower());
         return Utils.plotCelsius("dT:", warmLoad.temperatureCelsius - coolLoad.temperatureCelsius) + Utils.plotPercent("Eff:", turbineThermaltProcess.getEfficiency());
 
     }
@@ -149,6 +150,11 @@ public class TurbineElement extends TransparentNodeElement {
     @Override
     public boolean onBlockActivated(EntityPlayer player, Direction side, float vx, float vy, float vz) {
         return false;
+    }
+
+    public double getAmbientTemperatureKelvin() {
+        double ambientCelsius = getAmbientTemperatureCelsius();
+        return ambientCelsius + PhysicalConstant.zeroCelsiusInKelvin;
     }
 
     public float getLightOpacity() {

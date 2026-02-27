@@ -183,6 +183,7 @@ open class ShaftRender(entity: TransparentNodeEntity, desc: TransparentNodeDescr
         }
 
         if (cableRender != null) {
+            val render = cableRender ?: return
             preserveMatrix {
                 if (cableRefresh) {
                     cableRefresh = false
@@ -190,14 +191,14 @@ open class ShaftRender(entity: TransparentNodeEntity, desc: TransparentNodeDescr
                 }
 
                 glCableTransform(front!!.down())
-                cableRender!!.bindCableTexture()
+                render.bindCableTexture()
 
                 for (lrdu in LRDU.values()) {
                     Utils.setGlColorFromDye(connectionType!!.otherdry[lrdu.toInt()])
                     if (!eConn.get(lrdu)) continue
                     if (lrdu != front!!.down().getLRDUGoingTo(front!!) && lrdu.inverse() != front!!.down().getLRDUGoingTo(front!!)) continue
                     mask.set(1.shl(lrdu.ordinal))
-                    CableRender.drawCable(cableRender, mask, connectionType!!)
+                    CableRender.drawCable(render, mask, connectionType!!)
                 }
             }
         }

@@ -93,7 +93,7 @@ class LargeRheostatElement(node: TransparentNode, desc_: TransparentNodeDescript
 
     val thermalLoad = NbtThermalLoad("thermalLoad")
     val heater = ResistorHeatThermalLoad(resistor, thermalLoad)
-    val thermalWatchdog = ThermalLoadWatchDog(thermalLoad)
+    val thermalWatchdog = ambientAwareThermalWatchdog(ThermalLoadWatchDog(thermalLoad))
 
     init {
         // Electrics
@@ -174,7 +174,7 @@ class LargeRheostatElement(node: TransparentNode, desc_: TransparentNodeDescript
     }
 
     override fun thermoMeterString(side: Direction) =
-        Utils.plotCelsius("T: ", thermalLoad.temperatureCelsius) + Utils.plotPower("P: ", thermalLoad.power)
+        plotAmbientCelsius("T: ", thermalLoad.temperatureCelsius) + Utils.plotPower("P: ", thermalLoad.power)
 
     override fun initialize() {
         desc.dissipator.applyTo(thermalLoad)
@@ -196,7 +196,7 @@ class LargeRheostatElement(node: TransparentNode, desc_: TransparentNodeDescript
 
     override fun getWaila(): Map<String, String> = mutableMapOf(
         Pair(tr("Resistance"), Utils.plotOhm("", resistor.resistance)),
-        Pair(tr("Temperature"), Utils.plotCelsius("", thermalLoad.temperature)),
+        Pair(tr("Temperature"), plotAmbientCelsius("", thermalLoad.temperature)),
         Pair(tr("Power loss"), Utils.plotPower("", resistor.power))
     )
 }

@@ -22,6 +22,7 @@ import net.minecraft.client.gui.GuiScreen
 import net.minecraft.entity.item.EntityItem
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.inventory.IInventory
+import net.minecraft.util.AxisAlignedBB
 import org.lwjgl.opengl.GL11
 import java.io.ByteArrayOutputStream
 import java.io.DataInputStream
@@ -155,6 +156,62 @@ abstract class TransparentNodeElementRender(var tileEntity: TransparentNodeEntit
 
     open fun cameraDrawOptimisation(): Boolean {
         return true
+    }
+
+    open fun unoptimizedRenderBoundingBox(): AxisAlignedBB {
+        val base = AxisAlignedBB.getBoundingBox(
+            (tileEntity.xCoord - 1).toDouble(),
+            (tileEntity.yCoord - 1).toDouble(),
+            (tileEntity.zCoord - 1).toDouble(),
+            (tileEntity.xCoord + 1).toDouble(),
+            (tileEntity.yCoord + 1).toDouble(),
+            (tileEntity.zCoord + 1).toDouble()
+        )
+
+        var merged: AxisAlignedBB = base
+
+        val collisionQuery = AxisAlignedBB.getBoundingBox(
+            (tileEntity.xCoord - 64).toDouble(),
+            (tileEntity.yCoord - 64).toDouble(),
+            (tileEntity.zCoord - 64).toDouble(),
+            (tileEntity.xCoord + 64).toDouble(),
+            (tileEntity.yCoord + 64).toDouble(),
+            (tileEntity.zCoord + 64).toDouble()
+        )
+        val collisionBoxes = mutableListOf<AxisAlignedBB?>()
+        transparentNodedescriptor.addCollisionBoxesToList(
+            collisionQuery,
+            collisionBoxes,
+            tileEntity.worldObj,
+            tileEntity.xCoord,
+            tileEntity.yCoord,
+            tileEntity.zCoord
+        )
+        for (box in collisionBoxes) {
+            if (box != null) {
+                merged = merged.func_111270_a(box)
+            }
+        }
+
+        val ghostGroup = transparentNodedescriptor.getGhostGroupFront(front)
+        if (ghostGroup != null) {
+            for (element in ghostGroup.elementList) {
+                val x = tileEntity.xCoord + element.x
+                val y = tileEntity.yCoord + element.y
+                val z = tileEntity.zCoord + element.z
+                val blockBox = AxisAlignedBB.getBoundingBox(
+                    x.toDouble(),
+                    y.toDouble(),
+                    z.toDouble(),
+                    (x + 1).toDouble(),
+                    (y + 1).toDouble(),
+                    (z + 1).toDouble()
+                )
+                merged = merged.func_111270_a(blockBox)
+            }
+        }
+
+        return merged.expand(0.25, 0.25, 0.25)
     }
 
     open fun getCableRenderSide(side: Direction, lrdu: LRDU): CableRenderDescriptor? {

@@ -2,7 +2,6 @@ package mods.eln.sixnode.electricaldatalogger;
 
 import mods.eln.misc.INBTTReady;
 import mods.eln.misc.Utils;
-import mods.eln.sim.PhysicalConstant;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.nbt.NBTTagCompound;
@@ -15,8 +14,9 @@ public class DataLogs implements INBTTReady {
 
     float samplingPeriod = 0.5f;
     float maxValue = 100f, minValue = 0f;
+    boolean showZeroLine = true;
     byte unitType = percentType;
-    public static final byte voltageType = 0, currentType = 1, powerType = 2, celsiusType = 3, percentType = 4, energyType = 5, noType = 6;
+    public static final byte voltageType = 0, currentType = 1, powerType = 2, celsiusType = 3, percentType = 4, energyType = 5, noType = 6, temperatureType = 7, humidityType = 8;
 
     public DataLogs(int sizeMax) {
         log = new byte[sizeMax];
@@ -65,6 +65,7 @@ public class DataLogs implements INBTTReady {
         maxValue = nbt.getFloat(str + "maxValue");
         minValue = nbt.getFloat(str + "minValue");
         unitType = nbt.getByte(str + "unitType");
+        showZeroLine = !nbt.hasKey(str + "showZeroLine") || nbt.getBoolean(str + "showZeroLine");
         Utils.println("Datalog readnbt done");
     }
 
@@ -75,6 +76,7 @@ public class DataLogs implements INBTTReady {
         nbt.setFloat(str + "maxValue", maxValue);
         nbt.setFloat(str + "minValue", minValue);
         nbt.setByte(str + "unitType", unitType);
+        nbt.setBoolean(str + "showZeroLine", showZeroLine);
     }
 
     public byte[] copyLog() {
@@ -95,12 +97,23 @@ public class DataLogs implements INBTTReady {
     }
 
     void draw(float margeX, float margeY, String textHeader) {
-        draw(log, size, samplingPeriod, maxValue, minValue, unitType, margeX, margeY, textHeader);
+        draw(log, size, samplingPeriod, maxValue, minValue, unitType, showZeroLine, margeX, margeY, textHeader);
     }
 
-    static void draw(byte[] value, int size, float samplingPeriod, float maxValue, float minValue, byte unitType, float margeX, float margeY, String textHeader) {
+    static void draw(byte[] value, int size, float samplingPeriod, float maxValue, float minValue, byte unitType, boolean showZeroLine, float margeX, float margeY, String textHeader) {
         if (value == null) return;
         if (size < 2) return;
+        final FontRenderer fontrenderer = Minecraft.getMinecraft().fontRenderer;
+        final float scale = 0.01f;
+
+        final String yTop = textHeader + " " + getYstring(1f, maxValue, minValue, unitType);
+        final String yMid = textHeader + " " + getYstring(0.5f, maxValue, minValue, unitType);
+        final String yBottom = textHeader + " " + getYstring(0.0f, maxValue, minValue, unitType);
+        final String tStart = textHeader + Utils.plotTime(size * samplingPeriod);
+        final String tEnd = textHeader + Utils.plotTime(0);
+
+        // Keep axis near the original right edge position so the graph keeps full width.
+        final float rightEdge = Math.max(0.2f, margeX - 0.05f);
         //long startT = System.nanoTime();
         GL11.glLineWidth(1f);
         GL11.glDisable(GL11.GL_TEXTURE_2D);
@@ -109,13 +122,13 @@ public class DataLogs implements INBTTReady {
         float dx = 1f / (size - 1);
         GL11.glBegin(GL11.GL_LINE_STRIP);
         for (int idx = 0; idx < size; idx++) {
-            GL11.glVertex2f(margeX - dx * idx * margeX, margeY - ((int) value[idx] + 128) / 255f * margeY);
+            GL11.glVertex2f(rightEdge - dx * idx * rightEdge, margeY - ((int) value[idx] + 128) / 255f * margeY);
         }
         GL11.glEnd();
 
         GL11.glBegin(GL11.GL_QUAD_STRIP);
         for (int idx = 0; idx < size; idx++) {
-            float x = margeX - dx * idx * margeX;
+            float x = rightEdge - dx * idx * rightEdge;
             float y = margeY - ((int) value[idx] + 128) / 255f * margeY;
                 /*float dy = 0.0f;
 				int dyInt; 
@@ -140,20 +153,20 @@ public class DataLogs implements INBTTReady {
 
         float temp = 0.01f;
         GL11.glBegin(GL11.GL_QUAD_STRIP);
-        GL11.glVertex2f(margeX + temp, 0f);
-        GL11.glVertex2f(margeX - temp, 0f);
-        GL11.glVertex2f(margeX + temp, margeY + temp);
-        GL11.glVertex2f(margeX - temp, margeY - temp);
+        GL11.glVertex2f(rightEdge + temp, 0f);
+        GL11.glVertex2f(rightEdge - temp, 0f);
+        GL11.glVertex2f(rightEdge + temp, margeY + temp);
+        GL11.glVertex2f(rightEdge - temp, margeY - temp);
         GL11.glVertex2f(0f, margeY + temp);
         GL11.glVertex2f(0f, margeY - temp);
         GL11.glEnd();
 
-        if ((minValue < 0 && maxValue > 0) || (minValue > 0 && maxValue < 0)) {
+        if (showZeroLine && ((minValue < 0 && maxValue > 0) || (minValue > 0 && maxValue < 0))) {
             temp = 0.005f;
             float zeroY = (maxValue) / (maxValue - minValue) * margeY;
             GL11.glBegin(GL11.GL_QUAD_STRIP);
-            GL11.glVertex2f(margeX, zeroY + temp);
-            GL11.glVertex2f(margeX, zeroY - temp);
+            GL11.glVertex2f(rightEdge, zeroY + temp);
+            GL11.glVertex2f(rightEdge, zeroY - temp);
             GL11.glVertex2f(0f, zeroY + temp);
             GL11.glVertex2f(0f, zeroY - temp);
             GL11.glEnd();
@@ -168,18 +181,17 @@ public class DataLogs implements INBTTReady {
 		*/
         GL11.glEnable(GL11.GL_TEXTURE_2D);
 
-        FontRenderer fontrenderer = Minecraft.getMinecraft().fontRenderer;
         GL11.glPushMatrix();
-        float scale = 0.01f;
         GL11.glScalef(scale, scale, 1f);
         //fontrenderer.drawString("Time", (int)( 0.5f / scale), (int)(0.8f / scale), 0);
+        int yLabelX = (int) (rightEdge / scale) + 2;
+        fontrenderer.drawString(yTop, yLabelX, (int) (0f / scale), 0);
+        fontrenderer.drawString(yMid, yLabelX, (int) ((margeY / 2 - 0.05f) / scale), 0);
+        fontrenderer.drawString(yBottom, yLabelX, (int) ((margeY - 0.08f) / scale), 0);
 
-        fontrenderer.drawString(textHeader + " " + getYstring(1f, maxValue, minValue, unitType), (int) (margeX / scale), (int) (0f / scale), 0);
-        fontrenderer.drawString(textHeader + " " + getYstring(0.5f, maxValue, minValue, unitType), (int) (margeX / scale), (int) ((margeY / 2 - 0.05f) / scale), 0);
-        fontrenderer.drawString(textHeader + " " + getYstring(0.0f, maxValue, minValue, unitType), (int) (margeX / scale), (int) ((margeY - 0.08f) / scale), 0);
-
-        fontrenderer.drawString(textHeader + Utils.plotTime(size * samplingPeriod), (int) (0f / scale), (int) ((margeY + 0.03) / scale), 0);
-        fontrenderer.drawString(textHeader + Utils.plotTime(0), (int) ((margeX - 0.05) / scale), (int) ((margeY + 0.03) / scale), 0);
+        fontrenderer.drawString(tStart, (int) (0f / scale), (int) ((margeY + 0.03) / scale), 0);
+        int rightTimeX = (int) (margeX / scale) - fontrenderer.getStringWidth(tEnd) - 2;
+        fontrenderer.drawString(tEnd, rightTimeX, (int) ((margeY + 0.03) / scale), 0);
         //fontrenderer.drawString("Time", (int)(0.5f / scale), (int)(0.8f / scale), 0);
         GL11.glPopMatrix();
         //startT = System.nanoTime() - startT;
@@ -191,7 +203,7 @@ public class DataLogs implements INBTTReady {
 
         switch (unitType) {
             case celsiusType:
-                str = Utils.plotCelsius("", factor * (maxValue - minValue) + minValue - PhysicalConstant.ambientTemperatureCelsius);
+                str = Utils.plotCelsius("", factor * (maxValue - minValue) + minValue);
                 break;
             case voltageType:
                 str = Utils.plotVolt("", factor * (maxValue - minValue) + minValue);
@@ -211,14 +223,26 @@ public class DataLogs implements INBTTReady {
             case noType:
                 str = "" + (factor * (maxValue - minValue) + minValue);
                 break;
+            case temperatureType:
+                str = Utils.plotValue(factor * (maxValue - minValue) + minValue, "\u00B0F ");
+                break;
+            case humidityType:
+                str = Utils.plotPercent("RH:", (factor * (maxValue - minValue) + minValue) * 0.01);
+                break;
         }
         return str;
+    }
+
+    public static String getValueString(byte value, float maxValue, float minValue, byte unitType) {
+        float factor = (((int) value) + 128) / 255f;
+        return getYstring(factor, maxValue, minValue, unitType);
     }
 
     public static void draw(NBTTagCompound nbt, float margeX, float margeY, String textHeader) {
         if (nbt == null) return;
         byte[] data = nbt.getByteArray("log");
         if (data == null) return;
-        draw(data, data.length, nbt.getFloat("samplingPeriod"), nbt.getFloat("maxValue"), nbt.getFloat("minValue"), nbt.getByte("unitType"), margeX, margeY, textHeader);
+        boolean showZeroLine = !nbt.hasKey("showZeroLine") || nbt.getBoolean("showZeroLine");
+        draw(data, data.length, nbt.getFloat("samplingPeriod"), nbt.getFloat("maxValue"), nbt.getFloat("minValue"), nbt.getByte("unitType"), showZeroLine, margeX, margeY, textHeader);
     }
 }

@@ -13,6 +13,8 @@ import mods.eln.node.six.SixNodeElement;
 import mods.eln.sim.ElectricalLoad;
 import mods.eln.sim.ThermalLoad;
 import mods.eln.sim.mna.component.Resistor;
+import mods.eln.sim.mna.component.ResistorSwitch;
+import mods.eln.sim.mna.misc.MnaConst;
 import mods.eln.sim.nbt.NbtElectricalGateInput;
 import mods.eln.sim.nbt.NbtElectricalLoad;
 import mods.eln.sim.process.destruct.VoltageStateWatchDog;
@@ -35,7 +37,7 @@ public class ElectricalRelayElement extends SixNodeElement implements IConfigura
     public ElectricalRelayDescriptor descriptor;
     public NbtElectricalLoad aLoad = new NbtElectricalLoad("aLoad");
     public NbtElectricalLoad bLoad = new NbtElectricalLoad("bLoad");
-    public Resistor switchResistor = new Resistor(aLoad, bLoad);
+    public ResistorSwitch switchResistor = new ResistorSwitch("switchRes", aLoad, bLoad);
     public NbtElectricalGateInput gate = new NbtElectricalGateInput("gate");
     public ElectricalRelayGateProcess gateProcess = new ElectricalRelayGateProcess(this, "GP", gate);
 
@@ -53,6 +55,9 @@ public class ElectricalRelayElement extends SixNodeElement implements IConfigura
         super(sixNode, side, descriptor);
 
         this.descriptor = (ElectricalRelayDescriptor) descriptor;
+        if (this.descriptor.cable.signalWire) {
+            switchResistor.setOffResistance(MnaConst.ultraImpedance);
+        }
 
         electricalLoadList.add(aLoad);
         electricalLoadList.add(bLoad);
@@ -162,11 +167,7 @@ public class ElectricalRelayElement extends SixNodeElement implements IConfigura
     }
 
     public void refreshSwitchResistor() {
-        if (!switchState) {
-            switchResistor.highImpedance();
-        } else {
-            descriptor.applyTo(switchResistor);
-        }
+        switchResistor.setState(switchState);
     }
 
     public boolean getSwitchState() {
@@ -189,6 +190,7 @@ public class ElectricalRelayElement extends SixNodeElement implements IConfigura
     public void computeElectricalLoad() {
         descriptor.applyTo(aLoad);
         descriptor.applyTo(bLoad);
+        descriptor.applyTo(switchResistor);
         refreshSwitchResistor();
     }
 

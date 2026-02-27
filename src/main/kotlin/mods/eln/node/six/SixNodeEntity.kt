@@ -15,6 +15,7 @@ import net.minecraft.client.gui.GuiScreen
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.init.Blocks
 import net.minecraft.inventory.Container
+import net.minecraft.util.AxisAlignedBB
 import net.minecraft.world.World
 import java.io.DataInputStream
 import java.io.IOException
@@ -127,6 +128,22 @@ class SixNodeEntity : NodeBlockEntity() {
             if (e != null && !e.cameraDrawOptimisation()) return false
         }
         return true
+    }
+
+    override fun unoptimizedRenderBoundingBox(): AxisAlignedBB {
+        var bb = localRenderBoundingBox()
+        for (render in elementRenderList) {
+            val custom = render?.getRenderBoundingBox(this) ?: continue
+            bb = AxisAlignedBB.getBoundingBox(
+                minOf(bb.minX, custom.minX),
+                minOf(bb.minY, custom.minY),
+                minOf(bb.minZ, custom.minZ),
+                maxOf(bb.maxX, custom.maxX),
+                maxOf(bb.maxY, custom.maxY),
+                maxOf(bb.maxZ, custom.maxZ)
+            )
+        }
+        return bb
     }
 
     override fun destructor() {
