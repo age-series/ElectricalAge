@@ -491,6 +491,7 @@ object SixNodeRegistration {
             desc.renderIconInHand = true
             Eln.sixNodeItem.addDescriptor(subId + (id shl 6), desc)
             desc.cameraOpt = false
+            desc.extendedRenderBounds = true
         }
         run {
             subId = 9
