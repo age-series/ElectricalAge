@@ -308,7 +308,10 @@ abstract class SixNodeElement(sixNode: SixNode, @JvmField var side: Direction, d
 
     override fun ghostBlockActivated(UUID: Int, entityPlayer: EntityPlayer, side: Direction, vx: Float, vy: Float, vz: Float): Boolean {
         if (UUID == sixNodeElementDescriptor.ghostGroupUuid) {
+            // A click inside a ghost volume should never leak through to normal item use,
+            // otherwise players can place/paint blocks "inside" multiblock bounds.
             sixNode!!.onBlockActivated(entityPlayer, this.side, vx, vy, vz)
+            return true
         }
         return false
     }
