@@ -23,6 +23,7 @@ import mods.eln.sound.SoundCommand
 import net.minecraft.client.gui.GuiScreen
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.inventory.IInventory
+import net.minecraft.util.AxisAlignedBB
 import org.lwjgl.opengl.GL11
 import java.io.ByteArrayOutputStream
 import java.io.DataInputStream
@@ -293,6 +294,10 @@ abstract class SixNodeElementRender(open var tileEntity: SixNodeEntity, @JvmFiel
 
     open fun cameraDrawOptimisation(): Boolean {
         return true
+    }
+
+    open fun getRenderBoundingBox(@Suppress("UNUSED_PARAMETER") tileEntity: SixNodeEntity): AxisAlignedBB? {
+        return null
     }
 
     @Throws(IOException::class)

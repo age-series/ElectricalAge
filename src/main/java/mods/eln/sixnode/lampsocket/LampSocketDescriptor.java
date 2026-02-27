@@ -18,6 +18,7 @@ public class LampSocketDescriptor extends SixNodeDescriptor {
     LampSocketObjRender render;
 
     public boolean cameraOpt = true;
+    public boolean extendedRenderBounds = false;
 
     public int range;
     public String modelName;
