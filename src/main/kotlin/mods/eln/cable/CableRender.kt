@@ -226,13 +226,12 @@ object CableRender {
 
     @JvmStatic
     fun drawCable(
-        cable: CableRenderDescriptor?,
+        cable: CableRenderDescriptor,
         connection: LRDUMask,
         connectionType: CableRenderType,
-        deltaStart: Float = cable!!.widthDiv2 / 2f,
+        deltaStart: Float = cable.widthDiv2 / 2f,
         drawBottom: Boolean = false
     ) {
-        if (cable == null) return
         var endLeft = -deltaStart
         var endRight = deltaStart
         var endUp = deltaStart
