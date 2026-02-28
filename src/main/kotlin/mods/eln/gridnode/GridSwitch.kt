@@ -300,7 +300,7 @@ class GridSwitchElement(node: TransparentNode, descriptor: TransparentNodeDescri
 
 class GridSwitchRender(entity: TransparentNodeEntity, descriptor: TransparentNodeDescriptor) : GridRender(entity, descriptor) {
     init {
-        this.transparentNodedescriptor = descriptor as GridSwitchDescriptor
+        this.transparentNodeDescriptor = descriptor as GridSwitchDescriptor
     }
 
     val desc = descriptor as GridSwitchDescriptor

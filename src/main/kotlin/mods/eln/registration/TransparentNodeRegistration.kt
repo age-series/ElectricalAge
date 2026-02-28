@@ -36,6 +36,7 @@ import mods.eln.transparentnode.electricalmachine.*
 import mods.eln.transparentnode.festive.ChristmasTreeDescriptor
 import mods.eln.transparentnode.festive.HolidayCandleDescriptor
 import mods.eln.transparentnode.festive.StringLightsDescriptor
+import mods.eln.transparentnode.floodlight.FloodlightDescriptor
 import mods.eln.transparentnode.heatfurnace.HeatFurnaceDescriptor
 import mods.eln.transparentnode.powercapacitor.PowerCapacitorDescriptor
 import mods.eln.transparentnode.powerinductor.PowerInductorDescriptor
@@ -106,6 +107,7 @@ object TransparentNodeRegistration {
         Eln.transparentNodeItem.setCreativeTabForGroup(65, Eln.creativeTabMachines)
         Eln.transparentNodeItem.setCreativeTabForGroup(66, Eln.creativeTabMachines)
         Eln.transparentNodeItem.setCreativeTabForGroup(67, Eln.creativeTabPowerElectronics)
+        Eln.transparentNodeItem.setCreativeTabForGroup(68, Eln.creativeTabLighting)
         Eln.transparentNodeItem.setCreativeTabForGroup(69, Eln.creativeTabLighting)
         Eln.transparentNodeItem.setCreativeTabForGroup(70, Eln.creativeTabMachines)
         Eln.transparentNodeItem.setCreativeTabForGroup(71, Eln.creativeTabPowerElectronics)
@@ -133,7 +135,7 @@ object TransparentNodeRegistration {
         registerTransparentNodeMisc(65)
         registerTurret(66)
         registerFuelGenerator(67)
-        //registerFloodlight(68);
+        registerFloodlight(68)
         registerFestive(69)
         registerFab(70)
         registerRailroad(71)
@@ -193,26 +195,24 @@ object TransparentNodeRegistration {
          */
     }
 
-    /*
-        private void registerFloodlight(int id) {
-            int subId;
-            String name;
-            {
-                subId = 0;
-                name = TR_NAME(Type.NONE, "Basic Floodlight");
-                BasicFloodlightDescriptor desc = new BasicFloodlightDescriptor(name, obj.getObj("Floodlight"));
-                transparentNodeItem.addDescriptor(subId + (id << 6), desc);
-            }
-            {
-                subId = 1;
-                name = TR_NAME(Type.NONE, "Motorized Floodlight");
-                MotorizedFloodlightDescriptor desc = new MotorizedFloodlightDescriptor(name, obj.getObj
-                ("FloodlightMotor"));
-                transparentNodeItem.addDescriptor(subId + (id << 6), desc);
-            }
-        }
-    */
+    private fun registerFloodlight(id: Int) {
+        var subId: Int
+        var name: String
 
+        run {
+            subId = 0
+            name = TR_NAME(I18N.Type.NONE, "Basic Floodlight")
+            val desc = FloodlightDescriptor(name, Eln.obj.getObj("Floodlight"), false)
+            transparentNodeItem.addDescriptor(subId + (id shl 6), desc)
+        }
+
+        run {
+            subId = 1
+            name = TR_NAME(I18N.Type.NONE, "Motorized Floodlight")
+            val desc = FloodlightDescriptor(name, Eln.obj.getObj("FloodlightMotor"), true)
+            transparentNodeItem.addDescriptor(subId + (id shl 6), desc)
+        }
+    }
 
     private fun registerLargeRheostat() {
         val id = 96

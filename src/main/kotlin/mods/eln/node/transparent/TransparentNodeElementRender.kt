@@ -29,7 +29,7 @@ import java.io.DataInputStream
 import java.io.DataOutputStream
 import java.io.IOException
 
-abstract class TransparentNodeElementRender(var tileEntity: TransparentNodeEntity, var transparentNodedescriptor: TransparentNodeDescriptor) {
+abstract class TransparentNodeElementRender(var tileEntity: TransparentNodeEntity, var transparentNodeDescriptor: TransparentNodeDescriptor) {
     @JvmField
     var front: Direction? = null
     var grounded = false
@@ -128,6 +128,19 @@ abstract class TransparentNodeElementRender(var tileEntity: TransparentNodeEntit
         }
     }
 
+    fun clientSendDouble(id: Byte, str: Double) {
+        try {
+            val bos = ByteArrayOutputStream()
+            val stream = DataOutputStream(bos)
+            preparePacketForServer(stream)
+            stream.writeByte(id.toInt())
+            stream.writeDouble(str)
+            sendPacketToServer(bos)
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
+    }
+
     fun clientSendInt(id: Byte, str: Int) {
         try {
             val bos = ByteArrayOutputStream()
@@ -166,7 +179,7 @@ abstract class TransparentNodeElementRender(var tileEntity: TransparentNodeEntit
             (tileEntity.zCoord + 64).toDouble()
         )
         val collisionBoxes = mutableListOf<AxisAlignedBB?>()
-        transparentNodedescriptor.addCollisionBoxesToList(
+        transparentNodeDescriptor.addCollisionBoxesToList(
             collisionQuery,
             collisionBoxes,
             tileEntity.worldObj,
@@ -180,7 +193,7 @@ abstract class TransparentNodeElementRender(var tileEntity: TransparentNodeEntit
             }
         }
 
-        val ghostGroup = transparentNodedescriptor.getGhostGroupFront(front)
+        val ghostGroup = transparentNodeDescriptor.getGhostGroupFront(front)
         if (ghostGroup != null) {
             for (element in ghostGroup.elementList) {
                 val x = tileEntity.xCoord + element.x

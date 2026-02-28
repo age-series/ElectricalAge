@@ -106,7 +106,7 @@ open class TransparentNodeEntity : NodeBlockEntity(), ISidedInventory {
 
     fun addCollisionBoxesToList(par5AxisAlignedBB: AxisAlignedBB, list: MutableList<AxisAlignedBB?>, blockCoord: Coordinate?) {
         val desc = if (worldObj.isRemote) {
-            if (elementRender == null) null else elementRender!!.transparentNodedescriptor
+            if (elementRender == null) null else elementRender!!.transparentNodeDescriptor
         } else {
             val node = node as TransparentNode?
             if (node == null) null else node.element!!.transparentNodeDescriptor

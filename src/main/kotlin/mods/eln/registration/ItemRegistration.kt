@@ -391,7 +391,8 @@ object ItemRegistration {
                 lightPower[12],
                 lightLevel[12],
                 instance.incandescentLampLife,
-                standardGrowRate
+                standardGrowRate,
+                0
             )
             Eln.sharedItem.addElement(completId, element)
         }
@@ -407,7 +408,8 @@ object ItemRegistration {
                 lightPower[14],
                 lightLevel[14],
                 instance.incandescentLampLife,
-                standardGrowRate
+                standardGrowRate,
+                0
             )
             Eln.sharedItem.addElement(completId, element)
         }
@@ -423,7 +425,8 @@ object ItemRegistration {
                 lightPower[14],
                 lightLevel[14],
                 instance.incandescentLampLife,
-                standardGrowRate
+                standardGrowRate,
+                0
             )
             Eln.sharedItem.addElement(completId, element)
         }
@@ -439,7 +442,8 @@ object ItemRegistration {
                 lightPower[11],
                 lightLevel[11],
                 instance.carbonLampLife,
-                standardGrowRate
+                standardGrowRate,
+                0
             )
             Eln.sharedItem.addElement(completId, element)
         }
@@ -455,7 +459,8 @@ object ItemRegistration {
                 lightPower[13],
                 lightLevel[13],
                 instance.carbonLampLife,
-                standardGrowRate
+                standardGrowRate,
+                0
             )
             Eln.sharedItem.addElement(completId, element)
         }
@@ -471,7 +476,8 @@ object ItemRegistration {
                 lightPower[12] * economicPowerFactor,
                 lightLevel[12],
                 instance.economicLampLife,
-                standardGrowRate
+                standardGrowRate,
+                0
             )
             Eln.sharedItem.addElement(completId, element)
         }
@@ -481,7 +487,8 @@ object ItemRegistration {
             element = LampDescriptor(
                 I18N.TR_NAME(I18N.Type.NONE, "50V Economic Light Bulb"), "fluorescentlamp",
                 LampDescriptor.Type.ECO, LampSocketType.Douille, Eln.LVU, lightPower[14] * economicPowerFactor,
-                lightLevel[14], instance.economicLampLife, standardGrowRate
+                lightLevel[14], instance.economicLampLife, standardGrowRate,
+                0
             )
             Eln.sharedItem.addElement(completId, element)
         }
@@ -491,7 +498,8 @@ object ItemRegistration {
             element = LampDescriptor(
                 I18N.TR_NAME(I18N.Type.NONE, "200V Economic Light Bulb"), "fluorescentlamp",
                 LampDescriptor.Type.ECO, LampSocketType.Douille, Eln.MVU, lightPower[14] * economicPowerFactor,
-                lightLevel[14], instance.economicLampLife, standardGrowRate
+                lightLevel[14], instance.economicLampLife, standardGrowRate,
+                0
             )
             Eln.sharedItem.addElement(completId, element)
         }
@@ -507,7 +515,8 @@ object ItemRegistration {
                 120.0,
                 lightLevel[15],
                 instance.incandescentLampLife,
-                0.50
+                0.50,
+                0
             )
             Eln.sharedItem.addElement(completId, element)
         }
@@ -523,7 +532,8 @@ object ItemRegistration {
                 120.0,
                 lightLevel[15],
                 instance.incandescentLampLife,
-                0.50
+                0.50,
+                0
             )
             Eln.sharedItem.addElement(completId, element)
         }
@@ -539,7 +549,8 @@ object ItemRegistration {
                 lightPower[14] / 2,
                 lightLevel[14],
                 instance.ledLampLife,
-                standardGrowRate
+                standardGrowRate,
+                0
             )
             Eln.sharedItem.addElement(completId, element)
         }
@@ -555,7 +566,42 @@ object ItemRegistration {
                 lightPower[14] / 2,
                 lightLevel[14],
                 instance.ledLampLife,
-                standardGrowRate
+                standardGrowRate,
+                0
+            )
+            Eln.sharedItem.addElement(completId, element)
+        }
+        run {
+            subId = 44
+            completId = subId + (id shl 6)
+            element = LampDescriptor(
+                I18N.TR_NAME(I18N.Type.NONE, "50V Halogen Bulb"),
+                "halogenlamp",
+                LampDescriptor.Type.HALOGEN,
+                LampSocketType.Tube,
+                Eln.LVU,
+                250.0,
+                lightLevel[15],
+                instance.halogenLampLife,
+                standardGrowRate,
+                8
+            )
+            Eln.sharedItem.addElement(completId, element)
+        }
+        run {
+            subId = 45
+            completId = subId + (id shl 6)
+            element = LampDescriptor(
+                I18N.TR_NAME(I18N.Type.NONE, "200V Halogen Bulb"),
+                "halogenlamp",
+                LampDescriptor.Type.HALOGEN,
+                LampSocketType.Tube,
+                Eln.MVU,
+                500.0,
+                lightLevel[15],
+                instance.halogenLampLife,
+                standardGrowRate,
+                16
             )
             Eln.sharedItem.addElement(completId, element)
         }

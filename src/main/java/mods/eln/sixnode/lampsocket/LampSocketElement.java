@@ -234,7 +234,7 @@ public class LampSocketElement extends SixNodeElement implements IConfigurable {
             }
             info.put(I18N.tr("Voltage"), Utils.plotVolt("", positiveLoad.getVoltage()));
             if (lampStack != null && lampDescriptor != null) {
-                info.put(I18N.tr("Life Left: "), Utils.plotValue(lampDescriptor.getLifeInTag(lampStack)) + " Hours");
+                info.put(I18N.tr("Life Left"), Utils.plotValue(lampDescriptor.getLifeInTag(lampStack)) + " Hours");
             }
 
         }
@@ -319,6 +319,12 @@ public class LampSocketElement extends SixNodeElement implements IConfigurable {
                         needPublish(); //Sync
                     }
                     return true;
+                }
+
+                if (itemDescriptor instanceof LampDescriptor) {
+                    if (((LampDescriptor) itemDescriptor).socket != socketDescriptor.socketType) {
+                        return false;
+                    }
                 }
             }
         }

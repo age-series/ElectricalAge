@@ -9,6 +9,8 @@ These assets should be attributed to the Electrical Age team, with the following
 - `src/main/resources/assets/eln/textures/blocks/2x3solarpanel.png` is designed by [Luis Prado](https://thenounproject.com/Luis/).
 - `src/main/resources/assets/eln/textures/blocks/scanner.png` is designed by [Creative Stall](https://thenounproject.com/creativestall/).
 - Everything under `src/main/resources/assets/eln/textures/items/` is designed by Guillermo Guso from the Noun Project.
+- `src/main/resources/assets/eln/textures/items/halogenlamp.png` is designed by [LiveDieRespwn](https://github.com/LiveDieRespwn).
+
 
 Some graphics are public domain:
 

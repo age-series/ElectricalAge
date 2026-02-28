@@ -259,11 +259,11 @@ class FabricatorRender(entity: TransparentNodeEntity, descriptor: TransparentNod
     override val inventory = FabricatorInventory(3, 64, this)
 
     init {
-        this.transparentNodedescriptor = descriptor as FabricatorDescriptor
+        this.transparentNodeDescriptor = descriptor as FabricatorDescriptor
     }
 
     override fun draw() {
-        (this.transparentNodedescriptor as FabricatorDescriptor).draw(isRunning)
+        (this.transparentNodeDescriptor as FabricatorDescriptor).draw(isRunning)
     }
 
     override fun newGuiDraw(side: Direction, player: EntityPlayer): GuiScreen {
@@ -280,7 +280,7 @@ class FabricatorRender(entity: TransparentNodeEntity, descriptor: TransparentNod
 const val slotSize = 16
 const val buttonWidth = 20
 
-class FabricatorGui(player: EntityPlayer, inventory: IInventory, val render: FabricatorRender): GuiContainerEln(FabricatorContainer(null, player, inventory, render.transparentNodedescriptor as FabricatorDescriptor)) {
+class FabricatorGui(player: EntityPlayer, inventory: IInventory, val render: FabricatorRender): GuiContainerEln(FabricatorContainer(null, player, inventory, render.transparentNodeDescriptor as FabricatorDescriptor)) {
 
     private val buttonsArray = mutableListOf<GuiButtonEln>()
 
