@@ -86,10 +86,12 @@ class LampDescriptor(
         val lifeLost = (ageFactor * time) / 3600.0 // Life lost in hours, per tick
 
         val currentLife = this.getLifeInTag(lampStack)
-
         this.setLifeInTag(lampStack, currentLife - lifeLost)
 
-        return currentLife
+        var newLife = this.getLifeInTag(lampStack)
+        if (newLife < 0) newLife = 0.0
+
+        return newLife
     }
 
     override fun addInformation(itemStack: ItemStack?, entityPlayer: EntityPlayer?, list: MutableList<String>, par4: Boolean) {

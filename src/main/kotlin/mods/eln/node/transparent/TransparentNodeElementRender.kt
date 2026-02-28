@@ -179,7 +179,7 @@ abstract class TransparentNodeElementRender(var tileEntity: TransparentNodeEntit
             (tileEntity.zCoord + 64).toDouble()
         )
         val collisionBoxes = mutableListOf<AxisAlignedBB?>()
-        transparentNodedescriptor.addCollisionBoxesToList(
+        transparentNodeDescriptor.addCollisionBoxesToList(
             collisionQuery,
             collisionBoxes,
             tileEntity.worldObj,
@@ -193,7 +193,7 @@ abstract class TransparentNodeElementRender(var tileEntity: TransparentNodeEntit
             }
         }
 
-        val ghostGroup = transparentNodedescriptor.getGhostGroupFront(front)
+        val ghostGroup = transparentNodeDescriptor.getGhostGroupFront(front)
         if (ghostGroup != null) {
             for (element in ghostGroup.elementList) {
                 val x = tileEntity.xCoord + element.x

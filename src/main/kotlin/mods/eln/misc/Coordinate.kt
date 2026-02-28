@@ -44,11 +44,11 @@ class Coordinate : INBTTReady {
     }
 
     // Emulates the default Minecraft behavior for determining block coordinates
-    constructor(v: Vec3) {
+    constructor(v: Vec3, d: Int) {
         x = floor(v.xCoord).toInt()
         y = floor(v.yCoord).toInt()
         z = floor(v.zCoord).toInt()
-        dimension = 0
+        dimension = d
     }
 
     override fun hashCode(): Int {

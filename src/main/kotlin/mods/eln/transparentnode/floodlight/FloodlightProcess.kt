@@ -11,9 +11,6 @@ import mods.eln.sim.IProcess
 import mods.eln.sixnode.lampsocket.LightBlockEntity
 import net.minecraft.item.ItemStack
 import net.minecraft.util.Vec3
-import java.io.ByteArrayOutputStream
-import java.io.DataOutputStream
-import java.io.IOException
 import kotlin.math.*
 
 class FloodlightProcess(var element: FloodlightElement) : IProcess {
@@ -76,29 +73,11 @@ class FloodlightProcess(var element: FloodlightElement) : IProcess {
 
         element.powered = newLightValue > LampDescriptor.MIN_LIGHT_VALUE
         element.lightRange = lampLightRanges[FloodlightContainer.LAMP_SLOT_1_ID] + lampLightRanges[FloodlightContainer.LAMP_SLOT_2_ID]
-
-        updateBlockLight(newLightValue)
+        element.node!!.lightValue = newLightValue
+        element.needPublish()
 
         // Only run raytracing when the floodlight is actually on.
         if (newLightValue != 0) placeSpots(newLightValue)
-    }
-
-    private fun updateBlockLight(newLight: Int) {
-        element.node!!.lightValue = newLight
-
-        val bos = ByteArrayOutputStream(64)
-        val packet = DataOutputStream(bos)
-
-        element.preparePacketForClient(packet)
-
-        try {
-            packet.writeInt(element.node!!.lightValue)
-        }
-        catch (e: IOException) {
-            e.printStackTrace()
-        }
-
-        element.sendPacketToAllClient(bos)
     }
 
     /**
@@ -151,7 +130,7 @@ class FloodlightProcess(var element: FloodlightElement) : IProcess {
 
         for (idx in 0 until rotationVectors.size) {
             val lightVector = element.node!!.coordinate.toVec3()
-            val lbCoordinate = Coordinate(lightVector)
+            val lbCoordinate = Coordinate(lightVector, element.node!!.coordinate.dimension)
 
             // This forces the light cone to be "flat" on the end, instead of curved.
             val throwDistance = element.lightRange / cos(toRadians(rotationVectors[idx].second))
