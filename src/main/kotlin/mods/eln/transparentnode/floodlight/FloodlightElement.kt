@@ -107,6 +107,7 @@ class FloodlightElement(transparentNode: TransparentNode, transparentNodeDescrip
         if (Utils.isPlayerUsingWrench(player)) {
             blockFacing = blockFacing.left(rotationAxis)
             reconnect()
+            needPublish()
             return true
         }
 
