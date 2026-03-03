@@ -69,8 +69,8 @@ class PowerCapacitorSixDescriptor(name: String,
     fun getUNominalValue(inventory: IInventory): Double {
         val diel = inventory.getStackInSlot(PowerCapacitorSixContainer.dielectricId)
         return if (diel == null) 10000.0 else {
-            val desc = GenericItemUsingDamageDescriptor.getDescriptor(diel) as DielectricItem
-            desc.uNominal * diel.stackSize
+            val desc = GenericItemUsingDamageDescriptor.getDescriptor(diel, DielectricItem::class.java) as? DielectricItem
+            if (desc == null) 10000.0 else desc.uNominal * diel.stackSize
         }
     }
 

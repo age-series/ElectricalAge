@@ -1,7 +1,7 @@
 package mods.eln.transparentnode.electricalfurnace;
 
 import mods.eln.Eln;
-import mods.eln.generic.GenericItemUsingDamage;
+import mods.eln.generic.GenericItemUsingDamageDescriptor;
 import mods.eln.i18n.I18N;
 import mods.eln.item.HeatingCorpElement;
 import mods.eln.item.regulator.IRegulatorDescriptor;
@@ -173,17 +173,28 @@ public class ElectricalFurnaceElement extends TransparentNodeElement {
             thermalRegulator.setMinimumResistance(MnaConst.highImpedance);
             voltageWatchdog.setNominalVoltage(100000);
         } else {
-            HeatingCorpElement element = ((GenericItemUsingDamage<HeatingCorpElement>) itemStack.getItem()).getDescriptor(itemStack);
-            element.applyTo(thermalRegulator);
-            voltageWatchdog.setNominalVoltage(element.electricalNominalU);
+            HeatingCorpElement element = (HeatingCorpElement) GenericItemUsingDamageDescriptor.getDescriptor(
+                itemStack, HeatingCorpElement.class);
+            if (element == null) {
+                thermalRegulator.setMinimumResistance(MnaConst.highImpedance);
+                voltageWatchdog.setNominalVoltage(100000);
+            } else {
+                element.applyTo(thermalRegulator);
+                voltageWatchdog.setNominalVoltage(element.electricalNominalU);
+            }
         }
 
         itemStack = inventory.getStackInSlot(thermalRegulatorSlotId);
         if (itemStack == null) {
             thermalRegulator.setNone();
         } else {
-            IRegulatorDescriptor element = ((GenericItemUsingDamage<IRegulatorDescriptor>) itemStack.getItem()).getDescriptor(itemStack);
-            element.applyTo(thermalRegulator, 500.0, 10.0, 0.1, 0.1);
+            IRegulatorDescriptor element = (IRegulatorDescriptor) GenericItemUsingDamageDescriptor.getDescriptor(
+                itemStack, IRegulatorDescriptor.class);
+            if (element == null) {
+                thermalRegulator.setNone();
+            } else {
+                element.applyTo(thermalRegulator, 500.0, 10.0, 0.1, 0.1);
+            }
         }
     }
 

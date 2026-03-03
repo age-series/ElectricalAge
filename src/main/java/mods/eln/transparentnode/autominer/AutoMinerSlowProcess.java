@@ -1,6 +1,7 @@
 package mods.eln.transparentnode.autominer;
 
 import mods.eln.Eln;
+import mods.eln.generic.GenericItemUsingDamageDescriptor;
 import mods.eln.item.ElectricalDrillDescriptor;
 import mods.eln.item.MiningPipeDescriptor;
 import mods.eln.item.electricalitem.OreColorMapping;
@@ -53,7 +54,8 @@ public class AutoMinerSlowProcess implements IProcess, INBTTReady {
     }
 
     private boolean isReadyToDrill() {
-        ElectricalDrillDescriptor drill = (ElectricalDrillDescriptor) ElectricalDrillDescriptor.getDescriptor(miner.getInventory().getStackInSlot(AutoMinerContainer.electricalDrillSlotId));
+        ElectricalDrillDescriptor drill = (ElectricalDrillDescriptor) GenericItemUsingDamageDescriptor.getDescriptor(
+            miner.getInventory().getStackInSlot(AutoMinerContainer.electricalDrillSlotId), ElectricalDrillDescriptor.class);
         if (drill == null) return false;
         return isStorageReady();
     }
@@ -70,7 +72,8 @@ public class AutoMinerSlowProcess implements IProcess, INBTTReady {
 
     @Override
     public void process(double time) {
-        ElectricalDrillDescriptor drill = (ElectricalDrillDescriptor) ElectricalDrillDescriptor.getDescriptor(miner.getInventory().getStackInSlot(AutoMinerContainer.electricalDrillSlotId));
+        ElectricalDrillDescriptor drill = (ElectricalDrillDescriptor) GenericItemUsingDamageDescriptor.getDescriptor(
+            miner.getInventory().getStackInSlot(AutoMinerContainer.electricalDrillSlotId), ElectricalDrillDescriptor.class);
 
         if (++blinkCounter >= 9) {
             blinkCounter = 0;
@@ -233,9 +236,11 @@ public class AutoMinerSlowProcess implements IProcess, INBTTReady {
     }
 
     private void setupJob() {
-        ElectricalDrillDescriptor drill = (ElectricalDrillDescriptor) ElectricalDrillDescriptor.getDescriptor(miner.getInventory().getStackInSlot(AutoMinerContainer.electricalDrillSlotId));
+        ElectricalDrillDescriptor drill = (ElectricalDrillDescriptor) GenericItemUsingDamageDescriptor.getDescriptor(
+            miner.getInventory().getStackInSlot(AutoMinerContainer.electricalDrillSlotId), ElectricalDrillDescriptor.class);
         // OreScanner scanner = (OreScanner) ElectricalDrillDescriptor.getDescriptor(miner.inventory.getStackInSlot(AutoMinerContainer.OreScannerSlotId));
-        MiningPipeDescriptor pipe = (MiningPipeDescriptor) ElectricalDrillDescriptor.getDescriptor(miner.getInventory().getStackInSlot(AutoMinerContainer.MiningPipeSlotId));
+        MiningPipeDescriptor pipe = (MiningPipeDescriptor) GenericItemUsingDamageDescriptor.getDescriptor(
+            miner.getInventory().getStackInSlot(AutoMinerContainer.MiningPipeSlotId), MiningPipeDescriptor.class);
 
         int scannerRadius = Eln.instance.autominerRange;
         double scannerEnergy = 0;

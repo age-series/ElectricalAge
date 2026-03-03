@@ -1,6 +1,7 @@
 package mods.eln.transparentnode.powercapacitor;
 
 import mods.eln.Eln;
+import mods.eln.generic.GenericItemUsingDamageDescriptor;
 import mods.eln.item.DielectricItem;
 import mods.eln.misc.IFunction;
 import mods.eln.misc.Obj3D;
@@ -53,8 +54,8 @@ public class PowerCapacitorDescriptor extends TransparentNodeDescriptor {
         if (diel == null)
             return 10000;
         else {
-            DielectricItem desc = (DielectricItem) DielectricItem.getDescriptor(diel);
-            return desc.uNominal * diel.stackSize;
+            DielectricItem desc = (DielectricItem) GenericItemUsingDamageDescriptor.getDescriptor(diel, DielectricItem.class);
+            return desc == null ? 10000 : desc.uNominal * diel.stackSize;
         }
     }
 

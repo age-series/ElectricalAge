@@ -254,27 +254,26 @@ class LegacyDcDcElement(transparentNode: TransparentNode, descriptor: Transparen
         primaryMaxCurrent = 5.0
         secondaryMaxCurrent = 5.0
 
-        var coreFactor = 1.0
-        if (core != null) {
-            val coreDescriptor = GenericItemUsingDamageDescriptor.getDescriptor(core) as FerromagneticCoreDescriptor
-            coreFactor = coreDescriptor.cableMultiplicator
-        }
+        val coreDescriptor = GenericItemUsingDamageDescriptor.getDescriptor(
+            core, FerromagneticCoreDescriptor::class.java) as? FerromagneticCoreDescriptor
+        val coreFactor = coreDescriptor?.cableMultiplicator ?: 1.0
+        val hasValidCore = coreDescriptor != null
 
-        if (primaryCable == null || core == null || primaryCable.stackSize < 1) {
+        if (primaryCable == null || !hasValidCore || primaryCable.stackSize < 1) {
             primaryLoad.highImpedance()
             populated = false
         } else {
             primaryLoad.serialResistance = coreFactor * 0.01
         }
 
-        if (secondaryCable == null || core == null || secondaryCable.stackSize < 1) {
+        if (secondaryCable == null || !hasValidCore || secondaryCable.stackSize < 1) {
             secondaryLoad.highImpedance()
             populated = false
         } else {
             secondaryLoad.serialResistance = coreFactor * 0.01
         }
 
-        populated = primaryCable != null && secondaryCable != null && primaryCable.stackSize >= 1 && secondaryCable.stackSize >= 1 && core != null
+        populated = primaryCable != null && secondaryCable != null && primaryCable.stackSize >= 1 && secondaryCable.stackSize >= 1 && hasValidCore
 
         ratioControl = if (populated) {
             secondaryCable!!.stackSize.toDouble() / primaryCable!!.stackSize.toDouble()
