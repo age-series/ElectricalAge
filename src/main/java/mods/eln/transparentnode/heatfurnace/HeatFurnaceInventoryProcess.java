@@ -1,6 +1,6 @@
 package mods.eln.transparentnode.heatfurnace;
 
-import mods.eln.generic.GenericItemUsingDamage;
+import mods.eln.generic.GenericItemUsingDamageDescriptor;
 import mods.eln.item.ThermalIsolatorElement;
 import mods.eln.misc.INBTTReady;
 import mods.eln.misc.Utils;
@@ -28,10 +28,13 @@ public class HeatFurnaceInventoryProcess implements IProcess, INBTTReady {
 
         double isolationFactor = 1;
         if (isolatorChamberStack != null) {
-            if (furnace.thermalLoad.temperatureCelsius > ((ThermalIsolatorElement)ThermalIsolatorElement.getDescriptor(isolatorChamberStack)).getTmax()) {
+            ThermalIsolatorElement iso = (ThermalIsolatorElement) GenericItemUsingDamageDescriptor.getDescriptor(
+                isolatorChamberStack, ThermalIsolatorElement.class);
+            if (iso == null) {
+                isolationFactor = 1;
+            } else if (furnace.thermalLoad.temperatureCelsius > iso.getTmax()) {
                 furnace.inventory.decrStackSize(HeatFurnaceContainer.isolatorId, 1);
             } else {
-                ThermalIsolatorElement iso = (ThermalIsolatorElement) ((GenericItemUsingDamage) isolatorChamberStack.getItem()).getDescriptor(isolatorChamberStack);
                 isolationFactor = iso.getConductionFactor();
             }
         }

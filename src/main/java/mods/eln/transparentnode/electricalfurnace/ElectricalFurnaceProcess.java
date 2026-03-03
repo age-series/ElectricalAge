@@ -1,6 +1,6 @@
 package mods.eln.transparentnode.electricalfurnace;
 
-import mods.eln.generic.GenericItemUsingDamage;
+import mods.eln.generic.GenericItemUsingDamageDescriptor;
 import mods.eln.item.ThermalIsolatorElement;
 import mods.eln.node.transparent.TransparentNodeElementInventory;
 import mods.eln.sim.IProcess;
@@ -32,8 +32,9 @@ public class ElectricalFurnaceProcess implements IProcess {
         if (itemStack == null) {
             furnace.descriptor.refreshTo(furnace.thermalLoad, 1);
         } else {
-            ThermalIsolatorElement element = ((GenericItemUsingDamage<ThermalIsolatorElement>) itemStack.getItem()).getDescriptor(itemStack);
-            furnace.descriptor.refreshTo(furnace.thermalLoad, element.getConductionFactor());
+            ThermalIsolatorElement element = (ThermalIsolatorElement) GenericItemUsingDamageDescriptor.getDescriptor(
+                itemStack, ThermalIsolatorElement.class);
+            furnace.descriptor.refreshTo(furnace.thermalLoad, element == null ? 1 : element.getConductionFactor());
         }
 
         ItemStack itemStackIn = inventory.getStackInSlot(ElectricalFurnaceElement.inSlotId);
