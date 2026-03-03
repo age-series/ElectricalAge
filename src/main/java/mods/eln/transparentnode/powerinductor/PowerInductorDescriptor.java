@@ -1,6 +1,7 @@
 package mods.eln.transparentnode.powerinductor;
 
 import mods.eln.Eln;
+import mods.eln.generic.GenericItemUsingDamageDescriptor;
 import mods.eln.item.FerromagneticCoreDescriptor;
 import mods.eln.misc.Obj3D;
 import mods.eln.misc.IFunction;
@@ -47,7 +48,9 @@ public class PowerInductorDescriptor extends TransparentNodeDescriptor {
         ItemStack core = inventory.getStackInSlot(PowerInductorContainer.coreId);
 
         if (core == null) return MnaConst.highImpedance;
-        FerromagneticCoreDescriptor coreDescriptor = (FerromagneticCoreDescriptor) FerromagneticCoreDescriptor.getDescriptor(core);
+        FerromagneticCoreDescriptor coreDescriptor = (FerromagneticCoreDescriptor) GenericItemUsingDamageDescriptor.getDescriptor(
+            core, FerromagneticCoreDescriptor.class);
+        if (coreDescriptor == null) return MnaConst.highImpedance;
 
         double coreFactor = coreDescriptor.cableMultiplicator;
 

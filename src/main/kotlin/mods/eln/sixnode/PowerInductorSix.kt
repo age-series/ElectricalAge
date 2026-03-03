@@ -57,7 +57,8 @@ class PowerInductorSixDescriptor(name: String,
 
     fun getRsValue(inventory: IInventory): Double {
         val core = inventory.getStackInSlot(PowerInductorSixContainer.coreId) ?: return MnaConst.highImpedance
-        val coreDescriptor = GenericItemUsingDamageDescriptor.getDescriptor(core) as FerromagneticCoreDescriptor
+        val coreDescriptor = GenericItemUsingDamageDescriptor.getDescriptor(
+            core, FerromagneticCoreDescriptor::class.java) as? FerromagneticCoreDescriptor ?: return MnaConst.highImpedance
         val coreFactor = coreDescriptor.cableMultiplicator
         return Eln.instance.lowVoltageCableDescriptor.electricalRs * coreFactor
     }

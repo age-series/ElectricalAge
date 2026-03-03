@@ -1,5 +1,6 @@
 package mods.eln.sixnode.electricalwatch;
 
+import mods.eln.generic.GenericItemUsingDamageDescriptor;
 import mods.eln.item.electricalitem.BatteryItem;
 import mods.eln.misc.INBTTReady;
 import mods.eln.sim.IProcess;
@@ -19,7 +20,7 @@ public class ElectricalWatchSlowProcess implements IProcess, INBTTReady {
 
     double getBatteryLevel() {
         ItemStack batteryStack = element.getInventory().getStackInSlot(ElectricalWatchContainer.batteryId);
-        BatteryItem battery = (BatteryItem) BatteryItem.getDescriptor(batteryStack);
+        BatteryItem battery = (BatteryItem) GenericItemUsingDamageDescriptor.getDescriptor(batteryStack, BatteryItem.class);
         if (battery != null) {
             return battery.getEnergy(batteryStack) / battery.getEnergyMax(batteryStack);
         } else {
@@ -30,13 +31,13 @@ public class ElectricalWatchSlowProcess implements IProcess, INBTTReady {
     @Override
     public void process(double time) {
         ItemStack batteryStack = element.getInventory().getStackInSlot(ElectricalWatchContainer.batteryId);
-        BatteryItem battery = (BatteryItem) BatteryItem.getDescriptor(batteryStack);
+        BatteryItem battery = (BatteryItem) GenericItemUsingDamageDescriptor.getDescriptor(batteryStack, BatteryItem.class);
         double energy;
         if (battery == null || (energy = battery.getEnergy(batteryStack)) < element.descriptor.powerConsumtion * time * 4) {
             if (upToDate) {
                 upToDate = false;
                 oldDate = element.sixNode.coordinate.world().getWorldTime();
-                if (batteryStack != null) battery.setEnergy(batteryStack, 0);
+                if (battery != null && batteryStack != null) battery.setEnergy(batteryStack, 0);
                 element.needPublish();
             }
         } else {
