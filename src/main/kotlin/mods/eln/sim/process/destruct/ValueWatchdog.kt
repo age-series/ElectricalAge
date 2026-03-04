@@ -5,6 +5,14 @@ import mods.eln.misc.Utils
 import mods.eln.misc.Utils.println
 import mods.eln.sim.IProcess
 
+enum class WatchdogType {
+    THERMAL,
+    RESISTOR_HEAT,
+    VOLTAGE,
+    SHAFT_SPEED,
+    OTHER
+}
+
 abstract class ValueWatchdog : IProcess {
     private var destructible: IDestructible? = null
     var min = 0.0
@@ -15,6 +23,8 @@ abstract class ValueWatchdog : IProcess {
 
     // TODO: Rename. Hysteresis?
     private var joker = true
+    protected open val watchdogType: WatchdogType = WatchdogType.OTHER
+
     override fun process(time: Double) {
         if (boot) {
             boot = false
@@ -36,12 +46,30 @@ abstract class ValueWatchdog : IProcess {
         }
         if (timeout < 0) {
             onDestroy(value, overflow)
-            println(
-                "%s destroying %s",
-                javaClass.name,
-                destructible?.describe()?: "Null destructible"
-            )
-            if (!Eln.debugExplosions) destructible?.destructImpl()
+            if (isWatchdogDestructionEnabled()) {
+                println(
+                    "%s destroying %s",
+                    javaClass.name,
+                    destructible?.describe()?: "Null destructible"
+                )
+                destructible?.destructImpl()
+            } else {
+                println(
+                    "%s tripped (destruction disabled) for %s",
+                    javaClass.name,
+                    destructible?.describe() ?: "Null destructible"
+                )
+            }
+        }
+    }
+
+    private fun isWatchdogDestructionEnabled(): Boolean {
+        return when (watchdogType) {
+            WatchdogType.THERMAL -> Eln.watchdogThermalEnabled
+            WatchdogType.RESISTOR_HEAT -> Eln.watchdogResistorHeatEnabled
+            WatchdogType.VOLTAGE -> Eln.watchdogVoltageEnabled
+            WatchdogType.SHAFT_SPEED -> Eln.watchdogShaftSpeedEnabled
+            WatchdogType.OTHER -> Eln.watchdogOtherEnabled
         }
     }
 

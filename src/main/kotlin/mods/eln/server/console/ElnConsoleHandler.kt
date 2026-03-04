@@ -32,6 +32,7 @@ class ElnConsoleCommands: ICommand {
             ElnDebugCommand(),
             ElnSimSnapshotCommand(),
             ElnExplosionsCommand(),
+            ElnWatchdogCommand(),
             ElnIconsCommand(),
             ElnPoleMapCommand(),
             ElnStopShaftCommand(),

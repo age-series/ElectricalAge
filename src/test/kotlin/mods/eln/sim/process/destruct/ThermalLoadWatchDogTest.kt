@@ -1,7 +1,9 @@
 package mods.eln.sim.process.destruct
 
+import mods.eln.Eln
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFalse
 import kotlin.test.assertSame
 import kotlin.test.assertTrue
 import mods.eln.sim.ThermalLoad
@@ -59,5 +61,37 @@ class ThermalLoadWatchDogTest {
             .setTemperatureLimits(100.0, -40.0)
 
         assertTrue(watchdog.getValue() > watchdog.max, "Absolute temperature should exceed configured max.")
+    }
+
+    @Test
+    fun resistorHeatModeUsesResistorHeatToggle() {
+        val previousResistor = Eln.watchdogResistorHeatEnabled
+        val previousThermal = Eln.watchdogThermalEnabled
+        Eln.watchdogResistorHeatEnabled = false
+        Eln.watchdogThermalEnabled = true
+        try {
+            val load = ThermalLoad().apply { temperatureCelsius = 100.0 }
+            val target = object : IDestructible {
+                var destroyed = false
+                override fun destructImpl() {
+                    destroyed = true
+                }
+
+                override fun describe(): String = "resistor"
+            }
+            val watchdog = ThermalLoadWatchDog(load).asResistorHeatWatchdog()
+            watchdog.setDestroys(target)
+            watchdog.max = 1.0
+            watchdog.min = -1.0
+            watchdog.timeoutReset = 0.0
+
+            watchdog.process(1.0)
+            watchdog.process(1.0)
+
+            assertFalse(target.destroyed)
+        } finally {
+            Eln.watchdogResistorHeatEnabled = previousResistor
+            Eln.watchdogThermalEnabled = previousThermal
+        }
     }
 }

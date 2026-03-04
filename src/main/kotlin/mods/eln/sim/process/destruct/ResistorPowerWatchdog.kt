@@ -3,6 +3,7 @@ package mods.eln.sim.process.destruct
 import mods.eln.sim.mna.component.Resistor
 
 class ResistorPowerWatchdog(var resistor: Resistor) : ValueWatchdog() {
+    override val watchdogType = WatchdogType.RESISTOR_HEAT
 
     fun setMaximumPower(maximumPower: Double): ResistorPowerWatchdog {
         max = maximumPower

@@ -200,7 +200,11 @@ public class Eln {
     public static boolean explosionEnable;
     public static boolean debugEnabled = false;  // Read from configuration file. Default is `false`.
     public static boolean simSnapshotEnabled = false;
-    public static boolean debugExplosions = false;
+    public static boolean watchdogThermalEnabled = true;
+    public static boolean watchdogResistorHeatEnabled = false;
+    public static boolean watchdogVoltageEnabled = true;
+    public static boolean watchdogShaftSpeedEnabled = true;
+    public static boolean watchdogOtherEnabled = true;
     public static boolean versionCheckEnabled = true; // Read from configuration file. Default is `true`.
     public static boolean analyticsEnabled = true; // Read from configuration file. Default is `true`.
     public static String playerUUID = null; // Read from configuration file. Default is `null`.
