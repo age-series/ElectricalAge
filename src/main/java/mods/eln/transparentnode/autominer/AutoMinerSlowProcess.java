@@ -134,6 +134,7 @@ public class AutoMinerSlowProcess implements IProcess, INBTTReady {
                         Eln.ghostManager.removeGhostAndBlock(jobCoord);
                         if (miner.getInventory().getStackInSlot(AutoMinerContainer.MiningPipeSlotId) == null) {
                             miner.getInventory().setInventorySlotContents(AutoMinerContainer.MiningPipeSlotId, Eln.miningPipeDescriptor.newItemStack(1));
+                            miner.getInventory().markDirty();
                         } else {
                             miner.getInventory().decrStackSize(AutoMinerContainer.MiningPipeSlotId, -1);
                         }

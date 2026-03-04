@@ -234,6 +234,7 @@ class FabricatorProcess(val element: FabricatorElement): IProcess {
                     val newStack = operation.outputItem.copy()
                     newStack.stackSize = operation.perSheet
                     element.inventory.setInventorySlotContents(FabricatorSlots.OUTPUT.slotId, newStack)
+                    element.inventory.markDirty()
                     powerConsumed -= powerRequired
                     element.needPublish()
                 } else {
@@ -242,6 +243,7 @@ class FabricatorProcess(val element: FabricatorElement): IProcess {
                         val newStack = operation.outputItem.copy()
                         newStack.stackSize = stackSize + operation.perSheet
                         element.inventory.setInventorySlotContents(FabricatorSlots.OUTPUT.slotId, newStack)
+                        element.inventory.markDirty()
                         powerConsumed -= powerRequired
                         element.needPublish()
                     }
