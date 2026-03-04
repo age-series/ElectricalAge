@@ -238,7 +238,9 @@ public class ElectricalSensorElement extends SixNodeElement implements IConfigur
         //if (!descriptor.voltageOnly)
         {
             ItemStack cable = getInventory().getStackInSlot(ElectricalSensorContainer.cableSlotId);
-            GenericCableDescriptor cableDescriptor = (GenericCableDescriptor) Eln.sixNodeItem.getDescriptor(cable);
+            SixNodeDescriptor descriptor = Eln.sixNodeItem.getDescriptor(cable);
+            GenericCableDescriptor cableDescriptor = descriptor instanceof GenericCableDescriptor ?
+                (GenericCableDescriptor) descriptor : null;
 
             if (cableDescriptor == null) {
                 if (resistor != null) resistor.highImpedance();

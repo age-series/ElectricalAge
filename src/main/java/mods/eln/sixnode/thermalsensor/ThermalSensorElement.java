@@ -203,17 +203,17 @@ public class ThermalSensorElement extends SixNodeElement implements IConfigurabl
 
         SixNodeDescriptor descriptor = Eln.sixNodeItem.getDescriptor(cable);
         if (descriptor == null) return;
-        if (descriptor.getClass() == ThermalCableDescriptor.class) {
-            ThermalCableDescriptor cableDescriptor = (ThermalCableDescriptor) Eln.sixNodeItem.getDescriptor(cable);
+        if (descriptor instanceof ThermalCableDescriptor) {
+            ThermalCableDescriptor cableDescriptor = (ThermalCableDescriptor) descriptor;
             cableDescriptor.setThermalLoad(thermalLoad);
             thermalLoad.setAsFast();
-        } else if (descriptor.getClass() == ElectricalCableDescriptor.class) {
-            ElectricalCableDescriptor cableDescriptor = (ElectricalCableDescriptor) Eln.sixNodeItem.getDescriptor(cable);
+        } else if (descriptor instanceof ElectricalCableDescriptor) {
+            ElectricalCableDescriptor cableDescriptor = (ElectricalCableDescriptor) descriptor;
             cableDescriptor.applyTo(thermalLoad);
             thermalLoad.Rp = 1000000000.0;
             thermalLoad.setAsSlow();
-        } else if (descriptor.getClass() == CurrentCableDescriptor.class) {
-            CurrentCableDescriptor cableDescriptor = (CurrentCableDescriptor) Eln.sixNodeItem.getDescriptor(cable);
+        } else if (descriptor instanceof CurrentCableDescriptor) {
+            CurrentCableDescriptor cableDescriptor = (CurrentCableDescriptor) descriptor;
             cableDescriptor.applyTo(thermalLoad);
             thermalLoad.Rp = 1000000000.0;
             thermalLoad.setAsSlow();
@@ -224,12 +224,12 @@ public class ThermalSensorElement extends SixNodeElement implements IConfigurabl
 
     boolean isItemThermalCable() {
         SixNodeDescriptor descriptor = Eln.sixNodeItem.getDescriptor(getInventory().getStackInSlot(ThermalSensorContainer.cableSlotId));
-        return descriptor != null && descriptor.getClass() == ThermalCableDescriptor.class;
+        return descriptor instanceof ThermalCableDescriptor;
     }
 
     boolean isItemElectricalCable() {
         SixNodeDescriptor descriptor = Eln.sixNodeItem.getDescriptor(getInventory().getStackInSlot(ThermalSensorContainer.cableSlotId));
-        return descriptor != null && (descriptor.getClass() == ElectricalCableDescriptor.class || descriptor.getClass() == CurrentCableDescriptor.class);
+        return descriptor instanceof ElectricalCableDescriptor || descriptor instanceof CurrentCableDescriptor;
     }
 
     @Override

@@ -1,6 +1,7 @@
 package mods.eln.transparentnode.electricalfurnace;
 
 import mods.eln.gui.*;
+import mods.eln.generic.GenericItemUsingDamageDescriptor;
 import mods.eln.item.HeatingCorpElement;
 import mods.eln.misc.Utils;
 import mods.eln.node.transparent.TransparentNodeElementInventory;
@@ -92,9 +93,12 @@ public class ElectricalFurnaceGuiDraw extends GuiContainerEln {
         if (stack == null) {
             supplyBar.setEnabled(false);
         } else {
-            supplyBar.setEnabled(true);
-            HeatingCorpElement desc = (HeatingCorpElement) HeatingCorpElement.getDescriptor(stack);
-            supplyBar.setNominalU((float) desc.electricalNominalU);
+            HeatingCorpElement desc = (HeatingCorpElement) GenericItemUsingDamageDescriptor.getDescriptor(
+                stack, HeatingCorpElement.class);
+            supplyBar.setEnabled(desc != null);
+            if (desc != null) {
+                supplyBar.setNominalU((float) desc.electricalNominalU);
+            }
         }
         supplyBar.setVoltage(render.voltage);
         supplyBar.setPower(render.heatingCorpResistorP);

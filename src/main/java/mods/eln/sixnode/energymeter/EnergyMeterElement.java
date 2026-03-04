@@ -195,7 +195,8 @@ public class EnergyMeterElement extends SixNodeElement {
     public void computeElectricalLoad() {
         ItemStack cable = inventory.getStackInSlot(EnergyMeterContainer.cableSlotId);
 
-        cableDescriptor = (ElectricalCableDescriptor) Eln.sixNodeItem.getDescriptor(cable);
+        SixNodeDescriptor descriptor = Eln.sixNodeItem.getDescriptor(cable);
+        cableDescriptor = descriptor instanceof ElectricalCableDescriptor ? (ElectricalCableDescriptor) descriptor : null;
         if (cableDescriptor == null) {
             aLoad.highImpedance();
             bLoad.highImpedance();

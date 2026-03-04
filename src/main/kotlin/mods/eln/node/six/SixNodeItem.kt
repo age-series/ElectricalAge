@@ -122,15 +122,20 @@ class SixNodeItem(b: Block?) : GenericItemBlockUsingDamage<SixNodeDescriptor?>(b
     }
 
     override fun handleRenderType(item: ItemStack, type: ItemRenderType): Boolean {
-        return if (getDescriptor(item) == null) false else getDescriptor(item)!!.handleRenderType(item, type)
+        val descriptor = getDescriptor(item) ?: return false
+        return descriptor.handleRenderType(item, type)
     }
 
     override fun shouldUseRenderHelper(type: ItemRenderType, item: ItemStack, helper: ItemRendererHelper): Boolean {
-        return if (!isStackValidToPlace(item)) false else getDescriptor(item)!!.shouldUseRenderHelper(type, item, helper)
+        if (!isStackValidToPlace(item)) return false
+        val descriptor = getDescriptor(item) ?: return false
+        return descriptor.shouldUseRenderHelper(type, item, helper)
     }
 
     fun shouldUseRenderHelperEln(type: ItemRenderType?, item: ItemStack?, helper: ItemRendererHelper?): Boolean {
-        return if (!isStackValidToPlace(item)) false else getDescriptor(item)!!.shouldUseRenderHelperEln(type, item, helper)
+        if (!isStackValidToPlace(item)) return false
+        val descriptor = getDescriptor(item) ?: return false
+        return descriptor.shouldUseRenderHelperEln(type, item, helper)
     }
 
     override fun renderItem(type: ItemRenderType, item: ItemStack, vararg data: Any) {
@@ -160,7 +165,10 @@ class SixNodeItem(b: Block?) : GenericItemBlockUsingDamage<SixNodeDescriptor?>(b
                 }
             }
         }
-        getDescriptor(item)!!.renderItem(type, item, *data)
+        val descriptor = getDescriptor(item)
+        if (descriptor != null) {
+            descriptor.renderItem(type, item, *data)
+        }
         Minecraft.getMinecraft().mcProfiler.endSection()
     }
 

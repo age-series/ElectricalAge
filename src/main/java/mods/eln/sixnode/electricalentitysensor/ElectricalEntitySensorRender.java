@@ -2,6 +2,7 @@ package mods.eln.sixnode.electricalentitysensor;
 
 import mods.eln.Eln;
 import mods.eln.cable.CableRenderDescriptor;
+import mods.eln.generic.GenericItemUsingDamageDescriptor;
 import mods.eln.item.EntitySensorFilterDescriptor;
 import mods.eln.misc.Direction;
 import mods.eln.misc.LRDU;
@@ -47,7 +48,8 @@ public class ElectricalEntitySensorRender extends SixNodeElementRender {
         try {
             state = stream.readBoolean();
             ItemStack filterStack = Utils.unserialiseItemStack(stream);
-            filter = (EntitySensorFilterDescriptor) EntitySensorFilterDescriptor.getDescriptor(filterStack);
+            filter = (EntitySensorFilterDescriptor) GenericItemUsingDamageDescriptor.getDescriptor(
+                filterStack, EntitySensorFilterDescriptor.class);
         } catch (IOException e) {
             e.printStackTrace();
         }

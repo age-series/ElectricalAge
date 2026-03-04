@@ -9,6 +9,7 @@ import mods.eln.misc.LRDU;
 import mods.eln.misc.Utils;
 import mods.eln.node.AutoAcceptInventoryProxy;
 import mods.eln.node.NodeBase;
+import mods.eln.generic.GenericItemBlockUsingDamageDescriptor;
 import mods.eln.node.six.SixNode;
 import mods.eln.node.six.SixNodeDescriptor;
 import mods.eln.node.six.SixNodeElement;
@@ -337,9 +338,15 @@ public class LampSupplyElement extends SixNodeElement implements IConfigurable {
     void setupFromInventory() {
         ItemStack cableStack = getInventory().getStackInSlot(LampSupplyContainer.cableSlotId);
         if (cableStack != null) {
-            ElectricalCableDescriptor desc = (ElectricalCableDescriptor) ElectricalCableDescriptor.getDescriptor(cableStack);
-            desc.applyTo(powerLoad);
-            voltageWatchdog.setNominalVoltage(desc.electricalNominalVoltage);
+            ElectricalCableDescriptor desc = (ElectricalCableDescriptor) GenericItemBlockUsingDamageDescriptor.getDescriptor(
+                cableStack, ElectricalCableDescriptor.class);
+            if (desc != null) {
+                desc.applyTo(powerLoad);
+                voltageWatchdog.setNominalVoltage(desc.electricalNominalVoltage);
+            } else {
+                voltageWatchdog.setNominalVoltage(10000);
+                powerLoad.highImpedance();
+            }
         } else {
             voltageWatchdog.setNominalVoltage(10000);
             powerLoad.highImpedance();

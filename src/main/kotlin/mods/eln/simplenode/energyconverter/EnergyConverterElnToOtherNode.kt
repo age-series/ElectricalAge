@@ -51,7 +51,8 @@ class EnergyConverterElnToOtherNode : SimpleNode() {
         electricalProcessList.add(electricalProcess)
         Eln.applySmallRs(load)
         load.setAsPrivate()
-        (getDescriptor() as EnergyConverterElnToOtherDescriptor).applyTo(this)
+        val descriptor = getDescriptor() as? EnergyConverterElnToOtherDescriptor ?: return
+        descriptor.applyTo(this)
         connect()
     }
 
