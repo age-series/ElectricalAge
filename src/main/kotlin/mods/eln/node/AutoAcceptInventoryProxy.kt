@@ -139,7 +139,13 @@ class AutoAcceptInventoryProxy(val inventory: IInventory) {
         return this
     }
 
-    fun take(itemStack: ItemStack?) = itemAcceptors.filterNotNull().any { it.take(itemStack, inventory) }
+    fun take(itemStack: ItemStack?): Boolean {
+        val accepted = itemAcceptors.filterNotNull().any { it.take(itemStack, inventory) }
+        if (accepted) {
+            inventory.markDirty()
+        }
+        return accepted
+    }
 
     fun take(itemStack: ItemStack?, nodeElement: INodeElement?, publish: Boolean = false,
              notifyInventoryChange: Boolean = false) =

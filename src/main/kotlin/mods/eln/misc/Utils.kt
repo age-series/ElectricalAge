@@ -498,6 +498,7 @@ object Utils {
     fun tryPutStackInInventory(stack: ItemStack, inventory: IInventory?): Boolean {
         if (inventory == null) return false
         val limit = inventory.inventoryStackLimit
+        var changed = false
 
         // First, make a list of possible target slots.
         val slots = ArrayList<Int>(4)
@@ -535,13 +536,18 @@ object Utils {
                 val amount = toPut.coerceAtMost(limit)
                 inventory.setInventorySlotContents(slot, ItemStack(stack.item, amount, stack.itemDamage))
                 toPut -= amount
+                changed = true
             } else {
                 val space = limit - target.stackSize
                 val amount = toPut.coerceAtMost(space)
                 target.stackSize += amount
                 toPut -= amount
+                if (amount > 0) changed = true
             }
             if (toPut <= 0) break
+        }
+        if (changed) {
+            inventory.markDirty()
         }
         return true
     }
@@ -591,12 +597,14 @@ object Utils {
     @JvmStatic
     fun tryPutStackInInventory(stackList: Array<ItemStack>, inventory: IInventory, slotsIdList: IntArray): Boolean {
         val limit = inventory.inventoryStackLimit
+        var changed = false
         for (stack in stackList) {
             for (idx in slotsIdList.indices) {
                 val targetStack = inventory.getStackInSlot(slotsIdList[idx])
                 if (targetStack == null) {
                     inventory.setInventorySlotContents(slotsIdList[idx], stack.copy())
                     stack.stackSize = 0
+                    changed = true
                     break
                 } else if (targetStack.isItemEqual(stack)) {
                     // inventory.decrStackSize(idx, -stack.stackSize);
@@ -606,12 +614,16 @@ object Utils {
                         if (transfer > transferMax) transfer = transferMax
                         inventory.decrStackSize(slotsIdList[idx], -transfer)
                         stack.stackSize -= transfer
+                        if (transfer > 0) changed = true
                     }
                     if (stack.stackSize == 0) {
                         break
                     }
                 }
             }
+        }
+        if (changed) {
+            inventory.markDirty()
         }
         return true
     }

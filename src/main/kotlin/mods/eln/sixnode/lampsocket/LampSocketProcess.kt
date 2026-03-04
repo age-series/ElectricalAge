@@ -179,6 +179,7 @@ class LampSocketProcess(var lamp: LampSocketElement) : IProcess, INBTTReady /*,L
             }
             if (lampDescriptor.getLifeInTag(lampStack) <= 0.0) {
                 lamp.inventory!!.setInventorySlotContents(0, null)
+                lamp.inventory!!.markDirty()
                 newLight = 0
             }
         } else {
