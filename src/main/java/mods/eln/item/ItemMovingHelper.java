@@ -15,12 +15,14 @@ public abstract class ItemMovingHelper {
     public abstract ItemStack newStackOfSize(int items);
 
     public void move(InventoryPlayer src, IInventory dst, int dstSlot, int desired) {
+        boolean dstChanged = false;
         if(Utils.isCreative((EntityPlayerMP) src.player)) {
             if(desired == 0) {
                 dst.setInventorySlotContents(dstSlot, null);
             } else {
                 dst.setInventorySlotContents(dstSlot, newStackOfSize(desired));
             }
+            dst.markDirty();
             return;
         }
         int now = 0;
@@ -50,6 +52,7 @@ public abstract class ItemMovingHelper {
             Utils.println(String.format("IMH.m: moved %d into node", moved));
             if(moved > 0) {
                 dst.setInventorySlotContents(dstSlot, newStackOfSize(now + moved));
+                dstChanged = true;
             }
         } else {
             int diff = now - desired;
@@ -61,6 +64,7 @@ public abstract class ItemMovingHelper {
                     } else {
                         dst.setInventorySlotContents(dstSlot, newStackOfSize(desired));
                     }
+                    dstChanged = true;
                     Utils.println("IMH.m: move succeeded");
                 } else {
                     Utils.println("IMH.m: move failed!");
@@ -72,6 +76,9 @@ public abstract class ItemMovingHelper {
             syncEntireInventory(src.player);
         }
 
+        if (dstChanged) {
+            dst.markDirty();
+        }
     }
 
     public static void syncItemInSlot(InventoryPlayer inv, int slot) {

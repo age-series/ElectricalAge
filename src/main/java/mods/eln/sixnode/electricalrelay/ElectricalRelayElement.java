@@ -218,6 +218,7 @@ public class ElectricalRelayElement extends SixNodeElement implements IConfigura
     public void readConfigTool(NBTTagCompound compound, EntityPlayer invoker) {
         if(compound.hasKey("nc")) {
             defaultOutput = compound.getBoolean("nc");
+            needPublish();
         }
     }
 

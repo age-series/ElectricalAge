@@ -178,7 +178,10 @@ abstract class NodeBase {
                     if (writeConfigTool(side, equipped.tagCompound, entityPlayer)) snd = beepDownloaded
                     act = "write"
                 } else {
-                    if (readConfigTool(side, equipped.tagCompound, entityPlayer)) snd = beepUploaded
+                    if (readConfigTool(side, equipped.tagCompound, entityPlayer)) {
+                        needPublish()
+                        snd = beepUploaded
+                    }
                     act = "read"
                 }
                 snd.set(
