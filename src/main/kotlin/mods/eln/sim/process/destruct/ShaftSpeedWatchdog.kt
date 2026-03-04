@@ -3,6 +3,7 @@ package mods.eln.sim.process.destruct
 import mods.eln.mechanical.ShaftElement
 
 class ShaftSpeedWatchdog(private val shaftElement: ShaftElement, max: Double) : ValueWatchdog() {
+    override val watchdogType = WatchdogType.SHAFT_SPEED
 
     init {
         this.max = max

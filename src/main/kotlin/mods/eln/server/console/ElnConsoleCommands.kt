@@ -1053,26 +1053,15 @@ class ElnExplosionsCommand: IConsoleCommand {
     override val name = "explosions"
 
     override fun runCommand(ics: ICommandSender, args: List<String>) {
-        when (args.size) {
-            1 -> {
-                val explosions = getArgBool(ics, args[0]) ?: return
-                Eln.explosionEnable = explosions
-                val nonsense = false
-                Eln.config.get("gameplay", "explosion", nonsense).set(Eln.explosionEnable)
-                Eln.config.save()
-                cprint(ics, "Explosions: ${FC.DARK_GREEN}${boolToStr(explosions)}", indent = 1)
-            }
-            2 -> {
-                if (!args[0].equals("debug", ignoreCase = true)) return
-                val debugWatchdog = getArgBool(ics, args[1]) ?: return
-                val nonsense = false
-                Eln.config.get("debug", "watchdog", nonsense).set(Eln.debugExplosions)
-                Eln.config.save()
-                cprint(ics, "The debug watchdog is now ${FC.DARK_GREEN}${boolToStr(debugWatchdog)}", indent = 1)
-            }
-            else -> {
-                cprint(ics, "This command only takes one argument - true or false")
-            }
+        if (args.size == 1) {
+            val explosions = getArgBool(ics, args[0]) ?: return
+            Eln.explosionEnable = explosions
+            val nonsense = false
+            Eln.config.get("gameplay", "explosion", nonsense).set(Eln.explosionEnable)
+            Eln.config.save()
+            cprint(ics, "Explosions: ${FC.DARK_GREEN}${boolToStr(explosions)}", indent = 1)
+        } else {
+            cprint(ics, "This command only takes one argument - true or false")
         }
     }
 
@@ -1094,6 +1083,101 @@ class ElnExplosionsCommand: IConsoleCommand {
         } else {
             return options.filter {it.startsWith(args[0], ignoreCase = true)}
         }
+    }
+}
+
+class ElnWatchdogCommand: IConsoleCommand {
+    override val name = "watchdog"
+    private val validTypes = listOf("all", "thermal", "resistorHeat", "voltage", "shaftSpeed", "other", "defaults")
+
+    override fun runCommand(ics: ICommandSender, args: List<String>) {
+        if (args.isEmpty() || args.size > 2) {
+            cprint(ics, "Usage: /eln watchdog <type> [true|false]", indent = 1)
+            cprint(ics, "Types: ${validTypes.joinToString(", ")}", indent = 1)
+            return
+        }
+        val type = validTypes.firstOrNull { it.equals(args[0], ignoreCase = true) } ?: run {
+            cprint(ics, "Unknown watchdog type '${args[0]}'.", indent = 1)
+            cprint(ics, "Types: ${validTypes.joinToString(", ")}", indent = 1)
+            return
+        }
+        if (type.equals("defaults", ignoreCase = true)) {
+            if (args.size != 1) {
+                cprint(ics, "Usage: /eln watchdog defaults", indent = 1)
+                return
+            }
+            applyDefaults()
+            saveWatchdogConfig()
+            cprint(ics, "Watchdog defaults restored (thermal=true, resistorHeat=false, voltage=true, shaftSpeed=true, other=true).", indent = 1)
+            return
+        }
+        if (args.size != 2) {
+            cprint(ics, "Usage: /eln watchdog <type> <true|false>", indent = 1)
+            return
+        }
+        val watchdogEnabled = getArgBool(ics, args[1]) ?: return
+
+        when (type.lowercase()) {
+            "all" -> {
+                Eln.watchdogThermalEnabled = watchdogEnabled
+                Eln.watchdogResistorHeatEnabled = watchdogEnabled
+                Eln.watchdogVoltageEnabled = watchdogEnabled
+                Eln.watchdogShaftSpeedEnabled = watchdogEnabled
+                Eln.watchdogOtherEnabled = watchdogEnabled
+            }
+            "thermal" -> Eln.watchdogThermalEnabled = watchdogEnabled
+            "resistorheat" -> Eln.watchdogResistorHeatEnabled = watchdogEnabled
+            "voltage" -> Eln.watchdogVoltageEnabled = watchdogEnabled
+            "shaftspeed" -> Eln.watchdogShaftSpeedEnabled = watchdogEnabled
+            "other" -> Eln.watchdogOtherEnabled = watchdogEnabled
+        }
+
+        saveWatchdogConfig()
+
+        if (type.equals("all", ignoreCase = true)) {
+            cprint(ics, "All watchdog destruction: ${FC.DARK_GREEN}${boolToStr(watchdogEnabled)}", indent = 1)
+        } else {
+            cprint(ics, "Watchdog '$type' destruction: ${FC.DARK_GREEN}${boolToStr(watchdogEnabled)}", indent = 1)
+        }
+    }
+
+    private fun applyDefaults() {
+        Eln.watchdogThermalEnabled = true
+        Eln.watchdogResistorHeatEnabled = false
+        Eln.watchdogVoltageEnabled = true
+        Eln.watchdogShaftSpeedEnabled = true
+        Eln.watchdogOtherEnabled = true
+    }
+
+    private fun saveWatchdogConfig() {
+        Eln.config.get("watchdog", "thermal", true).set(Eln.watchdogThermalEnabled)
+        Eln.config.get("watchdog", "resistorHeat", false).set(Eln.watchdogResistorHeatEnabled)
+        Eln.config.get("watchdog", "voltage", true).set(Eln.watchdogVoltageEnabled)
+        Eln.config.get("watchdog", "shaftSpeed", true).set(Eln.watchdogShaftSpeedEnabled)
+        Eln.config.get("watchdog", "other", true).set(Eln.watchdogOtherEnabled)
+        Eln.config.save()
+    }
+
+    override fun getManPage(ics: ICommandSender, args: List<String>) {
+        cprint(ics, "Enable or disable destruction for one watchdog category at runtime.", indent = 1)
+        cprint(ics, "Use defaults to restore the default watchdog profile.", indent = 1)
+        cprint(ics, "This also updates Eln.cfg.", indent = 1)
+        cprint(ics, "")
+        cprint(ics, "Parameters:", indent = 1)
+        cprint(ics, "@0:string : Watchdog type (all, thermal, resistorHeat, voltage, shaftSpeed, other, defaults).", indent = 2)
+        cprint(ics, "@1:bool : Destruction state (enabled/disabled). Not used by defaults.", indent = 2)
+        cprint(ics, "")
+    }
+
+    override fun requiredPermission() = listOf(UserPermission.IS_OPERATOR)
+
+    override fun getTabCompletion(args: List<String>): List<String> {
+        if (args.isEmpty() || args[0].isEmpty()) return validTypes
+        if (args.size == 1) return validTypes.filter { it.startsWith(args[0], ignoreCase = true) }
+        val boolOptions = listOf("true", "false")
+        if (args[0].equals("defaults", ignoreCase = true)) return listOf()
+        if (args.size == 2) return boolOptions.filter { it.startsWith(args[1], ignoreCase = true) }
+        return listOf()
     }
 }
 

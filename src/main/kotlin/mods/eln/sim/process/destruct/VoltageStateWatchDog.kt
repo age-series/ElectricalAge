@@ -3,6 +3,7 @@ package mods.eln.sim.process.destruct
 import mods.eln.sim.mna.state.VoltageState
 
 class VoltageStateWatchDog(var state: VoltageState): ValueWatchdog() {
+    override val watchdogType = WatchdogType.VOLTAGE
 
     override fun getValue(): Double {
         return state.voltage

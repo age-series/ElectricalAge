@@ -38,9 +38,22 @@ object ConfigHandler {
         Eln.debugEnabled = Eln.config["debug", "enable", false, "Enables debug printing spam"].getBoolean(false)
         Eln.simSnapshotEnabled =
             Eln.config["debug", "simSnapshot", false, "Enable circuit snapshot logging (requires debug.enable)."].getBoolean(false)
-        Eln.debugExplosions = Eln.config["debug", "watchdog", false, "Watchdog Impl. check"].getBoolean(false)
+        Eln.config["debug", "watchdogDebugNoDestroy", false, "DEPRECATED: replaced by watchdog.* typed destruction toggles."].getBoolean(false)
+        Eln.config["debug", "watchdog", false, "DEPRECATED: ignored, replaced by watchdog.* typed destruction toggles."].getBoolean(false)
         Eln.explosionEnable =
             Eln.config["gameplay", "explosion", false, "Make explosions a bit bigger"].getBoolean(true)
+
+        Eln.watchdogThermalEnabled =
+            Eln.config["watchdog", "thermal", true, "Allow thermal watchdogs to destroy blocks (except resistor heat watchdogs)."].getBoolean(true)
+        Eln.watchdogResistorHeatEnabled =
+            Eln.config["watchdog", "resistorHeat", false, "Allow resistor heat watchdogs to destroy blocks."].getBoolean(false)
+        Eln.watchdogVoltageEnabled =
+            Eln.config["watchdog", "voltage", true, "Allow voltage watchdogs to destroy blocks."].getBoolean(true)
+        Eln.config["watchdog", "electrical", true, "DEPRECATED: renamed to watchdog.voltage."].getBoolean(true)
+        Eln.watchdogShaftSpeedEnabled =
+            Eln.config["watchdog", "shaftSpeed", true, "Allow shaft speed watchdogs to destroy blocks."].getBoolean(true)
+        Eln.watchdogOtherEnabled =
+            Eln.config["watchdog", "other", true, "Allow all other watchdog types to destroy blocks."].getBoolean(true)
 
         Eln.versionCheckEnabled =
             Eln.config["general", "versionCheckEnable", true, "Enable version checker"].getBoolean(true)

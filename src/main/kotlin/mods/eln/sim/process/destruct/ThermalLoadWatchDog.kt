@@ -8,6 +8,10 @@ import mods.eln.sim.ThermalLoadInitializerByPowerDrop
 import java.util.Locale
 
 class ThermalLoadWatchDog(var state: ThermalLoad): ValueWatchdog() {
+    private var type = WatchdogType.THERMAL
+    override val watchdogType: WatchdogType
+        get() = type
+
     private var lastTemperature = state.temperature
     private var lastDeltaPerSecond = 0.0
     private var matrixDumpSupplier: (() -> Any?)? = null
@@ -91,6 +95,11 @@ class ThermalLoadWatchDog(var state: ThermalLoad): ValueWatchdog() {
 
     fun setAmbientTemperatureProvider(provider: () -> Double): ThermalLoadWatchDog {
         ambientTemperatureProvider = provider
+        return this
+    }
+
+    fun asResistorHeatWatchdog(): ThermalLoadWatchDog {
+        type = WatchdogType.RESISTOR_HEAT
         return this
     }
 }
