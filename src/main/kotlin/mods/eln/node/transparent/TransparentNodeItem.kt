@@ -54,11 +54,13 @@ class TransparentNodeItem(b: Block?) : GenericItemBlockUsingDamage<TransparentNo
 
     override fun shouldUseRenderHelper(type: ItemRenderType, item: ItemStack,
                                        helper: ItemRendererHelper): Boolean {
-        return getDescriptor(item)!!.shouldUseRenderHelper(type, item, helper)
+        val descriptor = getDescriptor(item) ?: return false
+        return descriptor.shouldUseRenderHelper(type, item, helper)
     }
 
     fun shouldUseRenderHelperEln(type: ItemRenderType?, item: ItemStack?, helper: ItemRendererHelper?): Boolean {
-        return getDescriptor(item)!!.shouldUseRenderHelperEln(type, item, helper)
+        val descriptor = getDescriptor(item) ?: return false
+        return descriptor.shouldUseRenderHelperEln(type, item, helper)
     }
 
     override fun renderItem(type: ItemRenderType, item: ItemStack, vararg data: Any) {
@@ -75,7 +77,10 @@ class TransparentNodeItem(b: Block?) : GenericItemBlockUsingDamage<TransparentNo
                 }
             }
         }
-        getDescriptor(item)!!.renderItem(type, item, *data)
+        val descriptor = getDescriptor(item)
+        if (descriptor != null) {
+            descriptor.renderItem(type, item, *data)
+        }
         Minecraft.getMinecraft().mcProfiler.endSection()
     }
 

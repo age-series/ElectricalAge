@@ -1,5 +1,6 @@
 package mods.eln.item.regulator;
 
+import mods.eln.generic.GenericItemUsingDamageDescriptor;
 import mods.eln.generic.GenericItemUsingDamageSlot;
 import mods.eln.item.regulator.IRegulatorDescriptor.RegulatorType;
 import net.minecraft.inventory.IInventory;
@@ -26,7 +27,9 @@ public class RegulatorSlot extends GenericItemUsingDamageSlot {
     @Override
     public boolean isItemValid(ItemStack itemStack) {
         if (!super.isItemValid(itemStack)) return false;
-        IRegulatorDescriptor element = (IRegulatorDescriptor) IRegulatorDescriptor.getDescriptor(itemStack);
+        IRegulatorDescriptor element = (IRegulatorDescriptor) GenericItemUsingDamageDescriptor.getDescriptor(
+            itemStack, IRegulatorDescriptor.class);
+        if (element == null) return false;
         for (RegulatorType t : type) {
             if (t == element.getType()) return true;
         }

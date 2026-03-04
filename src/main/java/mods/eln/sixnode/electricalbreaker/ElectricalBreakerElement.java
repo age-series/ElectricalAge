@@ -8,6 +8,7 @@ import mods.eln.misc.Utils;
 import mods.eln.node.NodeBase;
 import mods.eln.node.six.SixNode;
 import mods.eln.node.six.SixNodeDescriptor;
+import mods.eln.node.six.SixNodeDescriptor;
 import mods.eln.node.six.SixNodeElement;
 import mods.eln.node.six.SixNodeElementInventory;
 import mods.eln.sim.ElectricalLoad;
@@ -162,7 +163,9 @@ public class ElectricalBreakerElement extends SixNodeElement {
 
     public void refreshSwitchResistor() {
         ItemStack cable = inventory.getStackInSlot(ElectricalBreakerContainer.cableSlotId);
-        ElectricalCableDescriptor cableDescriptor = (ElectricalCableDescriptor) Eln.sixNodeItem.getDescriptor(cable);
+        SixNodeDescriptor descriptor = Eln.sixNodeItem.getDescriptor(cable);
+        ElectricalCableDescriptor cableDescriptor = descriptor instanceof ElectricalCableDescriptor ?
+            (ElectricalCableDescriptor) descriptor : null;
         if (cableDescriptor == null || !switchState) {
             switchResistor.highImpedance();
         } else {
@@ -192,7 +195,8 @@ public class ElectricalBreakerElement extends SixNodeElement {
         if (!nbtBoot) setSwitchState(false);
         nbtBoot = false;
 
-        cableDescriptor = (ElectricalCableDescriptor) Eln.sixNodeItem.getDescriptor(cable);
+        SixNodeDescriptor descriptor = Eln.sixNodeItem.getDescriptor(cable);
+        cableDescriptor = descriptor instanceof ElectricalCableDescriptor ? (ElectricalCableDescriptor) descriptor : null;
         if (cableDescriptor == null) {
             aLoad.highImpedance();
             bLoad.highImpedance();

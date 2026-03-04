@@ -274,7 +274,9 @@ public class LampSocketElement extends SixNodeElement implements IConfigurable {
         ItemStack lamp = acceptingInventory.getInventory().getStackInSlot(LampSocketContainer.lampSlotId);
         ItemStack cable = acceptingInventory.getInventory().getStackInSlot(LampSocketContainer.cableSlotId);
 
-        ElectricalCableDescriptor cableDescriptor = (ElectricalCableDescriptor) Eln.sixNodeItem.getDescriptor(cable);
+        SixNodeDescriptor cableItemDescriptor = Eln.sixNodeItem.getDescriptor(cable);
+        ElectricalCableDescriptor cableDescriptor = cableItemDescriptor instanceof ElectricalCableDescriptor ?
+            (ElectricalCableDescriptor) cableItemDescriptor : null;
 
         if (cableDescriptor == null) {
             positiveLoad.highImpedance();

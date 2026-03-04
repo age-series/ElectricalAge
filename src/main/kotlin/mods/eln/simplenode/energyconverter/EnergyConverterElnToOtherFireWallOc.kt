@@ -29,7 +29,8 @@ class EnergyConverterElnToOtherFireWallOc(var e: EnergyConverterElnToOtherEntity
                 val c = node as Connector
                 val node = e.node as EnergyConverterElnToOtherNode
                 var eMax = node.availableEnergyInModUnits(Other.getWattsToOC())
-                eMax = Math.min(Math.min(eMax, c.globalBufferSize() - c.globalBuffer()), (node.getDescriptor() as EnergyConverterElnToOtherDescriptor).maxPower)
+                val descriptor = node.getDescriptor() as? EnergyConverterElnToOtherDescriptor ?: return
+                eMax = Math.min(Math.min(eMax, c.globalBufferSize() - c.globalBuffer()), descriptor.maxPower)
                 if (c.tryChangeBuffer(eMax)) {
                     node.drawEnergy(eMax, Other.getWattsToOC())
                 }

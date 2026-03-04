@@ -179,7 +179,7 @@ class ClutchElement(node: TransparentNode, desc_: TransparentNodeDescriptor) : S
     val clutchPlateDescriptor: ClutchPlateItem?
         get() {
             val stack = clutchPlateStack ?: return null
-            return (stack.item!! as GenericItemUsingDamage<GenericItemUsingDamageDescriptor>).getDescriptor(stack) as ClutchPlateItem
+            return GenericItemUsingDamageDescriptor.getDescriptor(stack, ClutchPlateItem::class.java) as? ClutchPlateItem
         }
     val clutchPinStack: ItemStack?
         get() {
