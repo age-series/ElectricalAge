@@ -83,7 +83,6 @@ object CraftingRecipes {
         recipeWindTurbine()
         recipeFuelGenerator()
 
-        recipeGeneral()
         recipeHeatingCorp()
         recipeRegulatorItem()
         recipeLampItem()
@@ -948,10 +947,6 @@ object CraftingRecipes {
                 "Advanced Machine Block"
             )
         )
-    }
-
-    private fun recipeGeneral() {
-        addSmelting(Eln.treeResin.parentItem, Eln.treeResin.parentItemDamage, Eln.findItemStack("Rubber", 1), 0f)
     }
 
     private fun recipeHeatingCorp() {
