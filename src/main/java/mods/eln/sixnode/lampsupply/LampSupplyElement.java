@@ -429,7 +429,7 @@ public class LampSupplyElement extends SixNodeElement implements IConfigurable {
     @Override
     public void readConfigTool(NBTTagCompound compound, EntityPlayer invoker) {
         if(compound.hasKey("powerChannels")) {
-            NBTTagList list = compound.getTagList("powerChannel", 8);
+            NBTTagList list = compound.getTagList("powerChannels", 8);
             for(int idx = 0; idx < descriptor.channelCount && idx < list.tagCount(); idx++) {
                 channelRemove(this, idx, entries.get(idx).powerChannel);
                 entries.get(idx).powerChannel = list.getStringTagAt(idx);
@@ -438,7 +438,7 @@ public class LampSupplyElement extends SixNodeElement implements IConfigurable {
             needPublish();
         }
         if(compound.hasKey("wirelessChannels")) {
-            NBTTagList list = compound.getTagList("wirelessChannel", 8);
+            NBTTagList list = compound.getTagList("wirelessChannels", 8);
             for(int idx = 0; idx < descriptor.channelCount && idx < list.tagCount(); idx++) {
                 channelRemove(this, idx, entries.get(idx).wirelessChannel);
                 entries.get(idx).wirelessChannel = list.getStringTagAt(idx);
