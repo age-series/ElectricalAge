@@ -156,7 +156,7 @@ abstract class TransparentNodeElement(@JvmField var node: TransparentNode?, @Jvm
         sendPacketToAllClient(bos)
     }
 
-    open fun sendStringToAllClient(id: Byte, str: String) {
+    fun sendStringToAllClient(id: Byte, str: String) {
         val bos = ByteArrayOutputStream(64)
         val packet = DataOutputStream(bos)
         preparePacketForClient(packet)
@@ -169,7 +169,7 @@ abstract class TransparentNodeElement(@JvmField var node: TransparentNode?, @Jvm
         sendPacketToAllClient(bos)
     }
 
-    fun sendPacketToAllClient(bos: ByteArrayOutputStream) {
+    private fun sendPacketToAllClient(bos: ByteArrayOutputStream) {
         node!!.sendPacketToAllClient(bos)
     }
 

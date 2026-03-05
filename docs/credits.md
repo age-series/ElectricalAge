@@ -23,6 +23,7 @@
 - **meelock** – typo fix
 - **Sukasa** – code enhancements
 - **DrummingFish** – GUI text parsing, cleaning/refactoring, tweaks
+- **TheBuilderBoy76** – bugfixes and new features
 
 ### Languages
 

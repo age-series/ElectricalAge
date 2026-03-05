@@ -15,6 +15,7 @@ import net.minecraft.nbt.NBTTagCompound
 import java.io.DataInputStream
 import java.io.DataOutputStream
 import java.io.IOException
+import kotlin.math.abs
 import kotlin.math.pow
 
 class LampDescriptor(
@@ -82,15 +83,15 @@ class LampDescriptor(
     }
 
     fun ageLamp(lampStack: ItemStack, voltage: Double, time: Double): Double {
-        val ageFactor = (0.000008 * voltage.pow(3.0)) - (0.003225 * voltage.pow(2.0)) + (0.33 * voltage)
+        val ageFactor = (0.000008 * abs(voltage).pow(3.0)) - (0.003225 * abs(voltage).pow(2.0)) + (0.33 * abs(voltage))
         val lifeLost = (ageFactor * time) / 3600.0 // Life lost in hours, per tick
 
         val currentLife = this.getLifeInTag(lampStack)
-        this.setLifeInTag(lampStack, currentLife - lifeLost)
 
-        var newLife = this.getLifeInTag(lampStack)
+        var newLife = currentLife - lifeLost
         if (newLife < 0) newLife = 0.0
 
+        this.setLifeInTag(lampStack, newLife)
         return newLife
     }
 
