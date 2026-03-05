@@ -272,6 +272,6 @@ class ThermalHeatExchangerRender(
 ): TransparentNodeElementRender(tileEntity, descriptor) {
     override fun draw() {
         front!!.glRotateXnRef()
-        (transparentNodedescriptor as ThermalHeatExchangerDescriptor).draw()
+        (transparentNodeDescriptor as ThermalHeatExchangerDescriptor).draw()
     }
 }

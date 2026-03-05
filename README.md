@@ -31,6 +31,6 @@ If you want to compile the project yourself, see the [contributing guide](./CONT
 
 ## Credits and License
 
-The people who made Electrical Age possible are listed in [docs/credits.md](docs/credits.md). The [GitHub contributors graph](https://github.com/age-series/ElectricalAge/graphs/contributors) highlights even more community members.
+The people who made Electrical Age possible are listed in [docs/credits.md](docs/credits.md). Notable feature contributions in this fork include work by TheBuilderBoy76. The [GitHub contributors graph](https://github.com/age-series/ElectricalAge/graphs/contributors) highlights even more community members.
 
 Source code is available under the terms described in [LICENSE.md](LICENSE.md). Art assets follow the licenses documented alongside those files as detailed in that document.

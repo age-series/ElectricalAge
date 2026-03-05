@@ -240,6 +240,7 @@ public class Eln {
     public static int roomMaxAxisSpanBlocks = 24;
     public static int roomMaxVolumeBlocks = 4096;
     public static boolean ledLampInfiniteLife = false;
+    public static boolean halogenLampInfiniteLife = false;
     static public GenericItemUsingDamageDescriptor multiMeterElement, thermometerElement, allMeterElement;
     static public GenericItemUsingDamageDescriptor configCopyToolElement;
     public static TreeResin treeResin;
@@ -313,6 +314,7 @@ public class Eln {
     public double economicLampLife;
     public double carbonLampLife;
     public double ledLampLife;
+    public double halogenLampLife;
     public double fuelGeneratorTankCapacity = 20 * 60;
     public int replicatorRegistrationId = -1;
 

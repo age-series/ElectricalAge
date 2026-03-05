@@ -13,6 +13,7 @@ import net.minecraft.world.World
 import net.minecraftforge.client.MinecraftForgeClient
 import net.minecraftforge.common.DimensionManager
 import kotlin.math.abs
+import kotlin.math.floor
 
 class Coordinate : INBTTReady {
     @JvmField
@@ -40,6 +41,14 @@ class Coordinate : INBTTReady {
 
     constructor(nbt: NBTTagCompound, str: String) {
         readFromNBT(nbt, str)
+    }
+
+    // Emulates the default Minecraft behavior for determining block coordinates
+    constructor(v: Vec3, d: Int) {
+        x = floor(v.xCoord).toInt()
+        y = floor(v.yCoord).toInt()
+        z = floor(v.zCoord).toInt()
+        dimension = d
     }
 
     override fun hashCode(): Int {
@@ -169,10 +178,11 @@ class Coordinate : INBTTReady {
         z = vp[2].toInt()
     }
 
+    // Emulates the default Minecraft behavior for determining block coordinates
     fun setPosition(vp: Vec3) {
-        x = vp.xCoord.toInt()
-        y = vp.yCoord.toInt()
-        z = vp.zCoord.toInt()
+        x = floor(vp.xCoord).toInt()
+        y = floor(vp.yCoord).toInt()
+        z = floor(vp.zCoord).toInt()
     }
 
     val tileEntity: TileEntity?
@@ -243,6 +253,11 @@ class Coordinate : INBTTReady {
 
     fun negate(): Coordinate {
         return Coordinate(-x, -y, -z, dimension)
+    }
+
+    // Emulates the default Minecraft behavior for determining block coordinates
+    fun toVec3(): Vec3 {
+        return Vec3.createVectorHelper(this.x + 0.5, this.y + 0.5, this.z + 0.5)
     }
 
     companion object {

@@ -291,7 +291,7 @@ class FuelHeatFurnaceRender(tileEntity: TransparentNodeEntity, descriptor: Trans
 
     override fun draw() {
         front!!.glRotateXnRef()
-        (transparentNodedescriptor as FuelHeatFurnaceDescriptor).draw(type, mainSwitch, heatPower != 0f)
+        (transparentNodeDescriptor as FuelHeatFurnaceDescriptor).draw(type, mainSwitch, heatPower != 0f)
     }
 
     override fun newGuiDraw(side: Direction, player: EntityPlayer) = FuelHeatFurnaceGui(player, inventory, this)
