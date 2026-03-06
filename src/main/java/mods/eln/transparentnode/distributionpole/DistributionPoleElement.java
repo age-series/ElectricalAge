@@ -1,7 +1,6 @@
 package mods.eln.transparentnode.distributionpole;
 
 import mods.eln.Eln;
-import mods.eln.debug.DebugType;
 import mods.eln.misc.Direction;
 import mods.eln.misc.LRDU;
 import mods.eln.node.transparent.TransparentNode;

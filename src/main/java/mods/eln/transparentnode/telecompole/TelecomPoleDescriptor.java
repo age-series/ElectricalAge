@@ -14,6 +14,7 @@ public class TelecomPoleDescriptor extends TransparentNodeDescriptor {
         this.ghostGroup = ghostGroup;
 
         pole = obj.getPart("TelComPole");
+        if (pole == null) pole = obj.getPart("TelComPole_TelComPole.001");
     }
 
     public void draw() {
