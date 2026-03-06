@@ -73,9 +73,9 @@ class FloodlightProcess(var element: FloodlightElement) : IProcess {
 
         element.powered = newLightValue > LampDescriptor.MIN_LIGHT_VALUE
         element.lightRange = lampLightRanges[FloodlightContainer.LAMP_SLOT_1_ID] + lampLightRanges[FloodlightContainer.LAMP_SLOT_2_ID]
-        element.node!!.lightValue = newLightValue
 
         if (newLightValue != element.node!!.lightValue) {
+            element.node!!.lightValue = newLightValue
             element.needPublish()
         }
 
