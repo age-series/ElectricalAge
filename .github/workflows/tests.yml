@@ -17,8 +17,14 @@ jobs:
       - name: Set up JDK
         uses: actions/setup-java@v4
         with:
+          distribution: zulu
+          java-version: 8
+      - name: Set up Gradle JDK
+        uses: actions/setup-java@v4
+        with:
           distribution: temurin
           java-version: 25
-          cache: gradle
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
       - name: Run tests
-        run: ./gradlew test
+        run: ./gradlew -Dorg.gradle.java.installations.auto-download=false test
