@@ -1,8 +1,7 @@
-package mods.eln.transparentnode.telecompole;
+package mods.eln.transparentnode.subtransmissionpole;
 
 import mods.eln.misc.Direction;
 import mods.eln.misc.LRDU;
-import mods.eln.node.NodeBase;
 import mods.eln.node.transparent.TransparentNode;
 import mods.eln.node.transparent.TransparentNodeDescriptor;
 import mods.eln.node.transparent.TransparentNodeElement;
@@ -10,9 +9,9 @@ import mods.eln.sim.ElectricalLoad;
 import mods.eln.sim.ThermalLoad;
 import net.minecraft.entity.player.EntityPlayer;
 
-public class TelecomPoleElement extends TransparentNodeElement {
+abstract class SubTransmissionPoleElementBase extends TransparentNodeElement {
 
-    public TelecomPoleElement(TransparentNode node, TransparentNodeDescriptor descriptor) {
+    protected SubTransmissionPoleElementBase(TransparentNode node, TransparentNodeDescriptor descriptor) {
         super(node, descriptor);
     }
 
@@ -28,7 +27,7 @@ public class TelecomPoleElement extends TransparentNodeElement {
 
     @Override
     public int getConnectionMask(Direction side, LRDU lrdu) {
-        return NodeBase.maskFiber;
+        return 0;
     }
 
     @Override
