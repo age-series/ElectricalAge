@@ -6,6 +6,7 @@ import mods.eln.sim.IProcess
 import mods.eln.sim.mna.misc.MnaConst
 
 object PoweredMinecartSimulationSingleton {
+    const val MINIMUM_CART_RESISTANCE = 800.0
     val poweredMinecartSimulationData: MutableList<PoweredMinecartSimulationData> = mutableListOf()
     val minecartEnergyCache: MutableMap<EntityElectricMinecart, Double> = mutableMapOf()
 
@@ -35,7 +36,8 @@ object PoweredMinecartSimulationSingleton {
         if (cartData.resistorElectricalLoad.voltage < 700.0) {
             cartData.resistor.resistance = MnaConst.highImpedance
         } else {
-            cartData.resistor.resistance = resistance
+            val limitedResistance = if (resistance < MINIMUM_CART_RESISTANCE) MINIMUM_CART_RESISTANCE else resistance
+            cartData.resistor.resistance = limitedResistance
         }
         cartData.slowProcess.timeLeft = time
     }
