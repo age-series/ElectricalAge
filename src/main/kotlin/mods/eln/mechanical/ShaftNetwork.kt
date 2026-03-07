@@ -41,6 +41,7 @@ open class ShaftNetwork() : INBTTReady {
             return if (_mass.isFinite()) _mass else 0.0
         }
     fun updateCache() {
+        pruneInvalidParts()
         elements.clear()
         _mass = 0.0
         parts.forEach { elements.add(it.element) }
@@ -49,12 +50,14 @@ open class ShaftNetwork() : INBTTReady {
 
     constructor(first: ShaftElement, side: Direction) : this() {
         parts.add(ShaftPart(first, side))
+        first.setShaft(side, this)
         updateCache()
     }
 
     constructor(first: ShaftElement, sides: Iterator<Direction>) : this() {
         sides.forEach {
             parts.add(ShaftPart(first, it))
+            first.setShaft(it, this)
         }
         updateCache()
     }
@@ -107,7 +110,19 @@ open class ShaftNetwork() : INBTTReady {
      */
     fun mergeShafts(other: ShaftNetwork, invoker: ShaftElement?): ShaftNetwork {
         assert(other != this)
-        Utils.println(String.format("SN.ms(this=%s, %s, invoker=%s)", this, other, invoker))
+        // Temporary merge/rebuild logging.
+        // Utils.println(
+        //     "SN.ms: merge this=%s(id=%d,r=%f,parts=%d) other=%s(id=%d,r=%f,parts=%d) invoker=%s",
+        //     this,
+        //     System.identityHashCode(this),
+        //     rads,
+        //     parts.size,
+        //     other,
+        //     System.identityHashCode(other),
+        //     other.rads,
+        //     other.parts.size,
+        //     invoker
+        // )
 
         // If the other class wants to take this merge, let it.
         // In particular, don't presume that:
@@ -162,6 +177,15 @@ open class ShaftNetwork() : INBTTReady {
             energy = newEnergy - energyLostPerDeltaRad * deltaRads * deltaRads
         }
 
+        // Utils.println(
+        //     "SN.ms: result survivor=%d rads=%f energy=%f parts=%d elements=%d",
+        //     System.identityHashCode(this),
+        //     rads,
+        //     energy,
+        //     parts.size,
+        //     elements.size
+        // )
+
         // Utils.println(String.format("SN.mS: Result %s r=%f e=%f", this, rads, energy))
 
         // Return the survivor
@@ -174,6 +198,15 @@ open class ShaftNetwork() : INBTTReady {
      */
     fun connectShaft(from: ShaftElement, side: Direction) {
         assert(ShaftPart(from, side) in parts)
+        pruneInvalidParts()
+        // Utils.println(
+        //     "SN.cS: element=%s coord=%s side=%s net=%d rads=%f",
+        //     from.javaClass.simpleName,
+        //     from.coordonate(),
+        //     side,
+        //     System.identityHashCode(this),
+        //     rads
+        // )
         val neighbours = getNeighbours(from)
         for (neighbour in neighbours) {
             if(neighbour.thisShaft != this) {
@@ -194,6 +227,15 @@ open class ShaftNetwork() : INBTTReady {
      * @param from The IShaftElement that's going away.
      */
     fun disconnectShaft(from: ShaftElement) {
+        pruneInvalidParts()
+        // Utils.println(
+        //     "SN.dS: element=%s coord=%s net=%d rads=%f partsBefore=%d",
+        //     from.javaClass.simpleName,
+        //     from.coordonate(),
+        //     System.identityHashCode(this),
+        //     rads,
+        //     parts.size
+        // )
         // Inform all directly involved shafts about the change in connections.
         for (neighbour in getNeighbours(from)) {
             if(neighbour.thisShaft == this) {
@@ -219,8 +261,15 @@ open class ShaftNetwork() : INBTTReady {
      * Yes, this makes breaking a shaft block O(n). Not a problem right now.
      */
     internal fun rebuildNetwork() {
+        pruneInvalidParts()
+        // Utils.println(
+        //     "SN.rN: rebuild start net=%d rads=%f parts=%d",
+        //     System.identityHashCode(this),
+        //     rads,
+        //     parts.size
+        // )
         val unseen = HashSet<ShaftPart>(parts)
-        val queue = HashMap<ShaftPart,ShaftNetwork>()
+        val queue = ArrayDeque<ShaftPart>()
         val seen = HashSet<ShaftPart>()
         val curRads = if(rads.isNaN()) 0.0 else rads
         var shaft = ShaftNetwork()
@@ -231,26 +280,34 @@ open class ShaftNetwork() : INBTTReady {
             // Do a breadth-first search from an arbitrary element.
             val start = unseen.iterator().next()
             unseen.remove(start);
-            if(!(start in seen)) queue.put(start, shaft)
+            if(!(start in seen)) queue.add(start)
             while (queue.size > 0) {
-                val next = queue.iterator().next()
-                queue.remove(next.key);
-                seen.add(next.key)
-                shaft = next.value
-                if(next.key.element.isShaftElementDestructing()) continue
-                shaft.parts.add(next.key);
-                next.key.element.setShaft(next.key.side, shaft)
+                val next = queue.removeFirst()
+                unseen.remove(next)
+                if (!seen.add(next)) continue
+                if (!isResolvableShaftElement(next.element)) continue
+                if(next.element.isShaftElementDestructing()) continue
+                shaft.parts.add(next)
+                next.element.setShaft(next.side, shaft)
                 // Utils.println("SN.rN visit next = " + next + ", queue.size = " + queue.size)
-                for(side in next.key.element.shaftConnectivity) {
-                    val part = ShaftPart(next.key.element, side)
-                    if(!(part in seen))
-                        queue.put(part, next.key.element.getShaft(side) ?: shaft)
+                for(side in next.element.shaftConnectivity) {
+                    if (side == next.side || !next.element.isInternallyConnected(next.side, side)) continue
+                    val part = ShaftPart(next.element, side)
+                    if(!(part in seen)) {
+                        queue.add(part)
+                    }
                 }
-                val neighbours = getNeighbours(next.key.element)
+                for (linked in next.element.linkedShaftParts(next.side)) {
+                    if (!isResolvableShaftElement(linked.element)) continue
+                    if (!(linked in seen)) {
+                        queue.add(linked)
+                    }
+                }
+                val neighbours = getNeighbours(next.element)
                 for (neighbour in neighbours) {
                     unseen.remove(neighbour.otherPart)
                     if(!(neighbour.otherPart in seen)) {
-                        queue.put(neighbour.otherPart, neighbour.thisShaft!!)
+                        queue.add(neighbour.otherPart)
                     }
                 }
             }
@@ -258,6 +315,13 @@ open class ShaftNetwork() : INBTTReady {
             // Utils.println("SN.rN new shaft, unseen.size = " + unseen.size)
             // We ran out of network. Any elements remaining in unseen should thus form a new network.
             shaft.updateCache()
+            // Utils.println(
+            //     "SN.rN: partition net=%d rads=%f parts=%d elements=%d",
+            //     System.identityHashCode(shaft),
+            //     shaft.rads,
+            //     shaft.parts.size,
+            //     shaft.elements.size
+            // )
             shaft.elements.forEach { it.needPublish() }
             shaft = ShaftNetwork()
             shaft.rads = curRads
@@ -265,6 +329,13 @@ open class ShaftNetwork() : INBTTReady {
 
         // Before we exit, make sure the last shaft constructed has its cache rebuilt.
         shaft.updateCache()
+        // Utils.println(
+        //     "SN.rN: rebuild end trailingNet=%d rads=%f parts=%d elements=%d",
+        //     System.identityHashCode(shaft),
+        //     shaft.rads,
+        //     shaft.parts.size,
+        //     shaft.elements.size
+        // )
         shaft.elements.forEach { it.needPublish() }
 
         // At this point, it's likely that `this` is no longer referenced by
@@ -276,11 +347,13 @@ open class ShaftNetwork() : INBTTReady {
     private fun getNeighbours(from: ShaftElement): ArrayList<ShaftNeighbour> {
         val c = Coordinate()
         val ret = ArrayList<ShaftNeighbour>(6)
+        if (!isResolvableShaftElement(from)) return ret
         for (dir in from.shaftConnectivity) {
             c.copyFrom(from.coordonate())
             c.move(dir)
             val candidate = findShaftElementAt(c)
-            if (candidate != null) {
+            if (candidate != null && isResolvableShaftElement(candidate)) {
+                if (from is GhostShaftNode && candidate is GhostShaftNode && from.sharesOwnerWith(candidate)) continue
                 for (dir2 in candidate.shaftConnectivity) {
                     if (dir2.inverse == dir) {
                         ret.add(
@@ -298,6 +371,21 @@ open class ShaftNetwork() : INBTTReady {
             }
         }
         return ret
+    }
+
+    private fun isResolvableShaftElement(element: ShaftElement): Boolean {
+        val resolved = findShaftElementAt(element.coordonate())
+        return resolved == null || resolved === element
+    }
+
+    private fun pruneInvalidParts() {
+        val iterator = parts.iterator()
+        while (iterator.hasNext()) {
+            val part = iterator.next()
+            if (!isResolvableShaftElement(part.element) || part.element.getShaft(part.side) !== this) {
+                iterator.remove()
+            }
+        }
     }
 
     private fun findShaftElementAt(coordinate: Coordinate): ShaftElement? {
@@ -329,6 +417,7 @@ class StaticShaftNetwork() : ShaftNetwork() {
     constructor(elem: ShaftElement, dirs: Iterator<Direction>) : this() {
         dirs.forEach {
             parts.add(ShaftPart(elem, it))
+            elem.setShaft(it, this)
         }
     }
     var fixedRads = 0.0
@@ -352,6 +441,7 @@ interface ShaftElement {
     fun setShaft(dir: Direction, net: ShaftNetwork?)
     fun isInternallyConnected(a: Direction, b: Direction): Boolean = true
     fun isShaftElementDestructing(): Boolean
+    fun linkedShaftParts(fromSide: Direction): Iterable<ShaftPart> = emptyList()
 
     fun initialize() {
         shaftConnectivity.forEach {

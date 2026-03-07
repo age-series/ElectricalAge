@@ -66,7 +66,11 @@ abstract class NodeBlock(material: Material?, tileEntityClass: Class<*>, blockIt
     //server
     override fun breakBlock(par1World: World, x: Int, y: Int, z: Int, par5: Block, par6: Int) {
         run {
-            val entity = par1World.getTileEntity(x, y, z) as NodeBlockEntity
+            val entity = par1World.getTileEntity(x, y, z) as? NodeBlockEntity
+            if (entity == null) {
+                super.breakBlock(par1World, x, y, z, par5, par6)
+                return
+            }
             entity.onBreakBlock()
             super.breakBlock(par1World, x, y, z, par5, par6)
         }

@@ -74,6 +74,8 @@ object TransparentNodeRegistration {
 
     private fun <T : SimpleShaftDescriptor> T.applyLargeMachineLayout(): T {
         ghostGroup = createLargeMachineGhostGroup()
+        ghostGroup?.removeElement(0, 1, -1)
+        ghostGroup?.removeElement(0, 1, 1)
         addShaftGhostPort(Coordinate(0, 1, -1, 0), Direction.ZN, Direction.ZN)
         addShaftGhostPort(Coordinate(0, 1, 1, 0), Direction.ZP, Direction.ZP)
         modelScale = LARGE_MACHINE_MODEL_SCALE
