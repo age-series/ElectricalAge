@@ -11,6 +11,7 @@ import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraftforge.client.IItemRenderer
 import org.lwjgl.opengl.GL11
+import org.lwjgl.opengl.GL12
 import java.io.DataInputStream
 import java.io.DataOutputStream
 import kotlin.reflect.KClass
@@ -161,7 +162,12 @@ open class ShaftRender(entity: TransparentNodeEntity, desc: TransparentNodeDescr
     fun draw(extra: () -> Unit) {
         preserveMatrix {
             front!!.glRotateXnRef()
+            GL11.glColor4f(1f, 1f, 1f, 1f)
             val scale = desc.modelScale
+            val rescaleNormals = scale != 1f
+            if (rescaleNormals) {
+                GL11.glEnable(GL12.GL_RESCALE_NORMAL)
+            }
             if (scale != 1f) {
                 GL11.glTranslatef(0f, (scale - 1f) / 2f, 0f)
             }
@@ -180,6 +186,10 @@ open class ShaftRender(entity: TransparentNodeEntity, desc: TransparentNodeDescr
                 desc.draw(-angle)
 
             extra()
+            GL11.glColor4f(1f, 1f, 1f, 1f)
+            if (rescaleNormals) {
+                GL11.glDisable(GL12.GL_RESCALE_NORMAL)
+            }
         }
 
         if (cableRender != null) {
