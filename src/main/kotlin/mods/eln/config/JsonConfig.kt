@@ -4,6 +4,7 @@ import com.google.gson.GsonBuilder
 import com.google.gson.JsonElement
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
+import mods.eln.Eln
 import mods.eln.Other
 import mods.eln.item.LampLists
 import mods.eln.item.TurbineBladeLists
@@ -78,6 +79,10 @@ class JsonConfig @JvmOverloads constructor(
         spec(path = "integrations.modbus.enabled", defaultValue = false, comment = "Enable Modbus RTU."),
         spec(path = "integrations.modbus.port", defaultValue = 1502, comment = "TCP port for Modbus RTU."),
         spec(path = "integrations.mqtt.enabled", defaultValue = false, comment = "Enable MQTT devices. Server endpoints live in config/eln/mqtt.json."),
+        spec(path = "integrations.mqtt.simMetrics.enabled", defaultValue = false, comment = "Publish simulator MNA metrics to MQTT."),
+        spec(path = "integrations.mqtt.simMetrics.server", defaultValue = "", comment = "MQTT server name in config/eln/mqtt.json used for simulator metrics."),
+        spec(path = "integrations.mqtt.simMetrics.id", defaultValue = "server", comment = "Topic ID used under eln/sim/<id>/... for simulator metrics."),
+        spec(path = "integrations.mqtt.simMetrics.publishIntervalTicks", defaultValue = 20, comment = "Simulator ticks to aggregate before MQTT publish. Higher values reduce overhead."),
         spec(path = "integrations.computerProbe.enabled", defaultValue = true, comment = "Enable the OC/CC to Eln computer probe."),
         spec(path = "integrations.energyExporter.enabled", defaultValue = true, comment = "Enable the Eln energy exporter."),
         spec(path = "integrations.oredict.tungstenEnabled", defaultValue = false, comment = "Use shared ore dictionary entries for tungsten."),
@@ -225,6 +230,12 @@ class JsonConfig @JvmOverloads constructor(
         Other.wattsToEu = getDoubleOrElse("balance.integrationConversion.wattsToEu", 1.0 / 3.0)
         Other.wattsToOC = getDoubleOrElse("balance.integrationConversion.wattsToOc", 1.0 / 3.0 / 2.5)
         Other.wattsToRf = getDoubleOrElse("balance.integrationConversion.wattsToRf", 1.0 / 3.0 * 4)
+        Eln.mqttEnabled = getBooleanOrElse("integrations.mqtt.enabled", false)
+        Eln.simMetricsEnabled = getBooleanOrElse("integrations.mqtt.simMetrics.enabled", false)
+        Eln.simMetricsMqttServer = getStringOrElse("integrations.mqtt.simMetrics.server", "")
+        Eln.simMetricsId = getStringOrElse("integrations.mqtt.simMetrics.id", "server")
+        Eln.simMetricsPublishIntervalTicks = max(1, getIntOrElse("integrations.mqtt.simMetrics.publishIntervalTicks", 20))
+        Eln.debugEnabled = getBooleanOrElse("debug.logging.enabled", false)
 
         setRuntimeValue(
             "runtime.items.batteries.standardHalfLifeTicks",
@@ -781,6 +792,10 @@ class JsonConfig @JvmOverloads constructor(
         "integrations.modbus.enabled" -> listOf(LegacyKey("modbus", "enable"))
         "integrations.modbus.port" -> listOf(LegacyKey("modbus", "port"))
         "integrations.mqtt.enabled" -> listOf(LegacyKey("mqtt", "enable"))
+        "integrations.mqtt.simMetrics.enabled" -> listOf(LegacyKey("mqtt", "simMetricsEnable"))
+        "integrations.mqtt.simMetrics.server" -> listOf(LegacyKey("mqtt", "simMetricsServer"))
+        "integrations.mqtt.simMetrics.id" -> listOf(LegacyKey("mqtt", "simMetricsId"))
+        "integrations.mqtt.simMetrics.publishIntervalTicks" -> listOf(LegacyKey("mqtt", "simMetricsPublishIntervalTicks"))
         "integrations.computerProbe.enabled" -> listOf(LegacyKey("compatibility", "ComputerProbeEnable"))
         "integrations.energyExporter.enabled" -> listOf(LegacyKey("compatibility", "ElnToOtherEnergyConverterEnable"))
         "integrations.oredict.tungstenEnabled" -> listOf(LegacyKey("dictionary", "tungsten"))
