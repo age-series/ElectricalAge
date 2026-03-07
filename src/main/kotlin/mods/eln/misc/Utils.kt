@@ -1245,6 +1245,11 @@ object Utils {
     }
 
     @JvmStatic
+    fun mapFileExists(name: String): Boolean {
+        return getMapFile(name).exists()
+    }
+
+    @JvmStatic
     @Throws(IOException::class)
     fun readMapFile(name: String): String {
         val file = getMapFile(name)
