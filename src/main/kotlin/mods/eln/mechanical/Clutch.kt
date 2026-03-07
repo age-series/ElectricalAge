@@ -134,6 +134,8 @@ class ClutchElement(node: TransparentNode, desc_: TransparentNodeDescriptor) : S
             Utils.println("CE.init ERROR: getShaft(left) != leftShaft")
         if(getShaft(front.right()) != rightShaft)
             Utils.println("CE.init ERROR: getShaft(right) != rightShaft")
+        // Temporary shaft topology logger. Re-enable when debugging network splits again.
+        // installShaftDebugProcess()
         // Utils.println(String.format("CE.i: new left %s r=%f, right %s r=%f", leftShaft, leftShaft.rads, rightShaft, rightShaft.rads))
     }
 

@@ -6,6 +6,7 @@ import mods.eln.cable.CableRenderType
 import mods.eln.misc.*
 import mods.eln.node.NodeManager
 import mods.eln.node.transparent.*
+import mods.eln.sim.IProcess
 import mods.eln.sim.process.destruct.WorldExplosion
 import mods.eln.sound.LoopedSound
 import net.minecraft.item.ItemStack
@@ -236,9 +237,17 @@ abstract class SimpleShaftElement(node: TransparentNode, transparentNodeDescript
     var destructing = false
     override fun isShaftElementDestructing() = destructing
     private val shaftGhostNodes = mutableListOf<GhostShaftNode>()
+    private var shaftDebugProcessInstalled = false
 
     override val shaftConnectivity: Array<Direction>
         get() = arrayOf(front.left(), front.right())
+
+    override fun linkedShaftParts(fromSide: Direction): Iterable<ShaftPart> {
+        return shaftGhostNodes
+            .filter { NodeManager.instance?.getNodeFromCoordonate(it.coordonate()) === it }
+            .filter { isInternallyConnected(fromSide, it.ownerConnectionSide) }
+            .map { ShaftPart(it, it.ghostConnectionSide) }
+    }
 
     override fun initialize() {
         reconnect()
@@ -252,6 +261,8 @@ abstract class SimpleShaftElement(node: TransparentNode, transparentNodeDescript
         }
         val exp = WorldExplosion(this as ShaftElement).machineExplosion()
         slowProcessList.add(createShaftWatchdog(this).setDestroys(exp))
+        // Temporary shaft topology logger. Re-enable when debugging network splits again.
+        // installShaftDebugProcess()
 
         val desc = transparentNodeDescriptor as? SimpleShaftDescriptor
         desc?.shaftGhostPorts?.forEach { port ->
@@ -309,5 +320,13 @@ abstract class SimpleShaftElement(node: TransparentNode, transparentNodeDescript
             }
         }
         shaftGhostNodes.clear()
+    }
+
+    protected fun installShaftDebugProcess() {
+        if (shaftDebugProcessInstalled) return
+        shaftDebugProcessInstalled = true
+        slowProcessList.add(IProcess {
+            ShaftDebugLogger.logElement(this)
+        })
     }
 }

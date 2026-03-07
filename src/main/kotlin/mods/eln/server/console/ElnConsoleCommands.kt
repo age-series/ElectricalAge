@@ -40,6 +40,62 @@ import kotlin.math.min
 import kotlin.math.max
 import kotlin.math.sin
 
+private data class ZoneBounds(
+    val minX: Int,
+    val maxX: Int,
+    val minY: Int,
+    val maxY: Int,
+    val minZ: Int,
+    val maxZ: Int
+)
+
+private fun parseZoneBounds(ics: EntityPlayerMP, args: List<String>, commandName: String): ZoneBounds? {
+    if (args.size == 1) {
+        val radius = args[0].toIntOrNull()
+        if (radius == null || radius < 0) {
+            cprint(ics, "${FC.BRIGHT_RED}Invalid radius '${args[0]}'", indent = 1)
+            cprint(ics, "${FC.BRIGHT_YELLOW}Usage: /eln $commandName <radius> or /eln $commandName x1 y1 z1 x2 y2 z2", indent = 1)
+            return null
+        }
+        val x = ics.playerCoordinates.posX
+        val y = ics.playerCoordinates.posY
+        val z = ics.playerCoordinates.posZ
+        return ZoneBounds(x - radius, x + radius, y - radius, y + radius, z - radius, z + radius)
+    }
+    if (args.size != 6) {
+        cprint(ics, "${FC.BRIGHT_YELLOW}Usage: /eln $commandName <radius> or /eln $commandName x1 y1 z1 x2 y2 z2", indent = 1)
+        return null
+    }
+    val coords = IntArray(6)
+    for (i in 0 until 6) {
+        val value = args[i].toIntOrNull()
+        if (value == null) {
+            cprint(ics, "${FC.BRIGHT_RED}Invalid coordinate '${args[i]}'", indent = 1)
+            return null
+        }
+        coords[i] = value
+    }
+    return ZoneBounds(
+        min(coords[0], coords[3]),
+        max(coords[0], coords[3]),
+        min(coords[1], coords[4]),
+        max(coords[1], coords[4]),
+        min(coords[2], coords[5]),
+        max(coords[2], coords[5])
+    )
+}
+
+private fun clearElnBlock(world: World, x: Int, y: Int, z: Int): Boolean {
+    val block = world.getBlock(x, y, z)
+    val isElnBlock =
+        block == Eln.sixNodeBlock ||
+            block == Eln.transparentNodeBlock ||
+            block == Eln.ghostBlock
+    if (!isElnBlock) return false
+    world.setBlockToAir(x, y, z)
+    return true
+}
+
 class ElnLsCommand: IConsoleCommand {
     override val name = "ls"
 
@@ -419,25 +475,13 @@ class ElnZoneDumpCommand : IConsoleCommand {
             cprint(ics, "${FC.BRIGHT_RED}This command can only be run by a player.", indent = 1)
             return
         }
-        if (args.size != 6) {
-            cprint(ics, "${FC.BRIGHT_YELLOW}Usage: /eln zonedump x1 y1 z1 x2 y2 z2", indent = 1)
-            return
-        }
-        val values = IntArray(6)
-        for (i in 0 until 6) {
-            val v = args[i].toIntOrNull()
-            if (v == null) {
-                cprint(ics, "${FC.BRIGHT_RED}Invalid coordinate '${args[i]}'", indent = 1)
-                return
-            }
-            values[i] = v
-        }
-        val minX = min(values[0], values[3])
-        val maxX = max(values[0], values[3])
-        val minY = min(values[1], values[4])
-        val maxY = max(values[1], values[4])
-        val minZ = min(values[2], values[5])
-        val maxZ = max(values[2], values[5])
+        val bounds = parseZoneBounds(ics, args, name) ?: return
+        val minX = bounds.minX
+        val maxX = bounds.maxX
+        val minY = bounds.minY
+        val maxY = bounds.maxY
+        val minZ = bounds.minZ
+        val maxZ = bounds.maxZ
 
         val world = ics.worldObj
         val dim = world.provider.dimensionId
@@ -528,7 +572,8 @@ class ElnZoneDumpCommand : IConsoleCommand {
     }
 
     override fun getManPage(ics: ICommandSender, args: List<String>) {
-        cprint(ics, "Dump Eln nodes and world blocks in a rectangular zone to a zonedump-<timestamp>.txt file.", indent = 1)
+        cprint(ics, "Dump Eln nodes and world blocks in a zone to a zonedump-<timestamp>.txt file.", indent = 1)
+        cprint(ics, "Usage: /eln zonedump <radius>", indent = 1)
         cprint(ics, "Usage: /eln zonedump x1 y1 z1 x2 y2 z2", indent = 1)
         cprint(ics, "")
     }
@@ -542,25 +587,13 @@ class ElnZoneCleanCommand : IConsoleCommand {
             cprint(ics, "${FC.BRIGHT_RED}This command can only be run by a player.", indent = 1)
             return
         }
-        if (args.size != 6) {
-            cprint(ics, "${FC.BRIGHT_YELLOW}Usage: /eln zoneclean x1 y1 z1 x2 y2 z2", indent = 1)
-            return
-        }
-        val coords = IntArray(6)
-        for (i in 0 until 6) {
-            val value = args[i].toIntOrNull()
-            if (value == null) {
-                cprint(ics, "${FC.BRIGHT_RED}Invalid coordinate '${args[i]}'", indent = 1)
-                return
-            }
-            coords[i] = value
-        }
-        val minX = min(coords[0], coords[3])
-        val maxX = max(coords[0], coords[3])
-        val minY = min(coords[1], coords[4])
-        val maxY = max(coords[1], coords[4])
-        val minZ = min(coords[2], coords[5])
-        val maxZ = max(coords[2], coords[5])
+        val bounds = parseZoneBounds(ics, args, name) ?: return
+        val minX = bounds.minX
+        val maxX = bounds.maxX
+        val minY = bounds.minY
+        val maxY = bounds.maxY
+        val minZ = bounds.minZ
+        val maxZ = bounds.maxZ
 
         val world = ics.worldObj
         val dim = world.provider.dimensionId
@@ -594,7 +627,7 @@ class ElnZoneCleanCommand : IConsoleCommand {
                 try {
                     node.onBreakBlock()
                 } catch (e: Exception) {
-                    println("zonerepair: onBreakBlock failed for $coord : ${e.message}")
+                    println("zoneclean: onBreakBlock failed for $coord : ${e.message}")
                 }
                 nodeManager?.removeNode(node)
                 if (expectedBlock != null && actualBlock == expectedBlock) {
@@ -613,9 +646,9 @@ class ElnZoneCleanCommand : IConsoleCommand {
                     if (!isNodeBlock) continue
                     val coord = Coordinate(x, y, z, dim)
                     if (coordKeyedNodes.containsKey(coord)) continue
-                    world.removeTileEntity(x, y, z)
-                    world.setBlockToAir(x, y, z)
-                    orphanBlocks++
+                    if (clearElnBlock(world, x, y, z)) {
+                        orphanBlocks++
+                    }
                 }
             }
         }
@@ -629,6 +662,7 @@ class ElnZoneCleanCommand : IConsoleCommand {
 
     override fun getManPage(ics: ICommandSender, args: List<String>) {
         cprint(ics, "Removes ghost nodes and orphaned Eln blocks within a rectangular zone.", indent = 1)
+        cprint(ics, "Usage: /eln zoneclean <radius>", indent = 1)
         cprint(ics, "Usage: /eln zoneclean x1 y1 z1 x2 y2 z2", indent = 1)
         cprint(ics, "Blocks removed this way must be rebuilt manually.", indent = 1)
         cprint(ics, "")
@@ -643,25 +677,13 @@ class ElnZoneRemoveCommand : IConsoleCommand {
             cprint(ics, "${FC.BRIGHT_RED}This command can only be run by a player.", indent = 1)
             return
         }
-        if (args.size != 6) {
-            cprint(ics, "${FC.BRIGHT_YELLOW}Usage: /eln zoneremove x1 y1 z1 x2 y2 z2", indent = 1)
-            return
-        }
-        val coords = IntArray(6)
-        for (i in 0 until 6) {
-            val parsed = args[i].toIntOrNull()
-            if (parsed == null) {
-                cprint(ics, "${FC.BRIGHT_RED}Invalid coordinate '${args[i]}'", indent = 1)
-                return
-            }
-            coords[i] = parsed
-        }
-        val minX = min(coords[0], coords[3])
-        val maxX = max(coords[0], coords[3])
-        val minY = min(coords[1], coords[4])
-        val maxY = max(coords[1], coords[4])
-        val minZ = min(coords[2], coords[5])
-        val maxZ = max(coords[2], coords[5])
+        val bounds = parseZoneBounds(ics, args, name) ?: return
+        val minX = bounds.minX
+        val maxX = bounds.maxX
+        val minY = bounds.minY
+        val maxY = bounds.maxY
+        val minZ = bounds.minZ
+        val maxZ = bounds.maxZ
 
         val world = ics.worldObj
         val dim = world.provider.dimensionId
@@ -731,6 +753,7 @@ class ElnZoneRemoveCommand : IConsoleCommand {
     override fun getManPage(ics: ICommandSender, args: List<String>) {
         cprint(ics, "Removes all Eln nodes and blocks within a rectangular zone.", indent = 1)
         cprint(ics, "Ghost nodes on the zone boundary notify their owners before removal.", indent = 1)
+        cprint(ics, "Usage: /eln zoneremove <radius>", indent = 1)
         cprint(ics, "Usage: /eln zoneremove x1 y1 z1 x2 y2 z2", indent = 1)
         cprint(ics, "")
     }
@@ -749,17 +772,6 @@ class ElnZoneRemoveCommand : IConsoleCommand {
             coord.z == minZ || coord.z == maxZ
     }
 
-    private fun clearElnBlock(world: World, x: Int, y: Int, z: Int): Boolean {
-        val block = world.getBlock(x, y, z)
-        val isElnBlock =
-            block == Eln.sixNodeBlock ||
-                block == Eln.transparentNodeBlock ||
-                block == Eln.ghostBlock
-        if (!isElnBlock) return false
-        world.removeTileEntity(x, y, z)
-        world.setBlockToAir(x, y, z)
-        return true
-    }
 }
 
 class ElnStopShaftCommand : IConsoleCommand {

@@ -1,9 +1,12 @@
 package mods.eln.mechanical
 
+import mods.eln.Eln
 import mods.eln.misc.Coordinate
 import mods.eln.misc.Direction
 import mods.eln.misc.LRDU
+import mods.eln.misc.Utils
 import mods.eln.node.GhostNode
+import mods.eln.node.NodeManager
 import mods.eln.sim.ElectricalLoad
 import mods.eln.sim.ThermalLoad
 import net.minecraft.entity.EntityLivingBase
@@ -23,6 +26,8 @@ class GhostShaftNode(
     private val ownerSide: Direction,
     localFacing: Direction
 ) : GhostNode(), ShaftElement {
+    private val observerCoordinate = Coordinate(origin)
+    private val ghostUuid = Utils.uuid
 
     private val target = Coordinate(offset).apply {
         applyTransformation(front, origin)
@@ -34,7 +39,30 @@ class GhostShaftNode(
     private var connectionSide: Direction = facing
     private var shaft: ShaftNetwork = ShaftNetwork()
 
+    val ownerConnectionSide: Direction
+        get() = ownerSide
+
+    val ghostConnectionSide: Direction
+        get() = connectionSide
+
+    fun sharesOwnerWith(other: GhostShaftNode): Boolean = owner === other.owner
+
     fun placeGhost() {
+        // Temporary shaft placement logging.
+        // Utils.println(
+        //     "GhostShaft.place: target=%s facing=%s owner=%s ownerSide=%s ghostUuid=%d",
+        //     target,
+        //     facing,
+        //     owner.javaClass.simpleName,
+        //     ownerSide,
+        //     ghostUuid
+        // )
+        val existingNode = NodeManager.instance?.getNodeFromCoordonate(target)
+        if (existingNode is GhostShaftNode) {
+            // Utils.println("GhostShaft.place: removing stale ghost shaft at %s before re-placement", target)
+            existingNode.onBreakBlock()
+        }
+        Eln.ghostManager.createGhost(target, observerCoordinate, ghostUuid)
         onBlockPlacedBy(target, facing, null, null)
     }
 
@@ -44,6 +72,16 @@ class GhostShaftNode(
      */
     fun attachToOwnerNetwork() {
         val ownerNet = owner.getShaft(ownerSide) ?: return
+        // Utils.println(
+        //     "GhostShaft.attach: ghostCoord=%s owner=%s ownerSide=%s ghostNet=%d ownerNet=%d ghostRads=%f ownerRads=%f",
+        //     target,
+        //     owner.javaClass.simpleName,
+        //     ownerSide,
+        //     System.identityHashCode(shaft),
+        //     System.identityHashCode(ownerNet),
+        //     shaft.rads,
+        //     ownerNet.rads
+        // )
         if (shaft !== ownerNet) {
             ownerNet.mergeShafts(shaft, owner)
             shaft = ownerNet
@@ -53,6 +91,7 @@ class GhostShaftNode(
     override fun initializeFromThat(front: Direction, entityLiving: EntityLivingBase?, itemStack: ItemStack?) {
         connectionSide = front
         shaft = ShaftNetwork(this, shaftConnectivity.iterator())
+        // Utils.println("GhostShaft.init: coord=%s connectionSide=%s net=%d", coordinate, connectionSide, System.identityHashCode(shaft))
         shaft.connectShaft(this, connectionSide)
         connect()
     }
@@ -89,6 +128,7 @@ class GhostShaftNode(
     }
 
     override fun onBreakBlock() {
+        // Utils.println("GhostShaft.break: coord=%s net=%d rads=%f", coordinate, System.identityHashCode(shaft), shaft.rads)
         shaft.disconnectShaft(this)
         super.onBreakBlock()
         owner.needPublish()
@@ -96,6 +136,10 @@ class GhostShaftNode(
 
     override fun isShaftElementDestructing(): Boolean {
         return this.isDestructing || owner.isShaftElementDestructing()
+    }
+
+    override fun linkedShaftParts(fromSide: Direction): Iterable<ShaftPart> {
+        return if (fromSide == connectionSide) listOf(ShaftPart(owner, ownerSide)) else emptyList()
     }
 
     override fun getSideConnectionMask(side: Direction, lrdu: LRDU): Int = 0

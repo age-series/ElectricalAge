@@ -47,6 +47,8 @@ class FixedShaftElement(node: TransparentNode, desc_: TransparentNodeDescriptor)
             // These calls can still change the speed via mergeShaft
             shaft.connectShaft(this, it)
         }
+        // Temporary shaft topology logger. Re-enable when debugging network splits again.
+        // installShaftDebugProcess()
     }
 
     override fun thermoMeterString(side: Direction): String = ""
