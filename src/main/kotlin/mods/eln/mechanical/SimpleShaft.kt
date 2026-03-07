@@ -4,6 +4,7 @@ import mods.eln.cable.CableRender
 import mods.eln.cable.CableRenderDescriptor
 import mods.eln.cable.CableRenderType
 import mods.eln.misc.*
+import mods.eln.node.NodeManager
 import mods.eln.node.transparent.*
 import mods.eln.sim.process.destruct.WorldExplosion
 import mods.eln.sound.LoopedSound
@@ -302,7 +303,11 @@ abstract class SimpleShaftElement(node: TransparentNode, transparentNodeDescript
     }
 
     private fun clearGhostShafts() {
-        shaftGhostNodes.forEach { it.onBreakBlock() }
+        shaftGhostNodes.forEach {
+            if (NodeManager.instance?.getNodeFromCoordonate(it.coordonate()) === it) {
+                it.onBreakBlock()
+            }
+        }
         shaftGhostNodes.clear()
     }
 }
