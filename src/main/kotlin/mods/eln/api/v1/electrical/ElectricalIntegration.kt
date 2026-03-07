@@ -67,6 +67,31 @@ object ElectricalIntegration {
     }
 
     /**
+     * Placement-relative block faces for side-aware block node registration.
+     */
+    enum class RelativeBlockFace {
+        FRONT,
+        BACK,
+        LEFT,
+        RIGHT,
+        UP,
+        DOWN;
+
+        fun resolve(front: BlockFace): BlockFace {
+            return BlockFace.fromInternal(
+                when (this) {
+                    FRONT -> front.toInternal()
+                    BACK -> front.toInternal().back()
+                    LEFT -> front.toInternal().left()
+                    RIGHT -> front.toInternal().right()
+                    UP -> front.toInternal().up()
+                    DOWN -> front.toInternal().down()
+                }
+            )
+        }
+    }
+
+    /**
      * API-owned node-port enum for node lookup and connection.
      */
     enum class NodePort(val id: Int) {
@@ -263,15 +288,109 @@ object ElectricalIntegration {
      * Registering this node lets adjacent ELN cables connect to and render against
      * the supplied shared load without requiring the block itself to inherit ELN node types.
      */
-    class BlockNode @JvmOverloads constructor(
+    class BlockNode internal constructor(
         val dimension: Int,
         val x: Int,
         val y: Int,
         val z: Int,
         val load: Load,
+        val front: BlockFace,
+        val faceConnections: Map<BlockFace, FaceConnection>
+    ) {
+        val mask: Int
+            get() = faceConnections.values.fold(0) { acc, connection -> acc or connection.mask }
+
+        @JvmOverloads
+        constructor(
+            dimension: Int,
+            x: Int,
+            y: Int,
+            z: Int,
+            load: Load,
+            mask: Int = ElectricalMasks.POWER
+        ) : this(
+            dimension,
+            x,
+            y,
+            z,
+            load,
+            BlockFace.XN,
+            defaultFaceConnections(load, mask)
+        )
+
+        @JvmOverloads
+        constructor(
+            dimension: Int,
+            x: Int,
+            y: Int,
+            z: Int,
+            front: BlockFace = BlockFace.XN,
+            faceConnections: Map<BlockFace, FaceConnection>
+        ) : this(
+            dimension,
+            x,
+            y,
+            z,
+            faceConnections.values.firstOrNull()?.load
+                ?: throw IllegalArgumentException("BlockNode faceConnections must not be empty"),
+            front,
+            faceConnections.toMap()
+        )
+
+        @JvmOverloads
+        constructor(
+            dimension: Int,
+            x: Int,
+            y: Int,
+            z: Int,
+            load: Load,
+            front: BlockFace,
+            mask: Int = ElectricalMasks.POWER,
+            vararg connectedFaces: RelativeBlockFace
+        ) : this(
+            dimension,
+            x,
+            y,
+            z,
+            load,
+            front,
+            relativeFaceConnections(load, front, mask, connectedFaces)
+        )
+
+        internal val delegate = ManagedGhostLoadNode(
+            Coordinate(x, y, z, dimension),
+            front.toInternal(),
+            faceConnections.mapKeys { (face, _) -> face.toInternal() }
+                .mapValues { (_, connection) -> InternalFaceConnection(connection.load.delegate, connection.mask) }
+        )
+
+        companion object {
+            private fun defaultFaceConnections(load: Load, mask: Int): Map<BlockFace, FaceConnection> {
+                return BlockFace.values().associateWith { FaceConnection(load, mask) }
+            }
+
+            private fun relativeFaceConnections(
+                load: Load,
+                front: BlockFace,
+                mask: Int,
+                connectedFaces: Array<out RelativeBlockFace>
+            ): Map<BlockFace, FaceConnection> {
+                val selectedFaces = if (connectedFaces.isEmpty()) RelativeBlockFace.values().asList() else connectedFaces.toList()
+                return selectedFaces.associate { it.resolve(front) to FaceConnection(load, mask) }
+            }
+        }
+    }
+
+    /**
+     * Per-face connection definition for a block-hosted virtual ELN node.
+     */
+    class FaceConnection @JvmOverloads constructor(
+        val load: Load,
         val mask: Int = ElectricalMasks.POWER
     ) {
-        internal val delegate = ManagedGhostLoadNode(Coordinate(x, y, z, dimension), load.delegate, mask)
+        init {
+            require(mask != 0) { "FaceConnection mask must not be zero" }
+        }
     }
 
     /**
@@ -874,6 +993,28 @@ object ElectricalIntegration {
     }
 
     /**
+     * Create the common external-block topology of a shared load, grounded resistor sink,
+     * and side-aware block-hosted ELN node.
+     */
+    @JvmOverloads
+    fun createGroundedResistorSink(
+        name: String,
+        dimension: Int,
+        x: Int,
+        y: Int,
+        z: Int,
+        resistance: Double,
+        front: BlockFace,
+        mask: Int = ElectricalMasks.POWER,
+        vararg connectedFaces: RelativeBlockFace
+    ): GroundedResistorSink {
+        val load = Load(name)
+        val resistor = ResistorLoad(load, null, resistance)
+        val blockNode = BlockNode(dimension, x, y, z, load, front, mask, *connectedFaces)
+        return GroundedResistorSink(load, resistor, blockNode)
+    }
+
+    /**
      * Register the common external-block topology of a shared load, grounded resistor sink,
      * and block-hosted ELN node.
      */
@@ -913,6 +1054,27 @@ object ElectricalIntegration {
     }
 
     /**
+     * Create and register the common external-block topology of a shared load,
+     * grounded resistor sink, and side-aware block-hosted ELN node.
+     */
+    @JvmOverloads
+    fun createAndRegisterGroundedResistorSink(
+        name: String,
+        dimension: Int,
+        x: Int,
+        y: Int,
+        z: Int,
+        resistance: Double,
+        front: BlockFace,
+        mask: Int = ElectricalMasks.POWER,
+        vararg connectedFaces: RelativeBlockFace
+    ): GroundedResistorSink {
+        return createGroundedResistorSink(name, dimension, x, y, z, resistance, front, mask, *connectedFaces).also {
+            registerGroundedResistorSink(it)
+        }
+    }
+
+    /**
      * Create and register an API load with the global ELN simulator.
      */
     fun createAndRegisterLoad(name: String): Load {
@@ -932,6 +1094,38 @@ object ElectricalIntegration {
         mask: Int = ElectricalMasks.POWER
     ): BlockNode {
         return BlockNode(dimension, x, y, z, load, mask).also(::registerBlockNode)
+    }
+
+    /**
+     * Create and register a side-aware block-hosted ELN node for an API load.
+     */
+    @JvmOverloads
+    fun createAndRegisterBlockNode(
+        dimension: Int,
+        x: Int,
+        y: Int,
+        z: Int,
+        load: Load,
+        front: BlockFace,
+        mask: Int = ElectricalMasks.POWER,
+        vararg connectedFaces: RelativeBlockFace
+    ): BlockNode {
+        return BlockNode(dimension, x, y, z, load, front, mask, *connectedFaces).also(::registerBlockNode)
+    }
+
+    /**
+     * Create and register a block-hosted ELN node with explicit per-face configuration.
+     */
+    @JvmOverloads
+    fun createAndRegisterBlockNode(
+        dimension: Int,
+        x: Int,
+        y: Int,
+        z: Int,
+        front: BlockFace = BlockFace.XN,
+        faceConnections: Map<BlockFace, FaceConnection>
+    ): BlockNode {
+        return BlockNode(dimension, x, y, z, front, faceConnections).also(::registerBlockNode)
     }
 
     /**
@@ -1300,13 +1494,18 @@ object ElectricalIntegration {
         }
     }
 
+    internal data class InternalFaceConnection(
+        val load: SimElectricalLoad,
+        val mask: Int
+    )
+
     internal class ManagedGhostLoadNode(
         private val hostCoordinate: Coordinate,
-        private val electricalLoad: SimElectricalLoad,
-        private val connectionMask: Int
+        private val front: Direction,
+        private val faceConnections: Map<Direction, InternalFaceConnection>
     ) : GhostNode() {
         fun initialize() {
-            onBlockPlacedBy(hostCoordinate, Direction.XN, null, null)
+            onBlockPlacedBy(hostCoordinate, front, null, null)
         }
 
         override fun initializeFromThat(front: Direction, entityLiving: EntityLivingBase?, itemStack: ItemStack?) {
@@ -1315,10 +1514,14 @@ object ElectricalIntegration {
 
         override fun initializeFromNBT() {}
 
-        override fun getSideConnectionMask(side: Direction, lrdu: LRDU): Int = connectionMask
+        override fun getSideConnectionMask(side: Direction, lrdu: LRDU): Int {
+            return faceConnections[side]?.mask ?: 0
+        }
 
         override fun getThermalLoad(side: Direction, lrdu: LRDU, mask: Int) = null
 
-        override fun getElectricalLoad(side: Direction, lrdu: LRDU, mask: Int): SimElectricalLoad = electricalLoad
+        override fun getElectricalLoad(side: Direction, lrdu: LRDU, mask: Int): SimElectricalLoad? {
+            return faceConnections[side]?.load
+        }
     }
 }

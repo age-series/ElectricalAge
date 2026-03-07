@@ -26,7 +26,7 @@ The API entry object is `ElectricalIntegration`.
 - `NodeConnectedResistorLoad`: resistor between one owned load and one node port.
 - `NodeConnection`: direct short connection between two electrical endpoints.
 - `Watchdog`: timeout/fault protection wrappers for voltage and power.
-- `BlockFace` / `NodePort`: API enums for block-face and node-port selection.
+- `BlockFace` / `RelativeBlockFace` / `NodePort`: API enums for block-face, placement-relative face, and node-port selection.
 - `ElectricalMasks`: API constants for electrical connection masks.
 - `ElectricalLoadRef` / `NodeConnectionState`: serializable descriptors for persistence.
 
@@ -72,6 +72,51 @@ You can also skip the explicit `resolveNodeLoad` call and connect directly from 
 ```kotlin
 val direct = ElectricalIntegration.connectLoadToNode(myLoad, nodeRef)
 ElectricalIntegration.registerConnection(direct)
+```
+
+## Registering block-hosted ELN nodes with explicit face configuration
+
+`BlockNode` can now be registered with per-face connectivity instead of one shared mask on all six faces.
+
+```kotlin
+val input = ElectricalIntegration.Load("my.mod.input")
+val output = ElectricalIntegration.Load("my.mod.output")
+
+ElectricalIntegration.registerLoad(input)
+ElectricalIntegration.registerLoad(output)
+
+val blockNode = ElectricalIntegration.BlockNode(
+    dimension = world.provider.dimensionId,
+    x = xCoord,
+    y = yCoord,
+    z = zCoord,
+    front = ElectricalIntegration.BlockFace.ZP,
+    faceConnections = mapOf(
+        ElectricalIntegration.BlockFace.XN to ElectricalIntegration.FaceConnection(input, ElectricalIntegration.ElectricalMasks.POWER),
+        ElectricalIntegration.BlockFace.XP to ElectricalIntegration.FaceConnection(output, ElectricalIntegration.ElectricalMasks.POWER),
+        ElectricalIntegration.BlockFace.YN to ElectricalIntegration.FaceConnection(output, ElectricalIntegration.ElectricalMasks.GATE)
+    )
+)
+
+ElectricalIntegration.registerBlockNode(blockNode)
+```
+
+If you want one shared load but only specific placement-relative faces to connect, use the convenience overload:
+
+```kotlin
+val sideOnly = ElectricalIntegration.BlockNode(
+    world.provider.dimensionId,
+    xCoord,
+    yCoord,
+    zCoord,
+    myLoad,
+    ElectricalIntegration.BlockFace.ZP,
+    ElectricalIntegration.ElectricalMasks.POWER,
+    ElectricalIntegration.RelativeBlockFace.LEFT,
+    ElectricalIntegration.RelativeBlockFace.RIGHT
+)
+
+ElectricalIntegration.registerBlockNode(sideOnly)
 ```
 
 ## Connecting two mod loads
