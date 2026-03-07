@@ -11,6 +11,13 @@ import java.util.*
 
 val ElnConsoleCommandList = mutableListOf<IConsoleCommand>()
 
+internal fun findConsoleCommand(
+    name: String,
+    commands: Iterable<IConsoleCommand> = ElnConsoleCommandList
+): IConsoleCommand? {
+    return commands.firstOrNull { it.name.equals(name, ignoreCase = true) }
+}
+
 class ElnConsoleCommands: ICommand {
 
     init {
@@ -128,18 +135,18 @@ class ElnConsoleCommands: ICommand {
             return
         }
         val permissions = determinePermissionsList(ics)
-        val command = ElnConsoleCommandList.filter { it.name.equals(args[0], ignoreCase = true) }
-        if (command.isEmpty()) {
+        val command = findConsoleCommand(args[0])
+        if (command == null) {
             cprint(ics,"${FC.DARK_CYAN}Command not found, run /eln ls for commands${FC.BRIGHT_GREY }")
             return
         }
         cprint(ics, "${FC.DARK_CYAN}${ics.commandSenderName} $${FC.DARK_YELLOW} /eln ${args.joinToString(" ")}")
-        val canRun = permissions.any { command[0].requiredPermission().contains(it) }
+        val canRun = permissions.any { command.requiredPermission().contains(it) }
         if (canRun) {
-            command[0].runCommand(ics, args.toList().drop(1))
+            command.runCommand(ics, args.toList().drop(1))
         } else {
             cprint(ics, "${FC.DARK_CYAN}You do not have permission to run that command. " +
-                "You need to have one of the following: ${command[0].requiredPermission()}${FC.BRIGHT_GREY }")
+                "You need to have one of the following: ${command.requiredPermission()}${FC.BRIGHT_GREY }")
         }
     }
 
@@ -175,11 +182,11 @@ class ElnConsoleCommands: ICommand {
         if (args.toList().isEmpty() || args[0] == "") {
             return ElnConsoleCommandList.map {it.name}.toMutableList()
         }
-        val command = ElnConsoleCommandList.filter { it.name.equals(args[0], ignoreCase = true) }
-        if (command.isEmpty()) {
+        val command = findConsoleCommand(args[0])
+        if (command == null) {
             return ElnConsoleCommandList.filter {it.name.startsWith(args[0], ignoreCase = true)}.map{it.name}.toMutableList()
         }
-        return command.first().getTabCompletion(args.drop(1)).toMutableList()
+        return command.getTabCompletion(args.drop(1)).toMutableList()
     }
 
     override fun isUsernameIndex(args: Array<out String>, index: Int): Boolean {

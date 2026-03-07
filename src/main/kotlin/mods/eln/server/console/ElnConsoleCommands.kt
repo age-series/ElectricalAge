@@ -430,7 +430,6 @@ class ElnManCommand: IConsoleCommand {
     override val name = "man"
 
     override fun runCommand(ics: ICommandSender, args: List<String>) {
-        println("man command args: $args")
         when (args.size) {
             0 -> {
                 cprint(ics, "Returns help for a given command.", indent = 1)
@@ -440,7 +439,7 @@ class ElnManCommand: IConsoleCommand {
                 cprint(ics, "")
             }
             else -> {
-                val command = ElnConsoleCommandList.mapNotNull { if (it.name.lowercase() == args[0]) it else null }.firstOrNull()
+                val command = findConsoleCommand(args[0])
                 if (command == null) {
                     cprint(ics, "Sorry, but no man page was found for ${args[0]}", indent = 1)
                 } else {
