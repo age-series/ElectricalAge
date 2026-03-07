@@ -41,6 +41,8 @@ open class ShaftNetwork() : INBTTReady {
             return if (_mass.isFinite()) _mass else 0.0
         }
     fun updateCache() {
+        elements.clear()
+        _mass = 0.0
         parts.forEach { elements.add(it.element) }
         elements.forEach { _mass += it.shaftMass }
     }
