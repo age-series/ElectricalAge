@@ -4,8 +4,10 @@ import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.Phase;
 import cpw.mods.fml.common.gameevent.TickEvent.ServerTickEvent;
+import mods.eln.Eln;
 import mods.eln.environment.RoomThermalManager;
 import mods.eln.item.lampitem.LampLists;
+import mods.eln.metrics.MetricsSubsystem;
 import mods.eln.misc.Utils;
 import mods.eln.sim.mna.RootSystem;
 import mods.eln.sim.mna.component.Component;
@@ -431,6 +433,11 @@ public class Simulator /* ,IPacketHandler */ {
             thermalFastNsStack /= 20;
             thermalSlowNsStack /= 20;
             slowNsStack /= 20;
+            double avgTickMicroseconds = avgTickTime;
+            double electricalMicroseconds = electricalNsStack / 1000.0;
+            double thermalFastMicroseconds = thermalFastNsStack / 1000.0;
+            double thermalSlowMicroseconds = thermalSlowNsStack / 1000.0;
+            double slowMicroseconds = slowNsStack / 1000.0;
 
             Utils.println("ticks " + new DecimalFormat("#").format((int) avgTickTime) + " us" + "  E " + electricalNsStack / 1000 + "  TF " + thermalFastNsStack / 1000 + "  TS " + thermalSlowNsStack / 1000 + "  S " + slowNsStack / 1000
 
@@ -444,6 +451,24 @@ public class Simulator /* ,IPacketHandler */ {
                 + "    " + thermalSlowProcessList.size() + " TSP"
                 + "    " + slowProcessList.size() + " SP"
             );
+            if (Eln.simMetricsEnabled) {
+                MetricsSubsystem.publishSimulatorRuntimeMetrics(
+                    avgTickMicroseconds,
+                    electricalMicroseconds,
+                    thermalFastMicroseconds,
+                    thermalSlowMicroseconds,
+                    slowMicroseconds,
+                    mna.getSubSystemCount(),
+                    electricalProcessList.size(),
+                    thermalFastLoadList.size(),
+                    thermalFastConnectionList.size(),
+                    thermalFastProcessList.size(),
+                    thermalSlowLoadList.size(),
+                    thermalSlowConnectionList.size(),
+                    thermalSlowProcessList.size(),
+                    slowProcessList.size()
+                );
+            }
 
             avgTickTime = 0;
 

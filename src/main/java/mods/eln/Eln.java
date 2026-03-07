@@ -42,6 +42,7 @@ import mods.eln.lightblock.LightBlock;
 import mods.eln.lightblock.LightBlockEntity;
 import mods.eln.misc.*;
 import mods.eln.mqtt.MqttManager;
+import mods.eln.metrics.MetricsSubsystem;
 import mods.eln.node.NodeBlockEntity;
 import mods.eln.node.NodeManager;
 import mods.eln.node.NodeManagerNbt;
@@ -198,6 +199,12 @@ public class Eln {
     public static OreItem oreItem;
     public static PortableNaNDescriptor portableNaNDescriptor = null;
     public static CableRenderDescriptor stdPortableNaN = null;
+    public static boolean mqttEnabled = false;
+    public static boolean simMetricsEnabled = false;
+    public static String simMetricsMqttServer = "";
+    public static String simMetricsId = "server";
+    public static int simMetricsPublishIntervalTicks = 20;
+    public static boolean debugEnabled = false;
     public static SiliconWafer siliconWafer;
     public static Transistor transistor;
     public static Thermistor thermistor;
@@ -331,6 +338,7 @@ public class Eln {
         config.writeExampleFile();
         FuelRegistry.init(event.getSuggestedConfigurationFile());
         MqttManager.init();
+        MetricsSubsystem.refreshFromConfig();
 
         eventChannel = NetworkRegistry.INSTANCE.newEventDrivenChannel(channelName);
 
@@ -543,6 +551,7 @@ public class Eln {
         LampSupplyElement.channelMap.clear();
         WirelessSignalTxElement.channelMap.clear();
         MqttManager.shutdown();
+        MetricsSubsystem.shutdown();
     }
 
     @EventHandler

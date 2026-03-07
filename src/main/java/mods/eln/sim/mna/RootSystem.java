@@ -1,5 +1,7 @@
 package mods.eln.sim.mna;
 
+import mods.eln.Eln;
+import mods.eln.metrics.MetricsSubsystem;
 import mods.eln.misc.Profiler;
 import mods.eln.misc.Utils;
 import mods.eln.sim.ElectricalLoad;
@@ -12,6 +14,9 @@ import mods.eln.sim.mna.state.VoltageState;
 import java.util.*;
 
 public class RootSystem {
+    private final MnaStepMetricsAccumulator stepMetricsAccumulator = new MnaStepMetricsAccumulator();
+    private final MnaStepMetricsAccumulator publishMetricsAccumulator = new MnaStepMetricsAccumulator();
+    private int publishTickCounter = 0;
 
     double dt;
     int interSystemOverSampling;
@@ -240,6 +245,32 @@ public class RootSystem {
         }
 
         profiler.stop();
+
+        if (Eln.simMetricsEnabled) {
+            collectAndPublishSimMetrics();
+        }
+    }
+
+    private void collectAndPublishSimMetrics() {
+        stepMetricsAccumulator.reset();
+        stepMetricsAccumulator.setSubSystemCount(systems.size());
+        for (SubSystem s : systems) {
+            s.drainMnaMetrics(stepMetricsAccumulator);
+        }
+        publishMetricsAccumulator.setSubSystemCount(stepMetricsAccumulator.getSubSystemCount());
+        publishMetricsAccumulator.add(stepMetricsAccumulator);
+        publishTickCounter++;
+        if (publishTickCounter >= Eln.simMetricsPublishIntervalTicks) {
+            MetricsSubsystem.publishMnaMetrics(
+                    publishMetricsAccumulator.getSubSystemCount(),
+                    publishMetricsAccumulator.getInversionCount(),
+                    publishMetricsAccumulator.getSingularMatrixCount(),
+                    publishMetricsAccumulator.getInversionAverageNanoseconds(),
+                    publishMetricsAccumulator.getInversionMaxNanoseconds()
+            );
+            publishMetricsAccumulator.reset();
+            publishTickCounter = 0;
+        }
     }
 
     private void buildSubSystem(State root) {
