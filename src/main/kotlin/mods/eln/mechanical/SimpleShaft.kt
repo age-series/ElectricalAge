@@ -262,9 +262,7 @@ abstract class SimpleShaftElement(node: TransparentNode, transparentNodeDescript
         super.onBreakElement()
         destructing = true
         clearGhostShafts()
-        shaftConnectivity.forEach {
-            shaft.disconnectShaft(this)
-        }
+        shaft.disconnectShaft(this)
     }
 
     override fun networkSerialize(stream: DataOutputStream) {
