@@ -239,8 +239,14 @@ public class Eln {
     public static int wirelessTxRange = 32;
     public static int roomMaxAxisSpanBlocks = 24;
     public static int roomMaxVolumeBlocks = 4096;
+
+    /* ---- Lightbulb life --------------------------------- */
+    public static boolean incandescentLampInfiniteLife = false;
+    public static boolean ecoLampInfiniteLife = false;
     public static boolean ledLampInfiniteLife = false;
     public static boolean halogenLampInfiniteLife = false;
+    /* ----------------------------------------------------- */
+
     static public GenericItemUsingDamageDescriptor multiMeterElement, thermometerElement, allMeterElement;
     static public GenericItemUsingDamageDescriptor configCopyToolElement;
     public static TreeResin treeResin;

@@ -144,14 +144,20 @@ object ConfigHandler {
             Eln.dictAdvancedChip = "circuitElnAdvanced"
         }
 
+        /* ---- Lamp config ----------------------------------------------------------------------- */
         eln.incandescentLampLife = Eln.config["lamp", "incandescentLifeInHours", 16.0].getDouble(16.0)
         eln.economicLampLife = Eln.config["lamp", "economicLifeInHours", 64.0].getDouble(64.0)
         eln.carbonLampLife = Eln.config["lamp", "carbonLifeInHours", 6.0].getDouble(6.0)
         eln.ledLampLife = Eln.config["lamp", "ledLifeInHours", 512.0].getDouble(512.0)
         eln.halogenLampLife = Eln.config["lamp", "halogenLifeInHours", 128.0].getDouble(128.0)
+
+        Eln.incandescentLampInfiniteLife = Eln.config["lamp", "infiniteIncandescentLife", false].boolean
+        Eln.ecoLampInfiniteLife = Eln.config["lamp", "infiniteEcoLife", false].boolean
         Eln.ledLampInfiniteLife = Eln.config["lamp", "infiniteLedLife", false].boolean
         Eln.halogenLampInfiniteLife = Eln.config["lamp", "infiniteHalogenLife", false].boolean
+
         Eln.allowSwingingLamps = Eln.config["lamp", "swingingLamps", true].boolean
+        /* ---------------------------------------------------------------------------------------- */
 
         eln.fuelGeneratorTankCapacity =
             Eln.config["fuelGenerator", "tankCapacityInSecondsAtNominalPower", 20 * 60].getDouble((20 * 60).toDouble())
