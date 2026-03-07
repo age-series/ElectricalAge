@@ -52,14 +52,14 @@ class FloodlightProcess(var element: FloodlightElement) : IProcess {
 
                 lampLightRanges.add(lampDescriptor.range)
 
-                val bulbCanAge = !Eln.halogenLampInfiniteLife && SaveConfig.instance!!.electricalLampAging
+                val bulbCanAge = !Eln.halogenLampInfiniteLife && !SaveConfig.instance!!.infiniteHalogenBulbLife
 
                 if (bulbCanAge) {
                     val currentLife = lampDescriptor.ageLamp(lampStacks[idx]!!, lampVoltage, time)
 
                     if (currentLife <= 0.0) {
                         element.inventory.setInventorySlotContents(idx, null)
-                        element.inventoryChange(element.inventory)
+                        element.inventory.markDirty()
                     }
                 }
             }
