@@ -20,6 +20,9 @@ The API entry object is `ElectricalIntegration`.
 ## Core concepts
 
 - `Load`: owned electrical node managed by your mod.
+- `SignalLoad`: owned signal-domain load with normalized voltage helpers.
+- `SignalBusLoad`: owned 16-channel signal bus load.
+- `VoltageSource`: ideal power-domain source between one or two owned loads.
 - `NodeLoad`: a read-only endpoint resolved from an existing ELN node.
 - `NodeLoadRef`: API-owned node address for resolving ELN ports from world position plus side/port info.
 - `ResistorLoad`: resistor between two owned loads.
@@ -28,6 +31,7 @@ The API entry object is `ElectricalIntegration`.
 - `Watchdog`: timeout/fault protection wrappers for voltage and power.
 - `BlockFace` / `RelativeBlockFace` / `NodePort`: API enums for block-face, placement-relative face, and node-port selection.
 - `ElectricalMasks`: API constants for electrical connection masks.
+- `SignalLevels`: API helpers for converting between normalized `0..1` values and ELN signal voltage.
 - `ElectricalLoadRef` / `NodeConnectionState`: serializable descriptors for persistence.
 
 ## Creating and using your load
@@ -74,9 +78,121 @@ val direct = ElectricalIntegration.connectLoadToNode(myLoad, nodeRef)
 ElectricalIntegration.registerConnection(direct)
 ```
 
+## Signal outputs and normalized signal voltage
+
+For signal-domain outputs, use `SignalSource` instead of a power `VoltageSource`.
+
+```kotlin
+val source = ElectricalIntegration.createAndRegisterSignalSource("my.mod.signal_out")
+
+source.setNormalized(0.5)
+val halfScaleVolts = ElectricalIntegration.getSignalVoltageLevel() * 0.5
+
+source.setVoltage(halfScaleVolts)
+source.setHighImpedance(false)
+
+val load = source.load
+val measuredVoltage = load.signalVoltage
+val measuredNormalized = load.normalized
+```
+
+If you only need the conversion helpers:
+
+```kotlin
+val maxSignalVoltage = ElectricalIntegration.SignalLevels.MAX_VOLTAGE
+val volts = ElectricalIntegration.SignalLevels.toVoltage(0.25)
+val normalized = ElectricalIntegration.SignalLevels.toNormalized(3.0)
+```
+
+## Signal bus
+
+For a full 16-channel signal bus on a face, use `SignalBusLoad` and `SignalBusSource`.
+
+```kotlin
+val bus = ElectricalIntegration.createAndRegisterSignalBusLoad("my.mod.bus")
+val busSource = ElectricalIntegration.createSignalBusSource(bus)
+ElectricalIntegration.registerComponent(busSource)
+
+busSource.setNormalized(ElectricalIntegration.SignalBusChannel.RED, 1.0)
+busSource.setVoltage(ElectricalIntegration.SignalBusChannel.BLUE, 2.5)
+busSource.setHighImpedance(ElectricalIntegration.SignalBusChannel.GREEN, true)
+
+val red = bus[ElectricalIntegration.SignalBusChannel.RED].normalized
+val blueVolts = bus.signalVoltage(ElectricalIntegration.SignalBusChannel.BLUE)
+
+for (channel in ElectricalIntegration.SignalBusChannel.ordered()) {
+    val volts = bus.signalVoltage(channel)
+    val normalized = bus.normalized(channel)
+}
+```
+
+Bus state can be persisted as one logical unit:
+
+```kotlin
+val tag = NBTTagCompound()
+bus.writeToNbt(tag, "signalBus")
+
+val restoredBus = ElectricalIntegration.SignalBusLoad("my.mod.bus")
+restoredBus.readFromNbt(tag, "signalBus")
+```
+
+When exposing a block face as a full bus, use the public hosted-node factory:
+
+```kotlin
+val blockNode = ElectricalIntegration.createHostedBlockNode(
+    dimension = world.provider.dimensionId,
+    x = xCoord,
+    y = yCoord,
+    z = zCoord,
+    front = ElectricalIntegration.BlockFace.ZP,
+    faceConnections = mapOf(
+        ElectricalIntegration.BlockFace.XN to ElectricalIntegration.SignalBusFaceConnection(bus)
+    )
+)
+```
+
+Multiple bus faces on one block work the same way:
+
+```kotlin
+val blockNode = ElectricalIntegration.createHostedBlockNode(
+    dimension = world.provider.dimensionId,
+    x = xCoord,
+    y = yCoord,
+    z = zCoord,
+    front = ElectricalIntegration.BlockFace.ZP,
+    faceConnections = mapOf(
+        ElectricalIntegration.BlockFace.XN to ElectricalIntegration.SignalBusFaceConnection(bus),
+        ElectricalIntegration.BlockFace.XP to ElectricalIntegration.SignalBusFaceConnection(bus),
+        ElectricalIntegration.BlockFace.YP to ElectricalIntegration.FaceConnection(statusLoad, ElectricalIntegration.ElectricalMasks.GATE)
+    )
+)
+```
+
+## Power-domain voltage sources
+
+For an ideal electrical source in the power network, use `VoltageSource`.
+
+```kotlin
+val positive = ElectricalIntegration.createAndRegisterLoad("my.mod.source_pos")
+val negative = ElectricalIntegration.createAndRegisterLoad("my.mod.source_neg")
+
+val source = ElectricalIntegration.createAndRegisterVoltageSource(
+    positiveLoad = positive,
+    negativeLoad = negative,
+    initialVoltage = 120.0
+)
+
+source.setVoltage(230.0)
+```
+
+This is intentionally separate from `SignalSource`:
+
+- `SignalSource` is clamped to ELN signal voltage and supports normalized `0..1` writes.
+- `VoltageSource` is an unconstrained power-domain source component.
+
 ## Registering block-hosted ELN nodes with explicit face configuration
 
-`BlockNode` can now be registered with per-face connectivity instead of one shared mask on all six faces.
+`BlockNode` can now be registered with per-face connectivity instead of one shared mask on all six faces. For mixed connection types, prefer the hosted-node factory over direct constructor calls.
 
 ```kotlin
 val input = ElectricalIntegration.Load("my.mod.input")
@@ -85,7 +201,7 @@ val output = ElectricalIntegration.Load("my.mod.output")
 ElectricalIntegration.registerLoad(input)
 ElectricalIntegration.registerLoad(output)
 
-val blockNode = ElectricalIntegration.BlockNode(
+val blockNode = ElectricalIntegration.createHostedBlockNode(
     dimension = world.provider.dimensionId,
     x = xCoord,
     y = yCoord,
