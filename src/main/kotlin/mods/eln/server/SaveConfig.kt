@@ -7,7 +7,12 @@ import net.minecraft.world.WorldSavedData
 class SaveConfig(par1Str: String) : WorldSavedData(par1Str) {
     @JvmField
     var heatFurnaceFuel = true
-    var electricalLampAging = true
+
+    var infiniteIncandescentLife = Eln.incandescentLampInfiniteLife
+    var infiniteEcoBulbLife = Eln.ecoLampInfiniteLife
+    var infiniteLedBulbLife = Eln.ledLampInfiniteLife
+    var infiniteHalogenBulbLife = Eln.halogenLampInfiniteLife
+
     var batteryAging = true
     @JvmField
     var infinitePortableBattery = false
@@ -15,7 +20,12 @@ class SaveConfig(par1Str: String) : WorldSavedData(par1Str) {
     var cableRsFactor_lastUsed = 1.0
     override fun readFromNBT(nbt: NBTTagCompound) {
         heatFurnaceFuel = nbt.getBoolean("heatFurnaceFuel")
-        electricalLampAging = nbt.getBoolean("electricalLampAging")
+
+        infiniteIncandescentLife = nbt.getBoolean("infiniteIncandescentBulbLife")
+        infiniteEcoBulbLife = nbt.getBoolean("infiniteEcoBulbLife")
+        infiniteLedBulbLife = nbt.getBoolean("infiniteLedBulbLife")
+        infiniteHalogenBulbLife = nbt.getBoolean("infiniteHalogenBulbLife")
+
         batteryAging = nbt.getBoolean("batteryAging")
         infinitePortableBattery = nbt.getBoolean("infinitPortableBattery")
         reGenOre = nbt.getBoolean("reGenOre")
@@ -25,7 +35,12 @@ class SaveConfig(par1Str: String) : WorldSavedData(par1Str) {
 
     override fun writeToNBT(nbt: NBTTagCompound) {
         nbt.setBoolean("heatFurnaceFuel", heatFurnaceFuel)
-        nbt.setBoolean("electricalLampAging", electricalLampAging)
+
+        nbt.setBoolean("infiniteIncandescentBulbLife", infiniteIncandescentLife)
+        nbt.setBoolean("infiniteEcoBulbLife", infiniteEcoBulbLife)
+        nbt.setBoolean("infiniteLedBulbLife", infiniteLedBulbLife)
+        nbt.setBoolean("infiniteHalogenBulbLife", infiniteHalogenBulbLife)
+
         nbt.setBoolean("batteryAging", batteryAging)
         nbt.setBoolean("infinitPortableBattery", infinitePortableBattery)
         nbt.setBoolean("reGenOre", reGenOre)

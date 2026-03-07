@@ -142,10 +142,17 @@ class ElnAgingCommand: IConsoleCommand {
     override fun runCommand(ics: ICommandSender, args: List<String>) {
         if (args.size == 1) {
             val aging = getArgBool(ics, args[0])?: return
+
             SaveConfig.instance?.batteryAging = aging
-            SaveConfig.instance?.electricalLampAging = aging
-            SaveConfig.instance?.heatFurnaceFuel = aging
             SaveConfig.instance?.infinitePortableBattery = !aging
+
+            SaveConfig.instance?.infiniteIncandescentLife = !aging
+            SaveConfig.instance?.infiniteEcoBulbLife = !aging
+            SaveConfig.instance?.infiniteLedBulbLife = !aging
+            SaveConfig.instance?.infiniteHalogenBulbLife = !aging
+
+            SaveConfig.instance?.heatFurnaceFuel = aging
+
             cprint(ics, "Batteries / Furnace Fuel / Lamp aging: ${FC.DARK_GREEN}${boolToStr(aging)}", indent = 1)
             cprint(ics, "Parameter saved in the map.", indent = 1)
         } else {
@@ -206,33 +213,105 @@ class ElnLampAgingCommand: IConsoleCommand {
     override val name = "lampAging"
 
     override fun runCommand(ics: ICommandSender, args: List<String>) {
-        if (args.size == 1) {
-            val lampAging = getArgBool(ics, args[0])?: return
-            SaveConfig.instance?.electricalLampAging = lampAging
-            cprint(ics, "Lamp aging: ${FC.DARK_GREEN}${boolToStr(lampAging)}", indent = 1)
-            cprint(ics, "Parameter saved in the map.", indent = 1)
-        } else {
-            cprint(ics, "This command only takes one argument - true or false")
+        var printError = false
+
+        if (args.size == 3) {
+            val domain = args[0]
+            val bulbType = args[1]
+            val aging = getArgBool(ics, args[2])?: return
+
+            var updateIncandescent = false
+            var updateEco = false
+            var updateLed = false
+            var updateHalogen = false
+
+            when (bulbType) {
+                "incandescent" -> updateIncandescent = true
+                "eco" -> updateEco = true
+                "led" -> updateLed = true
+                "halogen" -> updateHalogen = true
+                "all" -> {
+                    updateIncandescent = true
+                    updateEco = true
+                    updateLed = true
+                    updateHalogen = true
+                }
+                else -> printError = true
+            }
+
+            if (!printError) when (domain) {
+                "local" -> {
+                    if (updateIncandescent) SaveConfig.instance?.infiniteIncandescentLife = !aging
+                    if (updateEco) SaveConfig.instance?.infiniteEcoBulbLife = !aging
+                    if (updateLed) SaveConfig.instance?.infiniteLedBulbLife = !aging
+                    if (updateHalogen) SaveConfig.instance?.infiniteHalogenBulbLife = !aging
+
+                    cprint(ics, "Lamp aging: ${FC.DARK_GREEN}${bulbType}, ${FC.DARK_GREEN}${boolToStr(aging)}", indent = 1)
+                    cprint(ics, "Parameter saved in the map.", indent = 1)
+                }
+                "global" -> {
+                    if (updateIncandescent) {
+                        Eln.incandescentLampInfiniteLife = !aging
+                        Eln.config.get("lamp", "infiniteIncandescentLife", false).set(Eln.incandescentLampInfiniteLife)
+                    }
+                    if (updateEco) {
+                        Eln.ecoLampInfiniteLife = !aging
+                        Eln.config.get("lamp", "infiniteEcoLife", false).set(Eln.ecoLampInfiniteLife)
+                    }
+                    if (updateLed) {
+                        Eln.ledLampInfiniteLife = !aging
+                        Eln.config.get("lamp", "infiniteLedLife", false).set(Eln.ledLampInfiniteLife)
+                    }
+                    if (updateHalogen) {
+                        Eln.halogenLampInfiniteLife = !aging
+                        Eln.config.get("lamp", "infiniteHalogenLife", false).set(Eln.halogenLampInfiniteLife)
+                    }
+                    Eln.config.save()
+
+                    cprint(ics, "Lamp aging: ${FC.DARK_GREEN}${bulbType}, ${FC.DARK_GREEN}${boolToStr(aging)}", indent = 1)
+                    cprint(ics, "Parameter saved in the config file.", indent = 1)
+                }
+                else -> printError = true
+            }
         }
+        else printError = true
+
+        if (printError) cprint(ics, "This command takes three arguments - domain, bulb type, aging")
     }
 
     override fun getManPage(ics: ICommandSender, args: List<String>) {
         cprint(ics, "Enables/disables aging on lamps.", indent = 1)
-        cprint(ics, "Changes stored into the map.", indent = 1)
+        cprint(ics, "Changes stored into the map (local) or config file (global).", indent = 1)
         cprint(ics, "")
         cprint(ics, "Parameters :", indent = 1)
-        cprint(ics, "@0:bool : Lamp aging (enabled/disabled).", indent = 2)
+        cprint(ics, "@0:string : Domain (local/global).", indent = 2)
+        cprint(ics, "@1:string : Bulb Type (incandescent/eco/led/halogen/all).", indent = 2)
+        cprint(ics, "@2:bool : Aging (true/false).", indent = 2)
         cprint(ics, "")
     }
 
     override fun requiredPermission() = listOf(UserPermission.IS_OPERATOR)
 
     override fun getTabCompletion(args: List<String>): List<String> {
-        val options = listOf("true", "false")
-        return if (args.isEmpty() || args[0] == "") {
-            options
-        } else {
-            return options.filter {it.startsWith(args[0], ignoreCase = true)}
+        val arg0Options = listOf("local", "global")
+        val arg1Options = listOf("incandescent", "eco", "led", "halogen", "all")
+        val arg2Options = listOf("true", "false")
+
+        return when (args.size) {
+            0 -> arg0Options
+            1 -> {
+                if (args[0] == "") arg0Options
+                else arg0Options.filter {it.startsWith(args[0], ignoreCase = true)}
+            }
+            2 -> {
+                if (args[1] == "") arg1Options
+                else arg1Options.filter {it.startsWith(args[1], ignoreCase = true)}
+            }
+            3 -> {
+                if (args[2] == "") arg2Options
+                else arg2Options.filter {it.startsWith(args[2], ignoreCase = true)}
+            }
+            else -> listOf()
         }
     }
 }

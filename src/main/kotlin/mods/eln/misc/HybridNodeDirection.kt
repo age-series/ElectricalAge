@@ -6,7 +6,7 @@ enum class HybridNodeDirection(val int: Int) {
 
     companion object {
         fun fromInt(idx: Int): HybridNodeDirection? {
-            for (direction in HybridNodeDirection.values()) {
+            for (direction in entries) {
                 if (direction.int == idx) return direction
             }
             return null
