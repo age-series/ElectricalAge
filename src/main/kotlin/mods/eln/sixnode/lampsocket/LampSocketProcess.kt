@@ -101,7 +101,7 @@ class LampSocketProcess(var lamp: LampSocketElement) : IProcess, INBTTReady /*,L
                 val lampSupplyList = findBestSupply(lamp.sixNode!!.coordinate)
                 val bestLampSupply = lampSupplyList?.second
                 if (bestLampSupply != null && lampDescriptor != null && bestLampSupply.element.getChannelState(bestLampSupply.id)) {
-                    bestLampSupply.element.addToRp(lampDescriptor.r)
+                    bestLampSupply.element.addToRp(lampDescriptor.resistance)
                     lamp.positiveLoad.state = bestLampSupply.element.powerLoad.state
                 } else {
                     lamp.positiveLoad.state = 0.0
@@ -127,7 +127,7 @@ class LampSocketProcess(var lamp: LampSocketElement) : IProcess, INBTTReady /*,L
         if (lampDescriptor != null) {
             // This code makes the ECO lights blink, and the other lights are just "stable"
             when (lampDescriptor.type) {
-                LampDescriptor.Type.INCANDESCENT, LampDescriptor.Type.LED, LampDescriptor.Type.HALOGEN -> {
+                LampDescriptor.LampTechnology.INCANDESCENT, LampDescriptor.LampTechnology.INFRARED, LampDescriptor.LampTechnology.LED, LampDescriptor.LampTechnology.HALOGEN -> {
                     if (lamp.lampResistor.voltage < lampDescriptor.minimalU) {
                         lightDouble = 0.0
                     } else {
@@ -135,7 +135,7 @@ class LampSocketProcess(var lamp: LampSocketElement) : IProcess, INBTTReady /*,L
                     }
                     lightDouble *= 15
                 }
-                LampDescriptor.Type.ECO -> {
+                LampDescriptor.LampTechnology.FLUORESCENT -> {
                     val U = Math.abs(lamp.lampResistor.voltage)
                     if (U < lampDescriptor.minimalU) {
                         stableProb = 0.0
@@ -165,10 +165,11 @@ class LampSocketProcess(var lamp: LampSocketElement) : IProcess, INBTTReady /*,L
 
         if (lampDescriptor != null) {
             val bulbCanAge = when(lampDescriptor.type) {
-                LampDescriptor.Type.INCANDESCENT -> !Eln.incandescentLampInfiniteLife
-                LampDescriptor.Type.ECO -> !Eln.ecoLampInfiniteLife
-                LampDescriptor.Type.LED -> !Eln.ledLampInfiniteLife
-                LampDescriptor.Type.HALOGEN -> !Eln.halogenLampInfiniteLife
+                LampDescriptor.LampTechnology.INCANDESCENT -> !Eln.infiniteIncandescentLampLife
+                LampDescriptor.LampTechnology.FLUORESCENT -> !Eln.infiniteFluorescentLampLife
+                LampDescriptor.LampTechnology.INFRARED -> !Eln.infiniteInfraredLampLife
+                LampDescriptor.LampTechnology.LED -> !Eln.infiniteLedLampLife
+                LampDescriptor.LampTechnology.HALOGEN -> !Eln.infiniteHalogenLampLife
             }
 
             if (bulbCanAge) {

@@ -1070,21 +1070,21 @@ object CraftingRecipes {
             )
         )
         addRecipe(
-            Eln.findItemStack("Small 50V Economic Light Bulb", 4), " G ", "GFG", " S ", 'G',
+            Eln.findItemStack("Small 50V Fluorescent Light Bulb", 4), " G ", "GFG", " S ", 'G',
             ItemStack(Blocks.glass_pane), 'F', ItemStack(Items.glowstone_dust), 'S', findItemStack(
                 "Copper " +
                         "Cable"
             )
         )
         addRecipe(
-            Eln.findItemStack("50V Economic Light Bulb", 4), " G ", "GFG", " S ", 'G',
+            Eln.findItemStack("50V Fluorescent Light Bulb", 4), " G ", "GFG", " S ", 'G',
             ItemStack(Blocks.glass_pane), 'F', ItemStack(Items.glowstone_dust), 'S', findItemStack(
                 "Low Voltage " +
                         "Cable"
             )
         )
         addRecipe(
-            Eln.findItemStack("200V Economic Light Bulb", 4), " G ", "GFG", " S ", 'G',
+            Eln.findItemStack("200V Fluorescent Light Bulb", 4), " G ", "GFG", " S ", 'G',
             ItemStack(Blocks.glass_pane), 'F', ItemStack(Items.glowstone_dust), 'S', findItemStack(
                 "Medium " +
                         "Voltage Cable"

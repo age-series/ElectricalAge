@@ -152,10 +152,11 @@ object ConfigHandler {
         eln.ledLampLife = Eln.config["lamp", "ledLifeInHours", 512.0].getDouble(512.0)
         eln.halogenLampLife = Eln.config["lamp", "halogenLifeInHours", 128.0].getDouble(128.0)
 
-        Eln.incandescentLampInfiniteLife = Eln.config["lamp", "infiniteIncandescentLife", false].boolean
-        Eln.ecoLampInfiniteLife = Eln.config["lamp", "infiniteEcoLife", false].boolean
-        Eln.ledLampInfiniteLife = Eln.config["lamp", "infiniteLedLife", false].boolean
-        Eln.halogenLampInfiniteLife = Eln.config["lamp", "infiniteHalogenLife", false].boolean
+        Eln.infiniteIncandescentLampLife = Eln.config["lamp", "infiniteIncandescentLampLife", false].boolean
+        Eln.infiniteFluorescentLampLife = Eln.config["lamp", "infiniteFluorescentLampLife", false].boolean
+        Eln.infiniteInfraredLampLife = Eln.config["lamp", "infiniteInfraredLampLife", false].boolean
+        Eln.infiniteLedLampLife = Eln.config["lamp", "infiniteLedLampLife", false].boolean
+        Eln.infiniteHalogenLampLife = Eln.config["lamp", "infiniteHalogenLampLife", false].boolean
 
         Eln.config["lamp", "swingingLamps", true, "DEPRECATED: This now has no effect. " +
                 "If you don't like them, don't use them. We added a separate non-swinging variant."].boolean

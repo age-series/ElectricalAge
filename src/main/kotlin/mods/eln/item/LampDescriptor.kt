@@ -19,7 +19,7 @@ import kotlin.math.abs
 import kotlin.math.pow
 
 class LampDescriptor(
-    name: String, iconName: String, @JvmField val type: BulbType, @JvmField val socket: LampSocketType,
+    name: String, iconName: String, @JvmField val type: LampTechnology, @JvmField val socket: LampSocketType,
     val nominalU: Double, val nominalP: Double, val nominalLifeHours: Double, val range: Int
 ) : GenericItemUsingDamageDescriptorUpgrade(name), IConfigSharing {
 
@@ -28,21 +28,21 @@ class LampDescriptor(
         const val MAX_LIGHT_VALUE: Int = 15
     }
 
-    enum class BulbType {
+    enum class LampTechnology {
         INCANDESCENT, FLUORESCENT, INFRARED, LED, HALOGEN
     }
 
     val nominalLight = MAX_LIGHT_VALUE / 15.0
-    val vegetableGrowRate = if (type == BulbType.INFRARED) 0.5 else 0.0
+    val vegetableGrowRate = if (type == LampTechnology.INFRARED) 0.5 else 0.0
 
     val minimalU = when (type) {
-        BulbType.INCANDESCENT, BulbType.INFRARED, BulbType.HALOGEN -> nominalU * 0.5
-        BulbType.FLUORESCENT, BulbType.LED -> nominalU * 0.75
+        LampTechnology.INCANDESCENT, LampTechnology.INFRARED, LampTechnology.HALOGEN -> nominalU * 0.5
+        LampTechnology.FLUORESCENT, LampTechnology.LED -> nominalU * 0.75
     }
 
-    val stableUNormalised = if (type == BulbType.FLUORESCENT) 0.75 else 0.0
-    val stableU = if (type == BulbType.FLUORESCENT) nominalU * stableUNormalised else 0.0
-    val stableTime = if (type == BulbType.FLUORESCENT) 4.0 else 0.0
+    val stableUNormalised = if (type == LampTechnology.FLUORESCENT) 0.75 else 0.0
+    val stableU = if (type == LampTechnology.FLUORESCENT) nominalU * stableUNormalised else 0.0
+    val stableTime = if (type == LampTechnology.FLUORESCENT) 4.0 else 0.0
 
     val resistance = nominalU.pow(2) / nominalP
 
@@ -128,4 +128,5 @@ class LampDescriptor(
     override fun deserialize(stream: DataInputStream?) {
         serverNominalLife = stream!!.readDouble()
     }
+
 }
