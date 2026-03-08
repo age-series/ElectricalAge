@@ -190,12 +190,12 @@ class FloodlightElement(transparentNode: TransparentNode, transparentNodeDescrip
 
         when (lamp1Stack) {
             null -> lamp1Resistor.highImpedance()
-            else -> lamp1Resistor.resistance = (getItemObject(lamp1Stack) as LampDescriptor).r
+            else -> lamp1Resistor.resistance = (getItemObject(lamp1Stack) as LampDescriptor).resistance
         }
 
         when (lamp2Stack) {
             null -> lamp2Resistor.highImpedance()
-            else -> lamp2Resistor.resistance = (getItemObject(lamp2Stack) as LampDescriptor).r
+            else -> lamp2Resistor.resistance = (getItemObject(lamp2Stack) as LampDescriptor).resistance
         }
     }
 
