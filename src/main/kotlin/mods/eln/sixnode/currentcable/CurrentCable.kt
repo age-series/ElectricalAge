@@ -57,10 +57,8 @@ class CurrentCableDescriptor(
         thermalC = 1.0
         this.description = description
         this.render = render
-        thermalWarmLimit = 100.0
-        thermalCoolLimit = -100.0
         thermalWarmLimit = Eln.cableWarmLimit
-        thermalCoolLimit = -10.0
+        thermalCoolLimit = -40.0
         Eln.simulator.checkThermalLoad(thermalRs, thermalRp, thermalC)
     }
 
