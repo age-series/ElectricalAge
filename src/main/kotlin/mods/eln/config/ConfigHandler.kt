@@ -194,6 +194,9 @@ object ConfigHandler {
         Eln.lavaAmbientRampEnabled =
             Eln.config["simulation", "lavaAmbientRampEnabled", true, "Blend ambient temperature toward 40C between Y20 and Y12, then clamp to 40C below Y12."]
                 .getBoolean(true)
+        Eln.undergroundBiomeTemperatureMultiplier =
+            Eln.config["simulation", "undergroundBiomeTemperatureMultiplier", 0.2, "Multiplier applied to biome ambient temperature when calculating the Y50 underground baseline: 12C + biomeTemp * multiplier."]
+                .getDouble(0.2)
 
         Eln.fuelHeatValueFactor = Eln.config["balancing", "fuelHeatValueFactor", 0.0000675, "Factor to apply when " +
                 "converting real word heat values to Minecraft heat values (1mB = 1l)."].double

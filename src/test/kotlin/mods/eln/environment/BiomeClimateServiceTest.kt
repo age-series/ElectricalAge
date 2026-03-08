@@ -77,13 +77,18 @@ class BiomeClimateServiceTest {
     @Test
     fun undergroundProfileTransitionsFromSurfaceToBiomeWeightedUnderground() {
         val surface = -10.0
+        val previous = Eln.undergroundBiomeTemperatureMultiplier
+        Eln.undergroundBiomeTemperatureMultiplier = 0.2
         val underground = BiomeClimateService.undergroundTemperatureCelsius(surface)
-
-        assertEquals(0.0, underground, 1.0e-9)
-        assertEquals(surface, BiomeClimateService.applyDepthTemperatureProfile(surface, 63), 1.0e-9)
-        assertEquals(underground, BiomeClimateService.applyDepthTemperatureProfile(surface, 50), 1.0e-9)
-        assertEquals(-80.0 / 13.0, BiomeClimateService.applyDepthTemperatureProfile(surface, 58), 1.0e-9)
-        assertEquals(underground, BiomeClimateService.applyDepthTemperatureProfile(surface, 30), 1.0e-9)
+        try {
+            assertEquals(10.0, underground, 1.0e-9)
+            assertEquals(surface, BiomeClimateService.applyDepthTemperatureProfile(surface, 63), 1.0e-9)
+            assertEquals(underground, BiomeClimateService.applyDepthTemperatureProfile(surface, 50), 1.0e-9)
+            assertEquals(-30.0 / 13.0, BiomeClimateService.applyDepthTemperatureProfile(surface, 58), 1.0e-9)
+            assertEquals(underground, BiomeClimateService.applyDepthTemperatureProfile(surface, 30), 1.0e-9)
+        } finally {
+            Eln.undergroundBiomeTemperatureMultiplier = previous
+        }
     }
 
     @Test
@@ -92,11 +97,11 @@ class BiomeClimateServiceTest {
         try {
             Eln.lavaAmbientRampEnabled = true
             assertEquals(40.0, BiomeClimateService.applyDepthTemperatureProfile(20.0, 12), 1.0e-9)
-            assertEquals(38.0, BiomeClimateService.applyDepthTemperatureProfile(20.0, 16), 1.0e-9)
+            assertEquals(28.0, BiomeClimateService.applyDepthTemperatureProfile(20.0, 16), 1.0e-9)
 
             Eln.lavaAmbientRampEnabled = false
-            assertEquals(36.0, BiomeClimateService.applyDepthTemperatureProfile(20.0, 16), 1.0e-9)
-            assertEquals(36.0, BiomeClimateService.applyDepthTemperatureProfile(20.0, 8), 1.0e-9)
+            assertEquals(16.0, BiomeClimateService.applyDepthTemperatureProfile(20.0, 16), 1.0e-9)
+            assertEquals(16.0, BiomeClimateService.applyDepthTemperatureProfile(20.0, 8), 1.0e-9)
         } finally {
             Eln.lavaAmbientRampEnabled = previous
         }
