@@ -6,7 +6,6 @@ import mods.eln.item.LampDescriptor
 import mods.eln.misc.Coordinate
 import mods.eln.misc.INBTTReady
 import mods.eln.misc.Utils
-import mods.eln.server.SaveConfig
 import mods.eln.sim.IProcess
 import mods.eln.sixnode.lampsupply.LampSupplyElement
 import mods.eln.sixnode.lampsupply.LampSupplyElement.PowerSupplyChannelHandle
@@ -166,10 +165,10 @@ class LampSocketProcess(var lamp: LampSocketElement) : IProcess, INBTTReady /*,L
 
         if (lampDescriptor != null) {
             val bulbCanAge = when(lampDescriptor.type) {
-                LampDescriptor.Type.INCANDESCENT -> !Eln.incandescentLampInfiniteLife && !SaveConfig.instance!!.infiniteIncandescentLife
-                LampDescriptor.Type.ECO -> !Eln.ecoLampInfiniteLife && !SaveConfig.instance!!.infiniteEcoBulbLife
-                LampDescriptor.Type.LED -> !Eln.ledLampInfiniteLife && !SaveConfig.instance!!.infiniteLedBulbLife
-                LampDescriptor.Type.HALOGEN -> !Eln.halogenLampInfiniteLife && !SaveConfig.instance!!.infiniteHalogenBulbLife
+                LampDescriptor.Type.INCANDESCENT -> !Eln.incandescentLampInfiniteLife
+                LampDescriptor.Type.ECO -> !Eln.ecoLampInfiniteLife
+                LampDescriptor.Type.LED -> !Eln.ledLampInfiniteLife
+                LampDescriptor.Type.HALOGEN -> !Eln.halogenLampInfiniteLife
             }
 
             if (bulbCanAge) {

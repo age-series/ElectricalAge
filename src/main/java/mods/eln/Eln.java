@@ -218,7 +218,6 @@ public class Eln {
     public static double maxSoundDistance = 16;
     public static int soundChannels = 200;
     public static double cablePowerFactor;
-    public static boolean allowSwingingLamps = true;
     public static boolean enableFestivities = true;
     public static boolean verticalIronCableCrafting = false;
     public static Double flywheelMass = 0.0;
@@ -241,14 +240,10 @@ public class Eln {
     public static int wirelessTxRange = 32;
     public static int roomMaxAxisSpanBlocks = 24;
     public static int roomMaxVolumeBlocks = 4096;
-
-    /* ---- Lightbulb life --------------------------------- */
     public static boolean incandescentLampInfiniteLife = false;
     public static boolean ecoLampInfiniteLife = false;
     public static boolean ledLampInfiniteLife = false;
     public static boolean halogenLampInfiniteLife = false;
-    /* ----------------------------------------------------- */
-
     static public GenericItemUsingDamageDescriptor multiMeterElement, thermometerElement, allMeterElement;
     static public GenericItemUsingDamageDescriptor configCopyToolElement;
     public static TreeResin treeResin;
@@ -308,6 +303,8 @@ public class Eln {
     public boolean addOtherModOreToXRay;
     public boolean xRayScannerCanBeCrafted = true;
     public double stdBatteryHalfLife = 2 * Utils.minecraftDay;
+    public static boolean infiniteStandardBatteryLife = false;
+    public static boolean infinitePortableBatteryLife = false;
     public static final double SVU = 5, SVII = gateOutputCurrent / SVU, SVUinv = 1.0 / SVU;
     public double batteryCapacityFactor = 1.;
     public boolean replicatorPop;
@@ -324,6 +321,7 @@ public class Eln {
     public double ledLampLife;
     public double halogenLampLife;
     public double fuelGeneratorTankCapacity = 20 * 60;
+    public static boolean infiniteHeatFurnaceFuel = false;
     public int replicatorRegistrationId = -1;
 
     public static HashSet<String> oreNames = new HashSet<>();
