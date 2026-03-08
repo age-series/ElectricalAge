@@ -191,6 +191,9 @@ object ConfigHandler {
         Eln.cableThermalSpikeLimitFactor =
             Eln.config["simulation", "cableThermalSpikeLimitFactor", 20.0, "Multiplier applied to nominal heating rate when the spike limiter is enabled."]
                 .getDouble(20.0)
+        Eln.lavaAmbientRampEnabled =
+            Eln.config["simulation", "lavaAmbientRampEnabled", true, "Blend ambient temperature toward 40C between Y20 and Y12, then clamp to 40C below Y12."]
+                .getBoolean(true)
 
         Eln.fuelHeatValueFactor = Eln.config["balancing", "fuelHeatValueFactor", 0.0000675, "Factor to apply when " +
                 "converting real word heat values to Minecraft heat values (1mB = 1l)."].double
