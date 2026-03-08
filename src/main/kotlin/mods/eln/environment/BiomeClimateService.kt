@@ -20,6 +20,13 @@ object BiomeClimateService {
     private const val MIN_THUNDER_HUMIDITY_PERCENT = 95.0
     private const val RAIN_CLOUD_TEMP_DELTA_C = -2.0
     private const val THUNDER_CLOUD_TEMP_DELTA_C = -1.0
+    private const val SURFACE_Y = 63
+    private const val UPPER_UNDERGROUND_Y = 50
+    private const val LAVA_TRANSITION_START_Y = 20
+    private const val LAVA_TRANSITION_END_Y = 12
+    private const val UNDERGROUND_BASELINE_C = 12.0
+    private const val UNDERGROUND_BIOME_MULTIPLIER = 1.2
+    private const val DEEP_UNDERGROUND_AMBIENT_C = 40.0
 
     private val profilesByBiomeName = HashMap<String, BiomeClimateProfile>()
     private val profilesByBiomeId = HashMap<Int, BiomeClimateProfile>()
@@ -37,7 +44,8 @@ object BiomeClimateService {
         val profile = resolveProfileForBiome(biome)
 
         val dayBlend = dayBlendForWorldTicks(world.worldTime)
-        var temperatureC = interpolateTemperature(profile.dayHighCelsius, profile.nightLowCelsius, dayBlend)
+        val biomeTemperatureC = interpolateTemperature(profile.dayHighCelsius, profile.nightLowCelsius, dayBlend)
+        var temperatureC = biomeTemperatureC
         var humidity = interpolateHumidity(profile.dayHumidityPercent, profile.nightHumidityPercent, dayBlend)
 
         var activePrecipitationType = "none"
@@ -48,6 +56,8 @@ object BiomeClimateService {
                 humidity = applyHumidityBoost(humidity, activePrecipitationType, isRaining = true, isThundering = weather.thundering)
             }
         }
+
+        temperatureC = applyDepthTemperatureProfile(temperatureC, y)
 
         humidity = humidity.coerceIn(0.0, 100.0)
         return ClimateState(
@@ -286,6 +296,33 @@ object BiomeClimateService {
         return adjusted
     }
 
+    @JvmStatic
+    fun applyDepthTemperatureProfile(surfaceTemperatureCelsius: Double, y: Int): Double {
+        val undergroundTemperatureCelsius = undergroundTemperatureCelsius(surfaceTemperatureCelsius)
+
+        if (y >= SURFACE_Y) {
+            return surfaceTemperatureCelsius
+        }
+        if (y >= UPPER_UNDERGROUND_Y) {
+            val t = (SURFACE_Y - y).toDouble() / (SURFACE_Y - UPPER_UNDERGROUND_Y).toDouble()
+            return interpolateLinear(surfaceTemperatureCelsius, undergroundTemperatureCelsius, t)
+        }
+        if (!Eln.lavaAmbientRampEnabled || y > LAVA_TRANSITION_START_Y) {
+            return undergroundTemperatureCelsius
+        }
+        if (y <= LAVA_TRANSITION_END_Y) {
+            return DEEP_UNDERGROUND_AMBIENT_C
+        }
+
+        val t = (LAVA_TRANSITION_START_Y - y).toDouble() / (LAVA_TRANSITION_START_Y - LAVA_TRANSITION_END_Y).toDouble()
+        return interpolateLinear(undergroundTemperatureCelsius, DEEP_UNDERGROUND_AMBIENT_C, t)
+    }
+
+    @JvmStatic
+    fun undergroundTemperatureCelsius(surfaceTemperatureCelsius: Double): Double {
+        return UNDERGROUND_BASELINE_C + surfaceTemperatureCelsius * UNDERGROUND_BIOME_MULTIPLIER
+    }
+
     private fun ensureLoaded() {
         if (loaded) {
             return
@@ -331,6 +368,11 @@ object BiomeClimateService {
         val t = rawT.coerceIn(0.0, 1.0)
         val smooth = t * t * (3.0 - 2.0 * t)
         return start + (end - start) * smooth
+    }
+
+    private fun interpolateLinear(start: Double, end: Double, rawT: Double): Double {
+        val t = rawT.coerceIn(0.0, 1.0)
+        return start + (end - start) * t
     }
 
     private fun loadProfiles() {
