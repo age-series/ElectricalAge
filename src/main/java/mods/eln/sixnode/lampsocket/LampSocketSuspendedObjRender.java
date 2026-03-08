@@ -1,6 +1,5 @@
 package mods.eln.sixnode.lampsocket;
 
-import mods.eln.Eln;
 import mods.eln.misc.LRDU;
 import mods.eln.misc.Obj3D;
 import mods.eln.misc.Obj3D.Obj3DPart;
