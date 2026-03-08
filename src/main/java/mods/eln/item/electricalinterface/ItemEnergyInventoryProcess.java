@@ -122,7 +122,7 @@ public class ItemEnergyInventoryProcess implements IProcess {
                 e.i.electricalItemUpdate(e.stack, energyUpdatePeriod);
             }
 
-            if (Eln.saveConfig.infinitePortableBattery) {
+            if (Eln.infinitePortableBatteryLife) {
                 for (Element e : list) {
                     double chargePower = e.i.getChargePower(e.stack);
                     double energy = Math.min(e.i.getEnergyMax(e.stack), e.i.getEnergy(e.stack) + e.i.getChargePower(e.stack) * time);

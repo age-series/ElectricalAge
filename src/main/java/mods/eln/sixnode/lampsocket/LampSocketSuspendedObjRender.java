@@ -84,14 +84,14 @@ public class LampSocketSuspendedObjRender implements LampSocketObjRender {
         GL11.glTranslatef(baseLength, 0, 0);
 
         for (int idx = 0; idx < length; idx++) {
-            if (canSwing && Eln.allowSwingingLamps) {
+            if (canSwing) {
                 GL11.glRotatef(pertuPy, 0, 1, 0);
                 GL11.glRotatef(pertuPz, 0, 0, 1);
             }
             chain.draw();
             GL11.glTranslatef(chainLength, 0, 0);
         }
-        if (canSwing && Eln.allowSwingingLamps) {
+        if (canSwing) {
             GL11.glRotatef(pertuPy, 0, 1, 0);
             GL11.glRotatef(pertuPz, 0, 0, 1);
         }

@@ -6,7 +6,6 @@ import mods.eln.misc.Coordinate
 import mods.eln.misc.HybridNodeDirection
 import mods.eln.misc.HybridNodeDirection.*
 import mods.eln.misc.Utils.getItemObject
-import mods.eln.server.SaveConfig
 import mods.eln.sim.IProcess
 import mods.eln.sixnode.lampsocket.LightBlockEntity
 import net.minecraft.item.ItemStack
@@ -52,7 +51,7 @@ class FloodlightProcess(var element: FloodlightElement) : IProcess {
 
                 lampLightRanges.add(lampDescriptor.range)
 
-                val bulbCanAge = !Eln.halogenLampInfiniteLife && !SaveConfig.instance!!.infiniteHalogenBulbLife
+                val bulbCanAge = !Eln.halogenLampInfiniteLife
 
                 if (bulbCanAge) {
                     val currentLife = lampDescriptor.ageLamp(lampStacks[idx]!!, lampVoltage, time)
