@@ -196,7 +196,7 @@ class CurrentRelayElement(sixNode: SixNode, side: Direction, descriptor: SixNode
 
         slowProcessList.add(thermalWatchdog)
         thermalWatchdog
-            .setTemperatureLimits(Eln.cableWarmLimit, -10.0)
+            .setTemperatureLimits(Eln.cableWarmLimit, cableDescriptor.thermalCoolLimit)
             .setDestroys(WorldExplosion(this).cableExplosion())
         thermalWatchdog.dumpMatrixOnTrip("CurrentRelayElement thermal trip") { this }
     }
