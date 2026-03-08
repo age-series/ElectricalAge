@@ -25,7 +25,6 @@ object BiomeClimateService {
     private const val LAVA_TRANSITION_START_Y = 20
     private const val LAVA_TRANSITION_END_Y = 12
     private const val UNDERGROUND_BASELINE_C = 12.0
-    private const val UNDERGROUND_BIOME_MULTIPLIER = 1.2
     private const val DEEP_UNDERGROUND_AMBIENT_C = 40.0
 
     private val profilesByBiomeName = HashMap<String, BiomeClimateProfile>()
@@ -320,7 +319,7 @@ object BiomeClimateService {
 
     @JvmStatic
     fun undergroundTemperatureCelsius(surfaceTemperatureCelsius: Double): Double {
-        return UNDERGROUND_BASELINE_C + surfaceTemperatureCelsius * UNDERGROUND_BIOME_MULTIPLIER
+        return UNDERGROUND_BASELINE_C + surfaceTemperatureCelsius * Eln.undergroundBiomeTemperatureMultiplier
     }
 
     private fun ensureLoaded() {
