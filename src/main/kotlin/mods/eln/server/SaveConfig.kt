@@ -5,17 +5,11 @@ import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.world.WorldSavedData
 
 class SaveConfig(par1Str: String) : WorldSavedData(par1Str) {
-    @JvmField
-    var reGenOre = false
-    var cableRsFactor_lastUsed = 1.0
     override fun readFromNBT(nbt: NBTTagCompound) {
-        reGenOre = nbt.getBoolean("reGenOre")
-        cableRsFactor_lastUsed = nbt.getDouble("cableRsFactor_lastUsed")
         Eln.wind.readFromNBT(nbt, "wind")
     }
 
     override fun writeToNBT(nbt: NBTTagCompound) {
-        nbt.setBoolean("reGenOre", reGenOre)
         Eln.wind.writeToNBT(nbt, "wind")
     }
 

@@ -4,7 +4,6 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 import mods.eln.misc.FunctionTable
-import mods.eln.server.SaveConfig
 import mods.eln.sim.mna.component.VoltageSource
 
 private class TestBatterySlowProcess(
@@ -21,7 +20,6 @@ private class TestBatterySlowProcess(
 class BatterySlowProcessTest {
     @Test
     fun destroyOnInvalidVoltageOrOverVoltage() {
-        SaveConfig("test")
         val voltageFunction = FunctionTable(doubleArrayOf(1.0, 1.0), 1.0)
         val process = BatteryProcess(null, null, voltageFunction, 10.0, VoltageSource("b"), ThermalLoad())
         process.QNominal = 1.0
@@ -42,7 +40,6 @@ class BatterySlowProcessTest {
 
     @Test
     fun agingReducesLifeWhenEnabled() {
-        SaveConfig("test")
         val voltageFunction = FunctionTable(doubleArrayOf(1.0, 1.0), 1.0)
         val source = VoltageSource("b")
         val process = BatteryProcess(null, null, voltageFunction, 10.0, source, ThermalLoad())
