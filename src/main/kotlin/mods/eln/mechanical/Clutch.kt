@@ -78,6 +78,10 @@ class ClutchPlateItem(
 
 class ClutchPinItem(name: String) : GenericItemUsingDamageDescriptorWithComment(name, tr("Prevents clutches from slipping\nagain after they stop.").split("\n").toTypedArray())
 
+internal fun canClutchStopSlipping(leftShaft: ShaftNetwork, rightShaft: ShaftNetwork): Boolean {
+    return leftShaft !is StaticShaftNetwork && rightShaft !is StaticShaftNetwork
+}
+
 class ClutchDescriptor(name: String, override val obj: Obj3D) : SimpleShaftDescriptor(name, ClutchElement::class, ClutchRender::class, EntityMetaTag.Basic) {
     companion object {
         val degToRad = 360.0 / (2 * Math.PI)
@@ -285,6 +289,10 @@ class ClutchElement(node: TransparentNode, desc_: TransparentNodeDescriptor) : S
                 //if (slower.rads >= faster.rads - margin)
                 if (Math.signum(rightShaft.rads - leftShaft.rads) != Math.signum(preRads[RIGHT] - preRads[LEFT]))
                 {
+                    if (!canClutchStopSlipping(leftShaft, rightShaft)) {
+                        clutchPlateDescriptor!!.setWear(clutchPlateStack!!, wear + clutching * slipWearF.getValue(Math.abs(deltaR)))
+                        return
+                    }
                     // Sign change
                     //Utils.println("CPP.p: Sign change")
                     val dWFast = faster.rads - preRads[fasterIdx]
