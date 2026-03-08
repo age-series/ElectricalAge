@@ -25,7 +25,7 @@ class OreRegenerate {
         for (idx in 0..0) {
             if (!jobs.isEmpty()) {
                 val j = jobs.pollLast()
-                if (!Eln.saveConfig.reGenOre && !Eln.instance.forceOreRegen) return
+                if (!Eln.instance.forceOreRegen) return
                 val server = FMLCommonHandler.instance().minecraftServerInstance.worldServerForDimension(j.worldId)
                 val chunk = server.getChunkFromChunkCoords(j.x, j.z)
                 var y = 0
@@ -53,7 +53,7 @@ class OreRegenerate {
 
     @SubscribeEvent
     fun chunkLoad(e: ChunkEvent.Load) {
-        if (e.world.isRemote || Eln.saveConfig != null && !Eln.saveConfig.reGenOre) return
+        if (e.world.isRemote || !Eln.instance.forceOreRegen) return
         val c = e.chunk
         val ref = ChunkRef(c.xPosition, c.zPosition, c.worldObj.provider.dimensionId)
         if (alreadyLoadedChunks.contains(ref)) {

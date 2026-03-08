@@ -120,7 +120,7 @@ object ConfigHandler {
         eln.killMonstersAroundLampsRange = Eln.config["entity", "killMonstersAroundLampsRange", 9].getInt(9)
         eln.maxReplicators = Eln.config["entity", "maxReplicators", 100].getInt(100)
 
-        eln.forceOreRegen = Eln.config["mapGenerate", "forceOreRegen", false].getBoolean(false)
+        eln.forceOreRegen = Eln.config["mapGenerate", "forceOreRegen", false, "This is broken! Do not use!"].getBoolean(false)
         Eln.genCopper = Eln.config["mapGenerate", "copper", true].getBoolean(true)
         Eln.genLead = Eln.config["mapGenerate", "lead", true].getBoolean(true)
         Eln.genTungsten = Eln.config["mapGenerate", "tungsten", true].getBoolean(true)
