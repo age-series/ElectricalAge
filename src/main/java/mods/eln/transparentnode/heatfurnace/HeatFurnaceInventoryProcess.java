@@ -1,10 +1,10 @@
 package mods.eln.transparentnode.heatfurnace;
 
+import mods.eln.Eln;
 import mods.eln.generic.GenericItemUsingDamageDescriptor;
 import mods.eln.item.ThermalIsolatorElement;
 import mods.eln.misc.INBTTReady;
 import mods.eln.misc.Utils;
-import mods.eln.server.SaveConfig;
 import mods.eln.sim.IProcess;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
@@ -46,8 +46,8 @@ public class HeatFurnaceInventoryProcess implements IProcess, INBTTReady {
         }
         furnace.furnaceProcess.nominalPower = furnace.descriptor.nominalPower + furnace.descriptor.combustionChamberPower * combustionChamberNbr;
 
-        if (furnace.getTakeFuel() && SaveConfig.instance != null) {
-            if (!SaveConfig.instance.heatFurnaceFuel) {
+        if (furnace.getTakeFuel()) {
+            if (Eln.infiniteHeatFurnaceFuel) {
                 combustibleBuffer = furnace.furnaceProcess.nominalCombustibleEnergy;
             } else if (combustibleStack != null) {
                 double itemEnergy = Utils.getItemEnergie(combustibleStack);

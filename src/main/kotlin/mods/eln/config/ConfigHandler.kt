@@ -101,6 +101,8 @@ object ConfigHandler {
 
         eln.stdBatteryHalfLife = Eln.config["battery", "batteryHalfLife", 2, "How many days it takes for a battery to " +
                 "decay half way"].getDouble(2.0) * Utils.minecraftDay
+        Eln.infiniteStandardBatteryLife = Eln.config["battery", "infiniteStandardBatteryLife", false].boolean
+        Eln.infinitePortableBatteryLife = Eln.config["battery", "infinitePortableBatteryLife", false].boolean
         eln.batteryCapacityFactor = Eln.config["balancing", "batteryCapacityFactor", 1].getDouble(1.0)
 
         eln.ComputerProbeEnable = Eln.config["compatibility", "ComputerProbeEnable", true, "Enable the OC/CC <-> Eln " +
@@ -144,7 +146,6 @@ object ConfigHandler {
             Eln.dictAdvancedChip = "circuitElnAdvanced"
         }
 
-        /* ---- Lamp config ----------------------------------------------------------------------- */
         eln.incandescentLampLife = Eln.config["lamp", "incandescentLifeInHours", 16.0].getDouble(16.0)
         eln.economicLampLife = Eln.config["lamp", "economicLifeInHours", 64.0].getDouble(64.0)
         eln.carbonLampLife = Eln.config["lamp", "carbonLifeInHours", 6.0].getDouble(6.0)
@@ -156,11 +157,13 @@ object ConfigHandler {
         Eln.ledLampInfiniteLife = Eln.config["lamp", "infiniteLedLife", false].boolean
         Eln.halogenLampInfiniteLife = Eln.config["lamp", "infiniteHalogenLife", false].boolean
 
-        Eln.allowSwingingLamps = Eln.config["lamp", "swingingLamps", true].boolean
-        /* ---------------------------------------------------------------------------------------- */
+        Eln.config["lamp", "swingingLamps", true, "DEPRECATED: This now has no effect. " +
+                "If you don't like them, don't use them. We added a separate non-swinging variant."].boolean
 
         eln.fuelGeneratorTankCapacity =
             Eln.config["fuelGenerator", "tankCapacityInSecondsAtNominalPower", 20 * 60].getDouble((20 * 60).toDouble())
+
+        Eln.infiniteHeatFurnaceFuel = Eln.config["heatFurnace", "infiniteHeatFurnaceFuel", false].boolean
 
         eln.addOtherModOreToXRay = Eln.config["xrayscannerconfig", "addOtherModOreToXRay", true].getBoolean(true)
         eln.xRayScannerRange = Eln.config["xrayscannerconfig", "rangeInBloc", 5.0, "X-Ray Scanner range; set " +
