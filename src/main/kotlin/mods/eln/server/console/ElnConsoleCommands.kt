@@ -439,53 +439,6 @@ class ElnNewWindDirectionCommand: IConsoleCommand {
     override fun requiredPermission() = listOf(UserPermission.IS_OPERATOR)
 }
 
-
-class ElnRegenOreQueueCommand: IConsoleCommand {
-    override val name = "regenOre"
-
-    override fun runCommand(ics: ICommandSender, args: List<String>) {
-        var printSyntax = false
-
-        if (args.size == 1) {
-            val regenOre = getArgBool(ics, args[0]) ?: return
-
-            Eln.instance.forceOreRegen = regenOre
-            Eln.config.get("mapGenerate", "forceOreRegen", false).set(Eln.instance.forceOreRegen)
-            Eln.config.save()
-
-            cprint(ics, "Persistent ore regeneration: ${FC.DARK_GREEN}${boolToStr(regenOre)}", indent = 1)
-            cprint(ics, "Changes saved to the config file.", indent = 1)
-        }
-        else printSyntax = true
-
-        if (printSyntax) cprint(ics, "Command syntax: /eln regenOre [true/false]")
-    }
-
-    override fun getManPage(ics: ICommandSender, args: List<String>) {
-        cprint(ics, "Enables/disables persistent ELN ore regeneration.", indent = 1)
-        cprint(ics, "Changes saved to the config file.", indent = 1)
-        cprint(ics, "")
-        cprint(ics, "Parameters:", indent = 1)
-        cprint(ics, "@0:bool : Ore regen enabled (true/false).", indent = 2)
-        cprint(ics, "")
-    }
-
-    override fun requiredPermission() = listOf(UserPermission.IS_OPERATOR)
-
-    override fun getTabCompletion(args: List<String>): List<String> {
-        val arg0Options = listOf("true", "false")
-
-        return when (args.size) {
-            0 -> arg0Options
-            1 -> {
-                if (args[0] == "") arg0Options
-                else arg0Options.filter {it.startsWith(args[0], ignoreCase = true)}
-            }
-            else -> listOf()
-        }
-    }
-}
-
 class ElnLampsKillMonstersCommand: IConsoleCommand {
     override val name = "killMonstersAroundLamps"
 

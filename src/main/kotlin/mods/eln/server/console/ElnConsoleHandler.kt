@@ -31,7 +31,6 @@ class ElnConsoleCommands: ICommand {
             ElnLampAgingCommand(),
             ElnHeatFurnaceFuelCommand(),
             ElnNewWindDirectionCommand(),
-            ElnRegenOreQueueCommand(),
             ElnLampsKillMonstersCommand(),
             ElnMatrixCommand(),
             ElnManCommand(),

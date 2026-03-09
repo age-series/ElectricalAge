@@ -120,7 +120,7 @@ object ConfigHandler {
         eln.killMonstersAroundLampsRange = Eln.config["entity", "killMonstersAroundLampsRange", 9].getInt(9)
         eln.maxReplicators = Eln.config["entity", "maxReplicators", 100].getInt(100)
 
-        eln.forceOreRegen = Eln.config["mapGenerate", "forceOreRegen", false, "This is broken! Do not use!"].getBoolean(false)
+        Eln.config["mapGenerate", "forceOreRegen", false, "DEPRECATED: This feature has been removed."]
         Eln.genCopper = Eln.config["mapGenerate", "copper", true].getBoolean(true)
         Eln.genLead = Eln.config["mapGenerate", "lead", true].getBoolean(true)
         Eln.genTungsten = Eln.config["mapGenerate", "tungsten", true].getBoolean(true)
@@ -158,7 +158,7 @@ object ConfigHandler {
         Eln.halogenLampInfiniteLife = Eln.config["lamp", "infiniteHalogenLife", false].boolean
 
         Eln.config["lamp", "swingingLamps", true, "DEPRECATED: This now has no effect. " +
-                "If you don't like them, don't use them. We added a separate non-swinging variant."].boolean
+                "If you don't like them, don't use them. We added a separate non-swinging variant."]
 
         eln.fuelGeneratorTankCapacity =
             Eln.config["fuelGenerator", "tankCapacityInSecondsAtNominalPower", 20 * 60].getDouble((20 * 60).toDouble())
