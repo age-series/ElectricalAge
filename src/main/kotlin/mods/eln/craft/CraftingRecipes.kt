@@ -1091,11 +1091,11 @@ object CraftingRecipes {
             )
         )
         addRecipe(
-            Eln.findItemStack("50V Farming Bulb", 2), "GGG", "FFF", "GSG", 'G', ItemStack(Blocks.glass_pane),
+            Eln.findItemStack("50V Infrared Bulb (Farming Lamp)", 2), "GGG", "FFF", "GSG", 'G', ItemStack(Blocks.glass_pane),
             'F', Eln.dictTungstenIngot, 'S', findItemStack("Low Voltage Cable")
         )
         addRecipe(
-            Eln.findItemStack("200V Farming Bulb", 2), "GGG", "FFF", "GSG", 'G', ItemStack(Blocks.glass_pane),
+            Eln.findItemStack("200V Infrared Bulb (Farming Lamp)", 2), "GGG", "FFF", "GSG", 'G', ItemStack(Blocks.glass_pane),
             'F', Eln.dictTungstenIngot, 'S', findItemStack("Medium Voltage Cable")
         )
         addRecipe(

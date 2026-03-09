@@ -317,8 +317,9 @@ public class Eln {
     public static final double SVP = gateOutputCurrent * SVU;
     public ElectricalFurnaceDescriptor electricalFurnace;
     public double incandescentLampLife;
+    public double carbonIncandescentLampLife;
     public double fluorescentLampLife;
-    public double carbonLampLife;
+    public double infraredLampLife;
     public double ledLampLife;
     public double halogenLampLife;
     public double fuelGeneratorTankCapacity = 20 * 60;

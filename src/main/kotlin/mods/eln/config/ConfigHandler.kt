@@ -19,11 +19,13 @@ object ConfigHandler {
             "lamp", "incondescentLifeInHours", "incandescentLifeInHours")
         if (Eln.config.hasKey("lamp", "economicLifeInHours")) Eln.config.renameProperty(
             "lamp", "economicLifeInHours", "fluorescentLifeInHours")
+        if (Eln.config.hasKey("lamp", "carbonLifeInHours")) Eln.config.renameProperty(
+            "lamp", "carbonLifeInHours", "carbonIncandescentLifeInHours")
 
         if (Eln.config.hasKey("lamp", "infiniteIncandescentLife")) Eln.config.renameProperty(
             "lamp", "infiniteIncandescentLife", "infiniteIncandescentLampLife")
         if (Eln.config.hasKey("lamp", "infiniteEcoLife")) Eln.config.renameProperty(
-            "lamp", "infiniteEcoLife", "infiniteEcoLampLife")
+            "lamp", "infiniteEcoLife", "infiniteFluorescentLampLife")
         if (Eln.config.hasKey("lamp", "infiniteLedLife")) Eln.config.renameProperty(
             "lamp", "infiniteLedLife", "infiniteLedLampLife")
         if (Eln.config.hasKey("lamp", "infiniteHalogenLife")) Eln.config.renameProperty(
@@ -156,8 +158,9 @@ object ConfigHandler {
         }
 
         eln.incandescentLampLife = Eln.config["lamp", "incandescentLifeInHours", 16.0].getDouble(16.0)
+        eln.carbonIncandescentLampLife = Eln.config["lamp", "carbonIncandescentLifeInHours", 6.0].getDouble(6.0)
         eln.fluorescentLampLife = Eln.config["lamp", "fluorescentLifeInHours", 64.0].getDouble(64.0)
-        eln.carbonLampLife = Eln.config["lamp", "carbonLifeInHours", 6.0].getDouble(6.0)
+        eln.infraredLampLife = Eln.config["lamp", "infraredLifeInHours", 16.0].getDouble(16.0)
         eln.ledLampLife = Eln.config["lamp", "ledLifeInHours", 512.0].getDouble(512.0)
         eln.halogenLampLife = Eln.config["lamp", "halogenLifeInHours", 128.0].getDouble(128.0)
 
@@ -168,7 +171,7 @@ object ConfigHandler {
         Eln.infiniteHalogenLampLife = Eln.config["lamp", "infiniteHalogenLampLife", false].boolean
 
         Eln.config["lamp", "swingingLamps", true, "DEPRECATED: This now has no effect. " +
-                "If you don't like them, don't use them. We added a separate non-swinging variant."].boolean
+                "If you don't like them, don't use them. We added a separate non-swinging variant."]
 
         eln.fuelGeneratorTankCapacity =
             Eln.config["fuelGenerator", "tankCapacityInSecondsAtNominalPower", 20 * 60].getDouble((20 * 60).toDouble())

@@ -427,7 +427,7 @@ object ItemRegistration {
                 LampSocketType.Douille,
                 Eln.LVU,
                 15.0,
-                instance.carbonLampLife,
+                instance.carbonIncandescentLampLife,
                 11
             )
             Eln.sharedItem.addElement(completeId, descriptor)
@@ -442,7 +442,7 @@ object ItemRegistration {
                 LampSocketType.Douille,
                 Eln.LVU,
                 25.0,
-                instance.carbonLampLife,
+                instance.carbonIncandescentLampLife,
                 13
             )
             Eln.sharedItem.addElement(completeId, descriptor)
@@ -496,13 +496,13 @@ object ItemRegistration {
             subId = 32
             completeId = subId + (id shl 6)
             descriptor = LampDescriptor(
-                I18N.TR_NAME(I18N.Type.NONE, "50V Farming Bulb"),
+                I18N.TR_NAME(I18N.Type.NONE, "50V Infrared Bulb (Farming Lamp)"),
                 "farminglamp",
                 LampDescriptor.Technology.INFRARED,
                 LampSocketType.Douille,
                 Eln.LVU,
                 120.0,
-                instance.incandescentLampLife,
+                instance.infraredLampLife,
                 15
             )
             Eln.sharedItem.addElement(completeId, descriptor)
@@ -511,13 +511,13 @@ object ItemRegistration {
             subId = 36
             completeId = subId + (id shl 6)
             descriptor = LampDescriptor(
-                I18N.TR_NAME(I18N.Type.NONE, "200V Farming Bulb"),
+                I18N.TR_NAME(I18N.Type.NONE, "200V Infrared Bulb (Farming Lamp)"),
                 "farminglamp",
                 LampDescriptor.Technology.INFRARED,
                 LampSocketType.Douille,
                 Eln.MVU,
                 120.0,
-                instance.incandescentLampLife,
+                instance.infraredLampLife,
                 15
             )
             Eln.sharedItem.addElement(completeId, descriptor)
