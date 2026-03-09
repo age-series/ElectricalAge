@@ -17,8 +17,8 @@ object ConfigHandler {
         // attention to it, so it's OK... for the moment.
         if (Eln.config.hasKey("lamp", "incondescentLifeInHours")) Eln.config.renameProperty(
             "lamp", "incondescentLifeInHours", "incandescentLifeInHours")
-        if (Eln.config.hasKey("lamp", "ecoLifeInHours")) Eln.config.renameProperty(
-            "lamp", "ecoLifeInHours", "fluorescentLifeInHours")
+        if (Eln.config.hasKey("lamp", "economicLifeInHours")) Eln.config.renameProperty(
+            "lamp", "economicLifeInHours", "fluorescentLifeInHours")
 
         if (Eln.config.hasKey("lamp", "infiniteIncandescentLife")) Eln.config.renameProperty(
             "lamp", "infiniteIncandescentLife", "infiniteIncandescentLampLife")
