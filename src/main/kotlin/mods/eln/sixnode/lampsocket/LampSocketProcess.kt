@@ -127,7 +127,7 @@ class LampSocketProcess(var lamp: LampSocketElement) : IProcess, INBTTReady /*,L
         if (lampDescriptor != null) {
             // This code makes the ECO lights blink, and the other lights are just "stable"
             when (lampDescriptor.type) {
-                LampDescriptor.LampTechnology.INCANDESCENT, LampDescriptor.LampTechnology.INFRARED, LampDescriptor.LampTechnology.LED, LampDescriptor.LampTechnology.HALOGEN -> {
+                LampDescriptor.Technology.INCANDESCENT, LampDescriptor.Technology.INFRARED, LampDescriptor.Technology.LED, LampDescriptor.Technology.HALOGEN -> {
                     if (lamp.lampResistor.voltage < lampDescriptor.minimalU) {
                         lightDouble = 0.0
                     } else {
@@ -135,7 +135,7 @@ class LampSocketProcess(var lamp: LampSocketElement) : IProcess, INBTTReady /*,L
                     }
                     lightDouble *= 15
                 }
-                LampDescriptor.LampTechnology.FLUORESCENT -> {
+                LampDescriptor.Technology.FLUORESCENT -> {
                     val U = Math.abs(lamp.lampResistor.voltage)
                     if (U < lampDescriptor.minimalU) {
                         stableProb = 0.0
@@ -165,11 +165,11 @@ class LampSocketProcess(var lamp: LampSocketElement) : IProcess, INBTTReady /*,L
 
         if (lampDescriptor != null) {
             val bulbCanAge = when(lampDescriptor.type) {
-                LampDescriptor.LampTechnology.INCANDESCENT -> !Eln.infiniteIncandescentLampLife
-                LampDescriptor.LampTechnology.FLUORESCENT -> !Eln.infiniteFluorescentLampLife
-                LampDescriptor.LampTechnology.INFRARED -> !Eln.infiniteInfraredLampLife
-                LampDescriptor.LampTechnology.LED -> !Eln.infiniteLedLampLife
-                LampDescriptor.LampTechnology.HALOGEN -> !Eln.infiniteHalogenLampLife
+                LampDescriptor.Technology.INCANDESCENT -> !Eln.infiniteIncandescentLampLife
+                LampDescriptor.Technology.FLUORESCENT -> !Eln.infiniteFluorescentLampLife
+                LampDescriptor.Technology.INFRARED -> !Eln.infiniteInfraredLampLife
+                LampDescriptor.Technology.LED -> !Eln.infiniteLedLampLife
+                LampDescriptor.Technology.HALOGEN -> !Eln.infiniteHalogenLampLife
             }
 
             if (bulbCanAge) {

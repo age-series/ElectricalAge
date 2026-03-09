@@ -1038,64 +1038,64 @@ object CraftingRecipes {
     private fun recipeLampItem() {
         // Tungsten
         addRecipe(
-            Eln.findItemStack("Small 50V Incandescent Light Bulb", 4), " G ", "GFG", " S ", 'G',
+            Eln.findItemStack("Small 50V Incandescent Bulb", 4), " G ", "GFG", " S ", 'G',
             ItemStack(Blocks.glass_pane), 'F', Eln.dictTungstenIngot, 'S', findItemStack("Copper Cable")
         )
         addRecipe(
-            Eln.findItemStack("50V Incandescent Light Bulb", 4), " G ", "GFG", " S ", 'G',
+            Eln.findItemStack("50V Incandescent Bulb", 4), " G ", "GFG", " S ", 'G',
             ItemStack(Blocks.glass_pane), 'F', Eln.dictTungstenIngot, 'S', findItemStack("Low Voltage Cable")
         )
         addRecipe(
-            Eln.findItemStack("200V Incandescent Light Bulb", 4), " G ", "GFG", " S ", 'G',
+            Eln.findItemStack("200V Incandescent Bulb", 4), " G ", "GFG", " S ", 'G',
             ItemStack(Blocks.glass_pane), 'F', Eln.dictTungstenIngot, 'S', findItemStack("Medium Voltage Cable")
         )
         // CARBON
         addRecipe(
-            Eln.findItemStack("Small 50V Carbon Incandescent Light Bulb", 4), " G ", "GFG", " S ", 'G',
+            Eln.findItemStack("Small 50V Carbon Incandescent Bulb", 4), " G ", "GFG", " S ", 'G',
             ItemStack(Blocks.glass_pane), 'F', ItemStack(Items.coal), 'S', findItemStack("Copper Cable")
         )
         addRecipe(
-            Eln.findItemStack("Small 50V Carbon Incandescent Light Bulb", 4), " G ", "GFG", " S ", 'G',
+            Eln.findItemStack("Small 50V Carbon Incandescent Bulb", 4), " G ", "GFG", " S ", 'G',
             ItemStack(Blocks.glass_pane), 'F', ItemStack(Items.coal, 1, 1), 'S', findItemStack("Copper Cable")
         )
         addRecipe(
-            Eln.findItemStack("50V Carbon Incandescent Light Bulb", 4), " G ", "GFG", " S ", 'G',
+            Eln.findItemStack("50V Carbon Incandescent Bulb", 4), " G ", "GFG", " S ", 'G',
             ItemStack(Blocks.glass_pane), 'F', ItemStack(Items.coal), 'S', findItemStack("Low Voltage Cable")
         )
         addRecipe(
-            Eln.findItemStack("50V Carbon Incandescent Light Bulb", 4), " G ", "GFG", " S ", 'G',
+            Eln.findItemStack("50V Carbon Incandescent Bulb", 4), " G ", "GFG", " S ", 'G',
             ItemStack(Blocks.glass_pane), 'F', ItemStack(Items.coal, 1, 1), 'S', findItemStack(
                 "Low Voltage " +
                         "Cable"
             )
         )
         addRecipe(
-            Eln.findItemStack("Small 50V Fluorescent Light Bulb", 4), " G ", "GFG", " S ", 'G',
+            Eln.findItemStack("Small 50V Fluorescent Bulb", 4), " G ", "GFG", " S ", 'G',
             ItemStack(Blocks.glass_pane), 'F', ItemStack(Items.glowstone_dust), 'S', findItemStack(
                 "Copper " +
                         "Cable"
             )
         )
         addRecipe(
-            Eln.findItemStack("50V Fluorescent Light Bulb", 4), " G ", "GFG", " S ", 'G',
+            Eln.findItemStack("50V Fluorescent Bulb", 4), " G ", "GFG", " S ", 'G',
             ItemStack(Blocks.glass_pane), 'F', ItemStack(Items.glowstone_dust), 'S', findItemStack(
                 "Low Voltage " +
                         "Cable"
             )
         )
         addRecipe(
-            Eln.findItemStack("200V Fluorescent Light Bulb", 4), " G ", "GFG", " S ", 'G',
+            Eln.findItemStack("200V Fluorescent Bulb", 4), " G ", "GFG", " S ", 'G',
             ItemStack(Blocks.glass_pane), 'F', ItemStack(Items.glowstone_dust), 'S', findItemStack(
                 "Medium " +
                         "Voltage Cable"
             )
         )
         addRecipe(
-            Eln.findItemStack("50V Farming Lamp", 2), "GGG", "FFF", "GSG", 'G', ItemStack(Blocks.glass_pane),
+            Eln.findItemStack("50V Farming Bulb", 2), "GGG", "FFF", "GSG", 'G', ItemStack(Blocks.glass_pane),
             'F', Eln.dictTungstenIngot, 'S', findItemStack("Low Voltage Cable")
         )
         addRecipe(
-            Eln.findItemStack("200V Farming Lamp", 2), "GGG", "FFF", "GSG", 'G', ItemStack(Blocks.glass_pane),
+            Eln.findItemStack("200V Farming Bulb", 2), "GGG", "FFF", "GSG", 'G', ItemStack(Blocks.glass_pane),
             'F', Eln.dictTungstenIngot, 'S', findItemStack("Medium Voltage Cable")
         )
         addRecipe(
@@ -1356,11 +1356,8 @@ object CraftingRecipes {
 
     private fun recipeElectricalTool() {
         addRecipe(
-            findItemStack("Small Flashlight"), "GLG", "IBI", " I ", 'L', findItemStack(
-                "50V Incandescent Light " +
-                        "Bulb"
-            ), 'B', findItemStack("Portable Battery"), 'G', ItemStack(Blocks.glass_pane), 'I',
-            ItemStack(Items.iron_ingot)
+            findItemStack("Small Flashlight"), "GLG", "IBI", " I ", 'L', findItemStack("50V Incandescent Bulb"),
+            'B', findItemStack("Portable Battery"), 'G', ItemStack(Blocks.glass_pane), 'I', ItemStack(Items.iron_ingot)
         )
         addRecipe(
             findItemStack("Improved Flashlight"), "GLG", "IBI", " I ", 'L', findItemStack("50V LED Bulb"), 'B',

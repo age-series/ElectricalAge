@@ -317,7 +317,7 @@ public class Eln {
     public static final double SVP = gateOutputCurrent * SVU;
     public ElectricalFurnaceDescriptor electricalFurnace;
     public double incandescentLampLife;
-    public double economicLampLife;
+    public double fluorescentLampLife;
     public double carbonLampLife;
     public double ledLampLife;
     public double halogenLampLife;

@@ -19,7 +19,7 @@ import kotlin.math.abs
 import kotlin.math.pow
 
 class LampDescriptor(
-    name: String, iconName: String, @JvmField val type: LampTechnology, @JvmField val socket: LampSocketType,
+    name: String, iconName: String, @JvmField val type: Technology, @JvmField val socket: LampSocketType,
     val nominalU: Double, val nominalP: Double, val nominalLifeHours: Double, val range: Int
 ) : GenericItemUsingDamageDescriptorUpgrade(name), IConfigSharing {
 
@@ -28,21 +28,35 @@ class LampDescriptor(
         const val MAX_LIGHT_VALUE: Int = 15
     }
 
-    enum class LampTechnology {
+    enum class Technology {
         INCANDESCENT, FLUORESCENT, INFRARED, LED, HALOGEN
     }
 
-    val nominalLight = MAX_LIGHT_VALUE / 15.0
-    val vegetableGrowRate = if (type == LampTechnology.INFRARED) 0.5 else 0.0
+    enum class Condition {
+        NEW, GOOD, USED, BAD, END_OF_LIFE;
 
-    val minimalU = when (type) {
-        LampTechnology.INCANDESCENT, LampTechnology.INFRARED, LampTechnology.HALOGEN -> nominalU * 0.5
-        LampTechnology.FLUORESCENT, LampTechnology.LED -> nominalU * 0.75
+        val str: String get() {
+            return when (this) {
+                NEW -> "New"
+                GOOD -> "Good"
+                USED -> "Used"
+                BAD -> "Bad"
+                END_OF_LIFE -> "End of life"
+            }
+        }
     }
 
-    val stableUNormalised = if (type == LampTechnology.FLUORESCENT) 0.75 else 0.0
-    val stableU = if (type == LampTechnology.FLUORESCENT) nominalU * stableUNormalised else 0.0
-    val stableTime = if (type == LampTechnology.FLUORESCENT) 4.0 else 0.0
+    val nominalLight = MAX_LIGHT_VALUE / 15.0
+    val vegetableGrowRate = if (type == Technology.INFRARED) 0.5 else 0.0
+
+    val minimalU = when (type) {
+        Technology.INCANDESCENT, Technology.INFRARED, Technology.HALOGEN -> nominalU * 0.5
+        Technology.FLUORESCENT, Technology.LED -> nominalU * 0.75
+    }
+
+    val stableUNormalised = if (type == Technology.FLUORESCENT) 0.75 else 0.0
+    val stableU = if (type == Technology.FLUORESCENT) nominalU * stableUNormalised else 0.0
+    val stableTime = if (type == Technology.FLUORESCENT) 4.0 else 0.0
 
     val resistance = nominalU.pow(2) / nominalP
 
@@ -107,15 +121,22 @@ class LampDescriptor(
         list.add(tr("Nominal lifetime: ${serverNominalLife}h"))
 
         if (itemStack != null) {
-            if (!itemStack.hasTagCompound() || !itemStack.tagCompound.hasKey("life")) {
-                if (getLifeInTag(itemStack) == nominalLifeHours) list.add(tr("Condition: New"))
-                else if (getLifeInTag(itemStack) > (0.5 * nominalLifeHours)) list.add(tr("Condition: Good"))
-                else if (getLifeInTag(itemStack) > (0.15 * nominalLifeHours)) list.add(tr("Condition: Used"))
-                else if (getLifeInTag(itemStack) > (0.01 * nominalLifeHours)) list.add(tr("Condition: Bad"))
-                else list.add(tr("Condition: End of life"))
-            }
-
+            list.add(tr("Condition: ${getLampCondition(itemStack).str}"))
             if (Eln.debugEnabled) list.add(tr("Life: ${getLifeInTag(itemStack)}h"))
+        }
+    }
+
+    private fun getLampCondition(itemStack: ItemStack): Condition {
+        return if (!itemStack.hasTagCompound() || !itemStack.tagCompound.hasKey("life")) {
+            Condition.NEW
+        } else {
+            val lampLife = getLifeInTag(itemStack)
+
+            if (lampLife == nominalLifeHours) Condition.NEW
+            else if (lampLife > (0.5 * nominalLifeHours)) Condition.GOOD
+            else if (lampLife > (0.15 * nominalLifeHours)) Condition.USED
+            else if (lampLife > (0.01 * nominalLifeHours)) Condition.BAD
+            else Condition.END_OF_LIFE
         }
     }
 
