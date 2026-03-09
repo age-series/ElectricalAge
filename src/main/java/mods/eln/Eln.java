@@ -319,7 +319,7 @@ public class Eln {
     public double ledLampLife;
     public double halogenLampLife;
     public double fuelGeneratorTankCapacity = 20 * 60;
-    public static boolean infiniteHeatFurnaceFuel = false;
+    public static boolean heatFurnaceConsumesFuel = false;
     public int replicatorRegistrationId = -1;
 
     public static HashSet<String> oreNames = new HashSet<>();
