@@ -150,79 +150,15 @@ class ElnCablePaceCommand: IConsoleCommand {
     }
 }
 
-class ElnAgingCommand: IConsoleCommand {
-    override val name = "aging"
-
-    override fun runCommand(ics: ICommandSender, args: List<String>) {
-        var printSyntax = false
-
-        if (args.size == 1) {
-            val agingEnabled = getArgBool(ics, args[0])?: return
-
-            Eln.infiniteIncandescentLampLife = !agingEnabled
-            Eln.infiniteFluorescentLampLife = !agingEnabled
-            Eln.infiniteInfraredLampLife = !agingEnabled
-            Eln.infiniteLedLampLife = !agingEnabled
-            Eln.infiniteHalogenLampLife = !agingEnabled
-            Eln.infiniteStandardBatteryLife = !agingEnabled
-            Eln.infinitePortableBatteryLife = !agingEnabled
-            Eln.infiniteHeatFurnaceFuel = !agingEnabled
-
-            Eln.config.get("lamp", "infiniteIncandescentLampLife", false).set(Eln.infiniteIncandescentLampLife)
-            Eln.config.get("lamp", "infiniteFluorescentLampLife", false).set(Eln.infiniteFluorescentLampLife)
-            Eln.config.get("lamp", "infiniteInfraredLampLife", false).set(Eln.infiniteInfraredLampLife)
-            Eln.config.get("lamp", "infiniteLedLampLife", false).set(Eln.infiniteLedLampLife)
-            Eln.config.get("lamp", "infiniteHalogenLampLife", false).set(Eln.infiniteHalogenLampLife)
-            Eln.config.get("battery", "infiniteStandardBatteryLife", false).set(Eln.infiniteStandardBatteryLife)
-            Eln.config.get("battery", "infinitePortableBatteryLife", false).set(Eln.infinitePortableBatteryLife)
-            Eln.config.get("heatFurnace", "infiniteHeatFurnaceFuel", false).set(Eln.infiniteHeatFurnaceFuel)
-            Eln.config.save()
-
-            cprint(ics, "Lamp / battery / heat furnace fuel aging: ${FC.DARK_GREEN}${boolToStr(agingEnabled)}", indent = 1)
-            cprint(ics, "Changes saved to the config file.", indent = 1)
-        }
-        else printSyntax = true
-
-        if (printSyntax) cprint(ics, "Command syntax: /eln aging [true/false]")
-    }
-
-    override fun getManPage(ics: ICommandSender, args: List<String>) {
-        cprint(ics, "Enables/disables aging of the following:", indent = 1)
-        cprint(ics, "- lamps, batteries, heat furnace fuel", indent = 1)
-        cprint(ics, "Acts as a combination of the following commands:", indent = 1)
-        cprint(ics, "- lampAging, batteryAging, heatFurnaceFuelAging", indent = 1)
-        cprint(ics, "Changes saved to the config file.", indent = 1)
-        cprint(ics, "")
-        cprint(ics, "Parameters:", indent = 1)
-        cprint(ics, "@0:bool: Aging enabled (true/false).", indent = 2)
-        cprint(ics, "")
-    }
-
-    override fun requiredPermission() = listOf(UserPermission.IS_OPERATOR)
-
-    override fun getTabCompletion(args: List<String>): List<String> {
-        val arg0Options = listOf("true", "false")
-
-        return when (args.size) {
-            0 -> arg0Options
-            1 -> {
-                if (args[0] == "") arg0Options
-                else arg0Options.filter {it.startsWith(args[0], ignoreCase = true)}
-            }
-            else -> listOf()
-        }
-    }
-}
-
-class ElnLampAgingCommand: IConsoleCommand {
-    override val name = "lampAging"
+class ElnInfiniteLampLifeCommand: IConsoleCommand {
+    override val name = "infiniteLampLife"
 
     override fun runCommand(ics: ICommandSender, args: List<String>) {
         var printSyntax = false
 
         if (args.size == 2) {
             val bulbType = args[0]
-            val agingEnabled = getArgBool(ics, args[1])?: return
+            val infiniteLife = getArgBool(ics, args[1])?: return
 
             var updateIncandescent = false
             var updateFluorescent = false
@@ -248,43 +184,43 @@ class ElnLampAgingCommand: IConsoleCommand {
 
             if (!printSyntax) {
                 if (updateIncandescent) {
-                    Eln.infiniteIncandescentLampLife = !agingEnabled
+                    Eln.infiniteIncandescentLampLife = infiniteLife
                     Eln.config.get("lamp", "infiniteIncandescentLampLife", false).set(Eln.infiniteIncandescentLampLife)
                 }
                 if (updateFluorescent) {
-                    Eln.infiniteFluorescentLampLife = !agingEnabled
+                    Eln.infiniteFluorescentLampLife = infiniteLife
                     Eln.config.get("lamp", "infiniteFluorescentLampLife", false).set(Eln.infiniteFluorescentLampLife)
                 }
                 if (updateInfrared) {
-                    Eln.infiniteInfraredLampLife = !agingEnabled
+                    Eln.infiniteInfraredLampLife = infiniteLife
                     Eln.config.get("lamp", "infiniteInfraredLampLife", false).set(Eln.infiniteInfraredLampLife)
                 }
                 if (updateLed) {
-                    Eln.infiniteLedLampLife = !agingEnabled
+                    Eln.infiniteLedLampLife = infiniteLife
                     Eln.config.get("lamp", "infiniteLedLampLife", false).set(Eln.infiniteLedLampLife)
                 }
                 if (updateHalogen) {
-                    Eln.infiniteHalogenLampLife = !agingEnabled
+                    Eln.infiniteHalogenLampLife = infiniteLife
                     Eln.config.get("lamp", "infiniteHalogenLampLife", false).set(Eln.infiniteHalogenLampLife)
                 }
                 Eln.config.save()
 
-                cprint(ics, "Lamp aging: ${FC.DARK_GREEN}${bulbType}, ${FC.DARK_GREEN}${boolToStr(agingEnabled)}", indent = 1)
+                cprint(ics, "Infinite lamp life: ${FC.DARK_GREEN}${bulbType}, ${FC.DARK_GREEN}${boolToStr(infiniteLife)}", indent = 1)
                 cprint(ics, "Changes saved to the config file.", indent = 1)
             }
         }
         else printSyntax = true
 
-        if (printSyntax) cprint(ics, "Command syntax: /eln lampAging [incandescent/fluorescent/infrared/led/halogen/all] [true/false]")
+        if (printSyntax) cprint(ics, "Command syntax: /eln infiniteLampLife [incandescent/fluorescent/infrared/led/halogen/all] [true/false]")
     }
 
     override fun getManPage(ics: ICommandSender, args: List<String>) {
-        cprint(ics, "Enables/disables aging of lamps.", indent = 1)
+        cprint(ics, "Enables/disables infinite lamp life.", indent = 1)
         cprint(ics, "Changes saved to the config file.", indent = 1)
         cprint(ics, "")
         cprint(ics, "Parameters:", indent = 1)
         cprint(ics, "@0:string: Bulb type (incandescent/fluorescent/infrared/led/halogen/all).", indent = 2)
-        cprint(ics, "@1:bool: Aging enabled (true/false).", indent = 2)
+        cprint(ics, "@1:bool: Infinite life (true/false).", indent = 2)
         cprint(ics, "")
     }
 
@@ -309,15 +245,15 @@ class ElnLampAgingCommand: IConsoleCommand {
     }
 }
 
-class ElnBatteryAgingCommand: IConsoleCommand {
-    override val name = "batteryAging"
+class ElnInfiniteBatteryLifeCommand: IConsoleCommand {
+    override val name = "infiniteBatteryLife"
 
     override fun runCommand(ics: ICommandSender, args: List<String>) {
         var printSyntax = false
 
         if (args.size == 2) {
             val batteryType = args[0]
-            val agingEnabled = getArgBool(ics, args[1]) ?: return
+            val infiniteLife = getArgBool(ics, args[1]) ?: return
 
             var updateStandard = false
             var updatePortable = false
@@ -334,31 +270,31 @@ class ElnBatteryAgingCommand: IConsoleCommand {
 
             if (!printSyntax) {
                 if (updateStandard) {
-                    Eln.infiniteStandardBatteryLife = !agingEnabled
+                    Eln.infiniteStandardBatteryLife = infiniteLife
                     Eln.config.get("battery", "infiniteStandardBatteryLife", false).set(Eln.infiniteStandardBatteryLife)
                 }
                 if (updatePortable) {
-                    Eln.infinitePortableBatteryLife = !agingEnabled
+                    Eln.infinitePortableBatteryLife = infiniteLife
                     Eln.config.get("battery", "infinitePortableBatteryLife", false).set(Eln.infinitePortableBatteryLife)
                 }
                 Eln.config.save()
 
-                cprint(ics, "Battery aging: ${FC.DARK_GREEN}${batteryType}, ${FC.DARK_GREEN}${boolToStr(agingEnabled)}", indent = 1)
+                cprint(ics, "Infinite battery life: ${FC.DARK_GREEN}${batteryType}, ${FC.DARK_GREEN}${boolToStr(infiniteLife)}", indent = 1)
                 cprint(ics, "Changes saved to the config file.", indent = 1)
             }
         }
         else printSyntax = true
 
-        if (printSyntax) cprint(ics, "Command syntax: /eln batteryAging [standard/portable/all] [true/false]")
+        if (printSyntax) cprint(ics, "Command syntax: /eln infiniteBatteryLife [standard/portable/all] [true/false]")
     }
 
     override fun getManPage(ics: ICommandSender, args: List<String>) {
-        cprint(ics, "Enables/disables aging of batteries.", indent = 1)
+        cprint(ics, "Enables/disables infinite battery life.", indent = 1)
         cprint(ics, "Changes saved to the config file.", indent = 1)
         cprint(ics, "")
         cprint(ics, "Parameters:", indent = 1)
         cprint(ics, "@0:string: Battery type (standard/portable/all).", indent = 2)
-        cprint(ics, "@1:bool: Aging enabled (true/false).", indent = 2)
+        cprint(ics, "@1:bool: Infinite life (true/false).", indent = 2)
         cprint(ics, "")
     }
 
@@ -383,33 +319,34 @@ class ElnBatteryAgingCommand: IConsoleCommand {
     }
 }
 
-class ElnHeatFurnaceFuelCommand: IConsoleCommand {
-    override val name = "heatFurnaceFuelAging"
+class ElnHeatFurnaceFuelConsumptionCommand: IConsoleCommand {
+    override val name = "heatFurnaceConsumesFuel"
 
     override fun runCommand(ics: ICommandSender, args: List<String>) {
         var printSyntax = false
 
         if (args.size == 1) {
-            val agingEnabled = getArgBool(ics, args[0]) ?: return
+            val consumeFuel = getArgBool(ics, args[0]) ?: return
 
-            Eln.infiniteHeatFurnaceFuel = !agingEnabled
-            Eln.config.get("heatFurnace", "infiniteHeatFurnaceFuel", false).set(Eln.infiniteHeatFurnaceFuel)
+            Eln.heatFurnaceConsumesFuel = consumeFuel
+            Eln.config.get("heatFurnace", "heatFurnaceConsumesFuel", false,
+                "Controls whether or not heat furnaces consume fuel.").set(Eln.heatFurnaceConsumesFuel)
             Eln.config.save()
 
-            cprint(ics, "Heat furnace fuel aging: ${FC.DARK_GREEN}${boolToStr(agingEnabled)}", indent = 1)
+            cprint(ics, "Heat furnace fuel consumption: ${FC.DARK_GREEN}${boolToStr(consumeFuel)}", indent = 1)
             cprint(ics, "Changes saved to the config file.", indent = 1)
         }
         else printSyntax = true
 
-        if (printSyntax) cprint(ics, "Command syntax: /eln heatFurnaceFuelAging [true/false]")
+        if (printSyntax) cprint(ics, "Command syntax: /eln heatFurnaceConsumesFuel [true/false]")
     }
 
     override fun getManPage(ics: ICommandSender, args: List<String>) {
-        cprint(ics, "Enables/disables aging of heat furnace fuel.", indent = 1)
+        cprint(ics, "Enables/disables consumption of heat furnace fuel.", indent = 1)
         cprint(ics, "Changes saved to the config file.", indent = 1)
         cprint(ics, "")
         cprint(ics, "Parameters:", indent = 1)
-        cprint(ics, "@0:bool : Aging enabled (true/false).", indent = 2)
+        cprint(ics, "@0:bool : Fuel consumption enabled (true/false).", indent = 2)
         cprint(ics, "")
     }
 
@@ -446,53 +383,6 @@ class ElnNewWindDirectionCommand: IConsoleCommand {
     }
 
     override fun requiredPermission() = listOf(UserPermission.IS_OPERATOR)
-}
-
-
-class ElnRegenOreQueueCommand: IConsoleCommand {
-    override val name = "regenOre"
-
-    override fun runCommand(ics: ICommandSender, args: List<String>) {
-        var printSyntax = false
-
-        if (args.size == 1) {
-            val regenOre = getArgBool(ics, args[0]) ?: return
-
-            Eln.instance.forceOreRegen = regenOre
-            Eln.config.get("mapGenerate", "forceOreRegen", false).set(Eln.instance.forceOreRegen)
-            Eln.config.save()
-
-            cprint(ics, "Persistent ore regeneration: ${FC.DARK_GREEN}${boolToStr(regenOre)}", indent = 1)
-            cprint(ics, "Changes saved to the config file.", indent = 1)
-        }
-        else printSyntax = true
-
-        if (printSyntax) cprint(ics, "Command syntax: /eln regenOre [true/false]")
-    }
-
-    override fun getManPage(ics: ICommandSender, args: List<String>) {
-        cprint(ics, "Enables/disables persistent ELN ore regeneration.", indent = 1)
-        cprint(ics, "Changes saved to the config file.", indent = 1)
-        cprint(ics, "")
-        cprint(ics, "Parameters:", indent = 1)
-        cprint(ics, "@0:bool : Ore regen enabled (true/false).", indent = 2)
-        cprint(ics, "")
-    }
-
-    override fun requiredPermission() = listOf(UserPermission.IS_OPERATOR)
-
-    override fun getTabCompletion(args: List<String>): List<String> {
-        val arg0Options = listOf("true", "false")
-
-        return when (args.size) {
-            0 -> arg0Options
-            1 -> {
-                if (args[0] == "") arg0Options
-                else arg0Options.filter {it.startsWith(args[0], ignoreCase = true)}
-            }
-            else -> listOf()
-        }
-    }
 }
 
 class ElnLampsKillMonstersCommand: IConsoleCommand {

@@ -6,8 +6,6 @@ import net.minecraft.command.ICommandSender
 import net.minecraft.event.ClickEvent
 import net.minecraft.server.MinecraftServer
 import net.minecraft.util.ChatComponentText
-import java.lang.Exception
-import java.util.*
 
 val ElnConsoleCommandList = mutableListOf<IConsoleCommand>()
 
@@ -26,12 +24,10 @@ class ElnConsoleCommands: ICommand {
             ElnAboutCommand(),
             ElnVersionCommand(),
             ElnCablePaceCommand(),
-            ElnAgingCommand(),
-            ElnBatteryAgingCommand(),
-            ElnLampAgingCommand(),
-            ElnHeatFurnaceFuelCommand(),
+            ElnInfiniteBatteryLifeCommand(),
+            ElnInfiniteLampLifeCommand(),
+            ElnHeatFurnaceFuelConsumptionCommand(),
             ElnNewWindDirectionCommand(),
-            ElnRegenOreQueueCommand(),
             ElnLampsKillMonstersCommand(),
             ElnMatrixCommand(),
             ElnManCommand(),

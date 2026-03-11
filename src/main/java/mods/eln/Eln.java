@@ -267,8 +267,6 @@ public class Eln {
     public CurrentCableDescriptor lowCurrentCableDescriptor;
     public CurrentCableDescriptor mediumCurrentCableDescriptor;
     public CurrentCableDescriptor highCurrentCableDescriptor;
-    public OreRegenerate oreRegenerate;
-    public boolean forceOreRegen;
     public double heatTurbinePowerFactor = 1;
     public double solarPanelPowerFactor = 1;
     public double windTurbinePowerFactor = 1;
@@ -323,7 +321,7 @@ public class Eln {
     public double ledLampLife;
     public double halogenLampLife;
     public double fuelGeneratorTankCapacity = 20 * 60;
-    public static boolean infiniteHeatFurnaceFuel = false;
+    public static boolean heatFurnaceConsumesFuel = false;
     public int replicatorRegistrationId = -1;
 
     public static HashSet<String> oreNames = new HashSet<>();
@@ -399,7 +397,6 @@ public class Eln {
         ghostManager = new GhostManager("caca2");
         delayedTask = new DelayedTaskManager();
 
-        oreRegenerate = new OreRegenerate();
         nodeServer = new NodeServer();
         clientLiveDataManager = new LiveDataManager();
 
@@ -544,7 +541,6 @@ public class Eln {
         ghostManager.clear();
         saveConfig = null;
         modbusServer = null;
-        oreRegenerate.clear();
         delayedTask.clear();
         DelayedBlockRemove.clear();
         serverEventListener.clear();

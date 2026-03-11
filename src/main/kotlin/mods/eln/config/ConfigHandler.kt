@@ -131,7 +131,6 @@ object ConfigHandler {
         eln.killMonstersAroundLampsRange = Eln.config["entity", "killMonstersAroundLampsRange", 9].getInt(9)
         eln.maxReplicators = Eln.config["entity", "maxReplicators", 100].getInt(100)
 
-        eln.forceOreRegen = Eln.config["mapGenerate", "forceOreRegen", false, "This is broken! Do not use!"].getBoolean(false)
         Eln.genCopper = Eln.config["mapGenerate", "copper", true].getBoolean(true)
         Eln.genLead = Eln.config["mapGenerate", "lead", true].getBoolean(true)
         Eln.genTungsten = Eln.config["mapGenerate", "tungsten", true].getBoolean(true)
@@ -170,13 +169,10 @@ object ConfigHandler {
         Eln.infiniteLedLampLife = Eln.config["lamp", "infiniteLedLampLife", false].boolean
         Eln.infiniteHalogenLampLife = Eln.config["lamp", "infiniteHalogenLampLife", false].boolean
 
-        Eln.config["lamp", "swingingLamps", true, "DEPRECATED: This now has no effect. " +
-                "If you don't like them, don't use them. We added a separate non-swinging variant."]
-
         eln.fuelGeneratorTankCapacity =
             Eln.config["fuelGenerator", "tankCapacityInSecondsAtNominalPower", 20 * 60].getDouble((20 * 60).toDouble())
 
-        Eln.infiniteHeatFurnaceFuel = Eln.config["heatFurnace", "infiniteHeatFurnaceFuel", false].boolean
+        Eln.heatFurnaceConsumesFuel = Eln.config["heatFurnace", "heatFurnaceConsumesFuel", false, "Controls whether or not heat furnaces consume fuel."].boolean
 
         eln.addOtherModOreToXRay = Eln.config["xrayscannerconfig", "addOtherModOreToXRay", true].getBoolean(true)
         eln.xRayScannerRange = Eln.config["xrayscannerconfig", "rangeInBloc", 5.0, "X-Ray Scanner range; set " +
