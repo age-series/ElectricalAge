@@ -213,7 +213,7 @@ class ElnInfiniteLampLifeCommand: IConsoleCommand {
         cprint(ics, "")
         cprint(ics, "Parameters:", indent = 1)
         cprint(ics, "@0:string: Bulb type (incandescent/eco/led/halogen/all).", indent = 2)
-        cprint(ics, "@1:bool: Infinite life (true/false).", indent = 2)
+        cprint(ics, "@1:bool: Infinite life enabled (true/false).", indent = 2)
         cprint(ics, "")
     }
 
@@ -287,7 +287,7 @@ class ElnInfiniteBatteryLifeCommand: IConsoleCommand {
         cprint(ics, "")
         cprint(ics, "Parameters:", indent = 1)
         cprint(ics, "@0:string: Battery type (standard/portable/all).", indent = 2)
-        cprint(ics, "@1:bool: Infinite life (true/false).", indent = 2)
+        cprint(ics, "@1:bool: Infinite life enabled (true/false).", indent = 2)
         cprint(ics, "")
     }
 
@@ -339,7 +339,7 @@ class ElnHeatFurnaceFuelConsumptionCommand: IConsoleCommand {
         cprint(ics, "Changes saved to the config file.", indent = 1)
         cprint(ics, "")
         cprint(ics, "Parameters:", indent = 1)
-        cprint(ics, "@0:bool : Consumption enabled (true/false).", indent = 2)
+        cprint(ics, "@0:bool: Fuel consumption enabled (true/false).", indent = 2)
         cprint(ics, "")
     }
 
