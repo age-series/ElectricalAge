@@ -240,10 +240,11 @@ public class Eln {
     public static int wirelessTxRange = 32;
     public static int roomMaxAxisSpanBlocks = 24;
     public static int roomMaxVolumeBlocks = 4096;
-    public static boolean incandescentLampInfiniteLife = false;
-    public static boolean ecoLampInfiniteLife = false;
-    public static boolean ledLampInfiniteLife = false;
-    public static boolean halogenLampInfiniteLife = false;
+    public static boolean infiniteIncandescentLampLife = false;
+    public static boolean infiniteFluorescentLampLife = false;
+    public static boolean infiniteInfraredLampLife = false;
+    public static boolean infiniteLedLampLife = false;
+    public static boolean infiniteHalogenLampLife = false;
     static public GenericItemUsingDamageDescriptor multiMeterElement, thermometerElement, allMeterElement;
     static public GenericItemUsingDamageDescriptor configCopyToolElement;
     public static TreeResin treeResin;
@@ -314,8 +315,9 @@ public class Eln {
     public static final double SVP = gateOutputCurrent * SVU;
     public ElectricalFurnaceDescriptor electricalFurnace;
     public double incandescentLampLife;
-    public double economicLampLife;
-    public double carbonLampLife;
+    public double carbonIncandescentLampLife;
+    public double fluorescentLampLife;
+    public double infraredLampLife;
     public double ledLampLife;
     public double halogenLampLife;
     public double fuelGeneratorTankCapacity = 20 * 60;
