@@ -16,10 +16,21 @@ object ConfigHandler {
         //WARNING/BUG: "renameProperty" changes the type to String! However, read functions don't seem to care
         // attention to it, so it's OK... for the moment.
         if (Eln.config.hasKey("lamp", "incondescentLifeInHours")) Eln.config.renameProperty(
-            "lamp",
-            "incondescentLifeInHours",
-            "incandescentLifeInHours"
-        )
+            "lamp", "incondescentLifeInHours", "incandescentLifeInHours")
+        if (Eln.config.hasKey("lamp", "economicLifeInHours")) Eln.config.renameProperty(
+            "lamp", "economicLifeInHours", "fluorescentLifeInHours")
+        if (Eln.config.hasKey("lamp", "carbonLifeInHours")) Eln.config.renameProperty(
+            "lamp", "carbonLifeInHours", "carbonIncandescentLifeInHours")
+
+        if (Eln.config.hasKey("lamp", "infiniteIncandescentLife")) Eln.config.renameProperty(
+            "lamp", "infiniteIncandescentLife", "infiniteIncandescentLampLife")
+        if (Eln.config.hasKey("lamp", "infiniteEcoLife")) Eln.config.renameProperty(
+            "lamp", "infiniteEcoLife", "infiniteFluorescentLampLife")
+        if (Eln.config.hasKey("lamp", "infiniteLedLife")) Eln.config.renameProperty(
+            "lamp", "infiniteLedLife", "infiniteLedLampLife")
+        if (Eln.config.hasKey("lamp", "infiniteHalogenLife")) Eln.config.renameProperty(
+            "lamp", "infiniteHalogenLife", "infiniteHalogenLampLife")
+
         if (Eln.config.hasKey("mapgenerate", "plumb")) Eln.config.renameProperty("mapgenerate", "plumb", "lead")
         if (Eln.config.hasKey("mapgenerate", "cooper")) Eln.config.renameProperty("mapgenerate", "cooper", "copper")
         if (Eln.config.hasKey("simulation", "electricalFrequancy")) Eln.config.renameProperty(
@@ -146,15 +157,17 @@ object ConfigHandler {
         }
 
         eln.incandescentLampLife = Eln.config["lamp", "incandescentLifeInHours", 16.0].getDouble(16.0)
-        eln.economicLampLife = Eln.config["lamp", "economicLifeInHours", 64.0].getDouble(64.0)
-        eln.carbonLampLife = Eln.config["lamp", "carbonLifeInHours", 6.0].getDouble(6.0)
+        eln.carbonIncandescentLampLife = Eln.config["lamp", "carbonIncandescentLifeInHours", 6.0].getDouble(6.0)
+        eln.fluorescentLampLife = Eln.config["lamp", "fluorescentLifeInHours", 64.0].getDouble(64.0)
+        eln.infraredLampLife = Eln.config["lamp", "infraredLifeInHours", 16.0].getDouble(16.0)
         eln.ledLampLife = Eln.config["lamp", "ledLifeInHours", 512.0].getDouble(512.0)
         eln.halogenLampLife = Eln.config["lamp", "halogenLifeInHours", 128.0].getDouble(128.0)
 
-        Eln.incandescentLampInfiniteLife = Eln.config["lamp", "infiniteIncandescentLife", false].boolean
-        Eln.ecoLampInfiniteLife = Eln.config["lamp", "infiniteEcoLife", false].boolean
-        Eln.ledLampInfiniteLife = Eln.config["lamp", "infiniteLedLife", false].boolean
-        Eln.halogenLampInfiniteLife = Eln.config["lamp", "infiniteHalogenLife", false].boolean
+        Eln.infiniteIncandescentLampLife = Eln.config["lamp", "infiniteIncandescentLampLife", false].boolean
+        Eln.infiniteFluorescentLampLife = Eln.config["lamp", "infiniteFluorescentLampLife", false].boolean
+        Eln.infiniteInfraredLampLife = Eln.config["lamp", "infiniteInfraredLampLife", false].boolean
+        Eln.infiniteLedLampLife = Eln.config["lamp", "infiniteLedLampLife", false].boolean
+        Eln.infiniteHalogenLampLife = Eln.config["lamp", "infiniteHalogenLampLife", false].boolean
 
         eln.fuelGeneratorTankCapacity =
             Eln.config["fuelGenerator", "tankCapacityInSecondsAtNominalPower", 20 * 60].getDouble((20 * 60).toDouble())

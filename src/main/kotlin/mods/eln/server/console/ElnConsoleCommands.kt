@@ -161,18 +161,21 @@ class ElnInfiniteLampLifeCommand: IConsoleCommand {
             val infiniteLife = getArgBool(ics, args[1])?: return
 
             var updateIncandescent = false
-            var updateEco = false
+            var updateFluorescent = false
+            var updateInfrared = false
             var updateLed = false
             var updateHalogen = false
 
             when (bulbType) {
                 "incandescent" -> updateIncandescent = true
-                "eco" -> updateEco = true
+                "fluorescent" -> updateFluorescent = true
+                "infrared" -> updateInfrared = true
                 "led" -> updateLed = true
                 "halogen" -> updateHalogen = true
                 "all" -> {
                     updateIncandescent = true
-                    updateEco = true
+                    updateFluorescent = true
+                    updateInfrared = true
                     updateLed = true
                     updateHalogen = true
                 }
@@ -181,20 +184,24 @@ class ElnInfiniteLampLifeCommand: IConsoleCommand {
 
             if (!printSyntax) {
                 if (updateIncandescent) {
-                    Eln.incandescentLampInfiniteLife = infiniteLife
-                    Eln.config.get("lamp", "infiniteIncandescentLife", false).set(Eln.incandescentLampInfiniteLife)
+                    Eln.infiniteIncandescentLampLife = infiniteLife
+                    Eln.config.get("lamp", "infiniteIncandescentLampLife", false).set(Eln.infiniteIncandescentLampLife)
                 }
-                if (updateEco) {
-                    Eln.ecoLampInfiniteLife = infiniteLife
-                    Eln.config.get("lamp", "infiniteEcoLife", false).set(Eln.ecoLampInfiniteLife)
+                if (updateFluorescent) {
+                    Eln.infiniteFluorescentLampLife = infiniteLife
+                    Eln.config.get("lamp", "infiniteFluorescentLampLife", false).set(Eln.infiniteFluorescentLampLife)
+                }
+                if (updateInfrared) {
+                    Eln.infiniteInfraredLampLife = infiniteLife
+                    Eln.config.get("lamp", "infiniteInfraredLampLife", false).set(Eln.infiniteInfraredLampLife)
                 }
                 if (updateLed) {
-                    Eln.ledLampInfiniteLife = infiniteLife
-                    Eln.config.get("lamp", "infiniteLedLife", false).set(Eln.ledLampInfiniteLife)
+                    Eln.infiniteLedLampLife = infiniteLife
+                    Eln.config.get("lamp", "infiniteLedLampLife", false).set(Eln.infiniteLedLampLife)
                 }
                 if (updateHalogen) {
-                    Eln.halogenLampInfiniteLife = infiniteLife
-                    Eln.config.get("lamp", "infiniteHalogenLife", false).set(Eln.halogenLampInfiniteLife)
+                    Eln.infiniteHalogenLampLife = infiniteLife
+                    Eln.config.get("lamp", "infiniteHalogenLampLife", false).set(Eln.infiniteHalogenLampLife)
                 }
                 Eln.config.save()
 
@@ -204,7 +211,7 @@ class ElnInfiniteLampLifeCommand: IConsoleCommand {
         }
         else printSyntax = true
 
-        if (printSyntax) cprint(ics, "Command syntax: /eln infiniteLampLife [incandescent/eco/led/halogen/all] [true/false]")
+        if (printSyntax) cprint(ics, "Command syntax: /eln infiniteLampLife [incandescent/fluorescent/infrared/led/halogen/all] [true/false]")
     }
 
     override fun getManPage(ics: ICommandSender, args: List<String>) {
@@ -212,7 +219,7 @@ class ElnInfiniteLampLifeCommand: IConsoleCommand {
         cprint(ics, "Changes saved to the config file.", indent = 1)
         cprint(ics, "")
         cprint(ics, "Parameters:", indent = 1)
-        cprint(ics, "@0:string: Bulb type (incandescent/eco/led/halogen/all).", indent = 2)
+        cprint(ics, "@0:string: Bulb type (incandescent/fluorescent/infrared/led/halogen/all).", indent = 2)
         cprint(ics, "@1:bool: Infinite life enabled (true/false).", indent = 2)
         cprint(ics, "")
     }
@@ -220,7 +227,7 @@ class ElnInfiniteLampLifeCommand: IConsoleCommand {
     override fun requiredPermission() = listOf(UserPermission.IS_OPERATOR)
 
     override fun getTabCompletion(args: List<String>): List<String> {
-        val arg0Options = listOf("incandescent", "eco", "led", "halogen", "all")
+        val arg0Options = listOf("incandescent", "fluorescent", "infrared", "led", "halogen", "all")
         val arg1Options = listOf("true", "false")
 
         return when (args.size) {

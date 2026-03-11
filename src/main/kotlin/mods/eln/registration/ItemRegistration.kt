@@ -369,241 +369,218 @@ object ItemRegistration {
 
     private fun registerLampItem(id: Int) {
         var subId: Int
-        var completId: Int
-        val lightPower =
-            doubleArrayOf(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 15.0, 20.0, 25.0, 30.0, 40.0)
-        val lightLevel = DoubleArray(16)
-        val economicPowerFactor = 0.5
-        val standardGrowRate = 0.0
-        for (idx in 0..15) {
-            lightLevel[idx] = (idx + 0.49) / 15.0
-        }
-        var element: LampDescriptor
+        var completeId: Int
+        var descriptor: LampDescriptor
+
         run {
             subId = 0
-            completId = subId + (id shl 6)
-            element = LampDescriptor(
-                I18N.TR_NAME(I18N.Type.NONE, "Small 50V Incandescent Light Bulb"),
+            completeId = subId + (id shl 6)
+            descriptor = LampDescriptor(
+                I18N.TR_NAME(I18N.Type.NONE, "Small 50V Incandescent Bulb"),
                 "incandescentironlamp",
-                LampDescriptor.Type.INCANDESCENT,
+                LampDescriptor.Technology.INCANDESCENT,
                 LampSocketType.Douille,
                 Eln.LVU,
-                lightPower[12],
-                lightLevel[12],
+                20.0,
                 instance.incandescentLampLife,
-                standardGrowRate,
-                0
+                12
             )
-            Eln.sharedItem.addElement(completId, element)
+            Eln.sharedItem.addElement(completeId, descriptor)
         }
         run {
             subId = 1
-            completId = subId + (id shl 6)
-            element = LampDescriptor(
-                I18N.TR_NAME(I18N.Type.NONE, "50V Incandescent Light Bulb"),
+            completeId = subId + (id shl 6)
+            descriptor = LampDescriptor(
+                I18N.TR_NAME(I18N.Type.NONE, "50V Incandescent Bulb"),
                 "incandescentironlamp",
-                LampDescriptor.Type.INCANDESCENT,
+                LampDescriptor.Technology.INCANDESCENT,
                 LampSocketType.Douille,
                 Eln.LVU,
-                lightPower[14],
-                lightLevel[14],
+                30.0,
                 instance.incandescentLampLife,
-                standardGrowRate,
-                0
+                14
             )
-            Eln.sharedItem.addElement(completId, element)
+            Eln.sharedItem.addElement(completeId, descriptor)
         }
         run {
             subId = 2
-            completId = subId + (id shl 6)
-            element = LampDescriptor(
-                I18N.TR_NAME(I18N.Type.NONE, "200V Incandescent Light Bulb"),
+            completeId = subId + (id shl 6)
+            descriptor = LampDescriptor(
+                I18N.TR_NAME(I18N.Type.NONE, "200V Incandescent Bulb"),
                 "incandescentironlamp",
-                LampDescriptor.Type.INCANDESCENT,
+                LampDescriptor.Technology.INCANDESCENT,
                 LampSocketType.Douille,
                 Eln.MVU,
-                lightPower[14],
-                lightLevel[14],
+                30.0,
                 instance.incandescentLampLife,
-                standardGrowRate,
-                0
+                14
             )
-            Eln.sharedItem.addElement(completId, element)
+            Eln.sharedItem.addElement(completeId, descriptor)
         }
         run {
             subId = 4
-            completId = subId + (id shl 6)
-            element = LampDescriptor(
-                I18N.TR_NAME(I18N.Type.NONE, "Small 50V Carbon Incandescent Light Bulb"),
+            completeId = subId + (id shl 6)
+            descriptor = LampDescriptor(
+                I18N.TR_NAME(I18N.Type.NONE, "Small 50V Carbon Incandescent Bulb"),
                 "incandescentcarbonlamp",
-                LampDescriptor.Type.INCANDESCENT,
+                LampDescriptor.Technology.INCANDESCENT,
                 LampSocketType.Douille,
                 Eln.LVU,
-                lightPower[11],
-                lightLevel[11],
-                instance.carbonLampLife,
-                standardGrowRate,
-                0
+                15.0,
+                instance.carbonIncandescentLampLife,
+                11
             )
-            Eln.sharedItem.addElement(completId, element)
+            Eln.sharedItem.addElement(completeId, descriptor)
         }
         run {
             subId = 5
-            completId = subId + (id shl 6)
-            element = LampDescriptor(
-                I18N.TR_NAME(I18N.Type.NONE, "50V Carbon Incandescent Light Bulb"),
+            completeId = subId + (id shl 6)
+            descriptor = LampDescriptor(
+                I18N.TR_NAME(I18N.Type.NONE, "50V Carbon Incandescent Bulb"),
                 "incandescentcarbonlamp",
-                LampDescriptor.Type.INCANDESCENT,
+                LampDescriptor.Technology.INCANDESCENT,
                 LampSocketType.Douille,
                 Eln.LVU,
-                lightPower[13],
-                lightLevel[13],
-                instance.carbonLampLife,
-                standardGrowRate,
-                0
+                25.0,
+                instance.carbonIncandescentLampLife,
+                13
             )
-            Eln.sharedItem.addElement(completId, element)
+            Eln.sharedItem.addElement(completeId, descriptor)
         }
         run {
             subId = 16
-            completId = subId + (id shl 6)
-            element = LampDescriptor(
-                I18N.TR_NAME(I18N.Type.NONE, "Small 50V Economic Light Bulb"),
+            completeId = subId + (id shl 6)
+            descriptor = LampDescriptor(
+                I18N.TR_NAME(I18N.Type.NONE, "Small 50V Fluorescent Bulb"),
                 "fluorescentlamp",
-                LampDescriptor.Type.ECO,
+                LampDescriptor.Technology.FLUORESCENT,
                 LampSocketType.Douille,
                 Eln.LVU,
-                lightPower[12] * economicPowerFactor,
-                lightLevel[12],
-                instance.economicLampLife,
-                standardGrowRate,
-                0
+                20.0 * 0.5,
+                instance.fluorescentLampLife,
+                12
             )
-            Eln.sharedItem.addElement(completId, element)
+            Eln.sharedItem.addElement(completeId, descriptor)
         }
         run {
             subId = 17
-            completId = subId + (id shl 6)
-            element = LampDescriptor(
-                I18N.TR_NAME(I18N.Type.NONE, "50V Economic Light Bulb"), "fluorescentlamp",
-                LampDescriptor.Type.ECO, LampSocketType.Douille, Eln.LVU, lightPower[14] * economicPowerFactor,
-                lightLevel[14], instance.economicLampLife, standardGrowRate,
-                0
+            completeId = subId + (id shl 6)
+            descriptor = LampDescriptor(
+                I18N.TR_NAME(I18N.Type.NONE, "50V Fluorescent Bulb"),
+                "fluorescentlamp",
+                LampDescriptor.Technology.FLUORESCENT,
+                LampSocketType.Douille,
+                Eln.LVU,
+                30.0 * 0.5,
+                instance.fluorescentLampLife,
+                14
             )
-            Eln.sharedItem.addElement(completId, element)
+            Eln.sharedItem.addElement(completeId, descriptor)
         }
         run {
             subId = 18
-            completId = subId + (id shl 6)
-            element = LampDescriptor(
-                I18N.TR_NAME(I18N.Type.NONE, "200V Economic Light Bulb"), "fluorescentlamp",
-                LampDescriptor.Type.ECO, LampSocketType.Douille, Eln.MVU, lightPower[14] * economicPowerFactor,
-                lightLevel[14], instance.economicLampLife, standardGrowRate,
-                0
+            completeId = subId + (id shl 6)
+            descriptor = LampDescriptor(
+                I18N.TR_NAME(I18N.Type.NONE, "200V Fluorescent Bulb"),
+                "fluorescentlamp",
+                LampDescriptor.Technology.FLUORESCENT,
+                LampSocketType.Douille,
+                Eln.MVU,
+                30.0 * 0.5,
+                instance.fluorescentLampLife,
+                14
             )
-            Eln.sharedItem.addElement(completId, element)
+            Eln.sharedItem.addElement(completeId, descriptor)
         }
         run {
             subId = 32
-            completId = subId + (id shl 6)
-            element = LampDescriptor(
-                I18N.TR_NAME(I18N.Type.NONE, "50V Farming Lamp"),
+            completeId = subId + (id shl 6)
+            descriptor = LampDescriptor(
+                I18N.TR_NAME(I18N.Type.NONE, "50V Infrared Bulb (Farming Lamp)"),
                 "farminglamp",
-                LampDescriptor.Type.INCANDESCENT,
+                LampDescriptor.Technology.INFRARED,
                 LampSocketType.Douille,
                 Eln.LVU,
                 120.0,
-                lightLevel[15],
-                instance.incandescentLampLife,
-                0.50,
-                0
+                instance.infraredLampLife,
+                15
             )
-            Eln.sharedItem.addElement(completId, element)
+            Eln.sharedItem.addElement(completeId, descriptor)
         }
         run {
             subId = 36
-            completId = subId + (id shl 6)
-            element = LampDescriptor(
-                I18N.TR_NAME(I18N.Type.NONE, "200V Farming Lamp"),
+            completeId = subId + (id shl 6)
+            descriptor = LampDescriptor(
+                I18N.TR_NAME(I18N.Type.NONE, "200V Infrared Bulb (Farming Lamp)"),
                 "farminglamp",
-                LampDescriptor.Type.INCANDESCENT,
+                LampDescriptor.Technology.INFRARED,
                 LampSocketType.Douille,
                 Eln.MVU,
                 120.0,
-                lightLevel[15],
-                instance.incandescentLampLife,
-                0.50,
-                0
+                instance.infraredLampLife,
+                15
             )
-            Eln.sharedItem.addElement(completId, element)
+            Eln.sharedItem.addElement(completeId, descriptor)
         }
         run {
             subId = 37
-            completId = subId + (id shl 6)
-            element = LampDescriptor(
+            completeId = subId + (id shl 6)
+            descriptor = LampDescriptor(
                 I18N.TR_NAME(I18N.Type.NONE, "50V LED Bulb"),
                 "ledlamp",
-                LampDescriptor.Type.LED,
+                LampDescriptor.Technology.LED,
                 LampSocketType.Douille,
                 Eln.LVU,
-                lightPower[14] / 2,
-                lightLevel[14],
+                30.0 / 2,
                 instance.ledLampLife,
-                standardGrowRate,
-                0
+                14
             )
-            Eln.sharedItem.addElement(completId, element)
+            Eln.sharedItem.addElement(completeId, descriptor)
         }
         run {
             subId = 38
-            completId = subId + (id shl 6)
-            element = LampDescriptor(
+            completeId = subId + (id shl 6)
+            descriptor = LampDescriptor(
                 I18N.TR_NAME(I18N.Type.NONE, "200V LED Bulb"),
                 "ledlamp",
-                LampDescriptor.Type.LED,
+                LampDescriptor.Technology.LED,
                 LampSocketType.Douille,
                 Eln.MVU,
-                lightPower[14] / 2,
-                lightLevel[14],
+                30.0 / 2,
                 instance.ledLampLife,
-                standardGrowRate,
-                0
+                14
             )
-            Eln.sharedItem.addElement(completId, element)
+            Eln.sharedItem.addElement(completeId, descriptor)
         }
         run {
             subId = 44
-            completId = subId + (id shl 6)
-            element = LampDescriptor(
+            completeId = subId + (id shl 6)
+            descriptor = LampDescriptor(
                 I18N.TR_NAME(I18N.Type.NONE, "50V Halogen Bulb"),
                 "halogenlamp",
-                LampDescriptor.Type.HALOGEN,
+                LampDescriptor.Technology.HALOGEN,
                 LampSocketType.Tube,
                 Eln.LVU,
                 250.0,
-                lightLevel[15],
                 instance.halogenLampLife,
-                standardGrowRate,
                 8
             )
-            Eln.sharedItem.addElement(completId, element)
+            Eln.sharedItem.addElement(completeId, descriptor)
         }
         run {
             subId = 45
-            completId = subId + (id shl 6)
-            element = LampDescriptor(
+            completeId = subId + (id shl 6)
+            descriptor = LampDescriptor(
                 I18N.TR_NAME(I18N.Type.NONE, "200V Halogen Bulb"),
                 "halogenlamp",
-                LampDescriptor.Type.HALOGEN,
+                LampDescriptor.Technology.HALOGEN,
                 LampSocketType.Tube,
                 Eln.MVU,
                 500.0,
-                lightLevel[15],
                 instance.halogenLampLife,
-                standardGrowRate,
                 16
             )
-            Eln.sharedItem.addElement(completId, element)
+            Eln.sharedItem.addElement(completeId, descriptor)
         }
     }
 
