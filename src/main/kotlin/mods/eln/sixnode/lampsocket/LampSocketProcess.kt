@@ -83,7 +83,7 @@ class LampSocketProcess(var lamp: LampSocketElement) : IProcess, INBTTReady /*,L
     override fun process(time: Double) {
         var newLight: Int
         val lampStack = lamp.inventory!!.getStackInSlot(0)
-        val cableStack = lamp.inventory!!.getStackInSlot(LampSocketContainer.cableSlotId)
+        val cableStack = lamp.inventory!!.getStackInSlot(LampSocketContainer.CABLE_SLOT_ID)
         // LampDescriptor? is *important* here. Otherwise, NPE.
         val lampDescriptor = (lampStack?.item as? GenericItemUsingDamage<*>)?.getDescriptor(lampStack) as? LampDescriptor
         if (cableStack == null || lampStack == null) {
@@ -126,7 +126,7 @@ class LampSocketProcess(var lamp: LampSocketElement) : IProcess, INBTTReady /*,L
 
         if (lampDescriptor != null) {
             // This code makes the ECO lights blink, and the other lights are just "stable"
-            when (lampDescriptor.type) {
+            when (lampDescriptor.technology) {
                 LampDescriptor.Technology.INCANDESCENT, LampDescriptor.Technology.INFRARED, LampDescriptor.Technology.LED, LampDescriptor.Technology.HALOGEN -> {
                     if (lamp.lampResistor.voltage < lampDescriptor.minimalU) {
                         lightDouble = 0.0
@@ -164,7 +164,7 @@ class LampSocketProcess(var lamp: LampSocketElement) : IProcess, INBTTReady /*,L
         if (newLight < 0) newLight = 0
 
         if (lampDescriptor != null) {
-            val bulbCanAge = when(lampDescriptor.type) {
+            val bulbCanAge = when(lampDescriptor.technology) {
                 LampDescriptor.Technology.INCANDESCENT -> !Eln.infiniteIncandescentLampLife
                 LampDescriptor.Technology.FLUORESCENT -> !Eln.infiniteFluorescentLampLife
                 LampDescriptor.Technology.INFRARED -> !Eln.infiniteInfraredLampLife

@@ -28,7 +28,7 @@ public class LampSocketGuiDraw extends GuiContainerEln {
     GuiVerticalTrackBar alphaZ;
 
     public LampSocketGuiDraw(EntityPlayer player, IInventory inventory, LampSocketRender lampRender) {
-        super(new LampSocketContainer(player, inventory, lampRender.lampSocketDescriptor));
+        super(new LampSocketContainer(player, inventory));
         this.inventory = (SixNodeElementInventory) inventory;
         this.lampRender = lampRender;
     }
@@ -97,7 +97,7 @@ public class LampSocketGuiDraw extends GuiContainerEln {
         if (lampRender.poweredByLampSupply) {
             buttonSupplyType.displayString = tr("Powered by Lamp Supply");
             channel.setVisible(true);
-            if (inventory.getStackInSlot(LampSocketContainer.cableSlotId) == null)
+            if (inventory.getStackInSlot(LampSocketContainer.CABLE_SLOT_ID) == null)
                 channel.setComment(1, "§4" + tr("Cable slot empty"));
             else if (lampRender.isConnectedToLampSupply)
                 channel.setComment(1, "§2" + tr("connected to " + lampRender.channel));

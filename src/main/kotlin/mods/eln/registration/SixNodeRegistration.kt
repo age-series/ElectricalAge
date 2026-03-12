@@ -51,7 +51,6 @@ import mods.eln.sixnode.hub.HubDescriptor
 import mods.eln.sixnode.lampsocket.LampSocketDescriptor
 import mods.eln.sixnode.lampsocket.LampSocketStandardObjRender
 import mods.eln.sixnode.lampsocket.LampSocketSuspendedObjRender
-import mods.eln.sixnode.lampsocket.LampSocketType
 import mods.eln.sixnode.lampsupply.LampSupplyDescriptor
 import mods.eln.sixnode.logicgate.*
 import mods.eln.sixnode.modbusrtu.ModbusRtuDescriptor
@@ -405,7 +404,7 @@ object SixNodeRegistration {
                     Eln.obj.getObj(
                         "ClassicLampSocket"
                     ), false
-                ), LampSocketType.Douille, false, 4, 0f, 0f, 0f
+                ), false, 4, 0f, 0f, 0f
             ).lighting()
             Eln.sixNodeItem.addDescriptor(subId + (id shl 6), desc)
         }
@@ -417,7 +416,7 @@ object SixNodeRegistration {
                     Eln.obj.getObj(
                         "ClassicLampSocket"
                     ), false
-                ), LampSocketType.Douille, false, 10, -90f, 90f, 0f
+                ), false, 10, -90f, 90f, 0f
             ).lighting()
             Eln.sixNodeItem.addDescriptor(subId + (id shl 6), desc)
         }
@@ -430,7 +429,7 @@ object SixNodeRegistration {
                     Eln.obj.getObj(
                         "RobustLamp"
                     ), true
-                ), LampSocketType.Douille, false, 3, 0f, 0f, 0f
+                ), false, 3, 0f, 0f, 0f
             ).lighting()
             desc.setInitialOrientation(-90f)
             Eln.sixNodeItem.addDescriptor(subId + (id shl 6), desc)
@@ -443,7 +442,7 @@ object SixNodeRegistration {
                     Eln.obj.getObj(
                         "FlatLamp"
                     ), true
-                ), LampSocketType.Douille, false, 3, 0f, 0f, 0f
+                ), false, 3, 0f, 0f, 0f
             ).lighting()
             Eln.sixNodeItem.addDescriptor(subId + (id shl 6), desc)
         }
@@ -455,7 +454,7 @@ object SixNodeRegistration {
                     Eln.obj.getObj(
                         "SimpleLamp"
                     ), true
-                ), LampSocketType.Douille, false, 3, 0f, 0f, 0f
+                ), false, 3, 0f, 0f, 0f
             ).lighting()
             Eln.sixNodeItem.addDescriptor(subId + (id shl 6), desc)
         }
@@ -467,7 +466,7 @@ object SixNodeRegistration {
                     Eln.obj.getObj(
                         "FluorescentLamp"
                     ), true
-                ), LampSocketType.Douille, false, 4, 0f, 0f, 0f
+                ), false, 4, 0f, 0f, 0f
             ).lighting()
             Eln.sixNodeItem.addDescriptor(subId + (id shl 6), desc)
             desc.cableLeft = false
@@ -481,7 +480,7 @@ object SixNodeRegistration {
                     Eln.obj.getObj(
                         "StreetLight"
                     ), true
-                ), LampSocketType.Douille, false, 0, 0f, 0f, 0f
+                ), false, 0, 0f, 0f, 0f
             ).lighting()
             desc.setPlaceDirection(Direction.YN)
             val g = GhostGroup()
@@ -501,7 +500,7 @@ object SixNodeRegistration {
                     Eln.obj.getObj(
                         "SconceLamp"
                     ), true
-                ), LampSocketType.Douille, true, 3, 0f, 0f, 0f
+                ), true, 3, 0f, 0f, 0f
             ).lighting()
             desc.setPlaceDirection(
                 arrayOf(
@@ -523,7 +522,7 @@ object SixNodeRegistration {
                     Eln.obj.getObj(
                         "RobustLampSuspended"
                     ), true, 3
-                ), LampSocketType.Douille,  // LampSocketType
+                ),  // LampSocketType
                 false, 3, 0f, 0f, 0f
             )
             desc.setPlaceDirection(Direction.YP)
@@ -538,7 +537,7 @@ object SixNodeRegistration {
                     Eln.obj.getObj(
                         "RobustLampSuspended"
                     ), true, 7
-                ), LampSocketType.Douille, false, 4, 0f, 0f, 0f
+                ), false, 4, 0f, 0f, 0f
             )
             desc.setPlaceDirection(Direction.YP)
             Eln.sixNodeItem.addDescriptor(subId + (id shl 6), desc)
@@ -576,7 +575,7 @@ object SixNodeRegistration {
                     Eln.obj.getObj(
                         "RobustLampSuspended"
                     ), true, 3, false
-                ), LampSocketType.Douille, false, 3, 0f, 0f, 0f
+                ), false, 3, 0f, 0f, 0f
             )
             desc.setPlaceDirection(Direction.YP)
             Eln.sixNodeItem.addDescriptor(subId + (id shl 6), desc)
@@ -590,7 +589,7 @@ object SixNodeRegistration {
                     Eln.obj.getObj(
                         "RobustLampSuspended"
                     ), true, 7, false
-                ), LampSocketType.Douille, false, 4, 0f, 0f, 0f
+                ), false, 4, 0f, 0f, 0f
             )
             desc.setPlaceDirection(Direction.YP)
             Eln.sixNodeItem.addDescriptor(subId + (id shl 6), desc)

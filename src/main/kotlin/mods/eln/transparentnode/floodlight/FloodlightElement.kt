@@ -114,7 +114,7 @@ class FloodlightElement(transparentNode: TransparentNode, transparentNodeDescrip
         val currentEquippedItem = getItemObject(player.currentEquippedItem)
 
         if (currentEquippedItem is LampDescriptor) {
-            if (currentEquippedItem.socket == FloodlightContainer.LAMP_SOCKET_TYPE) {
+            if (currentEquippedItem.technology in FloodlightContainer.ACCEPTED_LAMP_TECHNOLOGY) {
                 return acceptingInventory.take(player.currentEquippedItem, this, true, true)
             }
         }
