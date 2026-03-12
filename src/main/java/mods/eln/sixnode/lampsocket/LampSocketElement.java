@@ -178,7 +178,7 @@ public class LampSocketElement extends SixNodeElement implements IConfigurable {
     @Nullable
     @Override
     public Container newContainer(@NotNull Direction side, @NotNull EntityPlayer player) {
-        return new LampSocketContainer(player, acceptingInventory.getInventory(), socketDescriptor);
+        return new LampSocketContainer(player, acceptingInventory.getInventory());
     }
 
     public static boolean canBePlacedOnSide(Direction side, int type) {
@@ -187,7 +187,7 @@ public class LampSocketElement extends SixNodeElement implements IConfigurable {
 
     @Override
     public ElectricalLoad getElectricalLoad(LRDU lrdu, int mask) {
-        if (acceptingInventory.getInventory().getStackInSlot(LampSocketContainer.cableSlotId) == null) return null;
+        if (acceptingInventory.getInventory().getStackInSlot(LampSocketContainer.CABLE_SLOT_ID) == null) return null;
         if (poweredByLampSupply) return null;
 
         if (grounded) return positiveLoad;
@@ -202,7 +202,7 @@ public class LampSocketElement extends SixNodeElement implements IConfigurable {
 
     @Override
     public int getConnectionMask(LRDU lrdu) {
-        if (acceptingInventory.getInventory().getStackInSlot(LampSocketContainer.cableSlotId) == null) return 0;
+        if (acceptingInventory.getInventory().getStackInSlot(LampSocketContainer.CABLE_SLOT_ID) == null) return 0;
         if (poweredByLampSupply) return 0;
         if (grounded) return NodeBase.maskElectricalPower;
 
@@ -252,9 +252,9 @@ public class LampSocketElement extends SixNodeElement implements IConfigurable {
         super.networkSerialize(stream);
         try {
             stream.writeByte((grounded ? (1 << 6) : 0));
-            Utils.serialiseItemStack(stream, acceptingInventory.getInventory().getStackInSlot(LampSocketContainer.lampSlotId));
+            Utils.serialiseItemStack(stream, acceptingInventory.getInventory().getStackInSlot(LampSocketContainer.LAMP_SLOT_ID));
             stream.writeFloat((float) lampProcess.alphaZ);
-            Utils.serialiseItemStack(stream, acceptingInventory.getInventory().getStackInSlot(LampSocketContainer.cableSlotId));
+            Utils.serialiseItemStack(stream, acceptingInventory.getInventory().getStackInSlot(LampSocketContainer.CABLE_SLOT_ID));
             stream.writeBoolean(poweredByLampSupply);
             stream.writeUTF(channel);
             stream.writeBoolean(isConnectedToLampSupply);
@@ -271,8 +271,8 @@ public class LampSocketElement extends SixNodeElement implements IConfigurable {
     }
 
     public void computeElectricalLoad() {
-        ItemStack lamp = acceptingInventory.getInventory().getStackInSlot(LampSocketContainer.lampSlotId);
-        ItemStack cable = acceptingInventory.getInventory().getStackInSlot(LampSocketContainer.cableSlotId);
+        ItemStack lamp = acceptingInventory.getInventory().getStackInSlot(LampSocketContainer.LAMP_SLOT_ID);
+        ItemStack cable = acceptingInventory.getInventory().getStackInSlot(LampSocketContainer.CABLE_SLOT_ID);
 
         SixNodeDescriptor cableItemDescriptor = Eln.sixNodeItem.getDescriptor(cable);
         ElectricalCableDescriptor cableDescriptor = cableItemDescriptor instanceof ElectricalCableDescriptor ?
@@ -324,9 +324,16 @@ public class LampSocketElement extends SixNodeElement implements IConfigurable {
                 }
 
                 if (itemDescriptor instanceof LampDescriptor) {
-                    if (((LampDescriptor) itemDescriptor).socket != socketDescriptor.socketType) {
-                        return false;
+                    boolean exit = true;
+
+                    for (int i = 0; i < LampSocketContainer.ACCEPTED_LAMP_TECHNOLOGY.length; i++) {
+                        if (((LampDescriptor) itemDescriptor).technology == LampSocketContainer.ACCEPTED_LAMP_TECHNOLOGY[i]) {
+                            exit = false;
+                            break;
+                        }
                     }
+
+                    if (exit) return false;
                 }
             }
         }

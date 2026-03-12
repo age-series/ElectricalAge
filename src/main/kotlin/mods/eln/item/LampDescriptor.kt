@@ -6,7 +6,6 @@ import mods.eln.misc.IConfigSharing
 import mods.eln.misc.Utils
 import mods.eln.misc.VoltageLevelColor
 import mods.eln.sim.mna.component.Resistor
-import mods.eln.sixnode.lampsocket.LampSocketType
 import mods.eln.wiki.Data
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.Item
@@ -19,7 +18,7 @@ import kotlin.math.abs
 import kotlin.math.pow
 
 class LampDescriptor(
-    name: String, iconName: String, @JvmField val type: Technology, @JvmField val socket: LampSocketType,
+    name: String, iconName: String, @JvmField val technology: Technology,
     val nominalU: Double, val nominalP: Double, val nominalLifeHours: Double, val range: Int
 ) : GenericItemUsingDamageDescriptorUpgrade(name), IConfigSharing {
 
@@ -47,16 +46,16 @@ class LampDescriptor(
     }
 
     val nominalLight = MAX_LIGHT_VALUE / 15.0
-    val vegetableGrowRate = if (type == Technology.INFRARED) 0.5 else 0.0
+    val vegetableGrowRate = if (technology == Technology.INFRARED) 0.5 else 0.0
 
-    val minimalU = when (type) {
+    val minimalU = when (technology) {
         Technology.INCANDESCENT, Technology.INFRARED, Technology.HALOGEN -> nominalU * 0.5
         Technology.FLUORESCENT, Technology.LED -> nominalU * 0.75
     }
 
-    val stableUNormalised = if (type == Technology.FLUORESCENT) 0.75 else 0.0
-    val stableU = if (type == Technology.FLUORESCENT) nominalU * stableUNormalised else 0.0
-    val stableTime = if (type == Technology.FLUORESCENT) 4.0 else 0.0
+    val stableUNormalised = if (technology == Technology.FLUORESCENT) 0.75 else 0.0
+    val stableU = if (technology == Technology.FLUORESCENT) nominalU * stableUNormalised else 0.0
+    val stableTime = if (technology == Technology.FLUORESCENT) 4.0 else 0.0
 
     val resistance = nominalU.pow(2) / nominalP
 
@@ -114,7 +113,7 @@ class LampDescriptor(
     override fun addInformation(itemStack: ItemStack?, entityPlayer: EntityPlayer?, list: MutableList<String>, par4: Boolean) {
         super.addInformation(itemStack, entityPlayer, list, par4)
 
-        list.add(tr("Technology: $type"))
+        list.add(tr("Technology: $technology"))
         list.add(tr("Range: $range blocks"))
         list.add(tr("Power: ${Utils.plotValue(nominalP)}W"))
         list.add(tr("Resistance: ${Utils.plotValue(resistance)}\u2126"))

@@ -14,7 +14,6 @@ import static mods.eln.i18n.I18N.tr;
 
 public class LampSocketDescriptor extends SixNodeDescriptor {
 
-    public LampSocketType socketType;
     LampSocketObjRender render;
 
     public boolean cameraOpt = true;
@@ -35,13 +34,11 @@ public class LampSocketDescriptor extends SixNodeDescriptor {
     public boolean renderIconInHand = false;
 
     public LampSocketDescriptor(String name, LampSocketObjRender render,
-                                LampSocketType socketType,
                                 boolean paintable,
                                 int range,
                                 float alphaZMin, float alphaZMax,
                                 float alphaZBoot) {
         super(name, LampSocketElement.class, LampSocketRender.class);
-        this.socketType = socketType;
         this.paintable = paintable;
         this.range = range;
         this.alphaZMin = alphaZMin;
