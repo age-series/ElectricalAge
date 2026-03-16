@@ -17,6 +17,7 @@ import net.minecraft.util.Vec3
 import java.io.ByteArrayOutputStream
 import java.io.DataOutputStream
 import java.io.IOException
+import kotlin.math.abs
 
 class LampSocketProcess(var lamp: LampSocketElement) : IProcess, INBTTReady /*,LightBlockObserver*/ {
     @JvmField
@@ -46,8 +47,8 @@ class LampSocketProcess(var lamp: LampSocketElement) : IProcess, INBTTReady /*,L
         return bestChannelHandle
     }
 
-    private fun updateNearbyBlocks(growRate: Double, nominalLight: Double, actualLight: Int, deltaT: Double) {
-        val randTarget = 1.0 / growRate * deltaT * (1.0 * actualLight / nominalLight / 15.0)
+    private fun updateNearbyBlocks(growRate: Double, nominalLight: Int, actualLight: Int, deltaT: Double) {
+        val randTarget = growRate * deltaT * (actualLight.toDouble() / nominalLight.toDouble())
         if (randTarget > Math.random()) {
             var exit = false
             val vv = Vec3.createVectorHelper(1.0, 0.0, 0.0)
@@ -125,32 +126,33 @@ class LampSocketProcess(var lamp: LampSocketElement) : IProcess, INBTTReady /*,L
         var lightDouble = 0.0
 
         if (lampDescriptor != null) {
+            val lampData = lampDescriptor.lampData
+
             // This code makes the ECO lights blink, and the other lights are just "stable"
-            when (lampDescriptor.technology) {
-                LampDescriptor.Technology.INCANDESCENT, LampDescriptor.Technology.INFRARED, LampDescriptor.Technology.LED, LampDescriptor.Technology.HALOGEN -> {
-                    if (lamp.lampResistor.voltage < lampDescriptor.minimalU) {
+            if (lampDescriptor.lampData.lampType == "fluorescent") {
+                val U = abs(lamp.lampResistor.voltage)
+                if (U < (lampDescriptor.nominalU * lampData.minimalUFactor)) {
+                    stableProb = 0.0
+                    lightDouble = 0.0
+                } else {
+                    val powerFactor = U / lampDescriptor.nominalU
+                    stableProb += U / (lampDescriptor.nominalU * lampData.stableUFactor) * time / lampData.timeUntilStableInSeconds * lampData.stableUFactor
+                    if (stableProb > U / (lampDescriptor.nominalU * lampData.stableUFactor)) stableProb = U / (lampDescriptor.nominalU * lampData.stableUFactor)
+                    if (Math.random() > stableProb) {
                         lightDouble = 0.0
                     } else {
-                        lightDouble = lampDescriptor.nominalLight * ((Math.abs(lamp.lampResistor.voltage) - lampDescriptor.minimalU) / (lampDescriptor.nominalU - lampDescriptor.minimalU))
+                        lightDouble = lampData.nominalLightValue * powerFactor
                     }
-                    lightDouble *= 15
                 }
-                LampDescriptor.Technology.FLUORESCENT -> {
-                    val U = Math.abs(lamp.lampResistor.voltage)
-                    if (U < lampDescriptor.minimalU) {
-                        stableProb = 0.0
-                        lightDouble = 0.0
-                    } else {
-                        val powerFactor = U / lampDescriptor.nominalU
-                        stableProb += U / lampDescriptor.stableU * time / lampDescriptor.stableTime * lampDescriptor.stableUNormalised
-                        if (stableProb > U / lampDescriptor.stableU) stableProb = U / lampDescriptor.stableU
-                        if (Math.random() > stableProb) {
-                            lightDouble = 0.0
-                        } else {
-                            lightDouble = lampDescriptor.nominalLight * powerFactor
-                            lightDouble *= 16
-                        }
-                    }
+            }
+            else {
+                if (lamp.lampResistor.voltage < (lampDescriptor.nominalU * lampData.minimalUFactor)) {
+                    lightDouble = 0.0
+                } else {
+                    val num: Double = abs(lamp.lampResistor.voltage) - (lampDescriptor.nominalU * lampData.minimalUFactor)
+                    val den: Double = lampDescriptor.nominalU - (lampDescriptor.nominalU * lampData.minimalUFactor)
+
+                    lightDouble = (num / den) * lampData.nominalLightValue
                 }
             }
         } else {
@@ -164,29 +166,22 @@ class LampSocketProcess(var lamp: LampSocketElement) : IProcess, INBTTReady /*,L
         if (newLight < 0) newLight = 0
 
         if (lampDescriptor != null) {
-            val bulbCanAge = when(lampDescriptor.technology) {
-                LampDescriptor.Technology.INCANDESCENT -> !Eln.infiniteIncandescentLampLife
-                LampDescriptor.Technology.FLUORESCENT -> !Eln.infiniteFluorescentLampLife
-                LampDescriptor.Technology.INFRARED -> !Eln.infiniteInfraredLampLife
-                LampDescriptor.Technology.LED -> !Eln.infiniteLedLampLife
-                LampDescriptor.Technology.HALOGEN -> !Eln.infiniteHalogenLampLife
-            }
+            // ageLamp command now checks for infinite life. This is to fix an over-life condition that can arise from
+            // decreasing the nominal life of a bulb type from the config file while infinite life is enabled. This also
+            // ensures that the lifetimes of bulbs that have infinite life enabled track the config file.
+            val currentLife = lampDescriptor.ageLamp(lampStack, lamp.lampResistor.voltage, time)
 
-            if (bulbCanAge) {
-                val currentLife = lampDescriptor.ageLamp(lampStack, lamp.lampResistor.voltage, time)
-
-                if (currentLife <= 0.0) {
-                    lamp.inventory!!.setInventorySlotContents(0, null)
-                    lamp.inventory!!.markDirty()
-                    newLight = 0
-                }
+            if (currentLife <= 0.0) {
+                lamp.inventory!!.setInventorySlotContents(0, null)
+                lamp.inventory!!.markDirty()
+                newLight = 0
             }
         } else {
             newLight = 0
         }
 
-        if (lamp.coordinate!!.blockExist && lampDescriptor != null && lampDescriptor.vegetableGrowRate != 0.0) {
-            updateNearbyBlocks(lampDescriptor.vegetableGrowRate, lampDescriptor.nominalLight, newLight, time)
+        if (lamp.coordinate!!.blockExist && lampDescriptor != null) {
+            updateNearbyBlocks(lampDescriptor.lampData.cropGrowthRateFactor, lampDescriptor.lampData.nominalLightValue, newLight, time)
         }
 
         boot = false

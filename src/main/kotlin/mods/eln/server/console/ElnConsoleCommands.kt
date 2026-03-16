@@ -160,58 +160,24 @@ class ElnInfiniteLampLifeCommand: IConsoleCommand {
             val bulbType = args[0]
             val infiniteLife = getArgBool(ics, args[1])?: return
 
-            var updateIncandescent = false
-            var updateFluorescent = false
-            var updateInfrared = false
-            var updateLed = false
-            var updateHalogen = false
-
             when (bulbType) {
-                "incandescent" -> updateIncandescent = true
-                "fluorescent" -> updateFluorescent = true
-                "infrared" -> updateInfrared = true
-                "led" -> updateLed = true
-                "halogen" -> updateHalogen = true
-                "all" -> {
-                    updateIncandescent = true
-                    updateFluorescent = true
-                    updateInfrared = true
-                    updateLed = true
-                    updateHalogen = true
+                "incandescent", "carbonIncandescent", "fluorescent", "farming", "led", "halogen" -> {
+                    Eln.lampTechnologies.getLampData(bulbType)!!.updateInfiniteLifeConfig(infiniteLife)
+                }
+                "all" -> for (lampTechnology in Eln.lampTechnologies.lampList) {
+                    Eln.lampTechnologies.getLampData(lampTechnology.lampType)!!.updateInfiniteLifeConfig(infiniteLife)
                 }
                 else -> printSyntax = true
             }
 
             if (!printSyntax) {
-                if (updateIncandescent) {
-                    Eln.infiniteIncandescentLampLife = infiniteLife
-                    Eln.config.get("lamp", "infiniteIncandescentLampLife", false).set(Eln.infiniteIncandescentLampLife)
-                }
-                if (updateFluorescent) {
-                    Eln.infiniteFluorescentLampLife = infiniteLife
-                    Eln.config.get("lamp", "infiniteFluorescentLampLife", false).set(Eln.infiniteFluorescentLampLife)
-                }
-                if (updateInfrared) {
-                    Eln.infiniteInfraredLampLife = infiniteLife
-                    Eln.config.get("lamp", "infiniteInfraredLampLife", false).set(Eln.infiniteInfraredLampLife)
-                }
-                if (updateLed) {
-                    Eln.infiniteLedLampLife = infiniteLife
-                    Eln.config.get("lamp", "infiniteLedLampLife", false).set(Eln.infiniteLedLampLife)
-                }
-                if (updateHalogen) {
-                    Eln.infiniteHalogenLampLife = infiniteLife
-                    Eln.config.get("lamp", "infiniteHalogenLampLife", false).set(Eln.infiniteHalogenLampLife)
-                }
-                Eln.config.save()
-
                 cprint(ics, "Infinite lamp life: ${FC.DARK_GREEN}${bulbType}, ${FC.DARK_GREEN}${boolToStr(infiniteLife)}", indent = 1)
                 cprint(ics, "Changes saved to the config file.", indent = 1)
             }
         }
         else printSyntax = true
 
-        if (printSyntax) cprint(ics, "Command syntax: /eln infiniteLampLife [incandescent/fluorescent/infrared/led/halogen/all] [true/false]")
+        if (printSyntax) cprint(ics, "Command syntax: /eln infiniteLampLife [incandescent/carbonIncandescent/fluorescent/farming/led/halogen/all] [true/false]")
     }
 
     override fun getManPage(ics: ICommandSender, args: List<String>) {
@@ -219,7 +185,7 @@ class ElnInfiniteLampLifeCommand: IConsoleCommand {
         cprint(ics, "Changes saved to the config file.", indent = 1)
         cprint(ics, "")
         cprint(ics, "Parameters:", indent = 1)
-        cprint(ics, "@0:string: Bulb type (incandescent/fluorescent/infrared/led/halogen/all).", indent = 2)
+        cprint(ics, "@0:string: Bulb type (incandescent/carbonIncandescent/fluorescent/farming/led/halogen/all).", indent = 2)
         cprint(ics, "@1:bool: Infinite life enabled (true/false).", indent = 2)
         cprint(ics, "")
     }
@@ -227,7 +193,7 @@ class ElnInfiniteLampLifeCommand: IConsoleCommand {
     override fun requiredPermission() = listOf(UserPermission.IS_OPERATOR)
 
     override fun getTabCompletion(args: List<String>): List<String> {
-        val arg0Options = listOf("incandescent", "fluorescent", "infrared", "led", "halogen", "all")
+        val arg0Options = listOf("incandescent", "carbonIncandescent", "fluorescent", "farming", "led", "halogen", "all")
         val arg1Options = listOf("true", "false")
 
         return when (args.size) {
