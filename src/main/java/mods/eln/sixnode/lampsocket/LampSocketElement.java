@@ -326,8 +326,9 @@ public class LampSocketElement extends SixNodeElement implements IConfigurable {
                 if (itemDescriptor instanceof LampDescriptor) {
                     boolean exit = true;
 
-                    for (int i = 0; i < LampSocketContainer.ACCEPTED_LAMP_TECHNOLOGY.length; i++) {
-                        if (((LampDescriptor) itemDescriptor).technology == LampSocketContainer.ACCEPTED_LAMP_TECHNOLOGY[i]) {
+                    // The compiler thinks the array length is always zero. This is simply not true.
+                    for (int idx = 0; idx < LampSocketContainer.ACCEPTED_LAMP_TYPES.length; idx++) {
+                        if (((LampDescriptor) itemDescriptor).getLampData() == LampSocketContainer.ACCEPTED_LAMP_TYPES[idx]) {
                             exit = false;
                             break;
                         }

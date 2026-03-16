@@ -1,6 +1,5 @@
 package mods.eln.transparentnode.floodlight
 
-import mods.eln.Eln
 import mods.eln.item.LampDescriptor
 import mods.eln.misc.Coordinate
 import mods.eln.misc.HybridNodeDirection
@@ -41,25 +40,24 @@ class FloodlightProcess(var element: FloodlightElement) : IProcess {
 
                 val lampVoltage = element.electricalLoad.voltage
 
-                val num: Double = abs(lampVoltage) - lampDescriptor.minimalU
-                val den: Double = lampDescriptor.nominalU - lampDescriptor.minimalU
+                val num: Double = abs(lampVoltage) - (lampDescriptor.nominalU * lampDescriptor.lampData.minimalUFactor)
+                val den: Double = lampDescriptor.nominalU - (lampDescriptor.nominalU * lampDescriptor.lampData.minimalUFactor)
 
-                lampLightValues.add(((num / den) * lampDescriptor.nominalLight * LampDescriptor.MAX_LIGHT_VALUE).toInt())
+                lampLightValues.add(((num / den) * lampDescriptor.lampData.nominalLightValue).toInt())
 
                 if (lampLightValues[idx] < LampDescriptor.MIN_LIGHT_VALUE) lampLightValues[idx] = LampDescriptor.MIN_LIGHT_VALUE
                 else if (lampLightValues[idx] > LampDescriptor.MAX_LIGHT_VALUE) lampLightValues[idx] = LampDescriptor.MAX_LIGHT_VALUE
 
                 lampLightRanges.add(lampDescriptor.range)
 
-                val bulbCanAge = !Eln.infiniteHalogenLampLife
+                // ageLamp command now checks for infinite life. This is to fix an over-life condition that can arise
+                // from decreasing the nominal life of a bulb type from the config file while infinite life is enabled.
+                // This also ensures that the lifetimes of bulbs that have infinite life enabled track the config file.
+                val currentLife = lampDescriptor.ageLamp(lampStacks[idx]!!, lampVoltage, time)
 
-                if (bulbCanAge) {
-                    val currentLife = lampDescriptor.ageLamp(lampStacks[idx]!!, lampVoltage, time)
-
-                    if (currentLife <= 0.0) {
-                        element.inventory.setInventorySlotContents(idx, null)
-                        element.inventory.markDirty()
-                    }
+                if (currentLife <= 0.0) {
+                    element.inventory.setInventorySlotContents(idx, null)
+                    element.inventory.markDirty()
                 }
             }
             else {

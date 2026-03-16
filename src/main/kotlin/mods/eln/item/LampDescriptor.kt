@@ -18,44 +18,13 @@ import kotlin.math.abs
 import kotlin.math.pow
 
 class LampDescriptor(
-    name: String, iconName: String, @JvmField val technology: Technology,
-    val nominalU: Double, val nominalP: Double, val nominalLifeHours: Double, val range: Int
+    name: String, iconName: String, val lampData: LampData, val nominalU: Double, val nominalP: Double, val range: Int
 ) : GenericItemUsingDamageDescriptorUpgrade(name), IConfigSharing {
 
     companion object {
         const val MIN_LIGHT_VALUE: Int = 0
         const val MAX_LIGHT_VALUE: Int = 15
     }
-
-    enum class Technology {
-        INCANDESCENT, FLUORESCENT, INFRARED, LED, HALOGEN
-    }
-
-    enum class Condition {
-        NEW, GOOD, USED, BAD, END_OF_LIFE;
-
-        val str: String get() {
-            return when (this) {
-                NEW -> "New"
-                GOOD -> "Good"
-                USED -> "Used"
-                BAD -> "Bad"
-                END_OF_LIFE -> "End of life"
-            }
-        }
-    }
-
-    val nominalLight = MAX_LIGHT_VALUE / 15.0
-    val vegetableGrowRate = if (technology == Technology.INFRARED) 0.5 else 0.0
-
-    val minimalU = when (technology) {
-        Technology.INCANDESCENT, Technology.INFRARED, Technology.HALOGEN -> nominalU * 0.5
-        Technology.FLUORESCENT, Technology.LED -> nominalU * 0.75
-    }
-
-    val stableUNormalised = if (technology == Technology.FLUORESCENT) 0.75 else 0.0
-    val stableU = if (technology == Technology.FLUORESCENT) nominalU * stableUNormalised else 0.0
-    val stableTime = if (technology == Technology.FLUORESCENT) 4.0 else 0.0
 
     val resistance = nominalU.pow(2) / nominalP
 
@@ -89,7 +58,7 @@ class LampDescriptor(
 
     override fun getDefaultNBT(): NBTTagCompound {
         val tag = NBTTagCompound()
-        tag.setDouble("life", nominalLifeHours)
+        tag.setDouble("life", lampData.nominalLifeInHours)
         return tag
     }
 
@@ -98,50 +67,62 @@ class LampDescriptor(
     }
 
     fun ageLamp(lampStack: ItemStack, voltage: Double, time: Double): Double {
-        val ageFactor = (0.000008 * abs(voltage).pow(3.0)) - (0.003225 * abs(voltage).pow(2.0)) + (0.33 * abs(voltage))
-        val lifeLost = (ageFactor * time) / 3600.0 // Life lost in hours, per tick
-
         val currentLife = this.getLifeInTag(lampStack)
 
-        var newLife = currentLife - lifeLost
-        if (newLife < 0) newLife = 0.0
+        // Force the life of non-aging bulbs to track the config file.
+        if (lampData.infiniteLifeEnabled) {
+            return if (currentLife != lampData.nominalLifeInHours) {
+                this.setLifeInTag(lampStack, lampData.nominalLifeInHours)
+                lampData.nominalLifeInHours
+            }
+            else currentLife
+        }
+        else {
+            val ageFactor = (0.000008 * abs(voltage).pow(3.0)) - (0.003225 * abs(voltage).pow(2.0)) + (0.33 * abs(voltage))
+            val lifeLost = (ageFactor * time) / 3600.0 // Life lost in hours, per tick
 
-        this.setLifeInTag(lampStack, newLife)
-        return newLife
+            // Force the current life of aging bulbs to decrease to nominal if the nominal life is adjusted (via the
+            // config file) to be less than the current life.
+            var newLife = if (currentLife > lampData.nominalLifeInHours) lampData.nominalLifeInHours else currentLife
+            newLife -= lifeLost
+            if (newLife < 0) newLife = 0.0
+
+            this.setLifeInTag(lampStack, newLife)
+            return newLife
+        }
     }
 
     override fun addInformation(itemStack: ItemStack?, entityPlayer: EntityPlayer?, list: MutableList<String>, par4: Boolean) {
         super.addInformation(itemStack, entityPlayer, list, par4)
 
-        list.add(tr("Technology: $technology"))
         list.add(tr("Range: $range blocks"))
         list.add(tr("Power: ${Utils.plotValue(nominalP)}W"))
         list.add(tr("Resistance: ${Utils.plotValue(resistance)}\u2126"))
         list.add(tr("Nominal lifetime: ${serverNominalLife}h"))
 
         if (itemStack != null) {
-            list.add(tr("Condition: ${getLampCondition(itemStack).str}"))
+            list.add(tr("Condition: ${getLampCondition(itemStack)}"))
             if (Eln.debugEnabled) list.add(tr("Life: ${getLifeInTag(itemStack)}h"))
         }
     }
 
-    private fun getLampCondition(itemStack: ItemStack): Condition {
+    private fun getLampCondition(itemStack: ItemStack): String {
         return if (!itemStack.hasTagCompound() || !itemStack.tagCompound.hasKey("life")) {
-            Condition.NEW
+            "New"
         } else {
             val lampLife = getLifeInTag(itemStack)
 
-            if (lampLife == nominalLifeHours) Condition.NEW
-            else if (lampLife > (0.5 * nominalLifeHours)) Condition.GOOD
-            else if (lampLife > (0.15 * nominalLifeHours)) Condition.USED
-            else if (lampLife > (0.01 * nominalLifeHours)) Condition.BAD
-            else Condition.END_OF_LIFE
+            if (lampLife == lampData.nominalLifeInHours) "New"
+            else if (lampLife > (0.5 * lampData.nominalLifeInHours)) "Good"
+            else if (lampLife > (0.15 * lampData.nominalLifeInHours)) "Used"
+            else if (lampLife > (0.01 * lampData.nominalLifeInHours)) "Bad"
+            else "End of life"
         }
     }
 
     @Throws(IOException::class)
     override fun serializeConfig(stream: DataOutputStream?) {
-        stream!!.writeDouble(nominalLifeHours)
+        stream!!.writeDouble(lampData.nominalLifeInHours)
     }
 
     @Throws(IOException::class)
