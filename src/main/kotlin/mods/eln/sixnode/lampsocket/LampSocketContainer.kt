@@ -22,11 +22,11 @@ class LampSocketContainer(player: EntityPlayer, inventory: IInventory) : BasicCo
 
         @JvmField
         val ACCEPTED_LAMP_TYPES = arrayOf(
-            Eln.lampTechnologies.getLampData("incandescent")!!,
-            Eln.lampTechnologies.getLampData("carbonIncandescent")!!,
-            Eln.lampTechnologies.getLampData("fluorescent")!!,
-            Eln.lampTechnologies.getLampData("farming")!!,
-            Eln.lampTechnologies.getLampData("led")!!
+            Eln.lampLists.getLampData("incandescent")!!,
+            Eln.lampLists.getLampData("carbonIncandescent")!!,
+            Eln.lampLists.getLampData("fluorescent")!!,
+            Eln.lampLists.getLampData("farming")!!,
+            Eln.lampLists.getLampData("led")!!
         )
     }
 

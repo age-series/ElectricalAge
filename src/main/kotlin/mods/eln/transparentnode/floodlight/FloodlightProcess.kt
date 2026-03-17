@@ -1,6 +1,8 @@
 package mods.eln.transparentnode.floodlight
 
+import mods.eln.Eln
 import mods.eln.item.LampDescriptor
+import mods.eln.item.LampLists
 import mods.eln.misc.Coordinate
 import mods.eln.misc.HybridNodeDirection
 import mods.eln.misc.HybridNodeDirection.*
@@ -18,6 +20,8 @@ class FloodlightProcess(var element: FloodlightElement) : IProcess {
         const val MAX_LIGHT_BEAM_COUNT = 4.0
         // How often to create a light block within a given beam of light
         const val LIGHT_BLOCK_FREQUENCY = 2
+        // Base length of a light beam
+        const val BASE_THROW_DISTANCE = 8
     }
 
     override fun process(time: Double) {
@@ -40,15 +44,15 @@ class FloodlightProcess(var element: FloodlightElement) : IProcess {
 
                 val lampVoltage = element.electricalLoad.voltage
 
-                val num: Double = abs(lampVoltage) - (lampDescriptor.nominalU * lampDescriptor.lampData.minimalUFactor)
-                val den: Double = lampDescriptor.nominalU - (lampDescriptor.nominalU * lampDescriptor.lampData.minimalUFactor)
+                val num: Double = abs(lampVoltage) - (lampDescriptor.lampData.nominalU * lampDescriptor.lampData.technology.minimalUFactor)
+                val den: Double = lampDescriptor.lampData.nominalU - (lampDescriptor.lampData.nominalU * lampDescriptor.lampData.technology.minimalUFactor)
 
-                lampLightValues.add(((num / den) * lampDescriptor.lampData.nominalLightValue).toInt())
+                lampLightValues.add(((num / den) * lampDescriptor.lampData.technology.nominalLightValue).toInt())
 
-                if (lampLightValues[idx] < LampDescriptor.MIN_LIGHT_VALUE) lampLightValues[idx] = LampDescriptor.MIN_LIGHT_VALUE
-                else if (lampLightValues[idx] > LampDescriptor.MAX_LIGHT_VALUE) lampLightValues[idx] = LampDescriptor.MAX_LIGHT_VALUE
+                if (lampLightValues[idx] < LampLists.MIN_LIGHT_VALUE) lampLightValues[idx] = LampLists.MIN_LIGHT_VALUE
+                else if (lampLightValues[idx] > LampLists.MAX_LIGHT_VALUE) lampLightValues[idx] = LampLists.MAX_LIGHT_VALUE
 
-                lampLightRanges.add(lampDescriptor.range)
+                lampLightRanges.add(BASE_THROW_DISTANCE * sqrt(lampDescriptor.lampData.nominalU / Eln.LVU).toInt())
 
                 // ageLamp command now checks for infinite life. This is to fix an over-life condition that can arise
                 // from decreasing the nominal life of a bulb type from the config file while infinite life is enabled.
@@ -61,14 +65,14 @@ class FloodlightProcess(var element: FloodlightElement) : IProcess {
                 }
             }
             else {
-                lampLightValues.add(LampDescriptor.MIN_LIGHT_VALUE)
+                lampLightValues.add(LampLists.MIN_LIGHT_VALUE)
                 lampLightRanges.add(0)
             }
         }
 
         val newLightValue = max(lampLightValues[FloodlightContainer.LAMP_SLOT_1_ID], lampLightValues[FloodlightContainer.LAMP_SLOT_2_ID])
 
-        element.powered = newLightValue > LampDescriptor.MIN_LIGHT_VALUE
+        element.powered = newLightValue > LampLists.MIN_LIGHT_VALUE
         element.lightRange = lampLightRanges[FloodlightContainer.LAMP_SLOT_1_ID] + lampLightRanges[FloodlightContainer.LAMP_SLOT_2_ID]
 
         if (newLightValue != element.node!!.lightValue) {

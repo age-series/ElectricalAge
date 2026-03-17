@@ -102,7 +102,7 @@ class LampSocketProcess(var lamp: LampSocketElement) : IProcess, INBTTReady /*,L
                 val lampSupplyList = findBestSupply(lamp.sixNode!!.coordinate)
                 val bestLampSupply = lampSupplyList?.second
                 if (bestLampSupply != null && lampDescriptor != null && bestLampSupply.element.getChannelState(bestLampSupply.id)) {
-                    bestLampSupply.element.addToRp(lampDescriptor.resistance)
+                    bestLampSupply.element.addToRp(lampDescriptor.lampData.resistance)
                     lamp.positiveLoad.state = bestLampSupply.element.powerLoad.state
                 } else {
                     lamp.positiveLoad.state = 0.0
@@ -129,30 +129,30 @@ class LampSocketProcess(var lamp: LampSocketElement) : IProcess, INBTTReady /*,L
             val lampData = lampDescriptor.lampData
 
             // This code makes the ECO lights blink, and the other lights are just "stable"
-            if (lampDescriptor.lampData.lampType == "fluorescent") {
+            if (lampData.technology.lampType == "fluorescent") {
                 val U = abs(lamp.lampResistor.voltage)
-                if (U < (lampDescriptor.nominalU * lampData.minimalUFactor)) {
+                if (U < (lampData.nominalU * lampData.technology.minimalUFactor)) {
                     stableProb = 0.0
                     lightDouble = 0.0
                 } else {
-                    val powerFactor = U / lampDescriptor.nominalU
-                    stableProb += U / (lampDescriptor.nominalU * lampData.stableUFactor) * time / lampData.timeUntilStableInSeconds * lampData.stableUFactor
-                    if (stableProb > U / (lampDescriptor.nominalU * lampData.stableUFactor)) stableProb = U / (lampDescriptor.nominalU * lampData.stableUFactor)
+                    val powerFactor = U / lampData.nominalU
+                    stableProb += U / (lampData.nominalU * lampData.technology.stableUFactor) * time / lampData.technology.timeUntilStableInSeconds * lampData.technology.stableUFactor
+                    if (stableProb > U / (lampData.nominalU * lampData.technology.stableUFactor)) stableProb = U / (lampData.nominalU * lampData.technology.stableUFactor)
                     if (Math.random() > stableProb) {
                         lightDouble = 0.0
                     } else {
-                        lightDouble = lampData.nominalLightValue * powerFactor
+                        lightDouble = lampData.technology.nominalLightValue * powerFactor
                     }
                 }
             }
             else {
-                if (lamp.lampResistor.voltage < (lampDescriptor.nominalU * lampData.minimalUFactor)) {
+                if (lamp.lampResistor.voltage < (lampData.nominalU * lampData.technology.minimalUFactor)) {
                     lightDouble = 0.0
                 } else {
-                    val num: Double = abs(lamp.lampResistor.voltage) - (lampDescriptor.nominalU * lampData.minimalUFactor)
-                    val den: Double = lampDescriptor.nominalU - (lampDescriptor.nominalU * lampData.minimalUFactor)
+                    val num: Double = abs(lamp.lampResistor.voltage) - (lampData.nominalU * lampData.technology.minimalUFactor)
+                    val den: Double = lampData.nominalU - (lampData.nominalU * lampData.technology.minimalUFactor)
 
-                    lightDouble = (num / den) * lampData.nominalLightValue
+                    lightDouble = (num / den) * lampData.technology.nominalLightValue
                 }
             }
         } else {
@@ -181,7 +181,7 @@ class LampSocketProcess(var lamp: LampSocketElement) : IProcess, INBTTReady /*,L
         }
 
         if (lamp.coordinate!!.blockExist && lampDescriptor != null) {
-            updateNearbyBlocks(lampDescriptor.lampData.cropGrowthRateFactor, lampDescriptor.lampData.nominalLightValue, newLight, time)
+            updateNearbyBlocks(lampDescriptor.lampData.technology.cropGrowthRateFactor, lampDescriptor.lampData.technology.nominalLightValue, newLight, time)
         }
 
         boot = false
