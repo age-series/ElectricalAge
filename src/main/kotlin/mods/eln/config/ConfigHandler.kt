@@ -12,7 +12,7 @@ object ConfigHandler {
     fun loadConfig(eln: Eln) {
         Eln.config.load()
 
-        for (lampTechnology in Eln.lampTechnologies.lampList) lampTechnology.loadConfig()
+        for (lampData in Eln.lampLists.lampTechnologyList) lampData.loadConfig()
 
         //Hacks for correct long date typing failures in config file
         //WARNING/BUG: "renameProperty" changes the type to String! However, read functions don't seem to care

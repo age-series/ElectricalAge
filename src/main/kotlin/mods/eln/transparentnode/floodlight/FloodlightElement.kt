@@ -114,7 +114,7 @@ class FloodlightElement(transparentNode: TransparentNode, transparentNodeDescrip
         val currentEquippedItem = getItemObject(player.currentEquippedItem)
 
         if (currentEquippedItem is LampDescriptor) {
-            if (currentEquippedItem.lampData in FloodlightContainer.ACCEPTED_LAMP_TYPES) {
+            if (currentEquippedItem.lampData.technology in FloodlightContainer.ACCEPTED_LAMP_TYPES) {
                 return acceptingInventory.take(player.currentEquippedItem, this, true, true)
             }
         }
@@ -190,12 +190,12 @@ class FloodlightElement(transparentNode: TransparentNode, transparentNodeDescrip
 
         when (lamp1Stack) {
             null -> lamp1Resistor.highImpedance()
-            else -> lamp1Resistor.resistance = (getItemObject(lamp1Stack) as LampDescriptor).resistance
+            else -> lamp1Resistor.resistance = (getItemObject(lamp1Stack) as LampDescriptor).lampData.resistance
         }
 
         when (lamp2Stack) {
             null -> lamp2Resistor.highImpedance()
-            else -> lamp2Resistor.resistance = (getItemObject(lamp2Stack) as LampDescriptor).resistance
+            else -> lamp2Resistor.resistance = (getItemObject(lamp2Stack) as LampDescriptor).lampData.resistance
         }
     }
 

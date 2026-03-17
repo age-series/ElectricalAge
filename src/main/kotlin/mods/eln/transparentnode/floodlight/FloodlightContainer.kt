@@ -15,7 +15,7 @@ class FloodlightContainer(player: EntityPlayer, inventory: IInventory) : BasicCo
         const val LAMP_SLOT_1_ID: Int = 0
         const val LAMP_SLOT_2_ID: Int = 1
 
-        val ACCEPTED_LAMP_TYPES = arrayOf(Eln.lampTechnologies.getLampData("halogen")!!)
+        val ACCEPTED_LAMP_TYPES = arrayOf(Eln.lampLists.getLampData("halogen")!!)
     }
 
 }

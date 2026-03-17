@@ -1356,8 +1356,11 @@ object CraftingRecipes {
 
     private fun recipeElectricalTool() {
         addRecipe(
-            findItemStack("Small Flashlight"), "GLG", "IBI", " I ", 'L', findItemStack("50V Incandescent Light Bulb"),
-            'B', findItemStack("Portable Battery"), 'G', ItemStack(Blocks.glass_pane), 'I', ItemStack(Items.iron_ingot)
+            findItemStack("Small Flashlight"), "GLG", "IBI", " I ", 'L', findItemStack(
+                "50V Incandescent Light " +
+                        "Bulb"
+            ), 'B', findItemStack("Portable Battery"), 'G', ItemStack(Blocks.glass_pane), 'I',
+            ItemStack(Items.iron_ingot)
         )
         addRecipe(
             findItemStack("Improved Flashlight"), "GLG", "IBI", " I ", 'L', findItemStack("50V LED Light Bulb"), 'B',

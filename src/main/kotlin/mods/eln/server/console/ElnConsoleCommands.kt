@@ -162,10 +162,10 @@ class ElnInfiniteLampLifeCommand: IConsoleCommand {
 
             when (bulbType) {
                 "incandescent", "carbonIncandescent", "fluorescent", "farming", "led", "halogen" -> {
-                    Eln.lampTechnologies.getLampData(bulbType)!!.updateInfiniteLifeConfig(infiniteLife)
+                    Eln.lampLists.getLampData(bulbType)!!.updateInfiniteLifeConfig(infiniteLife)
                 }
-                "all" -> for (lampTechnology in Eln.lampTechnologies.lampList) {
-                    Eln.lampTechnologies.getLampData(lampTechnology.lampType)!!.updateInfiniteLifeConfig(infiniteLife)
+                "all" -> for (lampTechnology in Eln.lampLists.lampTechnologyList) {
+                    Eln.lampLists.getLampData(lampTechnology.lampType)!!.updateInfiniteLifeConfig(infiniteLife)
                 }
                 else -> printSyntax = true
             }

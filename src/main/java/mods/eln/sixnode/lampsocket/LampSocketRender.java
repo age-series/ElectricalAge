@@ -134,7 +134,7 @@ public class LampSocketRender extends SixNodeElementRender {
 
     void setLight(byte newLight) {
         light = newLight;
-        if (lampDescriptor != null && lampDescriptor.getLampData().getLampType().equals("fluorescent") && oldLight != -1 && oldLight < 9 && light >= 9) {
+        if (lampDescriptor != null && lampDescriptor.getLampData().getTechnology().getLampType().equals("fluorescent") && oldLight != -1 && oldLight < 9 && light >= 9) {
             float rand = (float) Math.random();
             if (rand > 0.1f)
                 play(new SoundCommand("eln:neon_lamp").mulVolume(0.7f, 1.0f + (rand / 6.0f)).smallRange());
