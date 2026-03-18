@@ -26,6 +26,7 @@ class ElnConsoleCommands: ICommand {
             ElnCablePaceCommand(),
             ElnInfiniteBatteryLifeCommand(),
             ElnInfiniteLampLifeCommand(),
+            ElnNominalLampLifeCommand(),
             ElnHeatFurnaceFuelConsumptionCommand(),
             ElnNewWindDirectionCommand(),
             ElnLampsKillMonstersCommand(),
