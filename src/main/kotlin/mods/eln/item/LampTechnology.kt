@@ -13,8 +13,11 @@ object LampLists {
     val lampTechnologyList = mutableListOf<BoilerplateLampData>()
     val registeredLampList = mutableListOf<SpecificLampData>()
 
-    // This will be used to generate a list of bulb names for the command handler.
-    // val elnLampTypes = mutableListOf<String>()
+    // This is used to generate a list (object) of ELN lamp types for the command handler.
+    val elnLampTypesList = mutableListOf<String>()
+
+    // This is a formatted string with a list of all ELN lamp types for use in the command handler.
+    var elnLampTypesString: String = ""
 
     init {
         lampTechnologyList.add(BoilerplateLampData("incandescent", 16.0, false, 15, 1.0, 0.5, 0.0, 0.0, 1.0))
@@ -24,7 +27,10 @@ object LampLists {
         lampTechnologyList.add(BoilerplateLampData("led", 512.0, false, 15, 1.0, 0.75, 0.0, 0.0, 0.5))
         lampTechnologyList.add(BoilerplateLampData("halogen", 128.0, false, 15, 1.0, 0.5, 0.0, 0.0, 2.0))
 
-        // for (lamps in lampTechnologyList) elnLampTypes.add(lamps.lampType)
+        for (lamps in lampTechnologyList) elnLampTypesList.add(lamps.lampType)
+
+        for (lampTypes in elnLampTypesList) elnLampTypesString += "$lampTypes/"
+        elnLampTypesString += "all"
     }
 
     fun getLampData(lampType: String): BoilerplateLampData? {
@@ -56,7 +62,16 @@ data class BoilerplateLampData(
             Eln.config["lamp", this.lampType + "LampNominalLifeInHours", 0.0].set(this.nominalLifeInHours)
         }
         else {
-            this.nominalLifeInHours = Eln.config["lamp", this.lampType + "LampNominalLifeInHours", 0.0].double
+            val configNominalLife = Eln.config["lamp", this.lampType + "LampNominalLifeInHours", 0.0].double
+
+            try {
+                require(configNominalLife > 0)
+            } catch (_: IllegalArgumentException) {
+                // Somehow display a flag once Minecraft finishes loading or a world is opened? Not exactly sure how.
+                println("ELN config: Nominal lamp life of type ${this.lampType} must be greater than 0! Changes not applied!")
+            }
+
+            if (configNominalLife > 0) this.nominalLifeInHours = configNominalLife
         }
 
         if (!Eln.config.hasKey("lamp", this.lampType + "LampInfiniteLifeEnabled")) {

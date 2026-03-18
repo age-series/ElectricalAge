@@ -161,7 +161,7 @@ class ElnInfiniteLampLifeCommand: IConsoleCommand {
             val infiniteLife = getArgBool(ics, args[1])?: return
 
             when (bulbType) {
-                "incandescent", "carbonIncandescent", "fluorescent", "farming", "led", "halogen" -> {
+                in Eln.lampLists.elnLampTypesList -> {
                     Eln.lampLists.getLampData(bulbType)!!.updateInfiniteLifeConfig(infiniteLife)
                 }
                 "all" -> for (lampTechnology in Eln.lampLists.lampTechnologyList) {
@@ -177,7 +177,7 @@ class ElnInfiniteLampLifeCommand: IConsoleCommand {
         }
         else printSyntax = true
 
-        if (printSyntax) cprint(ics, "Command syntax: /eln infiniteLampLife [incandescent/carbonIncandescent/fluorescent/farming/led/halogen/all] [true/false]")
+        if (printSyntax) cprint(ics, "Command syntax: /eln $name [${Eln.lampLists.elnLampTypesString}] [true/false]")
     }
 
     override fun getManPage(ics: ICommandSender, args: List<String>) {
@@ -185,7 +185,7 @@ class ElnInfiniteLampLifeCommand: IConsoleCommand {
         cprint(ics, "Changes saved to the config file.", indent = 1)
         cprint(ics, "")
         cprint(ics, "Parameters:", indent = 1)
-        cprint(ics, "@0:string: Bulb type (incandescent/carbonIncandescent/fluorescent/farming/led/halogen/all).", indent = 2)
+        cprint(ics, "@0:string: Bulb type (${Eln.lampLists.elnLampTypesString}).", indent = 2)
         cprint(ics, "@1:bool: Infinite life enabled (true/false).", indent = 2)
         cprint(ics, "")
     }
@@ -193,7 +193,8 @@ class ElnInfiniteLampLifeCommand: IConsoleCommand {
     override fun requiredPermission() = listOf(UserPermission.IS_OPERATOR)
 
     override fun getTabCompletion(args: List<String>): List<String> {
-        val arg0Options = listOf("incandescent", "carbonIncandescent", "fluorescent", "farming", "led", "halogen", "all")
+        val arg0Options = Eln.lampLists.elnLampTypesList.toMutableList()
+        arg0Options.add("all")
         val arg1Options = listOf("true", "false")
 
         return when (args.size) {
@@ -205,6 +206,66 @@ class ElnInfiniteLampLifeCommand: IConsoleCommand {
             2 -> {
                 if (args[1] == "") arg1Options
                 else arg1Options.filter {it.startsWith(args[1], ignoreCase = true)}
+            }
+            else -> listOf()
+        }
+    }
+}
+
+class ElnNominalLampLifeCommand: IConsoleCommand {
+    override val name = "nominalLampLife"
+
+    override fun runCommand(ics: ICommandSender, args: List<String>) {
+        var printSyntax = false
+
+        if (args.size == 2) {
+            val bulbType = args[0]
+            val nominalLife = args[1].toDoubleOrNull()
+
+            if (nominalLife != null && nominalLife > 0) {
+                when (bulbType) {
+                    in Eln.lampLists.elnLampTypesList -> {
+                        Eln.lampLists.getLampData(bulbType)!!.updateNominalLifeConfig(nominalLife)
+                    }
+                    "all" -> for (lampTechnology in Eln.lampLists.lampTechnologyList) {
+                        Eln.lampLists.getLampData(lampTechnology.lampType)!!.updateNominalLifeConfig(nominalLife)
+                    }
+                    else -> printSyntax = true
+                }
+
+                if (!printSyntax) {
+                    cprint(ics, "Nominal lamp life: ${FC.DARK_GREEN}${bulbType}, ${FC.DARK_GREEN}${nominalLife}", indent = 1)
+                    cprint(ics, "Changes saved to the config file.", indent = 1)
+                }
+            }
+            else printSyntax = true
+        }
+        else printSyntax = true
+
+        if (printSyntax) cprint(ics, "Command syntax: /eln $name [${Eln.lampLists.elnLampTypesString}] [strictly positive double]")
+    }
+
+    override fun getManPage(ics: ICommandSender, args: List<String>) {
+        cprint(ics, "Updates a lamp's nominal life.", indent = 1)
+        cprint(ics, "Changes saved to the config file.", indent = 1)
+        cprint(ics, "")
+        cprint(ics, "Parameters:", indent = 1)
+        cprint(ics, "@0:string: Bulb type (${Eln.lampLists.elnLampTypesString}).", indent = 2)
+        cprint(ics, "@1:double: New nominal lamp life (strictly positive double).", indent = 2)
+        cprint(ics, "")
+    }
+
+    override fun requiredPermission() = listOf(UserPermission.IS_OPERATOR)
+
+    override fun getTabCompletion(args: List<String>): List<String> {
+        val arg0Options = Eln.lampLists.elnLampTypesList.toMutableList()
+        arg0Options.add("all")
+
+        return when (args.size) {
+            0 -> arg0Options
+            1 -> {
+                if (args[0] == "") arg0Options
+                else arg0Options.filter {it.startsWith(args[0], ignoreCase = true)}
             }
             else -> listOf()
         }
