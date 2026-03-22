@@ -10,7 +10,6 @@ import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
-import kotlin.math.abs
 import kotlin.math.pow
 
 class LampDescriptor(name: String, iconName: String, val lampData: SpecificLampData) : GenericItemUsingDamageDescriptorUpgrade(name) {
@@ -31,11 +30,8 @@ class LampDescriptor(name: String, iconName: String, val lampData: SpecificLampD
     fun getLifeInTag(stack: ItemStack): Double {
         if (!stack.hasTagCompound()) stack.tagCompound = getDefaultNBT()
 
-        return if (stack.tagCompound.hasKey("life")) {
-            stack.tagCompound.getDouble("life")
-        } else {
-            32.0 * 3600 * 20.0 // 32 hours * 3600 seconds/hour * 20 ticks/second
-        }
+        return if (stack.tagCompound.hasKey("life")) stack.tagCompound.getDouble("life")
+        else 24.0 // default 24 hours
     }
 
     fun setLifeInTag(stack: ItemStack, life: Double) {
@@ -53,31 +49,42 @@ class LampDescriptor(name: String, iconName: String, val lampData: SpecificLampD
         resistor.resistance = lampData.resistance
     }
 
-    // There's still a small bug where a lamp item in the player inventory will not update its life if aging is off and
-    // the nominal life changes. There probably isn't anything that can really be done about that.
-    fun ageLamp(lampStack: ItemStack, voltage: Double, time: Double): Double {
-        val currentLife = this.getLifeInTag(lampStack)
+    // The voltage argument to this function MUST be positive! This should be implemented in the code that calls this function.
+    // See https://www.desmos.com/calculator/0uuzozsiuu for a plot of the lamp aging function.
+    fun decreaseLampLife(lampStack: ItemStack, absAppliedVoltage: Double): Double {
+        var currentLife = getLifeInTag(lampStack)
 
-        // Force the life of non-aging bulbs to track the config file.
-        if (lampData.technology.infiniteLifeEnabled) {
-            return if (currentLife != lampData.technology.nominalLifeInHours) {
-                this.setLifeInTag(lampStack, lampData.technology.nominalLifeInHours)
-                lampData.technology.nominalLifeInHours
-            }
-            else currentLife
+        if (currentLife > lampData.technology.nominalLifeInHours) {
+            setLifeInTag(lampStack, lampData.technology.nominalLifeInHours)
+            currentLife = getLifeInTag(lampStack)
         }
-        else {
-            val ageFactor = (0.000008 * abs(voltage).pow(3.0)) - (0.003225 * abs(voltage).pow(2.0)) + (0.33 * abs(voltage))
-            val lifeLost = (ageFactor * time) / 3600.0 // Life lost in hours, per tick
 
-            // Force the current life of aging bulbs to decrease to nominal if the nominal life is adjusted (via the config file) to be less than the current life.
-            var newLife = if (currentLife > lampData.technology.nominalLifeInHours) lampData.technology.nominalLifeInHours else currentLife
-            newLife -= lifeLost
-            if (newLife < 0) newLife = 0.0
+        if (!lampData.technology.infiniteLifeEnabled) {
+            // Divide by 3600 to convert seconds to hours
+            val lifeLost = when {
+                // Life lost per second increases exponentially when voltage is above nominal (10x as fast at 1.25x nominal)
+                absAppliedVoltage > lampData.nominalU -> {
+                    10.0.pow(4.0 / lampData.nominalU).pow(absAppliedVoltage - lampData.nominalU) / 3600.0
+                }
+                // Life lost per second increases linearly when voltage is between nominal and minimal
+                absAppliedVoltage in (lampData.nominalU * lampData.technology.minimalUFactor)..lampData.nominalU -> {
+                    val slope = 1.0 / (lampData.nominalU * (1.0 - lampData.technology.minimalUFactor))
+                    val intercept = 1.0 - (slope * lampData.nominalU)
 
-            this.setLifeInTag(lampStack, newLife)
+                    ((slope * absAppliedVoltage) + intercept) / 3600.0
+                }
+                // Lamp does not lose life when voltage is below minimal (no light produced)
+                else -> 0.0
+            }
+
+            var newLife = currentLife - lifeLost
+            if (newLife < 0.0) newLife = 0.0
+
+            setLifeInTag(lampStack, newLife)
             return newLife
         }
+
+        return currentLife
     }
 
     override fun addInformation(itemStack: ItemStack?, entityPlayer: EntityPlayer?, list: MutableList<String>, par4: Boolean) {

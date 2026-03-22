@@ -14,7 +14,7 @@ class LampSlot(inventory: IInventory, slot: Int, x: Int, y: Int, stackLimit: Int
 
     override fun isItemValid(itemStack: ItemStack): Boolean {
         return if (!super.isItemValid(itemStack)) false
-        else (getItemObject(itemStack) as LampDescriptor?)?.lampData?.technology in acceptedLampTypes
+        else (getItemObject(itemStack) as LampDescriptor).lampData.technology in acceptedLampTypes
     }
 
 }

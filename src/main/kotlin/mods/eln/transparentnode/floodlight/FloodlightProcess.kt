@@ -54,14 +54,14 @@ class FloodlightProcess(var element: FloodlightElement) : IProcess {
 
                 lampLightRanges.add(BASE_THROW_DISTANCE * sqrt(lampDescriptor.lampData.nominalU / Eln.LVU).toInt())
 
-                // ageLamp command now checks for infinite life. This is to fix an over-life condition that can arise
-                // from decreasing the nominal life of a bulb type from the config file while infinite life is enabled.
-                // This also ensures that the lifetimes of bulbs that have infinite life enabled track the config file.
-                val currentLife = lampDescriptor.ageLamp(lampStacks[idx]!!, lampVoltage, time)
+                // Only decrease the life of a bulb once a second. This "fixes" the NBT mismatch bug when shift-clicking.
+                if (element.processElapsedTime == 0.0) {
+                    val lampLife = lampDescriptor.decreaseLampLife(lampStacks[idx]!!, abs(lampVoltage))
 
-                if (currentLife <= 0.0) {
-                    element.inventory.setInventorySlotContents(idx, null)
-                    element.inventory.markDirty()
+                    if (lampLife <= 0.0) {
+                        element.inventory.setInventorySlotContents(idx, null)
+                        element.inventory.markDirty()
+                    }
                 }
             }
             else {
@@ -82,6 +82,9 @@ class FloodlightProcess(var element: FloodlightElement) : IProcess {
 
         // Only run raytracing when the floodlight is actually on.
         if (newLightValue != 0) placeSpots(newLightValue)
+
+        element.processElapsedTime += time
+        if (element.processElapsedTime >= 1.0) element.processElapsedTime = 0.0
     }
 
     /**

@@ -166,15 +166,15 @@ class LampSocketProcess(var lamp: LampSocketElement) : IProcess, INBTTReady /*,L
         if (newLight < 0) newLight = 0
 
         if (lampDescriptor != null) {
-            // ageLamp command now checks for infinite life. This is to fix an over-life condition that can arise from
-            // decreasing the nominal life of a bulb type from the config file while infinite life is enabled. This also
-            // ensures that the lifetimes of bulbs that have infinite life enabled track the config file.
-            val currentLife = lampDescriptor.ageLamp(lampStack, lamp.lampResistor.voltage, time)
+            // Only decrease the life of a bulb once a second. This "fixes" the NBT mismatch bug when shift-clicking.
+            if (lamp.processElapsedTime == 0.0) {
+                val lampLife = lampDescriptor.decreaseLampLife(lampStack, abs(lamp.lampResistor.voltage))
 
-            if (currentLife <= 0.0) {
-                lamp.inventory!!.setInventorySlotContents(0, null)
-                lamp.inventory!!.markDirty()
-                newLight = 0
+                if (lampLife <= 0.0) {
+                    lamp.inventory!!.setInventorySlotContents(LampSocketContainer.LAMP_SLOT_ID, null)
+                    lamp.inventory!!.markDirty()
+                    newLight = 0
+                }
             }
         } else {
             newLight = 0
@@ -189,6 +189,9 @@ class LampSocketProcess(var lamp: LampSocketElement) : IProcess, INBTTReady /*,L
         placeSpot(newLight)
         if (light != newLight)
             lamp.needPublish()
+
+        lamp.processElapsedTime += time
+        if (lamp.processElapsedTime >= 1.0) lamp.processElapsedTime = 0.0
     }
 
     // ElectricalConnectionOneWay connection = null;
