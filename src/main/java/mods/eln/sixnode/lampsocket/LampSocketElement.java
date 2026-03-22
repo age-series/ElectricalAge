@@ -68,6 +68,8 @@ public class LampSocketElement extends SixNodeElement implements IConfigurable {
 
     public int paintColor = 15;
 
+    public double processElapsedTime = 0.0;
+
     public LampSocketElement(SixNode sixNode, Direction side, SixNodeDescriptor descriptor) {
         super(sixNode, side, descriptor);
         this.socketDescriptor = (LampSocketDescriptor) descriptor;

@@ -79,6 +79,8 @@ class FloodlightElement(transparentNode: TransparentNode, transparentNodeDescrip
     private val floodlightProcess = FloodlightProcess(this)
     private val monsterPopProcess = MonsterPopFreeProcess(transparentNode.coordinate, Eln.instance.killMonstersAroundLampsRange)
 
+    var processElapsedTime = 0.0
+
     init {
         if (motorized) {
             electricalLoadList.add(swivelControl)
