@@ -340,8 +340,6 @@ public class Eln {
         return stack;
     }
 
-    public static final LampLists lampLists = LampLists.INSTANCE;
-
     @EventHandler
     public void preInit(FMLPreInitializationEvent event) {
 
