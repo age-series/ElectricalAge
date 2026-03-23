@@ -1,8 +1,8 @@
 package mods.eln.sixnode.lampsocket
 
-import mods.eln.Eln
 import mods.eln.gui.ISlotSkin.SlotSkin
 import mods.eln.i18n.I18N.tr
+import mods.eln.item.LampLists
 import mods.eln.misc.BasicContainer
 import mods.eln.node.six.SixNodeItemSlot
 import mods.eln.sixnode.electricalcable.ElectricalCableDescriptor
@@ -22,11 +22,11 @@ class LampSocketContainer(player: EntityPlayer, inventory: IInventory) : BasicCo
 
         @JvmField
         val ACCEPTED_LAMP_TYPES = arrayOf(
-            Eln.lampLists.getLampData("incandescent")!!,
-            Eln.lampLists.getLampData("carbonIncandescent")!!,
-            Eln.lampLists.getLampData("fluorescent")!!,
-            Eln.lampLists.getLampData("farming")!!,
-            Eln.lampLists.getLampData("led")!!
+            LampLists.getLampData("incandescent")!!,
+            LampLists.getLampData("carbonIncandescent")!!,
+            LampLists.getLampData("fluorescent")!!,
+            LampLists.getLampData("farming")!!,
+            LampLists.getLampData("led")!!
         )
     }
 

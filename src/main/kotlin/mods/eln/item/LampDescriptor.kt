@@ -10,6 +10,7 @@ import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
+import kotlin.math.abs
 import kotlin.math.pow
 
 class LampDescriptor(name: String, iconName: String, val lampData: SpecificLampData) : GenericItemUsingDamageDescriptorUpgrade(name) {
@@ -19,7 +20,7 @@ class LampDescriptor(name: String, iconName: String, val lampData: SpecificLampD
         voltageLevelColor = VoltageLevelColor.fromVoltage(lampData.nominalU)
 
         if (name.contains("Small")) lampData.nominalP /= 2.0
-        Eln.lampLists.registeredLampList.add(lampData)
+        LampLists.registeredLampList.add(lampData)
     }
 
     override fun setParent(item: Item?, damage: Int) {
@@ -49,9 +50,7 @@ class LampDescriptor(name: String, iconName: String, val lampData: SpecificLampD
         resistor.resistance = lampData.resistance
     }
 
-    // The voltage argument to this function MUST be positive! This should be implemented in the code that calls this function.
-    // See https://www.desmos.com/calculator/0uuzozsiuu for a plot of the lamp aging function.
-    fun decreaseLampLife(lampStack: ItemStack, absAppliedVoltage: Double): Double {
+    fun decreaseLampLife(lampStack: ItemStack, appliedVoltage: Double): Double {
         var currentLife = getLifeInTag(lampStack)
 
         if (currentLife > lampData.technology.nominalLifeInHours) {
@@ -59,19 +58,20 @@ class LampDescriptor(name: String, iconName: String, val lampData: SpecificLampD
             currentLife = getLifeInTag(lampStack)
         }
 
+        // See https://www.desmos.com/calculator/0uuzozsiuu for a plot of the lamp aging function.
         if (!lampData.technology.infiniteLifeEnabled) {
             // Divide by 3600 to convert seconds to hours
             val lifeLost = when {
                 // Life lost per second increases exponentially when voltage is above nominal (10x as fast at 1.25x nominal)
-                absAppliedVoltage > lampData.nominalU -> {
-                    10.0.pow(4.0 / lampData.nominalU).pow(absAppliedVoltage - lampData.nominalU) / 3600.0
+                abs(appliedVoltage) > lampData.nominalU -> {
+                    10.0.pow(4.0 / lampData.nominalU).pow(abs(appliedVoltage) - lampData.nominalU) / 3600.0
                 }
                 // Life lost per second increases linearly when voltage is between nominal and minimal
-                absAppliedVoltage in (lampData.nominalU * lampData.technology.minimalUFactor)..lampData.nominalU -> {
+                abs(appliedVoltage) in (lampData.nominalU * lampData.technology.minimalUFactor)..lampData.nominalU -> {
                     val slope = 1.0 / (lampData.nominalU * (1.0 - lampData.technology.minimalUFactor))
                     val intercept = 1.0 - (slope * lampData.nominalU)
 
-                    ((slope * absAppliedVoltage) + intercept) / 3600.0
+                    ((slope * abs(appliedVoltage)) + intercept) / 3600.0
                 }
                 // Lamp does not lose life when voltage is below minimal (no light produced)
                 else -> 0.0

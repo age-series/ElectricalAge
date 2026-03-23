@@ -3,6 +3,7 @@ package mods.eln.config
 import mods.eln.Eln
 import mods.eln.Other
 import mods.eln.entity.ReplicatorPopProcess
+import mods.eln.item.LampLists
 import mods.eln.misc.Utils
 import java.util.*
 import kotlin.math.max
@@ -12,7 +13,7 @@ object ConfigHandler {
     fun loadConfig(eln: Eln) {
         Eln.config.load()
 
-        for (lampData in Eln.lampLists.lampTechnologyList) lampData.loadConfig()
+        for (lampData in LampLists.lampTechnologyList) lampData.loadConfig()
 
         //Hacks for correct long date typing failures in config file
         //WARNING/BUG: "renameProperty" changes the type to String! However, read functions don't seem to care
