@@ -291,6 +291,7 @@ class ClutchElement(node: TransparentNode, desc_: TransparentNodeDescriptor) : S
                 {
                     if (!canClutchStopSlipping(leftShaft, rightShaft)) {
                         clutchPlateDescriptor!!.setWear(clutchPlateStack!!, wear + clutching * slipWearF.getValue(Math.abs(deltaR)))
+                        slipping = false
                         return
                     }
                     // Sign change
