@@ -72,6 +72,7 @@ object ItemRegistration {
         mapSharedGroup(122, Eln.creativeTabToolsArmor)
         mapSharedGroup(123, Eln.creativeTabToolsArmor)
         mapSharedGroup(124, Eln.creativeTabPowerElectronics)
+        mapSharedGroup(18, Eln.creativeTabMachines)
         mapSharedGroup(126, Eln.creativeTabOresMaterials)
         mapSharedGroup(127, Eln.creativeTabToolsArmor)
         mapSharedGroup(118, Eln.creativeTabMachines)
@@ -113,7 +114,7 @@ object ItemRegistration {
         registerElectricalTool(121)
         registerPortableItem(122)
         registerFuelBurnerItem(124)
-
+        registerTurbineBladeItems(18)
 
         registerBasicItems(126)
         registerElectricMinecartItems(127)
@@ -1328,6 +1329,46 @@ object ItemRegistration {
             2 + (id shl 6), FuelBurnerDescriptor(
                 I18N.TR_NAME(I18N.Type.NONE, "Big Fuel Burner"),
                 25000 * fuelHeatFurnacePowerFactor, 0, 1f
+            )
+        )
+    }
+
+    private fun registerTurbineBladeItems(id: Int) {
+        // sharedItemStackOne and not sharedItem because blades store durability in NBT, stacking would corrupt it.
+        Eln.sharedItemStackOne.addElement(
+            0 + (id shl 6), mods.eln.item.TurbineBladeDescriptor(
+                I18N.TR_NAME(I18N.Type.NONE, "Iron Turbine Blade"),
+                tierName = "iron",
+                temperatureResistance = 0.8,
+                corrosionResistance = 0.8,
+                tierDescription = "Suitable for mild, clean fuels"
+            )
+        )
+        Eln.sharedItemStackOne.addElement(
+            1 + (id shl 6), mods.eln.item.TurbineBladeDescriptor(
+                I18N.TR_NAME(I18N.Type.NONE, "Steel Turbine Blade"),
+                tierName = "steel",
+                temperatureResistance = 1.2,
+                corrosionResistance = 1.2,
+                tierDescription = "Handles moderate conditions"
+            )
+        )
+        Eln.sharedItemStackOne.addElement(
+            2 + (id shl 6), mods.eln.item.TurbineBladeDescriptor(
+                I18N.TR_NAME(I18N.Type.NONE, "Alloy Turbine Blade"),
+                tierName = "alloy",
+                temperatureResistance = 2.0,
+                corrosionResistance = 2.0,
+                tierDescription = "Suitable for most fuel types"
+            )
+        )
+        Eln.sharedItemStackOne.addElement(
+            3 + (id shl 6), mods.eln.item.TurbineBladeDescriptor(
+                I18N.TR_NAME(I18N.Type.NONE, "Tungsten Turbine Blade"),
+                tierName = "tungsten",
+                temperatureResistance = 3.5,
+                corrosionResistance = 3.5,
+                tierDescription = "Handles extreme conditions"
             )
         )
     }
