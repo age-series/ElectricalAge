@@ -9,6 +9,7 @@ import mods.eln.gui.GuiHelperContainer
 import mods.eln.gui.HelperStdContainer
 import mods.eln.gui.ISlotSkin.SlotSkin
 import mods.eln.i18n.I18N.tr
+import mods.eln.item.TurbineBladeLists
 import mods.eln.item.TurbineBladeDescriptor
 import mods.eln.misc.*
 import mods.eln.node.INodeContainer
@@ -27,6 +28,7 @@ import net.minecraft.inventory.Container
 import net.minecraft.inventory.IInventory
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
+import org.lwjgl.opengl.GL11
 import java.io.DataInputStream
 import java.io.DataOutputStream
 import java.util.*
@@ -49,14 +51,30 @@ abstract class TurbineDescriptor(baseName: String, obj: Obj3D) :
     open val efficiencyCutoff = 0f
     val optimalRads = absoluteMaximumShaftSpeed * 0.8f
 
-    // Set by TurbineRender before each draw, skips rotating parts when no blade is in.
+    // Set by TurbineRender before each draw. Skips the rotating parts when no blade is installed,
+    // and controls whether the fan tint is applied.
     var bladeInstalled: Boolean = true
 
+    // RGB tint applied to the Fan part. Set by TurbineRender based on the installed blade tier.
+    // Defaults to white (no tint) so a missing blade or unknown tier renders neutrally.
+    var bladeR = 1f
+    var bladeG = 1f
+    var bladeB = 1f
+
     override fun draw(angle: Double) {
-        if (!bladeInstalled) {
-            for (part in static) part.draw()
-        } else {
-            super.draw(angle)
+        for (part in static) part.draw()
+        if (!bladeInstalled) return
+        // Draw the shaft and fan separately so the fan can be tinted by blade tier.
+        // rotating[0] is Shaft, rotating[1] is Fan, both spin around the same center.
+        preserveMatrix {
+            val centre = rotating[0].boundingBox().centre()
+            GL11.glTranslated(centre.xCoord, centre.yCoord, centre.zCoord)
+            GL11.glRotatef(((angle * 360) / 2.0 / Math.PI).toFloat(), 0f, 0f, 1f)
+            GL11.glTranslated(-centre.xCoord, -centre.yCoord, -centre.zCoord)
+            rotating[0].draw()                                        // Shaft: inherits the caller's white color
+            GL11.glColor3f(bladeR, bladeG, bladeB) // Switch to tier color for the fan
+            rotating[1].draw()                                        // Fan: flat-shaded, no texture, pure tint
+            GL11.glColor3f(1f, 1f, 1f)             // Reset so nothing drawn after us is tinted
         }
     }
     // Power stats
@@ -308,8 +326,12 @@ class TurbineElement(node: TransparentNode, desc_: TransparentNodeDescriptor) :
         val blade = TurbineBladeDescriptor.getDescriptor(bladeStack)
         if (blade != null && bladeStack != null) {
             stream.writeFloat(blade.getCondition(bladeStack).toFloat())
+            // Tier index so the client can pick the right tint color. -1 if the blade
+            // isn't in the registered list (shouldn't happen, but safe to handle).
+            stream.writeByte(TurbineBladeLists.registeredBlades.indexOf(blade))
         } else {
             stream.writeFloat(-1f)
+            stream.writeByte(-1)
         }
     }
 
@@ -341,15 +363,28 @@ class TurbineRender(entity: TransparentNodeEntity, desc: TransparentNodeDescript
 
     // Blade condition [0,1], or -1 if no blade installed.
     var bladeCondition = -1f
+    // Index into TurbineBladeLists.registeredBlades (0=iron, 1=steel, 2=alloy, 3=tungsten), or -1.
+    var bladeTier = -1
 
     override fun networkUnserialize(stream: DataInputStream) {
         super.networkUnserialize(stream)
         volumeSetting.target = stream.readFloat()
         bladeCondition = stream.readFloat()
+        bladeTier = stream.readByte().toInt()
     }
 
     override fun draw() {
-        (transparentNodeDescriptor as TurbineDescriptor).bladeInstalled = bladeCondition >= 0f
+        val desc = transparentNodeDescriptor as TurbineDescriptor
+        desc.bladeInstalled = bladeCondition >= 0f
+        // Pick the tint color for the fan based on which tier of blade is installed.
+        val (r, g, b) = when (bladeTier) {
+            0 -> Triple(0.847f, 0.847f, 0.847f) // Iron     #D8D8D8
+            1 -> Triple(0.659f, 0.690f, 0.722f) // Steel    #A8B0B8
+            2 -> Triple(0.784f, 0.659f, 0.376f) // Alloy    #C8A860
+            3 -> Triple(0.290f, 0.290f, 0.353f) // Tungsten #4A4A5A
+            else -> Triple(1f, 1f, 1f)          // No blade or unknown
+        }
+        desc.bladeR = r; desc.bladeG = g; desc.bladeB = b
         super.draw()
     }
 
