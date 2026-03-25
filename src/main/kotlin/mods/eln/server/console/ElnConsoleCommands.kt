@@ -9,7 +9,6 @@ import mods.eln.gridnode.electricalpole.ElectricalPoleElement
 import mods.eln.gridnode.transformer.GridTransformerElement
 import mods.eln.mechanical.ShaftElement
 import mods.eln.environment.BiomeClimateService
-import mods.eln.item.LampLists
 import mods.eln.misc.Coordinate
 import mods.eln.misc.FC
 import mods.eln.misc.Version
@@ -241,7 +240,6 @@ open class ElnAboutCommand: IConsoleCommand {
 
 // Since we tell people to run /eln version a lot, might as well have this alias.
 class ElnVersionCommand: ElnAboutCommand() { override val name = "version"}
-
 class ElnNewWindDirectionCommand: IConsoleCommand {
     override val name = "newWind"
 

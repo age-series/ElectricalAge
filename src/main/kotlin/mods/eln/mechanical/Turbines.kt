@@ -3,17 +3,28 @@ package mods.eln.mechanical
 import mods.eln.Eln
 import mods.eln.fluid.FuelRegistry
 import mods.eln.fluid.PreciseElementFluidHandler
+import mods.eln.generic.GenericItemUsingDamageSlot
+import mods.eln.gui.GuiContainerEln
+import mods.eln.gui.GuiHelperContainer
+import mods.eln.gui.HelperStdContainer
+import mods.eln.gui.ISlotSkin.SlotSkin
 import mods.eln.i18n.I18N.tr
+import mods.eln.item.TurbineBladeDescriptor
 import mods.eln.misc.*
+import mods.eln.node.INodeContainer
 import mods.eln.node.NodeBase
+import mods.eln.node.NodePeriodicPublishProcess
 import mods.eln.node.published
 import mods.eln.node.transparent.EntityMetaTag
 import mods.eln.node.transparent.TransparentNode
 import mods.eln.node.transparent.TransparentNodeDescriptor
+import mods.eln.node.transparent.TransparentNodeElementInventory
 import mods.eln.node.transparent.TransparentNodeEntity
 import mods.eln.sim.IProcess
 import mods.eln.sim.nbt.NbtElectricalGateInput
 import net.minecraft.entity.player.EntityPlayer
+import net.minecraft.inventory.Container
+import net.minecraft.inventory.IInventory
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
 import java.io.DataInputStream
@@ -37,6 +48,17 @@ abstract class TurbineDescriptor(baseName: String, obj: Obj3D) :
     // If efficiency is below this fraction, do nothing.
     open val efficiencyCutoff = 0f
     val optimalRads = absoluteMaximumShaftSpeed * 0.8f
+
+    // Set by TurbineRender before each draw, skips rotating parts when no blade is in.
+    var bladeInstalled: Boolean = true
+
+    override fun draw(angle: Double) {
+        if (!bladeInstalled) {
+            for (part in static) part.draw()
+        } else {
+            super.draw(angle)
+        }
+    }
     // Power stats
     val power: List<Double> by lazy {
         fluidTypes.map { FuelRegistry.heatEnergyPerMilliBucket(it) * fluidConsumption }
@@ -61,6 +83,7 @@ abstract class TurbineDescriptor(baseName: String, obj: Obj3D) :
 
     override fun addInformation(stack: ItemStack, player: EntityPlayer, list: MutableList<String>, par4: Boolean) {
         list.add(tr("Converts %1$ into mechanical energy.",fluidDescription))
+        list.add(tr("Requires a turbine blade to operate."))
         list.add(tr("Nominal usage ->"))
         val formattedRate = formatFluidRate(fluidConsumption)
         list.add("  "+tr("%1$ input: %2$",fluidDescription.replaceFirstChar { if (it.isLowerCase()) it.titlecase() else it.toString() },formattedRate))
@@ -130,10 +153,35 @@ class TurbineElement(node: TransparentNode, desc_: TransparentNodeDescriptor) :
 
     internal var volume: Float by published(0f)
 
+    // Blade slot
+    override val inventory = TransparentNodeElementInventory(1, 1, this)
+
+    companion object {
+        const val BLADE_SLOT = 0
+    }
+
     inner class TurbineSlowProcess() : IProcess, INBTTReady {
         val rc = RcInterpolator(desc.inertia)
 
+        // Accumulated condition loss waiting to be flushed to the blade's NBT.
+        // Written in batches (when >= 0.001) to keep NBT write rate sane.
+        var wearAccumulator = 0.0
+
         override fun process(time: Double) {
+            val bladeStack = inventory.getStackInSlot(BLADE_SLOT)
+            val blade = TurbineBladeDescriptor.getDescriptor(bladeStack)
+
+            // No blade installed means no power.
+            if (blade == null || bladeStack == null) {
+                efficiency = 0f
+                rc.target = 0f
+                rc.step(time.toFloat())
+                fluidRate = rc.get()
+                volume = 0f
+                wearAccumulator = 0.0
+                return
+            }
+
             // Do anything at all?
             val target: Float
             val computedEfficiency = Math.pow(Math.cos((shaft.rads - desc.optimalRads) / (desc.optimalRads * desc.efficiencyCurve) * Math.PI / 2), 3.0)
@@ -156,14 +204,39 @@ class TurbineElement(node: TransparentNode, desc_: TransparentNodeDescriptor) :
             shaft.energy += power * time.toFloat()
 
             volume = power / desc.maxFluidPower.toFloat()
+
+            // Blade wear: condition loss per second = fuelModifier / (nominalLifeInHours * 3600).
+            // Accumulated in wearAccumulator and applied to NBT in batches to reduce write rate.
+            if (power > 0.0 && !blade.infiniteLifeEnabled) {
+                val fluid = tank.tank.fluid?.getFluid()
+                val modifier = BladeWearCalculator.fuelModifier(
+                    FuelRegistry.temperatureFactor(fluid),
+                    FuelRegistry.cleanlinessFactor(fluid),
+                    blade
+                )
+                wearAccumulator += modifier * time / (blade.nominalLifeInHours * 3600.0)
+
+                if (wearAccumulator >= 0.001) {
+                    val newCondition = blade.getCondition(bladeStack) - wearAccumulator
+                    wearAccumulator = 0.0
+                    if (newCondition <= 0.0) {
+                        inventory.setInventorySlotContents(BLADE_SLOT, null)
+                        needPublish()
+                    } else {
+                        blade.setCondition(bladeStack, newCondition)
+                    }
+                }
+            }
         }
 
         override fun readFromNBT(nbt: NBTTagCompound, str: String) {
             rc.readFromNBT(nbt, str)
+            wearAccumulator = nbt.getDouble(str + "wearAccum")
         }
 
         override fun writeToNBT(nbt: NBTTagCompound, str: String) {
             rc.writeToNBT(nbt, str)
+            nbt.setDouble(str + "wearAccum", wearAccumulator)
         }
     }
 
@@ -171,6 +244,7 @@ class TurbineElement(node: TransparentNode, desc_: TransparentNodeDescriptor) :
         tank.setFilter(FuelRegistry.fluidListToFluids(desc.fluidTypes))
         slowProcessList.add(turbineSlowProcess)
         electricalLoadList.add(throttle)
+        slowProcessList.add(NodePeriodicPublishProcess(node, 2.0, 1.0))
     }
 
     override fun getFluidHandler() = tank
@@ -198,12 +272,27 @@ class TurbineElement(node: TransparentNode, desc_: TransparentNodeDescriptor) :
     }
 
     override fun getWaila(): Map<String, String> {
-        var info = mutableMapOf<String, String>()
-        info.put(tr("Speed"), Utils.plotRads("", shaft.rads))
-        info.put(tr("Energy"), Utils.plotEnergy("", shaft.energy))
+        val info = mutableMapOf<String, String>()
+        info[tr("Speed")] = Utils.plotRads("", shaft.rads)
+        info[tr("Energy")] = Utils.plotEnergy("", shaft.energy)
+        val bladeStack = inventory.getStackInSlot(BLADE_SLOT)
+        val blade = TurbineBladeDescriptor.getDescriptor(bladeStack)
+        if (blade != null && bladeStack != null) {
+            val condition = blade.getCondition(bladeStack)
+            val lifeLeftH = condition * blade.nominalLifeInHours
+            val lifeLeftStr = when {
+                lifeLeftH <= 0.0 -> "0h"
+                lifeLeftH < 1.0  -> "<1h"
+                else             -> String.format("%.1fh", lifeLeftH)
+            }
+            info[tr("Blade")] = blade.name
+            info[tr("Life Left")] = lifeLeftStr
+        } else {
+            info[tr("Blade")] = tr("None")
+        }
         if (Eln.config.getBooleanOrElse("ui.waila.easyMode", false)) {
-            info.put(tr("Efficiency"), Utils.plotPercent("", efficiency.toDouble()))
-            info.put(tr("Fuel usage"), desc.formatFluidRate(fluidRate))
+            info[tr("Efficiency")] = Utils.plotPercent("", efficiency.toDouble())
+            info[tr("Fuel usage")] = desc.formatFluidRate(fluidRate)
         }
         return info
     }
@@ -215,14 +304,78 @@ class TurbineElement(node: TransparentNode, desc_: TransparentNodeDescriptor) :
     override fun networkSerialize(stream: DataOutputStream) {
         super.networkSerialize(stream)
         stream.writeFloat(volume)
+        val bladeStack = inventory.getStackInSlot(BLADE_SLOT)
+        val blade = TurbineBladeDescriptor.getDescriptor(bladeStack)
+        if (blade != null && bladeStack != null) {
+            stream.writeFloat(blade.getCondition(bladeStack).toFloat())
+        } else {
+            stream.writeFloat(-1f)
+        }
+    }
+
+    override fun hasGui() = true
+
+    override fun newContainer(side: Direction, player: EntityPlayer): Container =
+        TurbineContainer(node, player, inventory)
+
+    override fun inventoryChange(inventory: IInventory?) {
+        needPublish()
     }
 }
 
 class TurbineRender(entity: TransparentNodeEntity, desc: TransparentNodeDescriptor) : ShaftRender(entity, desc) {
     override val cableRender = Eln.instance.stdCableRenderSignal
 
+    override val inventory = TransparentNodeElementInventory(1, 1, this)
+
+    // Blade condition [0,1], or -1 if no blade installed.
+    var bladeCondition = -1f
+
     override fun networkUnserialize(stream: DataInputStream) {
         super.networkUnserialize(stream)
         volumeSetting.target = stream.readFloat()
+        bladeCondition = stream.readFloat()
     }
+
+    override fun draw() {
+        (transparentNodeDescriptor as TurbineDescriptor).bladeInstalled = bladeCondition >= 0f
+        super.draw()
+    }
+
+    override fun newGuiDraw(side: Direction, player: EntityPlayer) =
+        TurbineGui(player, inventory, this)
+}
+
+// Container
+class TurbineContainer(
+    val base: NodeBase?,
+    player: EntityPlayer,
+    inventory: IInventory
+) : BasicContainer(
+    player,
+    inventory,
+    arrayOf(
+        GenericItemUsingDamageSlot(
+            inventory,
+            TurbineElement.BLADE_SLOT,
+            80, 35,
+            1,
+            TurbineBladeDescriptor::class.java,
+            SlotSkin.medium,
+            arrayOf(tr("Turbine blade slot"))
+        )
+    )
+), INodeContainer {
+    override val node: NodeBase? = base
+    override val refreshRateDivider = 1
+}
+
+// GUI
+class TurbineGui(
+    player: EntityPlayer,
+    val inventory: IInventory,
+    val render: TurbineRender
+) : GuiContainerEln(TurbineContainer(null, player, inventory)) {
+
+    override fun newHelper(): GuiHelperContainer = HelperStdContainer(this)
 }

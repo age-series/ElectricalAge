@@ -114,6 +114,7 @@ object CraftingRecipes {
         recipePlateMachine()
         recipeMagnetizer()
         recipeFuelBurnerItem()
+        recipeTurbineBlades()
         recipeDisplays()
 
         recipeECoal()
@@ -2088,6 +2089,36 @@ object CraftingRecipes {
         addRecipe(
             findItemStack("Big Fuel Burner"), "   ", "CCc", "CC ", 'C', findItemStack("Combustion Chamber"),
             'c', findItemStack("Copper Thermal Cable")
+        )
+    }
+
+    private fun recipeTurbineBlades() {
+        addRecipe(
+            findItemStack("Iron Turbine Blade"),
+            " I ", "IMI", " I ",
+            'I', "ingotIron",
+            'M', findItemStack("Machine Block")
+        )
+        addRecipe(
+            findItemStack("Steel Turbine Blade"),
+            "SIS", "SMS", "SIS",
+            'S', firstExistingOre("ingotSteel", "ingotIron"),
+            'I', "ingotIron",
+            'M', findItemStack("Machine Block")
+        )
+        addRecipe(
+            findItemStack("Alloy Turbine Blade"),
+            "AIA", "ACA", "AIA",
+            'A', "ingotAlloy",
+            'I', "ingotIron",
+            'C', findItemStack("Advanced Chip")
+        )
+        addRecipe(
+            findItemStack("Tungsten Turbine Blade"),
+            "TAT", "ACA", "TAT",
+            'T', Eln.dictTungstenIngot,
+            'A', "ingotAlloy",
+            'C', findItemStack("Advanced Chip")
         )
     }
 
