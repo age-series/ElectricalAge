@@ -318,6 +318,17 @@ class TurbineElement(node: TransparentNode, desc_: TransparentNodeDescriptor) :
     override fun newContainer(side: Direction, player: EntityPlayer): Container =
         TurbineContainer(node, player, inventory)
 
+    override fun onBlockActivated(player: EntityPlayer, side: Direction, vx: Float, vy: Float, vz: Float): Boolean {
+        val held = player.currentEquippedItem ?: return false
+        if (Utils.getItemObject(held) !is TurbineBladeDescriptor) return false
+        // Blade already installed, fall through so the GUI opens instead.
+        if (inventory.getStackInSlot(BLADE_SLOT) != null) return false
+        // Slot is empty, insert the blade, keeping its condition NBT intact.
+        inventory.setInventorySlotContents(BLADE_SLOT, held.splitStack(1))
+        inventoryChange(inventory)
+        return true
+    }
+
     override fun inventoryChange(inventory: IInventory?) {
         needPublish()
     }
