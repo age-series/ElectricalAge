@@ -24,6 +24,7 @@
 - **Sukasa** – code enhancements
 - **DrummingFish** – GUI text parsing, cleaning/refactoring, tweaks
 - **TheBuilderBoy76** – bugfixes and new features
+- **Justus0405** - new features
 
 ### Languages
 

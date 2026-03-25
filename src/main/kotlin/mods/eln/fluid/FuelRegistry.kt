@@ -4,6 +4,9 @@ import mods.eln.Eln
 import net.minecraftforge.fluids.Fluid
 import net.minecraftforge.fluids.FluidRegistry
 
+// Temperature and corrosion factors for blade wear. 0.0 = none, 1.0 = extreme.
+data class FuelProperties(val temperatureFactor: Double, val cleanlinessFactor: Double)
+
 object FuelRegistry {
     /**
      * Diesel is a refined, heavy fuel, can only be used by the fuel heat furnace for the moment.
@@ -140,4 +143,72 @@ object FuelRegistry {
 
     fun heatEnergyPerMilliBucket(fuelName: String): Double = Eln.fuelHeatValueFactor * (allFuels[fuelName] ?: 0.0)
     fun heatEnergyPerMilliBucket(fluid: Fluid?): Double = heatEnergyPerMilliBucket(fluid?.name ?: "")
+
+    // Fuels not listed fall back to (0.5, 0.3).
+    private val fuelProperties: Map<String, FuelProperties> = mapOf(
+        // Steam (always clean. temperature is the only wear factor)
+        "spentsteam"            to FuelProperties(0.05, 0.0),
+        "steam"                 to FuelProperties(0.15, 0.0),
+        "ic2steam"              to FuelProperties(0.15, 0.0),
+        "hotsteam"              to FuelProperties(0.35, 0.0),
+        "ic2superheatedsteam"   to FuelProperties(0.55, 0.0),
+        "superhotsteam"         to FuelProperties(0.75, 0.0),
+        "ultrahotsteam"         to FuelProperties(1.00, 0.0),
+
+        // Gas fuels
+        "oxyhydrogen"           to FuelProperties(0.30, 0.0),   // stoichiometric H2/O2, very clean
+        "hydrogen"              to FuelProperties(0.20, 0.0),   // pure H2, zero sulfur
+        "coalgas"               to FuelProperties(0.30, 0.30),  // town gas, some impurities
+        "coalgas_leaded"        to FuelProperties(0.30, 0.60),  // leaded coal gas, more corrosive
+        "syngas"                to FuelProperties(0.35, 0.10),  // H2/CO mix, low sulfur
+        "biogas"                to FuelProperties(0.35, 0.15),  // ~60% CH4 / 40% CO2
+        "sourgas"               to FuelProperties(0.45, 1.00),  // high H2S, most corrosive gas
+        "gas_coker"             to FuelProperties(0.50, 0.50),  // coker off-gas, moderately dirty
+        "reformgas"             to FuelProperties(0.50, 0.20),
+        "gas"                   to FuelProperties(0.55, 0.10),
+        "naturalgas"            to FuelProperties(0.55, 0.10),
+
+        // Gasoline / light-liquid fuels (gas turbine range)
+        "biofuel"               to FuelProperties(0.40, 0.05),
+        "bioethanol"            to FuelProperties(0.40, 0.05),
+        "ic2biogas"             to FuelProperties(0.40, 0.10),
+        "rc ethanol"            to FuelProperties(0.40, 0.05),
+        "ethanol"               to FuelProperties(0.40, 0.05),
+        "lpg"                   to FuelProperties(0.45, 0.05),
+        "naphtha_coker"         to FuelProperties(0.50, 0.40),  // coker naphtha, dirtier
+        "naphtha_crack"         to FuelProperties(0.50, 0.35),
+        "unsaturateds"          to FuelProperties(0.50, 0.25),
+        "naphtha_ds"            to FuelProperties(0.50, 0.08),  // desulfurized: much cleaner
+        "naphtha"               to FuelProperties(0.50, 0.25),
+        "fuel"                  to FuelProperties(0.55, 0.10),
+        "fuelgc"                to FuelProperties(0.55, 0.10),
+        "petroil"               to FuelProperties(0.55, 0.20),
+        "petroil_leaded"        to FuelProperties(0.55, 0.50),  // leaded: significantly worse
+        "gasoline"              to FuelProperties(0.55, 0.10),
+        "gasoline_leaded"       to FuelProperties(0.55, 0.40),  // lead deposits corrode blades
+        "rocket_fuel"           to FuelProperties(0.60, 0.05),
+        "reformate"             to FuelProperties(0.55, 0.08),
+        "aromatics"             to FuelProperties(0.55, 0.15),
+        "lightoil_crack"        to FuelProperties(0.60, 0.30),
+        "kerosene"              to FuelProperties(0.55, 0.10),
+        "lightoil_vacuum"       to FuelProperties(0.60, 0.25),
+        "lightoil_ds"           to FuelProperties(0.60, 0.05),  // desulfurized light oil
+        "lightoil"              to FuelProperties(0.60, 0.20),
+        "kerosene_reform"       to FuelProperties(0.55, 0.05),  // reformed, clean
+        "fire_water"            to FuelProperties(0.60, 0.05),
+        "highgradekerosene"     to FuelProperties(0.60, 0.05)
+    )
+
+    fun fuelProperties(fuelName: String): FuelProperties =
+        fuelProperties[fuelName] ?: FuelProperties(0.5, 0.3)
+
+    fun fuelProperties(fluid: Fluid?): FuelProperties = fuelProperties(fluid?.name ?: "")
+
+    fun temperatureFactor(fuelName: String): Double = fuelProperties(fuelName).temperatureFactor
+    fun temperatureFactor(fluid: Fluid?): Double = fuelProperties(fluid?.name ?: "")
+        .temperatureFactor
+
+    fun cleanlinessFactor(fuelName: String): Double = fuelProperties(fuelName).cleanlinessFactor
+    fun cleanlinessFactor(fluid: Fluid?): Double = fuelProperties(fluid?.name ?: "")
+        .cleanlinessFactor
 }
