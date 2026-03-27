@@ -66,11 +66,11 @@ public class LampSocketGuiDraw extends GuiContainerEln {
         if (object == buttonGrounded) {
             lampRender.clientSetGrounded(!lampRender.getGrounded());
         } else if (object == buttonSupplyType) {
-            lampRender.clientSend(LampSocketElement.tooglePowerSupplyType);
+            lampRender.clientSend(LampSocketElement.TOGGLE_POWER_SUPPLY_TYPE_ID);
         } else if (object == channel) {
-            lampRender.clientSetString((byte) LampSocketElement.setChannel, channel.getText());
+            lampRender.clientSetString((byte) LampSocketElement.SET_LAMP_SUPPLY_CHANNEL_ID, channel.getText());
         } else if (object == alphaZ) {
-            lampRender.clientSetFloat(LampSocketElement.setAlphaZId, alphaZ.getValue());
+            lampRender.clientSetFloat(LampSocketElement.SET_ALPHA_Z_ID, alphaZ.getValue());
         }
     }
 

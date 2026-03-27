@@ -19,6 +19,7 @@ import java.io.DataOutputStream
 import java.io.IOException
 import kotlin.math.abs
 
+// TODO: This file is a disaster. Major clean-up needed.
 class LampSocketProcess(var lamp: LampSocketElement) : IProcess, INBTTReady /*,LightBlockObserver*/ {
     @JvmField
     var light = 0 // 0..15
@@ -32,13 +33,13 @@ class LampSocketProcess(var lamp: LampSocketElement) : IProcess, INBTTReady /*,L
     var bestChannelHandle: Pair<Double, PowerSupplyChannelHandle>? = null
 
     private fun findBestSupply(here: Coordinate, forceUpdate: Boolean = false): Pair<Double, PowerSupplyChannelHandle>? {
-        val chanMap = LampSupplyElement.channelMap[lamp.channel] ?: return null
+        val chanMap = LampSupplyElement.channelMap[lamp.lampSupplyChannel] ?: return null
         val bestChanHand = bestChannelHandle
         // Here's our cached value. We just check if it's null and if it's still a thing.
         if (bestChanHand != null && !forceUpdate && chanMap.contains(bestChanHand.second)) {
             return bestChanHand // we good!
         }
-        val list = LampSupplyElement.channelMap[lamp.channel]?.filterNotNull() ?: return null
+        val list = LampSupplyElement.channelMap[lamp.lampSupplyChannel]?.filterNotNull() ?: return null
         val chanHand = list
             .map { Pair(it.element.sixNode?.coordinate?.trueDistanceTo(here)?: Double.MAX_VALUE, it) }
             .filter { it.first < it.second.element.range }
@@ -59,7 +60,7 @@ class LampSocketProcess(var lamp: LampSocketElement) : IProcess, INBTTReady /*,L
             lamp.front.rotateOnXnLeft(vv)
             lamp.side.rotateFromXN(vv)
             val c = Coordinate(lamp.sixNode!!.coordinate)
-            for (idx in 0 until lamp.socketDescriptor.range + actualLight) { // newCoord.move(lamp.side.getInverse());
+            for (idx in 0 until lamp.descriptor.range + actualLight) { // newCoord.move(lamp.side.getInverse());
                 vp.xCoord += vv.xCoord
                 vp.yCoord += vv.yCoord
                 vp.zCoord += vv.zCoord
@@ -83,17 +84,35 @@ class LampSocketProcess(var lamp: LampSocketElement) : IProcess, INBTTReady /*,L
 
     override fun process(time: Double) {
         var newLight: Int
-        val lampStack = lamp.inventory!!.getStackInSlot(0)
-        val cableStack = lamp.inventory!!.getStackInSlot(LampSocketContainer.CABLE_SLOT_ID)
+        val lampStack = lamp.inventory.getStackInSlot(LampSocketContainer.LAMP_SLOT_ID)
+        val cableStack = lamp.inventory.getStackInSlot(LampSocketContainer.CABLE_SLOT_ID)
         // LampDescriptor? is *important* here. Otherwise, NPE.
         val lampDescriptor = (lampStack?.item as? GenericItemUsingDamage<*>)?.getDescriptor(lampStack) as? LampDescriptor
-        if (cableStack == null || lampStack == null) {
+        if (cableStack == null && lampStack == null) {
+            // Manually call inventory change when all items are removed from the GUI because it is not being called normally
+            if (lamp.itemsInInventory) {
+                lamp.itemsInInventory = false
+                lamp.inventoryChange(lamp.inventory)
+            }
+        }
+        else if (cableStack == null || lampStack == null) {
+            // Manually call inventory change when an item is inserted from the GUI because it is not being called normally
+            if (!lamp.itemsInInventory) {
+                lamp.itemsInInventory = true
+                lamp.inventoryChange(lamp.inventory)
+            }
             /*
             Cable slot and lamp slot are empty. This means no light, and disconnect from lamp supply.
              */
             stableProb = 0.0
-            lamp.setIsConnectedToLampSupply(false)
+            lamp.isConnectedToLampSupply = false
+            lamp.needPublish()
         } else {
+            // Manually call inventory change when an item is inserted from the GUI because it is not being called normally
+            if (!lamp.itemsInInventory) {
+                lamp.itemsInInventory = true
+                lamp.inventoryChange(lamp.inventory)
+            }
             /*
             Cable slot and lamp slot have stuff. This means there can be light.
              */
@@ -103,46 +122,44 @@ class LampSocketProcess(var lamp: LampSocketElement) : IProcess, INBTTReady /*,L
                 val bestLampSupply = lampSupplyList?.second
                 if (bestLampSupply != null && lampDescriptor != null && bestLampSupply.element.getChannelState(bestLampSupply.id)) {
                     bestLampSupply.element.addToRp(lampDescriptor.lampData.resistance)
-                    lamp.positiveLoad.state = bestLampSupply.element.powerLoad.state
+                    lamp.electricalLoad.state = bestLampSupply.element.powerLoad.state
                 } else {
-                    lamp.positiveLoad.state = 0.0
+                    lamp.electricalLoad.state = 0.0
                 }
 
-                lamp.setIsConnectedToLampSupply(bestLampSupply != null)
+                lamp.isConnectedToLampSupply = bestLampSupply != null
+                lamp.needPublish()
             }
             else
             {
                 // Not powered by a lamp supply.
-                lamp.setIsConnectedToLampSupply(false)
+                lamp.isConnectedToLampSupply = false
+                lamp.needPublish()
             }
         }
 
-        lamp.computeElectricalLoad()
+        lamp.computeInventory()
         if (lampStack != lampStackLast) {
             stableProb = 0.0
         }
 
         if (stableProb < 0) stableProb = 0.0
-        var lightDouble = 0.0
+        var lightDouble: Double
 
         if (lampDescriptor != null) {
             val lampData = lampDescriptor.lampData
 
             // This code makes the ECO lights blink, and the other lights are just "stable"
             if (lampData.technology.lampType == "fluorescent") {
-                val U = abs(lamp.lampResistor.voltage)
-                if (U < (lampData.nominalU * lampData.technology.minimalUFactor)) {
+                val voltage = abs(lamp.lampResistor.voltage)
+                if (voltage < (lampData.nominalU * lampData.technology.minimalUFactor)) {
                     stableProb = 0.0
                     lightDouble = 0.0
                 } else {
-                    val powerFactor = U / lampData.nominalU
-                    stableProb += U / (lampData.nominalU * lampData.technology.stableUFactor) * time / lampData.technology.timeUntilStableInSeconds * lampData.technology.stableUFactor
-                    if (stableProb > U / (lampData.nominalU * lampData.technology.stableUFactor)) stableProb = U / (lampData.nominalU * lampData.technology.stableUFactor)
-                    if (Math.random() > stableProb) {
-                        lightDouble = 0.0
-                    } else {
-                        lightDouble = lampData.technology.nominalLightValue * powerFactor
-                    }
+                    val powerFactor = voltage / lampData.nominalU
+                    stableProb += voltage / (lampData.nominalU * lampData.technology.stableUFactor) * time / lampData.technology.timeUntilStableInSeconds * lampData.technology.stableUFactor
+                    if (stableProb > voltage / (lampData.nominalU * lampData.technology.stableUFactor)) stableProb = voltage / (lampData.nominalU * lampData.technology.stableUFactor)
+                    lightDouble = if (Math.random() > stableProb) 0.0 else lampData.technology.nominalLightValue * powerFactor
                 }
             }
             else {
@@ -174,8 +191,8 @@ class LampSocketProcess(var lamp: LampSocketElement) : IProcess, INBTTReady /*,L
                 val lampLife = lampDescriptor.decreaseLampLife(lampStack, lamp.lampResistor.voltage)
 
                 if (lampLife <= 0.0) {
-                    lamp.inventory?.setInventorySlotContents(LampSocketContainer.LAMP_SLOT_ID, null)
-                    lamp.inventory?.markDirty()
+                    lamp.inventory.setInventorySlotContents(LampSocketContainer.LAMP_SLOT_ID, null)
+                    lamp.inventory.markDirty()
                     newLight = 0
                 }
             }
@@ -218,7 +235,7 @@ class LampSocketProcess(var lamp: LampSocketElement) : IProcess, INBTTReady /*,L
         lamp.front.rotateOnXnLeft(vv)
         lamp.side.rotateFromXN(vv)
         val newCoord = Coordinate(lamp.sixNode!!.coordinate)
-        for (idx in 0 until lamp.socketDescriptor.range) { // newCoord.move(lamp.side.getInverse());
+        for (idx in 0 until lamp.descriptor.range) { // newCoord.move(lamp.side.getInverse());
             vp.xCoord += vv.xCoord
             vp.yCoord += vv.yCoord
             vp.zCoord += vv.zCoord

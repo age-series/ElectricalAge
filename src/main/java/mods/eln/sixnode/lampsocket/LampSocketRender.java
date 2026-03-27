@@ -207,7 +207,7 @@ public class LampSocketRender extends SixNodeElementRender {
 
             preparePacketForServer(stream);
 
-            stream.writeByte(LampSocketElement.setGroundedId);
+            stream.writeByte(LampSocketElement.SET_GROUNDED_ID);
             stream.writeByte(value ? 1 : 0);
 
             sendPacketToServer(bos);
