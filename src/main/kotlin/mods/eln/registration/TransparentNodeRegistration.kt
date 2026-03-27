@@ -233,26 +233,6 @@ object TransparentNodeRegistration {
         }
     }
 
-    /*
-        private void registerFloodlight(int id) {
-            int subId;
-            String name;
-            {
-                subId = 0;
-                name = TR_NAME(Type.NONE, "Basic Floodlight");
-                BasicFloodlightDescriptor desc = new BasicFloodlightDescriptor(name, obj.getObj("Floodlight"));
-                transparentNodeItem.addDescriptor(subId + (id << 6), desc);
-            }
-            {
-                subId = 1;
-                name = TR_NAME(Type.NONE, "Motorized Floodlight");
-                MotorizedFloodlightDescriptor desc = new MotorizedFloodlightDescriptor(name, obj.getObj
-                ("FloodlightMotor"));
-                transparentNodeItem.addDescriptor(subId + (id << 6), desc);
-            }
-        }
-    */
-
     private fun registerFloodlight(id: Int) {
         var subId: Int
         var name: String

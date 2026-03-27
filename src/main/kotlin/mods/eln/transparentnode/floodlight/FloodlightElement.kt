@@ -33,8 +33,11 @@ import net.minecraft.nbt.NBTTagCompound
 import java.io.DataInputStream
 import java.io.DataOutputStream
 import java.io.IOException
+import kotlin.math.pow
 
-class FloodlightElement(transparentNode: TransparentNode, transparentNodeDescriptor: TransparentNodeDescriptor) : TransparentNodeElement(transparentNode, transparentNodeDescriptor), IConfigurable {
+// TODO: Revisit integration of this file with the rest of the six-node lamp socket code.
+class FloodlightElement(transparentNode: TransparentNode, transparentNodeDescriptor: TransparentNodeDescriptor) :
+    TransparentNodeElement(transparentNode, transparentNodeDescriptor), IConfigurable {
 
     companion object {
         const val HORIZONTAL_ADJUST_EVENT: Byte = 0
@@ -66,8 +69,8 @@ class FloodlightElement(transparentNode: TransparentNode, transparentNodeDescrip
     var lightRange = 0
 
     val electricalLoad = NbtElectricalLoad("electricalLoad")
-    private val lamp1Resistor: Resistor = Resistor(electricalLoad, null)
-    private val lamp2Resistor: Resistor = Resistor(electricalLoad, null)
+    private val lamp1Resistor = Resistor(electricalLoad, null)
+    private val lamp2Resistor = Resistor(electricalLoad, null)
 
     val swivelControl = NbtElectricalGateInput("swivelControl")
     val headControl = NbtElectricalGateInput("headControl")
@@ -76,11 +79,11 @@ class FloodlightElement(transparentNode: TransparentNode, transparentNodeDescrip
     private val voltageWatchdog = VoltageStateWatchDog(electricalLoad)
 
     private val watchdogProcess = voltageWatchdog.setDestroys(WorldExplosion(this).machineExplosion())
-    private val floodlightProcess = FloodlightProcess(this)
     private val monsterPopProcess = MonsterPopFreeProcess(
         transparentNode.coordinate,
         Eln.config.getIntOrElse("entities.mobSpawning.preventNearLampsRange", 9)
     )
+    private val floodlightProcess = FloodlightProcess(this)
 
     var processElapsedTime = 0.0
 
@@ -91,13 +94,16 @@ class FloodlightElement(transparentNode: TransparentNode, transparentNodeDescrip
             electricalLoadList.add(beamControl)
         }
 
+        // TODO: revisit this
         // NOTE: Power factor (0.005) comes from MV cable registration
         electricalLoad.serialResistance = ((Eln.MVU * Eln.MVU) / Eln.instance.MVP()) * 0.005
+
+        // We currently have both 50V and 200V bulbs, so floodlights should be able to handle voltages up to 200V nominal
         voltageWatchdog.setNominalVoltage(Eln.MVU)
 
         slowProcessList.add(watchdogProcess)
-        slowProcessList.add(floodlightProcess)
         slowProcessList.add(monsterPopProcess)
+        slowProcessList.add(floodlightProcess)
     }
 
     override fun newContainer(side: Direction, player: EntityPlayer): Container {
@@ -120,7 +126,9 @@ class FloodlightElement(transparentNode: TransparentNode, transparentNodeDescrip
 
         if (currentEquippedItem is LampDescriptor) {
             if (currentEquippedItem.lampData.technology in FloodlightContainer.ACCEPTED_LAMP_TYPES) {
-                return acceptingInventory.take(player.currentEquippedItem, this, true, true)
+                return acceptingInventory.take(
+                    player.currentEquippedItem, this, publish = true, notifyInventoryChange = true
+                )
             }
         }
 
@@ -183,9 +191,8 @@ class FloodlightElement(transparentNode: TransparentNode, transparentNodeDescrip
     }
 
     override fun inventoryChange(inventory: IInventory?) {
-        disconnect()
         computeInventory()
-        connect()
+        reconnect()
         needPublish()
     }
 
@@ -195,12 +202,12 @@ class FloodlightElement(transparentNode: TransparentNode, transparentNodeDescrip
 
         when (lamp1Stack) {
             null -> lamp1Resistor.highImpedance()
-            else -> lamp1Resistor.resistance = (getItemObject(lamp1Stack) as LampDescriptor).lampData.resistance
+            else -> (getItemObject(lamp1Stack) as LampDescriptor).applyTo(lamp1Resistor)
         }
 
         when (lamp2Stack) {
             null -> lamp2Resistor.highImpedance()
-            else -> lamp2Resistor.resistance = (getItemObject(lamp2Stack) as LampDescriptor).lampData.resistance
+            else -> (getItemObject(lamp2Stack) as LampDescriptor).applyTo(lamp2Resistor)
         }
     }
 
@@ -278,14 +285,14 @@ class FloodlightElement(transparentNode: TransparentNode, transparentNodeDescrip
     override fun getWaila(): Map<String, String> {
         val info: MutableMap<String, String> = LinkedHashMap()
 
-        info[I18N.tr("Power Consumption")] = plotPower("", electricalLoad.voltage * electricalLoad.current)
+        val parallelResistance = (lamp1Resistor.resistance * lamp2Resistor.resistance) / (lamp1Resistor.resistance + lamp2Resistor.resistance)
+        info[I18N.tr("Power Consumption")] = plotPower("", electricalLoad.voltage.pow(2) / parallelResistance)
 
         val lamp1Stack = inventory.getStackInSlot(FloodlightContainer.LAMP_SLOT_1_ID)
-        val lamp2Stack = inventory.getStackInSlot(FloodlightContainer.LAMP_SLOT_2_ID)
-
         if (lamp1Stack != null) info[I18N.tr("Bulb 1")] = lamp1Stack.displayName
         else info[I18N.tr("Bulb 1")] = I18N.tr("None")
 
+        val lamp2Stack = inventory.getStackInSlot(FloodlightContainer.LAMP_SLOT_2_ID)
         if (lamp2Stack != null) info[I18N.tr("Bulb 2")] = lamp2Stack.displayName
         else info[I18N.tr("Bulb 2")] = I18N.tr("None")
 
@@ -296,6 +303,7 @@ class FloodlightElement(transparentNode: TransparentNode, transparentNodeDescrip
                 val lamp1Descriptor = getItemObject(lamp1Stack) as LampDescriptor
                 info[I18N.tr("Bulb 1 Life Left")] = plotValue(lamp1Descriptor.getLifeInTag(lamp1Stack)) + I18N.tr(" Hours")
             }
+
             if (lamp2Stack != null) {
                 val lamp2Descriptor = getItemObject(lamp2Stack) as LampDescriptor
                 info[I18N.tr("Bulb 2 Life Left")] = plotValue(lamp2Descriptor.getLifeInTag(lamp2Stack)) + I18N.tr(" Hours")
@@ -306,8 +314,13 @@ class FloodlightElement(transparentNode: TransparentNode, transparentNodeDescrip
     }
 
     override fun readConfigTool(compound: NBTTagCompound, invoker: EntityPlayer) {
-        if (ConfigCopyToolDescriptor.readGenDescriptor(compound, "lamp1", inventory, FloodlightContainer.LAMP_SLOT_1_ID, invoker)) inventoryChange(inventory)
-        if (ConfigCopyToolDescriptor.readGenDescriptor(compound, "lamp2", inventory, FloodlightContainer.LAMP_SLOT_2_ID, invoker)) inventoryChange(inventory)
+        if (ConfigCopyToolDescriptor.readGenDescriptor(compound, "lamp1", inventory, FloodlightContainer.LAMP_SLOT_1_ID, invoker)) {
+            inventoryChange(inventory)
+        }
+
+        if (ConfigCopyToolDescriptor.readGenDescriptor(compound, "lamp2", inventory, FloodlightContainer.LAMP_SLOT_2_ID, invoker)) {
+            inventoryChange(inventory)
+        }
     }
 
     override fun writeConfigTool(compound: NBTTagCompound, invoker: EntityPlayer) {
