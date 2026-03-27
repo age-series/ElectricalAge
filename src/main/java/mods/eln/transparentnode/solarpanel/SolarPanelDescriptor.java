@@ -7,7 +7,6 @@ import mods.eln.misc.Obj3D.Obj3DPart;
 import mods.eln.node.transparent.TransparentNodeDescriptor;
 import mods.eln.sim.ElectricalLoad;
 import mods.eln.wiki.Data;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
@@ -90,16 +89,6 @@ public class SolarPanelDescriptor extends TransparentNodeDescriptor {
         if (alpha > alphaMax) return alphaMax;
         if (alpha < alphaMin) return alphaMin;
         return alpha;
-    }
-
-    @Override
-    public Direction getFrontFromPlace(Direction side, EntityLivingBase entityLiving) {
-        if (canRotate && groundCoordinate != null) {
-            // That is, if this isn't a 1x1 panel.
-            return Direction.ZN;
-        } else {
-            return super.getFrontFromPlace(side, entityLiving);
-        }
     }
 
     void draw(float alpha, Direction front) {
