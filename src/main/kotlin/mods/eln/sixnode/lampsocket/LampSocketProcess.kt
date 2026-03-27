@@ -105,7 +105,7 @@ class LampSocketProcess(var lamp: LampSocketElement) : IProcess, INBTTReady /*,L
             Cable slot and lamp slot are empty. This means no light, and disconnect from lamp supply.
              */
             stableProb = 0.0
-            lamp.isConnectedToLampSupply = false
+            lamp.activeLampSupplyConnection = false
             lamp.needPublish()
         } else {
             // Manually call inventory change when an item is inserted from the GUI because it is not being called normally
@@ -127,13 +127,13 @@ class LampSocketProcess(var lamp: LampSocketElement) : IProcess, INBTTReady /*,L
                     lamp.electricalLoad.state = 0.0
                 }
 
-                lamp.isConnectedToLampSupply = bestLampSupply != null
+                lamp.activeLampSupplyConnection = bestLampSupply != null
                 lamp.needPublish()
             }
             else
             {
                 // Not powered by a lamp supply.
-                lamp.isConnectedToLampSupply = false
+                lamp.activeLampSupplyConnection = false
                 lamp.needPublish()
             }
         }

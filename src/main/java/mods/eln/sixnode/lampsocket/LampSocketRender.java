@@ -7,7 +7,9 @@ import mods.eln.node.six.SixNodeDescriptor;
 import mods.eln.node.six.SixNodeElementInventory;
 import mods.eln.node.six.SixNodeElementRender;
 import mods.eln.node.six.SixNodeEntity;
+import mods.eln.sixnode.currentcable.CurrentCableDescriptor;
 import mods.eln.sixnode.electricalcable.ElectricalCableDescriptor;
+import mods.eln.sixnode.genericcable.GenericCableDescriptor;
 import mods.eln.sound.SoundCommand;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.Entity;
@@ -53,7 +55,7 @@ public class LampSocketRender extends SixNodeElementRender {
 
     public boolean isConnectedToLampSupply;
 
-    ElectricalCableDescriptor cable;
+    GenericCableDescriptor cable;
 
     public LampSocketRender(SixNodeEntity tileEntity, Direction side, SixNodeDescriptor descriptor) {
         super(tileEntity, side, descriptor);
@@ -158,6 +160,7 @@ public class LampSocketRender extends SixNodeElementRender {
             ItemStack itemStack = Utils.unserialiseItemStack(stream);
             if (itemStack != null ) {
                 cable = (ElectricalCableDescriptor) ElectricalCableDescriptor.getDescriptor(itemStack, ElectricalCableDescriptor.class);
+                if (cable == null) cable = (CurrentCableDescriptor) CurrentCableDescriptor.getDescriptor(itemStack, CurrentCableDescriptor.class);
             } else {
                 cable = null;
             }
