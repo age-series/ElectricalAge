@@ -70,7 +70,7 @@ class LampSocketElement(sixNode: SixNode, side: Direction, sixNodeDescriptor: Si
     private var paintColor = 15
     var lampSupplyChannel = "Default channel"
     var poweredByLampSupply = true
-    var isConnectedToLampSupply = false
+    var activeLampSupplyConnection = false
     var itemsInInventory = false
 
     var processElapsedTime = 0.0
@@ -141,18 +141,42 @@ class LampSocketElement(sixNode: SixNode, side: Direction, sixNodeDescriptor: Si
         return false
     }
 
+    /**
+     * The if/else blocks here address the possible existence of legacy NBT tags and should remain in place.
+     */
     override fun readFromNBT(nbt: NBTTagCompound) {
         super.readFromNBT(nbt)
-        front = LRDU.fromInt(nbt.getInteger("front"))
-        grounded = nbt.getBoolean("grounded")
+
+        if (nbt.hasKey("front")) {
+            val temp = nbt.getByte("front")
+            front = LRDU.fromInt((temp.toInt() shr 0) and 0x3)
+            grounded = (temp.toInt() and 4) != 0
+            nbt.removeTag("front")
+        } else {
+            front = LRDU.fromInt(nbt.getInteger("frontNew"))
+            grounded = nbt.getBoolean("grounded")
+        }
+
         poweredByLampSupply = nbt.getBoolean("poweredByLampSupply")
-        lampSupplyChannel = nbt.getString("lampSupplyChannel")
-        paintColor = if (descriptor.paintable) nbt.getInteger("paintColor") else 0
+
+        if (nbt.hasKey("channel")) {
+            lampSupplyChannel = nbt.getString("channel")
+            nbt.removeTag("channel")
+        } else {
+            lampSupplyChannel = nbt.getString("lampSupplyChannel")
+        }
+
+        if (nbt.hasKey("color")) {
+            paintColor = if (descriptor.paintable) nbt.getByte("color").toInt() and 0xF else 0x0F
+            nbt.removeTag("color")
+        } else {
+            paintColor = if (descriptor.paintable) nbt.getInteger("paintColor") else 0
+        }
     }
 
     override fun writeToNBT(nbt: NBTTagCompound) {
         super.writeToNBT(nbt)
-        nbt.setInteger("front", front.toInt())
+        nbt.setInteger("frontNew", front.toInt())
         nbt.setBoolean("grounded", grounded)
         nbt.setBoolean("poweredByLampSupply", poweredByLampSupply)
         nbt.setString("lampSupplyChannel", lampSupplyChannel)
@@ -241,7 +265,7 @@ class LampSocketElement(sixNode: SixNode, side: Direction, sixNodeDescriptor: Si
             serialiseItemStack(stream, acceptingInventory.inventory.getStackInSlot(LampSocketContainer.CABLE_SLOT_ID))
             stream.writeBoolean(poweredByLampSupply)
             stream.writeUTF(lampSupplyChannel)
-            stream.writeBoolean(isConnectedToLampSupply)
+            stream.writeBoolean(activeLampSupplyConnection)
             stream.writeByte(lampSocketProcess.light)
             stream.writeByte(paintColor)
         } catch (e: IOException) {
