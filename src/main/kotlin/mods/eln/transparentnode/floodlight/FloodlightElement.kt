@@ -35,7 +35,6 @@ import java.io.DataOutputStream
 import java.io.IOException
 import kotlin.math.pow
 
-// TODO: Revisit integration of this file with the rest of the six-node lamp socket code.
 class FloodlightElement(transparentNode: TransparentNode, transparentNodeDescriptor: TransparentNodeDescriptor) :
     TransparentNodeElement(transparentNode, transparentNodeDescriptor), IConfigurable {
 
@@ -79,10 +78,8 @@ class FloodlightElement(transparentNode: TransparentNode, transparentNodeDescrip
     private val voltageWatchdog = VoltageStateWatchDog(electricalLoad)
 
     private val watchdogProcess = voltageWatchdog.setDestroys(WorldExplosion(this).machineExplosion())
-    private val monsterPopProcess = MonsterPopFreeProcess(
-        transparentNode.coordinate,
-        Eln.config.getIntOrElse("entities.mobSpawning.preventNearLampsRange", 9)
-    )
+    private val monsterPopProcess = MonsterPopFreeProcess(transparentNode.coordinate,
+        Eln.config.getIntOrElse("entities.mobSpawning.preventNearLampsRange", 9))
     private val floodlightProcess = FloodlightProcess(this)
 
     var processElapsedTime = 0.0
