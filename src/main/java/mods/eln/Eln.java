@@ -163,6 +163,7 @@ public class Eln {
     public static CreativeTabs creativeTabPowerElectronics;
     public static CreativeTabs creativeTabSignalProcessing;
     public static CreativeTabs creativeTabLighting;
+    public static CreativeTabs creativeTabCables;
     public static CreativeTabs creativeTabToolsArmor;
     public static CreativeTabs creativeTabOresMaterials;
     public static CreativeTabs creativeTabMachines;
@@ -211,6 +212,7 @@ public class Eln {
     public static GenericItemUsingDamageDescriptorWithComment dustCopper;
     public ArrayList<IConfigSharing> configShared = new ArrayList<>();
     public CopperCableDescriptor copperCableDescriptor;
+    public WireScrapDescriptor wireScrapDescriptor;
     public ElectricalCableDescriptor creativeCableDescriptor;
     public ElectricalCableDescriptor veryHighVoltageCableDescriptor;
     public ElectricalCableDescriptor highVoltageCableDescriptor;
@@ -338,6 +340,7 @@ public class Eln {
         GameRegistry.registerItem(itemCreativeTab, "eln.itemCreativeTab");
 
         creativeTabPowerElectronics = new GenericCreativeTab("ElnPowerElectronics", Items.redstone);
+        creativeTabCables = new GenericCreativeTab("ElnCables", Items.string);
         creativeTabSignalProcessing = new GenericCreativeTab("ElnSignalProcessing", Items.comparator);
         creativeTabLighting = new GenericCreativeTab("ElnLighting", Item.getItemFromBlock(Blocks.redstone_lamp));
         creativeTabToolsArmor = new GenericCreativeTab("ElnToolsArmor", Items.iron_pickaxe);
@@ -430,6 +433,7 @@ public class Eln {
         TR("itemGroup.ElnPowerElectronics");
         TR("itemGroup.ElnSignalProcessing");
         TR("itemGroup.ElnLighting");
+        TR("itemGroup.ElnCables");
         TR("itemGroup.ElnToolsArmor");
         TR("itemGroup.ElnOresMaterials");
         TR("itemGroup.ElnMachines");
@@ -586,6 +590,7 @@ public class Eln {
         setTabIcon(creativeTabPowerElectronics, stack(sixNodeItem, meta(33, 1)));
         setTabIcon(creativeTabSignalProcessing, stack(sixNodeItem, meta(32, 0)));
         setTabIcon(creativeTabLighting, stack(sharedItem, meta(4, 37)));
+        setTabIcon(creativeTabCables, stack(sixNodeItem, meta(34, 2)));
         setTabIcon(creativeTabToolsArmor, stack(sharedItem, meta(14, 0)));
         setTabIcon(creativeTabOresMaterials, stack(sharedItem, meta(8, 7)));
         setTabIcon(creativeTabMachines, stack(transparentNodeItem, meta(33, 4)));

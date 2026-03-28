@@ -3,6 +3,7 @@ package mods.eln.gridnode.electricalpole
 import mods.eln.gridnode.GridDescriptor
 import mods.eln.misc.Obj3D
 import mods.eln.sixnode.electricalcable.ElectricalCableDescriptor
+import mods.eln.sixnode.electricalcable.UtilityCableDescriptor
 
 enum class Kind {
     OVERHEAD,
@@ -39,4 +40,8 @@ class ElectricalPoleDescriptor(name: String,
     }
 
     override fun hasCustomIcon() = this.name == "Transmission Tower"
+
+    override fun acceptsGridCable(cable: ElectricalCableDescriptor): Boolean {
+        return cable == cableDescriptor || (cable is UtilityCableDescriptor && cable.poleEligible)
+    }
 }

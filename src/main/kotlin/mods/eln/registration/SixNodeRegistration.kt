@@ -23,6 +23,12 @@ import mods.eln.sixnode.electricalalarm.ElectricalAlarmDescriptor
 import mods.eln.sixnode.electricalbreaker.ElectricalBreakerDescriptor
 import mods.eln.sixnode.electricalcable.ElectricalCableDescriptor
 import mods.eln.sixnode.electricalcable.ElectricalSignalBusCableElement
+import mods.eln.sixnode.electricalcable.MoltenMetalPileDescriptor
+import mods.eln.sixnode.electricalcable.UtilityCableDescriptor
+import mods.eln.sixnode.electricalcable.UtilityCableElement
+import mods.eln.sixnode.electricalcable.UtilityCableMaterial
+import mods.eln.sixnode.electricalcable.UtilityCablePalette
+import mods.eln.sixnode.electricalcable.UtilityCableRender
 import mods.eln.sixnode.electricaldatalogger.ElectricalDataLoggerDescriptor
 import mods.eln.sixnode.electricaldigitaldisplay.ElectricalDigitalDisplayDescriptor
 import mods.eln.sixnode.electricalentitysensor.ElectricalEntitySensorDescriptor
@@ -75,6 +81,7 @@ object SixNodeRegistration {
     private fun <T : GenericItemBlockUsingDamageDescriptor> T.power() = inTab(Eln.creativeTabPowerElectronics)
     private fun <T : GenericItemBlockUsingDamageDescriptor> T.signal() = inTab(Eln.creativeTabSignalProcessing)
     private fun <T : GenericItemBlockUsingDamageDescriptor> T.lighting() = inTab(Eln.creativeTabLighting)
+    private fun <T : GenericItemBlockUsingDamageDescriptor> T.cables() = inTab(Eln.creativeTabCables)
     private fun <T : GenericItemBlockUsingDamageDescriptor> T.tools() = inTab(Eln.creativeTabToolsArmor)
     private fun <T : GenericItemBlockUsingDamageDescriptor> T.materials() = inTab(Eln.creativeTabOresMaterials)
     private fun <T : GenericItemBlockUsingDamageDescriptor> T.machines() = inTab(Eln.creativeTabMachines)
@@ -86,6 +93,10 @@ object SixNodeRegistration {
         Eln.sixNodeItem.setCreativeTabForGroup(3, Eln.creativeTabCreative)
         Eln.sixNodeItem.setCreativeTabForGroup(32, Eln.creativeTabPowerElectronics)
         Eln.sixNodeItem.setCreativeTabForGroup(33, Eln.creativeTabPowerElectronics)
+        Eln.sixNodeItem.setCreativeTabForGroup(34, Eln.creativeTabCables)
+        Eln.sixNodeItem.setCreativeTabForGroup(35, Eln.creativeTabCables)
+        Eln.sixNodeItem.setCreativeTabForGroup(36, Eln.creativeTabCables)
+        Eln.sixNodeItem.setCreativeTabForGroup(37, Eln.creativeTabCables)
         Eln.sixNodeItem.setCreativeTabForGroup(48, Eln.creativeTabPowerElectronics)
         Eln.sixNodeItem.setCreativeTabForGroup(126, Eln.creativeTabPowerElectronics)
         Eln.sixNodeItem.setCreativeTabForGroup(127, Eln.creativeTabPowerElectronics)
@@ -116,6 +127,7 @@ object SixNodeRegistration {
         registerElectricalSource(3)
         registerElectricalCable(32)
         registerCurrentCables(33)
+        registerUtilityCables(34, 35, 36, 37)
         registerThermalCable(48)
         registerCurrentRelays(126)
         if (Eln.instance.isDevelopmentRun) {
@@ -327,6 +339,293 @@ object SixNodeRegistration {
             desc.setPhysicalConstantLikeNormalCable(100.0)
             Eln.instance.highCurrentCableDescriptor = desc
             Eln.sixNodeItem.addDescriptor(subId + (id shl 6), desc)
+        }
+    }
+
+    private data class UtilitySingleSpec(
+        val awgLabel: String,
+        val metricLabel: String,
+        val metricArea: Double,
+        val ampacity: Double,
+        val insulatedVoltage: Double,
+        val insulatedTemperature: Double,
+        val poleEligible: Boolean = false
+    )
+
+    private data class UtilityMultiSpec(
+        val label: String,
+        val metricLabel: String,
+        val metricArea: Double,
+        val conductorCount: Int,
+        val ampacity: Double,
+        val insulationVoltage: Double,
+        val maxTemperature: Double,
+        val flatStyle: Boolean,
+        val palettes: Array<UtilityCablePalette>,
+        val poleEligible: Boolean = false
+    )
+
+    private class UtilityDescriptorAllocator(private val groups: IntArray) {
+        private var groupIndex = 0
+        private var subId = 0
+
+        fun nextId(): Int {
+            check(groupIndex < groups.size) { "Out of six-node groups while registering utility cables" }
+            val id = subId + (groups[groupIndex] shl 6)
+            subId++
+            if (subId >= 64) {
+                groupIndex++
+                subId = 0
+            }
+            return id
+        }
+    }
+
+    private fun registerUtilityCables(vararg groups: Int) {
+        val allocator = UtilityDescriptorAllocator(groups)
+        val renderCache = linkedMapOf<String, CableRenderDescriptor>()
+
+        fun render(texture: String, width: Float, height: Float): CableRenderDescriptor {
+            val key = "$texture:$width:$height"
+            return renderCache.getOrPut(key) { CableRenderDescriptor("eln", texture, width, height) }
+        }
+
+        fun newMoltenPileDescriptor(material: UtilityCableMaterial): MoltenMetalPileDescriptor {
+            return MoltenMetalPileDescriptor(
+                "${material.label} Molten Metal Pile",
+                material,
+                render("sprites/cable_melted.png", 2.4f, 0.9f)
+            ).also { desc ->
+                desc.setDefaultIcon("arcmetalblock")
+                desc.hideFromCreative()
+            }
+        }
+
+        fun iconNameFor(spec: UtilitySingleSpec, insulated: Boolean): String {
+            return when {
+                !insulated -> "utilitybareicon"
+                spec.metricArea <= 0.5 -> "utilitysignalicon"
+                spec.metricArea <= 2.5 -> "utilityinsulatedsmallicon"
+                spec.metricArea <= 35.0 -> "utilityinsulatedmediumicon"
+                else -> "utilityinsulatedlargeicon"
+            }
+        }
+
+        fun renderWidth(metricArea: Double, conductorCount: Int, flatStyle: Boolean): Pair<Float, Float> {
+            val singleWidth = when {
+                metricArea <= 0.5 -> 0.95f
+                metricArea <= 2.5 -> 1.45f
+                metricArea <= 10.0 -> 1.95f
+                metricArea <= 35.0 -> 2.95f
+                metricArea <= 120.0 -> 3.95f
+                else -> 5.95f
+            }
+            if (flatStyle) {
+                val totalVolume = (singleWidth * singleWidth * conductorCount * 0.38f).coerceAtLeast(1.0f)
+                val width = (conductorCount * 0.92f + singleWidth * 0.35f).coerceAtLeast(2.2f)
+                val height = (totalVolume / width).coerceIn(0.95f, 2.2f)
+                return Pair(width, height)
+            }
+            return if (conductorCount <= 1) {
+                Pair(singleWidth, maxOf(0.95f, singleWidth - 0.5f))
+            } else {
+                val body = singleWidth + 0.75f + (conductorCount - 2) * 0.4f
+                Pair(body, body)
+            }
+        }
+
+        fun configureElectricalConstants(desc: UtilityCableDescriptor, area: Double, ampacity: Double, nominalVoltage: Double, maxTemperature: Double) {
+            val baseAreaMm2 = 0.14
+            val baseTotalResistanceOhms = 0.009
+            val minimumTotalResistanceOhms = 0.00005
+            val totalResistanceOhms = (baseTotalResistanceOhms * (baseAreaMm2 / area.coerceAtLeast(baseAreaMm2)))
+                .coerceAtLeast(minimumTotalResistanceOhms)
+            val dropFactor = (totalResistanceOhms * ampacity / nominalVoltage).coerceAtLeast(1.0e-6)
+            val nominalPower = nominalVoltage * ampacity
+            desc.setPhysicalConstantLikeNormalCable(
+                nominalVoltage,
+                nominalPower,
+                dropFactor,
+                maxOf(nominalVoltage * 1.5, desc.insulationVoltageRating),
+                nominalPower * 1.1,
+                20.0,
+                maxTemperature,
+                -100.0,
+                Eln.cableHeatingTime,
+                Eln.cableThermalConductionTao
+            )
+            desc.ElementClass = UtilityCableElement::class.java
+            desc.RenderClass = UtilityCableRender::class.java
+        }
+
+        fun newSingleDescriptor(spec: UtilitySingleSpec, material: UtilityCableMaterial, insulated: Boolean, melted: Boolean = false): UtilityCableDescriptor {
+            val insulationLabel = when {
+                melted -> "Melted"
+                insulated -> "${spec.insulatedVoltage.toInt()}V"
+                else -> "Bare"
+            }
+            val name = "${material.label} ${spec.awgLabel} Cable $insulationLabel"
+            val (width, height) = renderWidth(spec.metricArea, 1, false)
+            val texture = when {
+                melted -> "sprites/cable_melted.png"
+                insulated -> "sprites/cable.png"
+                else -> "sprites/currentcable.png"
+            }
+            return UtilityCableDescriptor(
+                name = name,
+                render = render(texture, width, height),
+                description = if (insulated) "Insulated single-conductor utility cable." else "Bare single-conductor utility cable.",
+                sizeLabel = spec.awgLabel,
+                metricSizeLabel = spec.metricLabel,
+                material = material,
+                totalConductorAreaMm2 = spec.metricArea,
+                conductorCount = 1,
+                insulated = insulated && !melted,
+                insulationVoltageRating = if (insulated && !melted) spec.insulatedVoltage else 0.0,
+                melted = melted,
+                meltTemperatureCelsius = if (melted) spec.insulatedTemperature else if (insulated) spec.insulatedTemperature else 180.0,
+                flatStyle = false,
+                colorPalettes = arrayOf(UtilityCablePalette("single", "Single", intArrayOf(0))),
+                poleEligible = spec.poleEligible && !melted
+            ).also { desc ->
+                desc.setDefaultIcon(iconNameFor(spec, insulated))
+                configureElectricalConstants(desc, spec.metricArea, spec.ampacity, maxOf(50.0, spec.insulatedVoltage), if (insulated || melted) spec.insulatedTemperature else 180.0)
+                if (melted) {
+                    desc.hideFromCreative()
+                }
+            }
+        }
+
+        fun newMultiDescriptor(spec: UtilityMultiSpec, material: UtilityCableMaterial, melted: Boolean = false): UtilityCableDescriptor {
+            val name = "${material.label} ${spec.label} Cable ${if (melted) "Melted" else "${spec.insulationVoltage.toInt()}V"}"
+            val (width, height) = renderWidth(spec.metricArea, spec.conductorCount, spec.flatStyle)
+            val effectiveCount = if (melted) 1 else spec.conductorCount
+            val palettes = if (melted) arrayOf(UtilityCablePalette("melted", "Melted", intArrayOf(0))) else spec.palettes
+            return UtilityCableDescriptor(
+                name = name,
+                render = render(
+                    if (melted) "sprites/cable_melted_multi.png" else "sprites/cable.png",
+                    width,
+                    height
+                ),
+                description = "Insulated multi-conductor utility cable.",
+                sizeLabel = spec.label,
+                metricSizeLabel = spec.metricLabel,
+                material = material,
+                totalConductorAreaMm2 = spec.metricArea * spec.conductorCount,
+                conductorCount = effectiveCount,
+                insulated = !melted,
+                insulationVoltageRating = if (melted) 0.0 else spec.insulationVoltage,
+                melted = melted,
+                meltTemperatureCelsius = spec.maxTemperature,
+                flatStyle = spec.flatStyle,
+                colorPalettes = palettes,
+                poleEligible = spec.poleEligible && !melted
+            ).also { desc ->
+                desc.setDefaultIcon("utilityinsulatedlargeicon")
+                configureElectricalConstants(desc, spec.metricArea, spec.ampacity, spec.insulationVoltage, spec.maxTemperature)
+                if (melted) {
+                    desc.hideFromCreative()
+                }
+            }
+        }
+
+        val singles = listOf(
+            UtilitySingleSpec("26 AWG", "0.14", 0.14, 1.0, 300.0, 80.0),
+            UtilitySingleSpec("24 AWG", "0.25", 0.25, 2.0, 300.0, 80.0),
+            UtilitySingleSpec("22 AWG", "0.34", 0.34, 3.0, 300.0, 80.0),
+            UtilitySingleSpec("20 AWG", "0.5", 0.5, 5.0, 300.0, 80.0),
+            UtilitySingleSpec("18 AWG", "0.75", 0.75, 7.0, 300.0, 90.0),
+            UtilitySingleSpec("16 AWG", "1.5", 1.5, 10.0, 300.0, 90.0),
+            UtilitySingleSpec("14 AWG", "2.5", 2.5, 15.0, 600.0, 105.0),
+            UtilitySingleSpec("12 AWG", "4", 4.0, 20.0, 600.0, 105.0),
+            UtilitySingleSpec("10 AWG", "6", 6.0, 30.0, 600.0, 105.0),
+            UtilitySingleSpec("8 AWG", "10", 10.0, 40.0, 600.0, 105.0),
+            UtilitySingleSpec("6 AWG", "16", 16.0, 60.0, 600.0, 105.0),
+            UtilitySingleSpec("4 AWG", "25", 25.0, 80.0, 600.0, 105.0),
+            UtilitySingleSpec("2 AWG", "35", 35.0, 100.0, 600.0, 105.0, poleEligible = true),
+            UtilitySingleSpec("1/0 AWG", "50", 50.0, 125.0, 1000.0, 110.0, poleEligible = true),
+            UtilitySingleSpec("2/0 AWG", "70", 70.0, 175.0, 1000.0, 110.0, poleEligible = true),
+            UtilitySingleSpec("4/0 AWG", "120", 120.0, 260.0, 1000.0, 110.0, poleEligible = true),
+            UtilitySingleSpec("250 kcmil", "120", 120.0, 290.0, 1000.0, 110.0, poleEligible = true),
+            UtilitySingleSpec("350 kcmil", "185", 185.0, 350.0, 1000.0, 110.0, poleEligible = true),
+            UtilitySingleSpec("500 kcmil", "240", 240.0, 430.0, 1000.0, 110.0, poleEligible = true),
+            UtilitySingleSpec("750 kcmil", "400", 400.0, 600.0, 1000.0, 110.0, poleEligible = true),
+            UtilitySingleSpec("1000 kcmil", "500", 500.0, 750.0, 1000.0, 110.0, poleEligible = true)
+        )
+
+        val us2 = arrayOf(
+            UtilityCablePalette("us", "US", intArrayOf(15, 0, 5)),
+            UtilityCablePalette("eu", "EU", intArrayOf(12, 11, 5))
+        )
+        val us3 = arrayOf(
+            UtilityCablePalette("us", "US", intArrayOf(15, 14, 0, 5)),
+            UtilityCablePalette("eu", "EU", intArrayOf(12, 15, 11, 5))
+        )
+        val eu3g = arrayOf(UtilityCablePalette("eu", "EU", intArrayOf(12, 11, 5)), UtilityCablePalette("us", "US", intArrayOf(15, 0, 13)))
+        val eu5g = arrayOf(UtilityCablePalette("eu", "EU", intArrayOf(12, 15, 7, 11, 5)), UtilityCablePalette("us", "US", intArrayOf(15, 14, 11, 0, 13)))
+        val triplex120240 = arrayOf(
+            UtilityCablePalette("us", "US Split-Phase", intArrayOf(0, 12, 7)),
+            UtilityCablePalette("eu", "EU", intArrayOf(4, 11, 7))
+        )
+        val quadruplex208480 = arrayOf(
+            UtilityCablePalette("us", "US 3P", intArrayOf(0, 12, 1, 7)),
+            UtilityCablePalette("eu", "EU 3P", intArrayOf(4, 11, 7, 3))
+        )
+
+        val multis = listOf(
+            UtilityMultiSpec("14/2", "2.5", 2.5, 3, 15.0, 600.0, 105.0, true, us2),
+            UtilityMultiSpec("14/3", "2.5", 2.5, 4, 15.0, 600.0, 105.0, true, us3),
+            UtilityMultiSpec("12/2", "4", 4.0, 3, 20.0, 600.0, 105.0, true, us2),
+            UtilityMultiSpec("12/3", "4", 4.0, 4, 20.0, 600.0, 105.0, true, us3),
+            UtilityMultiSpec("10/2", "6", 6.0, 3, 30.0, 600.0, 105.0, true, us2),
+            UtilityMultiSpec("10/3", "6", 6.0, 4, 30.0, 600.0, 105.0, true, us3),
+            UtilityMultiSpec("8/2", "10", 10.0, 3, 40.0, 600.0, 105.0, true, us2),
+            UtilityMultiSpec("8/3", "10", 10.0, 4, 40.0, 600.0, 105.0, true, us3),
+            UtilityMultiSpec("3G1.5", "1.5", 1.5, 3, 10.0, 600.0, 105.0, false, eu3g),
+            UtilityMultiSpec("3G2.5", "2.5", 2.5, 3, 15.0, 600.0, 105.0, false, eu3g),
+            UtilityMultiSpec("3G4", "4", 4.0, 3, 20.0, 600.0, 105.0, false, eu3g),
+            UtilityMultiSpec("5G1.5", "1.5", 1.5, 5, 10.0, 600.0, 105.0, false, eu5g),
+            UtilityMultiSpec("5G2.5", "2.5", 2.5, 5, 15.0, 600.0, 105.0, false, eu5g),
+            UtilityMultiSpec("5G4", "4", 4.0, 5, 20.0, 600.0, 105.0, false, eu5g),
+            UtilityMultiSpec("Triplex 1/0", "50", 50.0, 3, 150.0, 600.0, 105.0, false, triplex120240, poleEligible = true),
+            UtilityMultiSpec("Triplex 4/0", "120", 120.0, 3, 260.0, 600.0, 105.0, false, triplex120240, poleEligible = true),
+            UtilityMultiSpec("Quadruplex 1/0", "50", 50.0, 4, 125.0, 600.0, 105.0, false, quadruplex208480, poleEligible = true),
+            UtilityMultiSpec("Quadruplex 4/0", "120", 120.0, 4, 260.0, 600.0, 105.0, false, quadruplex208480, poleEligible = true)
+        )
+
+        val moltenPileByMaterial = UtilityCableMaterial.values().associateWith { material ->
+            newMoltenPileDescriptor(material).also { desc ->
+                Eln.sixNodeItem.addDescriptor(allocator.nextId(), desc.power())
+            }
+        }
+
+        for (material in UtilityCableMaterial.values()) {
+            for (spec in singles) {
+                val bare = newSingleDescriptor(spec, material, insulated = false)
+                bare.moltenPileDescriptor = moltenPileByMaterial[material]
+                Eln.sixNodeItem.addDescriptor(allocator.nextId(), bare.cables())
+
+                val insulated = newSingleDescriptor(spec, material, insulated = true)
+                val melted = newSingleDescriptor(spec, material, insulated = true, melted = true)
+                insulated.meltedDescriptor = melted
+                insulated.moltenPileDescriptor = moltenPileByMaterial[material]
+                melted.moltenPileDescriptor = moltenPileByMaterial[material]
+                Eln.sixNodeItem.addDescriptor(allocator.nextId(), insulated.cables())
+                Eln.sixNodeItem.addDescriptor(allocator.nextId(), melted.cables())
+            }
+        }
+
+        for (material in UtilityCableMaterial.values()) {
+            for (spec in multis) {
+                val multi = newMultiDescriptor(spec, material)
+                val melted = newMultiDescriptor(spec, material, melted = true)
+                multi.meltedDescriptor = melted
+                multi.moltenPileDescriptor = moltenPileByMaterial[material]
+                melted.moltenPileDescriptor = moltenPileByMaterial[material]
+                Eln.sixNodeItem.addDescriptor(allocator.nextId(), multi.cables())
+                Eln.sixNodeItem.addDescriptor(allocator.nextId(), melted.cables())
+            }
         }
     }
 

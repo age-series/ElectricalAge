@@ -120,6 +120,13 @@ public class GenericItemBlockUsingDamage<Descriptor extends GenericItemBlockUsin
     }
 
     @Override
+    public int getItemStackLimit(ItemStack stack) {
+        Descriptor desc = getDescriptor(stack);
+        if (desc == null) return super.getItemStackLimit(stack);
+        return desc.getItemStackLimit(stack);
+    }
+
+    @Override
     @SideOnly(value = Side.CLIENT)
     public void registerIcons(IIconRegister iconRegister) {
         for (GenericItemBlockUsingDamageDescriptor descriptor : subItemList.values()) {
@@ -138,9 +145,7 @@ public class GenericItemBlockUsingDamage<Descriptor extends GenericItemBlockUsin
             CreativeTabs descriptorTab = descriptor.getCreativeTab();
             if (descriptorTab == null) descriptorTab = Eln.creativeTabOther;
             if (tabs == null || tabs == descriptorTab || tabs == CreativeTabs.tabAllSearch) {
-                ItemStack stack = Utils.newItemStack(itemID, 1, id);
-                stack.setTagCompound(descriptor.getDefaultNBT());
-                list.add(stack);
+                list.add(descriptor.newCreativeTabStack());
             }
         }
     }

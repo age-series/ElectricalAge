@@ -1,5 +1,6 @@
 package mods.eln.gridnode.electricalpole
 
+import mods.eln.generic.GenericItemBlockUsingDamageDescriptor
 import mods.eln.Eln
 import mods.eln.gridnode.GridDescriptor
 import mods.eln.gridnode.GridElement
@@ -20,6 +21,7 @@ import mods.eln.sim.process.destruct.ThermalLoadWatchDog
 import mods.eln.sim.process.destruct.VoltageStateWatchDog
 import mods.eln.sim.process.destruct.WorldExplosion
 import mods.eln.sim.process.heater.ElectricalLoadHeatThermalLoad
+import mods.eln.sixnode.electricalcable.ElectricalCableDescriptor
 
 import java.io.DataOutputStream
 import java.io.IOException
@@ -119,11 +121,65 @@ class ElectricalPoleElement(node: TransparentNode, descriptor: TransparentNodeDe
     }
 
     override fun multiMeterString(side: Direction): String {
-        return if (trafo != null) {
-            (Utils.plotVolt("GridU:", electricalLoad.voltage) + Utils.plotAmpere("GridP:", electricalLoad.current)
-                    + Utils.plotVolt("  GroundU:", trafo.secondaryLoad.voltage) + Utils.plotAmpere("GroundP:", trafo.secondaryLoad.current))
+        val electricalInfo = if (trafo != null) {
+            Utils.plotVolt("GridU:", electricalLoad.voltage) + Utils.plotAmpere("GridP:", electricalLoad.current) +
+                Utils.plotVolt("  GroundU:", trafo.secondaryLoad.voltage) + Utils.plotAmpere("GroundP:", trafo.secondaryLoad.current)
         } else {
             super.multiMeterString(side)
+        }
+
+        val connectionInfo = connectionLines(includeCurrentLimit = false).joinToString("\n")
+
+        return listOf(electricalInfo, connectionInfo)
+            .filter { it.isNotBlank() }
+            .joinToString("\n")
+    }
+
+    override fun getWaila(): Map<String, String> {
+        val info = linkedMapOf<String, String>()
+        val meterInfo = if (trafo != null) {
+            Utils.plotVolt("GridU:", electricalLoad.voltage) + Utils.plotAmpere("GridP:", electricalLoad.current) +
+                Utils.plotVolt("  GroundU:", trafo.secondaryLoad.voltage) + Utils.plotAmpere("GroundP:", trafo.secondaryLoad.current)
+        } else {
+            super.multiMeterString(front)
+        }
+        if (meterInfo.isNotBlank()) {
+            info["Info"] = meterInfo
+        }
+        connectionLines(includeCurrentLimit = true).forEach { (directionLabel, line) ->
+            info[directionLabel] = line
+        }
+        return info
+    }
+
+    private fun connectionLines(includeCurrentLimit: Boolean): List<Pair<String, String>> {
+        return gridLinkList
+            .map { link ->
+                val other = link.getOtherElement(this)
+                val dx = other.coordinate().x - coordinate().x
+                val dy = other.coordinate().y - coordinate().y
+                val dz = other.coordinate().z - coordinate().z
+                val descriptor = GenericItemBlockUsingDamageDescriptor.getDescriptor(link.cable)
+                val cableName = descriptor?.getName(link.cable) ?: "Unknown cable"
+                val cableLabel = if (includeCurrentLimit && descriptor is ElectricalCableDescriptor) {
+                    "$cableName (${Utils.plotAmpere("", descriptor.electricalMaximalCurrent).trim()})"
+                } else {
+                    cableName
+                }
+                val direction = describeDirection(dx, dy, dz)
+                direction.replaceFirstChar { it.uppercase() } to cableLabel
+            }
+            .sortedWith(compareBy({ it.first }, { it.second }))
+    }
+
+    private fun describeDirection(dx: Int, dy: Int, dz: Int): String {
+        val ax = kotlin.math.abs(dx)
+        val ay = kotlin.math.abs(dy)
+        val az = kotlin.math.abs(dz)
+        return when {
+            ay > ax && ay > az -> if (dy > 0) "up" else "down"
+            ax >= az -> if (dx > 0) "east" else "west"
+            else -> if (dz > 0) "south" else "north"
         }
     }
 
