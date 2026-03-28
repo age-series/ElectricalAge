@@ -39,6 +39,7 @@ import java.io.DataOutputStream
 import java.io.IOException
 import kotlin.math.pow
 
+// TODO: Revisit integration of this file with the rest of the six-node lamp socket code.
 class LampSocketElement(sixNode: SixNode, side: Direction, sixNodeDescriptor: SixNodeDescriptor) :
     SixNodeElement(sixNode, side, sixNodeDescriptor), IConfigurable {
 
@@ -63,7 +64,8 @@ class LampSocketElement(sixNode: SixNode, side: Direction, sixNodeDescriptor: Si
     private val voltageWatchdog = VoltageStateWatchDog(electricalLoad)
 
     private val watchdogProcess = voltageWatchdog.setDestroys(WorldExplosion(this).cableExplosion())
-    private val monsterPopProcess = MonsterPopFreeProcess(sixNode.coordinate, Eln.instance.killMonstersAroundLampsRange)
+    private val monsterPopProcess = MonsterPopFreeProcess(sixNode.coordinate,
+        Eln.config.getIntOrElse("entities.mobSpawning.preventNearLampsRange", 9))
     private val lampSocketProcess = LampSocketProcess(this)
 
     private var grounded = true
@@ -318,7 +320,7 @@ class LampSocketElement(sixNode: SixNode, side: Direction, sixNodeDescriptor: Si
         if (lampStack != null) info[I18N.tr("Bulb")] = lampStack.displayName
         else info[I18N.tr("Bulb")] = I18N.tr("None")
 
-        if (Eln.wailaEasyMode) {
+        if (Eln.config.getBooleanOrElse("ui.waila.easyMode", false)) {
             info[I18N.tr("Voltage")] = plotVolt("", electricalLoad.voltage)
 
             if (lampStack != null) {
