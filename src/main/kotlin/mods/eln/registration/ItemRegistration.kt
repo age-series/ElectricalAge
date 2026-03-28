@@ -114,6 +114,7 @@ object ItemRegistration {
 
         registerBasicItems(126)
         registerElectricMinecartItems(127)
+        registerWireToolItems(127)
 
         registerArmor()
         registerTool()
@@ -326,6 +327,22 @@ object ItemRegistration {
             val name = I18N.TR_NAME(I18N.Type.NONE, "Electric Minecart")
             val minecartItem = ElectricMinecartItem(name)
             Eln.sharedItem.addElement(subId + (id shl 6), minecartItem)
+        }
+    }
+
+    private fun registerWireToolItems(id: Int) {
+        run {
+            val subId = 0
+            val name = I18N.TR_NAME(I18N.Type.NONE, "Wire Scraps")
+            val desc = WireScrapDescriptor(name).inOresAndMaterialsTab()
+            instance.wireScrapDescriptor = desc
+            Eln.sharedItem.addElement(subId + (id shl 6), desc)
+        }
+        run {
+            val subId = 1
+            val name = I18N.TR_NAME(I18N.Type.NONE, "Wire Snips")
+            val desc = WireSnipsDescriptor(name).inToolsAndArmorTab()
+            Eln.sharedItem.addElement(subId + (id shl 6), desc)
         }
     }
 
