@@ -4,6 +4,7 @@ import mods.eln.Eln
 import mods.eln.Other
 import mods.eln.entity.ReplicatorPopProcess
 import mods.eln.item.LampLists
+import mods.eln.item.TurbineBladeLists
 import mods.eln.misc.Utils
 import java.util.*
 import kotlin.math.max
@@ -14,6 +15,7 @@ object ConfigHandler {
         Eln.config.load()
 
         for (lampData in LampLists.lampTechnologyList) lampData.loadConfig()
+        for (bladeData in TurbineBladeLists.bladeConfigList) bladeData.loadConfig()
 
         //Hacks for correct long date typing failures in config file
         //WARNING/BUG: "renameProperty" changes the type to String! However, read functions don't seem to care

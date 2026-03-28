@@ -10,6 +10,7 @@ import mods.eln.gridnode.transformer.GridTransformerElement
 import mods.eln.mechanical.ShaftElement
 import mods.eln.environment.BiomeClimateService
 import mods.eln.item.LampLists
+import mods.eln.item.TurbineBladeLists
 import mods.eln.misc.Coordinate
 import mods.eln.misc.FC
 import mods.eln.misc.Version
@@ -267,6 +268,128 @@ class ElnNominalLampLifeCommand: IConsoleCommand {
             1 -> {
                 if (args[0] == "") arg0Options
                 else arg0Options.filter {it.startsWith(args[0], ignoreCase = true)}
+            }
+            else -> listOf()
+        }
+    }
+}
+
+class ElnInfiniteBladeLifeCommand: IConsoleCommand {
+    override val name = "infiniteBladeLife"
+
+    override fun runCommand(ics: ICommandSender, args: List<String>) {
+        var printSyntax = false
+
+        if (args.size == 2) {
+            val bladeType = args[0]
+            val infiniteLife = getArgBool(ics, args[1]) ?: return
+
+            when (bladeType) {
+                in TurbineBladeLists.bladeTypesList -> {
+                    TurbineBladeLists.getConfigData(bladeType)!!.updateInfiniteLifeConfig(infiniteLife)
+                }
+                "all" -> for (blade in TurbineBladeLists.bladeConfigList) {
+                    blade.updateInfiniteLifeConfig(infiniteLife)
+                }
+                else -> printSyntax = true
+            }
+
+            if (!printSyntax) {
+                cprint(ics, "Infinite blade life: ${FC.DARK_GREEN}${bladeType}, ${FC.DARK_GREEN}${boolToStr(infiniteLife)}", indent = 1)
+                cprint(ics, "Changes saved to the config file.", indent = 1)
+            }
+        }
+        else printSyntax = true
+
+        if (printSyntax) cprint(ics, "Command syntax: /eln $name [${TurbineBladeLists.bladeTypesString}] [true/false]")
+    }
+
+    override fun getManPage(ics: ICommandSender, args: List<String>) {
+        cprint(ics, "Enables/disables infinite turbine blade life.", indent = 1)
+        cprint(ics, "Changes saved to the config file.", indent = 1)
+        cprint(ics, "")
+        cprint(ics, "Parameters:", indent = 1)
+        cprint(ics, "@0:string: Blade tier (${TurbineBladeLists.bladeTypesString}).", indent = 2)
+        cprint(ics, "@1:bool: Infinite life enabled (true/false).", indent = 2)
+        cprint(ics, "")
+    }
+
+    override fun requiredPermission() = listOf(UserPermission.IS_OPERATOR)
+
+    override fun getTabCompletion(args: List<String>): List<String> {
+        val arg0Options = TurbineBladeLists.bladeTypesList.toMutableList()
+        arg0Options.add("all")
+        val arg1Options = listOf("true", "false")
+
+        return when (args.size) {
+            0 -> arg0Options
+            1 -> {
+                if (args[0] == "") arg0Options
+                else arg0Options.filter { it.startsWith(args[0], ignoreCase = true) }
+            }
+            2 -> {
+                if (args[1] == "") arg1Options
+                else arg1Options.filter { it.startsWith(args[1], ignoreCase = true) }
+            }
+            else -> listOf()
+        }
+    }
+}
+
+class ElnNominalBladeLifeCommand: IConsoleCommand {
+    override val name = "nominalBladeLife"
+
+    override fun runCommand(ics: ICommandSender, args: List<String>) {
+        var printSyntax = false
+
+        if (args.size == 2) {
+            val bladeType = args[0]
+            val nominalLife = args[1].toDoubleOrNull()
+
+            if (nominalLife != null && nominalLife > 0) {
+                when (bladeType) {
+                    in TurbineBladeLists.bladeTypesList -> {
+                        TurbineBladeLists.getConfigData(bladeType)!!.updateNominalLifeConfig(nominalLife)
+                    }
+                    "all" -> for (blade in TurbineBladeLists.bladeConfigList) {
+                        blade.updateNominalLifeConfig(nominalLife)
+                    }
+                    else -> printSyntax = true
+                }
+
+                if (!printSyntax) {
+                    cprint(ics, "Nominal blade life: ${FC.DARK_GREEN}${bladeType}, ${FC.DARK_GREEN}${nominalLife}", indent = 1)
+                    cprint(ics, "Changes saved to the config file.", indent = 1)
+                }
+            }
+            else printSyntax = true
+        }
+        else printSyntax = true
+
+        if (printSyntax) cprint(ics, "Command syntax: /eln $name [${TurbineBladeLists.bladeTypesString}] [strictly positive double]")
+    }
+
+    override fun getManPage(ics: ICommandSender, args: List<String>) {
+        cprint(ics, "Updates a turbine blade tier's nominal durability.", indent = 1)
+        cprint(ics, "Changes saved to the config file.", indent = 1)
+        cprint(ics, "")
+        cprint(ics, "Parameters:", indent = 1)
+        cprint(ics, "@0:string: Blade tier (${TurbineBladeLists.bladeTypesString}).", indent = 2)
+        cprint(ics, "@1:double: New nominal blade durability (strictly positive double).", indent = 2)
+        cprint(ics, "")
+    }
+
+    override fun requiredPermission() = listOf(UserPermission.IS_OPERATOR)
+
+    override fun getTabCompletion(args: List<String>): List<String> {
+        val arg0Options = TurbineBladeLists.bladeTypesList.toMutableList()
+        arg0Options.add("all")
+
+        return when (args.size) {
+            0 -> arg0Options
+            1 -> {
+                if (args[0] == "") arg0Options
+                else arg0Options.filter { it.startsWith(args[0], ignoreCase = true) }
             }
             else -> listOf()
         }
