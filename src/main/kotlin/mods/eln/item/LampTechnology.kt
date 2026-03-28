@@ -13,12 +13,6 @@ object LampLists {
     val lampTechnologyList = mutableListOf<BoilerplateLampData>()
     val registeredLampList = mutableListOf<SpecificLampData>()
 
-    // This is used to generate a list (object) of ELN lamp types for the command handler.
-    val elnLampTypesList = mutableListOf<String>()
-
-    // This is a formatted string with a list of all ELN lamp types for use in the command handler.
-    var elnLampTypesString: String = ""
-
     init {
         lampTechnologyList.add(BoilerplateLampData("incandescent", 16.0, false, 15, 1.0, 0.5, 0.0, 0.0, 1.0))
         lampTechnologyList.add(BoilerplateLampData("carbonIncandescent", 6.0, false, 15, 1.0, 0.5, 0.0, 0.0, 1.0))
@@ -26,11 +20,6 @@ object LampLists {
         lampTechnologyList.add(BoilerplateLampData("farming", 16.0, false, 15, 2.0, 0.5, 0.0, 0.0, 1.5))
         lampTechnologyList.add(BoilerplateLampData("led", 512.0, false, 15, 1.0, 0.75, 0.0, 0.0, 0.5))
         lampTechnologyList.add(BoilerplateLampData("halogen", 128.0, false, 15, 1.0, 0.5, 0.0, 0.0, 2.0))
-
-        for (lamps in lampTechnologyList) elnLampTypesList.add(lamps.lampType)
-
-        for (lampTypes in elnLampTypesList) elnLampTypesString += "$lampTypes/"
-        elnLampTypesString += "all"
     }
 
     fun getLampData(lampType: String): BoilerplateLampData? {
@@ -53,6 +42,7 @@ data class BoilerplateLampData(
     val timeUntilStableInSeconds: Double,
     val basePowerMultiplier: Double
 ) {
+
     private val nominalLifePath: String
         get() = "lighting.lamps.${lampType}.nominalLifeHours"
 
@@ -60,37 +50,18 @@ data class BoilerplateLampData(
         get() = "lighting.lamps.${lampType}.infiniteLifeEnabled"
 
     fun loadConfig() {
-        // This goofy-looking logic ensures that each lamp entry in the config file has the proper default values
-        // (as defined in the init of LampTechnologies) assigned when the file is first created. On subsequent reads,
-        // the LampTechnologies entries are updated from the config file.
         val configNominalLife = Eln.config.getDoubleOrElse(nominalLifePath, this.nominalLifeInHours)
 
         try {
             require(configNominalLife > 0)
-        } catch (_: IllegalArgumentException) {
-            // Somehow display a flag once Minecraft finishes loading or a world is opened? Not exactly sure how.
+        } catch (e: IllegalArgumentException) {
+            // TODO: Somehow display a flag once Minecraft finishes loading or a world is opened? Not exactly sure how.
             println("ELN config: Nominal lamp life of type ${this.lampType} must be greater than 0! Changes not applied!")
         }
 
-        if (configNominalLife > 0) {
-            this.nominalLifeInHours = configNominalLife
-        }
+        if (configNominalLife > 0) this.nominalLifeInHours = configNominalLife
 
         this.infiniteLifeEnabled = Eln.config.getBooleanOrElse(infiniteLifePath, this.infiniteLifeEnabled)
-    }
-
-    fun updateNominalLifeConfig(newNominalLifeInHours: Double) {
-        this.nominalLifeInHours = newNominalLifeInHours
-
-        Eln.config.setDouble(nominalLifePath, newNominalLifeInHours)
-        Eln.config.save()
-    }
-
-    fun updateInfiniteLifeConfig(infiniteLifeEnabled: Boolean) {
-        this.infiniteLifeEnabled = infiniteLifeEnabled
-
-        Eln.config.setBoolean(infiniteLifePath, infiniteLifeEnabled)
-        Eln.config.save()
     }
 
 }
