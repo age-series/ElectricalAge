@@ -25,6 +25,7 @@ import mods.eln.eventhandlers.ElnFMLEventsHandler;
 import mods.eln.eventhandlers.ElnForgeEventsHandler;
 import mods.eln.eventhandlers.RoomThermalBlockEventsHandler;
 import mods.eln.fluid.ElnFluidRegistry;
+import mods.eln.fluid.FuelRegistry;
 import mods.eln.fluid.FluidRegistrationKt;
 import mods.eln.environment.BiomeClimateService;
 import mods.eln.generic.GenericCreativeTab;
@@ -308,6 +309,7 @@ public class Eln {
         if (side == Side.CLIENT) MinecraftForge.EVENT_BUS.register(new SoundLoader());
 
         config = new JsonConfig(event.getSuggestedConfigurationFile());
+        FuelRegistry.registerConfigEntries(config);
         config.loadConfig();
         MqttManager.init();
 

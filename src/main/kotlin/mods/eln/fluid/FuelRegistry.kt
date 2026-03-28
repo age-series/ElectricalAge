@@ -1,143 +1,226 @@
 package mods.eln.fluid
 
 import mods.eln.Eln
+import mods.eln.config.JsonConfig
 import net.minecraftforge.fluids.Fluid
 import net.minecraftforge.fluids.FluidRegistry
 
+data class FuelEntry(
+    val name: String,
+    val heatValue: Double,
+    val temperatureFactor: Double,
+    val cleanlinessFactor: Double,
+    val comment: String
+)
+
 object FuelRegistry {
-    /**
-     * Diesel is a refined, heavy fuel, can only be used by the fuel heat furnace for the moment.
-     *
-     * The values represent the heating value (energy) for 1L of the fuel IRL.
-     *
-     * Entries sorted lowest to highest energy per liter.
-     */
-    private val dieselFuels = mapOf(
-        "creosote" to 750000.0,              // Railcraft, coal tar creosote, density ≈ 1.08 kg/L, LHV ≈ 0.7 MJ/L (Engineering Toolbox)
-        "hootch" to (17826480.0 * 0.6),      // EnderIO, hootch — roughly equivalent to diluted ethanol (omega)
-        "woodoil" to 15000000.0,             // HBM Nuclear Tech, wood oil (pyrolysis oil), density ≈ 1.10 kg/L, LHV ≈ 14 MJ/kg (Bridgwater, "Biomass Fast Pyrolysis")
-        "biodiesel" to 32560000.0,           // Immersive Engineering, biodiesel, density = 0.88 kg/L, LHV = 37 MJ/kg (EN 14214)
-        "sunfloweroil" to 33000000.0,        // HBM Nuclear Tech, sunflower oil, density ≈ 0.92 kg/L, LHV ≈ 35.9 MJ/kg (Demirbas, "Energy Conversion and Management")
-        "fishoil" to 33200000.0,             // HBM Nuclear Tech, fish oil, density ≈ 0.92 kg/L, LHV ≈ 36.1 MJ/kg (Barnwal & Sharma, "Bioresource Technology")
-        "oliveoil" to 33400000.0,            // HBM Nuclear Tech, olive oil, density ≈ 0.91 kg/L, LHV ≈ 36.7 MJ/kg (Demirbas, "Energy Conversion and Management")
-        "reclaimed" to 34000000.0,           // HBM Nuclear Tech, reclaimed/waste oil, density ≈ 0.88 kg/L, LHV ≈ 38.6 MJ/kg (EPA waste oil guidance)
-        "coalcreosote" to 34300000.0,        // HBM Nuclear Tech, coal creosote oil, density ≈ 1.05 kg/L, LHV ≈ 32.7 MJ/kg (Perry's Chemical Engineers' Handbook)
-        "bitumen" to 34500000.0,             // HBM Nuclear Tech, bitumen/asphalt, density ≈ 1.02 kg/L, LHV ≈ 33.8 MJ/kg (Engineering Toolbox)
-        "crackoil_ds" to 34800000.0,         // HBM Nuclear Tech, desulfurized cracked oil, density ≈ 0.85 kg/L, LHV ≈ 40.9 MJ/kg
-        "hotcrackoil_ds" to 34800000.0,      // HBM Nuclear Tech, hot desulfurized cracked oil (same energy as crackoil_ds)
-        "oil_coker" to 34800000.0,           // HBM Nuclear Tech, coker oil (delayed coking residue), density ≈ 0.92 kg/L, LHV ≈ 37.8 MJ/kg (Gary & Handwerk, "Petroleum Refining")
-        "crackoil" to 35000000.0,            // HBM Nuclear Tech, cracked oil, density ≈ 0.85 kg/L, LHV ≈ 41.2 MJ/kg
-        "hotcrackoil" to 35000000.0,         // HBM Nuclear Tech, hot cracked oil (same energy as crackoil)
-        "oil_ds" to 35600000.0,              // HBM Nuclear Tech, desulfurized crude oil, density ≈ 0.87 kg/L, LHV ≈ 40.9 MJ/kg (~0.5% less than crude)
-        "hotoil_ds" to 35600000.0,           // HBM Nuclear Tech, hot desulfurized oil (same energy as oil_ds)
-        "oil" to 35800000.0,                 // HBM Nuclear Tech, crude oil, density ≈ 0.87 kg/L, LHV ≈ 41.2 MJ/kg (Engineering Toolbox)
-        "hotoil" to 35800000.0,              // HBM Nuclear Tech, hot crude oil (same energy as oil)
-        "lubricant" to 36000000.0,           // HBM Nuclear Tech, lubricating oil, density ≈ 0.88 kg/L, LHV ≈ 40.9 MJ/kg (Engineering Toolbox)
-        "heatingoil_vacuum" to 36000000.0,   // HBM Nuclear Tech, vacuum heating oil (heavier cut), density ≈ 0.88 kg/L, LHV ≈ 40.9 MJ/kg
-        "heatingoil" to 36500000.0,          // HBM Nuclear Tech, heating oil (No. 2 fuel oil), density ≈ 0.85 kg/L, LHV ≈ 42.9 MJ/kg (Engineering Toolbox)
-        "petroleum" to 37000000.0,           // HBM Nuclear Tech, petroleum (refined base stock), density ≈ 0.85 kg/L, LHV ≈ 43.5 MJ/kg (Engineering Toolbox)
-        "diesel_crack" to 37500000.0,        // HBM Nuclear Tech, cracked diesel (lighter cut from cracking), density ≈ 0.81 kg/L, LHV ≈ 46.3 MJ/kg
-        "diesel_crack_reform" to 38200000.0, // HBM Nuclear Tech, cracked then reformed diesel, density ≈ 0.82 kg/L, LHV ≈ 46.6 MJ/kg
-        "heavyoil_vacuum" to 38500000.0,     // HBM Nuclear Tech, vacuum heavy oil (vacuum distillation residue), density ≈ 0.98 kg/L, LHV ≈ 39.3 MJ/kg (Gary & Handwerk)
-        "diesel" to 38600000.0,              // Immersive Petroleum + PneumaticCraft + HBM Nuclear Tech, diesel, density ≈ 0.83 kg/L, LHV ≈ 45.5 MJ/kg, ≈ 38.6 MJ/L (Engineering Toolbox)
-        "heavyoil" to 39100000.0,            // Magneticraft + HBM Nuclear Tech, heavy fuel oil, density ≈ 0.95 kg/L, LHV ≈ 41.2 MJ/kg (Engineering Toolbox)
-        "diesel_reform" to 39200000.0        // HBM Nuclear Tech, reformed diesel (catalytic reforming increases density slightly), density ≈ 0.84 kg/L, LHV ≈ 46.7 MJ/kg
+    private const val heatValueFactorPath = "balance.heat.fuelHeatValueFactor"
+    private const val defaultHeatValueFactor = 0.0000675
+    private const val defaultTemperatureFactor = 0.5
+    private const val defaultCleanlinessFactor = 0.3
+
+    private const val dieselPath = "balance.heat.fuels.diesel"
+    private const val gasolinePath = "balance.heat.fuels.gasoline"
+    private const val gasPath = "balance.heat.fuels.gas"
+    private const val steamPath = "balance.heat.fuels.steam"
+
+    private val dieselDefaults = listOf(
+        fuel("creosote", 750000.0, 0.5, 0.3, "Railcraft, coal tar creosote, density approximately 1.08 kg/L, LHV approximately 0.7 MJ/L (Engineering Toolbox)."),
+        fuel("hootch", 17826480.0 * 0.6, 0.5, 0.3, "EnderIO, hootch, roughly equivalent to diluted ethanol."),
+        fuel("woodoil", 15000000.0, 0.5, 0.3, "HBM Nuclear Tech, wood oil (pyrolysis oil), density approximately 1.10 kg/L, LHV approximately 14 MJ/kg (Bridgwater, Biomass Fast Pyrolysis)."),
+        fuel("biodiesel", 32560000.0, 0.5, 0.3, "Immersive Engineering, biodiesel, density 0.88 kg/L, LHV 37 MJ/kg (EN 14214)."),
+        fuel("sunfloweroil", 33000000.0, 0.5, 0.3, "HBM Nuclear Tech, sunflower oil, density approximately 0.92 kg/L, LHV approximately 35.9 MJ/kg (Demirbas, Energy Conversion and Management)."),
+        fuel("fishoil", 33200000.0, 0.5, 0.3, "HBM Nuclear Tech, fish oil, density approximately 0.92 kg/L, LHV approximately 36.1 MJ/kg (Barnwal and Sharma, Bioresource Technology)."),
+        fuel("oliveoil", 33400000.0, 0.5, 0.3, "HBM Nuclear Tech, olive oil, density approximately 0.91 kg/L, LHV approximately 36.7 MJ/kg (Demirbas, Energy Conversion and Management)."),
+        fuel("reclaimed", 34000000.0, 0.5, 0.3, "HBM Nuclear Tech, reclaimed or waste oil, density approximately 0.88 kg/L, LHV approximately 38.6 MJ/kg (EPA waste oil guidance)."),
+        fuel("coalcreosote", 34300000.0, 0.5, 0.3, "HBM Nuclear Tech, coal creosote oil, density approximately 1.05 kg/L, LHV approximately 32.7 MJ/kg (Perry's Chemical Engineers' Handbook)."),
+        fuel("bitumen", 34500000.0, 0.5, 0.3, "HBM Nuclear Tech, bitumen or asphalt, density approximately 1.02 kg/L, LHV approximately 33.8 MJ/kg (Engineering Toolbox)."),
+        fuel("crackoil_ds", 34800000.0, 0.5, 0.3, "HBM Nuclear Tech, desulfurized cracked oil, density approximately 0.85 kg/L, LHV approximately 40.9 MJ/kg."),
+        fuel("hotcrackoil_ds", 34800000.0, 0.5, 0.3, "HBM Nuclear Tech, hot desulfurized cracked oil with the same energy as crackoil_ds."),
+        fuel("oil_coker", 34800000.0, 0.5, 0.3, "HBM Nuclear Tech, coker oil (delayed coking residue), density approximately 0.92 kg/L, LHV approximately 37.8 MJ/kg (Gary and Handwerk, Petroleum Refining)."),
+        fuel("crackoil", 35000000.0, 0.5, 0.3, "HBM Nuclear Tech, cracked oil, density approximately 0.85 kg/L, LHV approximately 41.2 MJ/kg."),
+        fuel("hotcrackoil", 35000000.0, 0.5, 0.3, "HBM Nuclear Tech, hot cracked oil with the same energy as crackoil."),
+        fuel("oil_ds", 35600000.0, 0.5, 0.3, "HBM Nuclear Tech, desulfurized crude oil, density approximately 0.87 kg/L, LHV approximately 40.9 MJ/kg."),
+        fuel("hotoil_ds", 35600000.0, 0.5, 0.3, "HBM Nuclear Tech, hot desulfurized oil with the same energy as oil_ds."),
+        fuel("oil", 35800000.0, 0.5, 0.3, "HBM Nuclear Tech, crude oil, density approximately 0.87 kg/L, LHV approximately 41.2 MJ/kg (Engineering Toolbox)."),
+        fuel("hotoil", 35800000.0, 0.5, 0.3, "HBM Nuclear Tech, hot crude oil with the same energy as oil."),
+        fuel("lubricant", 36000000.0, 0.5, 0.3, "HBM Nuclear Tech, lubricating oil, density approximately 0.88 kg/L, LHV approximately 40.9 MJ/kg (Engineering Toolbox)."),
+        fuel("heatingoil_vacuum", 36000000.0, 0.5, 0.3, "HBM Nuclear Tech, vacuum heating oil, density approximately 0.88 kg/L, LHV approximately 40.9 MJ/kg."),
+        fuel("heatingoil", 36500000.0, 0.5, 0.3, "HBM Nuclear Tech, heating oil (No. 2 fuel oil), density approximately 0.85 kg/L, LHV approximately 42.9 MJ/kg (Engineering Toolbox)."),
+        fuel("petroleum", 37000000.0, 0.5, 0.3, "HBM Nuclear Tech, petroleum base stock, density approximately 0.85 kg/L, LHV approximately 43.5 MJ/kg (Engineering Toolbox)."),
+        fuel("diesel_crack", 37500000.0, 0.5, 0.3, "HBM Nuclear Tech, cracked diesel, density approximately 0.81 kg/L, LHV approximately 46.3 MJ/kg."),
+        fuel("diesel_crack_reform", 38200000.0, 0.5, 0.3, "HBM Nuclear Tech, cracked then reformed diesel, density approximately 0.82 kg/L, LHV approximately 46.6 MJ/kg."),
+        fuel("heavyoil_vacuum", 38500000.0, 0.5, 0.3, "HBM Nuclear Tech, vacuum heavy oil, density approximately 0.98 kg/L, LHV approximately 39.3 MJ/kg (Gary and Handwerk, Petroleum Refining)."),
+        fuel("diesel", 38600000.0, 0.5, 0.3, "Immersive Petroleum, PneumaticCraft, and HBM Nuclear Tech diesel, density approximately 0.83 kg/L, LHV approximately 45.5 MJ/kg, about 38.6 MJ/L (Engineering Toolbox)."),
+        fuel("heavyoil", 39100000.0, 0.5, 0.3, "Magneticraft and HBM Nuclear Tech heavy fuel oil, density approximately 0.95 kg/L, LHV approximately 41.2 MJ/kg (Engineering Toolbox)."),
+        fuel("diesel_reform", 39200000.0, 0.5, 0.3, "HBM Nuclear Tech reformed diesel, density approximately 0.84 kg/L, LHV approximately 46.7 MJ/kg.")
     )
-    val dieselList = dieselFuels.keys.toTypedArray()
 
-    /**
-     * Gasoline-equivalents: Light oils, the type which can reasonably be burned by internal combustion engines
-     * or gas turbines. The ones on this list are all pretty close to each other in energy content.
-     *
-     * The values represent the heating value (energy) for 1L of the fuel IRL.
-     *
-     * Entries sorted lowest to highest energy per liter.
-     */
-    private val gasolineFuels = mapOf(
-        "biofuel" to 17826480.0,               // Minefactory Reloaded + HBM Nuclear Tech, bioethanol, density = 0.786 kg/L, LHV ≈ 22.68 MJ/L (NIST)
-        "bioethanol" to 17826480.0,            // Forestry, bioethanol, density = 0.786 kg/L, LHV ≈ 22.68 MJ/L
-        "ic2biogas" to 17826480.0,             // IC2 biogas (omega)
-        "rc ethanol" to 21172000.0,            // RotaryCraft, ethanol, density = 0.79 kg/L, LHV = 26.8 MJ/kg
-        "ethanol" to 21340000.0,               // HBM Nuclear Tech, ethanol, density = 0.789 kg/L, LHV = 26.8 MJ/kg, ≈ 21.1 MJ/L (Engineering Toolbox)
-        "lpg" to 24840000.0,                   // PneumaticCraft + HBM Nuclear Tech, LPG, density ≈ 0.54 kg/L, LHV ≈ 46 MJ/kg, ≈ 24.8 MJ/L (Engineering Toolbox)
-        "naphtha_coker" to 30500000.0,         // HBM Nuclear Tech, coker naphtha (lower quality from delayed coking), density ≈ 0.72 kg/L, LHV ≈ 42.4 MJ/kg (Gary & Handwerk)
-        "naphtha_crack" to 30800000.0,         // HBM Nuclear Tech, cracked naphtha (lighter fractions), density ≈ 0.71 kg/L, LHV ≈ 43.4 MJ/kg
-        "unsaturateds" to 31000000.0,          // HBM Nuclear Tech, unsaturateds (olefin mixture: propylene/butylene), density ≈ 0.72 kg/L, LHV ≈ 43.1 MJ/kg (Engineering Toolbox)
-        "naphtha_ds" to 31200000.0,            // HBM Nuclear Tech, desulfurized naphtha, density ≈ 0.73 kg/L, LHV ≈ 42.7 MJ/kg (~0.7% less than naphtha)
-        "naphtha" to 31400000.0,               // HBM Nuclear Tech, petroleum naphtha, density ≈ 0.73 kg/L, LHV ≈ 43.0 MJ/kg, ≈ 31.4 MJ/L (Engineering Toolbox)
-        "fuel" to 31570000.0,                  // Buildcraft, refined fuel, density = 0.77 kg/L, LHV = 41 MJ/kg
-        "fuelgc" to 31570000.0,                // GalactiCraft, see "fuel"
-        "petroil" to 31800000.0,               // HBM Nuclear Tech, petroil (petrol blend), density ≈ 0.74 kg/L, LHV ≈ 43.0 MJ/kg
-        "petroil_leaded" to 31800000.0,        // HBM Nuclear Tech, leaded petroil (same energy as petroil)
-        "gasoline" to 32200000.0,              // PneumaticCraft + HBM Nuclear Tech, gasoline, density ≈ 0.745 kg/L, LHV ≈ 43.2 MJ/kg, ≈ 32.2 MJ/L (Engineering Toolbox)
-        "gasoline_leaded" to 32200000.0,       // HBM Nuclear Tech, leaded gasoline (same energy as gasoline)
-        "rocket_fuel" to (17826480.0 * 1.866), // EnderIO, rocket fuel — something like ethanol (omega), ≈ 33.3 MJ/L
-        "reformate" to 33500000.0,             // HBM Nuclear Tech, reformate (high-octane catalytic reforming product), density ≈ 0.79 kg/L, LHV ≈ 42.4 MJ/kg (Gary & Handwerk)
-        "aromatics" to 34200000.0,             // HBM Nuclear Tech, aromatics (BTX mixture), density ≈ 0.87 kg/L, LHV ≈ 39.3 MJ/kg (Engineering Toolbox, toluene/xylene avg)
-        "lightoil_crack" to 34500000.0,        // HBM Nuclear Tech, cracked light oil, density ≈ 0.80 kg/L, LHV ≈ 43.1 MJ/kg
-        "kerosene" to 34800000.0,              // PneumaticCraft + HBM Nuclear Tech, kerosene (Jet A-1), density ≈ 0.81 kg/L, LHV ≈ 43.0 MJ/kg, ≈ 34.8 MJ/L (Engineering Toolbox)
-        "lightoil_vacuum" to 34800000.0,       // HBM Nuclear Tech, vacuum light oil (heavier cut), density ≈ 0.84 kg/L, LHV ≈ 41.4 MJ/kg
-        "lightoil_ds" to 35100000.0,           // HBM Nuclear Tech, desulfurized light oil, density ≈ 0.83 kg/L, LHV ≈ 42.3 MJ/kg
-        "lightoil" to 35358000.0,              // Magneticraft + HBM Nuclear Tech, light oil, density ≈ 0.83 kg/L, LHV ≈ 42.6 MJ/kg
-        "kerosene_reform" to 35400000.0,       // HBM Nuclear Tech, reformed kerosene (slight increase from reforming), density ≈ 0.82 kg/L, LHV ≈ 43.2 MJ/kg
-        "fire_water" to (17826480.0 * 2),      // EnderIO, fire water — something like ethanol (omega), ≈ 35.7 MJ/L
-        "highgradekerosene" to 39200000.0      // Silfryi's ContentTweaker scripts, refined kerosene, LHV = 39.2 MJ/L
+    private val gasolineDefaults = listOf(
+        fuel("biofuel", 17826480.0, 0.40, 0.05, "MineFactory Reloaded and HBM Nuclear Tech bioethanol, density 0.786 kg/L, LHV approximately 22.68 MJ/L (NIST)."),
+        fuel("bioethanol", 17826480.0, 0.40, 0.05, "Forestry bioethanol, density 0.786 kg/L, LHV approximately 22.68 MJ/L."),
+        fuel("ic2biogas", 17826480.0, 0.40, 0.10, "IC2 biogas, treated here as diluted ethanol."),
+        fuel("rc ethanol", 21172000.0, 0.40, 0.05, "RotaryCraft ethanol, density 0.79 kg/L, LHV 26.8 MJ/kg."),
+        fuel("ethanol", 21340000.0, 0.40, 0.05, "HBM Nuclear Tech ethanol, density 0.789 kg/L, LHV 26.8 MJ/kg, about 21.1 MJ/L (Engineering Toolbox)."),
+        fuel("lpg", 24840000.0, 0.45, 0.05, "PneumaticCraft and HBM Nuclear Tech LPG, density approximately 0.54 kg/L, LHV approximately 46 MJ/kg, about 24.8 MJ/L (Engineering Toolbox)."),
+        fuel("naphtha_coker", 30500000.0, 0.50, 0.40, "HBM Nuclear Tech coker naphtha, density approximately 0.72 kg/L, LHV approximately 42.4 MJ/kg (Gary and Handwerk, Petroleum Refining)."),
+        fuel("naphtha_crack", 30800000.0, 0.50, 0.35, "HBM Nuclear Tech cracked naphtha, density approximately 0.71 kg/L, LHV approximately 43.4 MJ/kg."),
+        fuel("unsaturateds", 31000000.0, 0.50, 0.25, "HBM Nuclear Tech unsaturateds (olefin mixture), density approximately 0.72 kg/L, LHV approximately 43.1 MJ/kg (Engineering Toolbox)."),
+        fuel("naphtha_ds", 31200000.0, 0.50, 0.08, "HBM Nuclear Tech desulfurized naphtha, density approximately 0.73 kg/L, LHV approximately 42.7 MJ/kg."),
+        fuel("naphtha", 31400000.0, 0.50, 0.25, "HBM Nuclear Tech petroleum naphtha, density approximately 0.73 kg/L, LHV approximately 43.0 MJ/kg, about 31.4 MJ/L (Engineering Toolbox)."),
+        fuel("fuel", 31570000.0, 0.55, 0.10, "BuildCraft refined fuel, density 0.77 kg/L, LHV 41 MJ/kg."),
+        fuel("fuelgc", 31570000.0, 0.55, 0.10, "Galacticraft fuel, matched to BuildCraft refined fuel."),
+        fuel("petroil", 31800000.0, 0.55, 0.20, "HBM Nuclear Tech petroil blend, density approximately 0.74 kg/L, LHV approximately 43.0 MJ/kg."),
+        fuel("petroil_leaded", 31800000.0, 0.55, 0.50, "HBM Nuclear Tech leaded petroil with the same energy as petroil."),
+        fuel("gasoline", 32200000.0, 0.55, 0.10, "PneumaticCraft and HBM Nuclear Tech gasoline, density approximately 0.745 kg/L, LHV approximately 43.2 MJ/kg, about 32.2 MJ/L (Engineering Toolbox)."),
+        fuel("gasoline_leaded", 32200000.0, 0.55, 0.40, "HBM Nuclear Tech leaded gasoline with the same energy as gasoline."),
+        fuel("rocket_fuel", 17826480.0 * 1.866, 0.60, 0.05, "EnderIO rocket fuel, approximated from ethanol-like energy density."),
+        fuel("reformate", 33500000.0, 0.55, 0.08, "HBM Nuclear Tech reformate, density approximately 0.79 kg/L, LHV approximately 42.4 MJ/kg (Gary and Handwerk, Petroleum Refining)."),
+        fuel("aromatics", 34200000.0, 0.55, 0.15, "HBM Nuclear Tech aromatics (BTX mixture), density approximately 0.87 kg/L, LHV approximately 39.3 MJ/kg (Engineering Toolbox)."),
+        fuel("lightoil_crack", 34500000.0, 0.60, 0.30, "HBM Nuclear Tech cracked light oil, density approximately 0.80 kg/L, LHV approximately 43.1 MJ/kg."),
+        fuel("kerosene", 34800000.0, 0.55, 0.10, "PneumaticCraft and HBM Nuclear Tech kerosene (Jet A-1), density approximately 0.81 kg/L, LHV approximately 43.0 MJ/kg, about 34.8 MJ/L (Engineering Toolbox)."),
+        fuel("lightoil_vacuum", 34800000.0, 0.60, 0.25, "HBM Nuclear Tech vacuum light oil, density approximately 0.84 kg/L, LHV approximately 41.4 MJ/kg."),
+        fuel("lightoil_ds", 35100000.0, 0.60, 0.05, "HBM Nuclear Tech desulfurized light oil, density approximately 0.83 kg/L, LHV approximately 42.3 MJ/kg."),
+        fuel("lightoil", 35358000.0, 0.60, 0.20, "Magneticraft and HBM Nuclear Tech light oil, density approximately 0.83 kg/L, LHV approximately 42.6 MJ/kg."),
+        fuel("kerosene_reform", 35400000.0, 0.55, 0.05, "HBM Nuclear Tech reformed kerosene, density approximately 0.82 kg/L, LHV approximately 43.2 MJ/kg."),
+        fuel("fire_water", 17826480.0 * 2, 0.60, 0.05, "EnderIO fire water, approximated at roughly twice ethanol energy density."),
+        fuel("highgradekerosene", 39200000.0, 0.60, 0.05, "ContentTweaker refined kerosene, LHV 39.2 MJ/L.")
     )
-    val gasolineList = gasolineFuels.keys.toTypedArray()
 
-    /**
-     * Burnable gases. Gas turbine is still happy, fuel generator is not.
-     *
-     * The values represent the heating value (energy) for 1L of the fuel IRL.
-     * Note: values below are in MJ/m³ before the ×1000 pressurization multiplier.
-     *
-     * Entries sorted lowest to highest energy per liter (pre-multiplier).
-     */
-    private val gasFuels = mapOf(
-        "oxyhydrogen" to 7600.0,     // HBM Nuclear Tech, oxyhydrogen (2:1 H2:O2 stoichiometric mix), LHV ≈ 7.6 MJ/m³ (Engineering Toolbox)
-        "hydrogen" to 10800.0,       // HBM Nuclear Tech, hydrogen gas, density ≈ 0.09 kg/m³, LHV = 120 MJ/kg, ≈ 10.8 MJ/m³ (Engineering Toolbox)
-        "coalgas" to 18000.0,        // HBM Nuclear Tech, coal gas (town gas), LHV ≈ 18 MJ/m³ (Engineering Toolbox)
-        "coalgas_leaded" to 18000.0, // HBM Nuclear Tech, leaded coal gas (same energy as coal gas), LHV ≈ 18 MJ/m³
-        "syngas" to 20000.0,         // Advanced Generators + HBM Nuclear Tech, syngas (synthesis gas), LHV ≈ 18–20 MJ/m³ (Engineering Toolbox)
-        "biogas" to 22000.0,         // HBM Nuclear Tech, biogas (~60% CH4 / 40% CO2), LHV ≈ 22 MJ/m³ (IEA Bioenergy)
-        "sourgas" to 25000.0,        // HBM Nuclear Tech, sour gas (natural gas with H2S/CO2), LHV ≈ 25 MJ/m³ (reduced due to impurities)
-        "gas_coker" to 28000.0,      // HBM Nuclear Tech, coker gas (off-gas from delayed coking), LHV ≈ 28 MJ/m³ (Gary & Handwerk)
-        "reformgas" to 30000.0,      // HBM Nuclear Tech, reform gas (catalytic reformer off-gas), LHV ≈ 30 MJ/m³
-        "gas" to 36000.0,            // HBM Nuclear Tech, natural gas / refinery gas, LHV ≈ 36 MJ/m³ (Engineering Toolbox)
-        "naturalgas" to 36000.0      // Magneticraft, natural gas, LHV = 36 MJ/m³ (Engineering Toolbox)
-    ).mapValues {
-        // Multiplied by 1000 because Minecraft gases are -- heavily pressurized.
-        it.value * 1000
+    private val gasDefaults = listOf(
+        fuel("oxyhydrogen", 7600.0 * 1000, 0.30, 0.0, "HBM Nuclear Tech oxyhydrogen (2:1 H2:O2 mix), LHV approximately 7.6 MJ/m^3 (Engineering Toolbox). Stored with the ELN gas pressurization multiplier applied."),
+        fuel("hydrogen", 10800.0 * 1000, 0.20, 0.0, "HBM Nuclear Tech hydrogen gas, density approximately 0.09 kg/m^3, LHV 120 MJ/kg, about 10.8 MJ/m^3 (Engineering Toolbox). Stored with the ELN gas pressurization multiplier applied."),
+        fuel("coalgas", 18000.0 * 1000, 0.30, 0.30, "HBM Nuclear Tech coal gas, LHV approximately 18 MJ/m^3 (Engineering Toolbox). Stored with the ELN gas pressurization multiplier applied."),
+        fuel("coalgas_leaded", 18000.0 * 1000, 0.30, 0.60, "HBM Nuclear Tech leaded coal gas with the same energy as coalgas. Stored with the ELN gas pressurization multiplier applied."),
+        fuel("syngas", 20000.0 * 1000, 0.35, 0.10, "Advanced Generators and HBM Nuclear Tech syngas, LHV approximately 18 to 20 MJ/m^3 (Engineering Toolbox). Stored with the ELN gas pressurization multiplier applied."),
+        fuel("biogas", 22000.0 * 1000, 0.35, 0.15, "HBM Nuclear Tech biogas, about 60 percent CH4 and 40 percent CO2, LHV approximately 22 MJ/m^3 (IEA Bioenergy). Stored with the ELN gas pressurization multiplier applied."),
+        fuel("sourgas", 25000.0 * 1000, 0.45, 1.0, "HBM Nuclear Tech sour gas, reduced energy due to impurities, LHV approximately 25 MJ/m^3. Stored with the ELN gas pressurization multiplier applied."),
+        fuel("gas_coker", 28000.0 * 1000, 0.50, 0.50, "HBM Nuclear Tech coker gas, LHV approximately 28 MJ/m^3 (Gary and Handwerk, Petroleum Refining). Stored with the ELN gas pressurization multiplier applied."),
+        fuel("reformgas", 30000.0 * 1000, 0.50, 0.20, "HBM Nuclear Tech reform gas, LHV approximately 30 MJ/m^3. Stored with the ELN gas pressurization multiplier applied."),
+        fuel("gas", 36000.0 * 1000, 0.55, 0.10, "HBM Nuclear Tech natural gas or refinery gas, LHV approximately 36 MJ/m^3 (Engineering Toolbox). Stored with the ELN gas pressurization multiplier applied."),
+        fuel("naturalgas", 36000.0 * 1000, 0.55, 0.10, "Magneticraft natural gas, LHV approximately 36 MJ/m^3 (Engineering Toolbox). Stored with the ELN gas pressurization multiplier applied.")
+    )
+
+    private val steamDefaults = listOf(
+        fuel("spentsteam", 2.257 * 0.1, 0.05, 0.0, "HBM Nuclear Tech spent or exhausted steam, about 10 percent residual energy before ELN scaling is applied."),
+        fuel("steam", 2.257, 0.15, 0.0, "Forge standard and HBM Nuclear Tech steam, heat of vaporization 2.257 J/g before ELN scaling is applied (NIST)."),
+        fuel("ic2steam", 2.257, 0.15, 0.0, "IC2 steam, matched to standard steam before ELN scaling is applied."),
+        fuel("hotsteam", 2.257 * 2, 0.35, 0.0, "HBM Nuclear Tech hot steam, about twice base steam energy before ELN scaling is applied."),
+        fuel("ic2superheatedsteam", 2.257 * 3, 0.55, 0.0, "IC2 superheated steam, triple condensed steam energy before ELN scaling is applied."),
+        fuel("superhotsteam", 2.257 * 4, 0.75, 0.0, "HBM Nuclear Tech super hot steam, about four times base steam energy before ELN scaling is applied."),
+        fuel("ultrahotsteam", 2.257 * 8, 1.0, 0.0, "HBM Nuclear Tech ultra hot steam, about eight times base steam energy before ELN scaling is applied.")
+    )
+
+    @JvmStatic
+    fun registerConfigEntries(config: JsonConfig) {
+        config.registerGroupComment("balance.heat.fuels", "Fuel registry data. Each fuel entry stores heat value and wear properties together.")
+        config.registerGroupComment(dieselPath, "Heavy liquid fuels used by fuel heat furnaces.")
+        config.registerGroupComment(gasolinePath, "Light liquid fuels usable by combustion engines and gas turbines.")
+        config.registerGroupComment(gasPath, "Burnable gases. Stored values are pre-pressurization real-world energy equivalents.")
+        config.registerGroupComment(steamPath, "Steam-like working fluids before ELN's global heat-value scaling is applied.")
+
+        registerFuelEntries(config, dieselPath, dieselDefaults)
+        registerFuelEntries(config, gasolinePath, gasolineDefaults)
+        registerFuelEntries(config, gasPath, gasDefaults)
+        registerFuelEntries(config, steamPath, steamDefaults)
     }
-    val gasList = gasFuels.keys.toTypedArray()
 
-    /**
-     * Steam. The value represents the heating value (energy) for 1L of steam IRL.
-     *
-     * We assume a density of 1g/L to harmonize with other mods.
-     *
-     * Entries sorted lowest to highest energy per liter.
-     */
-    private val steam = mapOf(
-        "spentsteam" to (2.257 * 0.1),        // HBM Nuclear Tech, spent/exhausted steam, ~10% residual energy
-        "steam" to 2.257,                     // Forge standard + HBM Nuclear Tech, heat of vaporization: 2.257 J/g (NIST)
-        "ic2steam" to 2.257,                  // IC2 steam, same as standard steam
-        "hotsteam" to (2.257 * 2),            // HBM Nuclear Tech, hot steam (~2× base, superheated to ~300°C)
-        "ic2superheatedsteam" to (2.257 * 3), // IC2, triple condensed superheated steam
-        "superhotsteam" to (2.257 * 4),       // HBM Nuclear Tech, super hot steam (~4× base, superheated to ~540°C)
-        "ultrahotsteam" to (2.257 * 8)        // HBM Nuclear Tech, ultra hot steam (~8× base, supercritical conditions)
-    ).mapValues {
-        // Unusually, the commonly accepted value (2.2) is pretty much correct. Undo the usual mapping.
-        it.value / Eln.config.getDoubleOrElse("balance.heat.fuelHeatValueFactor", 0.0000675)
+    private fun registerFuelEntries(config: JsonConfig, basePath: String, entries: List<FuelEntry>) {
+        for (entry in entries) {
+            val entryPath = "$basePath.${entry.name}"
+            config.registerGroupComment(entryPath, entry.comment)
+            config.registerEntry("$entryPath.heatValue", entry.heatValue)
+            config.registerEntry("$entryPath.temperatureFactor", entry.temperatureFactor)
+            config.registerEntry("$entryPath.cleanlinessFactor", entry.cleanlinessFactor)
+        }
     }
-    val steamList = steam.keys.toTypedArray()
 
-    // All fuels together.
-    private val allFuels = dieselFuels + gasolineFuels + gasFuels + steam
+    private fun fuelNames(path: String): Array<String> = Eln.config.getChildKeys(path).toTypedArray()
+
+    val dieselList: Array<String>
+        get() = fuelNames(dieselPath)
+
+    val gasolineList: Array<String>
+        get() = fuelNames(gasolinePath)
+
+    val gasList: Array<String>
+        get() = fuelNames(gasPath)
+
+    val steamList: Array<String>
+        get() = fuelNames(steamPath)
+
+    private fun heatValuePath(categoryPath: String, fuelName: String) = "$categoryPath.$fuelName.heatValue"
+
+    private fun temperatureFactorPath(categoryPath: String, fuelName: String) = "$categoryPath.$fuelName.temperatureFactor"
+
+    private fun cleanlinessFactorPath(categoryPath: String, fuelName: String) = "$categoryPath.$fuelName.cleanlinessFactor"
+
+    private fun fuelCategoryPaths(): List<String> = listOf(dieselPath, gasolinePath, gasPath, steamPath)
+
+    private fun findFuelCategoryPath(fuelName: String): String? =
+        fuelCategoryPaths().firstOrNull { path -> Eln.config.readPath(heatValuePath(path, fuelName)) != null }
+
+    private fun baseHeatValueForFuel(fuelName: String): Double {
+        val categoryPath = findFuelCategoryPath(fuelName) ?: return 0.0
+        val baseHeatValue = Eln.config.getDoubleOrElse(heatValuePath(categoryPath, fuelName), 0.0)
+        return if (categoryPath == steamPath) {
+            val factor = Eln.config.getDoubleOrElse(heatValueFactorPath, defaultHeatValueFactor)
+            if (factor == 0.0) 0.0 else baseHeatValue / factor
+        } else {
+            baseHeatValue
+        }
+    }
 
     fun fluidListToFluids(fluidNames: Array<String>) =
         fluidNames.map { FluidRegistry.getFluid(it) }.filterNotNull().toTypedArray()
 
-    fun heatEnergyPerMilliBucket(fuelName: String): Double = Eln.config.getDoubleOrElse("balance.heat.fuelHeatValueFactor", 0.0000675) * (allFuels[fuelName] ?: 0.0)
+    fun heatEnergyPerMilliBucket(fuelName: String): Double =
+        Eln.config.getDoubleOrElse(heatValueFactorPath, defaultHeatValueFactor) * baseHeatValueForFuel(fuelName)
+
     fun heatEnergyPerMilliBucket(fluid: Fluid?): Double = heatEnergyPerMilliBucket(fluid?.name ?: "")
+
+    fun fuelEntry(fuelName: String): FuelEntry {
+        val categoryPath = findFuelCategoryPath(fuelName)
+        return if (categoryPath == null) {
+            FuelEntry(
+                name = fuelName,
+                heatValue = 0.0,
+                temperatureFactor = defaultTemperatureFactor,
+                cleanlinessFactor = defaultCleanlinessFactor,
+                comment = ""
+            )
+        } else {
+            FuelEntry(
+                name = fuelName,
+                heatValue = Eln.config.getDoubleOrElse(heatValuePath(categoryPath, fuelName), 0.0),
+                temperatureFactor = Eln.config.getDoubleOrElse(
+                    temperatureFactorPath(categoryPath, fuelName),
+                    defaultTemperatureFactor
+                ),
+                cleanlinessFactor = Eln.config.getDoubleOrElse(
+                    cleanlinessFactorPath(categoryPath, fuelName),
+                    defaultCleanlinessFactor
+                ),
+                comment = ""
+            )
+        }
+    }
+
+    fun fuelEntry(fluid: Fluid?): FuelEntry = fuelEntry(fluid?.name ?: "")
+
+    fun temperatureFactor(fuelName: String): Double = fuelEntry(fuelName).temperatureFactor
+
+    fun temperatureFactor(fluid: Fluid?): Double = fuelEntry(fluid).temperatureFactor
+
+    fun cleanlinessFactor(fuelName: String): Double = fuelEntry(fuelName).cleanlinessFactor
+
+    fun cleanlinessFactor(fluid: Fluid?): Double = fuelEntry(fluid).cleanlinessFactor
+
+    private fun fuel(
+        name: String,
+        heatValue: Double,
+        temperatureFactor: Double,
+        cleanlinessFactor: Double,
+        comment: String
+    ) = FuelEntry(name, heatValue, temperatureFactor, cleanlinessFactor, comment)
 }

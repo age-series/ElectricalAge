@@ -1,6 +1,8 @@
 package mods.eln.config
 
 import com.google.gson.JsonParser
+import mods.eln.Eln
+import mods.eln.fluid.FuelRegistry
 import java.io.FileReader
 import java.nio.file.Files
 import kotlin.test.Test
@@ -71,5 +73,44 @@ class JsonConfigTest {
             val root = JsonParser().parse(reader).asJsonObject
             assertTrue(root.getAsJsonObject("ui").getAsJsonObject("icons").get("noSymbols").asBoolean)
         }
+    }
+
+    @Test
+    fun fuelRegistryEntriesLiveInJsonConfigWithComments() {
+        val dir = Files.createTempDirectory("eln-json-fuels-test").toFile()
+        val config = JsonConfig(dir.resolve("Eln.cfg"))
+        Eln.config = config
+        FuelRegistry.registerConfigEntries(config)
+        config.load()
+        config.save()
+
+        FileReader(dir.resolve("eln/eln.json")).use { reader ->
+            val root = JsonParser().parse(reader).asJsonObject
+            val diesel = root.getAsJsonObject("balance")
+                .getAsJsonObject("heat")
+                .getAsJsonObject("fuels")
+                .getAsJsonObject("diesel")
+            val creosote = diesel.getAsJsonObject("creosote")
+            assertEquals(750000.0, creosote.get("heatValue").asDouble)
+            assertEquals(0.5, creosote.get("temperatureFactor").asDouble)
+            assertEquals(0.3, creosote.get("cleanlinessFactor").asDouble)
+            assertTrue(creosote.get("_comment").asString.isNotBlank())
+            val gasoline = root.getAsJsonObject("balance")
+                .getAsJsonObject("heat")
+                .getAsJsonObject("fuels")
+                .getAsJsonObject("gasoline")
+                .getAsJsonObject("gasoline")
+            assertEquals(0.55, gasoline.get("temperatureFactor").asDouble)
+            assertEquals(0.10, gasoline.get("cleanlinessFactor").asDouble)
+        }
+
+        assertTrue(FuelRegistry.dieselList.contains("creosote"))
+        assertTrue(FuelRegistry.steamList.contains("steam"))
+        assertEquals(0.55, FuelRegistry.temperatureFactor("gasoline"))
+        assertEquals(0.10, FuelRegistry.cleanlinessFactor("gasoline"))
+        assertEquals(
+            config.getDoubleOrElse("balance.heat.fuelHeatValueFactor", 0.0000675) * 750000.0,
+            FuelRegistry.heatEnergyPerMilliBucket("creosote")
+        )
     }
 }
