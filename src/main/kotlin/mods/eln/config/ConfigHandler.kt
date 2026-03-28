@@ -6,6 +6,7 @@ import mods.eln.entity.ReplicatorPopProcess
 import mods.eln.item.LampLists
 import mods.eln.misc.Utils
 import java.util.*
+import kotlin.math.absoluteValue
 import kotlin.math.max
 import kotlin.math.min
 
@@ -68,6 +69,21 @@ object ConfigHandler {
 
         Eln.mqttEnabled = Eln.config["mqtt", "enable", false, "Enable MQTT devices; configure servers in eln-mqtt.json inside the config folder."]
             .getBoolean(false)
+        Eln.simMetricsEnabled =
+            Eln.config["mqtt", "simMetricsEnable", false, "Publish simulator MNA metrics to MQTT."]
+                .getBoolean(false)
+        Eln.simMetricsMqttServer =
+            Eln.config["mqtt", "simMetricsServer", "", "MQTT server name in eln-mqtt.json used for simulator metrics."]
+                .string.trim()
+        Eln.simMetricsId =
+            Eln.config["mqtt", "simMetricsId", "server", "Topic ID used under eln/sim/<id>/... for simulator metrics."]
+                .string.trim()
+                .ifBlank { "server" }
+        Eln.simMetricsPublishIntervalTicks =
+            Eln.config["mqtt", "simMetricsPublishIntervalTicks", 20, "Simulator ticks to aggregate before MQTT publish. Higher values reduce overhead."]
+                .getInt(20)
+                .absoluteValue
+                .coerceAtLeast(1)
 
         if (Eln.analyticsEnabled) {
             val p = Eln.config["general", "playerUUID", ""]

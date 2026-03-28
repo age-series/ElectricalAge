@@ -40,6 +40,7 @@ import mods.eln.item.electricalitem.OreColorMapping;
 import mods.eln.item.electricalitem.PortableOreScannerItem.RenderStorage.OreScannerConfigElement;
 import mods.eln.misc.*;
 import mods.eln.mqtt.MqttManager;
+import mods.eln.metrics.MetricsSubsystem;
 import mods.eln.node.NodeBlockEntity;
 import mods.eln.node.NodeManager;
 import mods.eln.node.NodeManagerNbt;
@@ -198,6 +199,10 @@ public class Eln {
     public static String dictCheapChip, dictAdvancedChip;
     public static boolean modbusEnable = false;
     public static boolean mqttEnabled = false;
+    public static boolean simMetricsEnabled = false;
+    public static String simMetricsMqttServer = "";
+    public static String simMetricsId = "server";
+    public static int simMetricsPublishIntervalTicks = 20;
     public static int modbusPort;
     public static boolean explosionEnable;
     public static boolean debugEnabled = false;  // Read from configuration file. Default is `false`.
@@ -377,6 +382,7 @@ public class Eln {
 
         ConfigHandler.INSTANCE.loadConfig(this);
         MqttManager.INSTANCE.init();
+        MetricsSubsystem.INSTANCE.refreshFromConfig();
 
         eventChannel = NetworkRegistry.INSTANCE.newEventDrivenChannel(channelName);
 
@@ -538,6 +544,7 @@ public class Eln {
         LampSupplyElement.channelMap.clear();
         WirelessSignalTxElement.channelMap.clear();
         MqttManager.INSTANCE.shutdown();
+        MetricsSubsystem.INSTANCE.shutdown();
     }
 
     @EventHandler
