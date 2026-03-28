@@ -149,4 +149,23 @@ class JsonConfigTest {
         }
         assertEquals(null, config.readPath("balance.heat.fuelHeatValueFactor"))
     }
+
+    @Test
+    fun regexReadAndWriteWorkForConfigPaths() {
+        val dir = Files.createTempDirectory("eln-json-regex-test").toFile()
+        val config = JsonConfig(dir.resolve("Eln.cfg"))
+        Eln.config = config
+        config.load()
+
+        val lampPaths = config.readPathsMatching("lighting.lamps.*.infiniteLifeEnabled")
+        assertTrue(lampPaths.isNotEmpty())
+        assertTrue(lampPaths.values.all { it is Boolean })
+
+        val updatedPaths = config.writePathsMatching(
+            "lighting.lamps.*.infiniteLifeEnabled",
+            "true"
+        )
+        assertEquals(lampPaths.keys.toSet(), updatedPaths.toSet())
+        assertTrue(updatedPaths.all { config.getBooleanOrElse(it, false) })
+    }
 }
