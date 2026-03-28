@@ -1,8 +1,8 @@
 package mods.eln.transparentnode.floodlight
 
 import mods.eln.Eln
+import mods.eln.item.BoilerplateLampData
 import mods.eln.item.LampDescriptor
-import mods.eln.item.LampLists
 import mods.eln.misc.Coordinate
 import mods.eln.misc.HybridNodeDirection
 import mods.eln.misc.HybridNodeDirection.*
@@ -49,8 +49,8 @@ class FloodlightProcess(var element: FloodlightElement) : IProcess {
 
                 lampLightValues.add(((num / den) * lampDescriptor.lampData.technology.nominalLightValue).toInt())
 
-                if (lampLightValues[idx] < LampLists.MIN_LIGHT_VALUE) lampLightValues[idx] = LampLists.MIN_LIGHT_VALUE
-                else if (lampLightValues[idx] > LampLists.MAX_LIGHT_VALUE) lampLightValues[idx] = LampLists.MAX_LIGHT_VALUE
+                if (lampLightValues[idx] < BoilerplateLampData.MIN_LIGHT_VALUE) lampLightValues[idx] = BoilerplateLampData.MIN_LIGHT_VALUE
+                else if (lampLightValues[idx] > BoilerplateLampData.MAX_LIGHT_VALUE) lampLightValues[idx] = BoilerplateLampData.MAX_LIGHT_VALUE
 
                 lampLightRanges.add(BASE_THROW_DISTANCE * sqrt(lampDescriptor.lampData.nominalU / Eln.LVU).toInt())
 
@@ -68,14 +68,14 @@ class FloodlightProcess(var element: FloodlightElement) : IProcess {
                 }
             }
             else {
-                lampLightValues.add(LampLists.MIN_LIGHT_VALUE)
+                lampLightValues.add(BoilerplateLampData.MIN_LIGHT_VALUE)
                 lampLightRanges.add(0)
             }
         }
 
         val newLightValue = max(lampLightValues[FloodlightContainer.LAMP_SLOT_1_ID], lampLightValues[FloodlightContainer.LAMP_SLOT_2_ID])
 
-        element.powered = newLightValue > LampLists.MIN_LIGHT_VALUE
+        element.powered = newLightValue > BoilerplateLampData.MIN_LIGHT_VALUE
         element.lightRange = lampLightRanges[FloodlightContainer.LAMP_SLOT_1_ID] + lampLightRanges[FloodlightContainer.LAMP_SLOT_2_ID]
 
         if (newLightValue != element.node!!.lightValue) {
