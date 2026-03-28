@@ -67,12 +67,12 @@ class LampSocketElement(sixNode: SixNode, side: Direction, sixNodeDescriptor: Si
     private val lampSocketProcess = LampSocketProcess(this)
 
     private var grounded = true
-    private var paintColor = 15
     var lampSupplyChannel = "Default channel"
     var poweredByLampSupply = true
     var activeLampSupplyConnection = false
-    var itemsInInventory = false
+    private var paintColor = 15
 
+    var itemsInInventory = false
     var processElapsedTime = 0.0
 
     override val lightValue: Int
@@ -259,15 +259,15 @@ class LampSocketElement(sixNode: SixNode, side: Direction, sixNodeDescriptor: Si
         super.networkSerialize(stream)
 
         try {
-            stream.writeByte((if (grounded) (1 shl 6) else 0))
-            serialiseItemStack(stream, acceptingInventory.inventory.getStackInSlot(LampSocketContainer.LAMP_SLOT_ID))
-            stream.writeFloat(lampSocketProcess.alphaZ.toFloat())
-            serialiseItemStack(stream, acceptingInventory.inventory.getStackInSlot(LampSocketContainer.CABLE_SLOT_ID))
-            stream.writeBoolean(poweredByLampSupply)
+            serialiseItemStack(stream, inventory.getStackInSlot(LampSocketContainer.LAMP_SLOT_ID))
+            serialiseItemStack(stream, inventory.getStackInSlot(LampSocketContainer.CABLE_SLOT_ID))
+            stream.writeBoolean(grounded)
             stream.writeUTF(lampSupplyChannel)
+            stream.writeBoolean(poweredByLampSupply)
             stream.writeBoolean(activeLampSupplyConnection)
-            stream.writeByte(lampSocketProcess.light)
-            stream.writeByte(paintColor)
+            stream.writeInt(paintColor)
+            stream.writeDouble(lampSocketProcess.alphaZ)
+            stream.writeInt(lampSocketProcess.light)
         } catch (e: IOException) {
             e.printStackTrace()
         }

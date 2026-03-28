@@ -36,7 +36,7 @@ public class LampSocketGuiDraw extends GuiContainerEln {
     public void initGui() {
         super.initGui();
         int x = 0;
-        if (lampRender.descriptor.alphaZMax == lampRender.descriptor.alphaZMin) {
+        if (lampRender.getDescriptor().alphaZMax == lampRender.getDescriptor().alphaZMin) {
             x = -0;
             buttonSupplyType = newGuiButton(x + 176 / 2 - 140 / 2, 8, 140, "");
             channel = newGuiTextField(x + 176 / 2 - 140 / 2 + 1, 34, 140);
@@ -49,13 +49,13 @@ public class LampSocketGuiDraw extends GuiContainerEln {
 
         channel.setComment(0, tr("Specify the supply channel"));
 
-        channel.setText(lampRender.channel);
+        channel.setText(lampRender.getLampSupplyChannel());
         alphaZ = newGuiVerticalTrackBar(176 - 8 - 20, 8, 20, 69);
-        alphaZ.setRange(lampRender.descriptor.alphaZMin, lampRender.descriptor.alphaZMax);
+        alphaZ.setRange(lampRender.getDescriptor().alphaZMin, lampRender.getDescriptor().alphaZMax);
         alphaZ.setStepIdMax(200);
-        alphaZ.setValue(lampRender.alphaZ);
+        alphaZ.setValue((float) lampRender.getAlphaZ());
 
-        if (lampRender.descriptor.alphaZMax == lampRender.descriptor.alphaZMin) {
+        if (lampRender.getDescriptor().alphaZMax == lampRender.getDescriptor().alphaZMin) {
             alphaZ.setVisible(false);
         }
     }
@@ -89,20 +89,20 @@ public class LampSocketGuiDraw extends GuiContainerEln {
     @Override
     protected void preDraw(float f, int x, int y) {
         super.preDraw(f, x, y);
-        if (lampRender.grounded)
+        if (lampRender.getGrounded())
             buttonGrounded.displayString = tr("Parallel");
         else
             buttonGrounded.displayString = tr("Serial");
 
-        if (lampRender.poweredByLampSupply) {
+        if (lampRender.getPoweredByLampSupply()) {
             buttonSupplyType.displayString = tr("Powered by Lamp Supply");
             channel.setVisible(true);
             if (inventory.getStackInSlot(LampSocketContainer.CABLE_SLOT_ID) == null)
                 channel.setComment(1, "§4" + tr("Cable slot empty"));
-            else if (lampRender.isConnectedToLampSupply)
-                channel.setComment(1, "§2" + tr("connected to " + lampRender.channel));
+            else if (lampRender.getActiveLampSupplyConnection())
+                channel.setComment(1, "§2" + tr("connected to " + lampRender.getLampSupplyChannel()));
             else
-                channel.setComment(1, "§4" + tr("%1$ is not in range!", lampRender.channel));
+                channel.setComment(1, "§4" + tr("%1$ is not in range!", lampRender.getLampSupplyChannel()));
         } else {
             channel.setVisible(false);
             buttonSupplyType.displayString = tr("Powered by cable");
