@@ -1,15 +1,11 @@
 package mods.eln.item
 
 import mods.eln.Eln
+import kotlin.math.abs
 import kotlin.math.pow
 import kotlin.math.sqrt
 
 object LampLists {
-    const val MIN_LIGHT_VALUE: Int = 0
-    const val MAX_LIGHT_VALUE: Int = 15
-
-    const val LAMP_BASE_POWER: Int = 60
-
     val lampTechnologyList = mutableListOf<BoilerplateLampData>()
     val registeredLampList = mutableListOf<SpecificLampData>()
 
@@ -43,6 +39,14 @@ data class BoilerplateLampData(
     val basePowerMultiplier: Double
 ) {
 
+    companion object {
+        const val MIN_LIGHT_VALUE: Int = 0
+        const val MAX_LIGHT_VALUE: Int = 15
+        const val LAMP_BASE_POWER: Int = 60
+        const val MIN_LAMP_LIFE_IN_HOURS: Double = 0.016666666666666666 // 1 minute IRL
+        const val MAX_LAMP_LIFE_IN_HOURS: Double = 8760.0 // 1 year IRL
+    }
+
     private val nominalLifePath: String
         get() = "lighting.lamps.${lampType}.nominalLifeHours"
 
@@ -50,16 +54,13 @@ data class BoilerplateLampData(
         get() = "lighting.lamps.${lampType}.infiniteLifeEnabled"
 
     fun loadConfig() {
-        val configNominalLife = Eln.config.getDoubleOrElse(nominalLifePath, this.nominalLifeInHours)
+        val configNominalLife = abs(Eln.config.getDoubleOrElse(nominalLifePath, this.nominalLifeInHours))
 
-        try {
-            require(configNominalLife > 0)
-        } catch (e: IllegalArgumentException) {
-            // TODO: Somehow display a flag once Minecraft finishes loading or a world is opened? Not exactly sure how.
-            println("ELN config: Nominal lamp life of type ${this.lampType} must be greater than 0! Changes not applied!")
+        if (configNominalLife !in MIN_LAMP_LIFE_IN_HOURS..MAX_LAMP_LIFE_IN_HOURS) {
+            println("ELN config: Nominal lamp life of type ${this.lampType} must be within the range (${MIN_LAMP_LIFE_IN_HOURS}, ${MAX_LAMP_LIFE_IN_HOURS})! Changes not applied!")
+        } else {
+            this.nominalLifeInHours = configNominalLife
         }
-
-        if (configNominalLife > 0) this.nominalLifeInHours = configNominalLife
 
         this.infiniteLifeEnabled = Eln.config.getBooleanOrElse(infiniteLifePath, this.infiniteLifeEnabled)
     }
@@ -69,6 +70,6 @@ data class BoilerplateLampData(
 data class SpecificLampData(
     val technology: BoilerplateLampData,
     val nominalU: Double,
-    var nominalP: Double = LampLists.LAMP_BASE_POWER * technology.basePowerMultiplier * sqrt(nominalU / Eln.LVU),
+    var nominalP: Double = BoilerplateLampData.LAMP_BASE_POWER * technology.basePowerMultiplier * sqrt(nominalU / Eln.LVU),
     val resistance: Double = nominalU.pow(2) / nominalP
 )
