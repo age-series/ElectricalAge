@@ -42,14 +42,14 @@ public class ClientProxy extends CommonProxy {
         uuidManager = new UuidManager();
         soundClientEventListener = new SoundClientEventListener(uuidManager);
 
-        if (Eln.versionCheckEnabled)
+        if (Eln.config.getBooleanOrElse("updates.versionCheck.enabled", true))
             FMLCommonHandler.instance().bus().register(VersionCheckerHandler.getInstance());
 
         new FrameTime();
         new ConnectionListener();
 
-        if (Eln.soundChannels > 0) {
-            SoundSystemConfig.setNumberNormalChannels(Math.max(SoundSystemConfig.getNumberNormalChannels(), Eln.soundChannels));
+        if (Eln.config.getIntOrElse("ui.audio.soundChannels", 200) > 0) {
+            SoundSystemConfig.setNumberNormalChannels(Math.max(SoundSystemConfig.getNumberNormalChannels(), Eln.config.getIntOrElse("ui.audio.soundChannels", 200)));
         }
     }
 }

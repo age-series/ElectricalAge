@@ -65,11 +65,11 @@ abstract class ValueWatchdog : IProcess {
 
     private fun isWatchdogDestructionEnabled(): Boolean {
         return when (watchdogType) {
-            WatchdogType.THERMAL -> Eln.watchdogThermalEnabled
-            WatchdogType.RESISTOR_HEAT -> Eln.watchdogResistorHeatEnabled
-            WatchdogType.VOLTAGE -> Eln.watchdogVoltageEnabled
-            WatchdogType.SHAFT_SPEED -> Eln.watchdogShaftSpeedEnabled
-            WatchdogType.OTHER -> Eln.watchdogOtherEnabled
+            WatchdogType.THERMAL -> Eln.config.getBooleanOrElse("simulation.watchdog.destruction.thermal", true)
+            WatchdogType.RESISTOR_HEAT -> Eln.config.getBooleanOrElse("simulation.watchdog.destruction.resistorHeat", false)
+            WatchdogType.VOLTAGE -> Eln.config.getBooleanOrElse("simulation.watchdog.destruction.voltage", true)
+            WatchdogType.SHAFT_SPEED -> Eln.config.getBooleanOrElse("simulation.watchdog.destruction.shaftSpeed", true)
+            WatchdogType.OTHER -> Eln.config.getBooleanOrElse("simulation.watchdog.destruction.other", true)
         }
     }
 

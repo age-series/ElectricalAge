@@ -55,7 +55,7 @@ public class ElectricalSwitchDescriptor extends SixNodeDescriptor {
         boolean signalSwitch) {
         super(name, ElectricalSwitchElement.class, ElectricalSwitchRender.class);
 
-        if (!Eln.noSymbols) {
+        if (!Eln.config.getBooleanOrElse("ui.icons.noSymbols", false)) {
             setDefaultIcon("switch");
         }
 

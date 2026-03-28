@@ -51,7 +51,7 @@ public class ServerWirelessTxStatus extends WirelessTxStatus implements IWireles
 
     @Override
     public int getRange() {
-        return Eln.instance.wirelessTxRange;
+        return Eln.config.getIntOrElse("wireless.transmitter.maxRangeBlocks", 32);
     }
 
     @Override

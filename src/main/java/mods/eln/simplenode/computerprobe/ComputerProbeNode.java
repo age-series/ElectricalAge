@@ -358,7 +358,7 @@ public class ComputerProbeNode extends SimpleNode implements IPeripheral {
 
         @Override
         public int getRange() {
-            return Eln.wirelessTxRange;
+            return Eln.config.getIntOrElse("wireless.transmitter.maxRangeBlocks", 32);
         }
 
         @Override

@@ -77,8 +77,8 @@ class BiomeClimateServiceTest {
     @Test
     fun undergroundProfileTransitionsFromSurfaceToBiomeWeightedUnderground() {
         val surface = -10.0
-        val previous = Eln.undergroundBiomeTemperatureMultiplier
-        Eln.undergroundBiomeTemperatureMultiplier = 0.2
+        val previous = Eln.config.getDoubleOrElse("simulation.thermal.ambient.undergroundBiomeTemperatureMultiplier", 0.2)
+        Eln.config.setDouble("simulation.thermal.ambient.undergroundBiomeTemperatureMultiplier", 0.2)
         val underground = BiomeClimateService.undergroundTemperatureCelsius(surface)
         try {
             assertEquals(10.0, underground, 1.0e-9)
@@ -87,23 +87,23 @@ class BiomeClimateServiceTest {
             assertEquals(-30.0 / 13.0, BiomeClimateService.applyDepthTemperatureProfile(surface, 58), 1.0e-9)
             assertEquals(underground, BiomeClimateService.applyDepthTemperatureProfile(surface, 30), 1.0e-9)
         } finally {
-            Eln.undergroundBiomeTemperatureMultiplier = previous
+            Eln.config.setDouble("simulation.thermal.ambient.undergroundBiomeTemperatureMultiplier", previous)
         }
     }
 
     @Test
     fun lavaRangeRampCanBeEnabledOrDisabled() {
-        val previous = Eln.lavaAmbientRampEnabled
+        val previous = Eln.config.getBooleanOrElse("simulation.thermal.ambient.lavaRampEnabled", true)
         try {
-            Eln.lavaAmbientRampEnabled = true
+            Eln.config.setBoolean("simulation.thermal.ambient.lavaRampEnabled", true)
             assertEquals(40.0, BiomeClimateService.applyDepthTemperatureProfile(20.0, 12), 1.0e-9)
             assertEquals(28.0, BiomeClimateService.applyDepthTemperatureProfile(20.0, 16), 1.0e-9)
 
-            Eln.lavaAmbientRampEnabled = false
+            Eln.config.setBoolean("simulation.thermal.ambient.lavaRampEnabled", false)
             assertEquals(16.0, BiomeClimateService.applyDepthTemperatureProfile(20.0, 16), 1.0e-9)
             assertEquals(16.0, BiomeClimateService.applyDepthTemperatureProfile(20.0, 8), 1.0e-9)
         } finally {
-            Eln.lavaAmbientRampEnabled = previous
+            Eln.config.setBoolean("simulation.thermal.ambient.lavaRampEnabled", previous)
         }
     }
 }

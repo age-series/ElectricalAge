@@ -85,12 +85,12 @@ open class ShaftNetwork() : INBTTReady {
     var radsLastPublished = rads
 
     var energy: Double
-        get() = if (mass.isFinite() && rads.isFinite()) mass * rads * rads * 0.5 * Eln.shaftEnergyFactor else 0.0
+        get() = if (mass.isFinite() && rads.isFinite()) mass * rads * rads * 0.5 * Eln.config.getDoubleOrElse("balance.mechanics.shaftEnergyFactor", 0.05) else 0.0
         set(value) {
             if(value < 0 || !value.isFinite())
                 rads = 0.0
             else
-                rads = Math.sqrt(2 * value / ((if(mass.isFinite()) mass else 0.0) * Eln.shaftEnergyFactor))
+                rads = Math.sqrt(2 * value / ((if(mass.isFinite()) mass else 0.0) * Eln.config.getDoubleOrElse("balance.mechanics.shaftEnergyFactor", 0.05)))
         }
 
     fun afterSetRads() {

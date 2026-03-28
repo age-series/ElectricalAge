@@ -274,7 +274,7 @@ public class TurretElement extends TransparentNodeElement implements IConfigurab
             }
         }
 
-        if (Eln.wailaEasyMode) {
+        if (Eln.config.getBooleanOrElse("ui.waila.easyMode", false)) {
             info.put(I18N.tr("Charge level"),
                 Utils.plotPercent("", energyBuffer / descriptor.getProperties().impulseEnergy));
         }

@@ -110,7 +110,7 @@ class PowerSinkElement(sixNode: SixNode, side: Direction, descriptor: SixNodeDes
         val info: MutableMap<String, String> = HashMap()
         info[tr("Voltage")] = Utils.plotVolt("", electricalLoad.voltage)
         info[tr("Current")] = Utils.plotAmpere("", electricalLoad.current)
-        if (Eln.wailaEasyMode) {
+        if (Eln.config.getBooleanOrElse("ui.waila.easyMode", false)) {
             info[tr("Power")] = Utils.plotPower("", electricalLoad.voltage * electricalLoad.current)
         }
         return info

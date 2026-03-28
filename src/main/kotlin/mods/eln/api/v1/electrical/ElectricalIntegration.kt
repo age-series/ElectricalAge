@@ -219,13 +219,13 @@ object ElectricalIntegration {
      * True when ELN debug logging/features are enabled.
      */
     @JvmStatic
-    fun isDebugEnabled(): Boolean = Eln.debugEnabled
+    fun isDebugEnabled(): Boolean = Eln.config.getBooleanOrElse("debug.logging.enabled", false)
 
     /**
      * True when ELN easy Waila mode is enabled.
      */
     @JvmStatic
-    fun isEasyWailaModeEnabled(): Boolean = Eln.wailaEasyMode
+    fun isEasyWailaModeEnabled(): Boolean = Eln.config.getBooleanOrElse("ui.waila.easyMode", false)
 
     /**
      * Lightweight telemetry handle for an electrical load.
@@ -1940,7 +1940,7 @@ object ElectricalIntegration {
     }
 
     private fun apiDebug(message: String, vararg args: Any?) {
-        if (!Eln.debugEnabled) return
+        if (!Eln.config.getBooleanOrElse("debug.logging.enabled", false)) return
         Eln.LOGGER.info("[ElectricalApiV1] $message", *args)
     }
 

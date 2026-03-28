@@ -127,7 +127,7 @@ public class ElectricalBreakerElement extends SixNodeElement {
         Map<String, String> info = new HashMap<String, String>();
         info.put(I18N.tr("Contact"), switchState ? I18N.tr("Closed") : I18N.tr("Open"));
         info.put(I18N.tr("Current"), Utils.plotAmpere("", aLoad.getCurrent()));
-        if (Eln.wailaEasyMode) {
+        if (Eln.config.getBooleanOrElse("ui.waila.easyMode", false)) {
             info.put(I18N.tr("Voltages"), Utils.plotVolt("", aLoad.getVoltage()) + Utils.plotVolt(" ", bLoad.getVoltage()));
         }
         return info;

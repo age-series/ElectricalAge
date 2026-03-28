@@ -173,7 +173,7 @@ class RadialMotorElement(node: TransparentNode, transparentNodeDescriptor: Trans
         val info = mutableMapOf<String, String>()
         info[tr("Speed")] = Utils.plotRads("", shaft.rads)
         info[tr("Energy")] = Utils.plotEnergy("", shaft.energy)
-        if (Eln.wailaEasyMode) {
+        if (Eln.config.getBooleanOrElse("ui.waila.easyMode", false)) {
             info[tr("Efficiency")] = Utils.plotPercent("", efficiency.toDouble())
             info[tr("Fuel usage")] = Utils.plotBuckets("", fluidRate / 1000.0) + "/s"
         }

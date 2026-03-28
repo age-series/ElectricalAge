@@ -44,7 +44,7 @@ object SingleNodeRegistration {
     }
 
     private fun registerEnergyConverter() {
-        if (Eln.instance.ElnToOtherEnergyConverterEnable) {
+        if (Eln.config.getBooleanOrElse("integrations.energyExporter.enabled", true)) {
             val entityName = "eln.EnergyConverterElnToOtherEntity"
 
             TileEntity.addMapping(EnergyConverterElnToOtherEntity::class.java, entityName)
@@ -67,7 +67,7 @@ object SingleNodeRegistration {
     }
 
     private fun registerComputer() {
-        if (Eln.instance.ComputerProbeEnable) {
+        if (Eln.config.getBooleanOrElse("integrations.computerProbe.enabled", true)) {
             val entityName = I18N.TR_NAME(I18N.Type.TILE, "eln.ElnProbe")
 
             TileEntity.addMapping(ComputerProbeEntity::class.java, entityName)

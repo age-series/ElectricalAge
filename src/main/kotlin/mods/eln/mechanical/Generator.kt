@@ -296,7 +296,7 @@ class GeneratorElement(node: TransparentNode, desc_: TransparentNodeDescriptor) 
         var info = mutableMapOf<String, String>()
         info.put(tr("Energy"), Utils.plotEnergy("", shaft.energy))
         info.put(tr("Speed"), Utils.plotRads("", shaft.rads))
-        if (Eln.wailaEasyMode) {
+        if (Eln.config.getBooleanOrElse("ui.waila.easyMode", false)) {
             info.put(tr("Voltage"), Utils.plotVolt("", electricalPowerSource.getVoltage()))
             info.put(tr("Current"), Utils.plotAmpere("", electricalPowerSource.getCurrent()))
             info.put(tr("Temperature"), plotAmbientCelsius("", thermal.temperature))

@@ -334,7 +334,7 @@ class DcDcElement(transparentNode: TransparentNode, descriptor: TransparentNodeD
     override fun getWaila(): Map<String, String> {
         val info = HashMap<String, String>()
         info[tr("Ratio")] = Utils.plotValue(interSystemProcess.ratio)
-        if (Eln.wailaEasyMode) {
+        if (Eln.config.getBooleanOrElse("ui.waila.easyMode", false)) {
             info[tr("Voltages")] = "\u00A7a" + Utils.plotVolt("", primaryLoad.voltage) + " " +
                 "\u00A7e" + Utils.plotVolt("", secondaryLoad.voltage)
         }

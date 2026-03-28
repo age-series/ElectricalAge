@@ -797,7 +797,7 @@ Wireless_channel_name=无线信号频道名称
 # ./src/main/java/mods/eln/sixnode/modbusrtu/ModbusRtuElement.java
 Modbus_TCP=Modbus TCP通讯协议
 Modbus_Unit_ID=Modbus独立ID
-Modbus_is_disabled,_enable_it_in_Eln.cfg=Modbus被停用,从Eln.cfg中启用
+Modbus_is_disabled,_enable_it_in_config/eln/eln.json=Modbus被停用,从config/eln/eln.json中启用
 
 # ./src/main/java/mods/eln/sixnode/modbusrtu/ModbusRtuGui.java
 Add=增加

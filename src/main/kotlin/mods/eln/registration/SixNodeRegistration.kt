@@ -865,7 +865,7 @@ object SixNodeRegistration {
                 name, Eln.obj.getObj("RTU")
 
             )
-            if (Eln.modbusEnable) {
+            if (Eln.config.getBooleanOrElse("integrations.modbus.enabled", false)) {
                 Eln.sixNodeItem.addDescriptor(subId + (id shl 6), desc)
             } else {
                 Eln.sixNodeItem.addWithoutRegistry(subId + (id shl 6), desc)
@@ -1237,7 +1237,7 @@ object SixNodeRegistration {
             subId = 8
             name = I18N.TR_NAME(I18N.Type.NONE, "Wireless Signal Transmitter")
             val desc =
-                WirelessSignalTxDescriptor(name, Eln.obj.getObj("wirelesssignaltx"), Eln.wirelessTxRange)
+                WirelessSignalTxDescriptor(name, Eln.obj.getObj("wirelesssignaltx"), Eln.config.getIntOrElse("wireless.transmitter.maxRangeBlocks", 32))
             Eln.sixNodeItem.addDescriptor(subId + (id shl 6), desc)
         }
 
@@ -1245,7 +1245,7 @@ object SixNodeRegistration {
             subId = 16
             name = I18N.TR_NAME(I18N.Type.NONE, "Wireless Signal Repeater")
             val desc =
-                WirelessSignalRepeaterDescriptor(name, Eln.obj.getObj("wirelesssignalrepeater"), Eln.wirelessTxRange)
+                WirelessSignalRepeaterDescriptor(name, Eln.obj.getObj("wirelesssignalrepeater"), Eln.config.getIntOrElse("wireless.transmitter.maxRangeBlocks", 32))
             Eln.sixNodeItem.addDescriptor(subId + (id shl 6), desc)
         }
     }
@@ -1341,7 +1341,7 @@ object SixNodeRegistration {
             name = I18N.TR_NAME(I18N.Type.NONE, "Signal Switch")
             val desc = ElectricalGateSourceDescriptor(
                 name, ledswitch, true,
-                if (Eln.noSymbols) "signalswitch" else "switch"
+                if (Eln.config.getBooleanOrElse("ui.icons.noSymbols", false)) "signalswitch" else "switch"
             )
             Eln.sixNodeItem.addDescriptor(subId + (id shl 6), desc)
         }
@@ -1356,7 +1356,7 @@ object SixNodeRegistration {
             subId = 12
             name = I18N.TR_NAME(I18N.Type.NONE, "Wireless Button")
             val desc = WirelessSignalSourceDescriptor(
-                name, ledswitch, Eln.wirelessTxRange,
+                name, ledswitch, Eln.config.getIntOrElse("wireless.transmitter.maxRangeBlocks", 32),
                 true
             )
             Eln.sixNodeItem.addDescriptor(subId + (id shl 6), desc)
@@ -1365,7 +1365,7 @@ object SixNodeRegistration {
             subId = 16
             name = I18N.TR_NAME(I18N.Type.NONE, "Wireless Switch")
             val desc = WirelessSignalSourceDescriptor(
-                name, ledswitch, Eln.wirelessTxRange,
+                name, ledswitch, Eln.config.getIntOrElse("wireless.transmitter.maxRangeBlocks", 32),
                 false
             )
             Eln.sixNodeItem.addDescriptor(subId + (id shl 6), desc)

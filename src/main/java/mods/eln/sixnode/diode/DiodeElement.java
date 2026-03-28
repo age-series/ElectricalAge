@@ -101,7 +101,7 @@ public class DiodeElement extends SixNodeElement {
     public Map<String, String> getWaila() {
         Map<String, String> info = new HashMap<String, String>();
         info.put(I18N.tr("Current"), Utils.plotAmpere("", anodeLoad.getCurrent()));
-        if (Eln.wailaEasyMode) {
+        if (Eln.config.getBooleanOrElse("ui.waila.easyMode", false)) {
             info.put(I18N.tr("Forward Voltage"), Utils.plotVolt("", anodeLoad.getVoltage() - catodeLoad.getVoltage()));
             info.put(I18N.tr("Temperature"), plotAmbientCelsius("", thermalLoad.getTemperature()));
         }

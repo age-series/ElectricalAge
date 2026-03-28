@@ -201,7 +201,7 @@ class TurbineElement(node: TransparentNode, desc_: TransparentNodeDescriptor) :
         var info = mutableMapOf<String, String>()
         info.put(tr("Speed"), Utils.plotRads("", shaft.rads))
         info.put(tr("Energy"), Utils.plotEnergy("", shaft.energy))
-        if (Eln.wailaEasyMode) {
+        if (Eln.config.getBooleanOrElse("ui.waila.easyMode", false)) {
             info.put(tr("Efficiency"), Utils.plotPercent("", efficiency.toDouble()))
             info.put(tr("Fuel usage"), desc.formatFluidRate(fluidRate))
         }

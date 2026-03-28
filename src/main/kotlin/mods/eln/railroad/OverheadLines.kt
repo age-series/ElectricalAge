@@ -85,7 +85,7 @@ class OverheadLinesElement(node: TransparentNode?,
     override fun getWaila(): Map<String, String> {
         val info: MutableMap<String, String> = HashMap()
         info[I18N.tr("Voltage")] = plotVolt("", electricalLoad.voltage)
-        if (Eln.wailaEasyMode) {
+        if (Eln.config.getBooleanOrElse("ui.waila.easyMode", false)) {
             info[I18N.tr("Power")] = plotPower("", electricalLoad.current * electricalLoad.voltage)
         }
         val ss = electricalLoad.subSystem

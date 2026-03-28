@@ -286,7 +286,7 @@ class GridSwitchElement(node: TransparentNode, descriptor: TransparentNodeDescri
 
     override fun getWaila(): Map<String, String> {
         val info = mutableMapOf<String, String>()
-        if (Eln.wailaEasyMode) {
+        if (Eln.config.getBooleanOrElse("ui.waila.easyMode", false)) {
             info[tr("Left")] = Utils.plotUIP(grida.voltage, grida.current)
             info[tr("Right")] = Utils.plotUIP(gridb.voltage, gridb.current)
             info[tr("Transfer")] = Utils.plotPower(transfer.power)

@@ -28,7 +28,7 @@ open class BatteryProcess(
         var wasteQ = 0.0
         val deltaQ = voltageSource.current * time / QNominal
         if (!isRechargeable && deltaQ < 0.0) {
-            if (Eln.debugEnabled) {
+            if (Eln.config.getBooleanOrElse("debug.logging.enabled", false)) {
                 Eln.logger.warn("Battery is recharging when it shouldn't! current=${voltageSource.current}")
             }
             wasteQ = -deltaQ

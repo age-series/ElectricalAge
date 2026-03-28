@@ -17,7 +17,7 @@ abstract class BatterySlowProcess(private var batteryProcess: BatteryProcess, va
             destroy()
             return
         }
-        if (!Eln.infiniteStandardBatteryLife) {
+        if (!Eln.config.getBooleanOrElse("items.batteries.infinite.standard", false)) {
             var newLife = batteryProcess.life
             val normalisedCurrent = Math.abs(batteryProcess.dischargeCurrent) / lifeNominalCurrent
             newLife -= normalisedCurrent * normalisedCurrent * lifeNominalLost * time

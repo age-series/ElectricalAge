@@ -653,7 +653,7 @@ object ItemRegistration {
             element = GenericItemUsingDamageDescriptorWithComment(name, arrayOf())
             Eln.sharedItem.addElement(currentId, element)
             Data.addResource(element.newItemStack())
-            addToOre(Eln.dictTungstenDust, element.newItemStack())
+            addToOre(Eln.config.getStringOrElse("runtime.dictionary.tungstenDust", "dustElnTungsten"), element.newItemStack())
         }
 
         run {
@@ -729,7 +729,7 @@ object ItemRegistration {
             Eln.sharedItem.addElement(completId, element)
             instance.tungstenIngot = element
             Data.addResource(element.newItemStack())
-            addToOre(Eln.dictTungstenIngot, element.newItemStack())
+            addToOre(Eln.config.getStringOrElse("runtime.dictionary.tungstenIngot", "ingotElnTungsten"), element.newItemStack())
         }
 
         run {
@@ -1217,17 +1217,22 @@ object ItemRegistration {
             name = I18N.TR_NAME(I18N.Type.NONE, "X-Ray Scanner")
             val desc = PortableOreScannerItem(
                 name, Eln.obj.getObj("XRayScanner"), 100000.0, 400.0,
-                300.0, instance.xRayScannerRange, (Math.PI / 2).toFloat(), 32, 20
+                300.0,
+                Eln.config.getDoubleOrElse("runtime.tools.xrayScanner.rangeBlocks.clamped", 5.0).toFloat(),
+                (Math.PI / 2).toFloat(),
+                32,
+                20
             )
             Eln.sharedItemStackOne.addElement(subId + (id shl 6), desc)
         }
     }
 
     private fun registerFuelBurnerItem(id: Int) {
+        val fuelHeatFurnacePowerFactor = Eln.config.getDoubleOrElse("balance.generators.fuelHeatFurnacePowerFactor", 1.0)
         Eln.sharedItemStackOne.addElement(
             0 + (id shl 6), FuelBurnerDescriptor(
                 I18N.TR_NAME(I18N.Type.NONE, "Small Fuel Burner"),
-                5000 * instance.fuelHeatFurnacePowerFactor, 2, 1.6f
+                5000 * fuelHeatFurnacePowerFactor, 2, 1.6f
             )
         )
         Eln.sharedItemStackOne.addElement(
@@ -1235,13 +1240,13 @@ object ItemRegistration {
                 I18N.TR_NAME(
                     I18N.Type.NONE,
                     "Medium Fuel Burner"
-                ), 10000 * instance.fuelHeatFurnacePowerFactor, 1, 1.4f
+                ), 10000 * fuelHeatFurnacePowerFactor, 1, 1.4f
             )
         )
         Eln.sharedItemStackOne.addElement(
             2 + (id shl 6), FuelBurnerDescriptor(
                 I18N.TR_NAME(I18N.Type.NONE, "Big Fuel Burner"),
-                25000 * instance.fuelHeatFurnacePowerFactor, 0, 1f
+                25000 * fuelHeatFurnacePowerFactor, 0, 1f
             )
         )
     }
@@ -1258,7 +1263,7 @@ object ItemRegistration {
             ).inOresAndMaterialsTab()
             Eln.sharedItem.addElement(subId + (id shl 6), desc)
             Data.addResource(desc.newItemStack())
-            OreDictionary.registerOre(Eln.dictCheapChip, desc.newItemStack())
+            OreDictionary.registerOre(Eln.config.getStringOrElse("runtime.dictionary.cheapChip", "circuitElnBasic"), desc.newItemStack())
         }
         run {
             subId = 1
@@ -1269,7 +1274,7 @@ object ItemRegistration {
             ).inOresAndMaterialsTab()
             Eln.sharedItem.addElement(subId + (id shl 6), desc)
             Data.addResource(desc.newItemStack())
-            OreDictionary.registerOre(Eln.dictAdvancedChip, desc.newItemStack())
+            OreDictionary.registerOre(Eln.config.getStringOrElse("runtime.dictionary.advancedChip", "circuitElnAdvanced"), desc.newItemStack())
         }
         run {
             subId = 2
@@ -1635,7 +1640,7 @@ object ItemRegistration {
             id = 1
             name = I18N.TR_NAME(I18N.Type.NONE, "Copper Ore")
             val desc =
-                OreDescriptor(name, id, 30 * (if (Eln.genCopper) 1 else 0), 6, 10, 0, 80)
+                OreDescriptor(name, id, 30 * (if (Eln.config.getBooleanOrElse("worldgen.ores.copper.enabled", true)) 1 else 0), 6, 10, 0, 80)
             Eln.oreCopper = desc
             Eln.oreItem.addDescriptor(id, desc)
             addToOre("oreCopper", desc.newItemStack())
@@ -1645,7 +1650,7 @@ object ItemRegistration {
             id = 4
             name = I18N.TR_NAME(I18N.Type.NONE, "Lead Ore")
             val desc =
-                OreDescriptor(name, id, 8 * (if (Eln.genLead) 1 else 0), 3, 9, 0, 24)
+                OreDescriptor(name, id, 8 * (if (Eln.config.getBooleanOrElse("worldgen.ores.lead.enabled", true)) 1 else 0), 3, 9, 0, 24)
             Eln.oreItem.addDescriptor(id, desc)
             addToOre("oreLead", desc.newItemStack())
         }
@@ -1653,15 +1658,15 @@ object ItemRegistration {
             id = 5
             name = I18N.TR_NAME(I18N.Type.NONE, "Tungsten Ore")
             val desc =
-                OreDescriptor(name, id, 6 * (if (Eln.genTungsten) 1 else 0), 3, 9, 0, 32)
+                OreDescriptor(name, id, 6 * (if (Eln.config.getBooleanOrElse("worldgen.ores.tungsten.enabled", true)) 1 else 0), 3, 9, 0, 32)
             Eln.oreItem.addDescriptor(id, desc)
-            addToOre(Eln.dictTungstenOre, desc.newItemStack())
+            addToOre(Eln.config.getStringOrElse("runtime.dictionary.tungstenOre", "oreElnTungsten"), desc.newItemStack())
         }
         run {
             id = 6
             name = I18N.TR_NAME(I18N.Type.NONE, "Cinnabar Ore")
             val desc =
-                OreDescriptor(name, id, 3 * (if (Eln.genCinnabar) 1 else 0), 3, 9, 0, 32)
+                OreDescriptor(name, id, 3 * (if (Eln.config.getBooleanOrElse("runtime.worldgen.ores.cinnabar.enabled", false)) 1 else 0), 3, 9, 0, 32)
             Eln.oreItem.addDescriptor(id, desc)
             addToOre("oreCinnabar", desc.newItemStack())
         }

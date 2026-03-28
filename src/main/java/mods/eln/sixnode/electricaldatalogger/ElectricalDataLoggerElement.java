@@ -146,7 +146,7 @@ public class ElectricalDataLoggerElement extends SixNodeElement implements IConf
     public Map<String, String> getWaila() {
         Map<String, String> info = new HashMap<String, String>();
         info.put(I18N.tr("Input"), Utils.plotVolt("", inputGate.getVoltage()));
-        if (Eln.wailaEasyMode && logs.size() > 0) {
+        if (Eln.config.getBooleanOrElse("ui.waila.easyMode", false) && logs.size() > 0) {
             info.put(I18N.tr("Current value"), DataLogs.getValueString(
                 logs.read(0),
                 logs.maxValue,

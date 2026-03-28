@@ -180,7 +180,7 @@ class PowerCapacitorSixElement(SixNode: SixNode, side: Direction, descriptor: Si
         val info: MutableMap<String, String> = HashMap()
         info[tr("Capacity")] = Utils.plotValue(capacitor.coulombs, "F")
         info[tr("Charge")] = Utils.plotEnergy("", capacitor.energy)
-        if (Eln.wailaEasyMode) {
+        if (Eln.config.getBooleanOrElse("ui.waila.easyMode", false)) {
             info[tr("Voltage drop")] = Utils.plotVolt("", Math.abs(capacitor.voltage))
             info[tr("Current")] = Utils.plotAmpere("", Math.abs(capacitor.current))
         }

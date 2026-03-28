@@ -817,7 +817,7 @@ Wireless_channel_name=Wireless channel name
 # ./src/main/java/mods/eln/sixnode/modbusrtu/ModbusRtuElement.java
 Modbus_TCP=Modbus TCP
 Modbus_Unit_ID=Modbus Unit ID
-Modbus_is_disabled,_enable_it_in_Eln.cfg=Modbus is disabled, enable it in Eln.cfg
+Modbus_is_disabled,_enable_it_in_config/eln/eln.json=Modbus is disabled, enable it in config/eln/eln.json
 
 # ./src/main/java/mods/eln/sixnode/modbusrtu/ModbusRtuGui.java
 Add=Add

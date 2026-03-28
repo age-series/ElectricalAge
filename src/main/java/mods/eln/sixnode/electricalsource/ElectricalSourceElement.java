@@ -85,7 +85,7 @@ public class ElectricalSourceElement extends SixNodeElement implements IConfigur
         Map<String, String> info = new HashMap<String, String>();
         info.put(I18N.tr("Voltage"), Utils.plotVolt("", electricalLoad.getVoltage()));
         info.put(I18N.tr("Current"), Utils.plotAmpere("", electricalLoad.getCurrent()));
-        if (Eln.wailaEasyMode) {
+        if (Eln.config.getBooleanOrElse("ui.waila.easyMode", false)) {
             info.put(I18N.tr("Power"), Utils.plotPower("", electricalLoad.getVoltage() * electricalLoad.getCurrent()));
         }
         return info;

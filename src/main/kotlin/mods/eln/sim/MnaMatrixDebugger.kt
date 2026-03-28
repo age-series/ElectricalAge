@@ -26,7 +26,7 @@ object MnaMatrixDebugger {
     private val TIMESTAMP_FORMAT = SimpleDateFormat("yyyyMMdd-HHmmss-SSS", Locale.ROOT)
 
     fun dump(target: Any?, reason: String? = null) {
-        if (!Eln.debugEnabled || !Eln.simSnapshotEnabled) {
+        if (!Eln.config.getBooleanOrElse("debug.logging.enabled", false) || !Eln.config.getBooleanOrElse("debug.logging.simSnapshot", false)) {
             return
         }
 

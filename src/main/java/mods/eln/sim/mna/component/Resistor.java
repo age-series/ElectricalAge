@@ -36,7 +36,7 @@ public class Resistor extends Bipole {
             Utils.println("Error! Resistor cannot be set to " + resistance);
             // Call stack for debugging which node type it comes from;
             // this typically results in a cable going boom! somewhere
-            if (Eln.debugEnabled)
+            if (Eln.config.getBooleanOrElse("debug.logging.enabled", false))
                 Eln.LOGGER.error("Error! Resistor cannot be set to {}", resistance, new Throwable());
             return this;
         }

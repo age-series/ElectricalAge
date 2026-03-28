@@ -329,8 +329,8 @@ class ClutchElement(node: TransparentNode, desc_: TransparentNodeDescriptor) : S
                     slipping = true
                     needPublish()
                 } else {
-                    leftShaft.rads = Math.sqrt(2 * leftEnergy / (mass * Eln.shaftEnergyFactor))
-                    rightShaft.rads = Math.sqrt(2 * rightEnergy / (mass * Eln.shaftEnergyFactor))
+                    leftShaft.rads = Math.sqrt(2 * leftEnergy / (mass * Eln.config.getDoubleOrElse("balance.mechanics.shaftEnergyFactor", 0.05)))
+                    rightShaft.rads = Math.sqrt(2 * rightEnergy / (mass * Eln.config.getDoubleOrElse("balance.mechanics.shaftEnergyFactor", 0.05)))
                 }
             }
         }
@@ -423,7 +423,7 @@ class ClutchElement(node: TransparentNode, desc_: TransparentNodeDescriptor) : S
         info.put(tr("Energies"), entries.map {
             Utils.plotEnergy("", it.value.energy)
         }.joinToString(", "))
-        if(Eln.wailaEasyMode) {
+        if(Eln.config.getBooleanOrElse("ui.waila.easyMode", false)) {
             info.put("Masses", entries.map {
                 Utils.plotValue(it.value.mass * 1000, "g")
             }.joinToString(", "))
@@ -433,7 +433,7 @@ class ClutchElement(node: TransparentNode, desc_: TransparentNodeDescriptor) : S
                 info.put("Wear", String.format("%.6f", desc.getWear(stack)))
         }
         info.put(tr("Clutching"), Utils.plotVolt(inputGate.signalVoltage))
-        if(Eln.wailaEasyMode) {
+        if(Eln.config.getBooleanOrElse("ui.waila.easyMode", false)) {
             info.put("Slipping", if (slipping) {
                 "YES"
             } else {

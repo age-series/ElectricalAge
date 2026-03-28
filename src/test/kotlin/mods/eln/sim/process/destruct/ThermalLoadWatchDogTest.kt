@@ -65,10 +65,10 @@ class ThermalLoadWatchDogTest {
 
     @Test
     fun resistorHeatModeUsesResistorHeatToggle() {
-        val previousResistor = Eln.watchdogResistorHeatEnabled
-        val previousThermal = Eln.watchdogThermalEnabled
-        Eln.watchdogResistorHeatEnabled = false
-        Eln.watchdogThermalEnabled = true
+        val previousResistor = Eln.config.getBooleanOrElse("simulation.watchdog.destruction.resistorHeat", false)
+        val previousThermal = Eln.config.getBooleanOrElse("simulation.watchdog.destruction.thermal", true)
+        Eln.config.setBoolean("simulation.watchdog.destruction.resistorHeat", false)
+        Eln.config.setBoolean("simulation.watchdog.destruction.thermal", true)
         try {
             val load = ThermalLoad().apply { temperatureCelsius = 100.0 }
             val target = object : IDestructible {
@@ -90,8 +90,8 @@ class ThermalLoadWatchDogTest {
 
             assertFalse(target.destroyed)
         } finally {
-            Eln.watchdogResistorHeatEnabled = previousResistor
-            Eln.watchdogThermalEnabled = previousThermal
+            Eln.config.setBoolean("simulation.watchdog.destruction.resistorHeat", previousResistor)
+            Eln.config.setBoolean("simulation.watchdog.destruction.thermal", previousThermal)
         }
     }
 }

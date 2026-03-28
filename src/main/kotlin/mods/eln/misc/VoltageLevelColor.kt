@@ -19,7 +19,7 @@ enum class VoltageLevelColor(private val voltageLevel: String?) {
     Thermal("thermal");
 
     fun drawIconBackground(type: ItemRenderType) {
-        if (!Eln.noVoltageBackground && voltageLevel != null && type == ItemRenderType.INVENTORY || type == ItemRenderType.FIRST_PERSON_MAP) {
+        if (!Eln.config.getBooleanOrElse("ui.icons.noVoltageBackground", false) && voltageLevel != null && type == ItemRenderType.INVENTORY || type == ItemRenderType.FIRST_PERSON_MAP) {
             UtilsClient.drawIcon(type, ResourceLocation("eln", "textures/voltages/$voltageLevel.png"))
         }
     }

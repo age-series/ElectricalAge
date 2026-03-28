@@ -265,7 +265,7 @@ class PIDRegulator : AnalogFunction() {
     override fun getWaila(inputs: Array<Double?>, output: Double): MutableMap<String, String> {
         val info = super.getWaila(inputs, output)
         info[tr("Params")] = "Kp = $Kp, Ki = $Ki, Kd = $Kd"
-        if (Eln.wailaEasyMode) {
+        if (Eln.config.getBooleanOrElse("ui.waila.easyMode", false)) {
             info[tr("State")] = "Si = ${pid.iStack}"
         }
         return info
@@ -794,7 +794,7 @@ class FilterElement(node: SixNode, side: Direction, sixNodeDescriptor: SixNodeDe
         CUTOFF_FREQUENCY_CHANGED(1)
     }
 
-    private var cutOffFrequency = Eln.instance.electricalFrequency / 4.0
+    private var cutOffFrequency = Eln.config.getDoubleOrElse("simulation.electrical.frequency", 20.0) / 4.0
         get() = (function as Filter).feedback / (2.0 * Math.PI)
         set(value) {
             field = value
@@ -842,7 +842,7 @@ class FilterElement(node: SixNode, side: Direction, sixNodeDescriptor: SixNodeDe
 
 class FilterRender(entity: SixNodeEntity, side: Direction, descriptor: SixNodeDescriptor) :
     AnalogChipRender(entity, side, descriptor) {
-    internal var cutOffFrequency = Synchronizable(Eln.instance.electricalFrequency.toFloat() / 4f)
+    internal var cutOffFrequency = Synchronizable((Eln.config.getDoubleOrElse("simulation.electrical.frequency", 20.0) / 4.0).toFloat())
 
     override fun newGuiDraw(side: Direction, player: EntityPlayer): GuiScreen = FilterGui(this)
 
@@ -881,8 +881,9 @@ class FilterGui(private var render: FilterRender) : GuiScreenEln() {
         if (render.cutOffFrequency.pending) {
             freq?.value = render.cutOffFrequency.value
         }
+        val defaultCutoffFrequency = (Eln.config.getDoubleOrElse("simulation.electrical.frequency", 20.0) / 4.0).toFloat()
         freq?.setComment(0, tr("Cut-off frequency %1$ Hz",
-            String.format("%1.3f", freq?.value ?: Eln.instance.electricalFrequency / 4f)))
+            String.format("%1.3f", freq?.value ?: defaultCutoffFrequency)))
     }
 
     override fun newHelper(): GuiHelper {

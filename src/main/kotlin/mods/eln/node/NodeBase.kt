@@ -110,7 +110,7 @@ abstract class NodeBase {
         var explosionStrength = explosionStrength
         if (isDestructing) return
         isDestructing = true
-        if (!Eln.explosionEnable) explosionStrength = 0f
+        if (!Eln.config.getBooleanOrElse("gameplay.hazards.explosionsEnabled", false)) explosionStrength = 0f
         disconnect()
         coordinate.world().setBlockToAir(coordinate.x, coordinate.y, coordinate.z)
         NodeManager.instance!!.removeNode(this)

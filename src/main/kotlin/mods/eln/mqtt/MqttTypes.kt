@@ -15,7 +15,7 @@ data class MqttServerConfig(
 )
 
 /**
- * Serialized structure for `eln-mqtt.json`.
+ * Serialized structure for `config/eln/mqtt.json`.
  */
 data class MqttConfiguration(
     val disable: Boolean = false,

@@ -47,7 +47,7 @@ public class HeatFurnaceInventoryProcess implements IProcess, INBTTReady {
         furnace.furnaceProcess.nominalPower = furnace.descriptor.nominalPower + furnace.descriptor.combustionChamberPower * combustionChamberNbr;
 
         if (furnace.getTakeFuel()) {
-            if (Eln.heatFurnaceConsumesFuel) {
+            if (Eln.config.getBooleanOrElse("machines.heatFurnace.consumeFuel", false)) {
                 combustibleBuffer = furnace.furnaceProcess.nominalCombustibleEnergy;
             } else if (combustibleStack != null) {
                 double itemEnergy = Utils.getItemEnergie(combustibleStack);

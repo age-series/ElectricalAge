@@ -248,7 +248,7 @@ class CurrentRelayElement(sixNode: SixNode, side: Direction, descriptor: SixNode
         info[tr("Position")] = if (switchState) tr("Closed") else tr("Open")
         info[tr("Current")] = plotAmpere("", aLoad.current)
         info[tr("Temperature")] = plotAmbientCelsius("", thermalLoad.temperatureCelsius)
-        if (Eln.wailaEasyMode) {
+        if (Eln.config.getBooleanOrElse("ui.waila.easyMode", false)) {
             info[tr("Default position")] = if (defaultOutput) tr("Closed") else tr("Open")
             info[tr("Voltages")] =
                 plotVolt("", aLoad.voltage) + plotVolt(" ", bLoad.voltage)

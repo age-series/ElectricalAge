@@ -96,6 +96,9 @@ private fun clearElnBlock(world: World, x: Int, y: Int, z: Int): Boolean {
     return true
 }
 
+private fun saveConfigPath(path: String, value: Any): String =
+    Eln.config.writePath(path, value.toString(), Eln.instance)
+
 class ElnLsCommand: IConsoleCommand {
     override val name = "ls"
 
@@ -109,6 +112,85 @@ class ElnLsCommand: IConsoleCommand {
         cprint(ics, "")
         cprint(ics, "No input parameters.", indent = 1)
         cprint(ics, "")
+    }
+}
+
+class ElnConfigCommand : IConsoleCommand {
+    override val name = "config"
+
+    override fun runCommand(ics: ICommandSender, args: List<String>) {
+        when (args.getOrNull(0)?.lowercase()) {
+            "get" -> {
+                val path = args.getOrNull(1)
+                if (args.size != 2 || path.isNullOrBlank()) {
+                    cprint(ics, "Usage: /eln config get <path>", indent = 1)
+                    return
+                }
+                val value = Eln.config.readPath(path)
+                if (value == null) {
+                    cprint(ics, "${FC.BRIGHT_RED}Unknown config path '$path'.", indent = 1)
+                    return
+                }
+                cprint(ics, "${FC.BRIGHT_GREEN}$path = $value", indent = 1)
+            }
+            "set" -> {
+                val path = args.getOrNull(1)
+                if (args.size < 3 || path.isNullOrBlank()) {
+                    cprint(ics, "Usage: /eln config set <path> <value>", indent = 1)
+                    return
+                }
+                val rawValue = args.drop(2).joinToString(" ")
+                try {
+                    val writtenValue = Eln.config.writePath(path, rawValue, Eln.instance)
+                    cprint(ics, "${FC.BRIGHT_GREEN}$path = $writtenValue", indent = 1)
+                    cprint(ics, "Changes saved to config/eln/eln.json.", indent = 1)
+                } catch (e: IllegalArgumentException) {
+                    cprint(ics, "${FC.BRIGHT_RED}${e.message}", indent = 1)
+                }
+            }
+            "list" -> {
+                val prefix = args.getOrNull(1)
+                if (args.size > 2) {
+                    cprint(ics, "Usage: /eln config list [prefix]", indent = 1)
+                    return
+                }
+                val paths = Eln.config.listPaths(prefix)
+                if (paths.isEmpty()) {
+                    cprint(ics, "${FC.BRIGHT_YELLOW}No config paths matched.", indent = 1)
+                    return
+                }
+                cprint(ics, "${FC.WHITE}Config paths:", indent = 1)
+                paths.forEach { cprint(ics, it, indent = 2) }
+            }
+            else -> {
+                cprint(ics, "Usage: /eln config get <path>", indent = 1)
+                cprint(ics, "Usage: /eln config set <path> <value>", indent = 1)
+                cprint(ics, "Usage: /eln config list [prefix]", indent = 1)
+            }
+        }
+    }
+
+    override fun getManPage(ics: ICommandSender, args: List<String>) {
+        cprint(ics, "Read or modify any JSON-backed Electrical Age config path.", indent = 1)
+        cprint(ics, "This command updates the cache and writes back to config/eln/eln.json.", indent = 1)
+        cprint(ics, "", indent = 1)
+        cprint(ics, "Usage: /eln config get <path>", indent = 1)
+        cprint(ics, "Usage: /eln config set <path> <value>", indent = 1)
+        cprint(ics, "Usage: /eln config list [prefix]", indent = 1)
+    }
+
+    override fun getTabCompletion(args: List<String>): List<String> {
+        val subcommands = listOf("get", "set", "list")
+        return when (args.size) {
+            0 -> subcommands
+            1 -> subcommands.filter { it.startsWith(args[0], ignoreCase = true) }
+            2 -> {
+                val subcommand = args[0].lowercase()
+                if (subcommand !in subcommands) return listOf()
+                Eln.config.listPaths(args[1].takeIf { it.isNotBlank() }).take(100)
+            }
+            else -> listOf()
+        }
     }
 }
 
@@ -140,7 +222,7 @@ class ElnCablePaceCommand: IConsoleCommand {
     override val name = "cablePace"
 
     override fun runCommand(ics: ICommandSender, args: List<String>) {
-        cprint(ics, "The cable pace is set to ${Eln.cablePowerFactor}")
+        cprint(ics, "The cable pace is set to ${Eln.config.getDoubleOrElse("balance.cables.powerFactor", 1.0)}")
     }
 
     override fun getManPage(ics: ICommandSender, args: List<String>) {
@@ -298,14 +380,11 @@ class ElnInfiniteBatteryLifeCommand: IConsoleCommand {
 
             if (!printSyntax) {
                 if (updateStandard) {
-                    Eln.infiniteStandardBatteryLife = infiniteLife
-                    Eln.config.get("battery", "infiniteStandardBatteryLife", false).set(Eln.infiniteStandardBatteryLife)
+                    saveConfigPath("items.batteries.infinite.standard", infiniteLife)
                 }
                 if (updatePortable) {
-                    Eln.infinitePortableBatteryLife = infiniteLife
-                    Eln.config.get("battery", "infinitePortableBatteryLife", false).set(Eln.infinitePortableBatteryLife)
+                    saveConfigPath("items.batteries.infinite.portable", infiniteLife)
                 }
-                Eln.config.save()
 
                 cprint(ics, "Infinite battery life: ${FC.DARK_GREEN}${batteryType}, ${FC.DARK_GREEN}${boolToStr(infiniteLife)}", indent = 1)
                 cprint(ics, "Changes saved to the config file.", indent = 1)
@@ -356,10 +435,7 @@ class ElnHeatFurnaceFuelConsumptionCommand: IConsoleCommand {
         if (args.size == 1) {
             val consumeFuel = getArgBool(ics, args[0]) ?: return
 
-            Eln.heatFurnaceConsumesFuel = consumeFuel
-            Eln.config.get("heatFurnace", "heatFurnaceConsumesFuel", false,
-                "Controls whether or not heat furnaces consume fuel.").set(Eln.heatFurnaceConsumesFuel)
-            Eln.config.save()
+            saveConfigPath("machines.heatFurnace.consumeFuel", consumeFuel)
 
             cprint(ics, "Heat furnace fuel consumption: ${FC.DARK_GREEN}${boolToStr(consumeFuel)}", indent = 1)
             cprint(ics, "Changes saved to the config file.", indent = 1)
@@ -419,7 +495,7 @@ class ElnLampsKillMonstersCommand: IConsoleCommand {
     override fun runCommand(ics: ICommandSender, args: List<String>) {
         if (args.size == 1) {
             val killMonstersAroundLamps = getArgBool(ics, args[0])?: return
-            Eln.instance.killMonstersAroundLamps = killMonstersAroundLamps
+            Eln.config.setRuntimeBoolean("entities.mobSpawning.preventNearLamps", killMonstersAroundLamps)
             cprint(ics, "Avoid monsters spawning around lamps: ${FC.DARK_GREEN}${boolToStr(killMonstersAroundLamps)}", indent = 1)
             cprint(ics, "Warning: Command effective to this game instance only, when you close the game, this config will be reverted.", indent = 1)
         } else {
@@ -431,7 +507,7 @@ class ElnLampsKillMonstersCommand: IConsoleCommand {
         cprint(ics, "When set, monsters don't spawn around the lamps (default).", indent = 1)
         cprint(ics, "When clear, leaving lights on in dark zones is recommended...", indent = 1)
         cprint(ics, "Effective only during this game instance.", indent = 1)
-        cprint(ics, "(See \"Eln.cfg\" for permanent effect.)", indent = 1)
+        cprint(ics, "(See \"config/eln/eln.json\" for permanent effect.)", indent = 1)
         cprint(ics, "")
         cprint(ics, "Parameters :", indent = 1)
         cprint(ics, "@0:bool : Enable/disable.", indent = 1)
@@ -1022,10 +1098,7 @@ class ElnWailaEasyModeCommand: IConsoleCommand {
     override fun runCommand(ics: ICommandSender, args: List<String>) {
         if (args.size == 1) {
             val wailaEasyMode = getArgBool(ics, args[0])?: return
-            Eln.wailaEasyMode = wailaEasyMode
-            var nonsense = false
-            Eln.config.get("balancing", "wailaEasyMode", nonsense).set(Eln.wailaEasyMode)
-            Eln.config.save()
+            saveConfigPath("ui.waila.easyMode", wailaEasyMode)
             cprint(ics, "Waila Easy Mode: ${FC.DARK_GREEN}${boolToStr(wailaEasyMode)}", indent = 1)
         } else {
             cprint(ics, "This command only takes one argument - true or false")
@@ -1059,10 +1132,7 @@ class ElnDebugCommand: IConsoleCommand {
     override fun runCommand(ics: ICommandSender, args: List<String>) {
         if (args.size == 1) {
             val debug = getArgBool(ics, args[0])?: return
-            Eln.debugEnabled = debug
-            val nonsense = false
-            Eln.config.get("debug", "enable", nonsense).set(Eln.debugEnabled)
-            Eln.config.save()
+            saveConfigPath("debug.logging.enabled", debug)
             cprint(ics, "Debug mode: ${FC.DARK_GREEN}${boolToStr(debug)}", indent = 1)
         } else {
             cprint(ics, "This command only takes one argument - true or false")
@@ -1096,10 +1166,7 @@ class ElnSimSnapshotCommand: IConsoleCommand {
     override fun runCommand(ics: ICommandSender, args: List<String>) {
         if (args.size == 1) {
             val enableSnapshots = getArgBool(ics, args[0]) ?: return
-            Eln.simSnapshotEnabled = enableSnapshots
-            val nonsense = false
-            Eln.config.get("debug", "simSnapshot", nonsense).set(Eln.simSnapshotEnabled)
-            Eln.config.save()
+            saveConfigPath("debug.logging.simSnapshot", enableSnapshots)
             cprint(ics, "Simulation snapshots: ${FC.DARK_GREEN}${boolToStr(enableSnapshots)}", indent = 1)
             cprint(ics, "Requires debug logging to be enabled as well.", indent = 1)
         } else {
@@ -1132,10 +1199,7 @@ class ElnExplosionsCommand: IConsoleCommand {
     override fun runCommand(ics: ICommandSender, args: List<String>) {
         if (args.size == 1) {
             val explosions = getArgBool(ics, args[0]) ?: return
-            Eln.explosionEnable = explosions
-            val nonsense = false
-            Eln.config.get("gameplay", "explosion", nonsense).set(Eln.explosionEnable)
-            Eln.config.save()
+            saveConfigPath("gameplay.hazards.explosionsEnabled", explosions)
             cprint(ics, "Explosions: ${FC.DARK_GREEN}${boolToStr(explosions)}", indent = 1)
         } else {
             cprint(ics, "This command only takes one argument - true or false")
@@ -1196,17 +1260,17 @@ class ElnWatchdogCommand: IConsoleCommand {
 
         when (type.lowercase()) {
             "all" -> {
-                Eln.watchdogThermalEnabled = watchdogEnabled
-                Eln.watchdogResistorHeatEnabled = watchdogEnabled
-                Eln.watchdogVoltageEnabled = watchdogEnabled
-                Eln.watchdogShaftSpeedEnabled = watchdogEnabled
-                Eln.watchdogOtherEnabled = watchdogEnabled
+                Eln.config.setBoolean("simulation.watchdog.destruction.thermal", watchdogEnabled)
+                Eln.config.setBoolean("simulation.watchdog.destruction.resistorHeat", watchdogEnabled)
+                Eln.config.setBoolean("simulation.watchdog.destruction.voltage", watchdogEnabled)
+                Eln.config.setBoolean("simulation.watchdog.destruction.shaftSpeed", watchdogEnabled)
+                Eln.config.setBoolean("simulation.watchdog.destruction.other", watchdogEnabled)
             }
-            "thermal" -> Eln.watchdogThermalEnabled = watchdogEnabled
-            "resistorheat" -> Eln.watchdogResistorHeatEnabled = watchdogEnabled
-            "voltage" -> Eln.watchdogVoltageEnabled = watchdogEnabled
-            "shaftspeed" -> Eln.watchdogShaftSpeedEnabled = watchdogEnabled
-            "other" -> Eln.watchdogOtherEnabled = watchdogEnabled
+            "thermal" -> Eln.config.setBoolean("simulation.watchdog.destruction.thermal", watchdogEnabled)
+            "resistorheat" -> Eln.config.setBoolean("simulation.watchdog.destruction.resistorHeat", watchdogEnabled)
+            "voltage" -> Eln.config.setBoolean("simulation.watchdog.destruction.voltage", watchdogEnabled)
+            "shaftspeed" -> Eln.config.setBoolean("simulation.watchdog.destruction.shaftSpeed", watchdogEnabled)
+            "other" -> Eln.config.setBoolean("simulation.watchdog.destruction.other", watchdogEnabled)
         }
 
         saveWatchdogConfig()
@@ -1219,26 +1283,25 @@ class ElnWatchdogCommand: IConsoleCommand {
     }
 
     private fun applyDefaults() {
-        Eln.watchdogThermalEnabled = true
-        Eln.watchdogResistorHeatEnabled = false
-        Eln.watchdogVoltageEnabled = true
-        Eln.watchdogShaftSpeedEnabled = true
-        Eln.watchdogOtherEnabled = true
+        Eln.config.setBoolean("simulation.watchdog.destruction.thermal", true)
+        Eln.config.setBoolean("simulation.watchdog.destruction.resistorHeat", false)
+        Eln.config.setBoolean("simulation.watchdog.destruction.voltage", true)
+        Eln.config.setBoolean("simulation.watchdog.destruction.shaftSpeed", true)
+        Eln.config.setBoolean("simulation.watchdog.destruction.other", true)
     }
 
     private fun saveWatchdogConfig() {
-        Eln.config.get("watchdog", "thermal", true).set(Eln.watchdogThermalEnabled)
-        Eln.config.get("watchdog", "resistorHeat", false).set(Eln.watchdogResistorHeatEnabled)
-        Eln.config.get("watchdog", "voltage", true).set(Eln.watchdogVoltageEnabled)
-        Eln.config.get("watchdog", "shaftSpeed", true).set(Eln.watchdogShaftSpeedEnabled)
-        Eln.config.get("watchdog", "other", true).set(Eln.watchdogOtherEnabled)
-        Eln.config.save()
+        saveConfigPath("simulation.watchdog.destruction.thermal", Eln.config.getBooleanOrElse("simulation.watchdog.destruction.thermal", true))
+        saveConfigPath("simulation.watchdog.destruction.resistorHeat", Eln.config.getBooleanOrElse("simulation.watchdog.destruction.resistorHeat", false))
+        saveConfigPath("simulation.watchdog.destruction.voltage", Eln.config.getBooleanOrElse("simulation.watchdog.destruction.voltage", true))
+        saveConfigPath("simulation.watchdog.destruction.shaftSpeed", Eln.config.getBooleanOrElse("simulation.watchdog.destruction.shaftSpeed", true))
+        saveConfigPath("simulation.watchdog.destruction.other", Eln.config.getBooleanOrElse("simulation.watchdog.destruction.other", true))
     }
 
     override fun getManPage(ics: ICommandSender, args: List<String>) {
         cprint(ics, "Enable or disable destruction for one watchdog category at runtime.", indent = 1)
         cprint(ics, "Use defaults to restore the default watchdog profile.", indent = 1)
-        cprint(ics, "This also updates Eln.cfg.", indent = 1)
+        cprint(ics, "This also updates config/eln/eln.json.", indent = 1)
         cprint(ics, "")
         cprint(ics, "Parameters:", indent = 1)
         cprint(ics, "@0:string : Watchdog type (all, thermal, resistorHeat, voltage, shaftSpeed, other, defaults).", indent = 2)
@@ -1264,10 +1327,7 @@ class ElnIconsCommand: IConsoleCommand {
     override fun runCommand(ics: ICommandSender, args: List<String>) {
         if (args.size == 1) {
             val symbols = args[0].equals("symbols", ignoreCase = true)
-            Eln.noSymbols = symbols
-            val nonsense = false
-            Eln.config.get("gameplay", "noSymbols", nonsense).set(Eln.noSymbols)
-            Eln.config.save()
+            saveConfigPath("ui.icons.noSymbols", symbols)
             cprint(ics, "Icons mode: ${FC.DARK_GREEN}${boolToStr(symbols)}", indent = 1)
         } else {
             cprint(ics, "This command only takes one argument - true or false")

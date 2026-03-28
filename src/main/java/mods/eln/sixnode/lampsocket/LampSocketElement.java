@@ -41,7 +41,10 @@ public class LampSocketElement extends SixNodeElement implements IConfigurable {
 
     LampSocketDescriptor socketDescriptor = null;
 
-    public MonsterPopFreeProcess monsterPopFreeProcess = new MonsterPopFreeProcess(sixNode.coordinate, Eln.instance.killMonstersAroundLampsRange);
+    public MonsterPopFreeProcess monsterPopFreeProcess = new MonsterPopFreeProcess(
+        sixNode.coordinate,
+        Eln.config.getIntOrElse("entities.mobSpawning.preventNearLampsRange", 9)
+    );
     public NbtElectricalLoad positiveLoad = new NbtElectricalLoad("positiveLoad");
 
     public LampSocketProcess lampProcess = new LampSocketProcess(this);
@@ -230,7 +233,7 @@ public class LampSocketElement extends SixNodeElement implements IConfigurable {
         } else {
             info.put(I18N.tr("Bulb"), I18N.tr("None"));
         }
-        if (Eln.wailaEasyMode) {
+        if (Eln.config.getBooleanOrElse("ui.waila.easyMode", false)) {
             if (poweredByLampSupply) {
                 info.put(I18N.tr("Channel"), channel);
             }

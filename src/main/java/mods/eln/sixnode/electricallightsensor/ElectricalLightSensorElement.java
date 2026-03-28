@@ -68,7 +68,7 @@ public class ElectricalLightSensorElement extends SixNodeElement {
     public Map<String, String> getWaila() {
         Map<String, String> info = new HashMap<String, String>();
         info.put(I18N.tr("Light level"), Utils.plotValue(slowProcess.light));
-        if (Eln.wailaEasyMode) {
+        if (Eln.config.getBooleanOrElse("ui.waila.easyMode", false)) {
             info.put(I18N.tr("Output voltage"), Utils.plotVolt("", outputGate.getVoltage()));
         }
         return info;

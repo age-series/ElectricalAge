@@ -18,7 +18,7 @@ class ModbusTcpServer(port: Int = 1502) {
     private val slaves = TreeMap<Int, IModbusSlave>()
 
     init {
-        if (Eln.modbusEnable) {
+        if (Eln.config.getBooleanOrElse("integrations.modbus.enabled", false)) {
             try {
                 server.bind(InetSocketAddress(port))
             } catch (e: BindException) {

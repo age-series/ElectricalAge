@@ -77,7 +77,10 @@ class FloodlightElement(transparentNode: TransparentNode, transparentNodeDescrip
 
     private val watchdogProcess = voltageWatchdog.setDestroys(WorldExplosion(this).machineExplosion())
     private val floodlightProcess = FloodlightProcess(this)
-    private val monsterPopProcess = MonsterPopFreeProcess(transparentNode.coordinate, Eln.instance.killMonstersAroundLampsRange)
+    private val monsterPopProcess = MonsterPopFreeProcess(
+        transparentNode.coordinate,
+        Eln.config.getIntOrElse("entities.mobSpawning.preventNearLampsRange", 9)
+    )
 
     var processElapsedTime = 0.0
 
@@ -286,7 +289,7 @@ class FloodlightElement(transparentNode: TransparentNode, transparentNodeDescrip
         if (lamp2Stack != null) info[I18N.tr("Bulb 2")] = lamp2Stack.displayName
         else info[I18N.tr("Bulb 2")] = I18N.tr("None")
 
-        if (Eln.wailaEasyMode) {
+        if (Eln.config.getBooleanOrElse("ui.waila.easyMode", false)) {
             info[I18N.tr("Voltage")] = plotVolt("", electricalLoad.voltage)
 
             if (lamp1Stack != null) {

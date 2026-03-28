@@ -53,46 +53,43 @@ data class BoilerplateLampData(
     val timeUntilStableInSeconds: Double,
     val basePowerMultiplier: Double
 ) {
+    private val nominalLifePath: String
+        get() = "lighting.lamps.${lampType}.nominalLifeHours"
+
+    private val infiniteLifePath: String
+        get() = "lighting.lamps.${lampType}.infiniteLifeEnabled"
 
     fun loadConfig() {
         // This goofy-looking logic ensures that each lamp entry in the config file has the proper default values
         // (as defined in the init of LampTechnologies) assigned when the file is first created. On subsequent reads,
         // the LampTechnologies entries are updated from the config file.
-        if (!Eln.config.hasKey("lamp", this.lampType + "LampNominalLifeInHours")) {
-            Eln.config["lamp", this.lampType + "LampNominalLifeInHours", 0.0].set(this.nominalLifeInHours)
-        }
-        else {
-            val configNominalLife = Eln.config["lamp", this.lampType + "LampNominalLifeInHours", 0.0].double
+        val configNominalLife = Eln.config.getDoubleOrElse(nominalLifePath, this.nominalLifeInHours)
 
-            try {
-                require(configNominalLife > 0)
-            } catch (_: IllegalArgumentException) {
-                // Somehow display a flag once Minecraft finishes loading or a world is opened? Not exactly sure how.
-                println("ELN config: Nominal lamp life of type ${this.lampType} must be greater than 0! Changes not applied!")
-            }
-
-            if (configNominalLife > 0) this.nominalLifeInHours = configNominalLife
+        try {
+            require(configNominalLife > 0)
+        } catch (_: IllegalArgumentException) {
+            // Somehow display a flag once Minecraft finishes loading or a world is opened? Not exactly sure how.
+            println("ELN config: Nominal lamp life of type ${this.lampType} must be greater than 0! Changes not applied!")
         }
 
-        if (!Eln.config.hasKey("lamp", this.lampType + "LampInfiniteLifeEnabled")) {
-            Eln.config["lamp", this.lampType + "LampInfiniteLifeEnabled", false].set(this.infiniteLifeEnabled)
+        if (configNominalLife > 0) {
+            this.nominalLifeInHours = configNominalLife
         }
-        else {
-            this.infiniteLifeEnabled = Eln.config["lamp", this.lampType + "LampInfiniteLifeEnabled", false].boolean
-        }
+
+        this.infiniteLifeEnabled = Eln.config.getBooleanOrElse(infiniteLifePath, this.infiniteLifeEnabled)
     }
 
     fun updateNominalLifeConfig(newNominalLifeInHours: Double) {
         this.nominalLifeInHours = newNominalLifeInHours
 
-        Eln.config.get("lamp", lampType + "LampNominalLifeInHours", 0.0).set(newNominalLifeInHours)
+        Eln.config.setDouble(nominalLifePath, newNominalLifeInHours)
         Eln.config.save()
     }
 
     fun updateInfiniteLifeConfig(infiniteLifeEnabled: Boolean) {
         this.infiniteLifeEnabled = infiniteLifeEnabled
 
-        Eln.config.get("lamp", lampType + "LampInfiniteLifeEnabled", false).set(infiniteLifeEnabled)
+        Eln.config.setBoolean(infiniteLifePath, infiniteLifeEnabled)
         Eln.config.save()
     }
 

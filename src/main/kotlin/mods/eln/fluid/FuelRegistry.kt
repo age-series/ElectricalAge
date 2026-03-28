@@ -128,7 +128,7 @@ object FuelRegistry {
         "ultrahotsteam" to (2.257 * 8)        // HBM Nuclear Tech, ultra hot steam (~8× base, supercritical conditions)
     ).mapValues {
         // Unusually, the commonly accepted value (2.2) is pretty much correct. Undo the usual mapping.
-        it.value / Eln.fuelHeatValueFactor
+        it.value / Eln.config.getDoubleOrElse("balance.heat.fuelHeatValueFactor", 0.0000675)
     }
     val steamList = steam.keys.toTypedArray()
 
@@ -138,6 +138,6 @@ object FuelRegistry {
     fun fluidListToFluids(fluidNames: Array<String>) =
         fluidNames.map { FluidRegistry.getFluid(it) }.filterNotNull().toTypedArray()
 
-    fun heatEnergyPerMilliBucket(fuelName: String): Double = Eln.fuelHeatValueFactor * (allFuels[fuelName] ?: 0.0)
+    fun heatEnergyPerMilliBucket(fuelName: String): Double = Eln.config.getDoubleOrElse("balance.heat.fuelHeatValueFactor", 0.0000675) * (allFuels[fuelName] ?: 0.0)
     fun heatEnergyPerMilliBucket(fluid: Fluid?): Double = heatEnergyPerMilliBucket(fluid?.name ?: "")
 }

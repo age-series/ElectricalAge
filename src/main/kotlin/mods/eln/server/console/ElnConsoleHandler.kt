@@ -21,6 +21,7 @@ class ElnConsoleCommands: ICommand {
     init {
         ElnConsoleCommandList.addAll(listOf(
             ElnLsCommand(),
+            ElnConfigCommand(),
             ElnAboutCommand(),
             ElnVersionCommand(),
             ElnCablePaceCommand(),

@@ -155,7 +155,7 @@ class PowerInductorSixElement(SixNode: SixNode, side: Direction, descriptor: Six
         val info: MutableMap<String, String> = HashMap()
         info[tr("Inductance")] = Utils.plotValue(inductor.inductance, "H")
         info[tr("Charge")] = Utils.plotEnergy("", inductor.energy)
-        if (Eln.wailaEasyMode) {
+        if (Eln.config.getBooleanOrElse("ui.waila.easyMode", false)) {
             info[tr("Voltage drop")] = Utils.plotVolt("", abs(inductor.voltage))
             info[tr("Current")] = Utils.plotAmpere("", abs(inductor.current))
         }

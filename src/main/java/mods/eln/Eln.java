@@ -18,7 +18,7 @@ import mods.eln.block.ArcMetalItemBlock;
 import mods.eln.cable.CableRenderDescriptor;
 import mods.eln.client.ClientKeyHandler;
 import mods.eln.client.SoundLoader;
-import mods.eln.config.ConfigHandler;
+import mods.eln.config.JsonConfig;
 import mods.eln.craft.CraftingRecipes;
 import mods.eln.entity.ReplicatorPopProcess;
 import mods.eln.eventhandlers.ElnFMLEventsHandler;
@@ -93,12 +93,12 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.oredict.OreDictionary;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.io.File;
 import java.util.*;
 
 import static mods.eln.i18n.I18N.TR;
@@ -139,16 +139,13 @@ public class Eln {
     public static final double cableHeatingTime = 30;
     public static final double cableWarmLimit = 130;
     public static final double cableThermalConductionTao = 0.5;
-    public static double cableThermalSpikeLimitFactor = 20;
-    public static boolean cableThermalSpikeLimiterEnabled = true;
-    public static boolean lavaAmbientRampEnabled = true;
-    public static double undergroundBiomeTemperatureMultiplier = 0.2;
     public static final ThermalLoadInitializer cableThermalLoadInitializer =
      new ThermalLoadInitializer(cableWarmLimit, -100, cableHeatingTime, cableThermalConductionTao);
     public static final ThermalLoadInitializer sixNodeThermalLoadInitializer =
      new ThermalLoadInitializer(cableWarmLimit, -100, cableHeatingTime, 1000);
     public static final HashMap<String, ItemStack> dictionnaryOreFromMod = new HashMap<>();
     public static Logger logger = LogManager.getLogger("ELN");
+    public static JsonConfig config = new JsonConfig(new File("config/Eln.cfg"));
     public static SimpleNetworkWrapper elnNetwork;
     public static PacketHandler packetHandler;
     public static LiveDataManager clientLiveDataManager;
@@ -187,41 +184,8 @@ public class Eln {
     public static SixNodeItem sixNodeItem;
     public static TransparentNodeItem transparentNodeItem;
     public static OreItem oreItem;
-    public static String analyticsURL = "";
-    public static boolean analyticsPlayerUUIDOptIn = false;
-
     public static PortableNaNDescriptor portableNaNDescriptor = null;
     public static CableRenderDescriptor stdPortableNaN = null;
-    public static boolean oredictTungsten, oredictChips;
-    public static boolean genCopper, genLead, genTungsten, genCinnabar;
-    public static String dictTungstenOre, dictTungstenDust, dictTungstenIngot;
-    public static String dictCheapChip, dictAdvancedChip;
-    public static boolean modbusEnable = false;
-    public static boolean mqttEnabled = false;
-    public static int modbusPort;
-    public static boolean explosionEnable;
-    public static boolean debugEnabled = false;  // Read from configuration file. Default is `false`.
-    public static boolean simSnapshotEnabled = false;
-    public static boolean watchdogThermalEnabled = true;
-    public static boolean watchdogResistorHeatEnabled = false;
-    public static boolean watchdogVoltageEnabled = true;
-    public static boolean watchdogShaftSpeedEnabled = true;
-    public static boolean watchdogOtherEnabled = true;
-    public static boolean versionCheckEnabled = true; // Read from configuration file. Default is `true`.
-    public static boolean analyticsEnabled = true; // Read from configuration file. Default is `true`.
-    public static String playerUUID = null; // Read from configuration file. Default is `null`.
-    public static boolean wailaEasyMode = false;
-    public static double shaftEnergyFactor = 0.05;
-    public static double fuelHeatValueFactor = 0.0000675;
-    public static boolean noSymbols = false;
-    public static boolean noVoltageBackground = false;
-    public static double maxSoundDistance = 16;
-    public static int soundChannels = 200;
-    public static double cablePowerFactor;
-    public static boolean enableFestivities = true;
-    public static boolean verticalIronCableCrafting = false;
-    public static Double flywheelMass = 0.0;
-    public static boolean directPoles = false;
     public static SiliconWafer siliconWafer;
     public static Transistor transistor;
     public static Thermistor thermistor;
@@ -232,14 +196,10 @@ public class Eln {
     public static String dictThermistor;
     public static String dictNibbleMemory;
     public static String dictALU;
-    public static Configuration config;
     public static FMLEventChannel eventChannel;
     public static Map<ElnFluidRegistry, Fluid> fluids = new EnumMap(ElnFluidRegistry.class);
     public static Map<ElnFluidRegistry, Block> fluidBlocks = new EnumMap(ElnFluidRegistry.class);
     public static WindProcess wind;
-    public static int wirelessTxRange = 32;
-    public static int roomMaxAxisSpanBlocks = 24;
-    public static int roomMaxVolumeBlocks = 4096;
     static public GenericItemUsingDamageDescriptor multiMeterElement, thermometerElement, allMeterElement;
     static public GenericItemUsingDamageDescriptor configCopyToolElement;
     public static TreeResin treeResin;
@@ -249,8 +209,6 @@ public class Eln {
     public static OreDescriptor oreCopper;
     public static GenericItemUsingDamageDescriptorWithComment dustCopper;
     public ArrayList<IConfigSharing> configShared = new ArrayList<>();
-    public double electricalFrequency, thermalFrequency;
-    public int electricalInterSystemOverSampling;
     public CopperCableDescriptor copperCableDescriptor;
     public ElectricalCableDescriptor creativeCableDescriptor;
     public ElectricalCableDescriptor veryHighVoltageCableDescriptor;
@@ -262,16 +220,6 @@ public class Eln {
     public CurrentCableDescriptor lowCurrentCableDescriptor;
     public CurrentCableDescriptor mediumCurrentCableDescriptor;
     public CurrentCableDescriptor highCurrentCableDescriptor;
-    public double heatTurbinePowerFactor = 1;
-    public double solarPanelPowerFactor = 1;
-    public double windTurbinePowerFactor = 1;
-    public double waterTurbinePowerFactor = 1;
-    public double fuelGeneratorPowerFactor = 1;
-    public double fuelHeatFurnacePowerFactor = 1;
-    public int autominerRange = 10;
-    public boolean killMonstersAroundLamps;
-    public int killMonstersAroundLampsRange;
-    public int maxReplicators = 100;
     public Double ELN_CONVERTER_MAX_POWER = 120_000.0;
     public ServerEventListener serverEventListener;
     public CableRenderDescriptor stdCableRenderSignal;
@@ -293,25 +241,11 @@ public class Eln {
     public RecipesList magnetiserRecipes = new RecipesList();
     public GenericItemUsingDamageDescriptorWithComment copperIngot, plumbIngot, tungstenIngot;
     public DataLogsPrintDescriptor dataLogsPrintDescriptor;
-    public float xRayScannerRange;
-    public boolean addOtherModOreToXRay;
-    public boolean xRayScannerCanBeCrafted = true;
-    public double stdBatteryHalfLife = 2 * Utils.minecraftDay;
-    public static boolean infiniteStandardBatteryLife = false;
-    public static boolean infinitePortableBatteryLife = false;
     public static final double SVU = 5, SVII = gateOutputCurrent / SVU, SVUinv = 1.0 / SVU;
-    public double batteryCapacityFactor = 1.;
-    public boolean replicatorPop;
-    public int plateConversionRatio;
-    public boolean ComputerProbeEnable;
-    public boolean ElnToOtherEnergyConverterEnable;
     public EnergyConverterElnToOtherBlock elnToOtherBlockConverter;
     public ComputerProbeBlock computerProbeBlock;
     public static final double SVP = gateOutputCurrent * SVU;
     public ElectricalFurnaceDescriptor electricalFurnace;
-    public double fuelGeneratorTankCapacity = 20 * 60;
-    public static boolean heatFurnaceConsumesFuel = false;
-    public int replicatorRegistrationId = -1;
 
     public static HashSet<String> oreNames = new HashSet<>();
 
@@ -373,15 +307,18 @@ public class Eln {
         Side side = FMLCommonHandler.instance().getEffectiveSide();
         if (side == Side.CLIENT) MinecraftForge.EVENT_BUS.register(new SoundLoader());
 
-        config = new Configuration(event.getSuggestedConfigurationFile());
-
-        ConfigHandler.INSTANCE.loadConfig(this);
-        MqttManager.INSTANCE.init();
+        config = new JsonConfig(event.getSuggestedConfigurationFile());
+        config.loadConfig();
+        MqttManager.init();
 
         eventChannel = NetworkRegistry.INSTANCE.newEventDrivenChannel(channelName);
 
-        simulator = new Simulator(0.05, 1 / electricalFrequency, electricalInterSystemOverSampling,
-                1 / thermalFrequency);
+        simulator = new Simulator(
+            0.05,
+            1 / config.getDoubleOrElse("simulation.electrical.frequency", 20.0),
+            config.getIntOrElse("simulation.electrical.interSystemOverSampling", 50),
+            1 / config.getDoubleOrElse("simulation.thermal.frequency", 400.0)
+        );
         nodeManager = new NodeManager("caca");
         ghostManager = new GhostManager("caca2");
         delayedTask = new DelayedTaskManager();
@@ -537,12 +474,12 @@ public class Eln {
         simulator.stop();
         LampSupplyElement.channelMap.clear();
         WirelessSignalTxElement.channelMap.clear();
-        MqttManager.INSTANCE.shutdown();
+        MqttManager.shutdown();
     }
 
     @EventHandler
     public void onServerStart(FMLServerAboutToStartEvent ev) {
-        modbusServer = new ModbusTcpServer(modbusPort);
+        modbusServer = new ModbusTcpServer(config.getIntOrElse("integrations.modbus.port", 1502));
         TeleporterElement.teleporterList.clear();
         LightBlockEntity.observers.clear();
         WirelessSignalTxElement.channelMap.clear();
@@ -551,7 +488,7 @@ public class Eln {
         simulator.init();
         simulator.addSlowProcess(wind = new WindProcess());
 
-        if (replicatorPop) simulator.addSlowProcess(new ReplicatorPopProcess());
+        if (config.getBooleanOrElse("entities.replicator.enabled", false)) simulator.addSlowProcess(new ReplicatorPopProcess());
         simulator.addSlowProcess(itemEnergyInventoryProcess = new ItemEnergyInventoryProcess());
     }
 
@@ -588,16 +525,16 @@ public class Eln {
     }
 
     public double LVP() {
-        return 1000 * cablePowerFactor;
+        return 1000 * config.getDoubleOrElse("balance.cables.powerFactor", 1.0);
     }
     public double MVP() {
-        return 2000 * cablePowerFactor;
+        return 2000 * config.getDoubleOrElse("balance.cables.powerFactor", 1.0);
     }
     public double HVP() {
-        return 5000 * cablePowerFactor;
+        return 5000 * config.getDoubleOrElse("balance.cables.powerFactor", 1.0);
     }
     public double VVP() {
-        return 15000 * cablePowerFactor;
+        return 15000 * config.getDoubleOrElse("balance.cables.powerFactor", 1.0);
     }
 
     public void regenOreScannerFactors() {
@@ -605,7 +542,7 @@ public class Eln {
 
         oreScannerConfig.clear();
 
-        if (addOtherModOreToXRay) {
+        if (config.getBooleanOrElse("tools.xrayScanner.addOtherModOreToScan", true)) {
             for (String name : OreDictionary.getOreNames()) {
                 if (name == null) continue;
                 if (name.startsWith("ore")) {

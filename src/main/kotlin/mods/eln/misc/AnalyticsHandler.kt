@@ -34,7 +34,7 @@ object AnalyticsHandler {
             // Prepare get parameters
             val version = simpleVersionName.replace("\\s+".toRegex(), "")
             val lang = I18N.getCurrentLanguage()
-            val url = String.format(URL, Eln.playerUUID, version, lang)
+            val url = String.format(URL, Eln.config.getStringOrElse("analytics.playerUuid", ""), version, lang)
             sendHttpRequest(url)
         }
         analyticsThread.start()
@@ -61,12 +61,12 @@ object AnalyticsHandler {
             val version = simpleVersionName.replace("\\s+".toRegex(), "")
             val lang = I18N.getCurrentLanguage()
 
-            if (Eln.analyticsPlayerUUIDOptIn && FMLCommonHandler.instance().effectiveSide == Side.CLIENT) {
+            if (Eln.config.getBooleanOrElse("analytics.playerUuidOptIn", false) && FMLCommonHandler.instance().effectiveSide == Side.CLIENT) {
                 // PLAYER HAS OPTED INTO SENDING THEIR UUID (and is not a server)
                 val formatUrl = "%s?version=%s&lang=%s&uuid=%s&name=%s"
                 url = String.format(
                     formatUrl,
-                    Eln.analyticsURL,
+                    Eln.config.getStringOrElse("analytics.endpointUrl", "http://eln.ja13.org/stat"),
                     version,
                     lang,
                     Minecraft.getMinecraft().session.func_148256_e().id.toString(),
@@ -75,7 +75,7 @@ object AnalyticsHandler {
             } else {
                 // PLAYER HAS NOT OPTED INTO SENDING THEIR UUID
                 val formatUrl = "%s?version=%s&lang=%s&uuid=%s"
-                url = String.format(formatUrl, Eln.analyticsURL, version, lang, Eln.playerUUID)
+                url = String.format(formatUrl, Eln.config.getStringOrElse("analytics.endpointUrl", "http://eln.ja13.org/stat"), version, lang, Eln.config.getStringOrElse("analytics.playerUuid", ""))
             }
             sendHttpRequest(url)
         }

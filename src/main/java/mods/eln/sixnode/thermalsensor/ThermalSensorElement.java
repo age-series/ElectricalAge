@@ -152,7 +152,7 @@ public class ThermalSensorElement extends SixNodeElement implements IConfigurabl
     public Map<String, String> getWaila() {
         Map<String, String> info = new HashMap<String, String>();
         info.put(I18N.tr("Output voltage"), Utils.plotVolt("", outputGate.getVoltage()));
-        if (Eln.wailaEasyMode) {
+        if (Eln.config.getBooleanOrElse("ui.waila.easyMode", false)) {
             switch (typeOfSensor) {
                 case temperatureType:
                     info.put(I18N.tr("Measured temperature"), plotAmbientCelsius("", thermalLoad.getTemperature()));

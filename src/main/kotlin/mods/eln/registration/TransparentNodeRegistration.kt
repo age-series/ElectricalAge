@@ -333,6 +333,7 @@ object TransparentNodeRegistration {
     private fun registerTurbine(id: Int) {
         var subId: Int
         var name: String?
+        val heatTurbinePowerFactor = Eln.config.getDoubleOrElse("balance.generators.heatTurbinePowerFactor", 1.0)
 
         val TtoU = FunctionTable(doubleArrayOf(0.0, 0.1, 0.85, 1.0, 1.1, 1.15, 1.18, 1.19, 1.25), 8.0 / 5.0)
         val PoutToPin = FunctionTable(
@@ -345,7 +346,7 @@ object TransparentNodeRegistration {
             name = TR_NAME(I18N.Type.NONE, "50V Turbine")
             val RsFactor = 0.1
             val nominalU = Eln.LVU
-            val nominalP: Double = 1000 * instance.heatTurbinePowerFactor // it was 300 before
+            val nominalP: Double = 1000 * heatTurbinePowerFactor // it was 300 before
             val nominalDeltaT = 250.0
             val desc =
                 TurbineDescriptor(
@@ -362,7 +363,7 @@ object TransparentNodeRegistration {
             name = TR_NAME(I18N.Type.NONE, "200V Turbine")
             val RsFactor = 0.10
             val nominalU = Eln.MVU
-            val nominalP: Double = 2000 * instance.heatTurbinePowerFactor
+            val nominalP: Double = 2000 * heatTurbinePowerFactor
             val nominalDeltaT = 350.0
             val desc =
                 TurbineDescriptor(
@@ -820,6 +821,7 @@ object TransparentNodeRegistration {
         var subId: Int
         var ghostGroup: GhostGroup
         var name: String?
+        val solarPanelPowerFactor = Eln.config.getDoubleOrElse("balance.generators.solarPanelPowerFactor", 1.0)
 
         val LVSolarU = 59.0
 
@@ -837,7 +839,7 @@ object TransparentNodeRegistration {
                 0,
                 null,
                 LVSolarU / 4,
-                65.0 * instance.solarPanelPowerFactor,
+                65.0 * solarPanelPowerFactor,
                 0.01,
                 Math.PI / 2,
                 Math.PI / 2
@@ -851,7 +853,7 @@ object TransparentNodeRegistration {
             val desc = SolarPanelDescriptor(
                 name, Eln.obj.getObj("smallsolarpannelrot"),
                 instance.lowVoltageCableDescriptor.render, ghostGroup, 0, 1, 0, null, LVSolarU / 4,
-                Eln.solarPanelBasePower * instance.solarPanelPowerFactor, 0.01, Math.PI / 4, Math.PI / 4 * 3
+                Eln.solarPanelBasePower * solarPanelPowerFactor, 0.01, Math.PI / 4, Math.PI / 4 * 3
             )
             transparentNodeItem.addDescriptor(subId + (id shl 6), desc)
         }
@@ -865,7 +867,7 @@ object TransparentNodeRegistration {
             val desc = SolarPanelDescriptor(
                 name, Eln.obj.getObj("bigSolarPanel"),
                 instance.meduimVoltageCableDescriptor.render, ghostGroup, 1, 1, 0, groundCoordinate, LVSolarU * 2,
-                Eln.solarPanelBasePower * instance.solarPanelPowerFactor * 8, 0.01, Math.PI / 2, Math.PI / 2
+                Eln.solarPanelBasePower * solarPanelPowerFactor * 8, 0.01, Math.PI / 2, Math.PI / 2
             )
             transparentNodeItem.addDescriptor(subId + (id shl 6), desc)
         }
@@ -886,7 +888,7 @@ object TransparentNodeRegistration {
                 1,
                 groundCoordinate,
                 LVSolarU * 2,
-                Eln.solarPanelBasePower * instance.solarPanelPowerFactor * 8,
+                Eln.solarPanelBasePower * solarPanelPowerFactor * 8,
                 0.01,
                 Math.PI / 8 * 3,
                 Math.PI / 8 * 5
@@ -971,6 +973,8 @@ object TransparentNodeRegistration {
     private fun registerBattery(id: Int) {
         var subId: Int
         var name: String
+        val batteryCapacityFactor = Eln.config.getDoubleOrElse("balance.storage.batteryCapacityFactor", 1.0)
+        val stdBatteryHalfLife = Eln.config.getDoubleOrElse("runtime.items.batteries.standardHalfLifeTicks", 2.0)
         val heatTIme = 30.0
         val voltageFunctionTable = doubleArrayOf(0.000, 0.9, 1.0, 1.025, 1.04, 1.05, 2.0)
         val voltageFunction = FunctionTable(voltageFunctionTable, 6.0 / 5)
@@ -988,7 +992,7 @@ object TransparentNodeRegistration {
             name = TR_NAME(I18N.Type.NONE, "Cost Oriented Battery")
             val desc = BatteryDescriptor(
                 name, "BatteryBig", 0.5, true, true, voltageFunction, stdU,
-                stdP * 1.2, 0.0, stdP, stdDischargeTime * instance.batteryCapacityFactor, stdEfficiency, instance.stdBatteryHalfLife,
+                stdP * 1.2, 0.0, stdP, stdDischargeTime * batteryCapacityFactor, stdEfficiency, stdBatteryHalfLife,
                 heatTIme, 60.0, -100.0
             )
             desc.setRenderSpec("lowcost")
@@ -1000,8 +1004,8 @@ object TransparentNodeRegistration {
             name = TR_NAME(I18N.Type.NONE, "Capacity Oriented Battery")
             val desc = BatteryDescriptor(
                 name, "BatteryBig", 0.5, true, true, voltageFunction,
-                stdU / 4, stdP / 2 * 1.2, 0.000, stdP / 2, stdDischargeTime * 8 * instance.batteryCapacityFactor, stdEfficiency,
-                instance.stdBatteryHalfLife, heatTIme, 60.0, -100.0
+                stdU / 4, stdP / 2 * 1.2, 0.000, stdP / 2, stdDischargeTime * 8 * batteryCapacityFactor, stdEfficiency,
+                stdBatteryHalfLife, heatTIme, 60.0, -100.0
             )
             desc.setRenderSpec("capacity")
             desc.setCurrentDrop(desc.electricalU * 1.2, desc.electricalStdP * 1.0)
@@ -1012,8 +1016,8 @@ object TransparentNodeRegistration {
             name = TR_NAME(I18N.Type.NONE, "Voltage Oriented Battery")
             val desc = BatteryDescriptor(
                 name, "BatteryBig", 0.5, true, true, voltageFunction,
-                stdU * 4, stdP * 1.2, 0.000, stdP, stdDischargeTime * instance.batteryCapacityFactor, stdEfficiency,
-                instance.stdBatteryHalfLife, heatTIme, 60.0, -100.0
+                stdU * 4, stdP * 1.2, 0.000, stdP, stdDischargeTime * batteryCapacityFactor, stdEfficiency,
+                stdBatteryHalfLife, heatTIme, 60.0, -100.0
             )
             desc.setRenderSpec("highvoltage")
             desc.setCurrentDrop(desc.electricalU * 1.2, desc.electricalStdP * 1.0)
@@ -1025,8 +1029,8 @@ object TransparentNodeRegistration {
             name = TR_NAME(I18N.Type.NONE, "Current Oriented Battery")
             val desc = BatteryDescriptor(
                 name, "BatteryBig", 0.5, true, true, voltageFunction, stdU,
-                stdP * 1.2 * 4, 0.000, stdP * 4, stdDischargeTime / 6 * instance.batteryCapacityFactor, stdEfficiency,
-                instance.stdBatteryHalfLife, heatTIme, 60.0, -100.0
+                stdP * 1.2 * 4, 0.000, stdP * 4, stdDischargeTime / 6 * batteryCapacityFactor, stdEfficiency,
+                stdBatteryHalfLife, heatTIme, 60.0, -100.0
             )
             desc.setRenderSpec("current")
             desc.setCurrentDrop(desc.electricalU * 1.2, desc.electricalStdP * 1.0)
@@ -1037,8 +1041,8 @@ object TransparentNodeRegistration {
             name = TR_NAME(I18N.Type.NONE, "Life Oriented Battery")
             val desc = BatteryDescriptor(
                 name, "BatteryBig", 0.5, true, false, voltageFunction,
-                stdU, stdP * 1.2, 0.000, stdP, stdDischargeTime * instance.batteryCapacityFactor, stdEfficiency,
-                instance.stdBatteryHalfLife * 8, heatTIme, 60.0, -100.0
+                stdU, stdP * 1.2, 0.000, stdP, stdDischargeTime * batteryCapacityFactor, stdEfficiency,
+                stdBatteryHalfLife * 8, heatTIme, 60.0, -100.0
             )
             desc.setRenderSpec("life")
             desc.setCurrentDrop(desc.electricalU * 1.2, desc.electricalStdP * 1.0)
@@ -1050,8 +1054,8 @@ object TransparentNodeRegistration {
             name = TR_NAME(I18N.Type.NONE, "Single-use Battery")
             val desc = BatteryDescriptor(
                 name, "BatteryBig", 1.0, false, false, voltageFunction,
-                stdU, stdP * 1.2 * 2, 0.000, stdP * 2, stdDischargeTime / 4 * instance.batteryCapacityFactor, stdEfficiency,
-                instance.stdBatteryHalfLife * 8, heatTIme, 60.0, -100.0
+                stdU, stdP * 1.2 * 2, 0.000, stdP * 2, stdDischargeTime / 4 * batteryCapacityFactor, stdEfficiency,
+                stdBatteryHalfLife * 8, heatTIme, 60.0, -100.0
             )
             desc.setRenderSpec("coal")
             transparentNodeItem.addDescriptor(subId + (id shl 6), desc)
@@ -1061,8 +1065,8 @@ object TransparentNodeRegistration {
             name = TR_NAME(I18N.Type.NONE, "Experimental Battery")
             val desc = BatteryDescriptor(
                 name, "BatteryBig", 0.5, true, false, voltageFunction,
-                stdU * 2, stdP * 1.2 * 8, 0.025, stdP * 8, stdDischargeTime / 4 * instance.batteryCapacityFactor, stdEfficiency,
-                instance.stdBatteryHalfLife * 8, heatTIme, 60.0, -100.0
+                stdU * 2, stdP * 1.2 * 8, 0.025, stdP * 8, stdDischargeTime / 4 * batteryCapacityFactor, stdEfficiency,
+                stdBatteryHalfLife * 8, heatTIme, 60.0, -100.0
             )
             desc.setRenderSpec("highvoltage")
             desc.setCurrentDrop(desc.electricalU * 1.2, desc.electricalStdP * 1.0)
@@ -1102,6 +1106,7 @@ object TransparentNodeRegistration {
     private fun registerWindTurbine(id: Int) {
         var subId: Int
         var name: String?
+        val windTurbinePowerFactor = Eln.config.getDoubleOrElse("balance.generators.windTurbinePowerFactor", 1.0)
 
         val PfW = FunctionTable(doubleArrayOf(0.0, 0.1, 0.3, 0.5, 0.8, 1.0, 1.1, 1.15, 1.2), 8.0 / 5.0)
         run {
@@ -1113,7 +1118,7 @@ object TransparentNodeRegistration {
                 Eln.obj.getObj("WindTurbineMini"),
                 instance.lowVoltageCableDescriptor,
                 PfW,
-                160 * instance.windTurbinePowerFactor,
+                160 * windTurbinePowerFactor,
                 10.0,
                 Eln.LVU * 1.18,
                 22.0,
@@ -1173,7 +1178,7 @@ object TransparentNodeRegistration {
                 name,
                 Eln.obj.getObj("SmallWaterWheel"),
                 instance.lowVoltageCableDescriptor,
-                30 * instance.waterTurbinePowerFactor,
+                30 * Eln.config.getDoubleOrElse("balance.generators.waterTurbinePowerFactor", 1.0),
                 Eln.LVU * 1.18,
                 waterCoord,
                 "eln:water_turbine",
@@ -1189,15 +1194,17 @@ object TransparentNodeRegistration {
 
     private fun registerFuelGenerator(id: Int) {
         var subId: Int
+        val fuelGeneratorPowerFactor = Eln.config.getDoubleOrElse("balance.generators.fuelGeneratorPowerFactor", 1.0)
+        val fuelGeneratorTankCapacity = Eln.config.getDoubleOrElse("machines.fuelGenerator.tankCapacitySecondsAtNominalPower", 20.0 * 60.0)
         run {
             subId = 1
             val descriptor = FuelGeneratorDescriptor(
                 TR_NAME(I18N.Type.NONE, "50V Fuel Generator"),
                 Eln.obj.getObj("FuelGenerator50V"),
                 instance.lowVoltageCableDescriptor,
-                instance.fuelGeneratorPowerFactor * 1200,
+                fuelGeneratorPowerFactor * 1200,
                 Eln.LVU * 1.25,
-                instance.fuelGeneratorTankCapacity
+                fuelGeneratorTankCapacity
             )
             transparentNodeItem.addDescriptor(subId + (id shl 6), descriptor)
         }
@@ -1208,7 +1215,7 @@ object TransparentNodeRegistration {
                     I18N.Type.NONE,
                     "200V Fuel Generator"
                 ), Eln.obj.getObj("FuelGenerator200V"), instance.meduimVoltageCableDescriptor,
-                instance.fuelGeneratorPowerFactor * 6000, Eln.MVU * 1.25, instance.fuelGeneratorTankCapacity
+                fuelGeneratorPowerFactor * 6000, Eln.MVU * 1.25, fuelGeneratorTankCapacity
             )
             transparentNodeItem.addDescriptor(subId + (id shl 6), descriptor)
         }
@@ -1315,7 +1322,7 @@ object TransparentNodeRegistration {
             subId = 0
             name = TR_NAME(I18N.Type.NONE, "Christmas Tree")
             val desc = ChristmasTreeDescriptor(name, Eln.obj.getObj("Christmas_Tree"))
-            if (Eln.enableFestivities) {
+            if (Eln.config.getBooleanOrElse("gameplay.seasonal.enableFestiveItems", true)) {
                 transparentNodeItem.addDescriptor(subId + (id shl 6), desc)
             } else {
                 transparentNodeItem.addWithoutRegistry(subId + (id shl 6), desc)
@@ -1325,7 +1332,7 @@ object TransparentNodeRegistration {
             subId = 1
             name = TR_NAME(I18N.Type.NONE, "Holiday Candle")
             val desc = HolidayCandleDescriptor(name, Eln.obj.getObj("Candle_Light"))
-            if (Eln.enableFestivities) {
+            if (Eln.config.getBooleanOrElse("gameplay.seasonal.enableFestiveItems", true)) {
                 transparentNodeItem.addDescriptor(subId + (id shl 6), desc)
             } else {
                 transparentNodeItem.addWithoutRegistry(subId + (id shl 6), desc)
@@ -1335,7 +1342,7 @@ object TransparentNodeRegistration {
             subId = 2
             name = TR_NAME(I18N.Type.NONE, "String Lights")
             val desc = StringLightsDescriptor(name, Eln.obj.getObj("Christmas_Lights"))
-            if (Eln.enableFestivities) {
+            if (Eln.config.getBooleanOrElse("gameplay.seasonal.enableFestiveItems", true)) {
                 transparentNodeItem.addDescriptor(subId + (id shl 6), desc)
             } else {
                 transparentNodeItem.addWithoutRegistry(subId + (id shl 6), desc)

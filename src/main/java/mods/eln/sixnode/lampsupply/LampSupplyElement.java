@@ -238,7 +238,7 @@ public class LampSupplyElement extends SixNodeElement implements IConfigurable {
             }
         }
         info.put(I18N.tr("Total power"), Utils.plotPower("", powerLoad.getVoltage() * powerLoad.getCurrent()));
-        if (Eln.wailaEasyMode) {
+        if (Eln.config.getBooleanOrElse("ui.waila.easyMode", false)) {
             info.put(I18N.tr("Voltage"), Utils.plotVolt("", powerLoad.getVoltage()));
         }
         return info;

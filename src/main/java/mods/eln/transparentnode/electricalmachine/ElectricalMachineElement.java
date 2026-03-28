@@ -200,7 +200,7 @@ public class ElectricalMachineElement extends TransparentNodeElement implements 
         Map<String, String> info = new HashMap<String, String>();
         info.put(I18N.tr("Power consumption"), Utils.plotPower("", slowRefreshProcess.getPower()));
         info.put(I18N.tr("Voltage"), Utils.plotVolt("", electricalLoad.getVoltage()));
-        if (Eln.wailaEasyMode) {
+        if (Eln.config.getBooleanOrElse("ui.waila.easyMode", false)) {
             info.put(I18N.tr("Power provided"), Utils.plotPower("", electricalLoad.getCurrent() * electricalLoad.getVoltage()));
         }
         return info;

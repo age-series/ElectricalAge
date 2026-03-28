@@ -197,7 +197,7 @@ public class EggIncubatorElement extends TransparentNodeElement {
         Map<String, String> info = new HashMap<String, String>();
         info.put(I18N.tr("Has egg"), inventory.getStackInSlot(EggIncubatorContainer.EggSlotId) != null ?
             I18N.tr("Yes") : I18N.tr("No"));
-        if (Eln.wailaEasyMode) {
+        if (Eln.config.getBooleanOrElse("ui.waila.easyMode", false)) {
             info.put(I18N.tr("Power consumption"), Utils.plotPower("", powerResistor.getPower()));
         }
         return info;

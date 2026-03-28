@@ -317,7 +317,7 @@ class MotorElement(node: TransparentNode, desc_: TransparentNodeDescriptor) :
         var info = mutableMapOf<String, String>()
         info.put(tr("Energy"), Utils.plotEnergy("", shaft.energy))
         info.put(tr("Speed"), Utils.plotRads("", shaft.rads))
-        if(Eln.wailaEasyMode) {
+        if(Eln.config.getBooleanOrElse("ui.waila.easyMode", false)) {
             info.put(tr("Voltage"), Utils.plotVolt("", powerSource.voltage))
             info.put(tr("Current"), Utils.plotAmpere("", powerSource.current))
             info.put(tr("Temperature"), plotAmbientCelsius("", thermal.temperature))

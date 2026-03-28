@@ -22,7 +22,7 @@ class FlywheelDescriptor(baseName: String, obj: Obj3D) : SimpleShaftDescriptor(b
 }
 
 class FlyWheelElement(node: TransparentNode, desc_: TransparentNodeDescriptor) : StraightJointElement(node, desc_) {
-    override val shaftMass = Eln.flywheelMass?: 50.0
+    override val shaftMass = Eln.config.getDoubleOrElse("balance.mechanics.flywheelMass", 50.0)
 
     inner class FlyWheelFlingProcess : IProcess {
         val interval = 0.05

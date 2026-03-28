@@ -88,7 +88,7 @@ object Utils {
 
     @JvmStatic
     fun println(str: String?) {
-        if (Eln.debugEnabled) Eln.logger.info(str)
+        if (Eln.config.getBooleanOrElse("debug.logging.enabled", false)) Eln.logger.info(str)
     }
 
     @JvmStatic

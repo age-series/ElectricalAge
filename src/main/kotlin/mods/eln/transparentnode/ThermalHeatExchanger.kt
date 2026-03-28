@@ -165,7 +165,9 @@ class ThermalHeatExchangerElement(
 
     private val thermalRegulatorProcess = IProcess { time ->
         //Yes, it's magic number time. 1.25 is a rough estimate of the "what the fuck" measure I got from thermal power.
-        val heatPower = joulesPerTick / (Eln.instance.thermalFrequency / Eln.instance.electricalFrequency) * 1.25 / time
+        val thermalFrequency = Eln.config.getDoubleOrElse("simulation.thermal.frequency", 400.0)
+        val electricalFrequency = Eln.config.getDoubleOrElse("simulation.electrical.frequency", 20.0)
+        val heatPower = joulesPerTick / (thermalFrequency / electricalFrequency) * 1.25 / time
         thermalLoad.movePowerTo(heatPower)
         //thermalLoad.PcTemp += heatPower
     }

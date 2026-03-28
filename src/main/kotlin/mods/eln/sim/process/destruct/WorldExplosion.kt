@@ -51,7 +51,7 @@ class WorldExplosion : IDestructible {
     }
 
     override fun destructImpl() {
-        if (Eln.explosionEnable) coordinate.world().createExplosion(
+        if (Eln.config.getBooleanOrElse("gameplay.hazards.explosionsEnabled", false)) coordinate.world().createExplosion(
             null as Entity?,
             coordinate.x.toDouble(),
             coordinate.y.toDouble(),

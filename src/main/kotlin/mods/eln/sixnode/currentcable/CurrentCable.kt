@@ -73,8 +73,8 @@ class CurrentCableDescriptor(
         thermalRp = thermalWarmLimit / thermalMaximalPowerDissipated
         thermalRs = 0.5 / thermalC / 2
         thermalSelfHeatingRateLimit =
-            if (Eln.cableThermalSpikeLimiterEnabled && Eln.cableHeatingTime > 0)
-                thermalWarmLimit / Eln.cableHeatingTime * Eln.cableThermalSpikeLimitFactor
+            if (Eln.config.getBooleanOrElse("simulation.thermal.cableSpikeLimiter.enabled", true) && Eln.cableHeatingTime > 0)
+                thermalWarmLimit / Eln.cableHeatingTime * Eln.config.getDoubleOrElse("simulation.thermal.cableSpikeLimiter.factor", 20.0)
             else
                 Double.POSITIVE_INFINITY
         voltageLevelColor = VoltageLevelColor.Neutral
@@ -198,7 +198,7 @@ open class CurrentCableElement(sixNode: SixNode?, side: Direction?, descriptor: 
         val info: MutableMap<String, String> = HashMap()
         info[tr("Current")] = plotAmpere("", electricalLoad.current)
         info[tr("Temperature")] = plotAmbientCelsius("", thermalLoad.temperature)
-        if (Eln.wailaEasyMode) {
+        if (Eln.config.getBooleanOrElse("ui.waila.easyMode", false)) {
             info[tr("Voltage")] = plotVolt("", electricalLoad.voltage)
         }
         info[tr("Subsystem Matrix Size")] = renderSubSystemWaila(electricalLoad.subSystem)

@@ -13,7 +13,7 @@ object ShaftDebugLogger {
     private val dumpedNetworks = Collections.newSetFromMap(IdentityHashMap<ShaftNetwork, Boolean>())
 
     fun logElement(element: ShaftElement) {
-        if (!Eln.debugEnabled) return
+        if (!Eln.config.getBooleanOrElse("debug.logging.enabled", false)) return
 
         val coordinate = element.coordonate()
         if (!coordinate.worldExist) return

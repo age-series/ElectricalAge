@@ -16,18 +16,18 @@ public class ReplicatorPopProcess implements IProcess {
     public ReplicatorPopProcess() {
     }
 
-    public static double popPerSecondPerPlayer = 1.0 / 60;
-
     @Override
     public void process(double time) {
         World world = FMLCommonHandler.instance().getMinecraftServerInstance().worldServers[0];
+        int maxReplicators = Eln.config.getIntOrElse("entities.replicator.maxCount", 100);
+        double popPerSecondPerPlayer = Eln.config.getDoubleOrElse("entities.replicator.thunderSpawnPerSecondPerPlayer", 1.0 / 120.0);
 
         int replicatorCount = 0;
 
         for (Object o : world.loadedEntityList) {
             if (o instanceof ReplicatorEntity) {
                 replicatorCount++;
-                if (replicatorCount > Eln.instance.maxReplicators) {
+                if (replicatorCount > maxReplicators) {
                     ReplicatorEntity r = (ReplicatorEntity) o;
                     r.setDead();
                 }

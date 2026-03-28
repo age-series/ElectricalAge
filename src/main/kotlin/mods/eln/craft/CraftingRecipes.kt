@@ -486,110 +486,110 @@ object CraftingRecipes {
     private fun recipeWirelessSignal() {
         addRecipe(
             findItemStack("Wireless Signal Transmitter"), " S ", " R ", "ICI", 'R',
-            ItemStack(Items.redstone), 'I', findItemStack("Iron Cable"), 'C', Eln.dictCheapChip, 'S', findItemStack(
+            ItemStack(Items.redstone), 'I', findItemStack("Iron Cable"), 'C', Eln.config.getStringOrElse("runtime.dictionary.cheapChip", "circuitElnBasic"), 'S', findItemStack(
                 "Signal Antenna"
             )
         )
         addRecipe(
             findItemStack("Wireless Signal Repeater"), "S S", "R R", "ICI", 'R', ItemStack(Items.redstone),
-            'I', findItemStack("Iron Cable"), 'C', Eln.dictCheapChip, 'S', findItemStack("Signal Antenna")
+            'I', findItemStack("Iron Cable"), 'C', Eln.config.getStringOrElse("runtime.dictionary.cheapChip", "circuitElnBasic"), 'S', findItemStack("Signal Antenna")
         )
         addRecipe(
             findItemStack("Wireless Signal Receiver"), " S ", "ICI", 'R', ItemStack(Items.redstone), 'I',
-            findItemStack("Iron Cable"), 'C', Eln.dictCheapChip, 'S', findItemStack("Signal Antenna")
+            findItemStack("Iron Cable"), 'C', Eln.config.getStringOrElse("runtime.dictionary.cheapChip", "circuitElnBasic"), 'S', findItemStack("Signal Antenna")
         )
     }
 
     private fun recipeChips() {
         addRecipe(
-            findItemStack("NOT Chip"), "   ", "cCr", "   ", 'C', Eln.dictCheapChip, 'r',
+            findItemStack("NOT Chip"), "   ", "cCr", "   ", 'C', Eln.config.getStringOrElse("runtime.dictionary.cheapChip", "circuitElnBasic"), 'r',
             ItemStack(Items.redstone), 'c', findItemStack("Copper Cable")
         )
         addRecipe(
-            findItemStack("AND Chip"), " c ", "cCc", " c ", 'C', Eln.dictCheapChip, 'c', findItemStack(
+            findItemStack("AND Chip"), " c ", "cCc", " c ", 'C', Eln.config.getStringOrElse("runtime.dictionary.cheapChip", "circuitElnBasic"), 'c', findItemStack(
                 "Copper " +
                         "Cable"
             )
         )
         addRecipe(
-            findItemStack("NAND Chip"), " c ", "cCr", " c ", 'C', Eln.dictCheapChip, 'r',
+            findItemStack("NAND Chip"), " c ", "cCr", " c ", 'C', Eln.config.getStringOrElse("runtime.dictionary.cheapChip", "circuitElnBasic"), 'r',
             ItemStack(Items.redstone), 'c', findItemStack("Copper Cable")
         )
         addRecipe(
-            findItemStack("OR Chip"), " r ", "rCr", " r ", 'C', Eln.dictCheapChip, 'r',
+            findItemStack("OR Chip"), " r ", "rCr", " r ", 'C', Eln.config.getStringOrElse("runtime.dictionary.cheapChip", "circuitElnBasic"), 'r',
             ItemStack(Items.redstone)
         )
         addRecipe(
-            findItemStack("NOR Chip"), " r ", "rCc", " r ", 'C', Eln.dictCheapChip, 'r',
+            findItemStack("NOR Chip"), " r ", "rCc", " r ", 'C', Eln.config.getStringOrElse("runtime.dictionary.cheapChip", "circuitElnBasic"), 'r',
             ItemStack(Items.redstone), 'c', findItemStack("Copper Cable")
         )
         addRecipe(
-            findItemStack("XOR Chip"), " rr", "rCr", " rr", 'C', Eln.dictCheapChip, 'r',
+            findItemStack("XOR Chip"), " rr", "rCr", " rr", 'C', Eln.config.getStringOrElse("runtime.dictionary.cheapChip", "circuitElnBasic"), 'r',
             ItemStack(Items.redstone)
         )
         addRecipe(
-            findItemStack("XNOR Chip"), " rr", "rCc", " rr", 'C', Eln.dictCheapChip, 'r',
+            findItemStack("XNOR Chip"), " rr", "rCc", " rr", 'C', Eln.config.getStringOrElse("runtime.dictionary.cheapChip", "circuitElnBasic"), 'r',
             ItemStack(Items.redstone), 'c', findItemStack("Copper Cable")
         )
         addRecipe(
-            findItemStack("PAL Chip"), "rcr", "cCc", "rcr", 'C', Eln.dictAdvancedChip, 'r',
+            findItemStack("PAL Chip"), "rcr", "cCc", "rcr", 'C', Eln.config.getStringOrElse("runtime.dictionary.advancedChip", "circuitElnAdvanced"), 'r',
             ItemStack(Items.redstone), 'c', findItemStack("Copper Cable")
         )
         addRecipe(
-            findItemStack("Schmitt Trigger Chip"), "   ", "cCc", "   ", 'C', Eln.dictAdvancedChip, 'c',
+            findItemStack("Schmitt Trigger Chip"), "   ", "cCc", "   ", 'C', Eln.config.getStringOrElse("runtime.dictionary.advancedChip", "circuitElnAdvanced"), 'c',
             findItemStack("Copper Cable")
         )
         addRecipe(
-            findItemStack("D Flip Flop Chip"), "   ", "cCc", " p ", 'C', Eln.dictAdvancedChip, 'p', findItemStack(
+            findItemStack("D Flip Flop Chip"), "   ", "cCc", " p ", 'C', Eln.config.getStringOrElse("runtime.dictionary.advancedChip", "circuitElnAdvanced"), 'p', findItemStack(
                 "Copper Plate"
             ), 'c', findItemStack("Copper Cable")
         )
         addRecipe(
-            findItemStack("Oscillator Chip"), "pdp", "cCc", "   ", 'C', Eln.dictAdvancedChip, 'p', findItemStack(
+            findItemStack("Oscillator Chip"), "pdp", "cCc", "   ", 'C', Eln.config.getStringOrElse("runtime.dictionary.advancedChip", "circuitElnAdvanced"), 'p', findItemStack(
                 "Copper Plate"
             ), 'c', findItemStack("Copper Cable"), 'd', findItemStack("Dielectric")
         )
         addRecipe(
-            findItemStack("JK Flip Flop Chip"), " p ", "cCc", " p ", 'C', Eln.dictAdvancedChip, 'p', findItemStack(
+            findItemStack("JK Flip Flop Chip"), " p ", "cCc", " p ", 'C', Eln.config.getStringOrElse("runtime.dictionary.advancedChip", "circuitElnAdvanced"), 'p', findItemStack(
                 "Copper Plate"
             ), 'c', findItemStack("Copper Cable")
         )
         addRecipe(
             findItemStack("Amplifier"), "  r", "cCc", "   ", 'r', ItemStack(Items.redstone), 'c',
-            findItemStack("Copper Cable"), 'C', Eln.dictAdvancedChip
+            findItemStack("Copper Cable"), 'C', Eln.config.getStringOrElse("runtime.dictionary.advancedChip", "circuitElnAdvanced")
         )
         addRecipe(
             findItemStack("Voltage controlled amplifier"), " sr", "cCc", "   ", 'r', ItemStack(Items.redstone), 'c',
-            findItemStack("Copper Cable"), 'C', Eln.dictAdvancedChip, 's', findItemStack("Signal Cable")
+            findItemStack("Copper Cable"), 'C', Eln.config.getStringOrElse("runtime.dictionary.advancedChip", "circuitElnAdvanced"), 's', findItemStack("Signal Cable")
         )
         addRecipe(
             findItemStack("OpAmp"), "  r", "cCc", " c ", 'r', ItemStack(Items.redstone), 'c',
-            findItemStack("Copper Cable"), 'C', Eln.dictAdvancedChip
+            findItemStack("Copper Cable"), 'C', Eln.config.getStringOrElse("runtime.dictionary.advancedChip", "circuitElnAdvanced")
         )
         addRecipe(
             findItemStack("Configurable summing unit"), " cr", "cCc", " c ", 'r', ItemStack(Items.redstone),
-            'c', findItemStack("Copper Cable"), 'C', Eln.dictAdvancedChip
+            'c', findItemStack("Copper Cable"), 'C', Eln.config.getStringOrElse("runtime.dictionary.advancedChip", "circuitElnAdvanced")
         )
         addRecipe(
             findItemStack("Sample and hold"), " rr", "cCc", " c ", 'r', ItemStack(Items.redstone), 'c',
-            findItemStack("Copper Cable"), 'C', Eln.dictAdvancedChip
+            findItemStack("Copper Cable"), 'C', Eln.config.getStringOrElse("runtime.dictionary.advancedChip", "circuitElnAdvanced")
         )
         addRecipe(
             findItemStack("Voltage controlled sine oscillator"), "rrr", "cCc", "   ", 'r',
-            ItemStack(Items.redstone), 'c', findItemStack("Copper Cable"), 'C', Eln.dictAdvancedChip
+            ItemStack(Items.redstone), 'c', findItemStack("Copper Cable"), 'C', Eln.config.getStringOrElse("runtime.dictionary.advancedChip", "circuitElnAdvanced")
         )
         addRecipe(
             findItemStack("Voltage controlled sawtooth oscillator"), "   ", "cCc", "rrr", 'r',
-            ItemStack(Items.redstone), 'c', findItemStack("Copper Cable"), 'C', Eln.dictAdvancedChip
+            ItemStack(Items.redstone), 'c', findItemStack("Copper Cable"), 'C', Eln.config.getStringOrElse("runtime.dictionary.advancedChip", "circuitElnAdvanced")
         )
         addRecipe(
             findItemStack("PID Regulator"), "rrr", "cCc", "rcr", 'r', ItemStack(Items.redstone), 'c',
-            findItemStack("Copper Cable"), 'C', Eln.dictAdvancedChip
+            findItemStack("Copper Cable"), 'C', Eln.config.getStringOrElse("runtime.dictionary.advancedChip", "circuitElnAdvanced")
         )
         addRecipe(
             findItemStack("Lowpass filter"), "CdC", "cDc", " s ", 'd', findItemStack("Dielectric"), 'c',
             findItemStack("Copper Cable"), 'C', findItemStack("Copper Plate"), 'D', findItemStack("Coal Dust"), 's',
-            Eln.dictCheapChip
+            Eln.config.getStringOrElse("runtime.dictionary.cheapChip", "circuitElnBasic")
         )
     }
 
@@ -600,7 +600,7 @@ object CraftingRecipes {
         )
         addRecipe(
             findItemStack("Variable DC-DC Converter"), "CBC", "III", 'C', findItemStack("Copper Cable"), 'I',
-            ItemStack(Items.iron_ingot), 'B', Eln.dictCheapChip
+            ItemStack(Items.iron_ingot), 'B', Eln.config.getStringOrElse("runtime.dictionary.cheapChip", "circuitElnBasic")
         )
     }
 
@@ -852,22 +852,22 @@ object CraftingRecipes {
         )
         addRecipe(
             findItemStack("Energy Meter"), "IcI", "IRI", "IcI", 'c', findItemStack("Copper Cable"), 'R',
-            Eln.dictCheapChip, 'I', findItemStack("Iron Cable")
+            Eln.config.getStringOrElse("runtime.dictionary.cheapChip", "circuitElnBasic"), 'I', findItemStack("Iron Cable")
         )
         addRecipe(
             findItemStack("Advanced Energy Meter"), " c ", "PRP", " c ", 'c', findItemStack("Copper Cable"),
-            'R', Eln.dictAdvancedChip, 'P', findItemStack("Iron Plate")
+            'R', Eln.config.getStringOrElse("runtime.dictionary.advancedChip", "circuitElnAdvanced"), 'P', findItemStack("Iron Plate")
         )
         addRecipe(
             findItemStack("MQTT Energy Meter"), "ICI", "RMR", "ICI",
-            'I', findItemStack("Iron Cable"), 'C', Eln.dictAdvancedChip,
+            'I', findItemStack("Iron Cable"), 'C', Eln.config.getStringOrElse("runtime.dictionary.advancedChip", "circuitElnAdvanced"),
             'R', ItemStack(Items.redstone), 'M', findItemStack("Advanced Energy Meter")
         )
     }
 
     private fun recipeAutoMiner() {
         addRecipe(
-            findItemStack("Auto Miner"), "MCM", "BOB", " P ", 'C', Eln.dictAdvancedChip, 'O', findItemStack(
+            findItemStack("Auto Miner"), "MCM", "BOB", " P ", 'C', Eln.config.getStringOrElse("runtime.dictionary.advancedChip", "circuitElnAdvanced"), 'O', findItemStack(
                 "Ore " +
                         "Scanner"
             ), 'B', findItemStack("Advanced Machine Block"), 'M', findItemStack("Advanced Electrical Motor"),
@@ -1031,7 +1031,7 @@ object CraftingRecipes {
         )
         addRecipe(
             Eln.findItemStack("Analogic Regulator", 1), "R R", " C ", " I ", 'R', ItemStack(Items.redstone),
-            'I', findItemStack("Iron Cable"), 'C', Eln.dictCheapChip
+            'I', findItemStack("Iron Cable"), 'C', Eln.config.getStringOrElse("runtime.dictionary.cheapChip", "circuitElnBasic")
         )
     }
 
@@ -1039,15 +1039,15 @@ object CraftingRecipes {
         // Tungsten
         addRecipe(
             Eln.findItemStack("Small 50V Incandescent Light Bulb", 4), " G ", "GFG", " S ", 'G',
-            ItemStack(Blocks.glass_pane), 'F', Eln.dictTungstenIngot, 'S', findItemStack("Copper Cable")
+            ItemStack(Blocks.glass_pane), 'F', Eln.config.getStringOrElse("runtime.dictionary.tungstenIngot", "ingotElnTungsten"), 'S', findItemStack("Copper Cable")
         )
         addRecipe(
             Eln.findItemStack("50V Incandescent Light Bulb", 4), " G ", "GFG", " S ", 'G',
-            ItemStack(Blocks.glass_pane), 'F', Eln.dictTungstenIngot, 'S', findItemStack("Low Voltage Cable")
+            ItemStack(Blocks.glass_pane), 'F', Eln.config.getStringOrElse("runtime.dictionary.tungstenIngot", "ingotElnTungsten"), 'S', findItemStack("Low Voltage Cable")
         )
         addRecipe(
             Eln.findItemStack("200V Incandescent Light Bulb", 4), " G ", "GFG", " S ", 'G',
-            ItemStack(Blocks.glass_pane), 'F', Eln.dictTungstenIngot, 'S', findItemStack("Medium Voltage Cable")
+            ItemStack(Blocks.glass_pane), 'F', Eln.config.getStringOrElse("runtime.dictionary.tungstenIngot", "ingotElnTungsten"), 'S', findItemStack("Medium Voltage Cable")
         )
         // CARBON
         addRecipe(
@@ -1092,11 +1092,11 @@ object CraftingRecipes {
         )
         addRecipe(
             Eln.findItemStack("50V Farming Light Bulb", 2), "GGG", "FFF", "GSG", 'G', ItemStack(Blocks.glass_pane),
-            'F', Eln.dictTungstenIngot, 'S', findItemStack("Low Voltage Cable")
+            'F', Eln.config.getStringOrElse("runtime.dictionary.tungstenIngot", "ingotElnTungsten"), 'S', findItemStack("Low Voltage Cable")
         )
         addRecipe(
             Eln.findItemStack("200V Farming Light Bulb", 2), "GGG", "FFF", "GSG", 'G', ItemStack(Blocks.glass_pane),
-            'F', Eln.dictTungstenIngot, 'S', findItemStack("Medium Voltage Cable")
+            'F', Eln.config.getStringOrElse("runtime.dictionary.tungstenIngot", "ingotElnTungsten"), 'S', findItemStack("Medium Voltage Cable")
         )
         addRecipe(
             Eln.findItemStack("50V LED Light Bulb", 2), "GGG", "SSS", " C ", 'G', ItemStack(Blocks.glass_pane), 'S',
@@ -1120,11 +1120,11 @@ object CraftingRecipes {
     private fun recipeProtection() {
         addRecipe(
             Eln.findItemStack("Overvoltage Protection", 4), "SCD", 'S', findItemStack("Electrical Probe Chip"), 'C',
-            Eln.dictCheapChip, 'D', ItemStack(Items.redstone)
+            Eln.config.getStringOrElse("runtime.dictionary.cheapChip", "circuitElnBasic"), 'D', ItemStack(Items.redstone)
         )
         addRecipe(
             Eln.findItemStack("Overheating Protection", 4), "SCD", 'S', findItemStack("Thermal Probe Chip"), 'C',
-            Eln.dictCheapChip, 'D', ItemStack(Items.redstone)
+            Eln.config.getStringOrElse("runtime.dictionary.cheapChip", "circuitElnBasic"), 'D', ItemStack(Items.redstone)
         )
     }
 
@@ -1156,8 +1156,8 @@ object CraftingRecipes {
 
     private fun recipeDust() {
         addShapelessRecipe(
-            Eln.findItemStack("Alloy Dust", 6), "dustIron", "dustCoal", Eln.dictTungstenDust, Eln.dictTungstenDust,
-            Eln.dictTungstenDust, Eln.dictTungstenDust
+            Eln.findItemStack("Alloy Dust", 6), "dustIron", "dustCoal", Eln.config.getStringOrElse("runtime.dictionary.tungstenDust", "dustElnTungsten"), Eln.config.getStringOrElse("runtime.dictionary.tungstenDust", "dustElnTungsten"),
+            Eln.config.getStringOrElse("runtime.dictionary.tungstenDust", "dustElnTungsten"), Eln.config.getStringOrElse("runtime.dictionary.tungstenDust", "dustElnTungsten")
         )
         addShapelessRecipe(
             Eln.findItemStack("Inert Canister", 1), findItemStack("Lapis Dust"), findItemStack(
@@ -1221,28 +1221,28 @@ object CraftingRecipes {
         )
         addRecipe(
             findItemStack("Config Copy Tool"), "wR", "RC", 'w', findItemStack("Wrench"), 'R',
-            ItemStack(Items.redstone), 'C', Eln.dictAdvancedChip
+            ItemStack(Items.redstone), 'C', Eln.config.getStringOrElse("runtime.dictionary.advancedChip", "circuitElnAdvanced")
         )
     }
 
     private fun recipeElectricalDrill() {
         addRecipe(
             findItemStack("Cheap Electrical Drill"), "CMC", " T ", " P ", 'T', findItemStack("Mining Pipe"),
-            'C', Eln.dictCheapChip, 'M', findItemStack("Electrical Motor"), 'P', ItemStack(Items.iron_pickaxe)
+            'C', Eln.config.getStringOrElse("runtime.dictionary.cheapChip", "circuitElnBasic"), 'M', findItemStack("Electrical Motor"), 'P', ItemStack(Items.iron_pickaxe)
         )
         addRecipe(
             findItemStack("Average Electrical Drill"), "RCR", " D ", " d ", 'R', Items.redstone, 'C',
-            Eln.dictCheapChip, 'D', findItemStack("Cheap Electrical Drill"), 'd', ItemStack(Items.diamond)
+            Eln.config.getStringOrElse("runtime.dictionary.cheapChip", "circuitElnBasic"), 'D', findItemStack("Cheap Electrical Drill"), 'd', ItemStack(Items.diamond)
         )
         addRecipe(
             findItemStack("Fast Electrical Drill"), "MCM", " T ", " P ", 'T', findItemStack("Mining Pipe"), 'C',
-            Eln.dictAdvancedChip, 'M', findItemStack("Advanced Electrical Motor"), 'P', ItemStack(Items.diamond_pickaxe)
+            Eln.config.getStringOrElse("runtime.dictionary.advancedChip", "circuitElnAdvanced"), 'M', findItemStack("Advanced Electrical Motor"), 'P', ItemStack(Items.diamond_pickaxe)
         )
         addRecipe(
             findItemStack("Turbo Electrical Drill"), "RCR", " F ", " D ", 'F', findItemStack(
                 "Fast Electrical " +
                         "Drill"
-            ), 'C', Eln.dictAdvancedChip, 'R', findItemStack("Graphite Rod"), 'D', findItemStack("Synthetic Diamond")
+            ), 'C', Eln.config.getStringOrElse("runtime.dictionary.advancedChip", "circuitElnAdvanced"), 'R', findItemStack("Graphite Rod"), 'D', findItemStack("Synthetic Diamond")
         )
         addRecipe(
             findItemStack("Irresponsible Electrical Drill"), "DDD", "DFD", "DDD", 'F', findItemStack(
@@ -1254,7 +1254,7 @@ object CraftingRecipes {
 
     private fun recipeOreScanner() {
         addRecipe(
-            findItemStack("Ore Scanner"), "IGI", "RCR", "IGI", 'C', Eln.dictCheapChip, 'R',
+            findItemStack("Ore Scanner"), "IGI", "RCR", "IGI", 'C', Eln.config.getStringOrElse("runtime.dictionary.cheapChip", "circuitElnBasic"), 'R',
             ItemStack(Items.redstone), 'I', findItemStack("Iron Cable"), 'G', ItemStack(Items.gold_ingot)
         )
     }
@@ -1271,13 +1271,13 @@ object CraftingRecipes {
     private fun recipeRawCable() {
         addRecipe(Eln.findItemStack("Copper Cable", 12), "III", 'I', "ingotCopper")
 
-        if (Eln.verticalIronCableCrafting) {
+        if (Eln.config.getBooleanOrElse("gameplay.crafting.verticalIronCableCrafting", false)) {
             addRecipe(Eln.findItemStack("Iron Cable", 12), "I  ", "I  ", "I  ", 'I', ItemStack(Items.iron_ingot))
         } else {
             addRecipe(Eln.findItemStack("Iron Cable", 12), "III", 'I', ItemStack(Items.iron_ingot))
         }
 
-        addRecipe(Eln.findItemStack("Tungsten Cable", 6), "III", 'I', Eln.dictTungstenIngot)
+        addRecipe(Eln.findItemStack("Tungsten Cable", 6), "III", 'I', Eln.config.getStringOrElse("runtime.dictionary.tungstenIngot", "ingotElnTungsten"))
         /*addRecipe(findItemStack("T1 Transmission Cable", 6),
             "III",
             'I', firstExistingOre("ingotSteel", "Arc Metal Ingot"));
@@ -1378,9 +1378,9 @@ object CraftingRecipes {
             'B', findItemStack("Portable Battery"), 'M', findItemStack("Electrical Motor"), 'I',
             ItemStack(Items.iron_ingot)
         )
-        if (Eln.instance.xRayScannerCanBeCrafted) {
+        if (Eln.config.getBooleanOrElse("tools.xrayScanner.canBeCrafted", true)) {
             addRecipe(
-                findItemStack("X-Ray Scanner"), "PGP", "PCP", "PBP", 'C', Eln.dictAdvancedChip, 'B', findItemStack(
+                findItemStack("X-Ray Scanner"), "PGP", "PCP", "PBP", 'C', Eln.config.getStringOrElse("runtime.dictionary.advancedChip", "circuitElnAdvanced"), 'B', findItemStack(
                     "Portable Battery"
                 ), 'P', findItemStack("Iron Cable"), 'G', findItemStack("Ore Scanner")
             )
@@ -1432,7 +1432,7 @@ object CraftingRecipes {
             ItemStack(Items.redstone)
         )
         addRecipe(
-            findItemStack("Advanced Chip"), "LRL", "RCR", "LRL", 'C', Eln.dictCheapChip, 'L', "ingotSilicon", 'R',
+            findItemStack("Advanced Chip"), "LRL", "RCR", "LRL", 'C', Eln.config.getStringOrElse("runtime.dictionary.cheapChip", "circuitElnBasic"), 'L', "ingotSilicon", 'R',
             ItemStack(Items.redstone)
         )
         addRecipe(
@@ -1456,7 +1456,7 @@ object CraftingRecipes {
         addRecipe(findItemStack("Signal Antenna"), "c", "c", 'c', findItemStack("Iron Cable"))
         addRecipe(
             findItemStack("Machine Booster"), "m", "c", "m", 'm', findItemStack("Electrical Motor"), 'c',
-            Eln.dictAdvancedChip
+            Eln.config.getStringOrElse("runtime.dictionary.advancedChip", "circuitElnAdvanced")
         )
         addRecipe(findItemStack("Wrench"), " c ", "cc ", "  c", 'c', findItemStack("Iron Cable"))
         addRecipe(
@@ -1472,8 +1472,8 @@ object CraftingRecipes {
             ItemStack(Items.dye, 1, 4)
         )
         addRecipe(Eln.findItemStack("Casing", 1), "ppp", "p p", "ppp", 'p', findItemStack("Iron Cable"))
-        addRecipe(findItemStack("Iron Clutch Plate"), " t ", "tIt", " t ", 'I', "plateIron", 't', Eln.dictTungstenDust)
-        addRecipe(findItemStack("Gold Clutch Plate"), " t ", "tGt", " t ", 'G', "plateGold", 't', Eln.dictTungstenDust)
+        addRecipe(findItemStack("Iron Clutch Plate"), " t ", "tIt", " t ", 'I', "plateIron", 't', Eln.config.getStringOrElse("runtime.dictionary.tungstenDust", "dustElnTungsten"))
+        addRecipe(findItemStack("Gold Clutch Plate"), " t ", "tGt", " t ", 'G', "plateGold", 't', Eln.config.getStringOrElse("runtime.dictionary.tungstenDust", "dustElnTungsten"))
         addRecipe(
             findItemStack("Copper Clutch Plate"),
             " t ",
@@ -1482,10 +1482,10 @@ object CraftingRecipes {
             'C',
             "plateCopper",
             't',
-            Eln.dictTungstenDust
+            Eln.config.getStringOrElse("runtime.dictionary.tungstenDust", "dustElnTungsten")
         )
-        addRecipe(findItemStack("Lead Clutch Plate"), " t ", "tLt", " t ", 'L', "plateLead", 't', Eln.dictTungstenDust)
-        addRecipe(findItemStack("Coal Clutch Plate"), " t ", "tCt", " t ", 'C', "plateCoal", 't', Eln.dictTungstenDust)
+        addRecipe(findItemStack("Lead Clutch Plate"), " t ", "tLt", " t ", 'L', "plateLead", 't', Eln.config.getStringOrElse("runtime.dictionary.tungstenDust", "dustElnTungsten"))
+        addRecipe(findItemStack("Coal Clutch Plate"), " t ", "tCt", " t ", 'C', "plateCoal", 't', Eln.config.getStringOrElse("runtime.dictionary.tungstenDust", "dustElnTungsten"))
         addRecipe(Eln.findItemStack("Clutch Pin", 4), "s", "s", 's', firstExistingOre("ingotSteel", "ingotAlloy"))
         addRecipe(
             findItemStack("Motor Cowling"),
@@ -1977,16 +1977,17 @@ object CraftingRecipes {
 
     private fun recipePlateMachine() {
         val f = 10000f
+        val plateConversionRatio = Eln.config.getIntOrElse("balance.materials.platesPerIngot", 1)
         Eln.instance.plateMachineRecipes.addRecipe(
             Recipe(
-                Eln.findItemStack("Copper Ingot", Eln.instance.plateConversionRatio), findItemStack(
+                Eln.findItemStack("Copper Ingot", plateConversionRatio), findItemStack(
                     "Copper Plate"
                 ), 1.0 * f
             )
         )
         Eln.instance.plateMachineRecipes.addRecipe(
             Recipe(
-                Eln.findItemStack("Lead Ingot", Eln.instance.plateConversionRatio), findItemStack(
+                Eln.findItemStack("Lead Ingot", plateConversionRatio), findItemStack(
                     "Lead Plate"
                 ), 1.0 * f
             )
@@ -1999,20 +2000,20 @@ object CraftingRecipes {
         )
         Eln.instance.plateMachineRecipes.addRecipe(
             Recipe(
-                Eln.findItemStack("Alloy Ingot", Eln.instance.plateConversionRatio), findItemStack(
+                Eln.findItemStack("Alloy Ingot", plateConversionRatio), findItemStack(
                     "Alloy Plate"
                 ), 1.0 * f
             )
         )
         Eln.instance.plateMachineRecipes.addRecipe(
             Recipe(
-                ItemStack(Items.iron_ingot, Eln.instance.plateConversionRatio, 0),
+                ItemStack(Items.iron_ingot, plateConversionRatio, 0),
                 findItemStack("Iron Plate"), 1.0 * f
             )
         )
         Eln.instance.plateMachineRecipes.addRecipe(
             Recipe(
-                ItemStack(Items.gold_ingot, Eln.instance.plateConversionRatio, 0),
+                ItemStack(Items.gold_ingot, plateConversionRatio, 0),
                 findItemStack("Gold Plate"), 1.0 * f
             )
         )
@@ -2145,7 +2146,7 @@ object CraftingRecipes {
             Eln.findItemStack("Experimental Transporter", 1), "RMR", "RMR", " R ", 'M', findItemStack(
                 "Advanced " +
                         "Machine Block"
-            ), 'C', findItemStack("High Voltage Cable"), 'R', Eln.dictAdvancedChip
+            ), 'C', findItemStack("High Voltage Cable"), 'R', Eln.config.getStringOrElse("runtime.dictionary.advancedChip", "circuitElnAdvanced")
         )
     }
 
@@ -2154,7 +2155,7 @@ object CraftingRecipes {
             Eln.findItemStack("800V Defence Turret", 1), " R ", "CMC", " c ", 'M', findItemStack(
                 "Advanced Machine " +
                         "Block"
-            ), 'C', Eln.dictAdvancedChip, 'c', Eln.instance.highVoltageCableDescriptor.newItemStack(), 'R',
+            ), 'C', Eln.config.getStringOrElse("runtime.dictionary.advancedChip", "circuitElnAdvanced"), 'c', Eln.instance.highVoltageCableDescriptor.newItemStack(), 'R',
             ItemStack(Blocks.redstone_block)
         )
     }
@@ -2169,7 +2170,7 @@ object CraftingRecipes {
             Eln.findItemStack("200V Macerator", 1), "ICI", "DMD", "IcI", 'M', findItemStack(
                 "Advanced Machine " +
                         "Block"
-            ), 'C', Eln.dictAdvancedChip, 'c', findItemStack("Advanced Electrical Motor"), 'D',
+            ), 'C', Eln.config.getStringOrElse("runtime.dictionary.advancedChip", "circuitElnAdvanced"), 'c', findItemStack("Advanced Electrical Motor"), 'D',
             ItemStack(Items.diamond), 'I', "ingotAlloy"
         )
         addRecipe(
@@ -2181,7 +2182,7 @@ object CraftingRecipes {
             Eln.findItemStack("200V Compressor", 1), "ICI", "DMD", "IcI", 'M', findItemStack(
                 "Advanced Machine " +
                         "Block"
-            ), 'C', Eln.dictAdvancedChip, 'c', findItemStack("Advanced Electrical Motor"), 'D', "plateAlloy", 'I',
+            ), 'C', Eln.config.getStringOrElse("runtime.dictionary.advancedChip", "circuitElnAdvanced"), 'c', findItemStack("Advanced Electrical Motor"), 'D', "plateAlloy", 'I',
             "ingotAlloy"
         )
         addRecipe(
@@ -2192,7 +2193,7 @@ object CraftingRecipes {
             Eln.findItemStack("200V Plate Machine", 1), "DCD", "DMD", "DcD", 'M', findItemStack(
                 "Advanced Machine " +
                         "Block"
-            ), 'C', Eln.dictAdvancedChip, 'c', findItemStack("Advanced Electrical Motor"), 'D', "plateAlloy", 'I',
+            ), 'C', Eln.config.getStringOrElse("runtime.dictionary.advancedChip", "circuitElnAdvanced"), 'c', findItemStack("Advanced Electrical Motor"), 'D', "plateAlloy", 'I',
             "ingotAlloy"
         )
         addRecipe(
@@ -2203,7 +2204,7 @@ object CraftingRecipes {
             Eln.findItemStack("200V Magnetizer", 1), "ICI", "cMc", "III", 'M', findItemStack(
                 "Advanced Machine " +
                         "Block"
-            ), 'C', Eln.dictAdvancedChip, 'c', findItemStack("Advanced Electrical Motor"), 'I', "ingotAlloy"
+            ), 'C', Eln.config.getStringOrElse("runtime.dictionary.advancedChip", "circuitElnAdvanced"), 'c', findItemStack("Advanced Electrical Motor"), 'I', "ingotAlloy"
         )
         addRecipe(
             Eln.findItemStack("Old 800V Arc Furnace", 1), "ICI", "DMD", "IcI", 'M', findItemStack(
@@ -2215,21 +2216,21 @@ object CraftingRecipes {
     }
 
     private fun recipeElectricalGate() {
-        addShapelessRecipe(findItemStack("Electrical Timer"), ItemStack(Items.repeater), Eln.dictCheapChip)
+        addShapelessRecipe(findItemStack("Electrical Timer"), ItemStack(Items.repeater), Eln.config.getStringOrElse("runtime.dictionary.cheapChip", "circuitElnBasic"))
         addRecipe(
             Eln.findItemStack("Signal Processor", 1), "IcI", "cCc", "IcI", 'I', ItemStack(Items.iron_ingot),
-            'c', findItemStack("Signal Cable"), 'C', Eln.dictCheapChip
+            'c', findItemStack("Signal Cable"), 'C', Eln.config.getStringOrElse("runtime.dictionary.cheapChip", "circuitElnBasic")
         )
     }
 
     private fun recipeElectricalRedstone() {
         addRecipe(
             Eln.findItemStack("Redstone-to-Voltage Converter", 1), "TCS", 'S', findItemStack("Signal Cable"), 'C',
-            Eln.dictCheapChip, 'T', ItemStack(Blocks.redstone_torch)
+            Eln.config.getStringOrElse("runtime.dictionary.cheapChip", "circuitElnBasic"), 'T', ItemStack(Blocks.redstone_torch)
         )
         addRecipe(
             Eln.findItemStack("Voltage-to-Redstone Converter", 1), "CTR", 'R', ItemStack(Items.redstone), 'C',
-            Eln.dictCheapChip, 'T', ItemStack(Blocks.redstone_torch)
+            Eln.config.getStringOrElse("runtime.dictionary.cheapChip", "circuitElnBasic"), 'T', ItemStack(Blocks.redstone_torch)
         )
     }
 
@@ -2260,13 +2261,13 @@ object CraftingRecipes {
         )
         addRecipe(
             findItemStack("Electrical Fire Detector"), "cbr", "p p", "r r", 'c', findItemStack("Signal Cable"),
-            'b', Eln.dictCheapChip, 'r', "itemRubber", 'p', "plateCopper"
+            'b', Eln.config.getStringOrElse("runtime.dictionary.cheapChip", "circuitElnBasic"), 'r', "itemRubber", 'p', "plateCopper"
         )
         addRecipe(
-            findItemStack("Electrical Fire Buzzer"), "rar", "p p", "r r", 'a', Eln.dictAdvancedChip, 'r',
+            findItemStack("Electrical Fire Buzzer"), "rar", "p p", "r r", 'a', Eln.config.getStringOrElse("runtime.dictionary.advancedChip", "circuitElnAdvanced"), 'r',
             "itemRubber", 'p', "plateCopper"
         )
-        addShapelessRecipe(findItemStack("Scanner"), ItemStack(Items.comparator), Eln.dictAdvancedChip)
+        addShapelessRecipe(findItemStack("Scanner"), ItemStack(Items.comparator), Eln.config.getStringOrElse("runtime.dictionary.advancedChip", "circuitElnAdvanced"))
     }
 
     private fun recipeElectricalVuMeter() {
@@ -2340,7 +2341,7 @@ object CraftingRecipes {
             'c',
             findItemStack("Signal Cable"),
             'C',
-            Eln.dictCheapChip,
+            Eln.config.getStringOrElse("runtime.dictionary.cheapChip", "circuitElnBasic"),
             'a',
             findItemStack("Signal Antenna"),
             'r',
@@ -2360,7 +2361,7 @@ object CraftingRecipes {
             'c',
             findItemStack("Signal Cable"),
             'C',
-            Eln.dictCheapChip,
+            Eln.config.getStringOrElse("runtime.dictionary.cheapChip", "circuitElnBasic"),
             'a',
             findItemStack("Signal Antenna"),
             'r',
@@ -2374,16 +2375,16 @@ object CraftingRecipes {
 
     private fun recipeElectricalDataLogger() {
         addRecipe(
-            Eln.findItemStack("Data Logger", 1), "RRR", "RGR", "RCR", 'R', "itemRubber", 'C', Eln.dictCheapChip, 'G',
+            Eln.findItemStack("Data Logger", 1), "RRR", "RGR", "RCR", 'R', "itemRubber", 'C', Eln.config.getStringOrElse("runtime.dictionary.cheapChip", "circuitElnBasic"), 'G',
             ItemStack(Blocks.glass_pane)
         )
         addRecipe(
             Eln.findItemStack("Modern Data Logger", 1), "RRR", "RGR", "RCR", 'R', "itemRubber", 'C',
-            Eln.dictAdvancedChip, 'G', ItemStack(Blocks.glass_pane)
+            Eln.config.getStringOrElse("runtime.dictionary.advancedChip", "circuitElnAdvanced"), 'G', ItemStack(Blocks.glass_pane)
         )
         addRecipe(
             Eln.findItemStack("Industrial Data Logger", 1), "RRR", "GGG", "RCR", 'R', "itemRubber", 'C',
-            Eln.dictAdvancedChip, 'G', ItemStack(Blocks.glass_pane)
+            Eln.config.getStringOrElse("runtime.dictionary.advancedChip", "circuitElnAdvanced"), 'G', ItemStack(Blocks.glass_pane)
         )
     }
 
@@ -2403,28 +2404,28 @@ object CraftingRecipes {
 
     private fun recipeElectricalAntenna() {
         addRecipe(
-            Eln.findItemStack("Low Power Transmitter Antenna", 1), "R i", "CI ", "R i", 'C', Eln.dictCheapChip, 'i',
+            Eln.findItemStack("Low Power Transmitter Antenna", 1), "R i", "CI ", "R i", 'C', Eln.config.getStringOrElse("runtime.dictionary.cheapChip", "circuitElnBasic"), 'i',
             ItemStack(Items.iron_ingot), 'I', "plateIron", 'R', ItemStack(Items.redstone)
         )
         addRecipe(
-            Eln.findItemStack("Low Power Receiver Antenna", 1), "i  ", " IC", "i  ", 'C', Eln.dictCheapChip, 'I',
+            Eln.findItemStack("Low Power Receiver Antenna", 1), "i  ", " IC", "i  ", 'C', Eln.config.getStringOrElse("runtime.dictionary.cheapChip", "circuitElnBasic"), 'I',
             "plateIron", 'i', ItemStack(Items.iron_ingot), 'R', ItemStack(Items.redstone)
         )
         addRecipe(
-            Eln.findItemStack("Medium Power Transmitter Antenna", 1), "c I", "CI ", "c I", 'C', Eln.dictAdvancedChip,
-            'c', Eln.dictCheapChip, 'I', "plateIron", 'R', ItemStack(Items.redstone)
+            Eln.findItemStack("Medium Power Transmitter Antenna", 1), "c I", "CI ", "c I", 'C', Eln.config.getStringOrElse("runtime.dictionary.advancedChip", "circuitElnAdvanced"),
+            'c', Eln.config.getStringOrElse("runtime.dictionary.cheapChip", "circuitElnBasic"), 'I', "plateIron", 'R', ItemStack(Items.redstone)
         )
         addRecipe(
-            Eln.findItemStack("Medium Power Receiver Antenna", 1), "I  ", " IC", "I  ", 'C', Eln.dictAdvancedChip, 'I',
+            Eln.findItemStack("Medium Power Receiver Antenna", 1), "I  ", " IC", "I  ", 'C', Eln.config.getStringOrElse("runtime.dictionary.advancedChip", "circuitElnAdvanced"), 'I',
             "plateIron", 'R', ItemStack(Items.redstone)
         )
 
         addRecipe(
-            Eln.findItemStack("High Power Transmitter Antenna", 1), "C I", "CI ", "C I", 'C', Eln.dictAdvancedChip, 'c',
-            Eln.dictCheapChip, 'I', "plateIron", 'R', ItemStack(Items.redstone)
+            Eln.findItemStack("High Power Transmitter Antenna", 1), "C I", "CI ", "C I", 'C', Eln.config.getStringOrElse("runtime.dictionary.advancedChip", "circuitElnAdvanced"), 'c',
+            Eln.config.getStringOrElse("runtime.dictionary.cheapChip", "circuitElnBasic"), 'I', "plateIron", 'R', ItemStack(Items.redstone)
         )
         addRecipe(
-            Eln.findItemStack("High Power Receiver Antenna", 1), "I D", " IC", "I D", 'C', Eln.dictAdvancedChip, 'I',
+            Eln.findItemStack("High Power Receiver Antenna", 1), "I D", " IC", "I D", 'C', Eln.config.getStringOrElse("runtime.dictionary.advancedChip", "circuitElnAdvanced"), 'I',
             "plateIron", 'R', ItemStack(Items.redstone), 'D', ItemStack(Items.diamond)
         )
     }
@@ -2437,19 +2438,19 @@ object CraftingRecipes {
             ), 'I', findItemStack("Iron Cable"), 'R', ItemStack(Items.redstone)
         )
         addRecipe(
-            Eln.findItemStack("50V Battery Charger", 1), "RIR", "ICI", "RcR", 'C', Eln.dictCheapChip, 'c',
+            Eln.findItemStack("50V Battery Charger", 1), "RIR", "ICI", "RcR", 'C', Eln.config.getStringOrElse("runtime.dictionary.cheapChip", "circuitElnBasic"), 'c',
             findItemStack("Low Voltage Cable"), 'I', findItemStack("Iron Cable"), 'R', ItemStack(Items.redstone)
         )
 
         addRecipe(
-            Eln.findItemStack("200V Battery Charger", 1), "RIR", "ICI", "RcR", 'C', Eln.dictAdvancedChip, 'c',
+            Eln.findItemStack("200V Battery Charger", 1), "RIR", "ICI", "RcR", 'C', Eln.config.getStringOrElse("runtime.dictionary.advancedChip", "circuitElnAdvanced"), 'c',
             findItemStack("Medium Voltage Cable"), 'I', findItemStack("Iron Cable"), 'R', ItemStack(Items.redstone)
         )
     }
 
     private fun recipeEggIncubator() {
         addRecipe(
-            Eln.findItemStack("50V Egg Incubator", 1), "IGG", "E G", "CII", 'C', Eln.dictCheapChip, 'E', findItemStack(
+            Eln.findItemStack("50V Egg Incubator", 1), "IGG", "E G", "CII", 'C', Eln.config.getStringOrElse("runtime.dictionary.cheapChip", "circuitElnBasic"), 'E', findItemStack(
                 "Small 50V Tungsten Heating Element"
             ), 'I', ItemStack(Items.iron_ingot), 'G',
             ItemStack(Blocks.glass_pane)
@@ -2457,9 +2458,9 @@ object CraftingRecipes {
     }
 
     private fun recipeEnergyConverter() {
-        if (Eln.instance.ElnToOtherEnergyConverterEnable) {
+        if (Eln.config.getBooleanOrElse("integrations.energyExporter.enabled", true)) {
             addRecipe(
-                ItemStack(Eln.instance.elnToOtherBlockConverter), "III", "cCR", "III", 'C', Eln.dictAdvancedChip, 'c',
+                ItemStack(Eln.instance.elnToOtherBlockConverter), "III", "cCR", "III", 'C', Eln.config.getStringOrElse("runtime.dictionary.advancedChip", "circuitElnAdvanced"), 'c',
                 findItemStack("High Voltage Cable"), 'I', findItemStack("Iron Cable"), 'R',
                 ItemStack(Items.gold_ingot)
             )
@@ -2467,9 +2468,9 @@ object CraftingRecipes {
     }
 
     private fun recipeComputerProbe() {
-        if (Eln.instance.ComputerProbeEnable) {
+        if (Eln.config.getBooleanOrElse("integrations.computerProbe.enabled", true)) {
             addRecipe(
-                ItemStack(Eln.instance.computerProbeBlock), "cIw", "ICI", "WIc", 'C', Eln.dictAdvancedChip, 'c',
+                ItemStack(Eln.instance.computerProbeBlock), "cIw", "ICI", "WIc", 'C', Eln.config.getStringOrElse("runtime.dictionary.advancedChip", "circuitElnAdvanced"), 'c',
                 findItemStack("Signal Cable"), 'I', findItemStack("Iron Cable"), 'w', findItemStack(
                     "Wireless Signal " +
                             "Receiver"
@@ -2516,11 +2517,16 @@ object CraftingRecipes {
         val redColor = (255 shl 16)
         val orangeColor = (255 shl 16) + (200 shl 8)
 
-        if (Eln.instance.replicatorRegistrationId == -1) Eln.instance.replicatorRegistrationId = EntityRegistry.findGlobalUniqueEntityId()
-        println("Replicator registred at${Eln.instance.replicatorRegistrationId}")
+        var replicatorRegistrationId = Eln.config.getIntOrElse("entities.replicator.entityId", -1)
+        if (replicatorRegistrationId == -1) {
+            replicatorRegistrationId = EntityRegistry.findGlobalUniqueEntityId()
+            Eln.config.setInt("entities.replicator.entityId", replicatorRegistrationId)
+            Eln.config.save()
+        }
+        println("Replicator registred at$replicatorRegistrationId")
         EntityRegistry.registerGlobalEntityID(
             ReplicatorEntity::class.java, I18N.TR_NAME(I18N.Type.ENTITY, "EAReplicator"),
-            Eln.instance.replicatorRegistrationId, redColor, orangeColor
+            replicatorRegistrationId, redColor, orangeColor
         )
 
         ReplicatorEntity.dropList.add(Eln.findItemStack("Iron Dust", 1))

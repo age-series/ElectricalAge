@@ -243,7 +243,7 @@ public class AutoMinerSlowProcess implements IProcess, INBTTReady {
         MiningPipeDescriptor pipe = (MiningPipeDescriptor) GenericItemUsingDamageDescriptor.getDescriptor(
             miner.getInventory().getStackInSlot(AutoMinerContainer.MiningPipeSlotId), MiningPipeDescriptor.class);
 
-        int scannerRadius = Eln.instance.autominerRange;
+        int scannerRadius = Eln.config.getIntOrElse("machines.autominer.maxRangeBlocks", 10);
         double scannerEnergy = 0;
 
         jobCoord.dimension = miner.node.coordinate.dimension;

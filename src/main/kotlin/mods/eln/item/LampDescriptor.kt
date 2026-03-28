@@ -95,7 +95,7 @@ class LampDescriptor(name: String, iconName: String, val lampData: SpecificLampD
         list.add(tr("Nominal lifetime: ${lampData.technology.nominalLifeInHours}h"))
 
         if (itemStack != null) {
-            if (Eln.debugEnabled) list.add(tr("Current lifetime: ${getLifeInTag(itemStack)}h"))
+            if (Eln.config.getBooleanOrElse("debug.logging.enabled", false)) list.add(tr("Current lifetime: ${getLifeInTag(itemStack)}h"))
             list.add(tr("Condition: ${getLampCondition(itemStack)}"))
         }
     }

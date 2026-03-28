@@ -118,7 +118,7 @@ class PortableNaNElement(sixNode: SixNode, side: Direction, descriptor: SixNodeD
 
         info[tr("Current")] = Utils.plotAmpere("", electricalLoad.current)
         info[tr("Temperature")] = plotAmbientCelsius("", thermalLoad.temperature)
-        if (Eln.wailaEasyMode) {
+        if (Eln.config.getBooleanOrElse("ui.waila.easyMode", false)) {
             info[tr("Voltage")] = Utils.plotVolt("", electricalLoad.voltage)
         }
         info[tr("Subsystem Matrix Size")] = Utils.renderSubSystemWaila(electricalLoad.subSystem)

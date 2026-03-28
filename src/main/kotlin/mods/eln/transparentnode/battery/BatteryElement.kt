@@ -134,7 +134,7 @@ class BatteryElement(transparentNode: TransparentNode, descriptor: TransparentNo
         info[tr("Charge")] = Utils.plotPercent("", batteryProcess.charge)
         info[tr("Energy")] = Utils.plotEnergy("", batteryProcess.energy)
         info[tr("Life")] = Utils.plotPercent("", batteryProcess.life)
-        if (Eln.wailaEasyMode) {
+        if (Eln.config.getBooleanOrElse("ui.waila.easyMode", false)) {
             info[tr("Voltage")] = Utils.plotVolt("", batteryProcess.u)
             info[tr("Current")] = Utils.plotAmpere("", batteryProcess.dischargeCurrent)
             info[tr("Temperature")] = plotAmbientCelsius("", thermalLoad.temperatureCelsius)

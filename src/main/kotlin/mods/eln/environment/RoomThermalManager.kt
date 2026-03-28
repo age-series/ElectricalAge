@@ -60,11 +60,13 @@ object RoomThermalManager {
     private var tickCounter = 0L
 
     private fun roomMaxAxisSpanBlocks(): Int {
-        return if (Eln.roomMaxAxisSpanBlocks > 0) Eln.roomMaxAxisSpanBlocks else DEFAULT_ROOM_MAX_AXIS_SPAN_BLOCKS
+        val configured = Eln.config.getIntOrElse("simulation.roomDetection.maxAxisSpanBlocks", DEFAULT_ROOM_MAX_AXIS_SPAN_BLOCKS)
+        return if (configured > 0) configured else DEFAULT_ROOM_MAX_AXIS_SPAN_BLOCKS
     }
 
     private fun roomMaxVolumeBlocks(): Int {
-        return if (Eln.roomMaxVolumeBlocks > 0) Eln.roomMaxVolumeBlocks else DEFAULT_ROOM_MAX_VOLUME_BLOCKS
+        val configured = Eln.config.getIntOrElse("simulation.roomDetection.maxVolumeBlocks", DEFAULT_ROOM_MAX_VOLUME_BLOCKS)
+        return if (configured > 0) configured else DEFAULT_ROOM_MAX_VOLUME_BLOCKS
     }
 
     fun tick(server: MinecraftServer) {
