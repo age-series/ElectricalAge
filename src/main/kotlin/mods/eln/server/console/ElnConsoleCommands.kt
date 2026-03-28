@@ -97,7 +97,10 @@ private fun clearElnBlock(world: World, x: Int, y: Int, z: Int): Boolean {
 }
 
 private fun saveConfigPath(path: String, value: Any): String =
-    Eln.config.writePath(path, value.toString(), Eln.instance)
+    Eln.config.writePath(path, value.toString())
+
+private fun isConfigPathPattern(path: String): Boolean =
+    path.any { it in "*+?[](){}|^$\\" }
 
 class ElnLsCommand: IConsoleCommand {
     override val name = "ls"
@@ -126,12 +129,23 @@ class ElnConfigCommand : IConsoleCommand {
                     cprint(ics, "Usage: /eln config get <path>", indent = 1)
                     return
                 }
-                val value = Eln.config.readPath(path)
-                if (value == null) {
-                    cprint(ics, "${FC.BRIGHT_RED}Unknown config path '$path'.", indent = 1)
-                    return
+                try {
+                    if (isConfigPathPattern(path)) {
+                        val values = Eln.config.readPathsMatching(path)
+                        values.forEach { (matchedPath, value) ->
+                            cprint(ics, "${FC.BRIGHT_GREEN}$matchedPath = $value", indent = 1)
+                        }
+                    } else {
+                        val value = Eln.config.readPath(path)
+                        if (value == null) {
+                            cprint(ics, "${FC.BRIGHT_RED}Unknown config path '$path'.", indent = 1)
+                            return
+                        }
+                        cprint(ics, "${FC.BRIGHT_GREEN}$path = $value", indent = 1)
+                    }
+                } catch (e: IllegalArgumentException) {
+                    cprint(ics, "${FC.BRIGHT_RED}${e.message}", indent = 1)
                 }
-                cprint(ics, "${FC.BRIGHT_GREEN}$path = $value", indent = 1)
             }
             "set" -> {
                 val path = args.getOrNull(1)
@@ -141,8 +155,16 @@ class ElnConfigCommand : IConsoleCommand {
                 }
                 val rawValue = args.drop(2).joinToString(" ")
                 try {
-                    val writtenValue = Eln.config.writePath(path, rawValue, Eln.instance)
-                    cprint(ics, "${FC.BRIGHT_GREEN}$path = $writtenValue", indent = 1)
+                    if (isConfigPathPattern(path)) {
+                        val matchedPaths = Eln.config.writePathsMatching(path, rawValue)
+                        cprint(ics, "${FC.BRIGHT_GREEN}Updated ${matchedPaths.size} config paths.", indent = 1)
+                        matchedPaths.forEach { matchedPath ->
+                            cprint(ics, "$matchedPath = ${Eln.config.readPath(matchedPath)}", indent = 2)
+                        }
+                    } else {
+                        val writtenValue = Eln.config.writePath(path, rawValue)
+                        cprint(ics, "${FC.BRIGHT_GREEN}$path = $writtenValue", indent = 1)
+                    }
                     cprint(ics, "Changes saved to config/eln/eln.json.", indent = 1)
                 } catch (e: IllegalArgumentException) {
                     cprint(ics, "${FC.BRIGHT_RED}${e.message}", indent = 1)
@@ -175,7 +197,9 @@ class ElnConfigCommand : IConsoleCommand {
         cprint(ics, "This command updates the cache and writes back to config/eln/eln.json.", indent = 1)
         cprint(ics, "", indent = 1)
         cprint(ics, "Usage: /eln config get <path>", indent = 1)
+        cprint(ics, "Usage: /eln config get <path-regex>", indent = 1)
         cprint(ics, "Usage: /eln config set <path> <value>", indent = 1)
+        cprint(ics, "Usage: /eln config set <path-regex> <value>", indent = 1)
         cprint(ics, "Usage: /eln config list [prefix]", indent = 1)
     }
 

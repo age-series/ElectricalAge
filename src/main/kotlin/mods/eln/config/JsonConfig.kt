@@ -4,7 +4,6 @@ import com.google.gson.GsonBuilder
 import com.google.gson.JsonElement
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
-import mods.eln.Eln
 import mods.eln.Other
 import mods.eln.item.LampLists
 import mods.eln.misc.Utils
@@ -15,6 +14,7 @@ import java.nio.file.Files
 import java.nio.file.StandardCopyOption
 import java.util.Locale
 import java.util.UUID
+import java.util.regex.PatternSyntaxException
 import kotlin.math.max
 import kotlin.math.min
 
@@ -265,6 +265,30 @@ class JsonConfig(private val legacyCfgFile: File) {
     }
 
     /**
+     * Reads every persisted config path whose full dotted path matches [pathPattern].
+     * Each dot-delimited path segment is treated as a regex segment, except `*` which expands to `.*`.
+     */
+    @Suppress("unused")
+    fun readPathsMatching(pathPattern: String): LinkedHashMap<String, Any> {
+        populateDefaults()
+        val canonicalPattern = pathPattern.trim()
+        val compiledPattern = try {
+            compilePathPattern(canonicalPattern)
+        } catch (e: PatternSyntaxException) {
+            throw IllegalArgumentException("Invalid config path regex '$canonicalPattern': ${e.message}")
+        }
+        val result = linkedMapOf<String, Any>()
+        values.keys
+            .filter { it.matches(compiledPattern) }
+            .sorted()
+            .forEach { path -> result[path] = values.getValue(path) }
+        if (result.isEmpty()) {
+            throw IllegalArgumentException("No config paths matched '$canonicalPattern'")
+        }
+        return result
+    }
+
+    /**
      * Registers an additional persisted config entry owned by another subsystem.
      */
     @Suppress("unused")
@@ -298,7 +322,7 @@ class JsonConfig(private val legacyCfgFile: File) {
      * Parses and writes a string value to a persisted config path, then reloads derived runtime caches.
      */
     @Suppress("unused")
-    fun writePath(path: String, rawValue: String, eln: Eln): String {
+    fun writePath(path: String, rawValue: String): String {
         populateDefaults()
         val canonicalPath = path.trim()
         val existing = values[canonicalPath] ?: throw IllegalArgumentException("Unknown config path '$canonicalPath'")
@@ -306,6 +330,34 @@ class JsonConfig(private val legacyCfgFile: File) {
         save()
         loadConfig()
         return formatValue(values.getValue(canonicalPath))
+    }
+
+    /**
+     * Writes a value to every persisted config path whose full dotted path matches [pathPattern].
+     * Each dot-delimited path segment is treated as a regex segment, except `*` which expands to `.*`.
+     */
+    @Suppress("unused")
+    fun writePathsMatching(pathPattern: String, rawValue: String): List<String> {
+        populateDefaults()
+        val canonicalPattern = pathPattern.trim()
+        val compiledPattern = try {
+            compilePathPattern(canonicalPattern)
+        } catch (e: PatternSyntaxException) {
+            throw IllegalArgumentException("Invalid config path regex '$canonicalPattern': ${e.message}")
+        }
+        val matchedPaths = values.keys
+            .filter { it.matches(compiledPattern) }
+            .sorted()
+        if (matchedPaths.isEmpty()) {
+            throw IllegalArgumentException("No config paths matched '$canonicalPattern'")
+        }
+        matchedPaths.forEach { path ->
+            val existing = values.getValue(path)
+            values[path] = parseRawValue(rawValue, existing)
+        }
+        save()
+        loadConfig()
+        return matchedPaths
     }
 
     /**
@@ -628,6 +680,18 @@ class JsonConfig(private val legacyCfgFile: File) {
     }
 
     private fun joinPath(parts: List<String>): String = parts.joinToString(".")
+
+    private fun compilePathPattern(pathPattern: String): Regex {
+        val regex = pathPattern
+            .split('.')
+            .joinToString("\\.") { segment ->
+                when (segment) {
+                    "*" -> ".*"
+                    else -> segment
+                }
+            }
+        return Regex("^$regex$")
+    }
 
     private fun registerSpecComments() {
         for (spec in specs) {
