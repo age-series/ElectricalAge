@@ -10,7 +10,8 @@ import org.lwjgl.opengl.GL11
 import java.io.DataInputStream
 import java.io.IOException
 
-class FloodlightRender(tileEntity: TransparentNodeEntity, transparentNodeDescriptor: TransparentNodeDescriptor) : TransparentNodeElementRender(tileEntity, transparentNodeDescriptor) {
+class FloodlightRender(tileEntity: TransparentNodeEntity, transparentNodeDescriptor: TransparentNodeDescriptor) :
+    TransparentNodeElementRender(tileEntity, transparentNodeDescriptor) {
 
     override val inventory = TransparentNodeElementInventory(2, 64, this)
     private val descriptor = transparentNodeDescriptor as FloodlightDescriptor
