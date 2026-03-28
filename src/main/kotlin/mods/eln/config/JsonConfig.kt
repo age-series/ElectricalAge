@@ -47,7 +47,7 @@ class JsonConfig(private val legacyCfgFile: File) {
     private val runtimeValues = linkedMapOf<String, Any>()
     private val pathComments = linkedMapOf<String, String>()
     private val groupComments = linkedMapOf<String, String>()
-    private val specs = buildSpecs()
+    private val specs = buildSpecs().toMutableList()
 
     private fun registerStaticComments() {
         groupComments["integrations"] = "Cross-mod integrations and external protocol bridges."
@@ -265,6 +265,36 @@ class JsonConfig(private val legacyCfgFile: File) {
     }
 
     /**
+     * Registers an additional persisted config entry owned by another subsystem.
+     */
+    @Suppress("unused")
+    fun registerEntry(path: String, defaultValue: Any, comment: String? = null) {
+        val canonicalPath = path.trim()
+        val spec = ConfigSpec(canonicalPath.split('.'), defaultValue, comment)
+        val existingIndex = specs.indexOfFirst { joinPath(it.path) == canonicalPath }
+        if (existingIndex >= 0) {
+            specs[existingIndex] = spec
+        } else {
+            specs.add(spec)
+        }
+        if (comment != null) {
+            pathComments[canonicalPath] = comment
+        } else {
+            pathComments.remove(canonicalPath)
+        }
+        values.putIfAbsent(canonicalPath, defaultValue)
+        clearCollectionCaches()
+    }
+
+    /**
+     * Registers an optional group-level JSON comment for a subtree path.
+     */
+    @Suppress("unused")
+    fun registerGroupComment(path: String, comment: String) {
+        groupComments[path.trim()] = comment
+    }
+
+    /**
      * Parses and writes a string value to a persisted config path, then reloads derived runtime caches.
      */
     @Suppress("unused")
@@ -322,6 +352,56 @@ class JsonConfig(private val legacyCfgFile: File) {
      */
     @Suppress("unused")
     fun getStringOrElse(path: String, defaultValue: String): String = asString(resolveValue(path), defaultValue)
+
+    /**
+     * Reads the direct child numeric values under [path], preserving config order.
+     */
+    @Suppress("unused")
+    fun getDoubleMap(path: String): LinkedHashMap<String, Double> {
+        populateDefaults()
+        val canonicalPath = path.trim().trim('.')
+        val cachePath = "cache.maps.$canonicalPath"
+        @Suppress("UNCHECKED_CAST")
+        val cached = runtimeValues[cachePath] as? LinkedHashMap<String, Double>
+        if (cached != null) return LinkedHashMap(cached)
+
+        val prefix = if (canonicalPath.isEmpty()) "" else "$canonicalPath."
+        val result = linkedMapOf<String, Double>()
+        for ((entryPath, value) in values) {
+            if (!entryPath.startsWith(prefix)) continue
+            val childKey = entryPath.removePrefix(prefix)
+            if (childKey.isEmpty() || '.' in childKey) continue
+            result[childKey] = asDouble(value, 0.0)
+        }
+        runtimeValues[cachePath] = LinkedHashMap(result)
+        return result
+    }
+
+    /**
+     * Reads the direct child keys under [path], preserving config order.
+     */
+    @Suppress("unused")
+    fun getChildKeys(path: String): List<String> {
+        populateDefaults()
+        val canonicalPath = path.trim().trim('.')
+        val cachePath = "cache.keys.$canonicalPath"
+        @Suppress("UNCHECKED_CAST")
+        val cached = runtimeValues[cachePath] as? List<String>
+        if (cached != null) return cached.toList()
+
+        val prefix = if (canonicalPath.isEmpty()) "" else "$canonicalPath."
+        val seen = linkedSetOf<String>()
+        for (entryPath in values.keys) {
+            if (!entryPath.startsWith(prefix)) continue
+            val childKey = entryPath.removePrefix(prefix).substringBefore('.', "")
+            if (childKey.isNotEmpty()) {
+                seen.add(childKey)
+            }
+        }
+        val result = seen.toList()
+        runtimeValues[cachePath] = result
+        return result
+    }
 
     /**
      * Reads a string config value from the given path, throwing [IllegalArgumentException] with [message] if missing.
@@ -388,6 +468,7 @@ class JsonConfig(private val legacyCfgFile: File) {
 
     private fun setTypedValue(path: String, value: Any) {
         populateDefaults()
+        clearCollectionCaches()
         if (runtimeValues.containsKey(path) && !values.containsKey(path)) {
             runtimeValues[path] = value
         } else {
@@ -485,6 +566,15 @@ class JsonConfig(private val legacyCfgFile: File) {
         for (lamp in LampLists.lampTechnologyList) {
             values.putIfAbsent("lighting.lamps.${lamp.lampType}.nominalLifeHours", lamp.nominalLifeInHours)
             values.putIfAbsent("lighting.lamps.${lamp.lampType}.infiniteLifeEnabled", lamp.infiniteLifeEnabled)
+        }
+    }
+
+    private fun clearCollectionCaches() {
+        val iterator = runtimeValues.keys.iterator()
+        while (iterator.hasNext()) {
+            if (iterator.next().startsWith("cache.")) {
+                iterator.remove()
+            }
         }
     }
 
