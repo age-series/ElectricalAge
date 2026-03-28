@@ -57,7 +57,7 @@ data class BoilerplateLampData(
         val configNominalLife = abs(Eln.config.getDoubleOrElse(nominalLifePath, this.nominalLifeInHours))
 
         if (configNominalLife !in MIN_LAMP_LIFE_IN_HOURS..MAX_LAMP_LIFE_IN_HOURS) {
-            println("ELN config: Nominal lamp life of type ${this.lampType} must be within the range (${MIN_LAMP_LIFE_IN_HOURS}, ${MAX_LAMP_LIFE_IN_HOURS})! Changes not applied!")
+            Eln.LOGGER.warn("ELN config: Nominal lamp life of type ${this.lampType} must be within the range (${MIN_LAMP_LIFE_IN_HOURS}, ${MAX_LAMP_LIFE_IN_HOURS})! Changes not applied!")
         } else {
             this.nominalLifeInHours = configNominalLife
         }
