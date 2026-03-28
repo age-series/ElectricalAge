@@ -53,9 +53,9 @@ public class LampSocketStandardObjRender implements LampSocketObjRender {
     @Override
     public void draw(LampSocketRender render, double distanceToPlayer) {
         int color = 15;
-        if (render.descriptor.paintable)
-            color = render.paintColor;
-        draw(render.front, render.alphaZ, render.light, render.lampDescriptor != null, color, distanceToPlayer);
+        if (render.getDescriptor().paintable)
+            color = render.getPaintColor();
+        draw(render.front, (float) render.getAlphaZ(), (byte) render.getLight(), render.getLampDescriptor() != null, color, distanceToPlayer);
     }
 
     public void draw(LRDU front, float alphaZ, byte light, boolean hasBulb, int color, double distanceToPlayer) {
