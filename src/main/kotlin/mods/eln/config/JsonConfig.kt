@@ -6,6 +6,7 @@ import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import mods.eln.Other
 import mods.eln.item.LampLists
+import mods.eln.item.TurbineBladeLists
 import mods.eln.misc.Utils
 import java.io.File
 import java.io.FileReader
@@ -211,6 +212,7 @@ class JsonConfig @JvmOverloads constructor(
         load()
 
         for (lampData in LampLists.lampTechnologyList) lampData.loadConfig()
+        for (bladeData in TurbineBladeLists.bladeConfigList) bladeData.loadConfig()
 
         val analyticsEnabled = getBooleanOrElse("analytics.enabled", true)
         if (analyticsEnabled) {
@@ -718,6 +720,10 @@ class JsonConfig @JvmOverloads constructor(
                 defaults["lighting.lamps.${lamp.lampType}.nominalLifeHours"] = lamp.nominalLifeInHours
                 defaults["lighting.lamps.${lamp.lampType}.infiniteLifeEnabled"] = lamp.infiniteLifeEnabled
             }
+            for (blade in TurbineBladeLists.bladeConfigList) {
+                defaults["items.turbineBlades.${blade.tierName}.nominalLifeHours"] = blade.nominalLifeInHours
+                defaults["items.turbineBlades.${blade.tierName}.infiniteLifeEnabled"] = blade.infiniteLifeEnabled
+            }
         }
         return defaults
     }
@@ -764,6 +770,10 @@ class JsonConfig @JvmOverloads constructor(
         for (lamp in LampLists.lampTechnologyList) {
             pathComments["lighting.lamps.${lamp.lampType}.nominalLifeHours"] = "Nominal lamp lifetime in hours for ${lamp.lampType} bulbs."
             pathComments["lighting.lamps.${lamp.lampType}.infiniteLifeEnabled"] = "Disable bulb wear-out for ${lamp.lampType} bulbs."
+        }
+        for (blade in TurbineBladeLists.bladeConfigList) {
+            pathComments["items.turbineBlades.${blade.tierName}.nominalLifeHours"] = "Nominal turbine blade lifetime in hours for the ${blade.tierName} tier."
+            pathComments["items.turbineBlades.${blade.tierName}.infiniteLifeEnabled"] = "Disable wear-out for ${blade.tierName} turbine blades."
         }
     }
 

@@ -2156,7 +2156,7 @@ object CraftingRecipes {
         addRecipe(
             findItemStack("Tungsten Turbine Blade"),
             "TAT", "ACA", "TAT",
-            'T', Eln.dictTungstenIngot,
+            'T', Eln.config.getStringOrElse("runtime.dictionary.tungstenIngot", "ingotElnTungsten"),
             'A', "ingotAlloy",
             'C', findItemStack("Advanced Chip")
         )
