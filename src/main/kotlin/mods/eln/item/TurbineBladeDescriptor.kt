@@ -15,40 +15,42 @@ data class BladeConfigData(
     var nominalLifeInHours: Double,
     var infiniteLifeEnabled: Boolean = false
 ) {
+    private val nominalLifePath: String
+        get() = "items.turbineBlades.${tierName}.nominalLifeHours"
+
+    private val infiniteLifePath: String
+        get() = "items.turbineBlades.${tierName}.infiniteLifeEnabled"
+
     fun loadConfig() {
-        if (!Eln.config.hasKey("turbineblade", "${tierName}BladeNominalLifeInHours")) {
-            Eln.config["turbineblade", "${tierName}BladeNominalLifeInHours", 0.0].set(nominalLifeInHours)
-        } else {
-            val configLife = Eln.config["turbineblade", "${tierName}BladeNominalLifeInHours", 0.0].double
-            try {
-                require(configLife > 0)
-            } catch (_: IllegalArgumentException) {
-                println("ELN config: Nominal blade life of type $tierName must be greater than 0! Changes not applied!")
-            }
-            if (configLife > 0) nominalLifeInHours = configLife
+        val configLife = Eln.config.getDoubleOrElse(nominalLifePath, nominalLifeInHours)
+
+        try {
+            require(configLife > 0)
+        } catch (_: IllegalArgumentException) {
+            println("ELN config: Nominal blade life of type $tierName must be greater than 0! Changes not applied!")
         }
 
-        if (!Eln.config.hasKey("turbineblade", "${tierName}BladeInfiniteLifeEnabled")) {
-            Eln.config["turbineblade", "${tierName}BladeInfiniteLifeEnabled", false].set(infiniteLifeEnabled)
-        } else {
-            infiniteLifeEnabled = Eln.config["turbineblade", "${tierName}BladeInfiniteLifeEnabled", false].boolean
+        if (configLife > 0) {
+            nominalLifeInHours = configLife
         }
+
+        infiniteLifeEnabled = Eln.config.getBooleanOrElse(infiniteLifePath, infiniteLifeEnabled)
     }
 
     fun updateNominalLifeConfig(newNominalLife: Double) {
         nominalLifeInHours = newNominalLife
-        Eln.config.get("turbineblade", "${tierName}BladeNominalLifeInHours", 0.0).set(newNominalLife)
+        Eln.config.setDouble(nominalLifePath, newNominalLife)
         Eln.config.save()
     }
 
     fun updateInfiniteLifeConfig(enabled: Boolean) {
         infiniteLifeEnabled = enabled
-        Eln.config.get("turbineblade", "${tierName}BladeInfiniteLifeEnabled", false).set(enabled)
+        Eln.config.setBoolean(infiniteLifePath, enabled)
         Eln.config.save()
     }
 }
 
-// Pre-populated at object init time so ConfigHandler can iterate it before item registration runs.
+// Pre-populated at object init time so blade config defaults exist before item registration runs.
 // Mirrors LampLists in LampTechnology.kt.
 object TurbineBladeLists {
     val bladeConfigList = mutableListOf<BladeConfigData>()
