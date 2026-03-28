@@ -1,9 +1,9 @@
 package mods.eln.fluid
 
-import mods.eln.Eln
 import mods.eln.config.JsonConfig
 import net.minecraftforge.fluids.Fluid
 import net.minecraftforge.fluids.FluidRegistry
+import java.io.File
 
 data class FuelEntry(
     val name: String,
@@ -14,15 +14,17 @@ data class FuelEntry(
 )
 
 object FuelRegistry {
-    private const val heatValueFactorPath = "balance.heat.fuelHeatValueFactor"
+    private const val heatValueFactorPath = "heatValueFactor"
     private const val defaultHeatValueFactor = 0.0000675
     private const val defaultTemperatureFactor = 0.5
     private const val defaultCleanlinessFactor = 0.3
 
-    private const val dieselPath = "balance.heat.fuels.diesel"
-    private const val gasolinePath = "balance.heat.fuels.gasoline"
-    private const val gasPath = "balance.heat.fuels.gas"
-    private const val steamPath = "balance.heat.fuels.steam"
+    private const val fuelsPath = "fuels"
+    private const val dieselPath = "fuels.diesel"
+    private const val gasolinePath = "fuels.gasoline"
+    private const val gasPath = "fuels.gas"
+    private const val steamPath = "fuels.steam"
+    private var config = JsonConfig(File("config/eln/fluids.cfg"), includeDefaultSpecs = false)
 
     private val dieselDefaults = listOf(
         fuel("creosote", 750000.0, 0.5, 0.3, "Railcraft, coal tar creosote, density approximately 1.08 kg/L, LHV approximately 0.7 MJ/L (Engineering Toolbox)."),
@@ -112,8 +114,18 @@ object FuelRegistry {
     )
 
     @JvmStatic
-    fun registerConfigEntries(config: JsonConfig) {
-        config.registerGroupComment("balance.heat.fuels", "Fuel registry data. Each fuel entry stores heat value and wear properties together.")
+    fun init(baseConfigFile: File) {
+        val configDirectory = baseConfigFile.parentFile ?: File("config")
+        config = JsonConfig(File(configDirectory, "fluids.cfg"), includeDefaultSpecs = false)
+        registerConfigEntries(config)
+        config.load()
+        config.save()
+        config.writeExampleFile()
+    }
+
+    private fun registerConfigEntries(config: JsonConfig) {
+        config.registerEntry(heatValueFactorPath, defaultHeatValueFactor, "Factor applied when converting real-world heat values to Minecraft heat values.")
+        config.registerGroupComment(fuelsPath, "Fuel registry data. Each fuel entry stores heat value and wear properties together.")
         config.registerGroupComment(dieselPath, "Heavy liquid fuels used by fuel heat furnaces.")
         config.registerGroupComment(gasolinePath, "Light liquid fuels usable by combustion engines and gas turbines.")
         config.registerGroupComment(gasPath, "Burnable gases. Stored values are pre-pressurization real-world energy equivalents.")
@@ -135,7 +147,7 @@ object FuelRegistry {
         }
     }
 
-    private fun fuelNames(path: String): Array<String> = Eln.config.getChildKeys(path).toTypedArray()
+    private fun fuelNames(path: String): Array<String> = config.getChildKeys(path).toTypedArray()
 
     val dieselList: Array<String>
         get() = fuelNames(dieselPath)
@@ -158,13 +170,13 @@ object FuelRegistry {
     private fun fuelCategoryPaths(): List<String> = listOf(dieselPath, gasolinePath, gasPath, steamPath)
 
     private fun findFuelCategoryPath(fuelName: String): String? =
-        fuelCategoryPaths().firstOrNull { path -> Eln.config.readPath(heatValuePath(path, fuelName)) != null }
+        fuelCategoryPaths().firstOrNull { path -> config.readPath(heatValuePath(path, fuelName)) != null }
 
     private fun baseHeatValueForFuel(fuelName: String): Double {
         val categoryPath = findFuelCategoryPath(fuelName) ?: return 0.0
-        val baseHeatValue = Eln.config.getDoubleOrElse(heatValuePath(categoryPath, fuelName), 0.0)
+        val baseHeatValue = config.getDoubleOrElse(heatValuePath(categoryPath, fuelName), 0.0)
         return if (categoryPath == steamPath) {
-            val factor = Eln.config.getDoubleOrElse(heatValueFactorPath, defaultHeatValueFactor)
+            val factor = config.getDoubleOrElse(heatValueFactorPath, defaultHeatValueFactor)
             if (factor == 0.0) 0.0 else baseHeatValue / factor
         } else {
             baseHeatValue
@@ -175,7 +187,7 @@ object FuelRegistry {
         fluidNames.map { FluidRegistry.getFluid(it) }.filterNotNull().toTypedArray()
 
     fun heatEnergyPerMilliBucket(fuelName: String): Double =
-        Eln.config.getDoubleOrElse(heatValueFactorPath, defaultHeatValueFactor) * baseHeatValueForFuel(fuelName)
+        config.getDoubleOrElse(heatValueFactorPath, defaultHeatValueFactor) * baseHeatValueForFuel(fuelName)
 
     fun heatEnergyPerMilliBucket(fluid: Fluid?): Double = heatEnergyPerMilliBucket(fluid?.name ?: "")
 
@@ -192,12 +204,12 @@ object FuelRegistry {
         } else {
             FuelEntry(
                 name = fuelName,
-                heatValue = Eln.config.getDoubleOrElse(heatValuePath(categoryPath, fuelName), 0.0),
-                temperatureFactor = Eln.config.getDoubleOrElse(
+                heatValue = config.getDoubleOrElse(heatValuePath(categoryPath, fuelName), 0.0),
+                temperatureFactor = config.getDoubleOrElse(
                     temperatureFactorPath(categoryPath, fuelName),
                     defaultTemperatureFactor
                 ),
-                cleanlinessFactor = Eln.config.getDoubleOrElse(
+                cleanlinessFactor = config.getDoubleOrElse(
                     cleanlinessFactorPath(categoryPath, fuelName),
                     defaultCleanlinessFactor
                 ),

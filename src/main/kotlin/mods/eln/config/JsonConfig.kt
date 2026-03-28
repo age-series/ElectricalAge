@@ -35,19 +35,23 @@ private data class ConfigSpec(
  *    [getDoubleOrElse], [getStringOrElse], [setBoolean], [setInt], [setDouble], or [setString].
  * 3. If the value is derived at runtime and should not be persisted, cache it under a `runtime.*` path instead.
  */
-class JsonConfig(private val legacyCfgFile: File) {
+class JsonConfig @JvmOverloads constructor(
+    private val legacyCfgFile: File,
+    private val includeDefaultSpecs: Boolean = true
+) {
     private val gson = GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create()
     private val configDirectory = legacyCfgFile.parentFile?.let {
         if (it.name.equals("eln", ignoreCase = true)) it else File(it, "eln")
     } ?: File("config/eln")
     private val baseName = legacyCfgFile.nameWithoutExtension.lowercase(Locale.ROOT)
     private val jsonFile = File(configDirectory, "$baseName.json")
+    private val exampleJsonFile = File(configDirectory, "$baseName.example.json")
     private val migratedCfgFile = File(configDirectory, "$baseName.migrated.cfg")
     private val values = linkedMapOf<String, Any>()
     private val runtimeValues = linkedMapOf<String, Any>()
     private val pathComments = linkedMapOf<String, String>()
     private val groupComments = linkedMapOf<String, String>()
-    private val specs = buildSpecs().toMutableList()
+    private val specs = if (includeDefaultSpecs) buildSpecs().toMutableList() else mutableListOf()
 
     private fun registerStaticComments() {
         groupComments["integrations"] = "Cross-mod integrations and external protocol bridges."
@@ -138,7 +142,6 @@ class JsonConfig(private val legacyCfgFile: File) {
         spec(path = "simulation.thermal.cableSpikeLimiter.factor", defaultValue = 20.0, comment = "Multiplier applied to nominal heating rate when the cable spike limiter is enabled."),
         spec(path = "simulation.thermal.ambient.lavaRampEnabled", defaultValue = true, comment = "Blend ambient temperature toward 40C between Y20 and Y12, then clamp below Y12."),
         spec(path = "simulation.thermal.ambient.undergroundBiomeTemperatureMultiplier", defaultValue = 0.2, comment = "Multiplier applied to biome ambient temperature for the Y50 underground baseline."),
-        spec(path = "balance.heat.fuelHeatValueFactor", defaultValue = 0.0000675, comment = "Factor applied when converting real-world heat values to Minecraft heat values."),
         spec(path = "ui.icons.noSymbols", defaultValue = false, comment = "Show the item instead of the electrical symbol as an icon."),
         spec(path = "ui.icons.noVoltageBackground", defaultValue = false, comment = "Disable colored backgrounds for items."),
         spec(path = "balance.mechanics.flywheelMass", defaultValue = 50.0, comment = "Flywheel mass.")
@@ -151,7 +154,9 @@ class JsonConfig(private val legacyCfgFile: File) {
     ) = ConfigSpec(path.split('.'), defaultValue, comment)
 
     init {
-        registerStaticComments()
+        if (includeDefaultSpecs) {
+            registerStaticComments()
+        }
         registerSpecComments()
     }
 
@@ -186,6 +191,17 @@ class JsonConfig(private val legacyCfgFile: File) {
         jsonFile.parentFile?.mkdirs()
         FileWriter(jsonFile, false).use { writer ->
             gson.toJson(buildJsonTree(), writer)
+        }
+    }
+
+    /**
+     * Writes an example JSON file containing the latest default schema for comparison during updates.
+     */
+    @Suppress("unused")
+    fun writeExampleFile() {
+        exampleJsonFile.parentFile?.mkdirs()
+        FileWriter(exampleJsonFile, false).use { writer ->
+            gson.toJson(buildJsonTree(buildDefaultValues()), writer)
         }
     }
 
@@ -292,6 +308,39 @@ class JsonConfig(private val legacyCfgFile: File) {
     @Suppress("unused")
     fun registerGroupComment(path: String, comment: String) {
         groupComments[path.trim()] = comment
+    }
+
+    /**
+     * Removes a single persisted config path if present.
+     */
+    @Suppress("unused")
+    fun removePath(path: String): Boolean {
+        val canonicalPath = path.trim()
+        val removed = values.remove(canonicalPath) != null
+        pathComments.remove(canonicalPath)
+        if (removed) {
+            clearCollectionCaches()
+        }
+        return removed
+    }
+
+    /**
+     * Removes every persisted config path with the given dotted prefix.
+     */
+    @Suppress("unused")
+    fun removePathsWithPrefix(prefix: String): List<String> {
+        val canonicalPrefix = prefix.trim().trim('.')
+        val fullPrefix = if (canonicalPrefix.isEmpty()) "" else "$canonicalPrefix."
+        val removed = values.keys
+            .filter { it == canonicalPrefix || it.startsWith(fullPrefix) }
+            .sorted()
+        if (removed.isEmpty()) return emptyList()
+        removed.forEach {
+            values.remove(it)
+            pathComments.remove(it)
+        }
+        clearCollectionCaches()
+        return removed
     }
 
     /**
@@ -560,12 +609,8 @@ class JsonConfig(private val legacyCfgFile: File) {
     }
 
     private fun populateDefaults() {
-        for (spec in specs) {
-            values.putIfAbsent(joinPath(spec.path), spec.defaultValue)
-        }
-        for (lamp in LampLists.lampTechnologyList) {
-            values.putIfAbsent("lighting.lamps.${lamp.lampType}.nominalLifeHours", lamp.nominalLifeInHours)
-            values.putIfAbsent("lighting.lamps.${lamp.lampType}.infiniteLifeEnabled", lamp.infiniteLifeEnabled)
+        for ((path, value) in buildDefaultValues()) {
+            values.putIfAbsent(path, value)
         }
     }
 
@@ -578,12 +623,14 @@ class JsonConfig(private val legacyCfgFile: File) {
         }
     }
 
-    private fun buildJsonTree(): JsonObject {
+    private fun buildJsonTree(): JsonObject = buildJsonTree(values)
+
+    private fun buildJsonTree(sourceValues: Map<String, Any>): JsonObject {
         val root = JsonObject()
         root.addProperty("schemaVersion", 1)
         root.addProperty("_comment", "Electrical Age configuration in JSON format. Files live in config/eln/.")
 
-        for ((path, value) in values) {
+        for ((path, value) in sourceValues) {
             val parts = path.split('.')
             var current = root
             val parentParts = mutableListOf<String>()
@@ -605,6 +652,20 @@ class JsonConfig(private val legacyCfgFile: File) {
         }
 
         return root
+    }
+
+    private fun buildDefaultValues(): LinkedHashMap<String, Any> {
+        val defaults = linkedMapOf<String, Any>()
+        for (spec in specs) {
+            defaults[joinPath(spec.path)] = spec.defaultValue
+        }
+        if (includeDefaultSpecs) {
+            for (lamp in LampLists.lampTechnologyList) {
+                defaults["lighting.lamps.${lamp.lampType}.nominalLifeHours"] = lamp.nominalLifeInHours
+                defaults["lighting.lamps.${lamp.lampType}.infiniteLifeEnabled"] = lamp.infiniteLifeEnabled
+            }
+        }
+        return defaults
     }
 
     private fun addJsonProperty(parent: JsonObject, key: String, value: Any) {
@@ -709,7 +770,6 @@ class JsonConfig(private val legacyCfgFile: File) {
         "simulation.thermal.cableSpikeLimiter.factor" -> listOf(LegacyKey("simulation", "cableThermalSpikeLimitFactor"))
         "simulation.thermal.ambient.lavaRampEnabled" -> listOf(LegacyKey("simulation", "lavaAmbientRampEnabled"))
         "simulation.thermal.ambient.undergroundBiomeTemperatureMultiplier" -> listOf(LegacyKey("simulation", "undergroundBiomeTemperatureMultiplier"))
-        "balance.heat.fuelHeatValueFactor" -> listOf(LegacyKey("balancing", "fuelHeatValueFactor"))
         "ui.icons.noSymbols" -> listOf(LegacyKey("general", "noSymbols"), LegacyKey("gameplay", "noSymbols"))
         "ui.icons.noVoltageBackground" -> listOf(LegacyKey("general", "noVoltageBackground"))
         "balance.mechanics.flywheelMass" -> listOf(LegacyKey("balancing", "flywheelMass"))

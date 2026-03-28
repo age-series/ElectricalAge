@@ -76,28 +76,40 @@ class JsonConfigTest {
     }
 
     @Test
+    fun writesExampleFileUsingCurrentDefaultModel() {
+        val dir = Files.createTempDirectory("eln-json-example-test").toFile()
+        val config = JsonConfig(dir.resolve("Eln.cfg"))
+        config.load()
+        config.setBoolean("ui.icons.noSymbols", true)
+        config.save()
+        config.writeExampleFile()
+
+        FileReader(dir.resolve("eln/eln.example.json")).use { reader ->
+            val root = JsonParser().parse(reader).asJsonObject
+            assertFalse(root.getAsJsonObject("ui").getAsJsonObject("icons").get("noSymbols").asBoolean)
+        }
+    }
+
+    @Test
     fun fuelRegistryEntriesLiveInJsonConfigWithComments() {
         val dir = Files.createTempDirectory("eln-json-fuels-test").toFile()
-        val config = JsonConfig(dir.resolve("Eln.cfg"))
+        val baseConfigFile = dir.resolve("Eln.cfg")
+        val config = JsonConfig(baseConfigFile)
         Eln.config = config
-        FuelRegistry.registerConfigEntries(config)
         config.load()
-        config.save()
+        FuelRegistry.init(baseConfigFile)
 
-        FileReader(dir.resolve("eln/eln.json")).use { reader ->
+        FileReader(dir.resolve("eln/fluids.json")).use { reader ->
             val root = JsonParser().parse(reader).asJsonObject
-            val diesel = root.getAsJsonObject("balance")
-                .getAsJsonObject("heat")
-                .getAsJsonObject("fuels")
+            val diesel = root.getAsJsonObject("fuels")
                 .getAsJsonObject("diesel")
             val creosote = diesel.getAsJsonObject("creosote")
             assertEquals(750000.0, creosote.get("heatValue").asDouble)
             assertEquals(0.5, creosote.get("temperatureFactor").asDouble)
             assertEquals(0.3, creosote.get("cleanlinessFactor").asDouble)
             assertTrue(creosote.get("_comment").asString.isNotBlank())
-            val gasoline = root.getAsJsonObject("balance")
-                .getAsJsonObject("heat")
-                .getAsJsonObject("fuels")
+            assertEquals(0.0000675, root.get("heatValueFactor").asDouble)
+            val gasoline = root.getAsJsonObject("fuels")
                 .getAsJsonObject("gasoline")
                 .getAsJsonObject("gasoline")
             assertEquals(0.55, gasoline.get("temperatureFactor").asDouble)
@@ -108,9 +120,33 @@ class JsonConfigTest {
         assertTrue(FuelRegistry.steamList.contains("steam"))
         assertEquals(0.55, FuelRegistry.temperatureFactor("gasoline"))
         assertEquals(0.10, FuelRegistry.cleanlinessFactor("gasoline"))
-        assertEquals(
-            config.getDoubleOrElse("balance.heat.fuelHeatValueFactor", 0.0000675) * 750000.0,
-            FuelRegistry.heatEnergyPerMilliBucket("creosote")
-        )
+        assertEquals(0.0000675 * 750000.0, FuelRegistry.heatEnergyPerMilliBucket("creosote"))
+        assertEquals(null, config.readPath("balance.heat.fuelHeatValueFactor"))
+
+        FileReader(dir.resolve("eln/fluids.example.json")).use { reader ->
+            val root = JsonParser().parse(reader).asJsonObject
+            assertEquals(0.0000675, root.get("heatValueFactor").asDouble)
+        }
+    }
+
+    @Test
+    fun fuelRegistryWritesSeparateFluidsConfigFile() {
+        val dir = Files.createTempDirectory("eln-json-fuel-migration-test").toFile()
+        val baseConfigFile = dir.resolve("Eln.cfg")
+        val config = JsonConfig(baseConfigFile)
+        Eln.config = config
+        config.load()
+        FuelRegistry.init(baseConfigFile)
+
+        FileReader(dir.resolve("eln/fluids.json")).use { reader ->
+            val root = JsonParser().parse(reader).asJsonObject
+            val creosote = root.getAsJsonObject("fuels")
+                .getAsJsonObject("diesel")
+                .getAsJsonObject("creosote")
+            assertEquals(750000.0, creosote.get("heatValue").asDouble)
+            assertEquals(0.5, creosote.get("temperatureFactor").asDouble)
+            assertEquals(0.3, creosote.get("cleanlinessFactor").asDouble)
+        }
+        assertEquals(null, config.readPath("balance.heat.fuelHeatValueFactor"))
     }
 }

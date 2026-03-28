@@ -309,8 +309,9 @@ public class Eln {
         if (side == Side.CLIENT) MinecraftForge.EVENT_BUS.register(new SoundLoader());
 
         config = new JsonConfig(event.getSuggestedConfigurationFile());
-        FuelRegistry.registerConfigEntries(config);
         config.loadConfig();
+        config.writeExampleFile();
+        FuelRegistry.init(event.getSuggestedConfigurationFile());
         MqttManager.init();
 
         eventChannel = NetworkRegistry.INSTANCE.newEventDrivenChannel(channelName);
