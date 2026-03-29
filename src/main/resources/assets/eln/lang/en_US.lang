@@ -1625,3 +1625,15 @@ RH\:=RH:
 Temp_[C]=Temp [C]
 Temp_[F]=Temp [F]
 Humidity_[%%]=Humidity [%%]
+
+# ./src/main/kotlin/mods/eln/transparentnode/WireProcessingMachines.kt
+Wire_Roller.name=Wire Roller
+Wire_Insulator.name=Wire Insulator
+Wire_Combiner.name=Wire Combiner
+
+# ./src/main/kotlin/mods/eln/item/WireMachineItems.kt
+Iron_Roller_Wheel.name=Iron Roller Wheel
+Steel_Roller_Wheel.name=Steel Roller Wheel
+Aluminum_Roller_Wheel.name=Aluminum Roller Wheel
+Insulation_Compound.name=Insulation Compound
+Wound_Wire_Bundle.name=Wound Wire Bundle

@@ -113,6 +113,7 @@ object TransparentNodeRegistration {
         Eln.transparentNodeItem.setCreativeTabForGroup(69, Eln.creativeTabLighting)
         Eln.transparentNodeItem.setCreativeTabForGroup(70, Eln.creativeTabMachines)
         Eln.transparentNodeItem.setCreativeTabForGroup(71, Eln.creativeTabPowerElectronics)
+        Eln.transparentNodeItem.setCreativeTabForGroup(72, Eln.creativeTabMachines)
         Eln.transparentNodeItem.setCreativeTabForGroup(96, Eln.creativeTabPowerElectronics)
         Eln.transparentNodeItem.setCreativeTabForGroup(117, Eln.creativeTabSignalProcessing)
         Eln.transparentNodeItem.setCreativeTabForGroup(123, Eln.creativeTabPowerElectronics)
@@ -141,6 +142,7 @@ object TransparentNodeRegistration {
         registerFestive(69)
         registerFab(70)
         registerRailroad(71)
+        registerWireProcessingMachines(72)
         registerLargeRheostat() // 96, but from the wrong side.
         registerNixieTube() // 117, but from the wrong side.
         registerGridDevices(123)
@@ -195,6 +197,39 @@ object TransparentNodeRegistration {
             transparentNodeItem.addDescriptor(subId + (id shl 6), desc)
         }
          */
+    }
+
+    private fun registerWireProcessingMachines(id: Int) {
+        run {
+            val subId = 0
+            val desc = WireMachineDescriptor(
+                TR_NAME(I18N.Type.NONE, "Wire Roller"),
+                WireMachineKind.ROLLER,
+                Eln.obj.getObj("platemachinea")
+            )
+            desc.setDefaultIcon("iron_block")
+            transparentNodeItem.addDescriptor(subId + (id shl 6), desc)
+        }
+        run {
+            val subId = 1
+            val desc = WireMachineDescriptor(
+                TR_NAME(I18N.Type.NONE, "Wire Insulator"),
+                WireMachineKind.INSULATOR,
+                Eln.obj.getObj("fabricator")
+            )
+            desc.setDefaultIcon("iron_block")
+            transparentNodeItem.addDescriptor(subId + (id shl 6), desc)
+        }
+        run {
+            val subId = 2
+            val desc = WireMachineDescriptor(
+                TR_NAME(I18N.Type.NONE, "Wire Combiner"),
+                WireMachineKind.COMBINER,
+                Eln.obj.getObj("magnetizera")
+            )
+            desc.setDefaultIcon("iron_block")
+            transparentNodeItem.addDescriptor(subId + (id shl 6), desc)
+        }
     }
 
     /*
