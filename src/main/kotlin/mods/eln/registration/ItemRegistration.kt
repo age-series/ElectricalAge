@@ -72,6 +72,7 @@ object ItemRegistration {
         mapSharedGroup(124, Eln.creativeTabPowerElectronics)
         mapSharedGroup(126, Eln.creativeTabOresMaterials)
         mapSharedGroup(127, Eln.creativeTabToolsArmor)
+        mapSharedGroup(118, Eln.creativeTabMachines)
 
         //ITEM REGISTRATION
         //Sub-UID must be unique in this section only.
@@ -115,6 +116,7 @@ object ItemRegistration {
         registerBasicItems(126)
         registerElectricMinecartItems(127)
         registerWireToolItems(127)
+        registerWireMachineItems(118)
 
         registerArmor()
         registerTool()
@@ -342,6 +344,41 @@ object ItemRegistration {
             val subId = 1
             val name = I18N.TR_NAME(I18N.Type.NONE, "Wire Snips")
             val desc = WireSnipsDescriptor(name).inToolsAndArmorTab()
+            Eln.sharedItem.addElement(subId + (id shl 6), desc)
+        }
+    }
+
+    private fun registerWireMachineItems(id: Int) {
+        run {
+            val subId = 0
+            val name = I18N.TR_NAME(I18N.Type.NONE, "Iron Roller Wheel")
+            val desc = RollerWheelDescriptor(name, "Iron", "ironrollerwheel")
+            Eln.sharedItem.addElement(subId + (id shl 6), desc)
+        }
+        run {
+            val subId = 1
+            val name = I18N.TR_NAME(I18N.Type.NONE, "Steel Roller Wheel")
+            val desc = RollerWheelDescriptor(name, "Steel", "steelrollerwheel")
+            Eln.sharedItem.addElement(subId + (id shl 6), desc)
+        }
+        run {
+            val subId = 2
+            val name = I18N.TR_NAME(I18N.Type.NONE, "Aluminum Roller Wheel")
+            val desc = RollerWheelDescriptor(name, "Aluminum", "aluminumrollerwheel")
+            Eln.sharedItem.addElement(subId + (id shl 6), desc)
+        }
+        run {
+            val subId = 3
+            val name = I18N.TR_NAME(I18N.Type.NONE, "Insulation Compound")
+            val desc = InsulationCompoundDescriptor(name).inOresAndMaterialsTab()
+            instance.insulationCompoundDescriptor = desc
+            Eln.sharedItem.addElement(subId + (id shl 6), desc)
+        }
+        run {
+            val subId = 4
+            val name = I18N.TR_NAME(I18N.Type.NONE, "Wound Wire Bundle")
+            val desc = WoundWireBundleDescriptor(name).inOresAndMaterialsTab()
+            instance.woundWireBundleDescriptor = desc
             Eln.sharedItem.addElement(subId + (id shl 6), desc)
         }
     }

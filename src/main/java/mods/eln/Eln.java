@@ -213,6 +213,8 @@ public class Eln {
     public ArrayList<IConfigSharing> configShared = new ArrayList<>();
     public CopperCableDescriptor copperCableDescriptor;
     public WireScrapDescriptor wireScrapDescriptor;
+    public WoundWireBundleDescriptor woundWireBundleDescriptor;
+    public InsulationCompoundDescriptor insulationCompoundDescriptor;
     public ElectricalCableDescriptor creativeCableDescriptor;
     public ElectricalCableDescriptor veryHighVoltageCableDescriptor;
     public ElectricalCableDescriptor highVoltageCableDescriptor;
