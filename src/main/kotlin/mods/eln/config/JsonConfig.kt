@@ -88,6 +88,7 @@ class JsonConfig @JvmOverloads constructor(
         spec(path = "gameplay.hazards.explosionsEnabled", defaultValue = false, comment = "Make explosions a bit bigger."),
         spec(path = "gameplay.seasonal.enableFestiveItems", defaultValue = true, comment = "Set false to disable festive items."),
         spec(path = "gameplay.crafting.verticalIronCableCrafting", defaultValue = false, comment = "Craft iron cables with vertical ingots instead of horizontal ones."),
+        spec(path = "gameplay.cables.creativeFreeLength", defaultValue = true, comment = "When enabled, creative players do not consume utility cable length when placing cables or connecting poles."),
         spec(path = "simulation.watchdog.destruction.thermal", defaultValue = true, comment = "Allow thermal watchdogs to destroy blocks except resistor heat watchdogs."),
         spec(path = "simulation.watchdog.destruction.resistorHeat", defaultValue = false, comment = "Allow resistor heat watchdogs to destroy blocks."),
         spec(path = "simulation.watchdog.destruction.voltage", defaultValue = true, comment = "Allow voltage watchdogs to destroy blocks."),
