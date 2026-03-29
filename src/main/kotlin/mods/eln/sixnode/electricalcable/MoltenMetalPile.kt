@@ -6,6 +6,10 @@ import mods.eln.i18n.I18N.tr
 import mods.eln.misc.Direction
 import mods.eln.misc.LRDU
 import mods.eln.misc.UtilsClient.bindTexture
+import mods.eln.misc.UtilsClient.disableBlend
+import mods.eln.misc.UtilsClient.disableLight
+import mods.eln.misc.UtilsClient.enableBlend
+import mods.eln.misc.UtilsClient.enableLight
 import mods.eln.node.six.SixNode
 import mods.eln.node.six.SixNodeDescriptor
 import mods.eln.node.six.SixNodeElement
@@ -73,7 +77,18 @@ class MoltenMetalPileRender(
         }
         bindTexture(descriptor.render.cableTexture)
         glListCall()
+        drawHotGlow()
         GL11.glColor3f(1f, 1f, 1f)
         Minecraft.getMinecraft().mcProfiler.endSection()
+    }
+
+    private fun drawHotGlow() {
+        disableLight()
+        enableBlend()
+        GL11.glColor4f(1.0f, 0.55f, 0.12f, 0.8f)
+        bindTexture(descriptor.render.cableTexture)
+        glListCall()
+        disableBlend()
+        enableLight()
     }
 }

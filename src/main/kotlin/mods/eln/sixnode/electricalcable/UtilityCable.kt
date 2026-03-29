@@ -6,6 +6,7 @@ import mods.eln.i18n.I18N.tr
 import mods.eln.item.BrushDescriptor
 import mods.eln.misc.Direction
 import mods.eln.misc.LRDU
+import mods.eln.misc.LRDUMask
 import mods.eln.misc.Utils
 import mods.eln.misc.Utils.addChatMessage
 import mods.eln.misc.Utils.isPlayerUsingWrench
@@ -15,6 +16,10 @@ import mods.eln.misc.Utils.plotVolt
 import mods.eln.misc.Utils.renderSubSystemWaila
 import mods.eln.misc.Utils.setGlColorFromDye
 import mods.eln.misc.UtilsClient.bindTexture
+import mods.eln.misc.UtilsClient.disableBlend
+import mods.eln.misc.UtilsClient.disableLight
+import mods.eln.misc.UtilsClient.enableBlend
+import mods.eln.misc.UtilsClient.enableLight
 import mods.eln.node.NodeBase
 import mods.eln.node.NodeConnection
 import mods.eln.node.six.SixNode
@@ -29,6 +34,8 @@ import mods.eln.sim.nbt.NbtThermalLoad
 import mods.eln.sim.process.heater.ElectricalLoadHeatThermalLoad
 import mods.eln.cable.CableRender
 import mods.eln.cable.CableRenderDescriptor
+import mods.eln.cable.CableRenderType
+import mods.eln.cable.CableRenderTypeMethodType
 import net.minecraft.client.renderer.RenderHelper
 import net.minecraft.client.Minecraft
 import net.minecraft.entity.player.EntityPlayer
@@ -227,6 +234,7 @@ class UtilityCableElement(
     private var paletteIndex = 0
     private var conductorsBound = false
     private var shockCooldown = 0.0
+    private var lastPublishedTemperatureCelsius = Double.NaN
 
     private val thermalLoad = NbtThermalLoad("thermalLoad")
     private val conductorLoads: Array<NbtElectricalLoad>
@@ -388,6 +396,7 @@ class UtilityCableElement(
         try {
             stream.writeByte(singleColor shl 4)
             stream.writeByte(paletteIndex)
+            stream.writeFloat((thermalLoad.temperatureCelsius + getAmbientTemperatureCelsius()).toFloat())
         } catch (e: IOException) {
             e.printStackTrace()
         }
@@ -498,6 +507,7 @@ class UtilityCableElement(
 
     private fun replaceWith(replacement: SixNodeDescriptor) {
         val node = sixNode ?: return
+        val currentTemperature = thermalLoad.temperatureCelsius
         node.disconnect()
         val newElement = replacement.ElementClass
             .getConstructor(SixNode::class.java, Direction::class.java, SixNodeDescriptor::class.java)
@@ -511,8 +521,28 @@ class UtilityCableElement(
             newElement.paletteIndex = paletteIndex
         }
         newElement.initialize()
+        if (newElement is UtilityCableElement) {
+            newElement.thermalLoad.temperatureCelsius = currentTemperature
+            newElement.lastPublishedTemperatureCelsius = currentTemperature
+        }
         node.connect()
         node.needPublish = true
+    }
+
+    private fun maybePublishTemperature(absoluteTemperatureCelsius: Double) {
+        val previous = lastPublishedTemperatureCelsius
+        val crossedGlowThreshold = previous <= 550.0 && absoluteTemperatureCelsius > 550.0 ||
+            previous > 550.0 && absoluteTemperatureCelsius <= 550.0
+        val smokeThreshold = descriptor.meltTemperatureCelsius * 0.8
+        val crossedSmokeThreshold = descriptor.insulated && !descriptor.melted && (
+            previous <= smokeThreshold && absoluteTemperatureCelsius > smokeThreshold ||
+                previous > smokeThreshold && absoluteTemperatureCelsius <= smokeThreshold
+            )
+        val changedEnough = previous.isNaN() || kotlin.math.abs(absoluteTemperatureCelsius - previous) >= 10.0
+        if (changedEnough || crossedGlowThreshold || crossedSmokeThreshold) {
+            needPublish()
+            lastPublishedTemperatureCelsius = absoluteTemperatureCelsius
+        }
     }
 
     private fun meltCable() {
@@ -552,12 +582,14 @@ class UtilityCableElement(
     private inner class UtilityCableFailureProcess : mods.eln.sim.IProcess {
         override fun process(time: Double) {
             shockCooldown = (shockCooldown - time).coerceAtLeast(0.0)
-            if (thermalLoad.temperatureCelsius + getAmbientTemperatureCelsius() >= descriptor.material.meltingPointCelsius) {
+            val absoluteTemperatureCelsius = thermalLoad.temperatureCelsius + getAmbientTemperatureCelsius()
+            maybePublishTemperature(absoluteTemperatureCelsius)
+            if (absoluteTemperatureCelsius >= descriptor.material.meltingPointCelsius) {
                 meltConductor()
                 return
             }
             if (descriptor.insulated && !descriptor.melted) {
-                if (thermalLoad.temperatureCelsius + getAmbientTemperatureCelsius() >= descriptor.meltTemperatureCelsius) {
+                if (absoluteTemperatureCelsius >= descriptor.meltTemperatureCelsius) {
                     meltCable()
                     return
                 }
@@ -585,6 +617,7 @@ class UtilityCableRender(
     private val descriptor = descriptor as UtilityCableDescriptor
     private var color = 0
     private var paletteIndex = 0
+    private var temperatureCelsius = 20f
 
     override fun drawCableAuto() = false
 
@@ -603,16 +636,25 @@ class UtilityCableRender(
         }
         bindTexture(descriptor.render.cableTexture)
         glListCall()
-        if (descriptor.insulated && descriptor.flatStyle && !descriptor.actsAsSingleConductor) {
+        drawHotMetalGlow()
+        if (shouldDrawExposedSingleConductor()) {
+            drawSingleExposedConductor()
+        }
+        if (shouldDrawExposedFlatConductors()) {
             drawFlatConductors()
         }
+        emitOverheatSmoke()
         GL11.glColor3f(1f, 1f, 1f)
         Minecraft.getMinecraft().mcProfiler.endSection()
     }
 
     override fun glListDraw() {
-        CableRender.drawCable(descriptor.render, connectedSide, CableRender.connectionType(this, side), descriptor.render.widthDiv2 / 2.0f, false)
-        CableRender.drawNode(descriptor.render, connectedSide, CableRender.connectionType(this, side))
+        val connectionMask = renderConnectionMask(jacket = true)
+        val connectionType = renderConnectionType(jacket = true)
+        CableRender.drawCable(descriptor.render, connectionMask, connectionType, descriptor.render.widthDiv2 / 2.0f, false)
+        if (shouldDrawJunctionNode()) {
+            CableRender.drawNode(descriptor.render, connectionMask, connectionType)
+        }
     }
 
     override fun glListEnable() = true
@@ -622,6 +664,7 @@ class UtilityCableRender(
         try {
             color = (stream.readByte().toInt() shr 4) and 0xF
             paletteIndex = stream.readByte().toInt().coerceAtLeast(0)
+            temperatureCelsius = stream.readFloat()
         } catch (e: IOException) {
             e.printStackTrace()
         }
@@ -658,16 +701,23 @@ class UtilityCableRender(
 
         val outerWidth = descriptor.render.width
         val outerHeight = descriptor.render.height
-        val conductorBand = outerWidth * 0.78f / count
-        val conductorWidth = conductorBand * 0.64f
-        val conductorHeight = minOf(outerHeight * 0.55f, conductorWidth * 0.95f)
+        val conductorBand = outerWidth * 0.82f / count
+        val conductorWidth = conductorBand * 0.78f
+        val conductorHeight = minOf(outerHeight * 0.72f, conductorWidth * 0.98f)
         val conductorRender = CableRenderDescriptor("eln", "sprites/cable.png", conductorWidth * 16f, conductorHeight * 16f)
-        val connectionType = CableRender.connectionType(this, side)
+        val connectionType = renderConnectionType(jacket = false)
+        val connectionMask = renderConnectionMask(jacket = false)
         val centerOffset = -outerWidth / 2f + outerWidth * 0.11f + conductorBand / 2f
+        val spreadOnZ = shouldSpreadConductorsOnZ()
 
         for (idx in 0 until count) {
             GL11.glPushMatrix()
-            GL11.glTranslatef(0f, centerOffset + idx * conductorBand, 0f)
+            val offset = centerOffset + idx * conductorBand
+            if (spreadOnZ) {
+                GL11.glTranslatef(0f, 0f, offset)
+            } else {
+                GL11.glTranslatef(0f, offset, 0f)
+            }
             when (palette.conductorColors[idx] and 0xF) {
                 0 -> GL11.glColor3f(0.12f, 0.12f, 0.12f)
                 5 -> GL11.glColor3f(0.19f, 0.65f, 0.22f)
@@ -677,9 +727,216 @@ class UtilityCableRender(
                 15 -> GL11.glColor3f(0.88f, 0.88f, 0.84f)
                 else -> setGlColorFromDye(palette.conductorColors[idx], 1.0f)
             }
-            CableRender.drawCable(conductorRender, connectedSide, connectionType, conductorRender.widthDiv2 / 2.0f, false)
-            CableRender.drawNode(conductorRender, connectedSide, connectionType)
+            CableRender.drawCable(conductorRender, connectionMask, connectionType, conductorRender.widthDiv2 / 2.0f, false)
+            if (shouldDrawJunctionNode()) {
+                CableRender.drawNode(conductorRender, connectionMask, connectionType)
+            }
             GL11.glPopMatrix()
         }
+    }
+
+    private fun drawSingleExposedConductor() {
+        val conductorWidthPixels = (descriptor.render.widthPixel * 0.52f).coerceAtMost(descriptor.render.widthPixel * 0.9f).coerceAtLeast(0.35f)
+        val conductorHeightPixels = (descriptor.render.heightPixel * 0.52f).coerceAtMost(descriptor.render.heightPixel * 0.9f).coerceAtLeast(0.2f)
+        val conductorRender = CableRenderDescriptor("eln", "sprites/cable.png", conductorWidthPixels, conductorHeightPixels)
+        val connectionMask = renderConnectionMask(jacket = false)
+        val connectionType = renderConnectionType(jacket = false)
+
+        when (descriptor.material) {
+            UtilityCableMaterial.COPPER -> GL11.glColor3f(0.85f, 0.42f, 0.18f)
+            UtilityCableMaterial.ALUMINUM -> GL11.glColor3f(0.78f, 0.80f, 0.84f)
+        }
+        bindTexture(conductorRender.cableTexture)
+        CableRender.drawCable(conductorRender, connectionMask, connectionType, conductorRender.widthDiv2 / 2.0f, false)
+    }
+
+    private fun drawHotMetalGlow() {
+        if (descriptor.insulated) {
+            return
+        }
+        val glowAlpha = hotGlowAlpha(temperatureCelsius.toDouble())
+        if (glowAlpha <= 0f) {
+            return
+        }
+        val glowColor = hotGlowColor(temperatureCelsius.toDouble())
+        disableLight()
+        enableBlend()
+        GL11.glColor4f(glowColor[0], glowColor[1], glowColor[2], glowAlpha)
+        bindTexture(descriptor.render.cableTexture)
+        glListCall()
+        disableBlend()
+        enableLight()
+    }
+
+    private fun emitOverheatSmoke() {
+        if (!descriptor.insulated || descriptor.melted) {
+            return
+        }
+        val startSmokingAt = descriptor.meltTemperatureCelsius * 0.8
+        if (temperatureCelsius.toDouble() < startSmokingAt || temperatureCelsius.toDouble() >= descriptor.meltTemperatureCelsius) {
+            return
+        }
+        val world = tileEntity.worldObj ?: return
+        if (!world.isRemote) {
+            return
+        }
+        val intensity = ((temperatureCelsius.toDouble() - startSmokingAt) / (descriptor.meltTemperatureCelsius - startSmokingAt)).coerceIn(0.0, 0.999)
+        if (world.rand.nextDouble() > 0.08 + intensity * 0.22) {
+            return
+        }
+        val baseX = tileEntity.xCoord + 0.5
+        val baseY = tileEntity.yCoord + 0.5
+        val baseZ = tileEntity.zCoord + 0.5
+        val dx = (world.rand.nextDouble() - 0.5) * 0.22
+        val dy = world.rand.nextDouble() * 0.08 + 0.02
+        val dz = (world.rand.nextDouble() - 0.5) * 0.22
+        world.spawnParticle("smoke", baseX + dx, baseY + dy, baseZ + dz, 0.0, 0.02 + intensity * 0.03, 0.0)
+    }
+
+    private fun shouldDrawJunctionNode(): Boolean {
+        return connectionCount() >= 3
+    }
+
+    private fun shouldDrawExposedSingleConductor(): Boolean {
+        return descriptor.insulated && descriptor.actsAsSingleConductor && connectionCount() <= 1
+    }
+
+    private fun shouldDrawExposedFlatConductors(): Boolean {
+        if (!(descriptor.insulated && descriptor.flatStyle && !descriptor.actsAsSingleConductor)) {
+            return false
+        }
+        val count = connectionCount()
+        return count <= 1
+    }
+
+    private fun usesTerminalFlatRender(): Boolean {
+        if (!usesTerminalEndRender()) {
+            return false
+        }
+        val count = connectionCount()
+        if (count == 0) {
+            return true
+        }
+        return count == 1
+    }
+
+    private fun renderConnectionMask(jacket: Boolean): LRDUMask {
+        val terminalRender = if (jacket) usesTerminalFlatRender() else shouldUseTerminalExposedRender()
+        if (!terminalRender) {
+            return connectedSide
+        }
+        return LRDUMask().apply {
+            when (terminalStubDirection()) {
+                LRDU.Left -> {
+                    this[LRDU.Left] = true
+                    this[LRDU.Right] = true
+                }
+                LRDU.Right -> {
+                    this[LRDU.Right] = true
+                    this[LRDU.Left] = true
+                }
+                LRDU.Up -> {
+                    this[LRDU.Up] = true
+                    this[LRDU.Down] = true
+                }
+                LRDU.Down -> {
+                    this[LRDU.Down] = true
+                    this[LRDU.Up] = true
+                }
+            }
+        }
+    }
+
+    private fun usesTerminalEndRender(): Boolean {
+        if (!descriptor.insulated) {
+            return false
+        }
+        if (!descriptor.actsAsSingleConductor && !descriptor.flatStyle) {
+            return false
+        }
+        return connectionCount() <= 1
+    }
+
+    private fun renderConnectionType(jacket: Boolean): CableRenderType {
+        val terminalRender = if (jacket) usesTerminalFlatRender() else shouldUseTerminalExposedRender()
+        if (!terminalRender) {
+            return CableRender.connectionType(this, side)
+        }
+        val trimPixels = if (jacket) 4f else 2f
+        return CableRenderType().apply {
+            when (terminalStubDirection()) {
+                LRDU.Left -> {
+                    method[LRDU.Right.dir] = CableRenderTypeMethodType.Internal
+                    endAt[LRDU.Right.dir] = trimPixels
+                    if (connectionCount() == 0) {
+                        method[LRDU.Left.dir] = CableRenderTypeMethodType.Internal
+                        endAt[LRDU.Left.dir] = trimPixels
+                    }
+                }
+                LRDU.Right -> {
+                    method[LRDU.Left.dir] = CableRenderTypeMethodType.Internal
+                    endAt[LRDU.Left.dir] = trimPixels
+                    if (connectionCount() == 0) {
+                        method[LRDU.Right.dir] = CableRenderTypeMethodType.Internal
+                        endAt[LRDU.Right.dir] = trimPixels
+                    }
+                }
+                LRDU.Up -> {
+                    method[LRDU.Down.dir] = CableRenderTypeMethodType.Internal
+                    endAt[LRDU.Down.dir] = trimPixels
+                    if (connectionCount() == 0) {
+                        method[LRDU.Up.dir] = CableRenderTypeMethodType.Internal
+                        endAt[LRDU.Up.dir] = trimPixels
+                    }
+                }
+                LRDU.Down -> {
+                    method[LRDU.Up.dir] = CableRenderTypeMethodType.Internal
+                    endAt[LRDU.Up.dir] = trimPixels
+                    if (connectionCount() == 0) {
+                        method[LRDU.Down.dir] = CableRenderTypeMethodType.Internal
+                        endAt[LRDU.Down.dir] = trimPixels
+                    }
+                }
+            }
+        }
+    }
+
+    private fun shouldUseTerminalExposedRender(): Boolean {
+        return shouldDrawExposedSingleConductor() || shouldDrawExposedFlatConductors()
+    }
+
+    private fun hotGlowAlpha(temperatureCelsius: Double): Float {
+        if (temperatureCelsius <= 550.0) return 0f
+        return ((temperatureCelsius - 550.0) / 250.0).toFloat().coerceIn(0.12f, 0.85f)
+    }
+
+    private fun hotGlowColor(temperatureCelsius: Double): FloatArray {
+        val normalized = ((temperatureCelsius - 550.0) / 500.0).coerceIn(0.0, 1.0).toFloat()
+        val red = 1.0f
+        val green = 0.22f + normalized * 0.55f
+        val blue = 0.05f + normalized * 0.18f
+        return floatArrayOf(red, green, blue)
+    }
+
+    private fun connectionCount(): Int {
+        var count = 0
+        if (connectedSide[LRDU.Left]) count++
+        if (connectedSide[LRDU.Right]) count++
+        if (connectedSide[LRDU.Up]) count++
+        if (connectedSide[LRDU.Down]) count++
+        return count
+    }
+
+    private fun terminalStubDirection(): LRDU {
+        if (connectedSide[LRDU.Left]) return LRDU.Left
+        if (connectedSide[LRDU.Right]) return LRDU.Right
+        if (connectedSide[LRDU.Up]) return LRDU.Up
+        if (connectedSide[LRDU.Down]) return LRDU.Down
+        return LRDU.Left
+    }
+
+    private fun shouldSpreadConductorsOnZ(): Boolean {
+        val mask = renderConnectionMask(jacket = false)
+        return (mask[LRDU.Up] || mask[LRDU.Down]) && !(mask[LRDU.Left] || mask[LRDU.Right])
     }
 }

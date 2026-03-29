@@ -413,12 +413,12 @@ object SixNodeRegistration {
 
         fun renderWidth(metricArea: Double, conductorCount: Int, flatStyle: Boolean): Pair<Float, Float> {
             val singleWidth = when {
-                metricArea <= 0.5 -> 0.95f
-                metricArea <= 2.5 -> 1.45f
-                metricArea <= 10.0 -> 1.95f
-                metricArea <= 35.0 -> 2.95f
-                metricArea <= 120.0 -> 3.95f
-                else -> 5.95f
+                metricArea <= 0.5 -> 0.65f
+                metricArea <= 2.5 -> 0.95f
+                metricArea <= 10.0 -> 1.25f
+                metricArea <= 35.0 -> 1.75f
+                metricArea <= 120.0 -> 2.35f
+                else -> 3.25f
             }
             if (flatStyle) {
                 val totalVolume = (singleWidth * singleWidth * conductorCount * 0.38f).coerceAtLeast(1.0f)
@@ -427,7 +427,7 @@ object SixNodeRegistration {
                 return Pair(width, height)
             }
             return if (conductorCount <= 1) {
-                Pair(singleWidth, maxOf(0.95f, singleWidth - 0.5f))
+                Pair(singleWidth, maxOf(0.65f, singleWidth - 0.3f))
             } else {
                 val body = singleWidth + 0.75f + (conductorCount - 2) * 0.4f
                 Pair(body, body)
