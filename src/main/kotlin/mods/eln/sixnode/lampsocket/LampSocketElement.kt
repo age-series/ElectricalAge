@@ -43,13 +43,6 @@ import kotlin.math.pow
 class LampSocketElement(sixNode: SixNode, side: Direction, sixNodeDescriptor: SixNodeDescriptor) :
     SixNodeElement(sixNode, side, sixNodeDescriptor), IConfigurable {
 
-    companion object {
-        const val SET_GROUNDED_ID: Byte = 0
-        const val TOGGLE_POWER_SUPPLY_TYPE_ID: Byte = 1
-        const val SET_LAMP_SUPPLY_CHANNEL_ID: Byte = 2
-        const val SET_ALPHA_Z_ID: Byte = 3
-    }
-
     override val inventory = SixNodeElementInventory(2, 64, this)
 
     private val acceptingInventory = AutoAcceptInventoryProxy(inventory)
@@ -261,8 +254,6 @@ class LampSocketElement(sixNode: SixNode, side: Direction, sixNodeDescriptor: Si
         super.networkSerialize(stream)
 
         try {
-            serialiseItemStack(stream, inventory.getStackInSlot(LampSocketContainer.LAMP_SLOT_ID))
-            serialiseItemStack(stream, inventory.getStackInSlot(LampSocketContainer.CABLE_SLOT_ID))
             stream.writeBoolean(grounded)
             stream.writeUTF(lampSupplyChannel)
             stream.writeBoolean(poweredByLampSupply)
@@ -270,6 +261,8 @@ class LampSocketElement(sixNode: SixNode, side: Direction, sixNodeDescriptor: Si
             stream.writeInt(paintColor)
             stream.writeDouble(lampSocketProcess.alphaZ)
             stream.writeInt(lampSocketProcess.light)
+            serialiseItemStack(stream, inventory.getStackInSlot(LampSocketContainer.LAMP_SLOT_ID))
+            serialiseItemStack(stream, inventory.getStackInSlot(LampSocketContainer.CABLE_SLOT_ID))
         } catch (e: IOException) {
             e.printStackTrace()
         }
@@ -278,26 +271,12 @@ class LampSocketElement(sixNode: SixNode, side: Direction, sixNodeDescriptor: Si
     override fun networkUnserialize(stream: DataInputStream) {
         try {
             when (stream.readByte()) {
-                SET_GROUNDED_ID -> {
-                    grounded = stream.readByte().toInt() != 0
-                    inventoryChange(inventory)
-                }
-
-                TOGGLE_POWER_SUPPLY_TYPE_ID -> {
-                    poweredByLampSupply = !poweredByLampSupply
-                    reconnect()
-                }
-
-                SET_LAMP_SUPPLY_CHANNEL_ID -> {
-                    lampSupplyChannel = stream.readUTF()
-                    needPublish()
-                }
-
-                SET_ALPHA_Z_ID -> {
-                    lampSocketProcess.alphaZ = stream.readFloat().toDouble()
-                    needPublish()
-                }
+                LampSocketGui.TOGGLE_GROUNDED_EVENT -> grounded = !grounded
+                LampSocketGui.TOGGLE_POWER_SOURCE_EVENT -> poweredByLampSupply = !poweredByLampSupply
+                LampSocketGui.UPDATE_LAMP_SUPPLY_CHANNEL_EVENT -> lampSupplyChannel = stream.readUTF()
+                LampSocketGui.ADJUST_ALPHA_Z_EVENT -> lampSocketProcess.alphaZ = stream.readDouble()
             }
+            inventoryChange(inventory)
         } catch (e: IOException) {
             e.printStackTrace()
         }
