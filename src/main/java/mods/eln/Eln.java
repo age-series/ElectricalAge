@@ -56,6 +56,7 @@ import mods.eln.registration.SingleNodeRegistration;
 import mods.eln.registration.SixNodeRegistration;
 import mods.eln.registration.TransparentNodeRegistration;
 import mods.eln.railroad.ElectricMinecartChargeReporter;
+import mods.eln.railroad.ThirdRailBlock;
 import mods.eln.server.*;
 import mods.eln.server.console.ElnConsoleCommands;
 import mods.eln.sim.Simulator;
@@ -244,6 +245,7 @@ public class Eln {
     public DataLogsPrintDescriptor dataLogsPrintDescriptor;
     public static final double SVU = 5, SVII = gateOutputCurrent / SVU, SVUinv = 1.0 / SVU;
     public EnergyConverterElnToOtherBlock elnToOtherBlockConverter;
+    public ThirdRailBlock thirdRailBlock;
     public ComputerProbeBlock computerProbeBlock;
     public static final double SVP = gateOutputCurrent * SVU;
     public ElectricalFurnaceDescriptor electricalFurnace;
