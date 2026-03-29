@@ -1,0 +1,331 @@
+200V Active Thermal Dissipator	200V_Active_Thermal_Dissipator.dot
+200V Battery Charger	200V_Battery_Charger.dot
+200V Compressor	200V_Compressor.dot
+200V Copper Heating Element	200V_Copper_Heating_Element.dot
+200V Economic Light Bulb	200V_Economic_Light_Bulb.dot
+200V Emergency Lamp	200V_Emergency_Lamp.dot
+200V Farming Lamp	200V_Farming_Lamp.dot
+200V Fuel Generator	200V_Fuel_Generator.dot
+200V Incandescent Light Bulb	200V_Incandescent_Light_Bulb.dot
+200V Iron Heating Element	200V_Iron_Heating_Element.dot
+200V Macerator	200V_Macerator.dot
+200V Magnetizer	200V_Magnetizer.dot
+200V Plate Machine	200V_Plate_Machine.dot
+200V Turbine	200V_Turbine.dot
+25A Diode	25A_Diode.dot
+2x3 Rotating Solar Panel	2x3_Rotating_Solar_Panel.dot
+3.2kV Tungsten Heating Element	3.2kV_Tungsten_Heating_Element.dot
+50V Battery Charger	50V_Battery_Charger.dot
+50V Carbon Incandescent Light Bulb	50V_Carbon_Incandescent_Light_Bulb.dot
+50V Carbon Incandescent Light Bulb -crafting-low-voltage-cable	50V_Carbon_Incandescent_Light_Bulb-crafting-low-voltage-cable.dot
+50V Carbon Incandescent Light Bulb -crafting-low-voltage-cable-2	50V_Carbon_Incandescent_Light_Bulb-crafting-low-voltage-cable-2.dot
+50V Compressor	50V_Compressor.dot
+50V Economic Light Bulb	50V_Economic_Light_Bulb.dot
+50V Egg Incubator	50V_Egg_Incubator.dot
+50V Emergency Lamp	50V_Emergency_Lamp.dot
+50V Farming Lamp	50V_Farming_Lamp.dot
+50V Fuel Generator	50V_Fuel_Generator.dot
+50V Macerator	50V_Macerator.dot
+50V Magnetizer	50V_Magnetizer.dot
+50V Plate Machine	50V_Plate_Machine.dot
+50V Turbine	50V_Turbine.dot
+800V Defence Turret	800V_Defence_Turret.dot
+AND Chip	AND_Chip.dot
+AllMeter	AllMeter.dot
+Amplifier	Amplifier.dot
+Analog Watch	Analog_Watch.dot
+Analog vuMeter	Analog_vuMeter.dot
+Animal Filter	Animal_Filter.dot
+Auto Miner	Auto_Miner.dot
+Axe Copper	Axe_Copper.dot
+Big Fuel Burner	Big_Fuel_Burner.dot
+Boots Copper	Boots_Copper.dot
+Canister of Arc Water	Canister_of_Arc_Water.dot
+Casing	Casing.dot
+Chestplate Copper	Chestplate_Copper.dot
+Christmas Tree	Christmas_Tree.dot
+Clutch	Clutch.dot
+Clutch Pin	Clutch_Pin.dot
+Coal Clutch Plate	Coal_Clutch_Plate.dot
+Config Copy Tool	Config_Copy_Tool.dot
+Configurable summing unit	Configurable_summing_unit.dot
+Copper Clutch Plate	Copper_Clutch_Plate.dot
+Crank Shaft	Crank_Shaft.dot
+Creative Cable	Creative_Cable.dot
+D Flip Flop Chip	D_Flip_Flop_Chip.dot
+Data Logger	Data_Logger.dot
+Digital Display	Digital_Display.dot
+Digital Watch	Digital_Watch.dot
+Direct Utility Pole	Direct_Utility_Pole.dot
+Electrical Anemometer Sensor	Electrical_Anemometer_Sensor.dot
+Electrical Breaker	Electrical_Breaker.dot
+Electrical Daylight Sensor	Electrical_Daylight_Sensor.dot
+Electrical Entity Sensor	Electrical_Entity_Sensor.dot
+Electrical Fire Buzzer	Electrical_Fire_Buzzer.dot
+Electrical Fire Detector	Electrical_Fire_Detector.dot
+Electrical Furnace	Electrical_Furnace.dot
+Electrical Fuse Holder	Electrical_Fuse_Holder.dot
+Electrical Light Sensor	Electrical_Light_Sensor.dot
+Electrical Probe	Electrical_Probe.dot
+Electrical Timer	Electrical_Timer.dot
+Electrical Weather Sensor	Electrical_Weather_Sensor.dot
+Eln Computer Probe	Eln_Computer_Probe.dot
+Energy Exporter	Energy_Exporter.dot
+Energy Meter	Energy_Meter.dot
+Experimental Battery	Experimental_Battery.dot
+Experimental Transporter	Experimental_Transporter.dot
+Flat Lamp Socket	Flat_Lamp_Socket.dot
+Fluorescent Lamp Socket	Fluorescent_Lamp_Socket.dot
+Flywheel	Flywheel.dot
+Fuel Heat Furnace	Fuel_Heat_Furnace.dot
+Gas Turbine	Gas_Turbine.dot
+Generator	Generator.dot
+Gold Clutch Plate	Gold_Clutch_Plate.dot
+Grid DC-DC Converter	Grid_DC-DC_Converter.dot
+Grid Switch	Grid_Switch.dot
+Ground Cable	Ground_Cable.dot
+Helmet Copper	Helmet_Copper.dot
+High Current Relay	High_Current_Relay.dot
+High Power Receiver Antenna	High_Power_Receiver_Antenna.dot
+High Power Transmitter Antenna	High_Power_Transmitter_Antenna.dot
+High Voltage Switch	High_Voltage_Switch.dot
+Hoe Copper	Hoe_Copper.dot
+Holiday Candle	Holiday_Candle.dot
+Hub	Hub.dot
+Improved Flashlight	Improved_Flashlight.dot
+Industrial Data Logger	Industrial_Data_Logger.dot
+Iron Clutch Plate	Iron_Clutch_Plate.dot
+Irresponsible Electrical Drill	Irresponsible_Electrical_Drill.dot
+JK Flip Flop Chip	JK_Flip_Flop_Chip.dot
+Joint	Joint.dot
+Joint hub	Joint_hub.dot
+LED vuMeter	LED_vuMeter.dot
+Lamp Socket A	Lamp_Socket_A.dot
+Lamp Socket B Projector	Lamp_Socket_B_Projector.dot
+Lamp Supply	Lamp_Supply.dot
+Large Gas Turbine	Large_Gas_Turbine.dot
+Large Generator	Large_Generator.dot
+Large Rheostat	Large_Rheostat.dot
+Large Shaft Motor	Large_Shaft_Motor.dot
+Large Steam Turbine	Large_Steam_Turbine.dot
+Lead Clutch Plate	Lead_Clutch_Plate.dot
+Lead Fuse for high voltage cables	Lead_Fuse_for_high_voltage_cables.dot
+Lead Fuse for low voltage cables	Lead_Fuse_for_low_voltage_cables.dot
+Lead Fuse for medium voltage cables	Lead_Fuse_for_medium_voltage_cables.dot
+Lead Fuse for very high voltage cables	Lead_Fuse_for_very_high_voltage_cables.dot
+Lead Plate	Lead_Plate.dot
+Legs Copper	Legs_Copper.dot
+Long Suspended Lamp Socket	Long_Suspended_Lamp_Socket.dot
+Long Suspended Lamp Socket (No Swing)	Long_Suspended_Lamp_Socket_No_Swing.dot
+Low Current Relay	Low_Current_Relay.dot
+Low Power Receiver Antenna	Low_Power_Receiver_Antenna.dot
+Low Power Transmitter Antenna	Low_Power_Transmitter_Antenna.dot
+Low Voltage Relay	Low_Voltage_Relay.dot
+Low Voltage Switch	Low_Voltage_Switch.dot
+Lowpass filter	Lowpass_filter.dot
+MQTT Energy Meter	MQTT_Energy_Meter.dot
+Machine Booster	Machine_Booster.dot
+Medium Current Relay	Medium_Current_Relay.dot
+Medium Fuel Burner	Medium_Fuel_Burner.dot
+Medium Power Receiver Antenna	Medium_Power_Receiver_Antenna.dot
+Medium Power Transmitter Antenna	Medium_Power_Transmitter_Antenna.dot
+Medium Voltage Relay	Medium_Voltage_Relay.dot
+Medium Voltage Switch	Medium_Voltage_Switch.dot
+Mercury	Mercury.dot
+Modern Data Logger	Modern_Data_Logger.dot
+Monster Filter	Monster_Filter.dot
+Multicolor LED vuMeter	Multicolor_LED_vuMeter.dot
+NAND Chip	NAND_Chip.dot
+NOR Chip	NOR_Chip.dot
+NOT Chip	NOT_Chip.dot
+NTC Thermistor	NTC_Thermistor.dot
+Name	Name.dot
+Nixie Tube	Nixie_Tube.dot
+Nuclear Alarm	Nuclear_Alarm.dot
+OR Chip	OR_Chip.dot
+Old 800V Arc Furnace	Old_800V_Arc_Furnace.dot
+On/OFF Regulator 1 Percent	On_OFF_Regulator_1_Percent.dot
+On/OFF Regulator 10 Percent	On_OFF_Regulator_10_Percent.dot
+OpAmp	OpAmp.dot
+Oscillator Chip	Oscillator_Chip.dot
+Output	Output.dot
+PAL Chip	PAL_Chip.dot
+PID Regulator	PID_Regulator.dot
+Pickaxe Copper	Pickaxe_Copper.dot
+Player Filter	Player_Filter.dot
+Portable Condensator Pack	Portable_Condensator_Pack.dot
+Portable Electrical Axe	Portable_Electrical_Axe.dot
+Portable Electrical Mining Drill	Portable_Electrical_Mining_Drill.dot
+Power Capacitor	Power_Capacitor.dot
+Power Inductor	Power_Inductor.dot
+Radial Motor	Radial_Motor.dot
+Rolling Shaft Machine	Rolling_Shaft_Machine.dot
+Sample and hold	Sample_and_hold.dot
+Scanner	Scanner.dot
+Schmitt Trigger Chip	Schmitt_Trigger_Chip.dot
+Sconce Lamp Socket	Sconce_Lamp_Socket.dot
+Shaft Motor	Shaft_Motor.dot
+Shovel Copper	Shovel_Copper.dot
+Signal Bus Cable	Signal_Bus_Cable.dot
+Signal Button	Signal_Button.dot
+Signal Diode	Signal_Diode.dot
+Signal Processor	Signal_Processor.dot
+Signal Relay	Signal_Relay.dot
+Signal Switch	Signal_Switch.dot
+Signal Trimmer	Signal_Trimmer.dot
+Simple Lamp Socket	Simple_Lamp_Socket.dot
+Small 50V Carbon Incandescent Light Bulb	Small_50V_Carbon_Incandescent_Light_Bulb.dot
+Small 50V Carbon Incandescent Light Bulb -crafting-copper-cable	Small_50V_Carbon_Incandescent_Light_Bulb-crafting-copper-cable.dot
+Small 50V Carbon Incandescent Light Bulb -crafting-copper-cable-2	Small_50V_Carbon_Incandescent_Light_Bulb-crafting-copper-cable-2.dot
+Small 50V Economic Light Bulb	Small_50V_Economic_Light_Bulb.dot
+Small 50V Incandescent Light Bulb	Small_50V_Incandescent_Light_Bulb.dot
+Small Active Thermal Dissipator	Small_Active_Thermal_Dissipator.dot
+Small Flashlight	Small_Flashlight.dot
+Small Fuel Burner	Small_Fuel_Burner.dot
+Small Rotating Solar Panel	Small_Rotating_Solar_Panel.dot
+Solar Tracker	Solar_Tracker.dot
+Standard Alarm	Standard_Alarm.dot
+Steam Turbine	Steam_Turbine.dot
+Stone Heat Furnace	Stone_Heat_Furnace.dot
+Street Light	Street_Light.dot
+Suspended Lamp Socket	Suspended_Lamp_Socket.dot
+Suspended Lamp Socket (No Swing)	Suspended_Lamp_Socket_No_Swing.dot
+Sword Copper	Sword_Copper.dot
+Tachometer	Tachometer.dot
+Temperature Probe	Temperature_Probe.dot
+Thermal Heat Exchanger	Thermal_Heat_Exchanger.dot
+Thermal Insulation	Thermal_Insulation.dot
+Thermal Probe	Thermal_Probe.dot
+Thermistor	Thermistor.dot
+Transmission Tower	Transmission_Tower.dot
+Tree Resin Collector	Tree_Resin_Collector.dot
+Tree Resin Collector -crafting-ore-plankwood	Tree_Resin_Collector-crafting-ore-plankwood.dot
+Tree Resin Collector -crafting-ore-plankwood-2	Tree_Resin_Collector-crafting-ore-plankwood-2.dot
+Type E Socket	Type_E_Socket.dot
+Type J Socket	Type_J_Socket.dot
+Utility Pole w/DC-DC Converter	Utility_Pole_w_DC-DC_Converter.dot
+Variable DC-DC Converter	Variable_DC-DC_Converter.dot
+Variable inductor	Variable_inductor.dot
+Very High Voltage Relay	Very_High_Voltage_Relay.dot
+Very High Voltage Switch	Very_High_Voltage_Switch.dot
+Voltage Probe	Voltage_Probe.dot
+Voltage controlled amplifier	Voltage_controlled_amplifier.dot
+Voltage controlled sawtooth oscillator	Voltage_controlled_sawtooth_oscillator.dot
+Voltage controlled sine oscillator	Voltage_controlled_sine_oscillator.dot
+Voltage-to-Redstone Converter	Voltage-to-Redstone_Converter.dot
+Water Turbine	Water_Turbine.dot
+Weak 50V Battery Charger	Weak_50V_Battery_Charger.dot
+Wind Turbine	Wind_Turbine.dot
+Wireless Analyser	Wireless_Analyser.dot
+Wireless Button	Wireless_Button.dot
+Wireless Signal Repeater	Wireless_Signal_Repeater.dot
+Wireless Switch	Wireless_Switch.dot
+X-Ray Scanner	X-Ray_Scanner.dot
+XNOR Chip	XNOR_Chip.dot
+XOR Chip	XOR_Chip.dot
+ingotLead	ingotLead.dot
+ingotLead -smelting-lead-ore	ingotLead-smelting-lead-ore.dot
+ingotLead -smelting-dustlead	ingotLead-smelting-dustlead.dot
+minecraft:blocks_lapis_block	minecraft_blocks_lapis_block.dot
+minecraft:items_emerald	minecraft_items_emerald.dot
+minecraft:items_ender_pearl	minecraft_items_ender_pearl.dot
+3x Graphite Rods	3x_Graphite_Rods.dot
+3x Graphite Rods -crafting-graphite-rod	3x_Graphite_Rods-crafting-graphite-rod.dot
+3x Graphite Rods -crafting-2x-graphite-rods	3x_Graphite_Rods-crafting-2x-graphite-rods.dot
+4x Graphite Rods	4x_Graphite_Rods.dot
+4x Graphite Rods -crafting-graphite-rod	4x_Graphite_Rods-crafting-graphite-rod.dot
+4x Graphite Rods -crafting-2x-graphite-rods	4x_Graphite_Rods-crafting-2x-graphite-rods.dot
+4x Graphite Rods -crafting-2x-graphite-rods-2	4x_Graphite_Rods-crafting-2x-graphite-rods-2.dot
+4x Graphite Rods -crafting-3x-graphite-rods	4x_Graphite_Rods-crafting-3x-graphite-rods.dot
+Alloy Ingot	Alloy_Ingot.dot
+Alloy Ingot -smelting	Alloy_Ingot-smelting.dot
+Alloy Ingot -arc-furnace	Alloy_Ingot-arc-furnace.dot
+Arc Clay Ingot	Arc_Clay_Ingot.dot
+Arc Clay Ingot -crafting	Arc_Clay_Ingot-crafting.dot
+Arc Clay Ingot -arc-furnace	Arc_Clay_Ingot-arc-furnace.dot
+Arc Metal Ingot	Arc_Metal_Ingot.dot
+Arc Metal Ingot -crafting	Arc_Metal_Ingot-crafting.dot
+Arc Metal Ingot -arc-furnace	Arc_Metal_Ingot-arc-furnace.dot
+Copper Ingot	Copper_Ingot.dot
+Copper Ingot -smelting-copper-ore	Copper_Ingot-smelting-copper-ore.dot
+Copper Ingot -smelting-dustcopper	Copper_Ingot-smelting-dustcopper.dot
+Copper Ingot -arc-furnace	Copper_Ingot-arc-furnace.dot
+Copper Thermal Cable	Copper_Thermal_Cable.dot
+Copper Thermal Cable -crafting-copper-ingot	Copper_Thermal_Cable-crafting-copper-ingot.dot
+Copper Thermal Cable -crafting-copper-cable	Copper_Thermal_Cable-crafting-copper-cable.dot
+Graphite Rod	Graphite_Rod.dot
+Graphite Rod -crafting-2x-graphite-rods	Graphite_Rod-crafting-2x-graphite-rods.dot
+Graphite Rod -crafting-3x-graphite-rods	Graphite_Rod-crafting-3x-graphite-rods.dot
+Graphite Rod -crafting-4x-graphite-rods	Graphite_Rod-crafting-4x-graphite-rods.dot
+Graphite Rod -compressor	Graphite_Rod-compressor.dot
+Iron Cable	Iron_Cable.dot
+Iron Cable -crafting-minecraft-items-iron-ingot	Iron_Cable-crafting-minecraft-items-iron-ingot.dot
+Iron Cable -crafting-minecraft-items-iron-ingot-2	Iron_Cable-crafting-minecraft-items-iron-ingot-2.dot
+Low Voltage Cable	Low_Voltage_Cable.dot
+Low Voltage Cable -crafting-copper-cable	Low_Voltage_Cable-crafting-copper-cable.dot
+Low Voltage Cable -crafting-copper-ingot	Low_Voltage_Cable-crafting-copper-ingot.dot
+Optimal Ferromagnetic Core	Optimal_Ferromagnetic_Core.dot
+Optimal Ferromagnetic Core -crafting	Optimal_Ferromagnetic_Core-crafting.dot
+Optimal Ferromagnetic Core -magnetizer	Optimal_Ferromagnetic_Core-magnetizer.dot
+Rubber	Rubber.dot
+Rubber -smelting-tree-resin	Rubber-smelting-tree-resin.dot
+Rubber -smelting-tree-resin-2	Rubber-smelting-tree-resin-2.dot
+Signal Cable	Signal_Cable.dot
+Signal Cable -crafting-iron-cable	Signal_Cable-crafting-iron-cable.dot
+Signal Cable -crafting-rubber	Signal_Cable-crafting-rubber.dot
+Single-use Battery	Single-use_Battery.dot
+Single-use Battery -crafting-copper-ingot	Single-use_Battery-crafting-copper-ingot.dot
+Single-use Battery -crafting-copper-ingot-2	Single-use_Battery-crafting-copper-ingot-2.dot
+Tree Resin	Tree_Resin.dot
+Tree Resin -compressor	Tree_Resin-compressor.dot
+Tree Resin -collection	Tree_Resin-collection.dot
+Tungsten Ingot	Tungsten_Ingot.dot
+Tungsten Ingot -smelting-tungsten-ore	Tungsten_Ingot-smelting-tungsten-ore.dot
+Tungsten Ingot -smelting-dusttungsten	Tungsten_Ingot-smelting-dusttungsten.dot
+Tungsten Ingot -arc-furnace	Tungsten_Ingot-arc-furnace.dot
+Utility Pole	Utility_Pole.dot
+Utility Pole -crafting-ore-ingotaluminum	Utility_Pole-crafting-ore-ingotaluminum.dot
+Utility Pole -crafting-minecraft-items-iron-ingot	Utility_Pole-crafting-minecraft-items-iron-ingot.dot
+dustCoal	dustCoal.dot
+dustCoal -macerator-minecraft-items-coal	dustCoal-macerator-minecraft-items-coal.dot
+dustCoal -macerator-minecraft-items-coal-2	dustCoal-macerator-minecraft-items-coal-2.dot
+dustCoal -macerator-e-coal-helmet	dustCoal-macerator-e-coal-helmet.dot
+dustCoal -macerator-e-coal-boots	dustCoal-macerator-e-coal-boots.dot
+dustCoal -macerator-e-coal-chestplate	dustCoal-macerator-e-coal-chestplate.dot
+dustCoal -macerator-e-coal-leggings	dustCoal-macerator-e-coal-leggings.dot
+dustCopper	dustCopper.dot
+dustCopper -macerator-copper-ore	dustCopper-macerator-copper-ore.dot
+dustCopper -macerator-copper-ingot	dustCopper-macerator-copper-ingot.dot
+dustCopper -macerator-single-use-battery	dustCopper-macerator-single-use-battery.dot
+dustGold	dustGold.dot
+dustGold -macerator-minecraft-blocks-gold-ore	dustGold-macerator-minecraft-blocks-gold-ore.dot
+dustGold -macerator-minecraft-items-gold-ingot	dustGold-macerator-minecraft-items-gold-ingot.dot
+dustIron	dustIron.dot
+dustIron -macerator-minecraft-blocks-iron-ore	dustIron-macerator-minecraft-blocks-iron-ore.dot
+dustIron -macerator-minecraft-items-iron-ingot	dustIron-macerator-minecraft-items-iron-ingot.dot
+dustLead	dustLead.dot
+dustLead -macerator-lead-ore	dustLead-macerator-lead-ore.dot
+dustLead -macerator-lead-ingot	dustLead-macerator-lead-ingot.dot
+dustLead -macerator-cost-oriented-battery	dustLead-macerator-cost-oriented-battery.dot
+dustLead -macerator-life-oriented-battery	dustLead-macerator-life-oriented-battery.dot
+dustLead -macerator-current-oriented-battery	dustLead-macerator-current-oriented-battery.dot
+dustLead -macerator-voltage-oriented-battery	dustLead-macerator-voltage-oriented-battery.dot
+dustLead -macerator-capacity-oriented-battery	dustLead-macerator-capacity-oriented-battery.dot
+dustTungsten	dustTungsten.dot
+dustTungsten -macerator-tungsten-ore	dustTungsten-macerator-tungsten-ore.dot
+dustTungsten -macerator-tungsten-ingot	dustTungsten-macerator-tungsten-ingot.dot
+minecraft:items_coal	minecraft_items_coal.dot
+minecraft:items_coal -macerator	minecraft_items_coal-macerator.dot
+minecraft:items_coal -arc-furnace	minecraft_items_coal-arc-furnace.dot
+minecraft:items_diamond	minecraft_items_diamond.dot
+minecraft:items_diamond -crafting	minecraft_items_diamond-crafting.dot
+minecraft:items_diamond -arc-furnace	minecraft_items_diamond-arc-furnace.dot
+minecraft:items_gold_ingot	minecraft_items_gold_ingot.dot
+minecraft:items_gold_ingot -smelting	minecraft_items_gold_ingot-smelting.dot
+minecraft:items_gold_ingot -arc-furnace	minecraft_items_gold_ingot-arc-furnace.dot
+minecraft:items_iron_ingot	minecraft_items_iron_ingot.dot
+minecraft:items_iron_ingot -smelting	minecraft_items_iron_ingot-smelting.dot
+minecraft:items_iron_ingot -arc-furnace	minecraft_items_iron_ingot-arc-furnace.dot
+minecraft:items_redstone	minecraft_items_redstone.dot
+minecraft:items_redstone -arc-furnace	minecraft_items_redstone-arc-furnace.dot
+minecraft:items_redstone -magnetizer	minecraft_items_redstone-magnetizer.dot
