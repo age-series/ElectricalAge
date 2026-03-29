@@ -13,9 +13,9 @@ import net.minecraft.inventory.IInventory
 
 class LampSocketContainer(player: EntityPlayer, inventory: IInventory) : BasicContainer(
     player, inventory, arrayOf(
-        LampItemSlot(inventory, LAMP_SLOT_ID, 70 + 1, 61 + 1, 1, ACCEPTED_LAMP_TYPES),
+        LampItemSlot(inventory, LAMP_SLOT_ID, 70+1, 57+1, 1, ACCEPTED_LAMP_TYPES),
         SixNodeItemSlot(
-            inventory, CABLE_SLOT_ID, 88 + 1, 61 + 1, 1, arrayOf(
+            inventory, CABLE_SLOT_ID, 88+1, 57+1, 1, arrayOf(
                 ElectricalCableDescriptor::class.java,
                 CurrentCableDescriptor::class.java
             ), SlotSkin.medium, arrayOf(tr("Electrical/current cable slot"))

@@ -49,7 +49,7 @@ class FloodlightRender(tileEntity: TransparentNodeEntity, transparentNodeDescrip
     }
 
     override fun newGuiDraw(side: Direction, player: EntityPlayer): GuiScreen {
-        return FloodlightGui(player, inventory, this)
+        return FloodlightGui(player, this)
     }
 
     private fun glNormalizePlacement(axis: HybridNodeDirection, facing: HybridNodeDirection) {

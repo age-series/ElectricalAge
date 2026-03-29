@@ -8,8 +8,8 @@ import net.minecraft.inventory.IInventory
 
 class FloodlightContainer(player: EntityPlayer, inventory: IInventory) : BasicContainer(
     player, inventory, arrayOf(
-        LampItemSlot(inventory, LAMP_SLOT_1_ID, 70 + 1, 61 + 1, 1, ACCEPTED_LAMP_TYPES),
-        LampItemSlot(inventory, LAMP_SLOT_2_ID, 88 + 1, 61 + 1, 1, ACCEPTED_LAMP_TYPES)
+        LampItemSlot(inventory, LAMP_SLOT_1_ID, 70+1, 61+1, 1, ACCEPTED_LAMP_TYPES),
+        LampItemSlot(inventory, LAMP_SLOT_2_ID, 88+1, 61+1, 1, ACCEPTED_LAMP_TYPES)
     )
 ) {
 
