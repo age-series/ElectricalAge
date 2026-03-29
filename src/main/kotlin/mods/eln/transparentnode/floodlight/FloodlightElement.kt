@@ -38,12 +38,6 @@ import kotlin.math.pow
 class FloodlightElement(transparentNode: TransparentNode, transparentNodeDescriptor: TransparentNodeDescriptor) :
     TransparentNodeElement(transparentNode, transparentNodeDescriptor), IConfigurable {
 
-    companion object {
-        const val HORIZONTAL_ADJUST_EVENT: Byte = 0
-        const val VERTICAL_ADJUST_EVENT: Byte = 1
-        const val BEAM_ADJUST_EVENT: Byte = 2
-    }
-
     override val inventory = TransparentNodeElementInventory(2, 64, this)
 
     private val acceptingInventory = AutoAcceptInventoryProxy(inventory)
@@ -264,10 +258,11 @@ class FloodlightElement(transparentNode: TransparentNode, transparentNodeDescrip
 
     override fun networkUnserialize(stream: DataInputStream): Byte {
         when (super.networkUnserialize(stream)) {
-            HORIZONTAL_ADJUST_EVENT -> swivelAngle = stream.readDouble()
-            VERTICAL_ADJUST_EVENT -> headAngle = stream.readDouble()
-            BEAM_ADJUST_EVENT -> beamWidth = stream.readDouble()
+            FloodlightGui.ADJUST_HORIZONTAL_ANGLE_EVENT -> swivelAngle = stream.readDouble()
+            FloodlightGui.ADJUST_VERTICAL_ANGLE_EVENT -> headAngle = stream.readDouble()
+            FloodlightGui.ADJUST_BEAM_WIDTH_EVENT -> beamWidth = stream.readDouble()
         }
+        inventoryChange(inventory)
         return unserializeNulldId
     }
 

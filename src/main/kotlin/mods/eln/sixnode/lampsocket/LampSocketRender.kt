@@ -22,15 +22,14 @@ import net.minecraft.entity.projectile.EntityArrow
 import net.minecraft.util.AxisAlignedBB
 import net.minecraft.world.EnumSkyBlock
 import org.lwjgl.opengl.GL11
-import java.io.ByteArrayOutputStream
 import java.io.DataInputStream
-import java.io.DataOutputStream
 import java.io.IOException
 import kotlin.math.cos
 import kotlin.math.pow
 import kotlin.math.sign
 import kotlin.math.sin
 
+// TODO: Revisit integration of this file with the rest of the six-node lamp socket code.
 class LampSocketRender(tileEntity: SixNodeEntity, side: Direction, sixNodeDescriptor: SixNodeDescriptor) :
     SixNodeElementRender(tileEntity, side, sixNodeDescriptor) {
 
@@ -77,12 +76,6 @@ class LampSocketRender(tileEntity: SixNodeEntity, side: Direction, sixNodeDescri
         super.publishUnserialize(stream)
 
         try {
-            val lampStack = unserialiseItemStack(stream)
-            if (lampStack != null) lampDescriptor = getItemObject(lampStack) as LampDescriptor
-
-            val cableStack = unserialiseItemStack(stream)
-            if (cableStack != null) cableDescriptor = getItemObject(cableStack) as GenericCableDescriptor
-
             grounded = stream.readBoolean()
             lampSupplyChannel = stream.readUTF()
             poweredByLampSupply = stream.readBoolean()
@@ -90,6 +83,12 @@ class LampSocketRender(tileEntity: SixNodeEntity, side: Direction, sixNodeDescri
             paintColor = stream.readInt()
             alphaZ = stream.readDouble()
             light = stream.readInt()
+
+            val lampStack = unserialiseItemStack(stream)
+            if (lampStack != null) lampDescriptor = getItemObject(lampStack) as LampDescriptor
+
+            val cableStack = unserialiseItemStack(stream)
+            if (cableStack != null) cableDescriptor = getItemObject(cableStack) as GenericCableDescriptor
         } catch (e: IOException) {
             e.printStackTrace()
         }
@@ -109,7 +108,7 @@ class LampSocketRender(tileEntity: SixNodeEntity, side: Direction, sixNodeDescri
     }
 
     override fun newGuiDraw(side: Direction, player: EntityPlayer): GuiScreen {
-        return LampSocketGuiDraw(player, inventory, this)
+        return LampSocketGui(player, this)
     }
 
     override fun refresh(deltaT: Float) {
@@ -191,20 +190,6 @@ class LampSocketRender(tileEntity: SixNodeEntity, side: Direction, sixNodeDescri
 
     override fun cameraDrawOptimisation(): Boolean {
         return descriptor.cameraOpt
-    }
-
-    fun clientSetGrounded(value: Boolean) {
-        try {
-            val bos = ByteArrayOutputStream()
-            val stream = DataOutputStream(bos)
-
-            preparePacketForServer(stream)
-            stream.writeByte(LampSocketElement.SET_GROUNDED_ID.toInt())
-            stream.writeByte(if (value) 1 else 0)
-            sendPacketToServer(bos)
-        } catch (e: IOException) {
-            e.printStackTrace()
-        }
     }
 
 }
