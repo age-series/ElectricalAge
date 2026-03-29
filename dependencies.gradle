@@ -46,4 +46,25 @@ dependencies {
     compileOnly "ic2:IC2Classic:1.2.1.8:dev"
     compileOnly "li.cil.oc:OpenComputers:MC1.7.10-1.7.2.1204:dev"
     compileOnly "dan200.computercraft:ComputerCraft:1.75"
+
+    def candidateFmpJars = [
+        file("${System.properties['user.home']}/.local/share/PrismLauncher/instances/1.7.10/.minecraft/mods/1.7.10/ForgeMultipart-1.7.10-1.2.0.345-universal.jar"),
+        file("${System.properties['user.home']}/downloads2/lol/Modpack/mods/1.7.10/ForgeMultipart-1.7.10-1.2.0.345-universal.jar"),
+    ]
+    def candidateCclJars = [
+        file("run/mods/1.7.10/CodeChickenLib-1.7.10-1.1.3.141-dev.jar"),
+        file("${System.properties['user.home']}/downloads2/lol/Modpack/mods/1.7.10/CodeChickenLib-1.7.10-1.1.3.140-universal.jar"),
+    ]
+
+    def localFmpJar = candidateFmpJars.find { it.exists() }
+    def localCclJar = candidateCclJars.find { it.exists() }
+
+    if (localFmpJar != null) {
+        compileOnly files(localFmpJar)
+        runtimeOnlyNonPublishable files(localFmpJar)
+    }
+    if (localCclJar != null) {
+        compileOnly files(localCclJar)
+        runtimeOnlyNonPublishable files(localCclJar)
+    }
 }
