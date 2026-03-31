@@ -129,6 +129,7 @@ public class Eln {
     public static final byte packetDestroyUuid = 20;
     public static final byte packetClientToServerConnection = 21;
     public static final byte packetServerToClientInfo = 22;
+    public static final byte packetFalstadImport = 23;
     public static final Obj3DFolder obj = new Obj3DFolder();
     public static final ArrayList<OreScannerConfigElement> oreScannerConfig = new ArrayList<OreScannerConfigElement>();
     public static final double gateOutputCurrent = 0.100;
@@ -204,6 +205,7 @@ public class Eln {
     public static WindProcess wind;
     static public GenericItemUsingDamageDescriptor multiMeterElement, thermometerElement, allMeterElement;
     static public GenericItemUsingDamageDescriptor configCopyToolElement;
+    static public GenericItemUsingDamageDescriptor falstadImportToolElement;
     public static TreeResin treeResin;
     public static MiningPipeDescriptor miningPipeDescriptor;
     static NodeServer nodeServer;

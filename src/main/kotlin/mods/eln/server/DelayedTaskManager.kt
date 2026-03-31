@@ -5,10 +5,11 @@ import cpw.mods.fml.common.gameevent.TickEvent.ServerTickEvent
 import cpw.mods.fml.common.gameevent.TickEvent
 import net.minecraftforge.common.MinecraftForge
 import cpw.mods.fml.common.FMLCommonHandler
-import java.util.*
+import java.util.ArrayList
+import java.util.concurrent.ConcurrentLinkedQueue
 
 class DelayedTaskManager {
-    var tasks = LinkedList<ITask>()
+    private val tasks = ConcurrentLinkedQueue<ITask>()
     fun clear() {
         tasks.clear()
     }
@@ -16,8 +17,11 @@ class DelayedTaskManager {
     @SubscribeEvent
     fun tick(event: ServerTickEvent) {
         if (event.phase != TickEvent.Phase.END) return
-        val cpy: List<ITask> = ArrayList(tasks)
-        tasks.clear()
+        val cpy = ArrayList<ITask>()
+        while (true) {
+            val task = tasks.poll() ?: break
+            cpy.add(task)
+        }
         for (t in cpy) {
             t.run()
         }

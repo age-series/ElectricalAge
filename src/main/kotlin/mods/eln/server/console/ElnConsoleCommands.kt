@@ -11,6 +11,7 @@ import mods.eln.mechanical.ShaftElement
 import mods.eln.environment.BiomeClimateService
 import mods.eln.item.LampLists
 import mods.eln.misc.Coordinate
+import mods.eln.misc.Direction
 import mods.eln.misc.FC
 import mods.eln.misc.Version
 import mods.eln.node.NodeBase
@@ -24,6 +25,7 @@ import mods.eln.server.console.ElnConsoleCommands.Companion.cprint
 import mods.eln.server.console.ElnConsoleCommands.Companion.getArgBool
 import net.minecraft.command.ICommandSender
 import net.minecraft.entity.player.EntityPlayerMP
+import net.minecraft.inventory.IInventory
 import net.minecraft.world.World
 import java.io.BufferedWriter
 import java.io.File
@@ -94,6 +96,53 @@ private fun clearElnBlock(world: World, x: Int, y: Int, z: Int): Boolean {
     if (!isElnBlock) return false
     world.setBlockToAir(x, y, z)
     return true
+}
+
+private fun clearInventoryWithoutDrops(inventory: IInventory?) {
+    if (inventory == null) return
+    for (slot in 0 until inventory.sizeInventory) {
+        inventory.setInventorySlotContents(slot, null)
+    }
+    inventory.markDirty()
+}
+
+private fun destroyElnNodeWithoutDrops(world: World, nodeManager: NodeManager, node: NodeBase, player: EntityPlayerMP): Boolean {
+    val coord = node.coordinate
+    val expectedBlock = when (node) {
+        is SixNode -> Eln.sixNodeBlock
+        is TransparentNode -> Eln.transparentNodeBlock
+        is GhostNode -> Eln.ghostBlock
+        else -> null
+    }
+    return try {
+        when (node) {
+            is SixNode -> {
+                node.sideElementList.forEach { element ->
+                    clearInventoryWithoutDrops(element?.inventory)
+                }
+                node.sixNodeCacheBlock = net.minecraft.init.Blocks.air
+                for (direction in Direction.values()) {
+                    if (node.getSideEnable(direction)) {
+                        node.deleteSubBlock(player, direction)
+                    }
+                }
+            }
+            is TransparentNode -> {
+                clearInventoryWithoutDrops(node.element?.inventory)
+                node.removedByPlayer = player
+            }
+        }
+        if (expectedBlock != null && world.getBlock(coord.x, coord.y, coord.z) == expectedBlock) {
+            world.setBlockToAir(coord.x, coord.y, coord.z)
+        } else {
+            node.onBreakBlock()
+            nodeManager.removeNode(node)
+        }
+        true
+    } catch (e: Exception) {
+        println("zonedestroy: removal failed for $coord : ${e.message}")
+        false
+    }
 }
 
 private fun saveConfigPath(path: String, value: Any): String =
@@ -648,6 +697,64 @@ class ElnZoneRemoveCommand : IConsoleCommand {
             coord.z == minZ || coord.z == maxZ
     }
 
+}
+
+class ElnZoneDestroyCommand : IConsoleCommand {
+    override val name = "zonedestroy"
+
+    override fun runCommand(ics: ICommandSender, args: List<String>) {
+        if (ics !is EntityPlayerMP) {
+            cprint(ics, "${FC.BRIGHT_RED}This command can only be run by a player.", indent = 1)
+            return
+        }
+        val bounds = parseZoneBounds(ics, args, name) ?: return
+        val world = ics.worldObj
+        val dim = world.provider.dimensionId
+        val nodeManager = NodeManager.instance
+        if (nodeManager == null) {
+            cprint(ics, "${FC.BRIGHT_RED}Node manager unavailable, cannot run zonedestroy.", indent = 1)
+            return
+        }
+
+        val targetNodes = nodeManager.nodeList.filter {
+            val c = it.coordinate
+            c.dimension == dim &&
+                c.x in bounds.minX..bounds.maxX &&
+                c.y in bounds.minY..bounds.maxY &&
+                c.z in bounds.minZ..bounds.maxZ
+        }
+
+        var nodesDestroyed = 0
+        for (node in targetNodes) {
+            if (destroyElnNodeWithoutDrops(world, nodeManager, node, ics)) {
+                nodesDestroyed++
+            }
+        }
+
+        var blocksCleared = 0
+        for (x in bounds.minX..bounds.maxX) {
+            for (y in bounds.minY..bounds.maxY) {
+                for (z in bounds.minZ..bounds.maxZ) {
+                    if (clearElnBlock(world, x, y, z)) {
+                        blocksCleared++
+                    }
+                }
+            }
+        }
+
+        cprint(
+            ics,
+            "${FC.BRIGHT_GREEN}Zone destroy complete: destroyed $nodesDestroyed nodes and cleared $blocksCleared blocks without dropping items.",
+            indent = 1
+        )
+    }
+
+    override fun getManPage(ics: ICommandSender, args: List<String>) {
+        cprint(ics, "Destroys all Eln nodes and blocks within a rectangular zone without dropping items.", indent = 1)
+        cprint(ics, "Usage: /eln zonedestroy <radius>", indent = 1)
+        cprint(ics, "Usage: /eln zonedestroy x1 y1 z1 x2 y2 z2", indent = 1)
+        cprint(ics, "")
+    }
 }
 
 class ElnStopShaftCommand : IConsoleCommand {

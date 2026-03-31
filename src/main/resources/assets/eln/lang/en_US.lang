@@ -250,8 +250,11 @@ Portable_Condensator_Pack.name=Portable Capacitor Pack
 Portable_Electrical_Axe.name=Portable Electrical Axe
 Portable_Electrical_Mining_Drill.name=Portable Electrical Mining Drill
 Power_Capacitor.name=Power Capacitor
+Creative_Power_Capacitor.name=Creative Power Capacitor
 Power_Inductor.name=Power Inductor
+Creative_Power_Inductor.name=Creative Power Inductor
 Power_Resistor.name=Power Resistor
+Creative_Power_Resistor.name=Creative Power Resistor
 Power_capacitor.name=Power capacitor
 Power_inductor.name=Power inductor
 Variable_inductor.name=Variable Inductor
@@ -480,6 +483,12 @@ Max_rads\:__=Max rads:
 # ./src/main/java/mods/eln/misc/UtilsClient.java
 Hold_[shift]_for_details=Hold [shift] for details
 Hold_[ctrl]_for_realism_details=Hold [ctrl] for realism details
+Creative_resistor_with_direct_value_entry.=Creative resistor with direct value entry.
+Creative_capacitor_with_direct_value_entry.=Creative capacitor with direct value entry.
+Creative_inductor_with_direct_value_entry.=Creative inductor with direct value entry.
+Timestep-dependent_behavior_can_make_reactive_simulation_inaccurate.=Timestep-dependent behavior can make reactive simulation inaccurate.
+MNA_capacitor_solving_can_produce_unrealistic_results.=MNA capacitor solving can produce unrealistic results.
+MNA_inductor_solving_can_produce_unrealistic_results.=MNA inductor solving can produce unrealistic results.
 
 # ./src/main/java/mods/eln/misc/Version.java
 mod.name=Electrical Age
