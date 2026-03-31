@@ -67,7 +67,8 @@ class LampSocketElement(sixNode: SixNode, side: Direction, sixNodeDescriptor: Si
     var activeLampSupplyConnection = false
     private var paintColor = 15
 
-    var itemsInInventory = false
+    var lampInInventory = false
+    var cableInInventory = false
     var processElapsedTime = 0.0
 
     override val lightValue: Int
@@ -261,6 +262,7 @@ class LampSocketElement(sixNode: SixNode, side: Direction, sixNodeDescriptor: Si
             stream.writeInt(paintColor)
             stream.writeDouble(lampSocketProcess.alphaZ)
             stream.writeInt(lampSocketProcess.light)
+            stream.writeBoolean(lampInInventory)
             serialiseItemStack(stream, inventory.getStackInSlot(LampSocketContainer.LAMP_SLOT_ID))
             serialiseItemStack(stream, inventory.getStackInSlot(LampSocketContainer.CABLE_SLOT_ID))
         } catch (e: IOException) {
