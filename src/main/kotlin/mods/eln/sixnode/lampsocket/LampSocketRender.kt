@@ -13,6 +13,7 @@ import mods.eln.node.six.SixNodeElementInventory
 import mods.eln.node.six.SixNodeElementRender
 import mods.eln.node.six.SixNodeEntity
 import mods.eln.sixnode.genericcable.GenericCableDescriptor
+import mods.eln.sixnode.lampsocket.objrender.LampSocketSuspendedObjRender
 import mods.eln.sound.SoundCommand
 import net.minecraft.client.gui.GuiScreen
 import net.minecraft.entity.Entity
@@ -46,7 +47,7 @@ class LampSocketRender(tileEntity: SixNodeEntity, side: Direction, sixNodeDescri
     var paintColor = 15
     var alphaZ = 0.0
 
-    var light: Int = 0
+    var light = 0
         set(newLight) {
             field = newLight
 
@@ -60,7 +61,9 @@ class LampSocketRender(tileEntity: SixNodeEntity, side: Direction, sixNodeDescri
 
             oldLight = light
         }
-    private var oldLight: Int = -1
+    private var oldLight = -1
+
+    var lampInInventory = false
 
     var perturbPy = 0.0
     var perturbPz = 0.0
@@ -83,6 +86,7 @@ class LampSocketRender(tileEntity: SixNodeEntity, side: Direction, sixNodeDescri
             paintColor = stream.readInt()
             alphaZ = stream.readDouble()
             light = stream.readInt()
+            lampInInventory = stream.readBoolean()
 
             val lampStack = unserialiseItemStack(stream)
             if (lampStack != null) lampDescriptor = getItemObject(lampStack) as LampDescriptor
@@ -103,7 +107,7 @@ class LampSocketRender(tileEntity: SixNodeEntity, side: Direction, sixNodeDescri
         // Only for colored cables
         super.draw()
 
-        GL11.glRotatef(descriptor.initialRotateDeg, 1f, 0f, 0f)
+        GL11.glRotated(descriptor.initialRotateDeg.toDouble(), 1.0, 0.0, 0.0)
         descriptor.render.draw(this, UtilsClient.distanceFromClientPlayer(this.tileEntity).toDouble())
     }
 
@@ -127,14 +131,14 @@ class LampSocketRender(tileEntity: SixNodeEntity, side: Direction, sixNodeDescri
 
             for (o in entityList) {
                 val e = o as Entity
-                var eFactor = 0f
+                var eFactor = 0
 
-                if (e is EntityArrow) eFactor = 1f
-                if (e is EntityLivingBase) eFactor = 4f
-                if (eFactor == 0f) continue
+                if (e is EntityArrow) eFactor = 1
+                if (e is EntityLivingBase) eFactor = 4
+                if (eFactor == 0) continue
 
-                perturbVy += (e.motionZ * eFactor * deltaT).toFloat()
-                perturbVz += (e.motionX * eFactor * deltaT).toFloat()
+                perturbVy += (e.motionZ * eFactor * deltaT)
+                perturbVz += (e.motionX * eFactor * deltaT)
             }
 
             if (tileEntity.getWorldObj().getSavedLightValue(EnumSkyBlock.Sky, tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord) > 3) {

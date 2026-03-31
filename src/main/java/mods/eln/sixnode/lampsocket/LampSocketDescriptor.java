@@ -3,6 +3,7 @@ package mods.eln.sixnode.lampsocket;
 import mods.eln.misc.RealisticEnum;
 import mods.eln.misc.VoltageLevelColor;
 import mods.eln.node.six.SixNodeDescriptor;
+import mods.eln.sixnode.lampsocket.objrender.ILampSocketObjRender;
 import mods.eln.wiki.Data;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -14,10 +15,12 @@ import static mods.eln.i18n.I18N.tr;
 
 public class LampSocketDescriptor extends SixNodeDescriptor {
 
-    LampSocketObjRender render;
+    ILampSocketObjRender render;
 
     public boolean cameraOpt = true;
     public boolean extendedRenderBounds = false;
+
+    public static final int minOnLightValue = 8;
 
     public int range;
     public String modelName;
@@ -33,7 +36,7 @@ public class LampSocketDescriptor extends SixNodeDescriptor {
     public boolean paintable = false;
     public boolean renderIconInHand = false;
 
-    public LampSocketDescriptor(String name, LampSocketObjRender render,
+    public LampSocketDescriptor(String name, ILampSocketObjRender render,
                                 boolean paintable,
                                 int range,
                                 float alphaZMin, float alphaZMax,
