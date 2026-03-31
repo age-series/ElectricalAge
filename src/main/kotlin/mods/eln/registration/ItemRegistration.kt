@@ -951,6 +951,14 @@ object ItemRegistration {
             Eln.sharedItem.addElement(completId, element)
             Eln.configCopyToolElement = element
         }
+        run {
+            subId = 17
+            completId = subId + (id shl 6)
+            element =
+                FalstadImportToolDescriptor(I18N.TR_NAME(I18N.Type.NONE, "Falstad Import Tool"))
+            Eln.sharedItem.addElement(completId, element)
+            Eln.falstadImportToolElement = element
+        }
     }
 
     private fun registerTreeResinAndRubber(id: Int) {

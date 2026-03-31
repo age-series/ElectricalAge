@@ -1076,6 +1076,30 @@ object SixNodeRegistration {
             ).power()
             Eln.sixNodeItem.addDescriptor(subId + (id shl 6), desc)
         }
+
+        run {
+            subId = 39
+            name = I18N.TR_NAME(I18N.Type.NONE, "Creative Power Capacitor")
+            val desc = CreativePowerCapacitorDescriptor(name, Eln.obj.getObj("PowerElectricPrimitives")).creative()
+            desc.setDefaultIcon("powercapacitor")
+            Eln.sixNodeItem.addDescriptor(subId + (id shl 6), desc)
+        }
+
+        run {
+            subId = 40
+            name = I18N.TR_NAME(I18N.Type.NONE, "Creative Power Inductor")
+            val desc = CreativePowerInductorDescriptor(name, Eln.obj.getObj("PowerElectricPrimitives")).creative()
+            desc.setDefaultIcon("powerinductor")
+            Eln.sixNodeItem.addDescriptor(subId + (id shl 6), desc)
+        }
+
+        run {
+            subId = 41
+            name = I18N.TR_NAME(I18N.Type.NONE, "Creative Power Resistor")
+            val desc = CreativePowerResistorDescriptor(name, Eln.obj.getObj("PowerElectricPrimitives")).creative()
+            desc.setDefaultIcon("powerresistor")
+            Eln.sixNodeItem.addDescriptor(subId + (id shl 6), desc)
+        }
     }
 
 
