@@ -56,8 +56,8 @@ import mods.eln.sixnode.mqttsignal.MqttSignalControllerDescriptor
 import mods.eln.sixnode.groundcable.GroundCableDescriptor
 import mods.eln.sixnode.hub.HubDescriptor
 import mods.eln.sixnode.lampsocket.LampSocketDescriptor
-import mods.eln.sixnode.lampsocket.LampSocketStandardObjRender
-import mods.eln.sixnode.lampsocket.LampSocketSuspendedObjRender
+import mods.eln.sixnode.lampsocket.objrender.LampSocketStandardObjRender
+import mods.eln.sixnode.lampsocket.objrender.LampSocketSuspendedObjRender
 import mods.eln.sixnode.lampsupply.LampSupplyDescriptor
 import mods.eln.sixnode.logicgate.*
 import mods.eln.sixnode.modbusrtu.ModbusRtuDescriptor
@@ -871,7 +871,7 @@ object SixNodeRegistration {
                 name, LampSocketSuspendedObjRender(
                     Eln.obj.getObj(
                         "RobustLampSuspended"
-                    ), true, 3
+                    ), true, 3, true
                 ),  // LampSocketType
                 false, 3, 0f, 0f, 0f
             )
@@ -886,7 +886,7 @@ object SixNodeRegistration {
                 name, LampSocketSuspendedObjRender(
                     Eln.obj.getObj(
                         "RobustLampSuspended"
-                    ), true, 7
+                    ), true, 7, true
                 ), false, 4, 0f, 0f, 0f
             )
             desc.setPlaceDirection(Direction.YP)

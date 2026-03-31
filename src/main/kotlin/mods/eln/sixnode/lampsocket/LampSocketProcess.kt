@@ -82,25 +82,34 @@ class LampSocketProcess(var lamp: LampSocketElement) : IProcess, INBTTReady /*,L
         }
     }
 
+    /**
+     * Manually call inventory change when all items are added/removed from the GUI because it is not being called normally
+     * TODO: This is (hopefully) temporary
+     */
+    private fun updateInventory(lampStack: ItemStack?, cableStack: ItemStack?) {
+        var inventoryChanged = false
+
+        if (lamp.lampInInventory != (lampStack != null)) {
+            lamp.lampInInventory = lampStack != null
+            inventoryChanged = true
+        }
+
+        if (lamp.cableInInventory != (cableStack != null)) {
+            lamp.cableInInventory = cableStack != null
+            inventoryChanged = true
+        }
+
+        if (inventoryChanged) lamp.inventoryChange(lamp.inventory)
+    }
+
     override fun process(time: Double) {
         var newLight: Int
         val lampStack = lamp.inventory.getStackInSlot(LampSocketContainer.LAMP_SLOT_ID)
         val cableStack = lamp.inventory.getStackInSlot(LampSocketContainer.CABLE_SLOT_ID)
+        updateInventory(lampStack, cableStack)
         // LampDescriptor? is *important* here. Otherwise, NPE.
         val lampDescriptor = (lampStack?.item as? GenericItemUsingDamage<*>)?.getDescriptor(lampStack) as? LampDescriptor
-        if (cableStack == null && lampStack == null) {
-            // Manually call inventory change when all items are removed from the GUI because it is not being called normally
-            if (lamp.itemsInInventory) {
-                lamp.itemsInInventory = false
-                lamp.inventoryChange(lamp.inventory)
-            }
-        }
-        else if (cableStack == null || lampStack == null) {
-            // Manually call inventory change when an item is inserted from the GUI because it is not being called normally
-            if (!lamp.itemsInInventory) {
-                lamp.itemsInInventory = true
-                lamp.inventoryChange(lamp.inventory)
-            }
+        if (cableStack == null || lampStack == null) {
             /*
             Cable slot and lamp slot are empty. This means no light, and disconnect from lamp supply.
              */
@@ -108,11 +117,6 @@ class LampSocketProcess(var lamp: LampSocketElement) : IProcess, INBTTReady /*,L
             lamp.activeLampSupplyConnection = false
             lamp.needPublish()
         } else {
-            // Manually call inventory change when an item is inserted from the GUI because it is not being called normally
-            if (!lamp.itemsInInventory) {
-                lamp.itemsInInventory = true
-                lamp.inventoryChange(lamp.inventory)
-            }
             /*
             Cable slot and lamp slot have stuff. This means there can be light.
              */
