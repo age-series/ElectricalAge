@@ -43,7 +43,7 @@ class LampSocketGui(player: EntityPlayer, val render: LampSocketRender) :
         textboxLampSupplyChannel.setText(render.lampSupplyChannel)
 
         trackbarAlphaZ = newGuiVerticalTrackBar(151, 7+2, 18, 68-4)
-        trackbarAlphaZ.setRange(render.descriptor.alphaZMin, render.descriptor.alphaZMax)
+        trackbarAlphaZ.setRange(render.descriptor.alphaZMin.toFloat(), render.descriptor.alphaZMax.toFloat())
         trackbarAlphaZ.setStepIdMax(180)
         trackbarAlphaZ.value = render.alphaZ.toFloat()
 

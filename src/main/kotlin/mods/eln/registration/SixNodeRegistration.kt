@@ -744,207 +744,223 @@ object SixNodeRegistration {
 
     private fun registerLampSocket(id: Int) {
         var subId: Int
-        var name: String?
+        var name: String
+        var descriptor: LampSocketDescriptor
 
         run {
             subId = 0
-            name = I18N.TR_NAME(I18N.Type.NONE, "Lamp Socket A")
-            val desc = LampSocketDescriptor(
-                name, LampSocketStandardObjRender(
-                    Eln.obj.getObj(
-                        "ClassicLampSocket"
-                    ), false
-                ), false, 4, 0f, 0f, 0f
+            name = I18N.TR_NAME(I18N.Type.NONE, "Classic Lamp Socket")
+            descriptor = LampSocketDescriptor(
+                name,
+                LampSocketStandardObjRender(Eln.obj.getObj("ClassicLampSocket"), false),
+                false,
+                4,
+                false
             ).lighting()
-            Eln.sixNodeItem.addDescriptor(subId + (id shl 6), desc)
+            Eln.sixNodeItem.addDescriptor(subId + (id shl 6), descriptor)
         }
+
         run {
             subId = 1
-            name = I18N.TR_NAME(I18N.Type.NONE, "Lamp Socket B Projector")
-            val desc = LampSocketDescriptor(
-                name, LampSocketStandardObjRender(
-                    Eln.obj.getObj(
-                        "ClassicLampSocket"
-                    ), false
-                ), false, 10, -90f, 90f, 0f
+            name = I18N.TR_NAME(I18N.Type.NONE, "Spot Lamp Socket")
+            descriptor = LampSocketDescriptor(
+                name,
+                LampSocketStandardObjRender(Eln.obj.getObj("ClassicLampSocket"), false),
+                false,
+                10,
+                true
             ).lighting()
-            Eln.sixNodeItem.addDescriptor(subId + (id shl 6), desc)
+            Eln.sixNodeItem.addDescriptor(subId + (id shl 6), descriptor)
         }
 
         run {
             subId = 4
             name = I18N.TR_NAME(I18N.Type.NONE, "Robust Lamp Socket")
-            val desc = LampSocketDescriptor(
-                name, LampSocketStandardObjRender(
-                    Eln.obj.getObj(
-                        "RobustLamp"
-                    ), true
-                ), false, 3, 0f, 0f, 0f
+            descriptor = LampSocketDescriptor(
+                name,
+                LampSocketStandardObjRender(Eln.obj.getObj("RobustLamp"), true),
+                false,
+                3,
+                false
             ).lighting()
-            desc.setInitialOrientation(-90f)
-            Eln.sixNodeItem.addDescriptor(subId + (id shl 6), desc)
+            descriptor.initialRotateDeg = -90.0
+            Eln.sixNodeItem.addDescriptor(subId + (id shl 6), descriptor)
         }
+
         run {
             subId = 5
             name = I18N.TR_NAME(I18N.Type.NONE, "Flat Lamp Socket")
-            val desc = LampSocketDescriptor(
-                name, LampSocketStandardObjRender(
-                    Eln.obj.getObj(
-                        "FlatLamp"
-                    ), true
-                ), false, 3, 0f, 0f, 0f
+            descriptor = LampSocketDescriptor(
+                name,
+                LampSocketStandardObjRender(Eln.obj.getObj("FlatLamp"), true),
+                false,
+                3,
+                false
             ).lighting()
-            Eln.sixNodeItem.addDescriptor(subId + (id shl 6), desc)
+            Eln.sixNodeItem.addDescriptor(subId + (id shl 6), descriptor)
         }
+
         run {
             subId = 6
             name = I18N.TR_NAME(I18N.Type.NONE, "Simple Lamp Socket")
-            val desc = LampSocketDescriptor(
-                name, LampSocketStandardObjRender(
-                    Eln.obj.getObj(
-                        "SimpleLamp"
-                    ), true
-                ), false, 3, 0f, 0f, 0f
+            descriptor = LampSocketDescriptor(
+                name,
+                LampSocketStandardObjRender(Eln.obj.getObj("SimpleLamp"), true),
+                false,
+                3,
+                false
             ).lighting()
-            Eln.sixNodeItem.addDescriptor(subId + (id shl 6), desc)
+            Eln.sixNodeItem.addDescriptor(subId + (id shl 6), descriptor)
         }
+
         run {
             subId = 7
             name = I18N.TR_NAME(I18N.Type.NONE, "Fluorescent Lamp Socket")
-            val desc = LampSocketDescriptor(
-                name, LampSocketStandardObjRender(
-                    Eln.obj.getObj(
-                        "FluorescentLamp"
-                    ), true
-                ), false, 4, 0f, 0f, 0f
+            descriptor = LampSocketDescriptor(
+                name,
+                LampSocketStandardObjRender(Eln.obj.getObj("FluorescentLamp"), true),
+                false,
+                4,
+                false
             ).lighting()
-            Eln.sixNodeItem.addDescriptor(subId + (id shl 6), desc)
-            desc.cableLeft = false
-            desc.cableRight = false
+            descriptor.cableLeft = false
+            descriptor.cableRight = false
+            Eln.sixNodeItem.addDescriptor(subId + (id shl 6), descriptor)
         }
-        run {
-            subId = 8
-            name = I18N.TR_NAME(I18N.Type.NONE, "Street Light")
-            val desc = LampSocketDescriptor(
-                name, LampSocketStandardObjRender(
-                    Eln.obj.getObj(
-                        "StreetLight"
-                    ), true
-                ), false, 0, 0f, 0f, 0f
-            ).lighting()
-            desc.setPlaceDirection(Direction.YN)
-            val g = GhostGroup()
-            g.addElement(1, 0, 0)
-            g.addElement(2, 0, 0)
-            desc.ghostGroup = g
-            desc.renderIconInHand = true
-            Eln.sixNodeItem.addDescriptor(subId + (id shl 6), desc)
-            desc.cameraOpt = false
-            desc.extendedRenderBounds = true
-        }
+
         run {
             subId = 9
             name = I18N.TR_NAME(I18N.Type.NONE, "Sconce Lamp Socket")
-            val desc = LampSocketDescriptor(
-                name, LampSocketStandardObjRender(
-                    Eln.obj.getObj(
-                        "SconceLamp"
-                    ), true
-                ), true, 3, 0f, 0f, 0f
+            descriptor = LampSocketDescriptor(
+                name,
+                LampSocketStandardObjRender(Eln.obj.getObj("SconceLamp"), true),
+                true,
+                3,
+                false
             ).lighting()
-            desc.setPlaceDirection(
-                arrayOf(
-                    Direction.XP,
-                    Direction.XN,
-                    Direction.ZP,
-                    Direction.ZN
-                )
-            )
-            desc.setInitialOrientation(-90f)
-            desc.setUserRotationLibertyDegrees(true)
-            Eln.sixNodeItem.addDescriptor(subId + (id shl 6), desc)
+            descriptor.setPlaceDirection(arrayOf(Direction.XP, Direction.XN, Direction.ZP, Direction.ZN))
+            descriptor.initialRotateDeg = -90.0
+            descriptor.rotateOnlyBy180Deg = true
+            Eln.sixNodeItem.addDescriptor(subId + (id shl 6), descriptor)
         }
+
         run {
             subId = 12
             name = I18N.TR_NAME(I18N.Type.NONE, "Suspended Lamp Socket")
-            val desc = LampSocketDescriptor(
-                name, LampSocketSuspendedObjRender(
-                    Eln.obj.getObj(
-                        "RobustLampSuspended"
-                    ), true, 3, true
-                ),  // LampSocketType
-                false, 3, 0f, 0f, 0f
+            descriptor = LampSocketDescriptor(
+                name,
+                LampSocketSuspendedObjRender(Eln.obj.getObj("RobustLampSuspended"), true, 3, true),
+                false,
+                3,
+                false
             )
-            desc.setPlaceDirection(Direction.YP)
-            Eln.sixNodeItem.addDescriptor(subId + (id shl 6), desc)
-            desc.cameraOpt = false
+            descriptor.setPlaceDirection(Direction.YP)
+            descriptor.renderIconInHand = true
+            descriptor.cameraOpt = false
+            Eln.sixNodeItem.addDescriptor(subId + (id shl 6), descriptor)
         }
+
         run {
             subId = 13
             name = I18N.TR_NAME(I18N.Type.NONE, "Long Suspended Lamp Socket")
-            val desc = LampSocketDescriptor(
-                name, LampSocketSuspendedObjRender(
-                    Eln.obj.getObj(
-                        "RobustLampSuspended"
-                    ), true, 7, true
-                ), false, 4, 0f, 0f, 0f
+            descriptor = LampSocketDescriptor(
+                name,
+                LampSocketSuspendedObjRender(Eln.obj.getObj("RobustLampSuspended"), true, 7, true),
+                false,
+                4,
+                false
             )
-            desc.setPlaceDirection(Direction.YP)
-            Eln.sixNodeItem.addDescriptor(subId + (id shl 6), desc)
-            desc.cameraOpt = false
+            descriptor.setPlaceDirection(Direction.YP)
+            descriptor.renderIconInHand = true
+            descriptor.cameraOpt = false
+            Eln.sixNodeItem.addDescriptor(subId + (id shl 6), descriptor)
         }
-        Eln.sixNodeItem.addDescriptor(
-            15 + (id shl 6), EmergencyLampDescriptor(
-                I18N.TR_NAME(
-                I18N.Type.NONE,
-                    "12V Emergency Lamp"
-                ), Eln.instance.lowVoltageCableDescriptor, (10 * 60 * 10).toDouble(), NominalVoltage.V12, 10.0, 5.0, 6,
-                Eln.obj.getObj("EmergencyExitLighting")
-            )
-        )
-        Eln.sixNodeItem.addDescriptor(
-            16 + (id shl 6), EmergencyLampDescriptor(
-                I18N.TR_NAME(
-                    I18N.Type.NONE, "240V Emergency " +
-                            "Lamp"
-                ),
-                Eln.instance.meduimVoltageCableDescriptor,
-                (10 * 60 * 20).toDouble(),
-                NominalVoltage.V240,
-                25.0,
-                10.0,
-                8,
-                Eln.obj.getObj("EmergencyExitLighting")
-            )
-        )
 
         run {
             subId = 17
             name = I18N.TR_NAME(I18N.Type.NONE, "Suspended Lamp Socket (No Swing)")
-            val desc = LampSocketDescriptor(
-                name, LampSocketSuspendedObjRender(
-                    Eln.obj.getObj(
-                        "RobustLampSuspended"
-                    ), true, 3, false
-                ), false, 3, 0f, 0f, 0f
+            descriptor = LampSocketDescriptor(
+                name,
+                LampSocketSuspendedObjRender(Eln.obj.getObj("RobustLampSuspended"), true, 3, false),
+                false,
+                3,
+                false
             )
-            desc.setPlaceDirection(Direction.YP)
-            Eln.sixNodeItem.addDescriptor(subId + (id shl 6), desc)
-            desc.cameraOpt = false
+            descriptor.setPlaceDirection(Direction.YP)
+            descriptor.renderIconInHand = true
+            descriptor.cameraOpt = false
+            Eln.sixNodeItem.addDescriptor(subId + (id shl 6), descriptor)
         }
+
         run {
             subId = 18
             name = I18N.TR_NAME(I18N.Type.NONE, "Long Suspended Lamp Socket (No Swing)")
-            val desc = LampSocketDescriptor(
-                name, LampSocketSuspendedObjRender(
-                    Eln.obj.getObj(
-                        "RobustLampSuspended"
-                    ), true, 7, false
-                ), false, 4, 0f, 0f, 0f
+            descriptor = LampSocketDescriptor(
+                name,
+                LampSocketSuspendedObjRender(Eln.obj.getObj("RobustLampSuspended"), true, 7, false),
+                false,
+                4,
+                false
             )
-            desc.setPlaceDirection(Direction.YP)
-            Eln.sixNodeItem.addDescriptor(subId + (id shl 6), desc)
-            desc.cameraOpt = false
+            descriptor.setPlaceDirection(Direction.YP)
+            descriptor.renderIconInHand = true
+            descriptor.cameraOpt = false
+            Eln.sixNodeItem.addDescriptor(subId + (id shl 6), descriptor)
+        }
+
+        run {
+            subId = 8
+            name = I18N.TR_NAME(I18N.Type.NONE, "Street Light")
+            descriptor = LampSocketDescriptor(
+                name,
+                LampSocketStandardObjRender(Eln.obj.getObj("StreetLight"), true),
+                false,
+                0,
+                false
+            ).lighting()
+            val g = GhostGroup()
+            g.addElement(1, 0, 0)
+            g.addElement(2, 0, 0)
+            descriptor.ghostGroup = g
+            descriptor.setPlaceDirection(Direction.YN)
+            descriptor.renderIconInHand = true
+            descriptor.cameraOpt = false
+            descriptor.extendedRenderBounds = true
+            Eln.sixNodeItem.addDescriptor(subId + (id shl 6), descriptor)
+        }
+
+        run {
+            subId = 15
+            Eln.sixNodeItem.addDescriptor(
+                subId + (id shl 6),
+                EmergencyLampDescriptor(
+                    I18N.TR_NAME(I18N.Type.NONE, "120V Emergency Lamp"),
+                    Eln.instance.lowVoltageCableDescriptor,
+                    (10 * 60 * 10).toDouble(),
+                    NominalVoltage.V120,
+                    10.0,
+                    5.0,
+                    6,
+                    Eln.obj.getObj("EmergencyExitLighting")
+                )
+            )
+        }
+
+        run {
+            subId = 16
+            Eln.sixNodeItem.addDescriptor(
+                subId + (id shl 6),
+                EmergencyLampDescriptor(
+                    I18N.TR_NAME(I18N.Type.NONE, "240V Emergency Lamp"),
+                    Eln.instance.meduimVoltageCableDescriptor,
+                    (10 * 60 * 20).toDouble(),
+                    NominalVoltage.V240,
+                    25.0,
+                    10.0,
+                    8,
+                    Eln.obj.getObj("EmergencyExitLighting")
+                )
+            )
         }
     }
 

@@ -271,11 +271,11 @@ object CraftingRecipes {
 
     private fun recipeLampSocket() {
         addRecipe(
-            Eln.findItemStack("Lamp Socket A", 3), "G ", "IG", "G ", 'G', ItemStack(Blocks.glass_pane), 'I',
+            Eln.findItemStack("Classic Lamp Socket", 3), "G ", "IG", "G ", 'G', ItemStack(Blocks.glass_pane), 'I',
             findItemStack("Iron Cable")
         )
         addRecipe(
-            Eln.findItemStack("Lamp Socket B Projector", 3), " G", "GI", " G", 'G',
+            Eln.findItemStack("Spot Lamp Socket", 3), " G", "GI", " G", 'G',
             ItemStack(Blocks.glass_pane), 'I', ItemStack(Items.iron_ingot)
         )
         addRecipe(

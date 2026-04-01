@@ -107,8 +107,8 @@ class LampSocketRender(tileEntity: SixNodeEntity, side: Direction, sixNodeDescri
         // Only for colored cables
         super.draw()
 
-        GL11.glRotated(descriptor.initialRotateDeg.toDouble(), 1.0, 0.0, 0.0)
-        descriptor.render.draw(this, UtilsClient.distanceFromClientPlayer(this.tileEntity).toDouble())
+        GL11.glRotated(descriptor.initialRotateDeg, 1.0, 0.0, 0.0)
+        descriptor.renderType.draw(this, UtilsClient.distanceFromClientPlayer(this.tileEntity).toDouble())
     }
 
     override fun newGuiDraw(side: Direction, player: EntityPlayer): GuiScreen {
@@ -116,7 +116,7 @@ class LampSocketRender(tileEntity: SixNodeEntity, side: Direction, sixNodeDescri
     }
 
     override fun refresh(deltaT: Float) {
-        if (descriptor.render is LampSocketSuspendedObjRender) {
+        if (descriptor.renderType is LampSocketSuspendedObjRender) {
             entityTimeout -= deltaT
 
             if (entityTimeout < 0) {
