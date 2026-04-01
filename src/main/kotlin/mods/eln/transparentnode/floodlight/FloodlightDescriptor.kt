@@ -13,7 +13,8 @@ import net.minecraftforge.client.IItemRenderer
 import org.lwjgl.opengl.GL11
 import java.util.*
 
-class FloodlightDescriptor(val name: String, val obj: Obj3D, val motorized: Boolean) : TransparentNodeDescriptor(name, FloodlightElement::class.java, FloodlightRender::class.java) {
+class FloodlightDescriptor(val itemName: String, val obj: Obj3D, val motorized: Boolean) :
+    TransparentNodeDescriptor(itemName, FloodlightElement::class.java, FloodlightRender::class.java) {
 
     private val base: Obj3D.Obj3DPart = obj.getPart("Lamp_Base_Cube.008")
     private val swivel: Obj3D.Obj3DPart = obj.getPart("Lamp_Swivel_Cube.014")
