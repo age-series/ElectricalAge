@@ -151,4 +151,49 @@ class FalstadNetlistParserTest {
         assertTrue(FalstadPoint(4, 2) !in plan.nodes)
         assertTrue(FalstadPoint(5, 2) !in plan.nodes)
     }
+
+    @Test
+    fun rotatesLayoutClockwise() {
+        val text = """
+            v 0 0 64 0 0 5 0 0 0
+            r 64 0 128 0 0 1000
+            w 128 0 128 64 0
+            g 128 64 128 64 0
+        """.trimIndent()
+
+        val plan = FalstadLayoutPlanner.plan(FalstadNetlistParser.parse(text))
+        val rotated = plan.rotatedClockwise()
+
+        assertEquals(3, rotated.width)
+        assertEquals(5, rotated.height)
+        assertEquals(FalstadNodeKind.GROUND, rotated.nodes[FalstadPoint(0, 4)])
+        assertTrue(rotated.wires.contains(FalstadPoint(1, 4)))
+        assertEquals(FalstadAxis.VERTICAL, rotated.components[0].axis)
+        assertEquals(FalstadPoint(2, 0), rotated.components[0].start)
+        assertEquals(FalstadPoint(2, 2), rotated.components[0].end)
+    }
+
+    @Test
+    fun plansLegacySpdtSwitchAsTwoComplementarySwitches() {
+        val text = """
+            ${'$'} 1 0.000005 16.13108636308289 50 5 50
+            v 96 336 96 64 0 0 40 5 0 0 0.5
+            S 256 144 256 64 0 0 false 0 2
+            w 96 64 240 64 0
+            r 96 336 256 336 0 140
+            r 256 336 400 336 0 140
+            w 272 64 400 64 0
+            w 400 64 400 336 0
+            l 256 144 256 336 0 3 0
+        """.trimIndent()
+
+        val plan = FalstadLayoutPlanner.plan(FalstadDeviceParser.parse(text))
+        val switches = plan.components.filter { it.kind == FalstadPlacedKind.SWITCH }
+
+        assertEquals(2, switches.size)
+        assertEquals(setOf(true, false), switches.mapNotNull { it.forcedSwitchState }.toSet())
+        assertTrue(switches.any { it.start == FalstadPoint(2, 2) && it.end == FalstadPoint(2, 0) })
+        assertTrue(switches.any { it.start == FalstadPoint(6, 2) && it.end == FalstadPoint(6, 0) })
+        assertTrue(plan.components.any { it.substitutions.any { msg -> msg.contains("SPDT switch") } })
+    }
 }

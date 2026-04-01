@@ -38,7 +38,13 @@ import kotlin.math.abs
 import kotlin.math.floor
 
 object FalstadImporter {
+    private const val SEARCH_RADIUS = 20
     private data class Area(val originX: Int, val groundY: Int, val originZ: Int)
+    private data class Footprint(val width: Int, val height: Int) {
+        val area: Int get() = width * height
+    }
+    private data class PlannedPlacement(val area: Area, val plan: FalstadLayoutPlan, val rotated: Boolean)
+    private data class PlacementSearchResult(val placement: PlannedPlacement?, val bestNearbyArea: Footprint?)
     private data class VoltageSourcePlacement(val sourcePoint: FalstadPoint, val groundPoint: FalstadPoint, val voltage: Double)
     private data class SinglePortVoltageSourcePlacement(val sourcePoint: FalstadPoint, val voltage: Double)
     private data class ProbeDisplayPlacement(
@@ -89,15 +95,24 @@ object FalstadImporter {
             return
         }
 
-        val area = findPlacementArea(player.worldObj, player, plan.width, plan.height)
-        if (area == null) {
-            addChatMessage(player, "Falstad import: couldn't find a flat, clear area near the player.")
+        addChatMessage(player, "Falstad import: requires a flat, clear area of ${requiredAreaText(plan)}.")
+
+        val search = findPlacementArea(player.worldObj, player, plan)
+        val placement = search.placement
+        if (placement == null) {
+            val bestNearby = search.bestNearbyArea?.let { " Largest nearby area found was ${it.width}x${it.height} blocks." } ?: ""
+            addChatMessage(player, "Falstad import: couldn't find a flat, clear area near the player for ${requiredAreaText(plan)}.$bestNearby")
             return
         }
+        if (placement.rotated) {
+            addChatMessage(player, "Falstad import: using rotated placement (${placement.plan.width}x${placement.plan.height}).")
+        }
 
+        val placedPlan = placement.plan
+        val area = placement.area
         val messages = mutableListOf<String>()
-        val probeDisplayMax = probeDisplayMaxValue(plan)
-        val sourcedByVoltageSource = plan.components
+        val probeDisplayMax = probeDisplayMaxValue(placedPlan)
+        val sourcedByVoltageSource = placedPlan.components
             .mapNotNull {
                 when (it.kind) {
                     FalstadPlacedKind.VOLTAGE_SOURCE -> voltageSourcePlacement(it).sourcePoint
@@ -106,12 +121,12 @@ object FalstadImporter {
                 }
             }
             .toSet()
-        val groundedByVoltageSource = plan.components
+        val groundedByVoltageSource = placedPlan.components
             .filter { it.kind == FalstadPlacedKind.VOLTAGE_SOURCE }
             .map { voltageSourcePlacement(it).groundPoint }
             .toSet()
 
-        for ((point, kind) in plan.nodes) {
+        for ((point, kind) in placedPlan.nodes) {
             if (point in sourcedByVoltageSource) {
                 continue
             }
@@ -127,7 +142,7 @@ object FalstadImporter {
             }
         }
 
-        for (point in plan.wires) {
+        for (point in placedPlan.wires) {
             val result = placeSixNode(player.worldObj, player, area, point, Eln.instance.lowVoltageCableDescriptor, null)
             if (!result.placed) {
                 messages += "Failed to place wire at ${point.x},${point.y}"
@@ -135,7 +150,7 @@ object FalstadImporter {
             }
         }
 
-        for (component in plan.components) {
+        for (component in placedPlan.components) {
             if (component.kind == FalstadPlacedKind.VOLTAGE_SOURCE) {
                 val result = placeVoltageSource(player, area, component, messages)
                 if (!result.placed) {
@@ -181,13 +196,21 @@ object FalstadImporter {
             messages += component.substitutions
         }
 
-        val totalPlaced = plan.nodes.size + plan.wires.size + plan.components.size
+        val totalPlaced = placedPlan.nodes.size + placedPlan.wires.size + placedPlan.components.size
         addChatMessage(player, "Falstad import: placed $totalPlaced blocks.")
-        for (message in plan.warnings.distinct().plus(messages.distinct()).distinct().take(8)) {
+        for (message in placedPlan.warnings.distinct().plus(messages.distinct()).distinct().take(8)) {
             addChatMessage(player, "Falstad import: $message")
         }
-        if (plan.warnings.distinct().plus(messages.distinct()).distinct().size > 8) {
+        if (placedPlan.warnings.distinct().plus(messages.distinct()).distinct().size > 8) {
             addChatMessage(player, "Falstad import: additional warnings omitted.")
+        }
+    }
+
+    private fun requiredAreaText(plan: FalstadLayoutPlan): String {
+        return if (plan.width == plan.height) {
+            "${plan.width}x${plan.height} blocks"
+        } else {
+            "${plan.width}x${plan.height} blocks (${plan.height}x${plan.width} rotated also works)"
         }
     }
 
@@ -569,12 +592,14 @@ object FalstadImporter {
     }
 
     private fun configureSwitch(element: ElectricalSwitchElement, component: FalstadPlacedComponent) {
-        val rawState = component.source.params.getOrNull(1) ?: component.source.params.getOrNull(0)
-        val falstadClosed = when {
-            rawState == null -> false
-            rawState.equals("true", ignoreCase = true) -> true
-            rawState.equals("false", ignoreCase = true) -> false
-            else -> (rawState.toIntOrNull() ?: 0) != 0
+        val falstadClosed = component.forcedSwitchState ?: run {
+            val rawState = component.source.params.getOrNull(1) ?: component.source.params.getOrNull(0)
+            when {
+                rawState == null -> false
+                rawState.equals("true", ignoreCase = true) -> true
+                rawState.equals("false", ignoreCase = true) -> false
+                else -> (rawState.toIntOrNull() ?: 0) != 0
+            }
         }
         element.setSwitchState(!falstadClosed)
     }
@@ -721,24 +746,66 @@ object FalstadImporter {
         element.readConfigTool(compound, player)
     }
 
-    private fun findPlacementArea(world: World, player: EntityPlayerMP, width: Int, height: Int): Area? {
+    private fun findPlacementArea(world: World, player: EntityPlayerMP, plan: FalstadLayoutPlan): PlacementSearchResult {
         val centerX = floor(player.posX).toInt()
         val centerZ = floor(player.posZ).toInt()
         val baseY = floor(player.posY).toInt() - 1
+        val rotatedPlan = if (plan.width != plan.height) plan.rotatedClockwise() else null
+        var bestNearbyArea: Footprint? = null
 
-        for (radius in 2..20) {
+        for (radius in 2..SEARCH_RADIUS) {
             for (dz in -radius..radius) {
                 for (dx in -radius..radius) {
                     val originX = centerX + dx
                     val originZ = centerZ + dz
                     val groundY = findGroundY(world, originX, originZ, baseY) ?: continue
-                    if (isFlatClearArea(world, originX, groundY, originZ, width, height)) {
-                        return Area(originX, groundY, originZ)
+                    val measured = measureClearFootprint(
+                        world,
+                        originX,
+                        groundY,
+                        originZ,
+                        centerX + SEARCH_RADIUS,
+                        centerZ + SEARCH_RADIUS
+                    )
+                    if (measured.area > (bestNearbyArea?.area ?: 0)) {
+                        bestNearbyArea = measured
+                    }
+                    if (isFlatClearArea(world, originX, groundY, originZ, plan.width, plan.height)) {
+                        return PlacementSearchResult(PlannedPlacement(Area(originX, groundY, originZ), plan, rotated = false), bestNearbyArea)
+                    }
+                    if (rotatedPlan != null && isFlatClearArea(world, originX, groundY, originZ, rotatedPlan.width, rotatedPlan.height)) {
+                        return PlacementSearchResult(PlannedPlacement(Area(originX, groundY, originZ), rotatedPlan, rotated = true), bestNearbyArea)
                     }
                 }
             }
         }
-        return null
+        return PlacementSearchResult(null, bestNearbyArea)
+    }
+
+    private fun measureClearFootprint(world: World, originX: Int, groundY: Int, originZ: Int, maxX: Int, maxZ: Int): Footprint {
+        var width = 0
+        while (originX + width <= maxX && isClearTile(world, originX + width, groundY, originZ)) {
+            width++
+        }
+
+        var height = 0
+        heightLoop@ while (originZ + height <= maxZ) {
+            for (xOffset in 0 until width) {
+                if (!isClearTile(world, originX + xOffset, groundY, originZ + height)) {
+                    break@heightLoop
+                }
+            }
+            height++
+        }
+
+        return Footprint(width, height)
+    }
+
+    private fun isClearTile(world: World, x: Int, groundY: Int, z: Int): Boolean {
+        val block = world.getBlock(x, groundY, z)
+        return isSolidSupport(world, x, groundY, z, block) &&
+            isReplaceableAbove(world, x, groundY + 1, z) &&
+            world.getTileEntity(x, groundY + 1, z) == null
     }
 
     private fun findGroundY(world: World, x: Int, z: Int, preferredY: Int): Int? {
@@ -754,10 +821,7 @@ object FalstadImporter {
     private fun isFlatClearArea(world: World, originX: Int, groundY: Int, originZ: Int, width: Int, height: Int): Boolean {
         for (x in originX until originX + width) {
             for (z in originZ until originZ + height) {
-                val block = world.getBlock(x, groundY, z)
-                if (!isSolidSupport(world, x, groundY, z, block)) return false
-                if (!isReplaceableAbove(world, x, groundY + 1, z)) return false
-                if (world.getTileEntity(x, groundY + 1, z) != null) return false
+                if (!isClearTile(world, x, groundY, z)) return false
             }
         }
         return true

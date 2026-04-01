@@ -52,7 +52,8 @@ data class FalstadPlacedComponent(
     val end: FalstadPoint,
     val axis: FalstadAxis,
     val source: FalstadComponent,
-    val substitutions: List<String> = emptyList()
+    val substitutions: List<String> = emptyList(),
+    val forcedSwitchState: Boolean? = null
 )
 
 data class FalstadLayoutPlan(
@@ -63,6 +64,32 @@ data class FalstadLayoutPlan(
     val components: List<FalstadPlacedComponent>,
     val warnings: List<String>
 )
+
+fun FalstadLayoutPlan.rotatedClockwise(): FalstadLayoutPlan {
+    fun rotate(point: FalstadPoint): FalstadPoint = FalstadPoint(height - 1 - point.y, point.x)
+
+    return FalstadLayoutPlan(
+        width = height,
+        height = width,
+        nodes = nodes.entries.associate { rotate(it.key) to it.value },
+        wires = wires.mapTo(linkedSetOf()) { rotate(it) },
+        components = components.map { component ->
+            val rotatedStart = rotate(component.start)
+            val rotatedEnd = rotate(component.end)
+            FalstadPlacedComponent(
+                kind = component.kind,
+                cell = rotate(component.cell),
+                start = rotatedStart,
+                end = rotatedEnd,
+                axis = if (component.axis == FalstadAxis.HORIZONTAL) FalstadAxis.VERTICAL else FalstadAxis.HORIZONTAL,
+                source = component.source,
+                substitutions = component.substitutions,
+                forcedSwitchState = component.forcedSwitchState
+            )
+        },
+        warnings = warnings
+    )
+}
 
 object FalstadNetlistParser {
     fun parse(text: String): FalstadParseResult {
@@ -241,16 +268,10 @@ object FalstadLayoutPlanner {
             return FalstadLayoutPlan(0, 0, emptyMap(), emptySet(), emptyList(), warnings)
         }
 
-        val xMap = components.flatMap { listOf(it.start.x, it.end.x) }
-            .distinct()
-            .sorted()
-            .withIndex()
-            .associate { it.value to it.index * 2 }
-        val yMap = components.flatMap { listOf(it.start.y, it.end.y) }
-            .distinct()
-            .sorted()
-            .withIndex()
-            .associate { it.value to it.index * 2 }
+        val xValues = components.flatMap { listOf(it.start.x, it.end.x) }.distinct().sorted()
+        val yValues = components.flatMap { listOf(it.start.y, it.end.y) }.distinct().sorted()
+        val xMap = xValues.withIndex().associate { it.value to it.index * 2 }
+        val yMap = yValues.withIndex().associate { it.value to it.index * 2 }
 
         val nodes = linkedMapOf<FalstadPoint, FalstadNodeKind>()
         val wires = linkedSetOf<FalstadPoint>()
@@ -295,6 +316,84 @@ object FalstadLayoutPlanner {
             }
         }
 
+        fun parseFalstadSwitchState(component: FalstadComponent): Boolean {
+            val booleanParam = component.params.firstOrNull { it.equals("true", ignoreCase = true) || it.equals("false", ignoreCase = true) }
+            return when {
+                booleanParam.equals("true", ignoreCase = true) -> true
+                booleanParam.equals("false", ignoreCase = true) -> false
+                else -> {
+                    val numeric = component.params.lastOrNull { it.toIntOrNull() != null }?.toIntOrNull() ?: 0
+                    numeric != 0
+                }
+            }
+        }
+
+        fun placeSpdtSwitch(component: FalstadComponent, start: FalstadPoint, end: FalstadPoint, axis: FalstadAxis) {
+            val substitutions = listOf("SPDT switch substituted with two complementary maintained switches")
+            val selectedAlternate = parseFalstadSwitchState(component)
+
+            if (axis == FalstadAxis.VERTICAL) {
+                val endIndex = xValues.indexOf(component.end.x)
+                if (endIndex <= 0 || endIndex >= xValues.lastIndex) {
+                    warnings += "Line ${component.lineNumber}: SPDT switch requires connections on both throws"
+                    return
+                }
+                val throwXs = listOf(xMap.getValue(xValues[endIndex - 1]), xMap.getValue(xValues[endIndex + 1]))
+                val throwClosed = if (selectedAlternate) listOf(true, false) else listOf(false, true)
+
+                for ((index, throwX) in throwXs.withIndex()) {
+                    val branchStart = FalstadPoint(throwX, start.y)
+                    val throwPoint = FalstadPoint(throwX, end.y)
+                    val cell = FalstadPoint(throwX, (start.y + end.y) / 2)
+                    markNode(branchStart)
+                    markNode(throwPoint)
+                    fillWirePath(start, branchStart)
+                    fillComponentLeadPath(branchStart, throwPoint, cell)
+                    placed += FalstadPlacedComponent(
+                        kind = FalstadPlacedKind.SWITCH,
+                        cell = cell,
+                        start = branchStart,
+                        end = throwPoint,
+                        axis = FalstadAxis.VERTICAL,
+                        source = component,
+                        substitutions = if (index == 0) substitutions else emptyList(),
+                        forcedSwitchState = throwClosed[index]
+                    )
+                }
+                markNode(start)
+                return
+            }
+
+            val endIndex = yValues.indexOf(component.end.y)
+            if (endIndex <= 0 || endIndex >= yValues.lastIndex) {
+                warnings += "Line ${component.lineNumber}: SPDT switch requires connections on both throws"
+                return
+            }
+            val throwYs = listOf(yMap.getValue(yValues[endIndex - 1]), yMap.getValue(yValues[endIndex + 1]))
+            val throwClosed = if (selectedAlternate) listOf(true, false) else listOf(false, true)
+
+            for ((index, throwY) in throwYs.withIndex()) {
+                val branchStart = FalstadPoint(start.x, throwY)
+                val throwPoint = FalstadPoint(end.x, throwY)
+                val cell = FalstadPoint((start.x + end.x) / 2, throwY)
+                markNode(branchStart)
+                markNode(throwPoint)
+                fillWirePath(start, branchStart)
+                fillComponentLeadPath(branchStart, throwPoint, cell)
+                placed += FalstadPlacedComponent(
+                    kind = FalstadPlacedKind.SWITCH,
+                    cell = cell,
+                    start = branchStart,
+                    end = throwPoint,
+                    axis = FalstadAxis.HORIZONTAL,
+                    source = component,
+                    substitutions = if (index == 0) substitutions else emptyList(),
+                    forcedSwitchState = throwClosed[index]
+                )
+            }
+            markNode(start)
+        }
+
         for (component in components) {
             val code = component.code.lowercase()
             val start = mapped(component.start)
@@ -309,6 +408,11 @@ object FalstadLayoutPlanner {
             val vertical = start.x == end.x
             if (!horizontal && !vertical) {
                 warnings += "Line ${component.lineNumber}: diagonal component '${component.code}' is not supported"
+                continue
+            }
+
+            if (component.code == "S") {
+                placeSpdtSwitch(component, start, end, if (horizontal) FalstadAxis.HORIZONTAL else FalstadAxis.VERTICAL)
                 continue
             }
 
