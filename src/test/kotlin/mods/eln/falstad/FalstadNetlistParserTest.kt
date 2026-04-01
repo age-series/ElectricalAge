@@ -5,6 +5,125 @@ import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
 class FalstadNetlistParserTest {
+    private data class TerminalPoint(
+        val label: String,
+        val source: FalstadPoint,
+        val placed: FalstadPoint
+    )
+
+    private class PointUnionFind {
+        private val parent = linkedMapOf<FalstadPoint, FalstadPoint>()
+
+        fun add(point: FalstadPoint) {
+            parent.putIfAbsent(point, point)
+        }
+
+        fun union(a: FalstadPoint, b: FalstadPoint) {
+            val rootA = find(a)
+            val rootB = find(b)
+            if (rootA != rootB) parent[rootA] = rootB
+        }
+
+        fun connected(a: FalstadPoint, b: FalstadPoint): Boolean = find(a) == find(b)
+
+        private fun find(point: FalstadPoint): FalstadPoint {
+            val currentParent = parent.getOrPut(point) { point }
+            if (currentParent == point) return point
+            val root = find(currentParent)
+            parent[point] = root
+            return root
+        }
+    }
+
+    private fun FalstadParseResult.findNearestConnectionOnAxis(excluding: FalstadComponent, x: Int, y: Int, above: Boolean): FalstadPoint? {
+        val candidates = components
+            .asSequence()
+            .filter { it !== excluding }
+            .flatMap { sequenceOf(it.start, it.end) }
+            .filter { it.x == x && if (above) it.y < y else it.y > y }
+            .distinct()
+        return if (above) candidates.maxByOrNull { it.y } else candidates.minByOrNull { it.y }
+    }
+
+    private fun xorTerminalPoints(parseResult: FalstadParseResult, plan: FalstadLayoutPlan): List<TerminalPoint> {
+        val placedBySource = plan.components.groupBy { it.source }
+        return buildList {
+            for (component in parseResult.components) {
+                when (component.code) {
+                    "151" -> {
+                        val placed = placedBySource.getValue(component).single()
+                        val upper = parseResult.findNearestConnectionOnAxis(component, component.start.x, component.start.y, above = true)
+                        val lower = parseResult.findNearestConnectionOnAxis(component, component.start.x, component.start.y, above = false)
+                        if (upper != null) add(TerminalPoint("151-upper-${component.lineNumber}", upper, placed.start))
+                        if (lower != null) add(TerminalPoint("151-lower-${component.lineNumber}", lower, placed.end))
+                        add(TerminalPoint("151-output-${component.lineNumber}", component.end, placed.extraPoints.first()))
+                    }
+                    "L" -> {
+                        val placed = placedBySource.getValue(component).single()
+                        add(TerminalPoint("L-${component.lineNumber}", component.start, placed.start))
+                    }
+                    "M" -> {
+                        val placed = placedBySource.getValue(component).single()
+                        add(TerminalPoint("M-${component.lineNumber}", component.start, placed.start))
+                    }
+                }
+            }
+        }
+    }
+
+    private fun xorFalstadNetGroups(parseResult: FalstadParseResult, terminals: List<TerminalPoint>): PointUnionFind {
+        val nets = PointUnionFind()
+        terminals.forEach { nets.add(it.source) }
+        for (component in parseResult.components) {
+            when (component.code) {
+                "w" -> nets.union(component.start, component.end)
+                "g" -> nets.add(component.start)
+                "L", "M", "151" -> {
+                    nets.add(component.start)
+                    nets.add(component.end)
+                }
+            }
+        }
+        return nets
+    }
+
+    private fun generatedConnectivity(plan: FalstadLayoutPlan): Set<Pair<FalstadPoint, FalstadPoint>> {
+        val occupied = (plan.nodes.keys + plan.wires).toSet()
+        val visited = mutableSetOf<FalstadPoint>()
+        val connections = mutableSetOf<Pair<FalstadPoint, FalstadPoint>>()
+
+        for (start in occupied) {
+            if (!visited.add(start)) continue
+            val queue = ArrayDeque<FalstadPoint>()
+            val component = linkedSetOf<FalstadPoint>()
+            queue += start
+            component += start
+
+            while (queue.isNotEmpty()) {
+                val point = queue.removeFirst()
+                val neighbors = listOf(
+                    FalstadPoint(point.x - 1, point.y),
+                    FalstadPoint(point.x + 1, point.y),
+                    FalstadPoint(point.x, point.y - 1),
+                    FalstadPoint(point.x, point.y + 1)
+                )
+                for (neighbor in neighbors) {
+                    if (neighbor !in occupied || !visited.add(neighbor)) continue
+                    queue += neighbor
+                    component += neighbor
+                }
+            }
+
+            for (a in component) {
+                for (b in component) {
+                    connections += a to b
+                }
+            }
+        }
+
+        return connections
+    }
+
     @Test
     fun parsesLegacyBasicNetlist() {
         val text = """
@@ -174,7 +293,7 @@ class FalstadNetlistParserTest {
     }
 
     @Test
-    fun plansLegacySpdtSwitchAsTwoComplementarySwitches() {
+    fun plansFalstadSpdtSwitchAsTwoComplementarySwitches() {
         val text = """
             ${'$'} 1 0.000005 16.13108636308289 50 5 50
             v 96 336 96 64 0 0 40 5 0 0 0.5
@@ -195,5 +314,110 @@ class FalstadNetlistParserTest {
         assertTrue(switches.any { it.start == FalstadPoint(2, 2) && it.end == FalstadPoint(2, 0) })
         assertTrue(switches.any { it.start == FalstadPoint(6, 2) && it.end == FalstadPoint(6, 0) })
         assertTrue(plan.components.any { it.substitutions.any { msg -> msg.contains("SPDT switch") } })
+    }
+
+    @Test
+    fun plansCurrentSourceWithoutStretchedLeadWires() {
+        val text = """
+            i 0 0 128 0 0 0.5
+        """.trimIndent()
+
+        val plan = FalstadLayoutPlanner.plan(FalstadNetlistParser.parse(text))
+
+        assertEquals(1, plan.components.size)
+        assertEquals(FalstadPlacedKind.CURRENT_SOURCE, plan.components.single().kind)
+        assertTrue(plan.wires.isEmpty())
+        assertEquals(FalstadNodeKind.NORMAL, plan.nodes[FalstadPoint(0, 0)])
+        assertEquals(FalstadNodeKind.NORMAL, plan.nodes[FalstadPoint(2, 0)])
+    }
+
+    @Test
+    fun defaultsFalstadCurrentSourceToTenMilliampsWhenValueMissing() {
+        val text = """
+            i 112 352 112 32 0
+        """.trimIndent()
+
+        val plan = FalstadLayoutPlanner.plan(FalstadNetlistParser.parse(text))
+        val placement = FalstadImporter.run {
+            val component = plan.components.single { it.kind == FalstadPlacedKind.CURRENT_SOURCE }
+            val method = javaClass.getDeclaredMethod("currentSourcePlacement", FalstadPlacedComponent::class.java)
+            method.isAccessible = true
+            method.invoke(this, component)
+        }
+
+        val currentField = placement.javaClass.getDeclaredField("current")
+        currentField.isAccessible = true
+        assertEquals(0.01, currentField.getDouble(placement))
+    }
+
+    @Test
+    fun plansFalstadLogicSymbolsFromXorNetlist() {
+        val text = """
+            ${'$'} 1 5.0E-6 1.5 50 5.0
+            151 96 240 208 240 0 2 0
+            151 208 192 320 192 0 2 0
+            151 208 288 320 288 0 2 0
+            w 208 240 208 272 0
+            w 208 240 208 208 0
+            151 320 240 432 240 0 2 0
+            w 320 192 320 224 0
+            w 320 256 320 288 0
+            w 96 176 96 224 0
+            w 96 176 208 176 0
+            w 96 256 96 304 0
+            w 96 304 208 304 0
+            M 432 240 480 240 0
+            L 96 176 48 176 0 true false
+            L 96 304 48 304 0 true false
+        """.trimIndent()
+
+        val plan = FalstadLayoutPlanner.plan(FalstadDeviceParser.parse(text))
+
+        assertEquals(4, plan.components.count { it.kind == FalstadPlacedKind.FALSTAD_NAND_GATE })
+        assertEquals(2, plan.components.count { it.kind == FalstadPlacedKind.SIGNAL_INPUT })
+        assertEquals(1, plan.components.count { it.kind == FalstadPlacedKind.SIGNAL_OUTPUT })
+        assertTrue(plan.warnings.isEmpty())
+    }
+
+    @Test
+    fun generatedPlacementPlanDoesNotShortFalstadXorNets() {
+        val text = """
+            ${'$'} 1 5.0E-6 1.5 50 5.0
+            151 96 240 208 240 0 2 0
+            151 208 192 320 192 0 2 0
+            151 208 288 320 288 0 2 0
+            w 208 240 208 272 0
+            w 208 240 208 208 0
+            151 320 240 432 240 0 2 0
+            w 320 192 320 224 0
+            w 320 256 320 288 0
+            w 96 176 96 224 0
+            w 96 176 208 176 0
+            w 96 256 96 304 0
+            w 96 304 208 304 0
+            M 432 240 480 240 0
+            L 96 176 48 176 0 true false
+            L 96 304 48 304 0 true false
+        """.trimIndent()
+
+        val parseResult = FalstadDeviceParser.parse(text)
+        val plan = FalstadLayoutPlanner.plan(parseResult)
+        val terminals = xorTerminalPoints(parseResult, plan)
+        val sourceNets = xorFalstadNetGroups(parseResult, terminals)
+        val placedConnectivity = generatedConnectivity(plan)
+
+        for (i in terminals.indices) {
+            for (j in i + 1 until terminals.size) {
+                val left = terminals[i]
+                val right = terminals[j]
+                val sourceConnected = sourceNets.connected(left.source, right.source)
+                val placedConnected = (left.placed to right.placed) in placedConnectivity
+                assertEquals(
+                    sourceConnected,
+                    placedConnected,
+                    "${left.label} (${left.source} -> ${left.placed}) vs ${right.label} (${right.source} -> ${right.placed})"
+                )
+            }
+        }
     }
 }

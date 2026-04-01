@@ -19,10 +19,14 @@ import mods.eln.sixnode.PowerCapacitorSixContainer
 import mods.eln.sixnode.PowerCapacitorSixElement
 import mods.eln.sixnode.PowerInductorSixContainer
 import mods.eln.sixnode.PowerInductorSixElement
+import mods.eln.sixnode.ElectricalVuMeterDescriptor
+import mods.eln.sixnode.electricalgatesource.ElectricalGateSourceElement
+import mods.eln.sixnode.electricalgatesource.ElectricalGateSourceDescriptor
 import mods.eln.sixnode.electricaldigitaldisplay.ElectricalDigitalDisplayElement
 import mods.eln.sixnode.electricalsensor.ElectricalSensorElement
 import mods.eln.sixnode.electricalsource.ElectricalSourceElement
 import mods.eln.sixnode.electricalswitch.ElectricalSwitchElement
+import mods.eln.sixnode.logicgate.LogicGateDescriptor
 import mods.eln.sixnode.resistor.ResistorDescriptor
 import mods.eln.sixnode.resistor.ResistorElement
 import net.minecraft.block.Block
@@ -38,6 +42,7 @@ import kotlin.math.abs
 import kotlin.math.floor
 
 object FalstadImporter {
+    private const val DEFAULT_FALSTAD_CURRENT_SOURCE_AMPS = 0.01
     private const val SEARCH_RADIUS = 20
     private data class Area(val originX: Int, val groundY: Int, val originZ: Int)
     private data class Footprint(val width: Int, val height: Int) {
@@ -46,6 +51,7 @@ object FalstadImporter {
     private data class PlannedPlacement(val area: Area, val plan: FalstadLayoutPlan, val rotated: Boolean)
     private data class PlacementSearchResult(val placement: PlannedPlacement?, val bestNearbyArea: Footprint?)
     private data class VoltageSourcePlacement(val sourcePoint: FalstadPoint, val groundPoint: FalstadPoint, val voltage: Double)
+    private data class CurrentSourcePlacement(val sourcePoint: FalstadPoint, val groundPoint: FalstadPoint, val current: Double)
     private data class SinglePortVoltageSourcePlacement(val sourcePoint: FalstadPoint, val voltage: Double)
     private data class ProbeDisplayPlacement(
         val probePoint: FalstadPoint,
@@ -95,7 +101,7 @@ object FalstadImporter {
             return
         }
 
-        addChatMessage(player, "Falstad import: requires a flat, clear area of ${requiredAreaText(plan)}.")
+        addChatMessage(player, "Falstad import: requires a flat, clear area of ${requiredAreaText(plan)}. Planned orientation: original.")
 
         val search = findPlacementArea(player.worldObj, player, plan)
         val placement = search.placement
@@ -104,26 +110,37 @@ object FalstadImporter {
             addChatMessage(player, "Falstad import: couldn't find a flat, clear area near the player for ${requiredAreaText(plan)}.$bestNearby")
             return
         }
-        if (placement.rotated) {
-            addChatMessage(player, "Falstad import: using rotated placement (${placement.plan.width}x${placement.plan.height}).")
-        }
+        val orientation = if (placement.rotated) "rotated clockwise" else "original"
+        addChatMessage(player, "Falstad import: using $orientation placement (${placement.plan.width}x${placement.plan.height}).")
 
         val placedPlan = placement.plan
         val area = placement.area
         val messages = mutableListOf<String>()
+        val useSignalCables = placedPlan.components.any {
+            it.kind == FalstadPlacedKind.FALSTAD_NAND_GATE ||
+                it.kind == FalstadPlacedKind.SIGNAL_INPUT ||
+                it.kind == FalstadPlacedKind.SIGNAL_OUTPUT
+        }
+        val normalCableDescriptor = if (useSignalCables) Eln.instance.signalCableDescriptor else Eln.instance.lowVoltageCableDescriptor
         val probeDisplayMax = probeDisplayMaxValue(placedPlan)
         val sourcedByVoltageSource = placedPlan.components
             .mapNotNull {
                 when (it.kind) {
                     FalstadPlacedKind.VOLTAGE_SOURCE -> voltageSourcePlacement(it).sourcePoint
+                    FalstadPlacedKind.CURRENT_SOURCE -> currentSourcePlacement(it).sourcePoint
                     FalstadPlacedKind.SINGLE_PORT_VOLTAGE_SOURCE -> singlePortVoltageSourcePlacement(it).sourcePoint
                     else -> null
                 }
             }
             .toSet()
         val groundedByVoltageSource = placedPlan.components
-            .filter { it.kind == FalstadPlacedKind.VOLTAGE_SOURCE }
-            .map { voltageSourcePlacement(it).groundPoint }
+            .mapNotNull {
+                when (it.kind) {
+                    FalstadPlacedKind.VOLTAGE_SOURCE -> voltageSourcePlacement(it).groundPoint
+                    FalstadPlacedKind.CURRENT_SOURCE -> currentSourcePlacement(it).groundPoint
+                    else -> null
+                }
+            }
             .toSet()
 
         for ((point, kind) in placedPlan.nodes) {
@@ -132,7 +149,7 @@ object FalstadImporter {
             }
             val descriptor = when (kind) {
                 FalstadNodeKind.GROUND -> getBlockDescriptor("Ground Cable")
-                FalstadNodeKind.NORMAL -> if (point in groundedByVoltageSource) getBlockDescriptor("Ground Cable") else Eln.instance.lowVoltageCableDescriptor
+                FalstadNodeKind.NORMAL -> if (point in groundedByVoltageSource) getBlockDescriptor("Ground Cable") else normalCableDescriptor
             } ?: continue
 
             val result = placeSixNode(player.worldObj, player, area, point, descriptor, null)
@@ -143,7 +160,7 @@ object FalstadImporter {
         }
 
         for (point in placedPlan.wires) {
-            val result = placeSixNode(player.worldObj, player, area, point, Eln.instance.lowVoltageCableDescriptor, null)
+            val result = placeSixNode(player.worldObj, player, area, point, normalCableDescriptor, null)
             if (!result.placed) {
                 messages += "Failed to place wire at ${point.x},${point.y}"
                 result.failureSummary?.let { messages += "Debug wire at ${point.x},${point.y}: $it" }
@@ -166,7 +183,40 @@ object FalstadImporter {
                     messages += "Failed to place Falstad voltage source at ${component.cell.x},${component.cell.y}"
                     result.failureSummary?.let { messages += "Debug Falstad voltage source at ${component.cell.x},${component.cell.y}: $it" }
                 }
-                messages += "Legacy adjustable voltage source substituted with Electrical Source"
+                messages += "Adjustable voltage source substituted with Electrical Source"
+                continue
+            }
+            if (component.kind == FalstadPlacedKind.CURRENT_SOURCE) {
+                val result = placeCurrentSource(player, area, component, messages)
+                if (!result.placed) {
+                    messages += "Failed to place Falstad current source at ${component.cell.x},${component.cell.y}"
+                    result.failureSummary?.let { messages += "Debug Falstad current source at ${component.cell.x},${component.cell.y}: $it" }
+                }
+                messages += "Current source substituted with Current Source + Ground"
+                continue
+            }
+            if (component.kind == FalstadPlacedKind.SIGNAL_INPUT) {
+                val result = placeSignalInput(player, area, component, placement.rotated, messages)
+                if (!result.placed) {
+                    messages += "Failed to place Falstad logic input at ${component.cell.x},${component.cell.y}"
+                    result.failureSummary?.let { messages += "Debug Falstad logic input at ${component.cell.x},${component.cell.y}: $it" }
+                }
+                continue
+            }
+            if (component.kind == FalstadPlacedKind.SIGNAL_OUTPUT) {
+                val result = placeSignalOutput(player, area, component, placement.rotated, messages)
+                if (!result.placed) {
+                    messages += "Failed to place Falstad logic output at ${component.cell.x},${component.cell.y}"
+                    result.failureSummary?.let { messages += "Debug Falstad logic output at ${component.cell.x},${component.cell.y}: $it" }
+                }
+                continue
+            }
+            if (component.kind == FalstadPlacedKind.FALSTAD_NAND_GATE) {
+                val result = placeFalstadNandGate(player, area, component, placement.rotated, messages)
+                if (!result.placed) {
+                    messages += "Failed to place Falstad gate at ${component.cell.x},${component.cell.y}"
+                    result.failureSummary?.let { messages += "Debug Falstad gate at ${component.cell.x},${component.cell.y}: $it" }
+                }
                 continue
             }
             if (component.kind == FalstadPlacedKind.PROBE_DISPLAY) {
@@ -183,7 +233,7 @@ object FalstadImporter {
                 messages += "Missing ELN descriptor for ${component.kind}"
                 continue
             }
-            val result = placeSixNode(player.worldObj, player, area, component.cell, descriptor, frontFor(component))
+            val result = placeSixNode(player.worldObj, player, area, component.cell, descriptor, frontFor(component, placement.rotated))
             if (!result.placed) {
                 messages += "Failed to place ${descriptor.name} at ${component.cell.x},${component.cell.y}"
                 result.failureSummary?.let { messages += "Debug ${descriptor.name} at ${component.cell.x},${component.cell.y}: $it" }
@@ -232,6 +282,15 @@ object FalstadImporter {
         val offset = component.source.params.getOrNull(4)?.toDoubleOrNull() ?: 0.0
         val rawVoltage = if (waveform == 0) maxVoltage + offset else maxVoltage
         return SinglePortVoltageSourcePlacement(component.start, rawVoltage)
+    }
+
+    private fun currentSourcePlacement(component: FalstadPlacedComponent): CurrentSourcePlacement {
+        val rawCurrent = component.source.params.getOrNull(1)?.toDoubleOrNull() ?: DEFAULT_FALSTAD_CURRENT_SOURCE_AMPS
+        return if (rawCurrent >= 0.0) {
+            CurrentSourcePlacement(component.end, component.start, rawCurrent)
+        } else {
+            CurrentSourcePlacement(component.start, component.end, -rawCurrent)
+        }
     }
 
     private fun probeDisplayPlacement(component: FalstadPlacedComponent): ProbeDisplayPlacement {
@@ -340,6 +399,29 @@ object FalstadImporter {
         return PlacementResult(true)
     }
 
+    private fun placeCurrentSource(
+        player: EntityPlayerMP,
+        area: Area,
+        component: FalstadPlacedComponent,
+        messages: MutableList<String>
+    ): PlacementResult {
+        val descriptor = getBlockDescriptor("Current Source") ?: return PlacementResult(false, "missing descriptor: Current Source")
+        val placement = currentSourcePlacement(component)
+        val placed = placeSixNode(player.worldObj, player, area, placement.sourcePoint, descriptor, frontFor(component))
+        if (!placed.placed) return placed
+
+        val element = getTopElement(player.worldObj, area, placement.sourcePoint) as? CurrentSourceElement
+        if (element == null) {
+            messages += "Current source placed, but couldn't configure its current."
+            return PlacementResult(true)
+        }
+
+        val compound = NBTTagCompound()
+        compound.setDouble("current", placement.current)
+        element.readConfigTool(compound, player)
+        return PlacementResult(true)
+    }
+
     private fun placeProbeDisplay(
         player: EntityPlayerMP,
         area: Area,
@@ -411,10 +493,20 @@ object FalstadImporter {
         FalstadPlacedKind.CURRENT_SOURCE -> getBlockDescriptor("Current Source")
         FalstadPlacedKind.SWITCH -> getBlockDescriptor("Low Voltage Switch")
         FalstadPlacedKind.PROBE_DISPLAY -> null
+        FalstadPlacedKind.FALSTAD_NAND_GATE -> getBlockDescriptor("NAND Chip", LogicGateDescriptor::class.java)
+        FalstadPlacedKind.SIGNAL_INPUT -> getBlockDescriptor("Signal Switch", ElectricalGateSourceDescriptor::class.java)
+        FalstadPlacedKind.SIGNAL_OUTPUT -> getBlockDescriptor("LED vuMeter", ElectricalVuMeterDescriptor::class.java)
     }
 
     private fun getBlockDescriptor(name: String): GenericItemBlockUsingDamageDescriptor? {
         return GenericItemBlockUsingDamageDescriptor.getByName(name)
+    }
+
+    private fun getBlockDescriptor(
+        name: String,
+        descriptorClass: Class<out GenericItemBlockUsingDamageDescriptor>
+    ): GenericItemBlockUsingDamageDescriptor? {
+        return Eln.sixNodeItem.descriptors.firstOrNull { it != null && it.name == name && descriptorClass.isInstance(it) }
     }
 
     private fun placeSixNode(
@@ -531,7 +623,17 @@ object FalstadImporter {
         return node.getElement(Direction.YN) ?: node.getElement(Direction.YP)
     }
 
-    private fun frontFor(component: FalstadPlacedComponent): LRDU {
+    private fun frontToward(cell: FalstadPoint, target: FalstadPoint): LRDU {
+        return when {
+            target.x > cell.x -> LRDU.Right
+            target.x < cell.x -> LRDU.Left
+            target.y > cell.y -> LRDU.Down
+            target.y < cell.y -> LRDU.Up
+            else -> LRDU.Up
+        }
+    }
+
+    private fun frontFor(component: FalstadPlacedComponent, rotatedPlacement: Boolean = false): LRDU {
         return when (component.kind) {
             FalstadPlacedKind.INDUCTOR -> {
                 if (component.axis == FalstadAxis.HORIZONTAL) LRDU.Left else LRDU.Up
@@ -546,10 +648,67 @@ object FalstadImporter {
                     if (component.start.y <= component.end.y) LRDU.Left else LRDU.Right
                 }
             }
+            FalstadPlacedKind.FALSTAD_NAND_GATE, FalstadPlacedKind.SIGNAL_INPUT, FalstadPlacedKind.SIGNAL_OUTPUT -> {
+                val baseFront = frontToward(component.cell, component.extraPoints.firstOrNull() ?: component.start)
+                when (component.kind) {
+                    FalstadPlacedKind.FALSTAD_NAND_GATE,
+                    FalstadPlacedKind.SIGNAL_INPUT,
+                    FalstadPlacedKind.SIGNAL_OUTPUT -> if (rotatedPlacement) baseFront.right() else baseFront.left()
+                    else -> baseFront
+                }
+            }
             else -> {
                 if (component.axis == FalstadAxis.HORIZONTAL) LRDU.Left else LRDU.Up
             }
         }
+    }
+
+    private fun placeSignalInput(
+        player: EntityPlayerMP,
+        area: Area,
+        component: FalstadPlacedComponent,
+        rotatedPlacement: Boolean,
+        messages: MutableList<String>
+    ): PlacementResult {
+        val descriptor = descriptorFor(component.kind) ?: return PlacementResult(false, "missing descriptor: Signal Switch")
+        val result = placeSixNode(player.worldObj, player, area, component.cell, descriptor, frontFor(component, rotatedPlacement))
+        if (!result.placed) return result
+
+        val element = getTopElement(player.worldObj, area, component.cell) as? ElectricalGateSourceElement
+        if (element == null) {
+            messages += "Signal switch placed, but couldn't configure its state."
+            return PlacementResult(true)
+        }
+        element.outputGateProcess.state(component.forcedSwitchState ?: false)
+        element.needPublish()
+        messages += component.substitutions
+        return PlacementResult(true)
+    }
+
+    private fun placeSignalOutput(
+        player: EntityPlayerMP,
+        area: Area,
+        component: FalstadPlacedComponent,
+        rotatedPlacement: Boolean,
+        messages: MutableList<String>
+    ): PlacementResult {
+        val descriptor = descriptorFor(component.kind) ?: return PlacementResult(false, "missing descriptor: LED vuMeter")
+        val result = placeSixNode(player.worldObj, player, area, component.cell, descriptor, frontFor(component, rotatedPlacement))
+        if (result.placed) messages += component.substitutions
+        return result
+    }
+
+    private fun placeFalstadNandGate(
+        player: EntityPlayerMP,
+        area: Area,
+        component: FalstadPlacedComponent,
+        rotatedPlacement: Boolean,
+        messages: MutableList<String>
+    ): PlacementResult {
+        val descriptor = descriptorFor(component.kind) ?: return PlacementResult(false, "missing descriptor: NAND Chip")
+        val result = placeSixNode(player.worldObj, player, area, component.cell, descriptor, frontFor(component, rotatedPlacement))
+        if (result.placed) messages += component.substitutions
+        return result
     }
 
     private fun configureElement(
