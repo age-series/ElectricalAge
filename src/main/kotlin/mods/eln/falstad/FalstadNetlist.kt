@@ -37,7 +37,10 @@ enum class FalstadPlacedKind {
     SINGLE_PORT_VOLTAGE_SOURCE,
     CURRENT_SOURCE,
     SWITCH,
-    PROBE_DISPLAY
+    PROBE_DISPLAY,
+    FALSTAD_NAND_GATE,
+    SIGNAL_INPUT,
+    SIGNAL_OUTPUT
 }
 
 enum class FalstadAxis {
@@ -53,7 +56,8 @@ data class FalstadPlacedComponent(
     val axis: FalstadAxis,
     val source: FalstadComponent,
     val substitutions: List<String> = emptyList(),
-    val forcedSwitchState: Boolean? = null
+    val forcedSwitchState: Boolean? = null,
+    val extraPoints: List<FalstadPoint> = emptyList()
 )
 
 data class FalstadLayoutPlan(
@@ -84,7 +88,8 @@ fun FalstadLayoutPlan.rotatedClockwise(): FalstadLayoutPlan {
                 axis = if (component.axis == FalstadAxis.HORIZONTAL) FalstadAxis.VERTICAL else FalstadAxis.HORIZONTAL,
                 source = component.source,
                 substitutions = component.substitutions,
-                forcedSwitchState = component.forcedSwitchState
+                forcedSwitchState = component.forcedSwitchState,
+                extraPoints = component.extraPoints.map { rotate(it) }
             )
         },
         warnings = warnings
@@ -131,7 +136,7 @@ object FalstadNetlistParser {
             }
 
             val rawParams = parts.drop(5)
-            val normalized = normalizeLegacyComponent(code, rawParams)
+            val normalized = normalizeFalstadComponent(code, rawParams)
             normalized.warning?.let { warnings += "Line $lineNumber: $it" }
 
             components += FalstadComponent(
@@ -147,25 +152,25 @@ object FalstadNetlistParser {
         return FalstadParseResult(components, warnings)
     }
 
-    private data class NormalizedLegacyComponent(
+    private data class NormalizedFalstadComponent(
         val code: String,
         val params: List<String>,
         val warning: String? = null
     )
 
-    private fun normalizeLegacyComponent(code: String, params: List<String>): NormalizedLegacyComponent {
+    private fun normalizeFalstadComponent(code: String, params: List<String>): NormalizedFalstadComponent {
         if (code != "172") {
-            return NormalizedLegacyComponent(code, params)
+            return NormalizedFalstadComponent(code, params)
         }
 
         val initialValue = params.getOrNull(2)?.toDoubleOrNull()
             ?: params.getOrNull(3)?.toDoubleOrNull()
             ?: 0.0
 
-        return NormalizedLegacyComponent(
+        return NormalizedFalstadComponent(
             code = "vs",
             params = listOf("0", "0", "0", initialValue.toString(), "0"),
-            warning = "legacy adjustable voltage source imported as a fixed DC source"
+            warning = "adjustable voltage source imported as a fixed DC source"
         )
     }
 }
@@ -272,6 +277,8 @@ object FalstadLayoutPlanner {
         val yValues = components.flatMap { listOf(it.start.y, it.end.y) }.distinct().sorted()
         val xMap = xValues.withIndex().associate { it.value to it.index * 2 }
         val yMap = yValues.withIndex().associate { it.value to it.index * 2 }
+        val mappedXPositions = xMap.values.toSet()
+        val mappedYPositions = yMap.values.toSet()
 
         val nodes = linkedMapOf<FalstadPoint, FalstadNodeKind>()
         val wires = linkedSetOf<FalstadPoint>()
@@ -292,12 +299,12 @@ object FalstadLayoutPlanner {
             if (start.x == end.x) {
                 for (y in min(start.y, end.y)..max(start.y, end.y)) {
                     val point = FalstadPoint(start.x, y)
-                    if (y % 2 == 0) markNode(point) else wires += point
+                    if (y in mappedYPositions) markNode(point) else wires += point
                 }
             } else {
                 for (x in min(start.x, end.x)..max(start.x, end.x)) {
                     val point = FalstadPoint(x, start.y)
-                    if (x % 2 == 0) markNode(point) else wires += point
+                    if (x in mappedXPositions) markNode(point) else wires += point
                 }
             }
         }
@@ -314,6 +321,11 @@ object FalstadLayoutPlanner {
                     if (point != cell) wires += point
                 }
             }
+        }
+
+        fun fillOrthogonalPath(start: FalstadPoint, bend: FalstadPoint, end: FalstadPoint) {
+            if (start != bend) fillWirePath(start, bend)
+            if (bend != end) fillWirePath(bend, end)
         }
 
         fun parseFalstadSwitchState(component: FalstadComponent): Boolean {
@@ -394,8 +406,102 @@ object FalstadLayoutPlanner {
             markNode(start)
         }
 
+        fun parseFalstadLogicState(component: FalstadComponent): Boolean {
+            val booleanParam = component.params.firstOrNull { it.equals("true", ignoreCase = true) || it.equals("false", ignoreCase = true) }
+            return booleanParam.equals("true", ignoreCase = true)
+        }
+
+        fun nearestConnectionOnAxis(excluding: FalstadComponent, x: Int, y: Int, above: Boolean): FalstadPoint? {
+            val candidates = components
+                .asSequence()
+                .filter { it !== excluding }
+                .flatMap { sequenceOf(mapped(it.start), mapped(it.end)) }
+                .filter { it.x == x && if (above) it.y < y else it.y > y }
+                .distinct()
+            return if (above) candidates.maxByOrNull { it.y } else candidates.minByOrNull { it.y }
+        }
+
+        fun placeFalstadNandGate(component: FalstadComponent, start: FalstadPoint, end: FalstadPoint) {
+            if (start.y != end.y) {
+                warnings += "Line ${component.lineNumber}: gate '${component.code}' is only supported horizontally"
+                return
+            }
+
+            val upperInput = nearestConnectionOnAxis(component, start.x, start.y, above = true)
+            val lowerInput = nearestConnectionOnAxis(component, start.x, start.y, above = false)
+            if (upperInput == null || lowerInput == null) {
+                warnings += "Line ${component.lineNumber}: gate '${component.code}' is missing stretched input connections"
+                return
+            }
+
+            val cell = start
+            val upperPin = FalstadPoint(cell.x, cell.y - 1)
+            val lowerPin = FalstadPoint(cell.x, cell.y + 1)
+            val outputPin = FalstadPoint(cell.x + 1, cell.y)
+
+            markNode(upperInput)
+            markNode(lowerInput)
+            markNode(end)
+            fillWirePath(upperInput, upperPin)
+            fillWirePath(lowerInput, lowerPin)
+            fillWirePath(outputPin, end)
+
+            placed += FalstadPlacedComponent(
+                kind = FalstadPlacedKind.FALSTAD_NAND_GATE,
+                cell = cell,
+                start = upperInput,
+                end = lowerInput,
+                axis = FalstadAxis.HORIZONTAL,
+                source = component,
+                substitutions = listOf("Falstad gate ${component.code} substituted with NAND Chip"),
+                extraPoints = listOf(outputPin, upperPin, lowerPin)
+            )
+        }
+
+        fun placeFalstadSignalInput(component: FalstadComponent, start: FalstadPoint, end: FalstadPoint, axis: FalstadAxis) {
+            val cell = end
+            val pin = if (axis == FalstadAxis.HORIZONTAL) {
+                FalstadPoint(end.x + if (start.x > end.x) 1 else -1, end.y)
+            } else {
+                FalstadPoint(end.x, end.y + if (start.y > end.y) 1 else -1)
+            }
+            markNode(start)
+            fillWirePath(start, pin)
+            placed += FalstadPlacedComponent(
+                kind = FalstadPlacedKind.SIGNAL_INPUT,
+                cell = cell,
+                start = start,
+                end = end,
+                axis = axis,
+                source = component,
+                substitutions = listOf("Falstad logic input substituted with Signal Switch"),
+                forcedSwitchState = parseFalstadLogicState(component)
+            )
+        }
+
+        fun placeFalstadSignalOutput(component: FalstadComponent, start: FalstadPoint, end: FalstadPoint, axis: FalstadAxis) {
+            val cell = end
+            val pin = if (axis == FalstadAxis.HORIZONTAL) {
+                FalstadPoint(end.x + if (start.x > end.x) 1 else -1, end.y)
+            } else {
+                FalstadPoint(end.x, end.y + if (start.y > end.y) 1 else -1)
+            }
+            markNode(start)
+            fillWirePath(start, pin)
+            placed += FalstadPlacedComponent(
+                kind = FalstadPlacedKind.SIGNAL_OUTPUT,
+                cell = cell,
+                start = start,
+                end = end,
+                axis = axis,
+                source = component,
+                substitutions = listOf("Falstad logic output substituted with LED vuMeter")
+            )
+        }
+
         for (component in components) {
-            val code = component.code.lowercase()
+            val rawCode = component.code
+            val code = rawCode.lowercase()
             val start = mapped(component.start)
             val end = mapped(component.end)
 
@@ -411,8 +517,20 @@ object FalstadLayoutPlanner {
                 continue
             }
 
-            if (component.code == "S") {
+            if (rawCode == "S") {
                 placeSpdtSwitch(component, start, end, if (horizontal) FalstadAxis.HORIZONTAL else FalstadAxis.VERTICAL)
+                continue
+            }
+            if (rawCode == "151") {
+                placeFalstadNandGate(component, start, end)
+                continue
+            }
+            if (rawCode == "L") {
+                placeFalstadSignalInput(component, start, end, if (horizontal) FalstadAxis.HORIZONTAL else FalstadAxis.VERTICAL)
+                continue
+            }
+            if (rawCode == "M") {
+                placeFalstadSignalOutput(component, start, end, if (horizontal) FalstadAxis.HORIZONTAL else FalstadAxis.VERTICAL)
                 continue
             }
 
@@ -463,6 +581,7 @@ object FalstadLayoutPlanner {
             )
             if (kind != FalstadPlacedKind.VOLTAGE_SOURCE &&
                 kind != FalstadPlacedKind.SINGLE_PORT_VOLTAGE_SOURCE &&
+                kind != FalstadPlacedKind.CURRENT_SOURCE &&
                 kind != FalstadPlacedKind.PROBE_DISPLAY) {
                 fillComponentLeadPath(start, end, cell)
             }

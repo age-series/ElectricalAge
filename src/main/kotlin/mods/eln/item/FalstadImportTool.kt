@@ -3,6 +3,7 @@ package mods.eln.item
 import mods.eln.Eln
 import mods.eln.falstad.FalstadImporter
 import mods.eln.generic.GenericItemUsingDamageDescriptor
+import mods.eln.i18n.I18N.tr
 import mods.eln.misc.Utils.addChatMessage
 import mods.eln.misc.UtilsClient
 import net.minecraft.client.Minecraft
@@ -27,8 +28,8 @@ class FalstadImportToolDescriptor(name: String) : GenericItemUsingDamageDescript
     }
 
     override fun addInformation(itemStack: ItemStack?, entityPlayer: EntityPlayer?, list: MutableList<String>, par4: Boolean) {
-        list.add("Right click to import a Falstad netlist from the clipboard.")
-        list.add("Places a simplified ELN build on flat ground near the player.")
+        list.add(tr("Right click to import a Falstad netlist from the clipboard."))
+        list.add(tr("Places a simplified ELN build on flat ground near the player."))
     }
 }
 
@@ -36,8 +37,8 @@ class FalstadImportGui : GuiScreen() {
     override fun initGui() {
         super.initGui()
         buttonList.clear()
-        buttonList.add(GuiButton(0, width / 2 - 70, height / 2 - 10, 140, 20, "Paste Clipboard"))
-        buttonList.add(GuiButton(1, width / 2 - 70, height / 2 + 16, 140, 20, "Cancel"))
+        buttonList.add(GuiButton(0, width / 2 - 70, height / 2 - 10, 140, 20, tr("Paste Clipboard")))
+        buttonList.add(GuiButton(1, width / 2 - 70, height / 2 + 16, 140, 20, tr("Cancel")))
     }
 
     override fun actionPerformed(button: GuiButton) {
@@ -46,18 +47,27 @@ class FalstadImportGui : GuiScreen() {
                 val clipboard = getClipboardString().orEmpty().trim()
                 val player = Minecraft.getMinecraft().thePlayer
                 if (clipboard.isEmpty()) {
-                    if (player != null) addChatMessage(player, "Falstad import: clipboard is empty.")
+                    if (player != null) addChatMessage(player, tr("Falstad import: clipboard is empty."))
                     return
                 }
 
                 if (!looksLikeFalstadData(clipboard)) {
-                    if (player != null) addChatMessage(player, "Falstad import: clipboard is not valid Falstad data.")
+                    if (player != null) addChatMessage(player, tr("Falstad import: clipboard is not valid Falstad data."))
                     return
                 }
 
                 val bytes = clipboard.toByteArray(StandardCharsets.UTF_8)
                 if (bytes.size > MAX_FALSTAD_IMPORT_BYTES) {
-                    if (player != null) addChatMessage(player, "Falstad import: netlist is too large to send (${bytes.size} bytes, limit $MAX_FALSTAD_IMPORT_BYTES).")
+                    if (player != null) {
+                        addChatMessage(
+                            player,
+                            tr(
+                                "Falstad import: netlist is too large to send (%1$ bytes, limit %2$).",
+                                bytes.size,
+                                MAX_FALSTAD_IMPORT_BYTES
+                            )
+                        )
+                    }
                     return
                 }
                 val bos = ByteArrayOutputStream(bytes.size + 8)
@@ -74,8 +84,8 @@ class FalstadImportGui : GuiScreen() {
 
     override fun drawScreen(mouseX: Int, mouseY: Int, partialTicks: Float) {
         drawDefaultBackground()
-        drawCenteredString(fontRendererObj, "Falstad Import Tool", width / 2, height / 2 - 42, 0xFFFFFF)
-        drawCenteredString(fontRendererObj, "Reads Falstad text from the system clipboard.", width / 2, height / 2 - 28, 0xA0A0A0)
+        drawCenteredString(fontRendererObj, tr("Falstad Import Tool"), width / 2, height / 2 - 42, 0xFFFFFF)
+        drawCenteredString(fontRendererObj, tr("Reads Falstad text from the system clipboard."), width / 2, height / 2 - 28, 0xA0A0A0)
         super.drawScreen(mouseX, mouseY, partialTicks)
     }
 

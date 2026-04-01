@@ -956,6 +956,7 @@ object ItemRegistration {
             completId = subId + (id shl 6)
             element =
                 FalstadImportToolDescriptor(I18N.TR_NAME(I18N.Type.NONE, "Falstad Import Tool"))
+            element.creativeTab = Eln.creativeTabToolsArmor
             Eln.sharedItem.addElement(completId, element)
             Eln.falstadImportToolElement = element
         }
@@ -1239,6 +1240,13 @@ object ItemRegistration {
             subId = 12
             name = I18N.TR_NAME(I18N.Type.NONE, "Portable Electrical Axe")
             val desc = ElectricalAxe(name, 22f, 1f, 40000.0, 200.0, 10000.0)
+            Eln.sharedItemStackOne.addElement(subId + (id shl 6), desc)
+        }
+        run {
+            subId = 16
+            name = I18N.TR_NAME(I18N.Type.NONE, "The Nope Wand")
+            val desc = NopeWandDescriptor(name)
+            desc.creativeTab = Eln.creativeTabToolsArmor
             Eln.sharedItemStackOne.addElement(subId + (id shl 6), desc)
         }
     }

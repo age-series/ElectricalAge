@@ -20,12 +20,12 @@ import mods.eln.node.GhostNode
 import mods.eln.node.simple.SimpleNode
 import mods.eln.node.six.SixNode
 import mods.eln.node.transparent.TransparentNode
+import mods.eln.server.ElnDestroyHelper
 import mods.eln.server.console.ElnConsoleCommands.Companion.boolToStr
 import mods.eln.server.console.ElnConsoleCommands.Companion.cprint
 import mods.eln.server.console.ElnConsoleCommands.Companion.getArgBool
 import net.minecraft.command.ICommandSender
 import net.minecraft.entity.player.EntityPlayerMP
-import net.minecraft.inventory.IInventory
 import net.minecraft.world.World
 import java.io.BufferedWriter
 import java.io.File
@@ -85,64 +85,6 @@ private fun parseZoneBounds(ics: EntityPlayerMP, args: List<String>, commandName
         min(coords[2], coords[5]),
         max(coords[2], coords[5])
     )
-}
-
-private fun clearElnBlock(world: World, x: Int, y: Int, z: Int): Boolean {
-    val block = world.getBlock(x, y, z)
-    val isElnBlock =
-        block == Eln.sixNodeBlock ||
-            block == Eln.transparentNodeBlock ||
-            block == Eln.ghostBlock
-    if (!isElnBlock) return false
-    world.setBlockToAir(x, y, z)
-    return true
-}
-
-private fun clearInventoryWithoutDrops(inventory: IInventory?) {
-    if (inventory == null) return
-    for (slot in 0 until inventory.sizeInventory) {
-        inventory.setInventorySlotContents(slot, null)
-    }
-    inventory.markDirty()
-}
-
-private fun destroyElnNodeWithoutDrops(world: World, nodeManager: NodeManager, node: NodeBase, player: EntityPlayerMP): Boolean {
-    val coord = node.coordinate
-    val expectedBlock = when (node) {
-        is SixNode -> Eln.sixNodeBlock
-        is TransparentNode -> Eln.transparentNodeBlock
-        is GhostNode -> Eln.ghostBlock
-        else -> null
-    }
-    return try {
-        when (node) {
-            is SixNode -> {
-                node.sideElementList.forEach { element ->
-                    clearInventoryWithoutDrops(element?.inventory)
-                }
-                node.sixNodeCacheBlock = net.minecraft.init.Blocks.air
-                for (direction in Direction.values()) {
-                    if (node.getSideEnable(direction)) {
-                        node.deleteSubBlock(player, direction)
-                    }
-                }
-            }
-            is TransparentNode -> {
-                clearInventoryWithoutDrops(node.element?.inventory)
-                node.removedByPlayer = player
-            }
-        }
-        if (expectedBlock != null && world.getBlock(coord.x, coord.y, coord.z) == expectedBlock) {
-            world.setBlockToAir(coord.x, coord.y, coord.z)
-        } else {
-            node.onBreakBlock()
-            nodeManager.removeNode(node)
-        }
-        true
-    } catch (e: Exception) {
-        println("zonedestroy: removal failed for $coord : ${e.message}")
-        false
-    }
 }
 
 private fun saveConfigPath(path: String, value: Any): String =
@@ -571,7 +513,7 @@ class ElnZoneCleanCommand : IConsoleCommand {
                     if (!isNodeBlock) continue
                     val coord = Coordinate(x, y, z, dim)
                     if (coordKeyedNodes.containsKey(coord)) continue
-                    if (clearElnBlock(world, x, y, z)) {
+                    if (ElnDestroyHelper.clearElnBlock(world, x, y, z)) {
                         orphanBlocks++
                     }
                 }
@@ -661,7 +603,7 @@ class ElnZoneRemoveCommand : IConsoleCommand {
         for (x in minX..maxX) {
             for (y in minY..maxY) {
                 for (z in minZ..maxZ) {
-                    if (clearElnBlock(world, x, y, z)) {
+                    if (ElnDestroyHelper.clearElnBlock(world, x, y, z)) {
                         blocksCleared++
                     }
                 }
@@ -709,42 +651,26 @@ class ElnZoneDestroyCommand : IConsoleCommand {
         }
         val bounds = parseZoneBounds(ics, args, name) ?: return
         val world = ics.worldObj
-        val dim = world.provider.dimensionId
         val nodeManager = NodeManager.instance
         if (nodeManager == null) {
             cprint(ics, "${FC.BRIGHT_RED}Node manager unavailable, cannot run zonedestroy.", indent = 1)
             return
         }
-
-        val targetNodes = nodeManager.nodeList.filter {
-            val c = it.coordinate
-            c.dimension == dim &&
-                c.x in bounds.minX..bounds.maxX &&
-                c.y in bounds.minY..bounds.maxY &&
-                c.z in bounds.minZ..bounds.maxZ
-        }
-
-        var nodesDestroyed = 0
-        for (node in targetNodes) {
-            if (destroyElnNodeWithoutDrops(world, nodeManager, node, ics)) {
-                nodesDestroyed++
-            }
-        }
-
-        var blocksCleared = 0
-        for (x in bounds.minX..bounds.maxX) {
-            for (y in bounds.minY..bounds.maxY) {
-                for (z in bounds.minZ..bounds.maxZ) {
-                    if (clearElnBlock(world, x, y, z)) {
-                        blocksCleared++
-                    }
-                }
-            }
-        }
+        val summary = ElnDestroyHelper.destroyWithinBounds(
+            world = world,
+            nodeManager = nodeManager,
+            minX = bounds.minX,
+            maxX = bounds.maxX,
+            minY = bounds.minY,
+            maxY = bounds.maxY,
+            minZ = bounds.minZ,
+            maxZ = bounds.maxZ,
+            player = ics
+        )
 
         cprint(
             ics,
-            "${FC.BRIGHT_GREEN}Zone destroy complete: destroyed $nodesDestroyed nodes and cleared $blocksCleared blocks without dropping items.",
+            "${FC.BRIGHT_GREEN}Zone destroy complete: destroyed ${summary.nodesDestroyed} nodes and cleared ${summary.blocksCleared} blocks without dropping items.",
             indent = 1
         )
     }
