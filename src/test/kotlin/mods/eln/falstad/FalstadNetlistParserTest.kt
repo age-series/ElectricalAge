@@ -420,4 +420,41 @@ class FalstadNetlistParserTest {
             }
         }
     }
+
+    @Test
+    fun plansHalfAdderLogicSymbols() {
+        val plan = FalstadLayoutPlanner.plan(FalstadDeviceParser.parse(java.io.File("halfadder.txt").readText()))
+
+        assertEquals(1, plan.components.count { it.kind == FalstadPlacedKind.FALSTAD_XOR_GATE })
+        assertEquals(1, plan.components.count { it.kind == FalstadPlacedKind.FALSTAD_AND_GATE })
+        assertEquals(2, plan.components.count { it.kind == FalstadPlacedKind.SIGNAL_INPUT })
+        assertEquals(2, plan.components.count { it.kind == FalstadPlacedKind.SIGNAL_OUTPUT })
+        assertTrue(plan.warnings.isEmpty(), plan.warnings.joinToString())
+    }
+
+    @Test
+    fun plansFullAdderLogicSymbols() {
+        val plan = FalstadLayoutPlanner.plan(FalstadDeviceParser.parse(java.io.File("fulladd.txt").readText()))
+
+        assertEquals(2, plan.components.count { it.kind == FalstadPlacedKind.FALSTAD_XOR_GATE })
+        assertEquals(2, plan.components.count { it.kind == FalstadPlacedKind.FALSTAD_AND_GATE })
+        assertEquals(1, plan.components.count { it.kind == FalstadPlacedKind.FALSTAD_OR_GATE })
+        assertEquals(3, plan.components.count { it.kind == FalstadPlacedKind.SIGNAL_INPUT })
+        assertEquals(2, plan.components.count { it.kind == FalstadPlacedKind.SIGNAL_OUTPUT })
+        assertTrue(plan.warnings.isEmpty(), plan.warnings.joinToString())
+    }
+
+    @Test
+    fun plansDigitalComparatorLogicSymbols() {
+        val plan = FalstadLayoutPlanner.plan(FalstadDeviceParser.parse(java.io.File("digicompare.txt").readText()))
+
+        assertEquals(2, plan.components.count { it.kind == FalstadPlacedKind.FALSTAD_AND_GATE })
+        assertEquals(4, plan.components.count { it.kind == FalstadPlacedKind.FALSTAD_NAND_GATE })
+        assertEquals(1, plan.components.count { it.kind == FalstadPlacedKind.FALSTAD_OR_GATE })
+        assertEquals(1, plan.components.count { it.kind == FalstadPlacedKind.FALSTAD_NOR_GATE })
+        assertEquals(3, plan.components.count { it.kind == FalstadPlacedKind.FALSTAD_NOT_GATE })
+        assertEquals(4, plan.components.count { it.kind == FalstadPlacedKind.SIGNAL_INPUT })
+        assertEquals(3, plan.components.count { it.kind == FalstadPlacedKind.SIGNAL_OUTPUT })
+        assertTrue(plan.warnings.isEmpty(), plan.warnings.joinToString())
+    }
 }

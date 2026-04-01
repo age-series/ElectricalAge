@@ -117,7 +117,12 @@ object FalstadImporter {
         val area = placement.area
         val messages = mutableListOf<String>()
         val useSignalCables = placedPlan.components.any {
+            it.kind == FalstadPlacedKind.FALSTAD_AND_GATE ||
             it.kind == FalstadPlacedKind.FALSTAD_NAND_GATE ||
+                it.kind == FalstadPlacedKind.FALSTAD_OR_GATE ||
+                it.kind == FalstadPlacedKind.FALSTAD_NOR_GATE ||
+                it.kind == FalstadPlacedKind.FALSTAD_XOR_GATE ||
+                it.kind == FalstadPlacedKind.FALSTAD_NOT_GATE ||
                 it.kind == FalstadPlacedKind.SIGNAL_INPUT ||
                 it.kind == FalstadPlacedKind.SIGNAL_OUTPUT
         }
@@ -211,7 +216,14 @@ object FalstadImporter {
                 }
                 continue
             }
-            if (component.kind == FalstadPlacedKind.FALSTAD_NAND_GATE) {
+            if (
+                component.kind == FalstadPlacedKind.FALSTAD_AND_GATE ||
+                component.kind == FalstadPlacedKind.FALSTAD_NAND_GATE ||
+                component.kind == FalstadPlacedKind.FALSTAD_OR_GATE ||
+                component.kind == FalstadPlacedKind.FALSTAD_NOR_GATE ||
+                component.kind == FalstadPlacedKind.FALSTAD_XOR_GATE ||
+                component.kind == FalstadPlacedKind.FALSTAD_NOT_GATE
+            ) {
                 val result = placeFalstadNandGate(player, area, component, placement.rotated, messages)
                 if (!result.placed) {
                     messages += "Failed to place Falstad gate at ${component.cell.x},${component.cell.y}"
@@ -493,7 +505,12 @@ object FalstadImporter {
         FalstadPlacedKind.CURRENT_SOURCE -> getBlockDescriptor("Current Source")
         FalstadPlacedKind.SWITCH -> getBlockDescriptor("Low Voltage Switch")
         FalstadPlacedKind.PROBE_DISPLAY -> null
+        FalstadPlacedKind.FALSTAD_AND_GATE -> getBlockDescriptor("AND Chip", LogicGateDescriptor::class.java)
         FalstadPlacedKind.FALSTAD_NAND_GATE -> getBlockDescriptor("NAND Chip", LogicGateDescriptor::class.java)
+        FalstadPlacedKind.FALSTAD_OR_GATE -> getBlockDescriptor("OR Chip", LogicGateDescriptor::class.java)
+        FalstadPlacedKind.FALSTAD_NOR_GATE -> getBlockDescriptor("NOR Chip", LogicGateDescriptor::class.java)
+        FalstadPlacedKind.FALSTAD_XOR_GATE -> getBlockDescriptor("XOR Chip", LogicGateDescriptor::class.java)
+        FalstadPlacedKind.FALSTAD_NOT_GATE -> getBlockDescriptor("NOT Chip", LogicGateDescriptor::class.java)
         FalstadPlacedKind.SIGNAL_INPUT -> getBlockDescriptor("Signal Switch", ElectricalGateSourceDescriptor::class.java)
         FalstadPlacedKind.SIGNAL_OUTPUT -> getBlockDescriptor("LED vuMeter", ElectricalVuMeterDescriptor::class.java)
     }
@@ -648,10 +665,22 @@ object FalstadImporter {
                     if (component.start.y <= component.end.y) LRDU.Left else LRDU.Right
                 }
             }
-            FalstadPlacedKind.FALSTAD_NAND_GATE, FalstadPlacedKind.SIGNAL_INPUT, FalstadPlacedKind.SIGNAL_OUTPUT -> {
+            FalstadPlacedKind.FALSTAD_AND_GATE,
+            FalstadPlacedKind.FALSTAD_NAND_GATE,
+            FalstadPlacedKind.FALSTAD_OR_GATE,
+            FalstadPlacedKind.FALSTAD_NOR_GATE,
+            FalstadPlacedKind.FALSTAD_XOR_GATE,
+            FalstadPlacedKind.FALSTAD_NOT_GATE,
+            FalstadPlacedKind.SIGNAL_INPUT,
+            FalstadPlacedKind.SIGNAL_OUTPUT -> {
                 val baseFront = frontToward(component.cell, component.extraPoints.firstOrNull() ?: component.start)
                 when (component.kind) {
+                    FalstadPlacedKind.FALSTAD_AND_GATE,
                     FalstadPlacedKind.FALSTAD_NAND_GATE,
+                    FalstadPlacedKind.FALSTAD_OR_GATE,
+                    FalstadPlacedKind.FALSTAD_NOR_GATE,
+                    FalstadPlacedKind.FALSTAD_XOR_GATE,
+                    FalstadPlacedKind.FALSTAD_NOT_GATE,
                     FalstadPlacedKind.SIGNAL_INPUT,
                     FalstadPlacedKind.SIGNAL_OUTPUT -> if (rotatedPlacement) baseFront.right() else baseFront.left()
                     else -> baseFront
