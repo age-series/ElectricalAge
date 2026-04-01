@@ -38,7 +38,12 @@ enum class FalstadPlacedKind {
     CURRENT_SOURCE,
     SWITCH,
     PROBE_DISPLAY,
+    FALSTAD_AND_GATE,
     FALSTAD_NAND_GATE,
+    FALSTAD_OR_GATE,
+    FALSTAD_NOR_GATE,
+    FALSTAD_XOR_GATE,
+    FALSTAD_NOT_GATE,
     SIGNAL_INPUT,
     SIGNAL_OUTPUT
 }
@@ -421,7 +426,7 @@ object FalstadLayoutPlanner {
             return if (above) candidates.maxByOrNull { it.y } else candidates.minByOrNull { it.y }
         }
 
-        fun placeFalstadNandGate(component: FalstadComponent, start: FalstadPoint, end: FalstadPoint) {
+        fun placeFalstadTwoInputGate(component: FalstadComponent, start: FalstadPoint, end: FalstadPoint, kind: FalstadPlacedKind, chipName: String) {
             if (start.y != end.y) {
                 warnings += "Line ${component.lineNumber}: gate '${component.code}' is only supported horizontally"
                 return
@@ -447,14 +452,45 @@ object FalstadLayoutPlanner {
             fillWirePath(outputPin, end)
 
             placed += FalstadPlacedComponent(
-                kind = FalstadPlacedKind.FALSTAD_NAND_GATE,
+                kind = kind,
                 cell = cell,
                 start = upperInput,
                 end = lowerInput,
                 axis = FalstadAxis.HORIZONTAL,
                 source = component,
-                substitutions = listOf("Falstad gate ${component.code} substituted with NAND Chip"),
+                substitutions = listOf("Falstad gate ${component.code} substituted with $chipName"),
                 extraPoints = listOf(outputPin, upperPin, lowerPin)
+            )
+        }
+
+        fun placeFalstadInverter(component: FalstadComponent, start: FalstadPoint, end: FalstadPoint) {
+            val horizontal = start.y == end.y
+            val cell = FalstadPoint((start.x + end.x) / 2, (start.y + end.y) / 2)
+            val inputPin = if (horizontal) {
+                FalstadPoint(cell.x + if (start.x < end.x) -1 else 1, cell.y)
+            } else {
+                FalstadPoint(cell.x, cell.y + if (start.y < end.y) -1 else 1)
+            }
+            val outputPin = if (horizontal) {
+                FalstadPoint(cell.x + if (start.x < end.x) 1 else -1, cell.y)
+            } else {
+                FalstadPoint(cell.x, cell.y + if (start.y < end.y) 1 else -1)
+            }
+
+            markNode(start)
+            markNode(end)
+            fillWirePath(start, inputPin)
+            fillWirePath(outputPin, end)
+
+            placed += FalstadPlacedComponent(
+                kind = FalstadPlacedKind.FALSTAD_NOT_GATE,
+                cell = cell,
+                start = start,
+                end = end,
+                axis = if (horizontal) FalstadAxis.HORIZONTAL else FalstadAxis.VERTICAL,
+                source = component,
+                substitutions = listOf("Falstad gate ${component.code} substituted with NOT Chip"),
+                extraPoints = listOf(outputPin, inputPin)
             )
         }
 
@@ -505,6 +541,10 @@ object FalstadLayoutPlanner {
             val start = mapped(component.start)
             val end = mapped(component.end)
 
+            if (code == "x") {
+                continue
+            }
+
             if (code == "g") {
                 markNode(start, FalstadNodeKind.GROUND)
                 continue
@@ -521,8 +561,28 @@ object FalstadLayoutPlanner {
                 placeSpdtSwitch(component, start, end, if (horizontal) FalstadAxis.HORIZONTAL else FalstadAxis.VERTICAL)
                 continue
             }
+            if (rawCode == "150") {
+                placeFalstadTwoInputGate(component, start, end, FalstadPlacedKind.FALSTAD_XOR_GATE, "XOR Chip")
+                continue
+            }
             if (rawCode == "151") {
-                placeFalstadNandGate(component, start, end)
+                placeFalstadTwoInputGate(component, start, end, FalstadPlacedKind.FALSTAD_NAND_GATE, "NAND Chip")
+                continue
+            }
+            if (rawCode == "152") {
+                placeFalstadTwoInputGate(component, start, end, FalstadPlacedKind.FALSTAD_OR_GATE, "OR Chip")
+                continue
+            }
+            if (rawCode == "153") {
+                placeFalstadTwoInputGate(component, start, end, FalstadPlacedKind.FALSTAD_NOR_GATE, "NOR Chip")
+                continue
+            }
+            if (rawCode == "154") {
+                placeFalstadTwoInputGate(component, start, end, FalstadPlacedKind.FALSTAD_AND_GATE, "AND Chip")
+                continue
+            }
+            if (rawCode == "I") {
+                placeFalstadInverter(component, start, end)
                 continue
             }
             if (rawCode == "L") {
