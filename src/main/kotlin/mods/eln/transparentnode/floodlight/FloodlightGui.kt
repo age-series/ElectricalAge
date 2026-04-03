@@ -5,7 +5,7 @@ import mods.eln.i18n.I18N
 import net.minecraft.entity.player.EntityPlayer
 
 class FloodlightGui(player: EntityPlayer, val render: FloodlightRender) :
-    GuiContainerEln(FloodlightContainer(player, render.inventory)) {
+    GuiContainerEln(FloodlightContainer(player, render.inventory, render.descriptor)) {
 
     companion object {
         const val ADJUST_HORIZONTAL_ANGLE_EVENT: Byte = 0

@@ -2,7 +2,7 @@ package mods.eln.sixnode.lampsocket
 
 import mods.eln.Eln
 import mods.eln.generic.GenericItemUsingDamage
-import mods.eln.item.LampDescriptor
+import mods.eln.item.lampitem.LampDescriptor
 import mods.eln.lightblock.LightBlockEntity
 import mods.eln.misc.Coordinate
 import mods.eln.misc.INBTTReady
@@ -188,11 +188,12 @@ class LampSocketProcess(var lamp: LampSocketElement) : IProcess, INBTTReady /*,L
         if (newLight < 0) newLight = 0
 
         if (lampDescriptor != null) {
-            // Only decrease the life of a bulb once a second. This reduces the update rate at which the NBT is changed
-            // to once per second from once per tick, reducing the probability of an NBT mismatch bug occurring when
-            // shift-clicking. When the bug is eventually fixed, the if() check is no longer necessary and the
-            // processElapsedTime variable and supporting code can be deleted.
-            if (lamp.processElapsedTime == 0.0) {
+            /** Only decrease the life of a bulb once a second. This reduces the update rate at which the NBT is changed
+             * to once per second from once per tick, reducing the probability of an NBT mismatch bug occurring when
+             * shift-clicking. When the bug is eventually fixed, the processElapsedTime variable and supporting code can
+             * be deleted. Also update the decreaseLampLife function definition according to the note there.
+             */
+            if (lamp.processElapsedTime in -0.001..0.001) {
                 val lampLife = lampDescriptor.decreaseLampLife(lampStack, lamp.lampResistor.voltage)
 
                 if (lampLife <= 0.0) {

@@ -5,7 +5,7 @@ import mods.eln.i18n.I18N
 import mods.eln.item.BrushDescriptor
 import mods.eln.item.ConfigCopyToolDescriptor
 import mods.eln.item.IConfigurable
-import mods.eln.item.LampDescriptor
+import mods.eln.item.lampitem.LampDescriptor
 import mods.eln.misc.Direction
 import mods.eln.misc.LRDU
 import mods.eln.misc.Utils
@@ -88,7 +88,7 @@ class LampSocketElement(sixNode: SixNode, side: Direction, sixNodeDescriptor: Si
     }
 
     override fun newContainer(side: Direction, player: EntityPlayer): Container {
-        return LampSocketContainer(player, inventory)
+        return LampSocketContainer(player, inventory, descriptor)
     }
 
     override fun hasGui(): Boolean {
@@ -121,7 +121,7 @@ class LampSocketElement(sixNode: SixNode, side: Direction, sixNodeDescriptor: Si
         }
 
         if (playerEquippedItem is LampDescriptor) {
-            if (playerEquippedItem.lampData.technology in LampSocketContainer.ACCEPTED_LAMP_TYPES) {
+            if (playerEquippedItem.lampData.technology in descriptor.acceptedLampTypes) {
                 return acceptingInventory.take(
                     entityPlayer.currentEquippedItem, this, publish = true, notifyInventoryChange = true
                 )
