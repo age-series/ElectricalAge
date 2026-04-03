@@ -1,7 +1,8 @@
-package mods.eln.item
+package mods.eln.item.lampitem
 
 import mods.eln.Eln
-import mods.eln.i18n.I18N.tr
+import mods.eln.i18n.I18N
+import mods.eln.item.GenericItemUsingDamageDescriptorUpgrade
 import mods.eln.misc.Utils
 import mods.eln.misc.VoltageLevelColor
 import mods.eln.sim.mna.component.Resistor
@@ -50,6 +51,10 @@ class LampDescriptor(name: String, iconName: String, val lampData: SpecificLampD
         resistor.resistance = lampData.resistance
     }
 
+    /**
+     * This function is currently set up to be called once per second (IRL). If the NBT update bug is ever fixed, this
+     * function should be updated to run once per tick by dividing the life lost by 20 before calculating the new life.
+     */
     fun decreaseLampLife(lampStack: ItemStack, appliedVoltage: Double): Double {
         var currentLife = getLifeInTag(lampStack)
 
@@ -90,14 +95,16 @@ class LampDescriptor(name: String, iconName: String, val lampData: SpecificLampD
     override fun addInformation(itemStack: ItemStack?, entityPlayer: EntityPlayer?, list: MutableList<String>, par4: Boolean) {
         super.addInformation(itemStack, entityPlayer, list, par4)
 
-        list.add(tr("Nominal voltage: ${Utils.plotValue(lampData.nominalU)}V"))
-        list.add(tr("Power: ${Utils.plotValue(lampData.nominalP)}W"))
-        list.add(tr("Resistance: ${Utils.plotValue(lampData.resistance)}\u2126"))
-        list.add(tr("Nominal lifetime: ${lampData.technology.nominalLifeInHours}h"))
+        list.add(I18N.tr("Nominal voltage: ${Utils.plotValue(lampData.nominalU)}V"))
+        list.add(I18N.tr("Power: ${Utils.plotValue(lampData.nominalP)}W"))
+        list.add(I18N.tr("Resistance: ${Utils.plotValue(lampData.resistance)}\u2126"))
+        list.add(I18N.tr("Nominal lifetime: ${lampData.technology.nominalLifeInHours}h"))
 
         if (itemStack != null) {
-            if (Eln.config.getBooleanOrElse("debug.logging.enabled", false)) list.add(tr("Current lifetime: ${getLifeInTag(itemStack)}h"))
-            list.add(tr("Condition: ${getLampCondition(itemStack)}"))
+            if (Eln.config.getBooleanOrElse("debug.logging.enabled", false)) {
+                list.add(I18N.tr("Current lifetime: ${getLifeInTag(itemStack)}h"))
+            }
+            list.add(I18N.tr("Condition: ${getLampCondition(itemStack)}"))
         }
     }
 

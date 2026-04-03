@@ -1,6 +1,7 @@
 package mods.eln.transparentnode.floodlight
 
 import mods.eln.i18n.I18N.tr
+import mods.eln.item.lampitem.LampLists
 import mods.eln.misc.*
 import mods.eln.misc.Utils.entityLivingHorizontalViewDirection
 import mods.eln.node.transparent.TransparentNodeDescriptor
@@ -26,14 +27,27 @@ class FloodlightDescriptor(val itemName: String, val obj: Obj3D, val motorized: 
 
     var placementSide: Direction = Direction.XN
 
+    val acceptedLampTypes = arrayOf(
+        LampLists.getLampData("led")!!,
+        LampLists.getLampData("halogen")!!
+    )
+    var acceptedLampTypesString: String = ""
+
     init {
         voltageLevelColor = VoltageLevelColor.Neutral
+
+        for (lampData in acceptedLampTypes) {
+            acceptedLampTypesString += lampData.lampType
+            if (acceptedLampTypes.indexOf(lampData) < (acceptedLampTypes.size - 1)) acceptedLampTypesString += ", "
+        }
     }
 
     override fun addInformation(itemStack: ItemStack, entityPlayer: EntityPlayer, list: MutableList<String>, par4: Boolean) {
         super.addInformation(itemStack, entityPlayer, list, par4)
+
         Collections.addAll(list, *tr("A powerful lamp that specializes in\nthe illumination of large spaces.")!!
             .split("\n".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray())
+        list.add(tr("Accepted lamp types: $acceptedLampTypesString"))
         list.add(tr("Uses inserted light bulbs."))
         list.add(if (motorized) tr("Intended for 240V bulb families.") else tr("Intended for 120V or 240V bulb families."))
     }

@@ -1,6 +1,7 @@
 package mods.eln.sixnode.lampsocket
 
 import mods.eln.i18n.I18N
+import mods.eln.item.lampitem.BoilerplateLampData
 import mods.eln.misc.RealisticEnum
 import mods.eln.misc.VoltageLevelColor
 import mods.eln.node.six.SixNodeDescriptor
@@ -16,12 +17,15 @@ import java.util.Collections
 import kotlin.text.split
 
 // TODO: Revisit integration of this file with the rest of the six-node lamp socket code.
-class LampSocketDescriptor(val itemName: String, val renderType: ILampSocketObjRender, val paintable: Boolean, val range: Int, val rotatable: Boolean) :
+class LampSocketDescriptor(val itemName: String, val renderType: ILampSocketObjRender, val paintable: Boolean,
+                           val range: Int, val rotatable: Boolean, val acceptedLampTypes: Array<BoilerplateLampData>) :
     SixNodeDescriptor(itemName, LampSocketElement::class.java, LampSocketRender::class.java) {
 
     companion object {
         const val MIN_LIGHT_ON_VALUE = 8
     }
+
+    var acceptedLampTypesString: String = ""
 
     val alphaZMin = if (rotatable) -90.0 else 0.0
     val alphaZMax = if (rotatable) 90.0 else 0.0
@@ -40,6 +44,11 @@ class LampSocketDescriptor(val itemName: String, val renderType: ILampSocketObjR
 
     init {
         voltageLevelColor = VoltageLevelColor.Neutral
+
+        for (lampData in acceptedLampTypes) {
+            acceptedLampTypesString += lampData.lampType
+            if (acceptedLampTypes.indexOf(lampData) < (acceptedLampTypes.size - 1)) acceptedLampTypesString += ", "
+        }
     }
 
     override fun setParent(item: Item, damage: Int) {
@@ -77,6 +86,7 @@ class LampSocketDescriptor(val itemName: String, val renderType: ILampSocketObjR
 
         if (range != 0) list.add(I18N.tr("Spot range: $range blocks"))
         if (rotatable) list.add(I18N.tr("Angle: ${alphaZMin.toInt()}° to ${alphaZMax.toInt()}°"))
+        list.add(I18N.tr("Accepted lamp types: $acceptedLampTypesString"))
     }
 
     override fun addRealismContext(list: MutableList<String>): RealisticEnum {

@@ -5,8 +5,8 @@ import com.google.gson.JsonElement
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import mods.eln.Other
-import mods.eln.item.LampLists
 import mods.eln.item.TurbineBladeLists
+import mods.eln.item.lampitem.LampLists
 import mods.eln.misc.Utils
 import java.io.File
 import java.io.FileReader

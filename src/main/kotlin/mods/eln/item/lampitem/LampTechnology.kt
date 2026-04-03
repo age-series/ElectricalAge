@@ -1,4 +1,4 @@
-package mods.eln.item
+package mods.eln.item.lampitem
 
 import mods.eln.Eln
 import kotlin.math.abs

@@ -1,8 +1,8 @@
 package mods.eln.transparentnode.floodlight
 
 import mods.eln.Eln
-import mods.eln.item.BoilerplateLampData
-import mods.eln.item.LampDescriptor
+import mods.eln.item.lampitem.BoilerplateLampData
+import mods.eln.item.lampitem.LampDescriptor
 import mods.eln.lightblock.LightBlockEntity
 import mods.eln.misc.Coordinate
 import mods.eln.misc.HybridNodeDirection
@@ -54,11 +54,12 @@ class FloodlightProcess(var element: FloodlightElement) : IProcess {
 
                 lampLightRanges.add(BASE_THROW_DISTANCE * sqrt(lampDescriptor.lampData.nominalU / Eln.LVU).toInt())
 
-                // Only decrease the life of a bulb once a second. This reduces the update rate at which the NBT is changed
-                // to once per second from once per tick, reducing the probability of an NBT mismatch bug occurring when
-                // shift-clicking. When the bug is eventually fixed, the if() check is no longer necessary and the
-                // processElapsedTime variable and supporting code can be deleted.
-                if (element.processElapsedTime == 0.0) {
+                /** Only decrease the life of a bulb once a second. This reduces the update rate at which the NBT is changed
+                 * to once per second from once per tick, reducing the probability of an NBT mismatch bug occurring when
+                 * shift-clicking. When the bug is eventually fixed, the processElapsedTime variable and supporting code can
+                 * be deleted. Also update the decreaseLampLife function definition according to the note there.
+                */
+                if (element.processElapsedTime in -0.001..0.001) {
                     val lampLife = lampDescriptor.decreaseLampLife(lampStacks[idx]!!, lampVoltage)
 
                     if (lampLife <= 0.0) {
@@ -138,7 +139,7 @@ class FloodlightProcess(var element: FloodlightElement) : IProcess {
             }
         }
 
-        for (idx in 0 until rotationVectors.size) {
+        for (idx in rotationVectors.indices) {
             val lightVector = element.node!!.coordinate.toVec3()
             val lbCoordinate = Coordinate(lightVector, element.node!!.coordinate.dimension)
 

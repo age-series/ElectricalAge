@@ -11,6 +11,9 @@ import mods.eln.i18n.I18N
 import mods.eln.i18n.I18N.tr
 import mods.eln.item.*
 import mods.eln.item.electricalitem.*
+import mods.eln.item.lampitem.LampDescriptor
+import mods.eln.item.lampitem.LampLists
+import mods.eln.item.lampitem.SpecificLampData
 import mods.eln.item.regulator.IRegulatorDescriptor
 import mods.eln.item.regulator.RegulatorAnalogDescriptor
 import mods.eln.item.regulator.RegulatorOnOffDescriptor
