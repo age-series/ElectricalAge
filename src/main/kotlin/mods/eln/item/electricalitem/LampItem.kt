@@ -1,10 +1,8 @@
 package mods.eln.item.electricalitem
 
-import mods.eln.Eln
 import mods.eln.generic.GenericItemUsingDamageDescriptor
-import mods.eln.sixnode.lampsocket.LightBlockEntity
+import mods.eln.lightblock.LightBlockEntity
 import net.minecraft.entity.Entity
-import net.minecraft.init.Blocks
 import net.minecraft.item.ItemStack
 import net.minecraft.util.MathHelper
 import net.minecraft.world.World
