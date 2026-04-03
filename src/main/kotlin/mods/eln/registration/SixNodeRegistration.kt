@@ -7,6 +7,7 @@ import mods.eln.ghost.GhostGroup
 import mods.eln.i18n.I18N
 import mods.eln.item.ElectricalFuseDescriptor
 import mods.eln.item.ElectricalFuseDescriptor.Companion.BlownFuse
+import mods.eln.item.lampitem.LampLists
 import mods.eln.misc.Direction
 import mods.eln.misc.FunctionTableYProtect
 import mods.eln.misc.IFunction
@@ -392,6 +393,10 @@ object SixNodeRegistration {
         }
     }
 
+    /**
+     * The run{} blocks in this function are not called in order of subId. This is done to organize the creative menu
+     * in a more logical way. Thus, take care when adding new lamp socket types.
+     */
     private fun registerLampSocket(id: Int) {
         var subId: Int
         var name: String
@@ -405,7 +410,13 @@ object SixNodeRegistration {
                 LampSocketStandardObjRender(Eln.obj.getObj("ClassicLampSocket"), false),
                 false,
                 4,
-                false
+                false,
+                arrayOf(
+                    LampLists.getLampData("incandescent")!!,
+                    LampLists.getLampData("carbonIncandescent")!!,
+                    LampLists.getLampData("farming")!!,
+                    LampLists.getLampData("led")!!
+                )
             ).lighting()
             Eln.sixNodeItem.addDescriptor(subId + (id shl 6), descriptor)
         }
@@ -418,7 +429,13 @@ object SixNodeRegistration {
                 LampSocketStandardObjRender(Eln.obj.getObj("ClassicLampSocket"), false),
                 false,
                 10,
-                true
+                true,
+                arrayOf(
+                    LampLists.getLampData("incandescent")!!,
+                    LampLists.getLampData("carbonIncandescent")!!,
+                    LampLists.getLampData("farming")!!,
+                    LampLists.getLampData("led")!!
+                )
             ).lighting()
             Eln.sixNodeItem.addDescriptor(subId + (id shl 6), descriptor)
         }
@@ -431,7 +448,13 @@ object SixNodeRegistration {
                 LampSocketStandardObjRender(Eln.obj.getObj("RobustLamp"), true),
                 false,
                 3,
-                false
+                false,
+                arrayOf(
+                    LampLists.getLampData("incandescent")!!,
+                    LampLists.getLampData("carbonIncandescent")!!,
+                    LampLists.getLampData("farming")!!,
+                    LampLists.getLampData("led")!!
+                )
             ).lighting()
             descriptor.initialRotateDeg = -90.0
             Eln.sixNodeItem.addDescriptor(subId + (id shl 6), descriptor)
@@ -445,7 +468,11 @@ object SixNodeRegistration {
                 LampSocketStandardObjRender(Eln.obj.getObj("FlatLamp"), true),
                 false,
                 3,
-                false
+                false,
+                arrayOf(
+                    LampLists.getLampData("fluorescent")!!,
+                    LampLists.getLampData("led")!!
+                )
             ).lighting()
             Eln.sixNodeItem.addDescriptor(subId + (id shl 6), descriptor)
         }
@@ -458,7 +485,13 @@ object SixNodeRegistration {
                 LampSocketStandardObjRender(Eln.obj.getObj("SimpleLamp"), true),
                 false,
                 3,
-                false
+                false,
+                arrayOf(
+                    LampLists.getLampData("incandescent")!!,
+                    LampLists.getLampData("carbonIncandescent")!!,
+                    LampLists.getLampData("farming")!!,
+                    LampLists.getLampData("led")!!
+                )
             ).lighting()
             Eln.sixNodeItem.addDescriptor(subId + (id shl 6), descriptor)
         }
@@ -471,7 +504,11 @@ object SixNodeRegistration {
                 LampSocketStandardObjRender(Eln.obj.getObj("FluorescentLamp"), true),
                 false,
                 4,
-                false
+                false,
+                arrayOf(
+                    LampLists.getLampData("fluorescent")!!,
+                    LampLists.getLampData("led")!!
+                )
             ).lighting()
             descriptor.cableLeft = false
             descriptor.cableRight = false
@@ -486,7 +523,13 @@ object SixNodeRegistration {
                 LampSocketStandardObjRender(Eln.obj.getObj("SconceLamp"), true),
                 true,
                 3,
-                false
+                false,
+                arrayOf(
+                    LampLists.getLampData("incandescent")!!,
+                    LampLists.getLampData("carbonIncandescent")!!,
+                    LampLists.getLampData("farming")!!,
+                    LampLists.getLampData("led")!!
+                )
             ).lighting()
             descriptor.setPlaceDirection(arrayOf(Direction.XP, Direction.XN, Direction.ZP, Direction.ZN))
             descriptor.initialRotateDeg = -90.0
@@ -502,7 +545,13 @@ object SixNodeRegistration {
                 LampSocketSuspendedObjRender(Eln.obj.getObj("RobustLampSuspended"), true, 3, true),
                 false,
                 3,
-                false
+                false,
+                arrayOf(
+                    LampLists.getLampData("incandescent")!!,
+                    LampLists.getLampData("carbonIncandescent")!!,
+                    LampLists.getLampData("farming")!!,
+                    LampLists.getLampData("led")!!
+                )
             )
             descriptor.setPlaceDirection(Direction.YP)
             descriptor.renderIconInHand = true
@@ -518,7 +567,13 @@ object SixNodeRegistration {
                 LampSocketSuspendedObjRender(Eln.obj.getObj("RobustLampSuspended"), true, 7, true),
                 false,
                 4,
-                false
+                false,
+                arrayOf(
+                    LampLists.getLampData("incandescent")!!,
+                    LampLists.getLampData("carbonIncandescent")!!,
+                    LampLists.getLampData("farming")!!,
+                    LampLists.getLampData("led")!!
+                )
             )
             descriptor.setPlaceDirection(Direction.YP)
             descriptor.renderIconInHand = true
@@ -534,7 +589,13 @@ object SixNodeRegistration {
                 LampSocketSuspendedObjRender(Eln.obj.getObj("RobustLampSuspended"), true, 3, false),
                 false,
                 3,
-                false
+                false,
+                arrayOf(
+                    LampLists.getLampData("incandescent")!!,
+                    LampLists.getLampData("carbonIncandescent")!!,
+                    LampLists.getLampData("farming")!!,
+                    LampLists.getLampData("led")!!
+                )
             )
             descriptor.setPlaceDirection(Direction.YP)
             descriptor.renderIconInHand = true
@@ -550,7 +611,13 @@ object SixNodeRegistration {
                 LampSocketSuspendedObjRender(Eln.obj.getObj("RobustLampSuspended"), true, 7, false),
                 false,
                 4,
-                false
+                false,
+                arrayOf(
+                    LampLists.getLampData("incandescent")!!,
+                    LampLists.getLampData("carbonIncandescent")!!,
+                    LampLists.getLampData("farming")!!,
+                    LampLists.getLampData("led")!!
+                )
             )
             descriptor.setPlaceDirection(Direction.YP)
             descriptor.renderIconInHand = true
@@ -566,7 +633,13 @@ object SixNodeRegistration {
                 LampSocketStandardObjRender(Eln.obj.getObj("StreetLight"), true),
                 false,
                 0,
-                false
+                false,
+                arrayOf(
+                    LampLists.getLampData("incandescent")!!,
+                    LampLists.getLampData("carbonIncandescent")!!,
+                    LampLists.getLampData("farming")!!,
+                    LampLists.getLampData("led")!!
+                )
             ).lighting()
             val g = GhostGroup()
             g.addElement(1, 0, 0)

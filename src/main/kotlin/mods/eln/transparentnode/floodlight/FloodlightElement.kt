@@ -4,7 +4,7 @@ import mods.eln.Eln
 import mods.eln.i18n.I18N
 import mods.eln.item.ConfigCopyToolDescriptor
 import mods.eln.item.IConfigurable
-import mods.eln.item.LampDescriptor
+import mods.eln.item.lampitem.LampDescriptor
 import mods.eln.misc.*
 import mods.eln.misc.Utils.getItemObject
 import mods.eln.misc.Utils.plotAmpere
@@ -98,7 +98,7 @@ class FloodlightElement(transparentNode: TransparentNode, transparentNodeDescrip
     }
 
     override fun newContainer(side: Direction, player: EntityPlayer): Container {
-        return FloodlightContainer(player, inventory)
+        return FloodlightContainer(player, inventory, descriptor)
     }
 
     override fun hasGui(): Boolean {
@@ -116,7 +116,7 @@ class FloodlightElement(transparentNode: TransparentNode, transparentNodeDescrip
         val currentEquippedItem = getItemObject(player.currentEquippedItem)
 
         if (currentEquippedItem is LampDescriptor) {
-            if (currentEquippedItem.lampData.technology in FloodlightContainer.ACCEPTED_LAMP_TYPES) {
+            if (currentEquippedItem.lampData.technology in descriptor.acceptedLampTypes) {
                 return acceptingInventory.take(
                     player.currentEquippedItem, this, publish = true, notifyInventoryChange = true
                 )

@@ -14,7 +14,7 @@ class FloodlightRender(tileEntity: TransparentNodeEntity, transparentNodeDescrip
     TransparentNodeElementRender(tileEntity, transparentNodeDescriptor) {
 
     override val inventory = TransparentNodeElementInventory(2, 64, this)
-    private val descriptor = transparentNodeDescriptor as FloodlightDescriptor
+    val descriptor = transparentNodeDescriptor as FloodlightDescriptor
 
     private var rotationAxis = XN
     private var blockFacing = XN

@@ -113,19 +113,6 @@ class LampSocketStandardObjRender(obj: Obj3D, val onOffModel: Boolean) : ILampSo
         UtilsClient.enableLight()
         UtilsClient.disableBlend()
         UtilsClient.enableCulling()
-
-        /*
-        GL11.glLineWidth(2f)
-        GL11.glDisable(GL11.GL_TEXTURE_2D)
-        GL11.glDisable(GL11.GL_LIGHTING)
-        GL11.glColor3d(1.0,1.0,1.0)
-        GL11.glBegin(GL11.GL_LINES)
-        GL11.glVertex3d(0.0, 0.0, 0.0)
-        GL11.glVertex3d(cos(alphaZ * (Math.PI / 180.0)), sin(alphaZ * (Math.PI / 180.0)), 0.0)
-        GL11.glEnd()
-        GL11.glEnable(GL11.GL_TEXTURE_2D)
-        GL11.glEnable(GL11.GL_LIGHTING)
-        */
     }
 
 }

@@ -1,7 +1,7 @@
 package mods.eln.sixnode.lampsocket
 
 import mods.eln.cable.CableRenderDescriptor
-import mods.eln.item.LampDescriptor
+import mods.eln.item.lampitem.LampDescriptor
 import mods.eln.misc.Coordinate
 import mods.eln.misc.Direction
 import mods.eln.misc.LRDU

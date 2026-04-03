@@ -7,7 +7,7 @@ import net.minecraft.entity.player.EntityPlayer
 
 // TODO: Revisit integration of this file with the rest of the six-node lamp socket code.
 class LampSocketGui(player: EntityPlayer, val render: LampSocketRender) :
-    GuiContainerEln(LampSocketContainer(player, render.inventory)) {
+    GuiContainerEln(LampSocketContainer(player, render.inventory, render.descriptor)) {
 
     companion object {
         const val TOGGLE_GROUNDED_EVENT: Byte = 0
@@ -63,10 +63,10 @@ class LampSocketGui(player: EntityPlayer, val render: LampSocketRender) :
             val lampStack = render.inventory.getStackInSlot(LampSocketContainer.LAMP_SLOT_ID)
             val cableStack = render.inventory.getStackInSlot(LampSocketContainer.CABLE_SLOT_ID)
 
-            if (lampStack == null) {
-                textboxLampSupplyChannel.setComment(1, "§4" + I18N.tr("Lamp slot empty"))
-            } else if (cableStack == null) {
+            if (cableStack == null) {
                 textboxLampSupplyChannel.setComment(1, "§4" + I18N.tr("Cable slot empty"))
+            } else if (lampStack == null) {
+                textboxLampSupplyChannel.setComment(1, "§4" + I18N.tr("Lamp slot empty"))
             } else if (render.activeLampSupplyConnection) {
                 textboxLampSupplyChannel.setComment(1, "§2" + I18N.tr("Connected to ${render.lampSupplyChannel}"))
             } else {
