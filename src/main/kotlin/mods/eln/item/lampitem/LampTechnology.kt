@@ -11,7 +11,7 @@ object LampLists {
 
     init {
         lampTechnologyList.add(BoilerplateLampData("incandescent", 16.0, false, 15, 1.0, 0.5, 0.0, 0.0, 1.0))
-        lampTechnologyList.add(BoilerplateLampData("carbonIncandescent", 6.0, false, 15, 1.0, 0.5, 0.0, 0.0, 1.0))
+        lampTechnologyList.add(BoilerplateLampData("carbon", 6.0, false, 15, 1.0, 0.5, 0.0, 0.0, 1.0))
         lampTechnologyList.add(BoilerplateLampData("fluorescent", 64.0, false, 15, 1.0, 0.75, 0.75, 4.0, 0.5))
         lampTechnologyList.add(BoilerplateLampData("farming", 16.0, false, 15, 2.0, 0.5, 0.0, 0.0, 1.5))
         lampTechnologyList.add(BoilerplateLampData("led", 512.0, false, 15, 1.0, 0.75, 0.0, 0.0, 0.5))
