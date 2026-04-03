@@ -11,6 +11,9 @@ import mods.eln.i18n.I18N
 import mods.eln.i18n.I18N.tr
 import mods.eln.item.*
 import mods.eln.item.electricalitem.*
+import mods.eln.item.lampitem.LampDescriptor
+import mods.eln.item.lampitem.LampLists
+import mods.eln.item.lampitem.SpecificLampData
 import mods.eln.item.regulator.IRegulatorDescriptor
 import mods.eln.item.regulator.RegulatorAnalogDescriptor
 import mods.eln.item.regulator.RegulatorOnOffDescriptor
@@ -402,8 +405,8 @@ object ItemRegistration {
             subId = 4
             completeId = subId + (id shl 6)
             descriptor = LampDescriptor(
-                I18N.TR_NAME(I18N.Type.NONE, "Small 50V Carbon Incandescent Light Bulb"), "incandescentcarbonlamp",
-                SpecificLampData(LampLists.getLampData("carbonIncandescent")!!, Eln.LVU)
+                I18N.TR_NAME(I18N.Type.NONE, "Small 50V Carbon Light Bulb"), "incandescentcarbonlamp",
+                SpecificLampData(LampLists.getLampData("carbon")!!, Eln.LVU)
             )
             Eln.sharedItem.addElement(completeId, descriptor)
         }
@@ -411,8 +414,8 @@ object ItemRegistration {
             subId = 5
             completeId = subId + (id shl 6)
             descriptor = LampDescriptor(
-                I18N.TR_NAME(I18N.Type.NONE, "50V Carbon Incandescent Light Bulb"), "incandescentcarbonlamp",
-                SpecificLampData(LampLists.getLampData("carbonIncandescent")!!, Eln.LVU)
+                I18N.TR_NAME(I18N.Type.NONE, "50V Carbon Light Bulb"), "incandescentcarbonlamp",
+                SpecificLampData(LampLists.getLampData("carbon")!!, Eln.LVU)
             )
             Eln.sharedItem.addElement(completeId, descriptor)
         }
@@ -1155,13 +1158,13 @@ object ItemRegistration {
         run {
             subId = 0
             name = I18N.TR_NAME(I18N.Type.NONE, "Small Flashlight")
-            val desc = ElectricalLampItem(name, 10, 6, 20.0, 12, 8, 50.0, 6000.0, 100.0)
+            val desc = ElectricalFlashlightItem(name, 10, 6, 20.0, 12, 8, 50.0, 6000.0, 100.0)
             Eln.sharedItemStackOne.addElement(subId + (id shl 6), desc)
         }
         run {
             subId = 1
             name = I18N.TR_NAME(I18N.Type.NONE, "Improved Flashlight")
-            val desc = ElectricalLampItem(name, 15, 8, 20.0, 15, 12, 50.0, 24000.0, 400.0)
+            val desc = ElectricalFlashlightItem(name, 15, 8, 20.0, 15, 12, 50.0, 24000.0, 400.0)
             Eln.sharedItemStackOne.addElement(subId + (id shl 6), desc)
         }
 

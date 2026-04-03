@@ -270,11 +270,11 @@ object CraftingRecipes {
 
     private fun recipeLampSocket() {
         addRecipe(
-            Eln.findItemStack("Lamp Socket A", 3), "G ", "IG", "G ", 'G', ItemStack(Blocks.glass_pane), 'I',
+            Eln.findItemStack("Classic Lamp Socket", 3), "G ", "IG", "G ", 'G', ItemStack(Blocks.glass_pane), 'I',
             findItemStack("Iron Cable")
         )
         addRecipe(
-            Eln.findItemStack("Lamp Socket B Projector", 3), " G", "GI", " G", 'G',
+            Eln.findItemStack("Spot Lamp Socket", 3), " G", "GI", " G", 'G',
             ItemStack(Blocks.glass_pane), 'I', ItemStack(Items.iron_ingot)
         )
         addRecipe(
@@ -1051,19 +1051,19 @@ object CraftingRecipes {
         )
         // CARBON
         addRecipe(
-            Eln.findItemStack("Small 50V Carbon Incandescent Light Bulb", 4), " G ", "GFG", " S ", 'G',
+            Eln.findItemStack("Small 50V Carbon Light Bulb", 4), " G ", "GFG", " S ", 'G',
             ItemStack(Blocks.glass_pane), 'F', ItemStack(Items.coal), 'S', findItemStack("Copper Cable")
         )
         addRecipe(
-            Eln.findItemStack("Small 50V Carbon Incandescent Light Bulb", 4), " G ", "GFG", " S ", 'G',
+            Eln.findItemStack("Small 50V Carbon Light Bulb", 4), " G ", "GFG", " S ", 'G',
             ItemStack(Blocks.glass_pane), 'F', ItemStack(Items.coal, 1, 1), 'S', findItemStack("Copper Cable")
         )
         addRecipe(
-            Eln.findItemStack("50V Carbon Incandescent Light Bulb", 4), " G ", "GFG", " S ", 'G',
+            Eln.findItemStack("50V Carbon Light Bulb", 4), " G ", "GFG", " S ", 'G',
             ItemStack(Blocks.glass_pane), 'F', ItemStack(Items.coal), 'S', findItemStack("Low Voltage Cable")
         )
         addRecipe(
-            Eln.findItemStack("50V Carbon Incandescent Light Bulb", 4), " G ", "GFG", " S ", 'G',
+            Eln.findItemStack("50V Carbon Light Bulb", 4), " G ", "GFG", " S ", 'G',
             ItemStack(Blocks.glass_pane), 'F', ItemStack(Items.coal, 1, 1), 'S', findItemStack(
                 "Low Voltage " +
                         "Cable"

@@ -15,8 +15,8 @@ import net.minecraft.world.World
 import net.minecraftforge.client.IItemRenderer.ItemRenderType
 import net.minecraftforge.client.IItemRenderer.ItemRendererHelper
 
-class ElectricalLampItem(name: String, var lightMin: Int, var rangeMin: Int, dischargeMin: Double, var lightMax: Int,
-                         rangeMax: Int, dischargeMax: Double, energyStorage: Double, chargePower: Double) : LampItem(name), IItemEnergyBattery {
+class ElectricalFlashlightItem(name: String, var lightMin: Int, var rangeMin: Int, dischargeMin: Double, var lightMax: Int,
+                               rangeMax: Int, dischargeMax: Double, energyStorage: Double, chargePower: Double) : FlashlightItem(name), IItemEnergyBattery {
     var rangeMax: Int
     var energyStorage: Double
     var dischargeMin: Double
