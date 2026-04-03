@@ -413,7 +413,7 @@ object SixNodeRegistration {
                 false,
                 arrayOf(
                     LampLists.getLampData("incandescent")!!,
-                    LampLists.getLampData("carbonIncandescent")!!,
+                    LampLists.getLampData("carbon")!!,
                     LampLists.getLampData("farming")!!,
                     LampLists.getLampData("led")!!
                 )
@@ -432,7 +432,7 @@ object SixNodeRegistration {
                 true,
                 arrayOf(
                     LampLists.getLampData("incandescent")!!,
-                    LampLists.getLampData("carbonIncandescent")!!,
+                    LampLists.getLampData("carbon")!!,
                     LampLists.getLampData("farming")!!,
                     LampLists.getLampData("led")!!
                 )
@@ -451,7 +451,7 @@ object SixNodeRegistration {
                 false,
                 arrayOf(
                     LampLists.getLampData("incandescent")!!,
-                    LampLists.getLampData("carbonIncandescent")!!,
+                    LampLists.getLampData("carbon")!!,
                     LampLists.getLampData("farming")!!,
                     LampLists.getLampData("led")!!
                 )
@@ -488,7 +488,7 @@ object SixNodeRegistration {
                 false,
                 arrayOf(
                     LampLists.getLampData("incandescent")!!,
-                    LampLists.getLampData("carbonIncandescent")!!,
+                    LampLists.getLampData("carbon")!!,
                     LampLists.getLampData("farming")!!,
                     LampLists.getLampData("led")!!
                 )
@@ -526,7 +526,7 @@ object SixNodeRegistration {
                 false,
                 arrayOf(
                     LampLists.getLampData("incandescent")!!,
-                    LampLists.getLampData("carbonIncandescent")!!,
+                    LampLists.getLampData("carbon")!!,
                     LampLists.getLampData("farming")!!,
                     LampLists.getLampData("led")!!
                 )
@@ -548,7 +548,7 @@ object SixNodeRegistration {
                 false,
                 arrayOf(
                     LampLists.getLampData("incandescent")!!,
-                    LampLists.getLampData("carbonIncandescent")!!,
+                    LampLists.getLampData("carbon")!!,
                     LampLists.getLampData("farming")!!,
                     LampLists.getLampData("led")!!
                 )
@@ -570,7 +570,7 @@ object SixNodeRegistration {
                 false,
                 arrayOf(
                     LampLists.getLampData("incandescent")!!,
-                    LampLists.getLampData("carbonIncandescent")!!,
+                    LampLists.getLampData("carbon")!!,
                     LampLists.getLampData("farming")!!,
                     LampLists.getLampData("led")!!
                 )
@@ -592,7 +592,7 @@ object SixNodeRegistration {
                 false,
                 arrayOf(
                     LampLists.getLampData("incandescent")!!,
-                    LampLists.getLampData("carbonIncandescent")!!,
+                    LampLists.getLampData("carbon")!!,
                     LampLists.getLampData("farming")!!,
                     LampLists.getLampData("led")!!
                 )
@@ -614,7 +614,7 @@ object SixNodeRegistration {
                 false,
                 arrayOf(
                     LampLists.getLampData("incandescent")!!,
-                    LampLists.getLampData("carbonIncandescent")!!,
+                    LampLists.getLampData("carbon")!!,
                     LampLists.getLampData("farming")!!,
                     LampLists.getLampData("led")!!
                 )
@@ -636,7 +636,7 @@ object SixNodeRegistration {
                 false,
                 arrayOf(
                     LampLists.getLampData("incandescent")!!,
-                    LampLists.getLampData("carbonIncandescent")!!,
+                    LampLists.getLampData("carbon")!!,
                     LampLists.getLampData("farming")!!,
                     LampLists.getLampData("led")!!
                 )

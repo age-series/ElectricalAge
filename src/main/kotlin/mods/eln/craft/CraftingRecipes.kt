@@ -1051,19 +1051,19 @@ object CraftingRecipes {
         )
         // CARBON
         addRecipe(
-            Eln.findItemStack("Small 50V Carbon Incandescent Light Bulb", 4), " G ", "GFG", " S ", 'G',
+            Eln.findItemStack("Small 50V Carbon Light Bulb", 4), " G ", "GFG", " S ", 'G',
             ItemStack(Blocks.glass_pane), 'F', ItemStack(Items.coal), 'S', findItemStack("Copper Cable")
         )
         addRecipe(
-            Eln.findItemStack("Small 50V Carbon Incandescent Light Bulb", 4), " G ", "GFG", " S ", 'G',
+            Eln.findItemStack("Small 50V Carbon Light Bulb", 4), " G ", "GFG", " S ", 'G',
             ItemStack(Blocks.glass_pane), 'F', ItemStack(Items.coal, 1, 1), 'S', findItemStack("Copper Cable")
         )
         addRecipe(
-            Eln.findItemStack("50V Carbon Incandescent Light Bulb", 4), " G ", "GFG", " S ", 'G',
+            Eln.findItemStack("50V Carbon Light Bulb", 4), " G ", "GFG", " S ", 'G',
             ItemStack(Blocks.glass_pane), 'F', ItemStack(Items.coal), 'S', findItemStack("Low Voltage Cable")
         )
         addRecipe(
-            Eln.findItemStack("50V Carbon Incandescent Light Bulb", 4), " G ", "GFG", " S ", 'G',
+            Eln.findItemStack("50V Carbon Light Bulb", 4), " G ", "GFG", " S ", 'G',
             ItemStack(Blocks.glass_pane), 'F', ItemStack(Items.coal, 1, 1), 'S', findItemStack(
                 "Low Voltage " +
                         "Cable"
