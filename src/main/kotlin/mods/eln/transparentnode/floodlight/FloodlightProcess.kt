@@ -3,12 +3,12 @@ package mods.eln.transparentnode.floodlight
 import mods.eln.Eln
 import mods.eln.item.BoilerplateLampData
 import mods.eln.item.LampDescriptor
+import mods.eln.lightblock.LightBlockEntity
 import mods.eln.misc.Coordinate
 import mods.eln.misc.HybridNodeDirection
 import mods.eln.misc.HybridNodeDirection.*
 import mods.eln.misc.Utils.getItemObject
 import mods.eln.sim.IProcess
-import mods.eln.sixnode.lampsocket.LightBlockEntity
 import net.minecraft.item.ItemStack
 import net.minecraft.util.Vec3
 import kotlin.math.*
