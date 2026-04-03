@@ -28,8 +28,8 @@ class FloodlightDescriptor(val itemName: String, val obj: Obj3D, val motorized: 
     var placementSide: Direction = Direction.XN
 
     val acceptedLampTypes = arrayOf(
-        LampLists.getLampData("led")!!,
-        LampLists.getLampData("halogen")!!
+        LampLists.getLampData("halogen")!!,
+        LampLists.getLampData("led")!!
     )
     var acceptedLampTypesString: String = ""
 

@@ -444,8 +444,8 @@ object ItemRegistration {
             subId = 0
             completeId = subId + (id shl 6)
             descriptor = LampDescriptor(
-                I18N.TR_NAME(I18N.Type.NONE, "Small 12V Incandescent Light Bulb"), "incandescentironlamp",
-                SpecificLampData(LampLists.getLampData("incandescent")!!, NominalVoltage.V12)
+                I18N.TR_NAME(I18N.Type.NONE, "Small 120V Incandescent Light Bulb"), "incandescentironlamp",
+                SpecificLampData(LampLists.getLampData("incandescent")!!, NominalVoltage.V120)
             )
             Eln.sharedItem.addElement(completeId, descriptor)
         }
@@ -453,8 +453,8 @@ object ItemRegistration {
             subId = 1
             completeId = subId + (id shl 6)
             descriptor = LampDescriptor(
-                I18N.TR_NAME(I18N.Type.NONE, "12V Incandescent Light Bulb"), "incandescentironlamp",
-                SpecificLampData(LampLists.getLampData("incandescent")!!, NominalVoltage.V12)
+                I18N.TR_NAME(I18N.Type.NONE, "120V Incandescent Light Bulb"), "incandescentironlamp",
+                SpecificLampData(LampLists.getLampData("incandescent")!!, NominalVoltage.V120)
             )
             Eln.sharedItem.addElement(completeId, descriptor)
         }
@@ -471,8 +471,8 @@ object ItemRegistration {
             subId = 4
             completeId = subId + (id shl 6)
             descriptor = LampDescriptor(
-                I18N.TR_NAME(I18N.Type.NONE, "Small 12V Carbon Incandescent Light Bulb"), "incandescentcarbonlamp",
-                SpecificLampData(LampLists.getLampData("carbonIncandescent")!!, NominalVoltage.V12)
+                I18N.TR_NAME(I18N.Type.NONE, "Small 120V Carbon Light Bulb"), "incandescentcarbonlamp",
+                SpecificLampData(LampLists.getLampData("carbon")!!, NominalVoltage.V120)
             )
             Eln.sharedItem.addElement(completeId, descriptor)
         }
@@ -480,8 +480,8 @@ object ItemRegistration {
             subId = 5
             completeId = subId + (id shl 6)
             descriptor = LampDescriptor(
-                I18N.TR_NAME(I18N.Type.NONE, "12V Carbon Incandescent Light Bulb"), "incandescentcarbonlamp",
-                SpecificLampData(LampLists.getLampData("carbonIncandescent")!!, NominalVoltage.V12)
+                I18N.TR_NAME(I18N.Type.NONE, "120V Carbon Light Bulb"), "incandescentcarbonlamp",
+                SpecificLampData(LampLists.getLampData("carbon")!!, NominalVoltage.V120)
             )
             Eln.sharedItem.addElement(completeId, descriptor)
         }
@@ -489,8 +489,8 @@ object ItemRegistration {
             subId = 16
             completeId = subId + (id shl 6)
             descriptor = LampDescriptor(
-                I18N.TR_NAME(I18N.Type.NONE, "Small 12V Fluorescent Light Bulb"), "fluorescentlamp",
-                SpecificLampData(LampLists.getLampData("fluorescent")!!, NominalVoltage.V12)
+                I18N.TR_NAME(I18N.Type.NONE, "Small 120V Fluorescent Light Bulb"), "fluorescentlamp",
+                SpecificLampData(LampLists.getLampData("fluorescent")!!, NominalVoltage.V120)
             )
             Eln.sharedItem.addElement(completeId, descriptor)
         }
@@ -498,8 +498,8 @@ object ItemRegistration {
             subId = 17
             completeId = subId + (id shl 6)
             descriptor = LampDescriptor(
-                I18N.TR_NAME(I18N.Type.NONE, "12V Fluorescent Light Bulb"), "fluorescentlamp",
-                SpecificLampData(LampLists.getLampData("fluorescent")!!, NominalVoltage.V12)
+                I18N.TR_NAME(I18N.Type.NONE, "120V Fluorescent Light Bulb"), "fluorescentlamp",
+                SpecificLampData(LampLists.getLampData("fluorescent")!!, NominalVoltage.V120)
             )
             Eln.sharedItem.addElement(completeId, descriptor)
         }
@@ -516,8 +516,8 @@ object ItemRegistration {
             subId = 32
             completeId = subId + (id shl 6)
             descriptor = LampDescriptor(
-                I18N.TR_NAME(I18N.Type.NONE, "12V Farming Light Bulb"), "farminglamp",
-                SpecificLampData(LampLists.getLampData("farming")!!, NominalVoltage.V12)
+                I18N.TR_NAME(I18N.Type.NONE, "120V Farming Light Bulb"), "farminglamp",
+                SpecificLampData(LampLists.getLampData("farming")!!, NominalVoltage.V120)
             )
             Eln.sharedItem.addElement(completeId, descriptor)
         }
@@ -534,8 +534,8 @@ object ItemRegistration {
             subId = 37
             completeId = subId + (id shl 6)
             descriptor = LampDescriptor(
-                I18N.TR_NAME(I18N.Type.NONE, "12V LED Light Bulb"), "ledlamp",
-                SpecificLampData(LampLists.getLampData("led")!!, NominalVoltage.V12)
+                I18N.TR_NAME(I18N.Type.NONE, "120V LED Light Bulb"), "ledlamp",
+                SpecificLampData(LampLists.getLampData("led")!!, NominalVoltage.V120)
             )
             Eln.sharedItem.addElement(completeId, descriptor)
         }
@@ -552,8 +552,8 @@ object ItemRegistration {
             subId = 44
             completeId = subId + (id shl 6)
             descriptor = LampDescriptor(
-                I18N.TR_NAME(I18N.Type.NONE, "12V Halogen Light Bulb"), "halogenlamp",
-                SpecificLampData(LampLists.getLampData("halogen")!!, NominalVoltage.V12)
+                I18N.TR_NAME(I18N.Type.NONE, "120V Halogen Light Bulb"), "halogenlamp",
+                SpecificLampData(LampLists.getLampData("halogen")!!, NominalVoltage.V120)
             )
             Eln.sharedItem.addElement(completeId, descriptor)
         }
