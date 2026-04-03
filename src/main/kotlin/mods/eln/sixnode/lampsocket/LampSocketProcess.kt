@@ -3,6 +3,7 @@ package mods.eln.sixnode.lampsocket
 import mods.eln.Eln
 import mods.eln.generic.GenericItemUsingDamage
 import mods.eln.item.LampDescriptor
+import mods.eln.lightblock.LightBlockEntity
 import mods.eln.misc.Coordinate
 import mods.eln.misc.INBTTReady
 import mods.eln.misc.Utils

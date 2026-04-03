@@ -1,6 +1,7 @@
 package mods.eln.transparentnode.teleporter;
 
 import mods.eln.i18n.I18N;
+import mods.eln.lightblock.LightBlockEntity;
 import mods.eln.misc.Coordinate;
 import mods.eln.misc.Direction;
 import mods.eln.misc.LRDU;
@@ -16,7 +17,6 @@ import mods.eln.sim.mna.component.Resistor;
 import mods.eln.sim.nbt.NbtElectricalLoad;
 import mods.eln.sim.process.destruct.VoltageStateWatchDog;
 import mods.eln.sim.process.destruct.WorldExplosion;
-import mods.eln.sixnode.lampsocket.LightBlockEntity;
 import mods.eln.sound.SoundCommand;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
