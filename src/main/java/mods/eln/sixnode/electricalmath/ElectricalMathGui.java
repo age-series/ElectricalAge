@@ -30,7 +30,7 @@ public class ElectricalMathGui extends GuiContainerEln {
     public void initGui() {
         super.initGui();
 
-        expression = newGuiTextField(8, 8, 176 - 16 + 44);
+        expression = newGuiTextField(8, 8, 176 - 16 + 44, 600);
         expression.setText(render.expression);
         expression.setObserver(this);
         expression.setComment(new String[]{tr("Output voltage formula"),

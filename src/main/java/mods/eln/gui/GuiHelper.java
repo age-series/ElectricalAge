@@ -39,9 +39,13 @@ public class GuiHelper {
     }
 
     GuiTextFieldEln newGuiTextField(int x, int y, int width) {
+        return newGuiTextField(x, y, width, 150);
+    }
+
+    GuiTextFieldEln newGuiTextField(int x, int y, int width, int maxLength) {
         GuiTextFieldEln o;
         o = new GuiTextFieldEln(Minecraft.getMinecraft().fontRenderer,
-            screen.width / 2 - xSize / 2 + x, screen.height / 2 - ySize / 2 + y, width, 12, this);
+            screen.width / 2 - xSize / 2 + x, screen.height / 2 - ySize / 2 + y, width, 12, this, maxLength);
         objectList.add(o);
         return o;
     }
