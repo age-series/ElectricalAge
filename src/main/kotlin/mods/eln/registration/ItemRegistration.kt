@@ -1233,13 +1233,13 @@ object ItemRegistration {
         run {
             subId = 0
             name = I18N.TR_NAME(I18N.Type.NONE, "Small Flashlight")
-            val desc = ElectricalLampItem(name, 10, 6, 20.0, 12, 8, 50.0, 6000.0, 100.0)
+            val desc = ElectricalFlashlightItem(name, 10, 6, 20.0, 12, 8, 50.0, 6000.0, 100.0)
             Eln.sharedItemStackOne.addElement(subId + (id shl 6), desc)
         }
         run {
             subId = 1
             name = I18N.TR_NAME(I18N.Type.NONE, "Improved Flashlight")
-            val desc = ElectricalLampItem(name, 15, 8, 20.0, 15, 12, 50.0, 24000.0, 400.0)
+            val desc = ElectricalFlashlightItem(name, 15, 8, 20.0, 15, 12, 50.0, 24000.0, 400.0)
             Eln.sharedItemStackOne.addElement(subId + (id shl 6), desc)
         }
 

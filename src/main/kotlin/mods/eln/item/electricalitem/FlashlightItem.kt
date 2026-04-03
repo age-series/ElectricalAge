@@ -7,7 +7,7 @@ import net.minecraft.item.ItemStack
 import net.minecraft.util.MathHelper
 import net.minecraft.world.World
 
-abstract class LampItem(name: String?) : GenericItemUsingDamageDescriptor(name!!) {
+abstract class FlashlightItem(name: String?) : GenericItemUsingDamageDescriptor(name!!) {
     abstract fun getLightState(stack: ItemStack): Int
     abstract fun getRange(stack: ItemStack): Int
     abstract fun getLight(stack: ItemStack): Int
