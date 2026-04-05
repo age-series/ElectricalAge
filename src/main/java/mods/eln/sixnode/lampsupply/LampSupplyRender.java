@@ -8,7 +8,9 @@ import mods.eln.node.six.SixNodeDescriptor;
 import mods.eln.node.six.SixNodeElementInventory;
 import mods.eln.node.six.SixNodeElementRender;
 import mods.eln.node.six.SixNodeEntity;
+import mods.eln.sixnode.currentcable.CurrentCableDescriptor;
 import mods.eln.sixnode.electricalcable.ElectricalCableDescriptor;
+import mods.eln.sixnode.genericcable.GenericCableDescriptor;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -93,8 +95,10 @@ public class LampSupplyRender extends SixNodeElementRender {
 
             ItemStack cableStack = Utils.unserialiseItemStack(stream);
             if (cableStack != null) {
-                ElectricalCableDescriptor desc = (ElectricalCableDescriptor) GenericItemBlockUsingDamageDescriptor.getDescriptor(
+                GenericCableDescriptor desc = (ElectricalCableDescriptor) GenericItemBlockUsingDamageDescriptor.getDescriptor(
                     cableStack, ElectricalCableDescriptor.class);
+                if (desc == null) desc = (CurrentCableDescriptor) GenericItemBlockUsingDamageDescriptor.getDescriptor(
+                        cableStack, CurrentCableDescriptor.class);
                 cableRender = desc == null ? null : desc.render;
             } else {
                 cableRender = null;

@@ -22,6 +22,7 @@ import mods.eln.sim.mna.misc.MnaConst;
 import mods.eln.sim.nbt.NbtElectricalLoad;
 import mods.eln.sim.process.destruct.VoltageStateWatchDog;
 import mods.eln.sim.process.destruct.WorldExplosion;
+import mods.eln.sixnode.currentcable.CurrentCableDescriptor;
 import mods.eln.sixnode.electricalcable.ElectricalCableDescriptor;
 import mods.eln.sixnode.wirelesssignal.IWirelessSignalSpot;
 import mods.eln.sixnode.wirelesssignal.IWirelessSignalTx;
@@ -65,7 +66,7 @@ public class LampSupplyElement extends SixNodeElement implements IConfigurable {
     public IProcess lampSupplySlowProcess = new LampSupplySlowProcess();
 
     private AutoAcceptInventoryProxy inventory = (new AutoAcceptInventoryProxy(new SixNodeElementInventory(1, 64, this)))
-        .acceptIfIncrement(0, 64, ElectricalCableDescriptor.class);
+        .acceptIfIncrement(0, 64, ElectricalCableDescriptor.class, CurrentCableDescriptor.class);
 
 
     static class Entry {
