@@ -37,16 +37,16 @@ class LampSocketStandardObjRender(obj: Obj3D, val onOffModel: Boolean) : ILampSo
             }
         }
 
-        draw(LRDU.Up, 0.0, 0, true, 15, distanceToPlayer)
+        draw(LRDU.Up, 0, true, 15, distanceToPlayer)
     }
 
     override fun draw(render: LampSocketRender, distanceToPlayer: Double) {
         val color = if (render.descriptor.paintable) render.paintColor else 15
 
-        draw(render.front!!, render.alphaZ, render.light, render.lampInInventory, color, distanceToPlayer)
+        draw(render.front!!, render.light, render.lampInInventory, color, distanceToPlayer)
     }
 
-    fun draw(front: LRDU, alphaZ: Double, light: Int, hasBulb: Boolean, color: Int, distanceToPlayer: Double) {
+    fun draw(front: LRDU, light: Int, hasBulb: Boolean, color: Int, distanceToPlayer: Double) {
         front.glRotateOnX()
 
         UtilsClient.disableCulling()

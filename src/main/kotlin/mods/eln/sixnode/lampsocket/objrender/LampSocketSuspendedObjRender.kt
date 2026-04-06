@@ -32,14 +32,14 @@ class LampSocketSuspendedObjRender(obj: Obj3D, val onOffModel: Boolean, val leng
             GL11.glTranslated(-1.5, 0.0, 0.4)
         }
 
-        draw(LRDU.Up, 0.0, 0, 0.0, 0.0, distanceToPlayer)
+        draw(LRDU.Up, 0, 0.0, 0.0, distanceToPlayer)
     }
 
     override fun draw(render: LampSocketRender, distanceToPlayer: Double) {
-        draw(render.front!!, render.alphaZ, render.light, render.perturbPy, render.perturbPz, distanceToPlayer)
+        draw(render.front!!, render.light, render.perturbPy, render.perturbPz, distanceToPlayer)
     }
 
-    fun draw(front: LRDU, alphaZ: Double, light: Int, perturbPy: Double, perturbPz: Double, distanceToPlayer: Double) {
+    fun draw(front: LRDU, light: Int, perturbPy: Double, perturbPz: Double, distanceToPlayer: Double) {
         // front.glRotateOnX()
 
         val perturbPy = perturbPy / length.toDouble()

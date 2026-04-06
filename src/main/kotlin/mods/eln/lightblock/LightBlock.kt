@@ -35,7 +35,7 @@ class LightBlock : BlockContainer(Material.air) {
         return -1
     }
 
-    override fun getItemDropped(p_149650_1_: Int, p_149650_2_: Random, p_149650_3_: Int): Item? {
+    override fun getItemDropped(par1: Int, par2: Random, par3: Int): Item? {
         return null
     }
 

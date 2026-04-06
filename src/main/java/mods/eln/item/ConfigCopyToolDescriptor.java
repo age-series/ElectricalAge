@@ -3,6 +3,8 @@ package mods.eln.item;
 import mods.eln.Eln;
 import mods.eln.generic.GenericItemBlockUsingDamageDescriptor;
 import mods.eln.generic.GenericItemUsingDamageDescriptor;
+import mods.eln.item.lampitem.BoilerplateLampData;
+import mods.eln.item.lampitem.LampDescriptor;
 import mods.eln.misc.Coordinate;
 import mods.eln.misc.Direction;
 import mods.eln.node.NodeBase;
@@ -100,6 +102,20 @@ public class ConfigCopyToolDescriptor extends GenericItemUsingDamageDescriptor {
             Eln.logger.info("CCT Copy: " + name + "Type: -1");
             compound.setInteger(name + "Type", -1);
         }
+    }
+
+    public static boolean readLampDescriptor(NBTTagCompound compound, String name, IInventory inv, int slot, EntityPlayer invoker, BoilerplateLampData[] acceptedLampTypes) {
+        GenericItemUsingDamageDescriptor desc = GenericItemUsingDamageDescriptor.getDescriptor(inv.getStackInSlot(slot));
+
+        if (desc instanceof LampDescriptor) {
+            for (BoilerplateLampData acceptedLampType : acceptedLampTypes) {
+                if (((LampDescriptor) desc).getLampData().getTechnology() == acceptedLampType) {
+                    return readGenDescriptor(compound, name, inv, slot, invoker);
+                }
+            }
+        }
+
+        return false;
     }
 
     public static boolean readGenDescriptor(NBTTagCompound compound, String name, IInventory inv, int slot, EntityPlayer invoker) {

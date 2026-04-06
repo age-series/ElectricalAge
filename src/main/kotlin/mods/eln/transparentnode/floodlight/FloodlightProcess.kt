@@ -13,7 +13,7 @@ import net.minecraft.item.ItemStack
 import net.minecraft.util.Vec3
 import kotlin.math.*
 
-class FloodlightProcess(var element: FloodlightElement) : IProcess {
+class FloodlightProcess(val element: FloodlightElement) : IProcess {
 
     companion object {
         // Number of light rays to be produced in each direction. Must be a mathematical integer!
@@ -23,6 +23,8 @@ class FloodlightProcess(var element: FloodlightElement) : IProcess {
         // Base length of a light beam
         const val BASE_THROW_DISTANCE = 8
     }
+
+    private var processElapsedTime = 0.0
 
     override fun process(time: Double) {
         if (element.motorized) {
@@ -38,9 +40,9 @@ class FloodlightProcess(var element: FloodlightElement) : IProcess {
         lampStacks.add(element.inventory.getStackInSlot(FloodlightContainer.LAMP_SLOT_1_ID))
         lampStacks.add(element.inventory.getStackInSlot(FloodlightContainer.LAMP_SLOT_2_ID))
 
-        for (idx in 0 until lampStacks.size) {
-            if (lampStacks[idx] != null) {
-                val lampDescriptor = getItemObject(lampStacks[idx]) as LampDescriptor
+        for ((idx, lampStack) in lampStacks.withIndex()) {
+            if (lampStack != null) {
+                val lampDescriptor = getItemObject(lampStack) as LampDescriptor
 
                 val lampVoltage = element.electricalLoad.voltage
 
@@ -54,21 +56,21 @@ class FloodlightProcess(var element: FloodlightElement) : IProcess {
 
                 lampLightRanges.add(BASE_THROW_DISTANCE * sqrt(lampDescriptor.lampData.nominalU / Eln.LVU).toInt())
 
-                /** Only decrease the life of a bulb once a second. This reduces the update rate at which the NBT is changed
+                /* Only decrease the life of a bulb once a second. This reduces the update rate at which the NBT is changed
                  * to once per second from once per tick, reducing the probability of an NBT mismatch bug occurring when
                  * shift-clicking. When the bug is eventually fixed, the processElapsedTime variable and supporting code can
                  * be deleted. Also update the decreaseLampLife function definition according to the note there.
                 */
-                if (element.processElapsedTime in -0.001..0.001) {
-                    val lampLife = lampDescriptor.decreaseLampLife(lampStacks[idx]!!, lampVoltage)
+                if (processElapsedTime in -0.001..0.001) {
+                    val lampLife = lampDescriptor.decreaseLampLife(lampStack, lampVoltage)
 
                     if (lampLife <= 0.0) {
+                        lampLightValues[idx] = BoilerplateLampData.MIN_LIGHT_VALUE
                         element.inventory.setInventorySlotContents(idx, null)
                         element.inventory.markDirty()
                     }
                 }
-            }
-            else {
+            } else {
                 lampLightValues.add(BoilerplateLampData.MIN_LIGHT_VALUE)
                 lampLightRanges.add(0)
             }
@@ -87,8 +89,8 @@ class FloodlightProcess(var element: FloodlightElement) : IProcess {
         // Only run raytracing when the floodlight is actually on.
         if (newLightValue != 0) placeSpots(newLightValue)
 
-        element.processElapsedTime += time
-        if (element.processElapsedTime >= 1.0) element.processElapsedTime = 0.0
+        processElapsedTime += time
+        if (processElapsedTime >= 1.0) processElapsedTime = 0.0
     }
 
     /**
@@ -152,11 +154,19 @@ class FloodlightProcess(var element: FloodlightElement) : IProcess {
                 lightVector.zCoord += rotationVectors[idx].first.zCoord
                 lbCoordinate.setPosition(lightVector)
 
-                if (!lbCoordinate.blockExist || lbCoordinate.block.isOpaqueCube) break
+                if (!lbCoordinate.blockExist || lbCoordinate.block.isOpaqueCube) {
+                    lightVector.xCoord -= rotationVectors[idx].first.xCoord
+                    lightVector.yCoord -= rotationVectors[idx].first.yCoord
+                    lightVector.zCoord -= rotationVectors[idx].first.zCoord
+                    lbCoordinate.setPosition(lightVector)
+
+                    LightBlockEntity.addLight(lbCoordinate, lightValue, 5)
+                    break
+                }
 
                 // Place light blocks every few blocks along the path of a beam, as well as always at the beam's endpoint.
-                if (jdx % LIGHT_BLOCK_FREQUENCY == (LIGHT_BLOCK_FREQUENCY - 1) || throwDistance.toInt() - jdx == 1) {
-                    LightBlockEntity.addLight(Coordinate(lbCoordinate), lightValue, 5)
+                if (jdx % LIGHT_BLOCK_FREQUENCY == (LIGHT_BLOCK_FREQUENCY - 1) || (jdx == throwDistance.toInt() - 1)) {
+                    LightBlockEntity.addLight(lbCoordinate, lightValue, 5)
                 }
             }
         }

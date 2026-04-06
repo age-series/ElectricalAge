@@ -45,18 +45,18 @@ class LampSocketRender(tileEntity: SixNodeEntity, side: Direction, sixNodeDescri
     var poweredByLampSupply = true
     var activeLampSupplyConnection = false
     var paintColor = 15
-    var alphaZ = 0.0
+    var rotationAngle = 0.0
 
     var light = 0
         set(newLight) {
             field = newLight
 
-            if (lampDescriptor != null && lampDescriptor!!.lampData.technology.lampType == "fluorescent" && oldLight != -1 && oldLight < 9 && light >= 9) {
-                val rand = Math.random()
-                if (rand > 0.1) play(
-                    SoundCommand("eln:neon_lamp").mulVolume(0.7f, (1.0 + (rand / 6.0)).toFloat()).smallRange()
-                )
-                else play(SoundCommand("eln:NEON_LFNOISE").mulVolume(0.2f, 1f).verySmallRange())
+            if (lampDescriptor != null && lampDescriptor!!.lampData.technology.lampType == "fluorescent") {
+                if (oldLight != -1 && oldLight < LampSocketDescriptor.MIN_LIGHT_ON_VALUE && light >= LampSocketDescriptor.MIN_LIGHT_ON_VALUE) {
+                    val rand = Math.random()
+                    if (rand > 0.1) play(SoundCommand("eln:neon_lamp").mulVolume(0.7f, (1.0 + (rand / 6.0)).toFloat()).smallRange())
+                    else play(SoundCommand("eln:NEON_LFNOISE").mulVolume(0.2f, 1f).verySmallRange())
+                }
             }
 
             oldLight = light
@@ -69,8 +69,8 @@ class LampSocketRender(tileEntity: SixNodeEntity, side: Direction, sixNodeDescri
     var perturbPz = 0.0
     private var perturbVy = 0.0
     private var perturbVz = 0.0
-    private var weatherAlphaY = 0.0
-    private var weatherAlphaZ = 0.0
+    private var weatherAngleY = 0.0
+    private var weatherAngleZ = 0.0
 
     private var entityTimeout = 0.0
     private var entityList: MutableList<Any?> = arrayListOf()
@@ -84,7 +84,7 @@ class LampSocketRender(tileEntity: SixNodeEntity, side: Direction, sixNodeDescri
             poweredByLampSupply = stream.readBoolean()
             activeLampSupplyConnection = stream.readBoolean()
             paintColor = stream.readInt()
-            alphaZ = stream.readDouble()
+            rotationAngle = stream.readDouble()
             light = stream.readInt()
             lampInInventory = stream.readBoolean()
 
@@ -145,14 +145,14 @@ class LampSocketRender(tileEntity: SixNodeEntity, side: Direction, sixNodeDescri
                 val weather = (UtilsClient.getWeather(tileEntity.getWorldObj()) * 0.9) + 0.1
 
                 // TODO: Reduce swinging of lamps to some degree?
-                weatherAlphaY += ((0.4 - Math.random()) * deltaT * (Math.PI / 0.2) * weather)
-                weatherAlphaZ += ((0.4 - Math.random()) * deltaT * (Math.PI / 0.2) * weather)
+                weatherAngleY += ((0.4 - Math.random()) * deltaT * (Math.PI / 0.2) * weather)
+                weatherAngleZ += ((0.4 - Math.random()) * deltaT * (Math.PI / 0.2) * weather)
 
-                if (weatherAlphaY > (2 * Math.PI)) weatherAlphaY -= (2 * Math.PI)
-                if (weatherAlphaZ > (2 * Math.PI)) weatherAlphaZ -= (2 * Math.PI)
+                if (weatherAngleY > (2 * Math.PI)) weatherAngleY -= (2 * Math.PI)
+                if (weatherAngleZ > (2 * Math.PI)) weatherAngleZ -= (2 * Math.PI)
 
-                perturbVy += (Math.random() * sin(weatherAlphaY) * weather.pow(2) * deltaT * 3)
-                perturbVz += (Math.random() * cos(weatherAlphaY) * weather.pow(2) * deltaT * 3)
+                perturbVy += (Math.random() * sin(weatherAngleY) * weather.pow(2) * deltaT * 3)
+                perturbVz += (Math.random() * cos(weatherAngleY) * weather.pow(2) * deltaT * 3)
 
                 perturbVy += (0.4 * deltaT * weather * sign(perturbVy) * Math.random())
                 perturbVz += (0.4 * deltaT * weather * sign(perturbVz) * Math.random())
@@ -170,10 +170,8 @@ class LampSocketRender(tileEntity: SixNodeEntity, side: Direction, sixNodeDescri
 
     override fun getCableRender(lrdu: LRDU): CableRenderDescriptor? {
         if (cableDescriptor == null
-            || (lrdu == front && !descriptor.cableFront)
-            || (lrdu == front!!.left() && !descriptor.cableLeft)
-            || (lrdu == front!!.right() && !descriptor.cableRight)
-            || (lrdu == front!!.inverse() && !descriptor.cableBack)
+            || (lrdu == front!!.left() && !descriptor.renderSideCables)
+            || (lrdu == front!!.right() && !descriptor.renderSideCables)
         ) return null
 
         return cableDescriptor!!.render

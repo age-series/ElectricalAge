@@ -1,334 +1,232 @@
 package mods.eln.sixnode.lampsocket
 
-import mods.eln.Eln
-import mods.eln.generic.GenericItemUsingDamage
+import mods.eln.item.lampitem.BoilerplateLampData
 import mods.eln.item.lampitem.LampDescriptor
 import mods.eln.lightblock.LightBlockEntity
 import mods.eln.misc.Coordinate
-import mods.eln.misc.INBTTReady
 import mods.eln.misc.Utils
 import mods.eln.sim.IProcess
 import mods.eln.sixnode.lampsupply.LampSupplyElement
-import mods.eln.sixnode.lampsupply.LampSupplyElement.PowerSupplyChannelHandle
-import net.minecraft.init.Blocks
 import net.minecraft.item.ItemStack
-import net.minecraft.nbt.NBTTagCompound
-import net.minecraft.util.MathHelper
 import net.minecraft.util.Vec3
 import java.io.ByteArrayOutputStream
 import java.io.DataOutputStream
 import java.io.IOException
 import kotlin.math.abs
 
-// TODO: This file is a disaster. Major clean-up needed.
-class LampSocketProcess(var lamp: LampSocketElement) : IProcess, INBTTReady /*,LightBlockObserver*/ {
-    @JvmField
-    var light = 0 // 0..15
-    @JvmField
-    var alphaZ = 0.0
-    var stableProb = 0.0
-    var lampStackLast: ItemStack? = null
-    var boot = true
-    var lbCoord: Coordinate
+// TODO: Revisit integration of this file with the rest of the six-node lamp socket code.
+class LampSocketProcess(var element: LampSocketElement) : IProcess {
 
-    var bestChannelHandle: Pair<Double, PowerSupplyChannelHandle>? = null
+    private var processElapsedTime = 0.0
 
-    private fun findBestSupply(here: Coordinate, forceUpdate: Boolean = false): Pair<Double, PowerSupplyChannelHandle>? {
-        val chanMap = LampSupplyElement.channelMap[lamp.lampSupplyChannel] ?: return null
-        val bestChanHand = bestChannelHandle
-        // Here's our cached value. We just check if it's null and if it's still a thing.
-        if (bestChanHand != null && !forceUpdate && chanMap.contains(bestChanHand.second)) {
-            return bestChanHand // we good!
-        }
-        val list = LampSupplyElement.channelMap[lamp.lampSupplyChannel]?.filterNotNull() ?: return null
-        val chanHand = list
-            .map { Pair(it.element.sixNode?.coordinate?.trueDistanceTo(here)?: Double.MAX_VALUE, it) }
-            .filter { it.first < it.second.element.range }
-            .minByOrNull { it.first }
-        bestChannelHandle = chanHand
-        return bestChannelHandle
-    }
-
-    private fun updateNearbyBlocks(growRate: Double, nominalLight: Int, actualLight: Int, deltaT: Double) {
-        val randTarget = growRate * deltaT * (actualLight.toDouble() / nominalLight.toDouble())
-        if (randTarget > Math.random()) {
-            var exit = false
-            val vv = Vec3.createVectorHelper(1.0, 0.0, 0.0)
-            val vp = Vec3.createVectorHelper(lamp.sixNode!!.coordinate.x + 0.5, lamp.sixNode!!.coordinate.y + 0.5, lamp.sixNode!!.coordinate.z + 0.5)
-            vv.rotateAroundZ((alphaZ * Math.PI / 180.0).toFloat())
-            vv.rotateAroundY(((Math.random() - 0.5) * 2 * Math.PI / 4).toFloat())
-            vv.rotateAroundZ(((Math.random() - 0.5) * 2 * Math.PI / 4).toFloat())
-            lamp.front.rotateOnXnLeft(vv)
-            lamp.side.rotateFromXN(vv)
-            val c = Coordinate(lamp.sixNode!!.coordinate)
-            for (idx in 0 until lamp.descriptor.range + actualLight) { // newCoord.move(lamp.side.getInverse());
-                vp.xCoord += vv.xCoord
-                vp.yCoord += vv.yCoord
-                vp.zCoord += vv.zCoord
-                c.setPosition(vp)
-                if (!c.blockExist) {
-                    exit = true
-                    break
-                }
-                if (isOpaque(c)) {
-                    vp.xCoord -= vv.xCoord
-                    vp.yCoord -= vv.yCoord
-                    vp.zCoord -= vv.zCoord
-                    c.setPosition(vp)
-                    break
-                }
-            }
-            if (!exit && c.block !== Blocks.air)
-                c.block.updateTick(c.world(), c.x, c.y, c.z, c.world().rand)
-        }
-    }
-
-    /**
-     * Manually call inventory change when all items are added/removed from the GUI because it is not being called normally
-     * TODO: This is (hopefully) temporary
-     */
-    private fun updateInventory(lampStack: ItemStack?, cableStack: ItemStack?) {
-        var inventoryChanged = false
-
-        if (lamp.lampInInventory != (lampStack != null)) {
-            lamp.lampInInventory = lampStack != null
-            inventoryChanged = true
-        }
-
-        if (lamp.cableInInventory != (cableStack != null)) {
-            lamp.cableInInventory = cableStack != null
-            inventoryChanged = true
-        }
-
-        if (inventoryChanged) lamp.inventoryChange(lamp.inventory)
-    }
+    var cachedBestChannelHandle: Pair<Double, LampSupplyElement.PowerSupplyChannelHandle>? = null
+    var stableLightProbability = 0.0
+    var fastLightValue = 0
 
     override fun process(time: Double) {
-        var newLight: Int
-        val lampStack = lamp.inventory.getStackInSlot(LampSocketContainer.LAMP_SLOT_ID)
-        val cableStack = lamp.inventory.getStackInSlot(LampSocketContainer.CABLE_SLOT_ID)
-        updateInventory(lampStack, cableStack)
-        // LampDescriptor? is *important* here. Otherwise, NPE.
-        val lampDescriptor = (lampStack?.item as? GenericItemUsingDamage<*>)?.getDescriptor(lampStack) as? LampDescriptor
-        if (cableStack == null || lampStack == null) {
-            /*
-            Cable slot and lamp slot are empty. This means no light, and disconnect from lamp supply.
-             */
-            stableProb = 0.0
-            lamp.activeLampSupplyConnection = false
-            lamp.needPublish()
-        } else {
-            /*
-            Cable slot and lamp slot have stuff. This means there can be light.
-             */
-            if (lamp.poweredByLampSupply) {
-                // Powered by a lamp supply.
-                val lampSupplyList = findBestSupply(lamp.sixNode!!.coordinate)
-                val bestLampSupply = lampSupplyList?.second
-                if (bestLampSupply != null && lampDescriptor != null && bestLampSupply.element.getChannelState(bestLampSupply.id)) {
+        val lampStack = element.inventory.getStackInSlot(LampSocketContainer.LAMP_SLOT_ID)
+        val cableStack = element.inventory.getStackInSlot(LampSocketContainer.CABLE_SLOT_ID)
+
+        var activeLampSupplyConnection = false
+        var newLightValue = BoilerplateLampData.MIN_LIGHT_VALUE
+
+        if (lampStack != null && cableStack != null) {
+            val lampDescriptor = Utils.getItemObject(lampStack) as LampDescriptor
+
+            if (element.poweredByLampSupply) {
+                findBestLampSupply(element.sixNode!!.coordinate)
+
+                val bestLampSupply = cachedBestChannelHandle?.second
+
+                if (bestLampSupply != null && bestLampSupply.element.getChannelState(bestLampSupply.id)) {
                     bestLampSupply.element.addToRp(lampDescriptor.lampData.resistance)
-                    lamp.electricalLoad.state = bestLampSupply.element.powerLoad.state
+                    element.electricalLoad.state = bestLampSupply.element.powerLoad.state
                 } else {
-                    lamp.electricalLoad.state = 0.0
+                    element.electricalLoad.state = 0.0
                 }
 
-                lamp.activeLampSupplyConnection = bestLampSupply != null
-                lamp.needPublish()
+                activeLampSupplyConnection = (bestLampSupply != null)
             }
-            else
-            {
-                // Not powered by a lamp supply.
-                lamp.activeLampSupplyConnection = false
-                lamp.needPublish()
-            }
-        }
 
-        lamp.computeInventory()
-        if (lampStack != lampStackLast) {
-            stableProb = 0.0
-        }
-
-        if (stableProb < 0) stableProb = 0.0
-        var lightDouble: Double
-
-        if (lampDescriptor != null) {
             val lampData = lampDescriptor.lampData
+            val lampTechnology = lampData.technology
+            val lampVoltage = abs(element.lampResistor.voltage)
 
-            // This code makes the ECO lights blink, and the other lights are just "stable"
-            if (lampData.technology.lampType == "fluorescent") {
-                val voltage = abs(lamp.lampResistor.voltage)
-                if (voltage < (lampData.nominalU * lampData.technology.minimalUFactor)) {
-                    stableProb = 0.0
-                    lightDouble = 0.0
+            if (lampVoltage > (lampData.nominalU * lampTechnology.minimalUFactor)) {
+                // This code makes the fluorescent lights blink, and the other lights are just "stable"
+                if (lampTechnology.lampType == "fluorescent") {
+                    val voltageFactor = lampVoltage / lampData.nominalU
+
+                    stableLightProbability += (lampVoltage / lampData.nominalU) * (time / lampTechnology.timeUntilStableInSeconds)
+
+                    if (stableLightProbability > (lampVoltage / (lampData.nominalU * lampTechnology.stableUFactor))) {
+                        stableLightProbability = (lampVoltage / (lampData.nominalU * lampTechnology.stableUFactor))
+                    }
+
+                    newLightValue = if (Math.random() > stableLightProbability) 0 else (lampTechnology.nominalLightValue * voltageFactor).toInt()
                 } else {
-                    val powerFactor = voltage / lampData.nominalU
-                    stableProb += voltage / (lampData.nominalU * lampData.technology.stableUFactor) * time / lampData.technology.timeUntilStableInSeconds * lampData.technology.stableUFactor
-                    if (stableProb > voltage / (lampData.nominalU * lampData.technology.stableUFactor)) stableProb = voltage / (lampData.nominalU * lampData.technology.stableUFactor)
-                    lightDouble = if (Math.random() > stableProb) 0.0 else lampData.technology.nominalLightValue * powerFactor
+                    val num: Double = lampVoltage - (lampData.nominalU * lampTechnology.minimalUFactor)
+                    val den: Double = lampData.nominalU - (lampData.nominalU * lampTechnology.minimalUFactor)
+
+                    newLightValue = ((num / den) * lampTechnology.nominalLightValue).toInt()
                 }
+
+                if (newLightValue < BoilerplateLampData.MIN_LIGHT_VALUE) newLightValue = BoilerplateLampData.MIN_LIGHT_VALUE
+                else if (newLightValue > BoilerplateLampData.MAX_LIGHT_VALUE) newLightValue = BoilerplateLampData.MAX_LIGHT_VALUE
+            } else {
+                if (stableLightProbability !in -0.001..0.001) stableLightProbability = 0.0
             }
-            else {
-                if (lamp.lampResistor.voltage < (lampData.nominalU * lampData.technology.minimalUFactor)) {
-                    lightDouble = 0.0
-                } else {
-                    val num: Double = abs(lamp.lampResistor.voltage) - (lampData.nominalU * lampData.technology.minimalUFactor)
-                    val den: Double = lampData.nominalU - (lampData.nominalU * lampData.technology.minimalUFactor)
 
-                    lightDouble = (num / den) * lampData.technology.nominalLightValue
-                }
+            if (element.coordinate!!.blockExist) {
+                updateNearbyBlocks(lampTechnology.cropGrowthRateFactor, lampTechnology.nominalLightValue, newLightValue, time)
             }
-        } else {
-            // there is no light bulb. Light = 0
-            lightDouble = 0.0
-        }
 
-        newLight = lightDouble.toInt()
-        //light.coerceIn(0, 15) // IT F'ING LIES
-        if (newLight > 15) newLight = 15
-        if (newLight < 0) newLight = 0
-
-        if (lampDescriptor != null) {
-            /** Only decrease the life of a bulb once a second. This reduces the update rate at which the NBT is changed
+            /* Only decrease the life of a bulb once a second. This reduces the update rate at which the NBT is changed
              * to once per second from once per tick, reducing the probability of an NBT mismatch bug occurring when
              * shift-clicking. When the bug is eventually fixed, the processElapsedTime variable and supporting code can
              * be deleted. Also update the decreaseLampLife function definition according to the note there.
              */
-            if (lamp.processElapsedTime in -0.001..0.001) {
-                val lampLife = lampDescriptor.decreaseLampLife(lampStack, lamp.lampResistor.voltage)
+            if (processElapsedTime in -0.001..0.001) {
+                val lampLife = lampDescriptor.decreaseLampLife(lampStack, lampVoltage)
 
                 if (lampLife <= 0.0) {
-                    lamp.inventory.setInventorySlotContents(LampSocketContainer.LAMP_SLOT_ID, null)
-                    lamp.inventory.markDirty()
-                    newLight = 0
+                    newLightValue = BoilerplateLampData.MIN_LIGHT_VALUE
+                    element.inventory.setInventorySlotContents(LampSocketContainer.LAMP_SLOT_ID, null)
+                    element.inventory.markDirty()
                 }
             }
         } else {
-            newLight = 0
+            if (stableLightProbability !in -0.001..0.001) stableLightProbability = 0.0
         }
 
-        if (lamp.coordinate!!.blockExist && lampDescriptor != null) {
-            updateNearbyBlocks(lampDescriptor.lampData.technology.cropGrowthRateFactor, lampDescriptor.lampData.technology.nominalLightValue, newLight, time)
+        updateFastLight(newLightValue)
+        publishChanges(activeLampSupplyConnection, newLightValue)
+        updateInventory(lampStack, cableStack)
+
+        if (newLightValue != 0) placeSpot(newLightValue)
+
+        processElapsedTime += time
+        if (processElapsedTime >= 1.0) processElapsedTime = 0.0
+    }
+
+    private fun findBestLampSupply(coordinate: Coordinate, forceUpdate: Boolean = false) {
+        val channelMap = LampSupplyElement.channelMap[element.lampSupplyChannel]
+
+        if (channelMap != null) {
+            if (channelMap.contains(cachedBestChannelHandle?.second) && !forceUpdate) return
+            else {
+                channelMap.filterNotNull()
+                cachedBestChannelHandle = channelMap
+                    .map { Pair(it.element.sixNode!!.coordinate.trueDistanceTo(coordinate), it) }
+                    .filter { it.first < it.second.element.range }
+                    .minByOrNull { it.first }
+            }
+        } else cachedBestChannelHandle = null
+    }
+
+    private fun updateNearbyBlocks(growRate: Double, nominalLight: Int, actualLight: Int, deltaT: Double) {
+        val randTarget = growRate * deltaT * (actualLight.toDouble() / nominalLight.toDouble())
+
+        if (randTarget > Math.random()) {
+            val rotationVector = Vec3.createVectorHelper(1.0, 0.0, 0.0)
+            rotationVector.rotateAroundZ((element.rotationAngle * (Math.PI / 180.0)).toFloat())
+            rotationVector.rotateAroundY(((Math.random() - 0.5) * Math.PI / 2.0).toFloat())
+            rotationVector.rotateAroundZ(((Math.random() - 0.5) * Math.PI / 2.0).toFloat())
+            element.front.rotateOnXnLeft(rotationVector)
+            element.side.rotateFromXN(rotationVector)
+
+            val lbCoordinate = raytrace(rotationVector, actualLight)
+            lbCoordinate.block.updateTick(lbCoordinate.world(), lbCoordinate.x, lbCoordinate.y, lbCoordinate.z, lbCoordinate.world().rand)
         }
-
-        boot = false
-        lampStackLast = lampStack
-        placeSpot(newLight)
-        if (light != newLight)
-            lamp.needPublish()
-
-        lamp.processElapsedTime += time
-        if (lamp.processElapsedTime >= 1.0) lamp.processElapsedTime = 0.0
     }
 
-    // ElectricalConnectionOneWay connection = null;
-    fun rotateAroundZ(v: Vec3, par1: Float) {
-        val f1 = MathHelper.cos(par1)
-        val f2 = MathHelper.sin(par1)
-        val d0 = v.xCoord * f1.toDouble() + v.yCoord * f2.toDouble()
-        val d1 = v.yCoord * f1.toDouble() - v.xCoord * f2.toDouble()
-        val d2 = v.zCoord
-        v.xCoord = d0
-        v.yCoord = d1
-        v.zCoord = d2
+    private fun placeSpot(lightValue: Int) {
+        val rotationVector = Vec3.createVectorHelper(1.0, 0.0, 0.0)
+        rotationVector.rotateAroundZ((element.rotationAngle * (Math.PI / 180.0)).toFloat())
+        element.front.rotateOnXnLeft(rotationVector)
+        element.side.rotateFromXN(rotationVector)
+
+        val lbCoordinate = raytrace(rotationVector, 0)
+        LightBlockEntity.addLight(lbCoordinate, lightValue, 5)
     }
 
-    fun placeSpot(newLight: Int) {
-        var exit = false
-        if (!lbCoord.blockExist) return
-        val vv = Vec3.createVectorHelper(1.0, 0.0, 0.0)
-        val vp = Utils.getVec05(lamp.sixNode!!.coordinate)
-        rotateAroundZ(vv, (alphaZ * Math.PI / 180.0).toFloat())
-        lamp.front.rotateOnXnLeft(vv)
-        lamp.side.rotateFromXN(vv)
-        val newCoord = Coordinate(lamp.sixNode!!.coordinate)
-        for (idx in 0 until lamp.descriptor.range) { // newCoord.move(lamp.side.getInverse());
-            vp.xCoord += vv.xCoord
-            vp.yCoord += vv.yCoord
-            vp.zCoord += vv.zCoord
-            newCoord.setPosition(vp)
-            if (!newCoord.blockExist) {
-                exit = true
+    private fun raytrace(rotationVector: Vec3, vectorLengthModifier: Int): Coordinate {
+        val lightVector = element.sixNode!!.coordinate.toVec3()
+        val lbCoordinate = Coordinate(lightVector, element.sixNode!!.coordinate.dimension)
+
+        for (idx in 0 until element.descriptor.range + vectorLengthModifier) {
+            lightVector.xCoord += rotationVector.xCoord
+            lightVector.yCoord += rotationVector.yCoord
+            lightVector.zCoord += rotationVector.zCoord
+            lbCoordinate.setPosition(lightVector)
+
+            if (!lbCoordinate.blockExist || lbCoordinate.block.isOpaqueCube) {
+                lightVector.xCoord -= rotationVector.xCoord
+                lightVector.yCoord -= rotationVector.yCoord
+                lightVector.zCoord -= rotationVector.zCoord
+                lbCoordinate.setPosition(lightVector)
                 break
             }
-            if (isOpaque(newCoord)) {
-                vp.xCoord -= vv.xCoord
-                vp.yCoord -= vv.yCoord
-                vp.zCoord -= vv.zCoord
-                newCoord.setPosition(vp)
-                break
-            }
         }
-        if (!exit) {
-            var count = 0
-            while (newCoord != lamp.sixNode!!.coordinate) {
-                val block = newCoord.block
-                if (block === Blocks.air || block === Eln.lightBlock) {
-                    count++
-                    if (count == 2) break
-                }
-                vp.xCoord -= vv.xCoord
-                vp.yCoord -= vv.yCoord
-                vp.zCoord -= vv.zCoord
-                newCoord.setPosition(vp)
-            }
-        }
-        if (!exit) setLightAt(newCoord, newLight)
+
+        return lbCoordinate
     }
 
-    private fun isOpaque(coord: Coordinate): Boolean {
-        val block = coord.block
-        return block !== Blocks.air && (block.isOpaqueCube && block !== Blocks.farmland)
-    }
+    /**
+     * Sync "fast" light changes (fluorescent flicker)
+     */
+    private fun updateFastLight(newLightValue: Int) {
+        if (fastLightValue != newLightValue) {
+            fastLightValue = newLightValue
 
-    fun setLightAt(coord: Coordinate, value: Int) {
-        val oldLbCoord = lbCoord
-        lbCoord = Coordinate(coord)
-        val oldLight = light
-        val same = coord == oldLbCoord
-        light = value
-        if (!same && oldLbCoord == lamp.sixNode!!.coordinate) {
-            lamp.sixNode!!.recalculateLightValue()
-        }
-        if (lbCoord == lamp.sixNode!!.coordinate) {
-            if (light != oldLight || !same) lamp.sixNode!!.recalculateLightValue()
-        } else {
-            LightBlockEntity.addLight(lbCoord, light, 5)
-        }
-        if (light != oldLight) {
             val bos = ByteArrayOutputStream(64)
             val packet = DataOutputStream(bos)
-            lamp.preparePacketForClient(packet)
+
+            element.preparePacketForClient(packet)
+
             try {
-                packet.writeByte(light)
+                packet.writeByte(element.lightValue)
             } catch (e: IOException) {
                 e.printStackTrace()
             }
-            lamp.sendPacketToAllClient(bos)
+
+            element.sendPacketToAllClient(bos)
         }
     }
 
-    override fun readFromNBT(nbt: NBTTagCompound, str: String) {
-        stableProb = nbt.getDouble(str + "LSP" + "stableProb")
-        lbCoord.readFromNBT(nbt, str + "lbCoordInst")
-        alphaZ = nbt.getFloat(str + "alphaZ").toDouble()
-        light = nbt.getInteger(str + "light")
-    }
+    private fun publishChanges(activeLampSupplyConnection: Boolean, newLightValue: Int) {
+        var publishChanges = false
 
-    override fun writeToNBT(nbt: NBTTagCompound, str: String) {
-        nbt.setDouble(str + "LSP" + "stableProb", stableProb)
-        lbCoord.writeToNBT(nbt, str + "lbCoordInst")
-        nbt.setFloat(str + "alphaZ", alphaZ.toFloat())
-        nbt.setInteger(str + "light", light)
-    }
-
-    val blockLight: Int
-        get() = if (lbCoord == lamp.sixNode!!.coordinate) {
-            light
-        } else {
-            0
+        if (element.activeLampSupplyConnection != activeLampSupplyConnection) {
+            element.activeLampSupplyConnection = activeLampSupplyConnection
+            publishChanges = true
         }
 
-    init {
-        lbCoord = Coordinate(lamp.sixNode!!.coordinate)
+        if (element.sixNode!!.lightValue != newLightValue) {
+            element.sixNode!!.lightValue = newLightValue
+            publishChanges = true
+        }
+
+        if (publishChanges) element.needPublish()
     }
+
+    /**
+     * Manually call inventory change when items are added/removed from the GUI because it is not being called normally.
+     */
+    private fun updateInventory(lampStack: ItemStack?, cableStack: ItemStack?) {
+        var inventoryChanged = false
+
+        if (element.lampInInventory != (lampStack != null)) {
+            element.lampInInventory = lampStack != null
+            inventoryChanged = true
+        }
+
+        if (element.cableInInventory != (cableStack != null)) {
+            element.cableInInventory = cableStack != null
+            inventoryChanged = true
+        }
+
+        if (inventoryChanged) element.inventoryChange(element.inventory)
+    }
+
 }

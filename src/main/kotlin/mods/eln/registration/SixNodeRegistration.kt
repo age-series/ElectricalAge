@@ -860,8 +860,7 @@ object SixNodeRegistration {
                     LampLists.getLampData("led")!!
                 )
             ).lighting()
-            descriptor.cableLeft = false
-            descriptor.cableRight = false
+            descriptor.renderSideCables = false
             Eln.sixNodeItem.addDescriptor(subId + (id shl 6), descriptor)
         }
 
@@ -881,9 +880,7 @@ object SixNodeRegistration {
                     LampLists.getLampData("led")!!
                 )
             ).lighting()
-            descriptor.setPlaceDirection(arrayOf(Direction.XP, Direction.XN, Direction.ZP, Direction.ZN))
             descriptor.initialRotateDeg = -90.0
-            descriptor.rotateOnlyBy180Deg = true
             Eln.sixNodeItem.addDescriptor(subId + (id shl 6), descriptor)
         }
 

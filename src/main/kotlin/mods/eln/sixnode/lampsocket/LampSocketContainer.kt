@@ -1,7 +1,7 @@
 package mods.eln.sixnode.lampsocket
 
 import mods.eln.gui.ISlotSkin.SlotSkin
-import mods.eln.i18n.I18N.tr
+import mods.eln.i18n.I18N
 import mods.eln.item.lampitem.LampItemSlot
 import mods.eln.misc.BasicContainer
 import mods.eln.node.six.SixNodeItemSlot
@@ -14,7 +14,7 @@ class LampSocketContainer(player: EntityPlayer, inventory: IInventory, descripto
     BasicContainer(player, inventory, arrayOf(
         LampItemSlot(inventory, LAMP_SLOT_ID, 70+1, 57+1, 1, descriptor.acceptedLampTypes),
         SixNodeItemSlot(inventory, CABLE_SLOT_ID, 88+1, 57+1, 1, arrayOf(ElectricalCableDescriptor::class.java,
-            CurrentCableDescriptor::class.java), SlotSkin.medium, arrayOf(tr("Cable slot"))
+            CurrentCableDescriptor::class.java), SlotSkin.medium, arrayOf(I18N.tr("Cable slot"))
         )
     )) {
 

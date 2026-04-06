@@ -66,13 +66,10 @@ class LampSocketElement(sixNode: SixNode, side: Direction, sixNodeDescriptor: Si
     var poweredByLampSupply = true
     var activeLampSupplyConnection = false
     private var paintColor = 15
+    var rotationAngle = 0.0
 
     var lampInInventory = false
     var cableInInventory = false
-    var processElapsedTime = 0.0
-
-    override val lightValue: Int
-        get() = lampSocketProcess.blockLight
 
     init {
         // TODO: revisit this
@@ -98,7 +95,6 @@ class LampSocketElement(sixNode: SixNode, side: Direction, sixNodeDescriptor: Si
     override fun onBlockActivated(entityPlayer: EntityPlayer, side: Direction, vx: Float, vy: Float, vz: Float): Boolean {
         if (Utils.isPlayerUsingWrench(entityPlayer)) {
             front = front.nextClockwise
-            if (descriptor.rotateOnlyBy180Deg) front = front.nextClockwise
             reconnect()
             needPublish()
             return true
@@ -168,6 +164,8 @@ class LampSocketElement(sixNode: SixNode, side: Direction, sixNodeDescriptor: Si
         } else {
             paintColor = if (descriptor.paintable) nbt.getInteger("paintColor") else 0
         }
+
+        rotationAngle = nbt.getDouble("rotationAngle")
     }
 
     override fun writeToNBT(nbt: NBTTagCompound) {
@@ -177,6 +175,7 @@ class LampSocketElement(sixNode: SixNode, side: Direction, sixNodeDescriptor: Si
         nbt.setBoolean("poweredByLampSupply", poweredByLampSupply)
         nbt.setString("lampSupplyChannel", lampSupplyChannel)
         nbt.setInteger("paintColor", paintColor)
+        nbt.setDouble("rotationAngle", rotationAngle)
     }
 
     override fun initialize() {
@@ -260,8 +259,8 @@ class LampSocketElement(sixNode: SixNode, side: Direction, sixNodeDescriptor: Si
             stream.writeBoolean(poweredByLampSupply)
             stream.writeBoolean(activeLampSupplyConnection)
             stream.writeInt(paintColor)
-            stream.writeDouble(lampSocketProcess.alphaZ)
-            stream.writeInt(lampSocketProcess.light)
+            stream.writeDouble(rotationAngle)
+            stream.writeInt(lampSocketProcess.fastLightValue)
             stream.writeBoolean(lampInInventory)
             serialiseItemStack(stream, inventory.getStackInSlot(LampSocketContainer.LAMP_SLOT_ID))
             serialiseItemStack(stream, inventory.getStackInSlot(LampSocketContainer.CABLE_SLOT_ID))
@@ -276,7 +275,7 @@ class LampSocketElement(sixNode: SixNode, side: Direction, sixNodeDescriptor: Si
                 LampSocketGui.TOGGLE_GROUNDED_EVENT -> grounded = !grounded
                 LampSocketGui.TOGGLE_POWER_SOURCE_EVENT -> poweredByLampSupply = !poweredByLampSupply
                 LampSocketGui.UPDATE_LAMP_SUPPLY_CHANNEL_EVENT -> lampSupplyChannel = stream.readUTF()
-                LampSocketGui.ADJUST_ALPHA_Z_EVENT -> lampSocketProcess.alphaZ = stream.readDouble()
+                LampSocketGui.ADJUST_ROTATION_ANGLE_EVENT -> rotationAngle = stream.readDouble()
             }
             inventoryChange(inventory)
         } catch (e: IOException) {
@@ -326,7 +325,7 @@ class LampSocketElement(sixNode: SixNode, side: Direction, sixNodeDescriptor: Si
             needPublish()
         }
 
-        if (ConfigCopyToolDescriptor.readGenDescriptor(compound, "lamp", inventory, LampSocketContainer.LAMP_SLOT_ID, invoker)) {
+        if (ConfigCopyToolDescriptor.readLampDescriptor(compound, "lamp", inventory, LampSocketContainer.LAMP_SLOT_ID, invoker, descriptor.acceptedLampTypes)) {
             inventoryChange(inventory)
         }
 
