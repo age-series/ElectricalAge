@@ -27,17 +27,13 @@ class LampSocketDescriptor(val itemName: String, val renderType: ILampSocketObjR
 
     var acceptedLampTypesString: String = ""
 
-    val alphaZMin = if (rotatable) -90.0 else 0.0
-    val alphaZMax = if (rotatable) 90.0 else 0.0
+    val minRotationAngle = if (rotatable) -90.0 else 0.0
+    val maxRotationAngle = if (rotatable) 90.0 else 0.0
 
     var initialRotateDeg = 0.0
-    var rotateOnlyBy180Deg = false
     var renderIconInHand = false
 
-    var cableFront = true
-    var cableBack = true
-    var cableLeft = true
-    var cableRight = true
+    var renderSideCables = true
 
     var cameraOpt = true
     var extendedRenderBounds = false
@@ -85,7 +81,7 @@ class LampSocketDescriptor(val itemName: String, val renderType: ILampSocketObjR
         super.addInformation(itemStack, entityPlayer, list, par4)
 
         if (range != 0) list.add(I18N.tr("Spot range: $range blocks"))
-        if (rotatable) list.add(I18N.tr("Angle: ${alphaZMin.toInt()}° to ${alphaZMax.toInt()}°"))
+        if (rotatable) list.add(I18N.tr("Angle: ${minRotationAngle.toInt()}° to ${maxRotationAngle.toInt()}°"))
         list.add(I18N.tr("Accepted lamp types: $acceptedLampTypesString"))
     }
 

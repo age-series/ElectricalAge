@@ -76,8 +76,6 @@ class FloodlightElement(transparentNode: TransparentNode, transparentNodeDescrip
         Eln.config.getIntOrElse("entities.mobSpawning.preventNearLampsRange", 9))
     private val floodlightProcess = FloodlightProcess(this)
 
-    var processElapsedTime = 0.0
-
     init {
         if (motorized) {
             electricalLoadList.add(swivelControl)
@@ -306,11 +304,11 @@ class FloodlightElement(transparentNode: TransparentNode, transparentNodeDescrip
     }
 
     override fun readConfigTool(compound: NBTTagCompound, invoker: EntityPlayer) {
-        if (ConfigCopyToolDescriptor.readGenDescriptor(compound, "lamp1", inventory, FloodlightContainer.LAMP_SLOT_1_ID, invoker)) {
+        if (ConfigCopyToolDescriptor.readLampDescriptor(compound, "lamp1", inventory, FloodlightContainer.LAMP_SLOT_1_ID, invoker, descriptor.acceptedLampTypes)) {
             inventoryChange(inventory)
         }
 
-        if (ConfigCopyToolDescriptor.readGenDescriptor(compound, "lamp2", inventory, FloodlightContainer.LAMP_SLOT_2_ID, invoker)) {
+        if (ConfigCopyToolDescriptor.readLampDescriptor(compound, "lamp2", inventory, FloodlightContainer.LAMP_SLOT_2_ID, invoker, descriptor.acceptedLampTypes)) {
             inventoryChange(inventory)
         }
     }

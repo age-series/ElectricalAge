@@ -13,13 +13,13 @@ class LampSocketGui(player: EntityPlayer, val render: LampSocketRender) :
         const val TOGGLE_GROUNDED_EVENT: Byte = 0
         const val TOGGLE_POWER_SOURCE_EVENT: Byte = 1
         const val UPDATE_LAMP_SUPPLY_CHANNEL_EVENT: Byte = 2
-        const val ADJUST_ALPHA_Z_EVENT: Byte = 3
+        const val ADJUST_ROTATION_ANGLE_EVENT: Byte = 3
     }
 
     private lateinit var buttonGrounded: GuiButton
     private lateinit var buttonPowerSource: GuiButton
     private lateinit var textboxLampSupplyChannel: GuiTextFieldEln
-    private lateinit var trackbarAlphaZ: GuiVerticalTrackBar
+    private lateinit var trackbarRotationAngle: GuiVerticalTrackBar
 
     override fun newHelper(): GuiHelperContainer {
         return HelperStdContainer(this)
@@ -31,7 +31,7 @@ class LampSocketGui(player: EntityPlayer, val render: LampSocketRender) :
         buttonGrounded = newGuiButton(7, 56, 54, "")
         buttonGrounded.visible = false // TODO: Whenever grounding is actually implemented, remove this.
 
-        if (render.descriptor.alphaZMax == render.descriptor.alphaZMin) {
+        if (render.descriptor.maxRotationAngle == render.descriptor.minRotationAngle) {
             buttonPowerSource = newGuiButton(16, 7, 144, "")
             textboxLampSupplyChannel = newGuiTextField(16+1, 35+1, 144-2)
         } else {
@@ -42,12 +42,12 @@ class LampSocketGui(player: EntityPlayer, val render: LampSocketRender) :
         textboxLampSupplyChannel.setComment(0, I18N.tr("Specify the lamp supply channel"))
         textboxLampSupplyChannel.setText(render.lampSupplyChannel)
 
-        trackbarAlphaZ = newGuiVerticalTrackBar(151, 7+2, 18, 68-4)
-        trackbarAlphaZ.setRange(render.descriptor.alphaZMin.toFloat(), render.descriptor.alphaZMax.toFloat())
-        trackbarAlphaZ.setStepIdMax(180)
-        trackbarAlphaZ.value = render.alphaZ.toFloat()
+        trackbarRotationAngle = newGuiVerticalTrackBar(151, 7+2, 18, 68-4)
+        trackbarRotationAngle.setRange(render.descriptor.minRotationAngle.toFloat(), render.descriptor.maxRotationAngle.toFloat())
+        trackbarRotationAngle.setStepIdMax(180)
+        trackbarRotationAngle.value = render.rotationAngle.toFloat()
 
-        if (render.descriptor.alphaZMax == render.descriptor.alphaZMin) trackbarAlphaZ.visible = false
+        if (render.descriptor.maxRotationAngle == render.descriptor.minRotationAngle) trackbarRotationAngle.visible = false
     }
 
     override fun preDraw(f: Float, x: Int, y: Int) {
@@ -77,7 +77,7 @@ class LampSocketGui(player: EntityPlayer, val render: LampSocketRender) :
             buttonPowerSource.displayString = I18N.tr("Powered by cable")
         }
 
-        trackbarAlphaZ.setComment(0, I18N.tr("Orientation: ${trackbarAlphaZ.value.toInt()}°"))
+        trackbarRotationAngle.setComment(0, I18N.tr("Orientation: ${trackbarRotationAngle.value.toInt()}°"))
     }
 
     override fun guiObjectEvent(obj: IGuiObject) {
@@ -87,7 +87,7 @@ class LampSocketGui(player: EntityPlayer, val render: LampSocketRender) :
             buttonGrounded -> render.clientSend(TOGGLE_GROUNDED_EVENT.toInt())
             buttonPowerSource -> render.clientSend(TOGGLE_POWER_SOURCE_EVENT.toInt())
             textboxLampSupplyChannel -> render.clientSetString(UPDATE_LAMP_SUPPLY_CHANNEL_EVENT, textboxLampSupplyChannel.text)
-            trackbarAlphaZ -> render.clientSetDouble(ADJUST_ALPHA_Z_EVENT, trackbarAlphaZ.value.toDouble())
+            trackbarRotationAngle -> render.clientSetDouble(ADJUST_ROTATION_ANGLE_EVENT, trackbarRotationAngle.value.toDouble())
         }
     }
 }
