@@ -122,7 +122,7 @@ public class Eln {
     public final static String NAME = "Electrical Age - jrddunbr's build";
     public final static String UPDATE_URL = "https://github.com/age-series/ElectricalAge/releases";
     public final static String[] AUTHORS = {"Dolu1990", "jrddunbr", "Baughn", "Grissess", "Caeleron", "Omega_Haxors",
-     "lambdaShade", "cm0x4D", "metc"};
+     "lambdaShade", "cm0x4D", "metc", "TheBuilderBoy76"};
     public static final String channelName = "miaouMod";
     public static final double solarPanelBasePower = 65.0;
     public static final byte packetPlayerKey = 14;
