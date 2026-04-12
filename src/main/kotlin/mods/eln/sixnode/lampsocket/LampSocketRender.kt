@@ -34,6 +34,11 @@ import kotlin.math.sin
 class LampSocketRender(tileEntity: SixNodeEntity, side: Direction, sixNodeDescriptor: SixNodeDescriptor) :
     SixNodeElementRender(tileEntity, side, sixNodeDescriptor) {
 
+    companion object {
+        const val MIN_LIGHT_ON_VALUE = 1
+        const val DEFAULT_PAINT_COLOR = 15
+    }
+
     override val inventory = SixNodeElementInventory(2, 64, this)
     val descriptor = sixNodeDescriptor as LampSocketDescriptor
 
@@ -44,7 +49,7 @@ class LampSocketRender(tileEntity: SixNodeEntity, side: Direction, sixNodeDescri
     var lampSupplyChannel = "Default channel"
     var poweredByLampSupply = true
     var activeLampSupplyConnection = false
-    var paintColor = 15
+    var paintColor = DEFAULT_PAINT_COLOR
     var rotationAngle = 0.0
 
     var light = 0
@@ -52,7 +57,7 @@ class LampSocketRender(tileEntity: SixNodeEntity, side: Direction, sixNodeDescri
             field = newLight
 
             if (lampDescriptor != null && lampDescriptor!!.lampData.technology.lampType == "fluorescent") {
-                if (oldLight != -1 && oldLight < LampSocketDescriptor.MIN_LIGHT_ON_VALUE && light >= LampSocketDescriptor.MIN_LIGHT_ON_VALUE) {
+                if (oldLight != -1 && oldLight < MIN_LIGHT_ON_VALUE && light >= MIN_LIGHT_ON_VALUE) {
                     val rand = Math.random()
                     if (rand > 0.1) play(SoundCommand("eln:neon_lamp").mulVolume(0.7f, (1.0 + (rand / 6.0)).toFloat()).smallRange())
                     else play(SoundCommand("eln:NEON_LFNOISE").mulVolume(0.2f, 1f).verySmallRange())
@@ -100,14 +105,14 @@ class LampSocketRender(tileEntity: SixNodeEntity, side: Direction, sixNodeDescri
 
     override fun serverPacketUnserialize(stream: DataInputStream?) {
         super.serverPacketUnserialize(stream)
-        light = stream!!.readByte().toInt()
+        light = stream!!.readInt()
     }
 
     override fun draw() {
         // Only for colored cables
         super.draw()
 
-        GL11.glRotated(descriptor.initialRotateDeg, 1.0, 0.0, 0.0)
+        GL11.glRotated(descriptor.initialRenderAngleOffset, 1.0, 0.0, 0.0)
         descriptor.renderType.draw(this, UtilsClient.distanceFromClientPlayer(this.tileEntity).toDouble())
     }
 
@@ -181,17 +186,13 @@ class LampSocketRender(tileEntity: SixNodeEntity, side: Direction, sixNodeDescri
         if (!descriptor.extendedRenderBounds) return null
 
         return AxisAlignedBB.getBoundingBox(
-            tileEntity.xCoord - 1.0,
+            (tileEntity.xCoord - 1).toDouble(),
             tileEntity.yCoord.toDouble(),
-            tileEntity.zCoord - 1.0,
-            tileEntity.xCoord + 2.0,
-            tileEntity.yCoord + 4.0,
-            tileEntity.zCoord + 2.0
+            (tileEntity.zCoord - 1).toDouble(),
+            (tileEntity.xCoord + 2).toDouble(),
+            (tileEntity.yCoord + 4).toDouble(),
+            (tileEntity.zCoord + 2).toDouble()
         )
-    }
-
-    override fun cameraDrawOptimisation(): Boolean {
-        return descriptor.cameraOpt
     }
 
 }

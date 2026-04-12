@@ -71,16 +71,16 @@ class LampSocketSuspendedObjRender(obj: Obj3D, val onOffModel: Boolean, val leng
         if (!onOffModel) {
             socket.draw()
         } else {
-            if (light > LampSocketDescriptor.MIN_LIGHT_ON_VALUE) {
+            if (light > LampSocketRender.MIN_LIGHT_ON_VALUE) {
                 GL11.glColor3d(light / 15.0, light / 15.0, light / 15.0)
                 UtilsClient.bindTexture(tOn)
             } else UtilsClient.bindTexture(tOff)
 
-            if (light > LampSocketDescriptor.MIN_LIGHT_ON_VALUE) UtilsClient.disableLight()
+            if (light > LampSocketRender.MIN_LIGHT_ON_VALUE) UtilsClient.disableLight()
 
             if (socket != null) socket.drawNoBind()
 
-            if (light > LampSocketDescriptor.MIN_LIGHT_ON_VALUE) {
+            if (light > LampSocketRender.MIN_LIGHT_ON_VALUE) {
                 UtilsClient.enableLight()
                 GL11.glColor3d(1.0, 1.0, 1.0)
             }

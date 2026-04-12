@@ -14,6 +14,9 @@ class LampSocketGui(player: EntityPlayer, val render: LampSocketRender) :
         const val TOGGLE_POWER_SOURCE_EVENT: Byte = 1
         const val UPDATE_LAMP_SUPPLY_CHANNEL_EVENT: Byte = 2
         const val ADJUST_ROTATION_ANGLE_EVENT: Byte = 3
+
+        const val MIN_ROTATION_ANGLE = -90.0
+        const val MAX_ROTATION_ANGLE = 90.0
     }
 
     private lateinit var buttonGrounded: GuiButton
@@ -31,23 +34,23 @@ class LampSocketGui(player: EntityPlayer, val render: LampSocketRender) :
         buttonGrounded = newGuiButton(7, 56, 54, "")
         buttonGrounded.visible = false // TODO: Whenever grounding is actually implemented, remove this.
 
-        if (render.descriptor.maxRotationAngle == render.descriptor.minRotationAngle) {
+        if (render.descriptor.enableProjectionRotation) {
+            buttonPowerSource = newGuiButton(7, 7, 144, "")
+            textboxLampSupplyChannel = newGuiTextField(7+1, 35+1, 144-2)
+        } else {
             buttonPowerSource = newGuiButton(16, 7, 144, "")
             textboxLampSupplyChannel = newGuiTextField(16+1, 35+1, 144-2)
-        } else {
-            buttonPowerSource = newGuiButton(7, 7, 135, "")
-            textboxLampSupplyChannel = newGuiTextField(7+1, 35+1, 135-2)
         }
 
         textboxLampSupplyChannel.setComment(0, I18N.tr("Specify the lamp supply channel"))
         textboxLampSupplyChannel.setText(render.lampSupplyChannel)
 
-        trackbarRotationAngle = newGuiVerticalTrackBar(151, 7+2, 18, 68-4)
-        trackbarRotationAngle.setRange(render.descriptor.minRotationAngle.toFloat(), render.descriptor.maxRotationAngle.toFloat())
+        trackbarRotationAngle = newGuiVerticalTrackBar(156, 7+2, 12, 68-4)
+        trackbarRotationAngle.setRange(MIN_ROTATION_ANGLE.toFloat(), MAX_ROTATION_ANGLE.toFloat())
         trackbarRotationAngle.setStepIdMax(180)
         trackbarRotationAngle.value = render.rotationAngle.toFloat()
 
-        if (render.descriptor.maxRotationAngle == render.descriptor.minRotationAngle) trackbarRotationAngle.visible = false
+        if (!render.descriptor.enableProjectionRotation) trackbarRotationAngle.visible = false
     }
 
     override fun preDraw(f: Float, x: Int, y: Int) {

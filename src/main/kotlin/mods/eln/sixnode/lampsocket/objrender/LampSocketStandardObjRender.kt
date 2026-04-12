@@ -25,23 +25,25 @@ class LampSocketStandardObjRender(obj: Obj3D, val onOffModel: Boolean) : ILampSo
     override fun draw(descriptor: LampSocketDescriptor, type: ItemRenderType, distanceToPlayer: Double) {
         if (type == ItemRenderType.INVENTORY) {
             if (descriptor.hasGhostGroup()) {
+                GL11.glRotated(-90.0, 0.0, 0.0, 1.0) // Undo initial rotation
                 GL11.glScaled(0.5, 0.5, 0.5)
                 GL11.glRotated(90.0, 0.0, -1.0, 0.0)
                 GL11.glTranslated(-1.5, 0.0, 0.0)
             }
         } else if (type == ItemRenderType.EQUIPPED_FIRST_PERSON) {
             if (descriptor.hasGhostGroup()) {
+                GL11.glRotated(-90.0, 0.0, 0.0, 1.0) // Undo initial rotation
                 GL11.glScaled(0.3, 0.3, 0.3)
                 GL11.glRotated(90.0, 0.0, -1.0, 0.0)
                 GL11.glTranslated(-0.5, 0.0, -1.0)
             }
         }
 
-        draw(LRDU.Up, 0, true, 15, distanceToPlayer)
+        draw(LRDU.Up, 0, true, LampSocketRender.DEFAULT_PAINT_COLOR, distanceToPlayer)
     }
 
     override fun draw(render: LampSocketRender, distanceToPlayer: Double) {
-        val color = if (render.descriptor.paintable) render.paintColor else 15
+        val color = if (render.descriptor.paintable) render.paintColor else LampSocketRender.DEFAULT_PAINT_COLOR
 
         draw(render.front!!, render.light, render.lampInInventory, color, distanceToPlayer)
     }
@@ -55,7 +57,7 @@ class LampSocketStandardObjRender(obj: Obj3D, val onOffModel: Boolean) : ILampSo
         if (!onOffModel) {
             if (socket != null) socket.draw()
         } else {
-            if (light > LampSocketDescriptor.MIN_LIGHT_ON_VALUE) {
+            if (light > LampSocketRender.MIN_LIGHT_ON_VALUE) {
                 UtilsClient.bindTexture(tOn)
             } else {
                 UtilsClient.bindTexture(tOff)
@@ -63,7 +65,7 @@ class LampSocketStandardObjRender(obj: Obj3D, val onOffModel: Boolean) : ILampSo
 
             if (socketUnlightable != null) socketUnlightable.drawNoBind()
 
-            if (light > LampSocketDescriptor.MIN_LIGHT_ON_VALUE) {
+            if (light > LampSocketRender.MIN_LIGHT_ON_VALUE) {
                 UtilsClient.disableLight()
 
                 // GL11.glColor3d(light / 15.0, light / 15.0, light / 15.0)
@@ -74,7 +76,7 @@ class LampSocketStandardObjRender(obj: Obj3D, val onOffModel: Boolean) : ILampSo
             }
 
             if (hasBulb) {
-                if (light > LampSocketDescriptor.MIN_LIGHT_ON_VALUE) {
+                if (light > LampSocketRender.MIN_LIGHT_ON_VALUE) {
                     if (lampOn != null) lampOn.draw()
                 } else {
                     if (lampOff != null) lampOff.draw()
@@ -83,7 +85,7 @@ class LampSocketStandardObjRender(obj: Obj3D, val onOffModel: Boolean) : ILampSo
 
             if (socket != null) socket.drawNoBind()
 
-            if (light > LampSocketDescriptor.MIN_LIGHT_ON_VALUE) UtilsClient.enableLight()
+            if (light > LampSocketRender.MIN_LIGHT_ON_VALUE) UtilsClient.enableLight()
         }
 
         UtilsClient.enableBlend()

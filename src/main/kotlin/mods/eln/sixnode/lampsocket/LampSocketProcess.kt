@@ -185,7 +185,7 @@ class LampSocketProcess(var element: LampSocketElement) : IProcess {
             element.preparePacketForClient(packet)
 
             try {
-                packet.writeByte(element.lightValue)
+                packet.writeInt(element.lightValue)
             } catch (e: IOException) {
                 e.printStackTrace()
             }
