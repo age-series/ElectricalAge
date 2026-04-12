@@ -65,7 +65,7 @@ class LampSocketElement(sixNode: SixNode, side: Direction, sixNodeDescriptor: Si
     var lampSupplyChannel = "Default channel"
     var poweredByLampSupply = true
     var activeLampSupplyConnection = false
-    private var paintColor = 15
+    private var paintColor = LampSocketRender.DEFAULT_PAINT_COLOR
     var rotationAngle = 0.0
 
     var lampInInventory = false

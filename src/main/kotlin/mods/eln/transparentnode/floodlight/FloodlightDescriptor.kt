@@ -31,7 +31,7 @@ class FloodlightDescriptor(val itemName: String, val obj: Obj3D, val motorized: 
         LampLists.getLampData("halogen")!!,
         LampLists.getLampData("led")!!
     )
-    var acceptedLampTypesString: String = ""
+    private var acceptedLampTypesString: String = ""
 
     init {
         voltageLevelColor = VoltageLevelColor.Neutral

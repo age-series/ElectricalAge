@@ -17,26 +17,16 @@ import java.util.Collections
 import kotlin.text.split
 
 // TODO: Revisit integration of this file with the rest of the six-node lamp socket code.
-class LampSocketDescriptor(val itemName: String, val renderType: ILampSocketObjRender, val paintable: Boolean,
-                           val range: Int, val rotatable: Boolean, val acceptedLampTypes: Array<BoilerplateLampData>) :
+class LampSocketDescriptor(itemName: String, val renderType: ILampSocketObjRender, val range: Int, val acceptedLampTypes: Array<BoilerplateLampData>) :
     SixNodeDescriptor(itemName, LampSocketElement::class.java, LampSocketRender::class.java) {
 
-    companion object {
-        const val MIN_LIGHT_ON_VALUE = 8
-    }
-
-    var acceptedLampTypesString: String = ""
-
-    val minRotationAngle = if (rotatable) -90.0 else 0.0
-    val maxRotationAngle = if (rotatable) 90.0 else 0.0
-
-    var initialRotateDeg = 0.0
-    var renderIconInHand = false
-
+    var paintable: Boolean = false
+    var enableProjectionRotation: Boolean = false
+    var initialRenderAngleOffset = 0.0
     var renderSideCables = true
-
-    var cameraOpt = true
     var extendedRenderBounds = false
+
+    private var acceptedLampTypesString: String = ""
 
     init {
         voltageLevelColor = VoltageLevelColor.Neutral
@@ -57,18 +47,20 @@ class LampSocketDescriptor(val itemName: String, val renderType: ILampSocketObjR
     }
 
     override fun shouldUseRenderHelper(type: ItemRenderType, item: ItemStack, helper: ItemRendererHelper): Boolean {
-        return !renderIconInHand && type != ItemRenderType.INVENTORY
+        return type != ItemRenderType.INVENTORY
     }
 
     override fun shouldUseRenderHelperEln(type: ItemRenderType?, item: ItemStack?, helper: ItemRendererHelper?): Boolean {
-        return !renderIconInHand && type != ItemRenderType.INVENTORY
+        return type != ItemRenderType.INVENTORY
     }
 
     override fun renderItem(type: ItemRenderType, item: ItemStack, vararg data: Any) {
-        if (type == ItemRenderType.INVENTORY || renderIconInHand) {
+        if (type == ItemRenderType.INVENTORY) {
             super.renderItem(type, item, *data)
         } else {
+            GL11.glRotated(initialRenderAngleOffset, 1.0, 0.0, 0.0)
             GL11.glScaled(1.25, 1.25, 1.25)
+            if (this.hasGhostGroup()) GL11.glRotated(90.0, 0.0, 0.0, 1.0)
             renderType.draw(this, type, 0.0)
         }
     }
@@ -81,7 +73,7 @@ class LampSocketDescriptor(val itemName: String, val renderType: ILampSocketObjR
         super.addInformation(itemStack, entityPlayer, list, par4)
 
         if (range != 0) list.add(I18N.tr("Spot range: $range blocks"))
-        if (rotatable) list.add(I18N.tr("Angle: ${minRotationAngle.toInt()}° to ${maxRotationAngle.toInt()}°"))
+        if (enableProjectionRotation) list.add(I18N.tr("Angle: ${LampSocketGui.MIN_ROTATION_ANGLE.toInt()}° to ${LampSocketGui.MAX_ROTATION_ANGLE.toInt()}°"))
         list.add(I18N.tr("Accepted lamp types: $acceptedLampTypesString"))
     }
 

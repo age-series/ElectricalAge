@@ -235,24 +235,30 @@ object TransparentNodeRegistration {
 
     private fun registerFloodlight(id: Int) {
         var subId: Int
-        var name: String
+        var completeId: Int
+        var descriptor: FloodlightDescriptor
 
         run {
             subId = 0
-            name = TR_NAME(I18N.Type.NONE, "120V Basic Floodlight")
-            val desc = FloodlightDescriptor(name, Eln.obj.getObj("Floodlight"), false)
+            completeId = subId + (id shl 6)
+            descriptor = FloodlightDescriptor(
+                TR_NAME(I18N.Type.NONE, "120V Basic Floodlight"),
+                Eln.obj.getObj("Floodlight"),
+                false)
             desc.setDefaultIcon("basicfloodlight")
-            transparentNodeItem.addDescriptor(subId + (id shl 6), desc)
+            transparentNodeItem.addDescriptor(completeId, descriptor)
         }
 
         run {
             subId = 1
-            name = TR_NAME(I18N.Type.NONE, "240V Motorized Floodlight")
-            val desc = FloodlightDescriptor(name, Eln.obj.getObj("FloodlightMotor"), true)
+            completeId = subId + (id shl 6)
+            descriptor = FloodlightDescriptor(
+                TR_NAME(I18N.Type.NONE, "240V Motorized Floodlight"),
+                Eln.obj.getObj("FloodlightMotor"),
+                true)
             desc.setDefaultIcon("motorizedfloodlight")
-            transparentNodeItem.addDescriptor(subId + (id shl 6), desc)
+            transparentNodeItem.addDescriptor(completeId, descriptor)
         }
-
     }
 
     private fun registerLargeRheostat() {

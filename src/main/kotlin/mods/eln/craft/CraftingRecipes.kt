@@ -279,7 +279,7 @@ object CraftingRecipes {
             ItemStack(Blocks.glass_pane), 'I', ItemStack(Items.iron_ingot)
         )
         addRecipe(
-            Eln.findItemStack("Street Light", 1), "G", "I", "I", 'G', ItemStack(Blocks.glass_pane), 'I',
+            Eln.findItemStack("Streetlight", 1), "G", "I", "I", 'G', ItemStack(Blocks.glass_pane), 'I',
             ItemStack(Items.iron_ingot)
         )
         addRecipe(
