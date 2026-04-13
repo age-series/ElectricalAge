@@ -1,6 +1,5 @@
 package mods.eln.transparentnode.floodlight
 
-import mods.eln.Eln
 import mods.eln.item.lampitem.BoilerplateLampData
 import mods.eln.item.lampitem.LampDescriptor
 import mods.eln.lightblock.LightBlockEntity
@@ -21,7 +20,7 @@ class FloodlightProcess(val element: FloodlightElement) : IProcess {
         // How often to create a light block within a given beam of light
         const val LIGHT_BLOCK_FREQUENCY = 2
         // Base length of a light beam
-        const val BASE_THROW_DISTANCE = 8
+        const val BASE_THROW_DISTANCE = 16
     }
 
     private var processElapsedTime = 0.0
@@ -43,18 +42,19 @@ class FloodlightProcess(val element: FloodlightElement) : IProcess {
         for ((idx, lampStack) in lampStacks.withIndex()) {
             if (lampStack != null) {
                 val lampDescriptor = getItemObject(lampStack) as LampDescriptor
+                val lampData = lampDescriptor.lampData
+                val lampTechnology = lampData.technology
+                val lampVoltage = abs(element.electricalLoad.voltage)
 
-                val lampVoltage = element.electricalLoad.voltage
+                val num: Double = lampVoltage - (lampData.nominalU * lampTechnology.minimalUFactor)
+                val den: Double = lampData.nominalU - (lampData.nominalU * lampTechnology.minimalUFactor)
 
-                val num: Double = abs(lampVoltage) - (lampDescriptor.lampData.nominalU * lampDescriptor.lampData.technology.minimalUFactor)
-                val den: Double = lampDescriptor.lampData.nominalU - (lampDescriptor.lampData.nominalU * lampDescriptor.lampData.technology.minimalUFactor)
-
-                lampLightValues.add(((num / den) * lampDescriptor.lampData.technology.nominalLightValue).toInt())
+                lampLightValues.add(((num / den) * lampTechnology.nominalLightValue).toInt())
 
                 if (lampLightValues[idx] < BoilerplateLampData.MIN_LIGHT_VALUE) lampLightValues[idx] = BoilerplateLampData.MIN_LIGHT_VALUE
                 else if (lampLightValues[idx] > BoilerplateLampData.MAX_LIGHT_VALUE) lampLightValues[idx] = BoilerplateLampData.MAX_LIGHT_VALUE
 
-                lampLightRanges.add(BASE_THROW_DISTANCE * sqrt(lampDescriptor.lampData.nominalU / Eln.LVU).toInt())
+                lampLightRanges.add(BASE_THROW_DISTANCE)
 
                 /* Only decrease the life of a bulb once a second. This reduces the update rate at which the NBT is changed
                  * to once per second from once per tick, reducing the probability of an NBT mismatch bug occurring when
@@ -77,29 +77,26 @@ class FloodlightProcess(val element: FloodlightElement) : IProcess {
         }
 
         val newLightValue = max(lampLightValues[FloodlightContainer.LAMP_SLOT_1_ID], lampLightValues[FloodlightContainer.LAMP_SLOT_2_ID])
+        val newLightRange = lampLightRanges[FloodlightContainer.LAMP_SLOT_1_ID] + lampLightRanges[FloodlightContainer.LAMP_SLOT_2_ID]
 
-        element.powered = newLightValue > BoilerplateLampData.MIN_LIGHT_VALUE
-        element.lightRange = lampLightRanges[FloodlightContainer.LAMP_SLOT_1_ID] + lampLightRanges[FloodlightContainer.LAMP_SLOT_2_ID]
+        // Only run raytracing when the floodlight is actually on.
+        if (newLightValue > BoilerplateLampData.MIN_LIGHT_VALUE) placeSpots(newLightValue, newLightRange)
 
         if (newLightValue != element.node!!.lightValue) {
             element.node!!.lightValue = newLightValue
+            element.powered = newLightValue > BoilerplateLampData.MIN_LIGHT_VALUE
             element.needPublish()
         }
-
-        // Only run raytracing when the floodlight is actually on.
-        if (newLightValue != 0) placeSpots(newLightValue)
 
         processElapsedTime += time
         if (processElapsedTime >= 1.0) processElapsedTime = 0.0
     }
 
     /**
-     * WARNING! DO NOT EDIT THIS FUNCTION!
-     * The math is very complex and any small change will likely break EVERYTHING.
-     * See the math docs (to be uploaded at some point) for a guide to the derivation process.
-     * Also see https://www.desmos.com/3d/xqi6ov3fpn for a visualization of the raytracing results.
+     * WARNING! BE VERY CAREFUL WHEN EDITING THIS FUNCTION!
+     * The logic and math are very complex, and it is easy to break everything if you don't know what you are doing!
      */
-    private fun placeSpots(lightValue: Int) {
+    private fun placeSpots(lightValue: Int, lightRange: Int) {
         val rotationVectors = mutableListOf<Pair<Vec3, Double>>()
         val fractionTable = mutableListOf<Double>()
 
@@ -146,7 +143,7 @@ class FloodlightProcess(val element: FloodlightElement) : IProcess {
             val lbCoordinate = Coordinate(lightVector, element.node!!.coordinate.dimension)
 
             // This forces the light cone to be "flat" on the end, instead of curved.
-            val throwDistance = element.lightRange / cos(toRadians(rotationVectors[idx].second))
+            val throwDistance = lightRange / cos(toRadians(rotationVectors[idx].second))
 
             for (jdx in 0 until throwDistance.toInt()) {
                 lightVector.xCoord += rotationVectors[idx].first.xCoord
@@ -181,10 +178,10 @@ class FloodlightProcess(val element: FloodlightElement) : IProcess {
     }
 
     /**
-     * DO NOT TOUCH THIS FUNCTION!!!!!
-     * Any edits to the math require re-deriving nearly every equation from scratch!
-     * See a visual of the equations/results at https://www.desmos.com/3d/xqi6ov3fpn.
-     * Trust me, the math is right! Any bugs that may arise result from improper usage.
+     * WARNING! DO NOT EDIT THIS FUNCTION!
+     * The math is very complex, and it is easy to break everything if you don't know what you are doing!
+     * See https://www.desmos.com/3d/xqi6ov3fpn for a visualization of the equations and the raytracing results.
+     * Trust me, the math is right! Any bugs that may arise result from improper usage of the parent function.
     */
     private fun calculateAngleAdjustments(vertAngle: Double, offsetAngle: Double, diagonalAngle: Double): Pair<Double, Double> {
         val k0 = toRadians(vertAngle)

@@ -7,7 +7,6 @@ import mods.eln.misc.Coordinate
 import mods.eln.misc.Utils
 import mods.eln.sim.IProcess
 import mods.eln.sixnode.lampsupply.LampSupplyElement
-import net.minecraft.item.ItemStack
 import net.minecraft.util.Vec3
 import java.io.ByteArrayOutputStream
 import java.io.DataOutputStream
@@ -53,28 +52,29 @@ class LampSocketProcess(var element: LampSocketElement) : IProcess {
             val lampVoltage = abs(element.lampResistor.voltage)
 
             if (lampVoltage > (lampData.nominalU * lampTechnology.minimalUFactor)) {
+                val num: Double = lampVoltage - (lampData.nominalU * lampTechnology.minimalUFactor)
+                val den: Double = lampData.nominalU - (lampData.nominalU * lampTechnology.minimalUFactor)
+
+                newLightValue = ((num / den) * lampTechnology.nominalLightValue).toInt()
+
                 // This code makes the fluorescent lights blink, and the other lights are just "stable"
                 if (lampTechnology.lampType == "fluorescent") {
-                    val voltageFactor = lampVoltage / lampData.nominalU
-
-                    stableLightProbability += (lampVoltage / lampData.nominalU) * (time / lampTechnology.timeUntilStableInSeconds)
-
-                    if (stableLightProbability > (lampVoltage / (lampData.nominalU * lampTechnology.stableUFactor))) {
-                        stableLightProbability = (lampVoltage / (lampData.nominalU * lampTechnology.stableUFactor))
+                    if (newLightValue >= LampSocketRender.MIN_LIGHT_ON_VALUE && stableLightProbability <= 1.0) {
+                        stableLightProbability += (lampVoltage / lampData.nominalU) * (time / lampTechnology.timeUntilStableInSeconds)
+                        if (stableLightProbability < Math.random()) newLightValue = BoilerplateLampData.MIN_LIGHT_VALUE
+                        if (stableLightProbability > 1.0) stableLightProbability = 1.0
+                    } else {
+                        newLightValue = BoilerplateLampData.MIN_LIGHT_VALUE
+                        stableLightProbability = 0.0
                     }
-
-                    newLightValue = if (Math.random() > stableLightProbability) 0 else (lampTechnology.nominalLightValue * voltageFactor).toInt()
                 } else {
-                    val num: Double = lampVoltage - (lampData.nominalU * lampTechnology.minimalUFactor)
-                    val den: Double = lampData.nominalU - (lampData.nominalU * lampTechnology.minimalUFactor)
-
-                    newLightValue = ((num / den) * lampTechnology.nominalLightValue).toInt()
+                    stableLightProbability = 1.0
                 }
 
                 if (newLightValue < BoilerplateLampData.MIN_LIGHT_VALUE) newLightValue = BoilerplateLampData.MIN_LIGHT_VALUE
                 else if (newLightValue > BoilerplateLampData.MAX_LIGHT_VALUE) newLightValue = BoilerplateLampData.MAX_LIGHT_VALUE
             } else {
-                if (stableLightProbability !in -0.001..0.001) stableLightProbability = 0.0
+                stableLightProbability = 0.0
             }
 
             if (element.coordinate!!.blockExist) {
@@ -96,14 +96,13 @@ class LampSocketProcess(var element: LampSocketElement) : IProcess {
                 }
             }
         } else {
-            if (stableLightProbability !in -0.001..0.001) stableLightProbability = 0.0
+            stableLightProbability = 0.0
         }
+
+        if (newLightValue > BoilerplateLampData.MIN_LIGHT_VALUE) placeSpot(newLightValue)
 
         updateFastLight(newLightValue)
         publishChanges(activeLampSupplyConnection, newLightValue)
-        updateInventory(lampStack, cableStack)
-
-        if (newLightValue != 0) placeSpot(newLightValue)
 
         processElapsedTime += time
         if (processElapsedTime >= 1.0) processElapsedTime = 0.0
@@ -129,7 +128,7 @@ class LampSocketProcess(var element: LampSocketElement) : IProcess {
 
         if (randTarget > Math.random()) {
             val rotationVector = Vec3.createVectorHelper(1.0, 0.0, 0.0)
-            rotationVector.rotateAroundZ((element.rotationAngle * (Math.PI / 180.0)).toFloat())
+            rotationVector.rotateAroundZ((element.projectionRotationAngle * (Math.PI / 180.0)).toFloat())
             rotationVector.rotateAroundY(((Math.random() - 0.5) * Math.PI / 2.0).toFloat())
             rotationVector.rotateAroundZ(((Math.random() - 0.5) * Math.PI / 2.0).toFloat())
             element.front.rotateOnXnLeft(rotationVector)
@@ -142,7 +141,7 @@ class LampSocketProcess(var element: LampSocketElement) : IProcess {
 
     private fun placeSpot(lightValue: Int) {
         val rotationVector = Vec3.createVectorHelper(1.0, 0.0, 0.0)
-        rotationVector.rotateAroundZ((element.rotationAngle * (Math.PI / 180.0)).toFloat())
+        rotationVector.rotateAroundZ((element.projectionRotationAngle * (Math.PI / 180.0)).toFloat())
         element.front.rotateOnXnLeft(rotationVector)
         element.side.rotateFromXN(rotationVector)
 
@@ -185,7 +184,7 @@ class LampSocketProcess(var element: LampSocketElement) : IProcess {
             element.preparePacketForClient(packet)
 
             try {
-                packet.writeInt(element.lightValue)
+                packet.writeInt(newLightValue)
             } catch (e: IOException) {
                 e.printStackTrace()
             }
@@ -207,26 +206,8 @@ class LampSocketProcess(var element: LampSocketElement) : IProcess {
             publishChanges = true
         }
 
+        // Prevent duplicate function calls
         if (publishChanges) element.needPublish()
-    }
-
-    /**
-     * Manually call inventory change when items are added/removed from the GUI because it is not being called normally.
-     */
-    private fun updateInventory(lampStack: ItemStack?, cableStack: ItemStack?) {
-        var inventoryChanged = false
-
-        if (element.lampInInventory != (lampStack != null)) {
-            element.lampInInventory = lampStack != null
-            inventoryChanged = true
-        }
-
-        if (element.cableInInventory != (cableStack != null)) {
-            element.cableInInventory = cableStack != null
-            inventoryChanged = true
-        }
-
-        if (inventoryChanged) element.inventoryChange(element.inventory)
     }
 
 }

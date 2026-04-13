@@ -22,6 +22,7 @@ import mods.eln.sim.ElectricalLoad
 import mods.eln.sim.MonsterPopFreeProcess
 import mods.eln.sim.ThermalLoad
 import mods.eln.sim.mna.component.Resistor
+import mods.eln.sim.mna.misc.MnaConst
 import mods.eln.sim.nbt.NbtElectricalGateInput
 import mods.eln.sim.nbt.NbtElectricalLoad
 import mods.eln.sim.process.destruct.VoltageStateWatchDog
@@ -59,8 +60,6 @@ class FloodlightElement(transparentNode: TransparentNode, transparentNodeDescrip
     var headAngle by published(0.0)
     var beamWidth by published(0.0)
 
-    var lightRange = 0
-
     val electricalLoad = NbtElectricalLoad("electricalLoad")
     private val lamp1Resistor = Resistor(electricalLoad, null)
     private val lamp2Resistor = Resistor(electricalLoad, null)
@@ -83,9 +82,8 @@ class FloodlightElement(transparentNode: TransparentNode, transparentNodeDescrip
             electricalLoadList.add(beamControl)
         }
 
-        // TODO: revisit this
-        // NOTE: Power factor (0.005) comes from MV cable registration
-        electricalLoad.serialResistance = ((Eln.MVU * Eln.MVU) / Eln.instance.MVP()) * 0.005
+        // Internal cable has no resistance, for simplicity
+        electricalLoad.serialResistance = MnaConst.noImpedance
 
         // We currently have both 50V and 200V bulbs, so floodlights should be able to handle voltages up to 200V nominal
         voltageWatchdog.setNominalVoltage(Eln.MVU)
@@ -115,9 +113,7 @@ class FloodlightElement(transparentNode: TransparentNode, transparentNodeDescrip
 
         if (currentEquippedItem is LampDescriptor) {
             if (currentEquippedItem.lampData.technology in descriptor.acceptedLampTypes) {
-                return acceptingInventory.take(
-                    player.currentEquippedItem, this, publish = true, notifyInventoryChange = true
-                )
+                return acceptingInventory.take(player.currentEquippedItem, this, publish = true, notifyInventoryChange = true)
             }
         }
 
@@ -137,7 +133,6 @@ class FloodlightElement(transparentNode: TransparentNode, transparentNodeDescrip
         swivelAngle = nbt.getDouble("swivelAngle")
         headAngle = nbt.getDouble("headAngle")
         beamWidth = nbt.getDouble("beamWidth")
-        lightRange = nbt.getInteger("lightRange")
     }
 
     override fun writeToNBT(nbt: NBTTagCompound) {
@@ -149,7 +144,6 @@ class FloodlightElement(transparentNode: TransparentNode, transparentNodeDescrip
         nbt.setDouble("swivelAngle", swivelAngle)
         nbt.setDouble("headAngle", headAngle)
         nbt.setDouble("beamWidth", beamWidth)
-        nbt.setInteger("lightRange", lightRange)
     }
 
     override fun initialize() {
@@ -209,8 +203,7 @@ class FloodlightElement(transparentNode: TransparentNode, transparentNodeDescrip
             blockFacing.left(rotationAxis) -> swivelControl
             blockFacing.front() -> beamControl
             else -> null
-        }
-        else when (side.toHybridNodeDirection()) {
+        } else when (side.toHybridNodeDirection()) {
             blockFacing.back() -> electricalLoad
             else -> null
         }
@@ -229,8 +222,7 @@ class FloodlightElement(transparentNode: TransparentNode, transparentNodeDescrip
             blockFacing.left(rotationAxis) -> NodeBase.maskElectricalInputGate
             blockFacing.front() -> NodeBase.maskElectricalInputGate
             else -> 0
-        }
-        else when (side.toHybridNodeDirection()) {
+        } else when (side.toHybridNodeDirection()) {
             blockFacing.back() -> NodeBase.maskElectricalPower
             else -> 0
         }
@@ -248,8 +240,7 @@ class FloodlightElement(transparentNode: TransparentNode, transparentNodeDescrip
             stream.writeDouble(beamWidth)
             Utils.serialiseItemStack(stream, inventory.getStackInSlot(FloodlightContainer.LAMP_SLOT_1_ID))
             Utils.serialiseItemStack(stream, inventory.getStackInSlot(FloodlightContainer.LAMP_SLOT_2_ID))
-        }
-        catch (e: IOException) {
+        } catch (e: IOException) {
             e.printStackTrace()
         }
     }
@@ -300,17 +291,26 @@ class FloodlightElement(transparentNode: TransparentNode, transparentNodeDescrip
             }
         }
 
+        if (Eln.config.getBooleanOrElse("debug.logging.enabled", false)) {
+            info[I18N.tr("Lamp Brightness")] = plotValue(node!!.lightValue.toDouble())
+        }
+
         return info
     }
 
     override fun readConfigTool(compound: NBTTagCompound, invoker: EntityPlayer) {
+        var inventoryChanged = false
+
         if (ConfigCopyToolDescriptor.readLampDescriptor(compound, "lamp1", inventory, FloodlightContainer.LAMP_SLOT_1_ID, invoker, descriptor.acceptedLampTypes)) {
-            inventoryChange(inventory)
+            inventoryChanged = true
         }
 
         if (ConfigCopyToolDescriptor.readLampDescriptor(compound, "lamp2", inventory, FloodlightContainer.LAMP_SLOT_2_ID, invoker, descriptor.acceptedLampTypes)) {
-            inventoryChange(inventory)
+            inventoryChanged = true
         }
+
+        // Prevent duplicate function calls
+        if (inventoryChanged) inventoryChange(inventory)
     }
 
     override fun writeConfigTool(compound: NBTTagCompound, invoker: EntityPlayer) {

@@ -48,7 +48,7 @@ class LampSocketGui(player: EntityPlayer, val render: LampSocketRender) :
         trackbarRotationAngle = newGuiVerticalTrackBar(156, 7+2, 12, 68-4)
         trackbarRotationAngle.setRange(MIN_ROTATION_ANGLE.toFloat(), MAX_ROTATION_ANGLE.toFloat())
         trackbarRotationAngle.setStepIdMax(180)
-        trackbarRotationAngle.value = render.rotationAngle.toFloat()
+        trackbarRotationAngle.value = render.projectionRotationAngle.toFloat()
 
         if (!render.descriptor.enableProjectionRotation) trackbarRotationAngle.visible = false
     }
