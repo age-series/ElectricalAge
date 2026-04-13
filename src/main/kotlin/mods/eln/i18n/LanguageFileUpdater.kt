@@ -70,7 +70,7 @@ private fun parseLangFile(file: File): Map<String, String> {
                 val separatorIndex = findUnescapedEquals(trimmed)
                 if (separatorIndex > 0) {
                     val key = I18N.resolveUnicodeEscapes(trimmed.substring(0, separatorIndex))
-                    val value = trimmed.substring(separatorIndex + 1)
+                    val value = I18N.resolveUnicodeEscapes(trimmed.substring(separatorIndex + 1))
                     result[key] = value
                 }
             }
