@@ -10,3 +10,15 @@ tasks.named("processResources", ProcessResources).configure {
 tasks.withType(org.gradle.api.plugins.quality.Checkstyle).configureEach {
     enabled = false
 }
+
+// Temporary task to generate lang files
+tasks.register("generateLangFiles", JavaExec) {
+    group = "build"
+    description = "Generates language files from source code"
+    mainClass = "mods.eln.i18n.LanguageFileUpdater"
+    // Scan both java and kotlin source, write to lang folder
+    args("src/main", "src/main/resources/assets/eln/lang")
+    classpath = sourceSets.main.runtimeClasspath + sourceSets.main.output
+    // Must compile first
+    dependsOn("classes")
+}
