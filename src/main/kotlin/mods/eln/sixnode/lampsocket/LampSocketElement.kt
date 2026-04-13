@@ -61,21 +61,14 @@ class LampSocketElement(sixNode: SixNode, side: Direction, sixNodeDescriptor: Si
         Eln.config.getIntOrElse("entities.mobSpawning.preventNearLampsRange", 9))
     private val lampSocketProcess = LampSocketProcess(this)
 
-    private var grounded = true
-    var lampSupplyChannel = "Default channel"
     var poweredByLampSupply = true
+    var lampSupplyChannel = "Default channel"
     var activeLampSupplyConnection = false
+    var projectionRotationAngle = 0.0
     private var paintColor = LampSocketRender.DEFAULT_PAINT_COLOR
-    var rotationAngle = 0.0
-
-    var lampInInventory = false
-    var cableInInventory = false
+    private var grounded = true
 
     init {
-        // TODO: revisit this
-        // NOTE: Power factor (0.005) comes from MV cable registration
-        electricalLoad.serialResistance = ((Eln.MVU * Eln.MVU) / Eln.instance.MVP()) * 0.005
-
         // We currently have both 50V and 200V bulbs, so lamp sockets should be able to handle voltages up to 200V nominal
         voltageWatchdog.setNominalVoltage(Eln.MVU)
 
@@ -149,6 +142,13 @@ class LampSocketElement(sixNode: SixNode, side: Direction, sixNodeDescriptor: Si
             grounded = nbt.getBoolean("grounded")
         }
 
+        if (nbt.hasKey("color")) {
+            paintColor = if (descriptor.paintable) nbt.getByte("color").toInt() and 0xF else LampSocketRender.DEFAULT_PAINT_COLOR
+            nbt.removeTag("color")
+        } else {
+            paintColor = if (descriptor.paintable) nbt.getInteger("paintColor") else LampSocketRender.DEFAULT_PAINT_COLOR
+        }
+
         poweredByLampSupply = nbt.getBoolean("poweredByLampSupply")
 
         if (nbt.hasKey("channel")) {
@@ -158,24 +158,19 @@ class LampSocketElement(sixNode: SixNode, side: Direction, sixNodeDescriptor: Si
             lampSupplyChannel = nbt.getString("lampSupplyChannel")
         }
 
-        if (nbt.hasKey("color")) {
-            paintColor = if (descriptor.paintable) nbt.getByte("color").toInt() and 0xF else 0x0F
-            nbt.removeTag("color")
-        } else {
-            paintColor = if (descriptor.paintable) nbt.getInteger("paintColor") else 0
-        }
-
-        rotationAngle = nbt.getDouble("rotationAngle")
+        projectionRotationAngle = nbt.getDouble("projectionRotationAngle")
+        lampSocketProcess.stableLightProbability = nbt.getDouble("stableLightProbability")
     }
 
     override fun writeToNBT(nbt: NBTTagCompound) {
         super.writeToNBT(nbt)
         nbt.setInteger("frontNew", front.toInt())
         nbt.setBoolean("grounded", grounded)
+        nbt.setInteger("paintColor", paintColor)
         nbt.setBoolean("poweredByLampSupply", poweredByLampSupply)
         nbt.setString("lampSupplyChannel", lampSupplyChannel)
-        nbt.setInteger("paintColor", paintColor)
-        nbt.setDouble("rotationAngle", rotationAngle)
+        nbt.setDouble("projectionRotationAngle", projectionRotationAngle)
+        nbt.setDouble("stableLightProbability", lampSocketProcess.stableLightProbability)
     }
 
     override fun initialize() {
@@ -209,10 +204,7 @@ class LampSocketElement(sixNode: SixNode, side: Direction, sixNodeDescriptor: Si
 
         when (lampStack) {
             null -> lampResistor.highImpedance()
-            else -> {
-                val lampDescriptor = getItemObject(lampStack) as LampDescriptor
-                lampDescriptor.applyTo(lampResistor)
-            }
+            else -> (getItemObject(lampStack) as LampDescriptor).applyTo(lampResistor)
         }
 
         when (cableStack) {
@@ -254,14 +246,13 @@ class LampSocketElement(sixNode: SixNode, side: Direction, sixNodeDescriptor: Si
         super.networkSerialize(stream)
 
         try {
-            stream.writeBoolean(grounded)
-            stream.writeUTF(lampSupplyChannel)
             stream.writeBoolean(poweredByLampSupply)
+            stream.writeUTF(lampSupplyChannel)
             stream.writeBoolean(activeLampSupplyConnection)
+            stream.writeDouble(projectionRotationAngle)
             stream.writeInt(paintColor)
-            stream.writeDouble(rotationAngle)
-            stream.writeInt(lampSocketProcess.fastLightValue)
-            stream.writeBoolean(lampInInventory)
+            stream.writeBoolean(grounded)
+            stream.writeInt(sixNode!!.lightValue)
             serialiseItemStack(stream, inventory.getStackInSlot(LampSocketContainer.LAMP_SLOT_ID))
             serialiseItemStack(stream, inventory.getStackInSlot(LampSocketContainer.CABLE_SLOT_ID))
         } catch (e: IOException) {
@@ -275,7 +266,7 @@ class LampSocketElement(sixNode: SixNode, side: Direction, sixNodeDescriptor: Si
                 LampSocketGui.TOGGLE_GROUNDED_EVENT -> grounded = !grounded
                 LampSocketGui.TOGGLE_POWER_SOURCE_EVENT -> poweredByLampSupply = !poweredByLampSupply
                 LampSocketGui.UPDATE_LAMP_SUPPLY_CHANNEL_EVENT -> lampSupplyChannel = stream.readUTF()
-                LampSocketGui.ADJUST_ROTATION_ANGLE_EVENT -> rotationAngle = stream.readDouble()
+                LampSocketGui.ADJUST_ROTATION_ANGLE_EVENT -> projectionRotationAngle = stream.readDouble()
             }
             inventoryChange(inventory)
         } catch (e: IOException) {
@@ -311,32 +302,49 @@ class LampSocketElement(sixNode: SixNode, side: Direction, sixNodeDescriptor: Si
             if (poweredByLampSupply) info[I18N.tr("Channel")] = lampSupplyChannel
         }
 
+        if (Eln.config.getBooleanOrElse("debug.logging.enabled", false)) {
+            info[I18N.tr("Lamp Brightness")] = plotValue(sixNode!!.lightValue.toDouble())
+        }
+
         return info
     }
 
     override fun readConfigTool(compound: NBTTagCompound, invoker: EntityPlayer) {
+        var publishChanges = false
+        var inventoryChanged = false
+
         if (compound.hasKey("poweredByLampSupply")) {
             poweredByLampSupply = compound.getBoolean("poweredByLampSupply")
-            needPublish()
+            publishChanges = true
         }
 
         if (compound.hasKey("lampSupplyChannel")) {
             lampSupplyChannel = compound.getString("lampSupplyChannel")
-            needPublish()
+            publishChanges = true
+        }
+
+        if (compound.hasKey("grounded")) {
+            grounded = compound.getBoolean("grounded")
+            publishChanges = true
         }
 
         if (ConfigCopyToolDescriptor.readLampDescriptor(compound, "lamp", inventory, LampSocketContainer.LAMP_SLOT_ID, invoker, descriptor.acceptedLampTypes)) {
-            inventoryChange(inventory)
+            inventoryChanged = true
         }
 
         if (ConfigCopyToolDescriptor.readCableType(compound, inventory, LampSocketContainer.CABLE_SLOT_ID, invoker)) {
-            inventoryChange(inventory)
+            inventoryChanged = true
         }
+
+        // Prevent duplicate calls of these functions
+        if (inventoryChanged) inventoryChange(inventory)
+        else if (publishChanges) needPublish()
     }
 
     override fun writeConfigTool(compound: NBTTagCompound, invoker: EntityPlayer) {
         compound.setBoolean("poweredByLampSupply", poweredByLampSupply)
         compound.setString("lampSupplyChannel", lampSupplyChannel)
+        compound.setBoolean("grounded", grounded)
         ConfigCopyToolDescriptor.writeGenDescriptor(compound, "lamp", inventory.getStackInSlot(LampSocketContainer.LAMP_SLOT_ID))
         ConfigCopyToolDescriptor.writeCableType(compound, inventory.getStackInSlot(LampSocketContainer.CABLE_SLOT_ID))
     }

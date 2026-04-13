@@ -36,7 +36,7 @@ class LampSocketSuspendedObjRender(obj: Obj3D, val onOffModel: Boolean, val leng
     }
 
     override fun draw(render: LampSocketRender, distanceToPlayer: Double) {
-        draw(render.front!!, render.light, render.perturbPy, render.perturbPz, distanceToPlayer)
+        draw(render.front!!, render.lightValue, render.perturbPy, render.perturbPz, distanceToPlayer)
     }
 
     fun draw(front: LRDU, light: Int, perturbPy: Double, perturbPz: Double, distanceToPlayer: Double) {
@@ -71,16 +71,16 @@ class LampSocketSuspendedObjRender(obj: Obj3D, val onOffModel: Boolean, val leng
         if (!onOffModel) {
             socket.draw()
         } else {
-            if (light > LampSocketRender.MIN_LIGHT_ON_VALUE) {
+            if (light >= LampSocketRender.MIN_LIGHT_ON_VALUE) {
                 GL11.glColor3d(light / 15.0, light / 15.0, light / 15.0)
                 UtilsClient.bindTexture(tOn)
             } else UtilsClient.bindTexture(tOff)
 
-            if (light > LampSocketRender.MIN_LIGHT_ON_VALUE) UtilsClient.disableLight()
+            if (light >= LampSocketRender.MIN_LIGHT_ON_VALUE) UtilsClient.disableLight()
 
             if (socket != null) socket.drawNoBind()
 
-            if (light > LampSocketRender.MIN_LIGHT_ON_VALUE) {
+            if (light >= LampSocketRender.MIN_LIGHT_ON_VALUE) {
                 UtilsClient.enableLight()
                 GL11.glColor3d(1.0, 1.0, 1.0)
             }

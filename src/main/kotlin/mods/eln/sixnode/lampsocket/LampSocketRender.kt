@@ -35,7 +35,7 @@ class LampSocketRender(tileEntity: SixNodeEntity, side: Direction, sixNodeDescri
     SixNodeElementRender(tileEntity, side, sixNodeDescriptor) {
 
     companion object {
-        const val MIN_LIGHT_ON_VALUE = 1
+        const val MIN_LIGHT_ON_VALUE = 8
         const val DEFAULT_PAINT_COLOR = 15
     }
 
@@ -45,30 +45,30 @@ class LampSocketRender(tileEntity: SixNodeEntity, side: Direction, sixNodeDescri
     var lampDescriptor: LampDescriptor? = null
     private var cableDescriptor: GenericCableDescriptor? = null
 
-    var grounded = true
-    var lampSupplyChannel = "Default channel"
     var poweredByLampSupply = true
+    var lampSupplyChannel = "Default channel"
     var activeLampSupplyConnection = false
+    var projectionRotationAngle = 0.0
     var paintColor = DEFAULT_PAINT_COLOR
-    var rotationAngle = 0.0
+    var grounded = true
 
-    var light = 0
+    private var boot = true
+
+    var lightValue = 0
         set(newLight) {
             field = newLight
 
             if (lampDescriptor != null && lampDescriptor!!.lampData.technology.lampType == "fluorescent") {
-                if (oldLight != -1 && oldLight < MIN_LIGHT_ON_VALUE && light >= MIN_LIGHT_ON_VALUE) {
+                if (MIN_LIGHT_ON_VALUE in (oldLightValue + 1)..lightValue) {
                     val rand = Math.random()
                     if (rand > 0.1) play(SoundCommand("eln:neon_lamp").mulVolume(0.7f, (1.0 + (rand / 6.0)).toFloat()).smallRange())
                     else play(SoundCommand("eln:NEON_LFNOISE").mulVolume(0.2f, 1f).verySmallRange())
                 }
+
+                oldLightValue = lightValue
             }
-
-            oldLight = light
         }
-    private var oldLight = -1
-
-    var lampInInventory = false
+    private var oldLightValue = 0
 
     var perturbPy = 0.0
     var perturbPz = 0.0
@@ -84,20 +84,24 @@ class LampSocketRender(tileEntity: SixNodeEntity, side: Direction, sixNodeDescri
         super.publishUnserialize(stream)
 
         try {
-            grounded = stream.readBoolean()
-            lampSupplyChannel = stream.readUTF()
             poweredByLampSupply = stream.readBoolean()
+            lampSupplyChannel = stream.readUTF()
             activeLampSupplyConnection = stream.readBoolean()
+            projectionRotationAngle = stream.readDouble()
             paintColor = stream.readInt()
-            rotationAngle = stream.readDouble()
-            light = stream.readInt()
-            lampInInventory = stream.readBoolean()
+            grounded = stream.readBoolean()
+            lightValue = stream.readInt()
+
+            if (boot) {
+                oldLightValue = lightValue
+                boot = false
+            }
 
             val lampStack = unserialiseItemStack(stream)
-            if (lampStack != null) lampDescriptor = getItemObject(lampStack) as LampDescriptor
+            lampDescriptor = if (lampStack != null) getItemObject(lampStack) as LampDescriptor else null
 
             val cableStack = unserialiseItemStack(stream)
-            if (cableStack != null) cableDescriptor = getItemObject(cableStack) as GenericCableDescriptor
+            cableDescriptor = if (cableStack != null) getItemObject(cableStack) as GenericCableDescriptor else null
         } catch (e: IOException) {
             e.printStackTrace()
         }
@@ -105,12 +109,11 @@ class LampSocketRender(tileEntity: SixNodeEntity, side: Direction, sixNodeDescri
 
     override fun serverPacketUnserialize(stream: DataInputStream?) {
         super.serverPacketUnserialize(stream)
-        light = stream!!.readInt()
+        lightValue = stream!!.readInt()
     }
 
     override fun draw() {
-        // Only for colored cables
-        super.draw()
+        super.draw() // Only for colored cables
 
         GL11.glRotated(descriptor.initialRenderAngleOffset, 1.0, 0.0, 0.0)
         descriptor.renderType.draw(this, UtilsClient.distanceFromClientPlayer(this.tileEntity).toDouble())
