@@ -277,7 +277,7 @@ class SchmittTrigger : LogicFunction() {
     override val hasState = true
     override val inputCount = 1
     override val infos =
-        tr("If the input voltage is lower than 10V, the\noutput is 0 (low), if the output is bigger or\nequal to 30V, the output will be 1 (high). For\nall voltages in between, the output does not change.")
+        tr("If the input voltage is lower than 10V, the\noutput is 0 (low), if the input is bigger or\nequal to 30V, the output will be 1 (high). For\nall voltages in between, the output does not change.")
     private var state = false
 
     override fun process(inputs: Array<Double?>): Boolean {
