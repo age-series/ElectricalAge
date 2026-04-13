@@ -1513,32 +1513,32 @@ object ItemRegistration {
         Eln.sharedItem.addElement(53 + (id shl 6), casingDesc)
         Eln.sharedItem.addElement(
             54 + (id shl 6), ClutchPlateItem(
-                "Iron Clutch Plate", 5120f, 640f, 640f, 160f,
+                I18N.TR_NAME(I18N.Type.NONE, "Iron Clutch Plate"), 5120f, 640f, 640f, 160f,
                 0.0001f, false
             ).inOresAndMaterialsTab()
         )
-        Eln.sharedItem.addElement(55 + (id shl 6), ClutchPinItem("Clutch Pin").inOresAndMaterialsTab())
+        Eln.sharedItem.addElement(55 + (id shl 6), ClutchPinItem(I18N.TR_NAME(I18N.Type.NONE, "Clutch Pin")).inOresAndMaterialsTab())
         Eln.sharedItem.addElement(
             56 + (id shl 6), ClutchPlateItem(
-                "Gold Clutch Plate", 10240f, 2048f, 1024f, 512f,
+                I18N.TR_NAME(I18N.Type.NONE, "Gold Clutch Plate"), 10240f, 2048f, 1024f, 512f,
                 0.001f, false
             ).inOresAndMaterialsTab()
         )
         Eln.sharedItem.addElement(
             57 + (id shl 6), ClutchPlateItem(
-                "Copper Clutch Plate", 8192f, 4096f, 1024f, 512f,
+                I18N.TR_NAME(I18N.Type.NONE, "Copper Clutch Plate"), 8192f, 4096f, 1024f, 512f,
                 0.0003f, false
             ).inOresAndMaterialsTab()
         )
         Eln.sharedItem.addElement(
             58 + (id shl 6), ClutchPlateItem(
-                "Lead Clutch Plate", 15360f, 1024f, 1536f, 768f,
+                I18N.TR_NAME(I18N.Type.NONE, "Lead Clutch Plate"), 15360f, 1024f, 1536f, 768f,
                 0.0015f, false
             ).inOresAndMaterialsTab()
         )
         Eln.sharedItem.addElement(
             59 + (id shl 6), ClutchPlateItem(
-                "Coal Clutch Plate", 1024f, 128f, 128f, 32f, 0.1f,
+                I18N.TR_NAME(I18N.Type.NONE, "Coal Clutch Plate"), 1024f, 128f, 128f, 32f, 0.1f,
                 true
             ).inOresAndMaterialsTab()
         )

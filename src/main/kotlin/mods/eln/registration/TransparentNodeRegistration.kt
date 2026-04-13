@@ -1365,7 +1365,7 @@ object TransparentNodeRegistration {
         run {
             subId = 3
             val descriptor = GridTransformerDescriptor(
-                "Grid DC-DC Converter", Eln.obj.getObj(
+                TR_NAME(I18N.Type.NONE, "Grid DC-DC Converter"), Eln.obj.getObj(
                     "GridConverter"
                 ), "textures/wire.png", instance.highVoltageCableDescriptor
             )
@@ -1383,7 +1383,7 @@ object TransparentNodeRegistration {
         run {
             subId = 4
             val descriptor = ElectricalPoleDescriptor(
-                "Utility Pole",
+                TR_NAME(I18N.Type.NONE, "Utility Pole"),
                 Eln.obj.getObj(
                     "UtilityPole"
                 ),
@@ -1404,7 +1404,7 @@ object TransparentNodeRegistration {
         run {
             subId = 5
             val descriptor = ElectricalPoleDescriptor(
-                "Utility Pole w/DC-DC Converter",
+                TR_NAME(I18N.Type.NONE, "Utility Pole w/DC-DC Converter"),
                 Eln.obj.getObj("UtilityPole"),
                 "textures/wire.png",
                 instance.highVoltageCableDescriptor,
@@ -1422,7 +1422,7 @@ object TransparentNodeRegistration {
         run {
             subId = 6
             val descriptor = ElectricalPoleDescriptor(
-                "Transmission Tower",
+                TR_NAME(I18N.Type.NONE, "Transmission Tower"),
                 Eln.obj.getObj(
                     "TransmissionTower"
                 ),
@@ -1442,7 +1442,7 @@ object TransparentNodeRegistration {
         run {
             subId = 7
             val descriptor = ElectricalPoleDescriptor(
-                "Direct Utility Pole",
+                TR_NAME(I18N.Type.NONE, "Direct Utility Pole"),
                 Eln.obj.getObj(
                     "UtilityPole"
                 ),

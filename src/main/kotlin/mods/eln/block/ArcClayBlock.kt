@@ -3,6 +3,8 @@ package mods.eln.block
 import cpw.mods.fml.relauncher.Side
 import cpw.mods.fml.relauncher.SideOnly
 import mods.eln.Eln
+import mods.eln.i18n.I18N.TR_NAME
+import mods.eln.i18n.I18N.Type
 import net.minecraft.block.Block
 import net.minecraft.block.material.Material
 import net.minecraft.client.renderer.texture.IIconRegister
@@ -13,7 +15,7 @@ class ArcClayBlock : Block(Material.rock) {
     private var icon: IIcon? = null
 
     init {
-        setBlockName(name)
+        setBlockName(TR_NAME(Type.TILE, "arc_clay_block"))
         setBlockTextureName("eln:$name")
         setCreativeTab(Eln.creativeTabOresMaterials)
     }
@@ -37,7 +39,7 @@ class ArcMetalBlock : Block(Material.rock) {
     private var icon: IIcon? = null
 
     init {
-        setBlockName(name)
+        setBlockName(TR_NAME(Type.TILE, "arc_metal_block"))
         setBlockTextureName("eln:$name")
         setCreativeTab(Eln.creativeTabOresMaterials)
     }
