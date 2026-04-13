@@ -552,7 +552,7 @@ class ClutchRender(entity: TransparentNodeEntity, desc_: TransparentNodeDescript
 class ClutchContainer(player: EntityPlayer, inv: IInventory) : BasicContainer(
     player, inv, arrayOf(
         GenericItemUsingDamageSlot(inv, 0, 176 / 2 - 16 / 2 - 17 + 4, 42 - 16 / 2, 1, ClutchPlateItem::class.java, ISlotSkin.SlotSkin.medium, arrayOf(tr("Clutch Plate"))),
-        GenericItemUsingDamageSlot(inv, 1, 176 / 2 - 16 / 2 + 17 + 4, 42 - 16 / 2, 1, ClutchPinItem::class.java, ISlotSkin.SlotSkin.medium, arrayOf(tr("Clutch Pin")))
+        GenericItemUsingDamageSlot(inv, 1, 176 / 2 - 16 / 2 + 17 + 4, 42 - 16 / 2, 1, ClutchPinItem::class.java, ISlotSkin.SlotSkin.medium, arrayOf(tr("Clutch Pin ")))
     )
 )
 
