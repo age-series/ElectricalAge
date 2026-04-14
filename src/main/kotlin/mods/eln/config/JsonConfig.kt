@@ -72,6 +72,7 @@ class JsonConfig @JvmOverloads constructor(
         groupComments["ui"] = "HUD and item icon presentation."
         groupComments["lighting"] = "Lamp technology settings generated from registered lamp types."
         groupComments["lighting.lamps"] = "Per-lamp-type durability tuning."
+        groupComments["tools.xrayScanner.ores"] = "Ore scanner detection factors. Keys with ':' are block references (modid:name or modid:name:meta), keys without ':' are OreDictionary names."
     }
 
     private fun buildSpecs(): List<ConfigSpec> = listOf(
@@ -133,6 +134,18 @@ class JsonConfig @JvmOverloads constructor(
         spec(path = "tools.xrayScanner.addOtherModOreToScan", defaultValue = true),
         spec(path = "tools.xrayScanner.rangeBlocks", defaultValue = 5.0, comment = "X-ray scanner range in blocks. Intended range is 4 to 10."),
         spec(path = "tools.xrayScanner.canBeCrafted", defaultValue = true),
+        spec(path = "tools.xrayScanner.otherModOreFactor", defaultValue = 0.15, comment = "Default factor for auto-discovered mod ores not listed in ores config."),
+        spec(path = "tools.xrayScanner.ores.minecraft:coal_ore.factor", defaultValue = 0.05),
+        spec(path = "tools.xrayScanner.ores.minecraft:iron_ore.factor", defaultValue = 0.15),
+        spec(path = "tools.xrayScanner.ores.minecraft:gold_ore.factor", defaultValue = 0.40),
+        spec(path = "tools.xrayScanner.ores.minecraft:lapis_ore.factor", defaultValue = 0.40),
+        spec(path = "tools.xrayScanner.ores.minecraft:redstone_ore.factor", defaultValue = 0.40),
+        spec(path = "tools.xrayScanner.ores.minecraft:diamond_ore.factor", defaultValue = 1.00),
+        spec(path = "tools.xrayScanner.ores.minecraft:emerald_ore.factor", defaultValue = 0.40),
+        spec(path = "tools.xrayScanner.ores.Eln:Ore:1.factor", defaultValue = 0.10),
+        spec(path = "tools.xrayScanner.ores.Eln:Ore:4.factor", defaultValue = 0.20),
+        spec(path = "tools.xrayScanner.ores.Eln:Ore:5.factor", defaultValue = 0.20),
+        spec(path = "tools.xrayScanner.ores.Eln:Ore:6.factor", defaultValue = 0.20),
         spec(path = "simulation.electrical.frequency", defaultValue = 20.0, comment = "Set to a clean divisor of 20."),
         spec(path = "simulation.electrical.interSystemOverSampling", defaultValue = 50, comment = "Avoid setting this below 50."),
         spec(path = "simulation.thermal.frequency", defaultValue = 400.0, comment = "Thermal simulation update frequency."),
