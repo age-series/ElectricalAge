@@ -29,8 +29,8 @@ internal object LanguageFileGenerator {
 
             // For each translated string in that source file, add translation text.
             for (text2Translate in strings[sourceFile]!!) {
-                text2Translate.applyExistingTranslationIfPresent(existingTranslations)
-                writer.append(text2Translate.toString())
+                val effectiveText = existingTranslations?.get(text2Translate.key) ?: text2Translate.text
+                writer.append("${text2Translate.key}=${effectiveText.replace("\\\"", "\"")}\n")
             }
         }
 

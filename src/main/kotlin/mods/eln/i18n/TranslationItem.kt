@@ -1,19 +1,10 @@
 package mods.eln.i18n
 
-internal class TranslationItem(val key: String?, var text: String) : Comparable<TranslationItem> {
+internal class TranslationItem(val key: String?, val text: String) : Comparable<TranslationItem> {
 
     constructor(text: String) : this(I18N.encodeLangKey(text), text)
 
     fun isValid(): Boolean = key != null
-
-    fun applyExistingTranslationIfPresent(existing: Map<String, String>?) {
-        if (existing != null && key != null) {
-            val existingText = existing[key]
-            if (existingText != null) {
-                text = existingText
-            }
-        }
-    }
 
     override fun compareTo(other: TranslationItem): Int {
         return key!!.compareTo(other.key!!)
