@@ -30,7 +30,8 @@ internal object LanguageFileGenerator {
             // For each translated string in that source file, add translation text.
             for (text2Translate in strings[sourceFile]!!) {
                 val effectiveText = existingTranslations?.get(text2Translate.key) ?: text2Translate.text
-                writer.append("${text2Translate.key}=${effectiveText.replace("\\\"", "\"")}\n")
+                val resolvedText = I18N.resolveUnicodeEscapes(effectiveText).replace("\\\"", "\"")
+                writer.append("${text2Translate.key}=$resolvedText\n")
             }
         }
 

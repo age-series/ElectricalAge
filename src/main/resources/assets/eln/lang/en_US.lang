@@ -17,7 +17,7 @@ Casing_slot=Casing slot
 Channel=Channel
 Charge=Charge
 Charge_power=Charge power
-Charge_power\:_%1$W=Charge power\: %1$W
+Charge_power\:_%1$W=Charge power: %1$W
 Closed=Closed
 Connected=Connected
 Control=Control
@@ -30,7 +30,7 @@ Current\:_%1$A=Current: %1$A
 Default_position=Default position
 Dielectric_slot=Dielectric slot
 Disabled=Disabled
-Discharge_power\:_%1$W=Discharge power\: %1$W
+Discharge_power\:_%1$W=Discharge power: %1$W
 Efficiency=Efficiency
 Electrical_cable_slot=Electrical cable slot
 Energy=Energy
@@ -57,7 +57,7 @@ It_is_made_this_way_to_improve_the_performance_of_the_simulator_in_large_power_n
 It_should_require_power_to_transmit_realistically=It should require power to transmit realistically
 MQTT_server=MQTT server
 Max._temperature\:_%1$°C=Max. temperature: %1$°C
-Max_rads\:__=Max rads:
+Max_rads\:__=Max rads:  
 Measured_temperature\ncorresponding\nto_0%_output=Measured temperature\ncorresponding\nto 0% output
 Measured_temperature\ncorresponding\nto_100%_output=Measured temperature\ncorresponding\nto 100% output
 Measured_value\ncorresponding\nto_0%_output=Measured value\ncorresponding\nto 0% output
@@ -109,7 +109,7 @@ Specify_the_channel=Specify the channel
 Specify_the_supply_channel=Specify the supply channel
 Speed=Speed
 State=State
-Stored_energy\:_%1$J_(%2$%)=Stored energy\: %1$J (%2$%)
+Stored_energy\:_%1$J_(%2$%)=Stored energy: %1$J (%2$%)
 Subsystem_Matrix_Size=Subsystem Matrix Size
 Temperature=Temperature
 Temperature\:_%1$°C=Temperature: %1$°C
@@ -132,12 +132,12 @@ Voltages=Voltages
 Write=Write
 Yes=Yes
 You_can't_place_this_block_at_this_side=You can't place this block at this side
-_O\:_= O:
+_O\:_= O: 
 __*_Wire_resistance_is_much_higher_than_normal=  * Wire resistance is much higher than normal
 __*_Wire_resistance_is_not_impacted_by_temperature=  * Wire resistance is not impacted by temperature
-__Max._temperature\:_=  Max. temperature:
-__Optimal_rads\:_=Optimal rads:
-__Power_out\:_=Power out:
+__Max._temperature\:_=  Max. temperature: 
+__Optimal_rads\:_=  Optimal rads: 
+__Power_out\:_=  Power out: 
 
 # src/main/java/mods/eln/Eln.java
 itemGroup.Eln=Electrical Age
@@ -284,7 +284,7 @@ Battery_powered_buzzer_\nactivated_in_presence_of_fire.=Battery powered buzzer \
 Output_voltage_increases\nif_a_fire_has_been_detected.=Output voltage increases\nif a fire has been detected.
 
 # src/main/java/mods/eln/sixnode/electricalfiredetector/ElectricalFireDetectorElement.java
-Fire_detected\:_=Fire detected:
+Fire_detected\:_=Fire detected: 
 Fire_present=Fire present
 
 # src/main/java/mods/eln/sixnode/electricalgatesource/ElectricalGateSourceDescriptor.java
@@ -670,7 +670,7 @@ Standby_power\:_%1$W=Standby power: %1$W
 # src/main/java/mods/eln/transparentnode/turret/TurretElement.java
 ??=??
 Charge_level=Charge level
-Shoot_=Shoot
+Shoot_=Shoot 
 Shoot_everything=Shoot everything
 Shoot_nothing=Shoot nothing
 Target=Target
@@ -749,7 +749,7 @@ Can_be_used_to_encase_EA_items_that_support_it=Can be used to encase EA items th
 
 # src/main/kotlin/mods/eln/item/FuelBurnerDescriptor.kt
 Burn_unit_for_the_gas_heat_furnace.=Burn unit for the gas heat furnace.
-Produced_heat_power\:_=Produced heat power:
+Produced_heat_power\:_=Produced heat power: 
 
 # src/main/kotlin/mods/eln/item/LampDescriptor.kt
 Condition\:_%1$=Condition: %1$
@@ -781,7 +781,7 @@ Opens_holes._Right-click_to_open_smaller_holes.=Opens holes. Right-click to open
 
 # src/main/kotlin/mods/eln/mechanical/Clutch.kt
 Bad=Bad
-Clutch_Pin_=Clutch Pin
+Clutch_Pin_=Clutch Pin 
 Clutch_Plate=Clutch Plate
 Clutching=Clutching
 Condition\:=Condition:
@@ -799,15 +799,15 @@ Player_crankable_shaft=Player crankable shaft
 
 # src/main/kotlin/mods/eln/mechanical/Generator.kt
 Converts_mechanical_energy_into_electricity,_or_(badly)_vice_versa.=Converts mechanical energy into electricity, or (badly) vice versa.
-__Rads\:_=  Rads:
-__Voltage_out\:_=Voltage out:
+__Rads\:_=  Rads: 
+__Voltage_out\:_=  Voltage out: 
 
 # src/main/kotlin/mods/eln/mechanical/Motor.kt
 Converts_electricity_into_mechanical_energy,_or_(badly)_vice_versa.=Converts electricity into mechanical energy, or (badly) vice versa.
-Max_rad/s\:_=Max rad/s:
-__Power_in\:_=  Power in:
-__Voltage_in\:_=  Voltage in:
-__rad/s\:_=  rad/s:
+Max_rad/s\:_=Max rad/s: 
+__Power_in\:_=  Power in: 
+__Voltage_in\:_=  Voltage in: 
+__rad/s\:_=  rad/s: 
 
 # src/main/kotlin/mods/eln/mechanical/RadialMotor.kt
 %1$_input\:_%2$_mB/s=%1$ input: %2$ mB/s
@@ -833,7 +833,7 @@ mod.name=Electrical Age
 # src/main/kotlin/mods/eln/node/six/SixNodeDescriptor.kt
 
 # src/main/kotlin/mods/eln/railroad/ElectricMinecartChargeReporter.kt
-Cart_Energy\:_=Cart Energy:
+Cart_Energy\:_=Cart Energy: 
 
 # src/main/kotlin/mods/eln/registration/ItemRegistration.kt
 200V_Copper_Heating_Element.name=200V Copper Heating Element
@@ -1401,14 +1401,14 @@ Nominal_voltage\:_%1$_V=Nominal voltage: %1$ V
 Produces_electricity_using_gasoline.=Produces electricity using gasoline.
 
 # src/main/kotlin/mods/eln/transparentnode/FuelHeatFurnace.kt
-Actual\:_=Actual:
+Actual\:_=Actual: 
 Analog_regulator_slot=Analog regulator slot
-Control_value_at_=Control value at
+Control_value_at_=Control value at 
 Fuel_burner_slot=Fuel burner slot
 Furnace_is_off=Furnace is off
 Furnace_is_on=Furnace is on
-Heat_Power\:_=Heat Power:
-Set_point\:_=Set point:
+Heat_Power\:_=Heat Power: 
+Set_point\:_=Set point: 
 
 # src/main/kotlin/mods/eln/transparentnode/LargeRheostat.kt
 Control_resistance_with_signal=Control resistance with signal
@@ -1444,20 +1444,20 @@ The_output_voltage_is_controlled\nfrom_a_signal_input=The output voltage is cont
 This_variable_DC/DC_has_unrealistic_capacitance_effects_and_can_sink/source_power_that_violates_Newton's_laws=This variable DC/DC has unrealistic capacitance effects and can sink/source power that violates Newton's laws
 
 # src/main/kotlin/mods/eln/transparentnode/battery/BatteryDescriptor.kt
-Actual_charge\:_=Actual charge:
-Batteries_are_based_in_realistic_battery_designs_that_someone_might_implement_realistically\:=Batteries are based in realistic battery designs that someone might implement realistically\:
+Actual_charge\:_=Actual charge: 
+Batteries_are_based_in_realistic_battery_designs_that_someone_might_implement_realistically\:=Batteries are based in realistic battery designs that someone might implement realistically:
 Battery_could_be_realistic_in_the_future=Battery could be realistic in the future
-Energy_capacity\:_=Energy capacity:
-Internal_resistance\:_=Internal resistance:
-Life\:_=Life:
-Nominal_power\:_=Nominal power:
-Nominal_voltage\:_=Nominal voltage:
+Energy_capacity\:_=Energy capacity: 
+Internal_resistance\:_=Internal resistance: 
+Life\:_=Life: 
+Nominal_power\:_=Nominal power: 
+Nominal_voltage\:_=Nominal voltage: 
 __*_Batteries_have_internal_resistance=  * Batteries have internal resistance
 __*_Current_oriented_uses_two_smaller_batteries_in_parallel_to_increase_current_capability=  * Current oriented uses two smaller batteries in parallel to increase current capability
 __*_Not_currently_simulating_any_particular_chemistry_of_battery=  * Not currently simulating any particular chemistry of battery
 __*_Single_use_batteries_emulate_a_voltaic_pile=  * Single use batteries emulate a voltaic pile
 __*_Voltage_oriented_uses_two_smaller_batteries_in_series_to_increase_voltage=  * Voltage oriented uses two smaller batteries in series to increase voltage
-_charged_at_=charged at
+_charged_at_= charged at 
 
 # src/main/kotlin/mods/eln/transparentnode/battery/BatteryElement.kt
 Life=Life
@@ -1466,7 +1466,7 @@ Life=Life
 Charged=Charged
 Discharge=Discharge
 Energy\:=Energy:
-Energy\:_=Energy:
+Energy\:_=Energy: 
 Life\:=Life:
 No_charge=No charge
 Power_in\:=Power in:
