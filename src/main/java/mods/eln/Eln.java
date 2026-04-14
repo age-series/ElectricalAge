@@ -38,7 +38,7 @@ import mods.eln.ghost.GhostManagerNbt;
 import mods.eln.item.*;
 import mods.eln.item.electricalinterface.ItemEnergyInventoryProcess;
 import mods.eln.item.electricalitem.OreColorMapping;
-import mods.eln.item.electricalitem.PortableOreScannerItem.RenderStorage.OreScannerConfigElement;
+import mods.eln.item.electricalitem.OreScannerConfigElement;
 import mods.eln.misc.*;
 import mods.eln.mqtt.MqttManager;
 import mods.eln.node.NodeBlockEntity;
@@ -602,8 +602,6 @@ public class Eln {
     }
 
     public void regenOreScannerFactors() {
-        OreColorMapping.INSTANCE.updateColorMapping();
-
         oreScannerConfig.clear();
 
         if (config.getBooleanOrElse("tools.xrayScanner.addOtherModOreToScan", true)) {
@@ -611,7 +609,9 @@ public class Eln {
                 if (name == null) continue;
                 if (name.startsWith("ore")) {
                     for (ItemStack stack : OreDictionary.getOres(name)) {
-                        int id = Utils.getItemId(stack) + 4096 * stack.getItem().getMetadata(stack.getItemDamage());
+                        int damage = stack.getItemDamage();
+                        int meta = (damage == OreDictionary.WILDCARD_VALUE) ? 0 : stack.getItem().getMetadata(damage);
+                        int id = Utils.getItemId(stack) + 4096 * meta;
                         boolean find = false;
                         for (OreScannerConfigElement c : oreScannerConfig) {
                             if (c.getBlockKey() == id) {
@@ -641,6 +641,7 @@ public class Eln {
         oreScannerConfig.add(new OreScannerConfigElement(Block.getIdFromBlock(oreBlock) + (4 << 12), 20 / 100f));
         oreScannerConfig.add(new OreScannerConfigElement(Block.getIdFromBlock(oreBlock) + (5 << 12), 20 / 100f));
         oreScannerConfig.add(new OreScannerConfigElement(Block.getIdFromBlock(oreBlock) + (6 << 12), 20 / 100f));
+        OreColorMapping.INSTANCE.updateColorMapping();
     }
 
     private void updateCreativeTabIcons() {

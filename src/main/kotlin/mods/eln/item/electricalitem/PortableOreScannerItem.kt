@@ -328,8 +328,6 @@ class PortableOreScannerItem(name: String?, private val obj: Obj3D,
         var worldBlocksDim: Int
         var worldBlocksDim2: Int
 
-        class OreScannerConfigElement(var blockKey: Int, var factor: Float)
-
         fun generate(w: World, posX: Double, posY: Double, posZ: Double, alphaY: Float, alphaX: Float) {
             val blockKeyFactor = OreColorMapping.map
 
