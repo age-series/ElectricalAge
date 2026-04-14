@@ -1,829 +1,1488 @@
 #<ELN_LANGFILE_V1_1>
 
-# ./src/main/java/mods/eln/Achievements.java
-Electrical_Age_[WIP]=Electrical Age [WIP]
-achievement.craft_50v_macerator=Crushing Novice
-achievement.craft_50v_macerator.desc=Craft a 50V Macerator
-achievement.open_guide=Wiki Power
-achievement.open_guide.desc=Open the wiki guide
+# Appearing in multiple source files
+%1$_is_not_in_range!=%1$ není v rozsahu!
+(Increases_capacity)=(Zvyšuje kapacitu)
+(Increases_inductance)=(Zvyšuje indukčnost)
+*_Missing_an_inductive_voltage_spike_on_field_collapse=* Chybí indukční napěťový špička při kolapsu pole
+A_relay_is_an_electrical\ncontact_that_conducts\ncurrent_when_a_signal\nvoltage_is_applied.=Relé je elektrický\nkontakt, který vede\nproud, když je přiloženo\nsignálové napětí.
+Acts_like_a\npush_button.=Funguje jako\ntlačítko.
+Acts_like_a\ntoggle_switch.=Funguje jako\npřepínač.
+Battery_level=Úroveň nabití baterie
+Biggest=Největší
+Booster_slot=Slot pro posilovač
+Can_create\:=Může vytvořit:
+Capacity\:_%1$F=Kapacita: %1$F
+Casing_slot=Slot pro pouzdro
+Channel=Kanál
+Charge=Nabíjení
+Charge_power=Výkon nabíjení
+Charge_power\:_%1$W=Výkon nabíjení: %1$W
+Closed=Zavřeno
+Connected=Připojeno
+Control=Ovládání
+Converts_%1$_into_mechanical_energy.=Převádí %1$ na mechanickou energii.
+Cooling_power\:_%1$W=Chladicí výkon: %1$W
+Copper_cable_slot=Slot pro měděný kabel
+Creative_block.=Kreativní blok.
+Current=Proud
+Current\:_%1$A=Proud: %1$A
+Default_position=Výchozí pozice
+Dielectric_slot=Slot pro dielektrikum
+Disabled=Zakázáno
+Discharge_power\:_%1$W=Výkon vybíjení: %1$W
+Efficiency=Účinnost
+Electrical_cable_slot=Slot pro elektrický kabel
+Energy=Energie
+Entity_filter_slot=Slot pro filtr entit
+External_control=Externí ovládání
+Ferromagnetic_core_slot=Slot pro feromagnetické jádro
+Fuel_usage=Spotřeba paliva
+Generated_power=Vyráběný výkon
+Generates_heat_when_supplied_with_fuel.=Vyrábí teplo při dodávání paliva.
+Generating=Výroba
+Has_a_signal_output.=Má signálový výstup.
+Has_some_caveats\:=Má určitá omezení:
+Inductance=Indukčnost
+Inductance\:_%1$H=Indukčnost: %1$H
+Input=Vstup
+Input_voltage=Vstupní napětí
+Inputs=Vstupy
+Internal_control=Interní ovládání
+Internal_resistance\:_%1$Ω=Vnitřní odpor: %1$Ω
+Is_off=Je vypnuto
+Is_on=Je zapnuto
+It_doesn't_really_behave_well_for_DC=Nefunguje příliš dobře pro stejnosměrný proud
+It_is_made_this_way_to_improve_the_performance_of_the_simulator_in_large_power_networks=Je to takto navrženo pro zlepšení výkonu simulátoru ve velkých napájecích sítích
+It_should_require_power_to_transmit_realistically=Mělo by realisticky vyžadovat energii k přenosu
+MQTT_server=MQTT server
+Max._temperature\:_%1$°C=Max. teplota: %1$°C
+Max_rads\:__=Max. rad/s:
+Measured_temperature\ncorresponding\nto_0%_output=Naměřená teplota\nodpovídající\n0% výstupu
+Measured_temperature\ncorresponding\nto_100%_output=Naměřená teplota\nodpovídající\n100% výstupu
+Measured_value\ncorresponding\nto_0%_output=Naměřená hodnota\nodpovídající\n0% výstupu
+Measured_value\ncorresponding\nto_100%_output=Naměřená hodnota\nodpovídající\n100% výstupu
+No=Ne
+No_valid_fluids_for_this_turbine!=Žádné platné tekutiny pro tuto turbínu!
+Nominal\:=Jmenovitý:
+Nominal_Ratings\:=Jmenovité hodnoty:
+Nominal_power\:_%1$W=Jmenovitý výkon: %1$W
+Nominal_usage\:=Jmenovité použití:
+Nominal_usage_->=Jmenovité použití ->
+Nominal_voltage\:_%1$V=Jmenovité napětí: %1$V
+None=Žádný
+Normally_closed=Normálně zavřeno
+Normally_open=Normálně otevřeno
+Not_connected=Nepřipojeno
+Not_enough_space_for_this_block=Nedostatek prostoru pro tento blok
+OFF=VYP
+ON=ZAP
+Off=Vyp
+On=Zap
+Open=Otevřeno
+Output=Výstup
+Output_voltage=Výstupní napětí
+Portable_battery_slot=Slot pro přenosnou baterii
+Position=Pozice
+Power=Výkon
+Power\:_%1$W=Výkon: %1$W
+Power_consumption=Spotřeba energie
+Power_out\:_%1$-_%2$=Výkon ven: %1$- %2$
+Power_sourced=Zdroj výkonu
+Powered_by_Lamp_Supply=Napájeno ze zdroje lamp
+Powered_by_cable=Napájeno kabelem
+Produced_power=Vyráběný výkon
+Range\:_%1$_blocks=Dosah: %1$ bloků
+Ratio=Poměr
+Read=Čtení
+Redstone_slot=Slot pro redstone
+Redstone_value=Hodnota redstone
+Regulator_slot=Slot pro regulátor
+Relative_humidity=Relativní vlhkost
+Reset=Reset
+Resistance=Odpor
+Resistance\:_%1$Ω=Odpor: %1$Ω
+Serial_resistance\:_%1$Ω=Sériový odpor: %1$Ω
+Signal=Signál
+Smallest=Nejmenší
+Specify_the_channel=Zadejte kanál
+Specify_the_supply_channel=Zadejte napájecí kanál
+Speed=Rychlost
+State=Stav
+Stored_energy\:_%1$J_(%2$%)=Uložená energie: %1$J (%2$%)
+Subsystem_Matrix_Size=Velikost matice subsystému
+Temperature=Teplota
+Temperature\:_%1$°C=Teplota: %1$°C
+Temperature_gauge=Teploměr
+The_relay's_input_behaves\nlike_a_Schmitt_Trigger.=Vstup relé se chová\njako Schmittův spouštěč.
+Thermal_isolator_slot=Slot pro tepelný izolátor
+Thermal_power=Tepelný výkon
+Toggle=Přepnout
+Toggle_switch=Přepínač
+Toggles_the_output_each_time\nan_emitter's_value_rises.\nUseful_to_allow_multiple_buttons\nto_control_the_same_light.=Přepíná výstup pokaždé,\nkdy hodnota vysílače vzroste.\nUžitečné pro umožnění více tlačítek\novládat stejné světlo.
+Transforms_an_input_voltage_to\nan_output_voltage.=Transformuje vstupní napětí na\nvýstupní napětí.
+Used_to_cool_down_turbines.=Používá se k chlazení turbín.
+Uses_the_biggest\nvalue_on_the_channel.=Používá největší\nhodnotu na kanálu.
+Uses_the_smallest\nvalue_on_the_channel.=Používá nejmenší\nhodnotu na kanálu.
+Validate=Ověřit
+Voltage=Napětí
+Voltage\:_%1$V=Napětí: %1$V
+Voltage_drop=Napěťový pokles
+Voltages=Napětí
+Write=Zápis
+Yes=Ano
+You_can't_place_this_block_at_this_side=Nemůžete umístit tento blok na tuto stranu
+_O\:_= O:
+__*_Wire_resistance_is_much_higher_than_normal=  * Odpor drátu je mnohem vyšší než obvykle
+__*_Wire_resistance_is_not_impacted_by_temperature=  * Odpor drátu není ovlivněn teplotou
+__Max._temperature\:_=  Max. teplota:
+__Optimal_rads\:_=  Optimální rad/s:
+__Power_out\:_=  Výkon ven:
 
-# ./src/main/java/mods/eln/Eln.java
-10A_Diode.name=10A Dioda
-200V_Active_Thermal_Dissipator.name=200V Active Thermal Dissipator
-200V_Battery_Charger.name=200V Battery Charger
-200V_Compressor.name=200V Compressor
-200V_Condensator.name=200V Kondenzátor
-200V_Copper_Heating_Corp.name=200V Copper Heating Element
-200V_Economic_Light_Bulb.name=200V Economic Light Bulb
-200V_Farming_Lamp.name=200V Farming Lamp
-200V_Fuel_Generator.name=200V Fuel Generator
-200V_Incandescent_Light_Bulb.name=200V Incandescent Light Bulb
-200V_Iron_Heating_Corp.name=200V Iron Heating Element
-200V_LED_Bulb.name=200V LED Bulb
-200V_Macerator.name=200V Macerator
-200V_Magnetizer.name=200V Magnetizer
-200V_Plate_Machine.name=200V Plate Machine
-200V_Power_Socket.name=200V Power Socket
-200V_Tungsten_Heating_Corp.name=200V Tungsten Heating Element
-200V_Turbine.name=200V Turbine
-25A_Diode.name=25A Dioda
-50V_Battery_Charger.name=50V Battery Charger
-50V_Carbon_Incandescent_Light_Bulb.name=50V Carbon Incandescent Light Bulb
-50V_Compressor.name=50V Compressor
-50V_Condensator.name=50V Kondenzátor
-50V_Copper_Heating_Corp.name=50V Copper Heating Element
-50V_Economic_Light_Bulb.name=50V Economic Light Bulb
-50V_Egg_Incubator.name=50V Egg Incubator
-50V_Farming_Lamp.name=50V Farming Lamp
-50V_Fuel_Generator.name=50V Fuel Generator
-50V_Incandescent_Light_Bulb.name=50V Incandescent Light Bulb
-50V_Iron_Heating_Corp.name=50V Iron Heating Element
-50V_LED_Bulb.name=50V LED Bulb
-50V_Macerator.name=50V Macerator
-50V_Magnetizer.name=50V Magnetizer
-50V_Plate_Machine.name=50V Plate Machine
-50V_Power_Socket.name=50V Power Socket
-50V_Tungsten_Heating_Corp.name=50V Tungsten Heating Element
-50V_Turbine.name=50V Turbine
-800V_Defence_Turret.name=800V Defence Turret
-AND_Chip.name=AND Chip
-Advanced_Chip.name=Advanced Chip
-Advanced_Electrical_Motor.name=Advanced Electrical Motor
-Advanced_Energy_Meter.name=Advanced Energy Meter
-Advanced_Machine_Block.name=Advanced Machine Block
-Advanced_Magnet.name=Advanced Magnet
-AllMeter.name=Universal-Meter
-Alloy_Dust.name=Alloy Dust
-Alloy_Ingot.name=Alloy Ingot
-Alloy_Plate.name=Alloy Plate
-Analog_Watch.name=Analog watch
-Analog_vuMeter.name=Analog Gauge
-Analogic_Regulator.name=Analogic Regulator
-Animal_Filter.name=Animal Filter
-Auto_Miner.name=Auto Miner
-Average_Electrical_Drill.name=Average Electrical Drill
-Average_Ferromagnetic_Core.name=Average Ferromagnetic Core
-Basic_Magnet.name=Basic Magnet
-Black_Brush.name=Black Brush
-Blue_Brush.name=Blue Brush
-Brown_Brush.name=Brown Brush
-Capacity_Oriented_Battery.name=Capacity Oriented Battery
-Cheap_Chip.name=Cheap Chip
-Cheap_Electrical_Drill.name=Cheap Electrical Drill
-Cheap_Ferromagnetic_Core.name=Cheap Ferromagnetic Core
-Cinnabar_Dust.name=Cinnabar Dust
-Cinnabar_Ore.name=Cinnabar Ore
-Coal_Dust.name=Coal Dust
-Coal_Plate.name=Coal Plate
-Combustion_Chamber.name=Combustion Chamber
-Copper_Cable.name=Copper Cable
-Copper_Dust.name=Copper Dust
-Copper_Ingot.name=Copper Ingot
-Copper_Ore.name=Copper Ore
-Copper_Plate.name=Copper Plate
-Copper_Thermal_Cable.name=Copper Thermal Cable
-Cost_Oriented_Battery.name=Cost Oriented Battery
-Current_Oriented_Battery.name=Current Oriented Battery
-Cyan_Brush.name=Cyan Brush
-D_Flip_Flop_Chip.name=D Flip Flop Chip
-Data_Logger.name=Data Logger
-Data_Logger_Print.name=Data Logger Print
-Dielectric.name=Dielectric
-Digital_Watch.name=Digital Watch
-Electrical_Anemometer_Sensor.name=Electrical Anemometer Sensor
-Electrical_Breaker.name=Electrical Breaker
-Electrical_Daylight_Sensor.name=Elektronický Senzor Světla
-Electrical_Entity_Sensor.name=Electrical Entity Sensor
-Electrical_Fire_Detector.name=Elektronický Hlásič Požáru
-Electrical_Furnace.name=Elektrická Pec
-Electrical_Light_Sensor.name=Elektrický Světelný Senzor
-Electrical_Motor.name=Elektrický Motor
-Electrical_Probe.name=Electrical Probe
-Electrical_Probe_Chip.name=Electrical Probe Chip
-Electrical_Source.name=Electrical Source
-Electrical_Timer.name=Electrical Timer
-Electrical_Weather_Sensor.name=Electrical Weather Sensor
-Electrical_age_wrench,\nCan_be_used_to_turn\nsmall_wall_blocks=Electrical age wrench,\nCan be used to turn\nsmall wall blocks
-Energy_Meter.name=Energy Meter
-Experimental_Transporter.name=Experimental Transporter
-Fast_Electrical_Drill.name=Fast Electrical Drill
-Ferrite_Ingot.name=Ferrite Ingot
-Flat_Lamp_Socket.name=Flat Lamp Socket
-Fluorescent_Lamp_Socket.name=Fluorescent Lamp Socket
-Generator.name=Generator
-Gold_Dust.name=Gold Dust
-Gold_Plate.name=Gold Plate
-Gray_Brush.name=Gray Brush
-Green_Brush.name=Green Brush
-Ground_Cable.name=Ground Cable
-High_Power_Receiver_Antenna.name=High Power Receiver Antenna
-High_Power_Transmitter_Antenna.name=High Power Transmitter Antenna
-High_Voltage_Cable.name=High Voltage Cable
-High_Voltage_Relay.name=High Voltage Relay
-High_Voltage_Switch.name=High Voltage Switch
-Hub.name=Hub
-Industrial_Data_Logger.name=Industrial Data Logger
-Iron_Cable.name=Iron Cable
-Iron_Dust.name=Iron Dust
-Iron_Plate.name=Iron Plate
-JK_Flip_Flop_Chip.name=JK Flip Flop Chip
-LED_vuMeter.name=LED vuMeter
-Lamp_Socket_A.name=Lamp Socket A
-Lamp_Socket_B_Projector.name=Lamp Socket B Projector
-Lamp_Supply.name=Lamp Supply
-Large_Rheostat.name=Large Rheostat
-Lead_Dust.name=Lead Dust
-Lead_Ingot.name=Lead Ingot
-Lead_Ore.name=Lead Ore
-Lead_Plate.name=Lead Plate
-Life_Oriented_Battery.name=Life Oriented Battery
-Light_Blue_Brush.name=Light Blue Brush
-Lime_Brush.name=Lime Brush
-Long_Suspended_Lamp_Socket.name=Long Suspended Lamp Socket
-Low_Power_Receiver_Antenna.name=Low Power Receiver Antenna
-Low_Power_Transmitter_Antenna.name=Low Power Transmitter Antenna
-Low_Voltage_Cable.name=Low Voltage Cable
-Low_Voltage_Relay.name=Low Voltage Relay
-Low_Voltage_Switch.name=Low Voltage Switch
-Machine_Block.name=Machine Block
-Machine_Booster.name=Machine Booster
-Magenta_Brush.name=Magenta Brush
-Medium_Power_Receiver_Antenna.name=Medium Power Receiver Antenna
-Medium_Power_Transmitter_Antenna.name=Medium Power Transmitter Antenna
-Medium_Voltage_Cable.name=Medium Voltage Cable
-Medium_Voltage_Relay.name=Medium Voltage Relay
-Medium_Voltage_Switch.name=Medium Voltage Switch
-Mercury.name=Mercury
-Mining_Pipe.name=Mining Pipe
-Modbus_RTU.name=Modbus RTU
-Modern_Data_Logger.name=Modern Data Logger
-Monster_Filter.name=Monster Filter
-MultiMeter.name=Multimetr
-NAND_Chip.name=NAND Chip
-NOR_Chip.name=NOR Chip
-NOT_Chip.name=NOT Chip
-Nuclear_Alarm.name=Nuclear Alarm
-OR_Chip.name=OR Chip
-On_OFF_Regulator_10_Percent.name=On/off regulator 10%
-On_OFF_Regulator_1_Percent.name=On/off regulator 1%
-Optimal_Ferromagnetic_Core.name=Optimal Ferromagnetic Core
-Orange_Brush.name=Orange Brush
-Ore_Scanner.name=Ore Scanner
-Oscillator_Chip.name=Oscillator Chip
-Overheating_Protection.name=Overheating Protection
-Overvoltage_Protection.name=Overvoltage Protection
-PAL_Chip.name=PAL Chip
-Pink_Brush.name=Pink Brush
-Player_Filter.name=Player Filter
-Portable_Battery.name=Portable Battery
-Portable_Battery_Pack.name=Portable Battery Pack
-Portable_Condensator.name=Portable Condensator
-Portable_Condensator_Pack.name=Portable Condensator Pack
-Portable_Electrical_Axe.name=Portable Electrical Axe
-Portable_Electrical_Mining_Drill.name=Portable Electrical Mining Drill
-Power_Capacitor.name=Power Capacitor
-Power_Inductor.name=Power Inductor
-Power_Resistor.name=Power Resistor
-Power_capacitor.name=Power capacitor
-Power_inductor.name=Power inductor
-Purple_Brush.name=Purple Brush
-Red_Brush.name=Red Brush
-Redstone-to-Voltage_Converter.name=Redstone-to-Voltage Converter
-Rheostat.name=Rheostat
-Robust_Lamp_Socket.name=Robust Lamp Socket
-Rubber.name=Guma
-Schmitt_Trigger_Chip.name=Schmitt Trigger Chip
-Sconce_Lamp_Socket.name=Sconce Lamp Socket
-Signal_20H_inductor.name=Signal 20H inductor
-Signal_Antenna.name=Signal Antenna
-Signal_Button.name=Signal Button
-Signal_Cable.name=Signal Cable
-Signal_Diode.name=Signal Diode
-Signal_Processor.name=Signal Processor
-Signal_Relay.name=Signal Relay
-Signal_Source.name=Signal Source
-Signal_Switch.name=Signal Switch
-Signal_Switch_with_LED.name=Signal Switch with LED
-Signal_Trimmer.name=Signal Trimmer
-Silicon_Dust.name=Silicon Dust
-Silicon_Ingot.name=Silicon Ingot
-Silicon_Plate.name=Silicon Plate
-Silver_Brush.name=Silver Brush
-Simple_Lamp_Socket.name=Simple Lamp Socket
-Single-use_Battery.name=Single-use Battery
-Small_200V_Copper_Heating_Corp.name=Small 200V Copper Heating Element
-Small_200V_Iron_Heating_Corp.name=Small 200V Iron Heating Element
-Small_200V_Tungsten_Heating_Corp.name=Small 200V Tungsten Heating Element
-Small_50V_Carbon_Incandescent_Light_Bulb.name=Small 50V Carbon Incandescent Light Bulb
-Small_50V_Copper_Heating_Corp.name=Small 50V Copper Heating Element
-Small_50V_Economic_Light_Bulb.name=Small 50V Economic Light Bulb
-Small_50V_Incandescent_Light_Bulb.name=Small 50V Incandescent Light Bulb
-Small_50V_Iron_Heating_Corp.name=Small 50V Iron Heating Element
-Small_50V_Tungsten_Heating_Corp.name=Small 50V Tungsten Heating Element
-Small_Active_Thermal_Dissipator.name=Small Active Thermal Dissipator
-Small_Flashlight.name=Small Flashlight
-Small_Passive_Thermal_Dissipator.name=Small Passive Thermal Dissipator
-Small_Rotating_Solar_Panel.name=Small Rotating Solar Panel
-Small_Solar_Panel.name=Small Solar Panel
-Solar_Tracker.name=Solar Tracker
-Standard_Alarm.name=Standard Alarm
-Steam_Turbine.name=Steam Turbine
-Stone_Heat_Furnace.name=Stone Heat Furnace
-Street_Light.name=Streetlight
-Suspended_Lamp_Socket.name=Suspended Lamp Socket
-Temperature_Probe.name=Temperature Probe
-Thermal_Probe.name=Thermal Probe
-Thermal_Probe_Chip.name=Thermal Probe Chip
-Thermistor.name=Thermistor
-ThermoMeter.name=Thermometer
-Transformer.name=Transformer
-Tree_Resin.name=Tree Resin
-Tree_Resin_Collector.name=Tree Resin Collector
-Tungsten_Cable.name=Tungsten Cable
-Tungsten_Dust.name=Tungsten Dust
-Tungsten_Ingot.name=Tungsten Ingot
-Tungsten_Ore.name=Tungsten Ore
-Tutorial_Sign.name=Tutorial Sign
-Very_High_Voltage_Cable.name=Very High Voltage Cable
-Very_High_Voltage_Relay.name=Very High Voltage Relay
-Very_High_Voltage_Switch.name=Very High Voltage Switch
-Voltage-to-Redstone_Converter.name=Voltage-to-Redstone Converter
-Voltage_Oriented_Battery.name=Voltage Oriented Battery
-Voltage_Probe.name=Voltage Probe
-Water_Turbine.name=Vodní Turbína
-Weak_50V_Battery_Charger.name=Weak 50V Battery Charger
-White_Brush.name=White Brush
-Wind_Turbine.name=Větrná Turbína
-Wireless_Analyser.name=Wireless Analyzer
-Wireless_Button.name=Bezdrátové Tlačítko
-Wireless_Signal_Receiver.name=Wireless Signal Receiver
-Wireless_Signal_Repeater.name=Wireless Signal Repeater
-Wireless_Signal_Transmitter.name=Wireless Signal Transmitter
-Wireless_Switch.name=Wireless Switch
-Wrench.name=Wrench
-X-Ray_Scanner.name=X-Ray Scanner
-XNOR_Chip.name=XNOR Chip
-XOR_Chip.name=XOR Chip
-Yellow_Brush.name=Yellow Brush
-entity.EAReplicator.name=Replicator
-item.Copper Axe.name\=Copper Axe
-item.Copper Axe.name\=Copper Axe
-item.Copper Axe.name\=Copper Axe
-item.Copper Axe.name\=Copper Axe
-item.Copper Axe.name\=Copper Axe
-item.Copper Axe.name\=Copper Axe
-item.Copper Axe.name\=Copper Axe
-item.Copper Axe.name\=Copper Axe
-item.Copper Axe.name\=Copper Axe
-item.E-Coal Boots.name\=E-Coal Boots
-item.E-Coal Boots.name\=E-Coal Boots
-item.E-Coal Boots.name\=E-Coal Boots
-item.E-Coal Boots.name\=E-Coal Boots
+# src/main/java/mods/eln/Eln.java
 itemGroup.Eln=Electrical Age
-mod.meta.desc=Electricity in your base\!
-tile.eln.ElnProbe.name=Eln Computer Probe
-tile.eln.EnergyConverterElnToOtherHVUBlock.name=800V Electrical Age to other energy exporter
-tile.eln.EnergyConverterElnToOtherLVUBlock.name=50V Electrical Age to other energy exporter
-tile.eln.EnergyConverterElnToOtherMVUBlock.name=200V Electrical Age to other energy exporter
+itemGroup.ElnCreative=Kreativní
+itemGroup.ElnLighting=Osvětlení
+itemGroup.ElnMachines=Stroje
+itemGroup.ElnOresMaterials=Rudy a materiály
+itemGroup.ElnOther=Ostatní
+itemGroup.ElnPowerElectronics=Výkonová elektronika
+itemGroup.ElnSignalProcessing=Zpracování signálů
+itemGroup.ElnToolsArmor=Nástroje a brnění
+mod.meta.desc=Electrical Age - simulace elektrotechniky pro Minecraft
 
-# ./src/main/java/mods/eln/i18n/I18N.java
-You_have_%1$_lives_left=You have %1$ lives left
+# src/main/java/mods/eln/gui/GuiVerticalVoltageSupplyBar.java
+Power_Supply_\:=Zdroj napájení :
+Voltage_Supply_\:=Napájecí napětí :
 
-# ./src/main/java/mods/eln/item/BrushDescriptor.java
-Brush_is_dry=Brush is dry
-Can_paint_%1$_blocks=Can paint %1$ blocks
+# src/main/java/mods/eln/item/CombustionChamber.java
+Upgrade_for_the_Stone_Heat_Furnace.=Vylepšení pro kamennou tepelnou pec.
 
-# ./src/main/java/mods/eln/item/CombustionChamber.java
-Upgrade_for_the_Stone_Heat_Furnace.=Upgrade for the Stone Heat Furnace.
+# src/main/java/mods/eln/item/ElectricalDrillDescriptor.java
+Energy_per_operation\:_%1$J=Energie na operaci: %1$J
+Time_per_operation\:_%1$h=Čas na operaci: %1$h
 
-# ./src/main/java/mods/eln/item/ElectricalDrillDescriptor.java
-Energy_per_operation\:_%1$J=Energy per operation\: %1$J
-Time_per_operation\:_%1$s=Time per operation\: %1$s
+# src/main/java/mods/eln/item/FerromagneticCoreDescriptor.java
+Cable_loss_factor\:_%1$=Ztrátový faktor kabelu: %1$
 
-# ./src/main/java/mods/eln/item/FerromagneticCoreDescriptor.java
-Cable_loss_factor\:_%1$=Cable loss factor\: %1$
+# src/main/java/mods/eln/item/HeatingCorpElement.java
 
-# ./src/main/java/mods/eln/item/HeatingCorpElement.java
+# src/main/java/mods/eln/item/OverHeatingProtectionDescriptor.java
+Useful_to_prevent_overheating\nof_Batteries=Užitečné pro zabránění přehřívání\nbaterií
 
-# ./src/main/java/mods/eln/item/LampDescriptor.java
-Bad=Bad
-Condition\:=Kondice
-End_of_life=End of life
-Good=Dobrý
-New=Nový
-Nominal_lifetime\:_%1$h=Nominal lifetime\: %1$h
-Technology\:_%1$=Technology\: %1$
-Used=Použitý
+# src/main/java/mods/eln/item/OverVoltageProtectionDescriptor.java
+Useful_to_prevent_over-voltage\nof_Batteries=Užitečné pro zabránění přepětí\nbaterií
 
-# ./src/main/java/mods/eln/item/LampSlot.java
-Lamp_slot=Lamp slot
-
-# ./src/main/java/mods/eln/item/OverHeatingProtectionDescriptor.java
-Useful_to_prevent_overheating\nof_Batteries=Useful to prevent overheating\nof Batteries
-
-# ./src/main/java/mods/eln/item/OverVoltageProtectionDescriptor.java
-Useful_to_prevent_over-voltage\nof_Batteries=Useful to prevent over-voltage\nof Batteries
-
-# ./src/main/java/mods/eln/item/SolarTrackerDescriptor.java
+# src/main/java/mods/eln/item/SolarTrackerDescriptor.java
 Solar_panel_upgrade=Vylepšení solárního panelu
 
-# ./src/main/java/mods/eln/item/electricalitem/BatteryItem.java
+# src/main/java/mods/eln/item/regulator/RegulatorSlot.java
 
-# ./src/main/java/mods/eln/item/electricalitem/ElectricalLampItem.java
-Off=Vypnuto
-On=Zapnuto
-State\:=State\:
-Stored_Energy\:_%1$J_(%2$%)=Stored Energy\: %1$J (%2$%)
+# src/main/java/mods/eln/sixnode/TreeResinCollector/TreeResinCollectorDescriptor.java
+Produces_Tree_Resin_over\ntime_when_put_on_a_tree.=Vyrábí pryskyřici v průběhu\ndoby, když je umístěn na strom.
+This_block_can_only_be_placed_on_the_side_of_a_tree!=Tento blok lze umístit pouze na bok stromu!
 
-# ./src/main/java/mods/eln/item/regulator/RegulatorSlot.java
+# src/main/java/mods/eln/sixnode/batterycharger/BatteryChargerContainer.java
+Battery_slot=Slot pro baterii
 
-# ./src/main/java/mods/eln/misc/UtilsClient.java
-Hold_shift=Podržte shift
+# src/main/java/mods/eln/sixnode/batterycharger/BatteryChargerDescriptor.java
+Can_be_used_to_recharge\nelectrical_items_like\:\nFlash_Light,_X-Ray_scanner\nand_Portable_Battery_...=Lze použít k nabíjení\nelektrických předmětů jako:\nBaterka, Rentgenový skener\na Přenosná baterie ...
+This_battery_charger_doesn't_take_into_account_battery_chemistry=Tato nabíječka baterií nebere v úvahu chemii baterie
 
-# ./src/main/java/mods/eln/misc/Version.java
-mod.name=Electrical Age
+# src/main/java/mods/eln/sixnode/batterycharger/BatteryChargerElement.java
+Charge_Current=Nabíjecí proud
 
-# ./src/main/java/mods/eln/node/six/SixNodeDescriptor.java
+# src/main/java/mods/eln/sixnode/batterycharger/BatteryChargerGui.java
 
-# ./src/main/java/mods/eln/simplenode/energyconverter/EnergyConverterElnToOtherGui.java
-Input_power_is_limited_to_%1$W=Input power is limited to %1$W
+# src/main/java/mods/eln/sixnode/diode/DiodeDescriptor.java
+Electrical_current_can_only\nflow_through_the_diode\nfrom_anode_to_cathode=Elektrický proud může protékat\ndiodou pouze\nod anody ke katodě
+Works,_with_the_caveat_that_it's_delayed_a_sim_tick=Funguje, s tím omezením, že je zpožděn o simulační tik
 
-# ./src/main/java/mods/eln/sixnode/LogicGate.kt
-_O\:_= O\:
+# src/main/java/mods/eln/sixnode/diode/DiodeElement.java
+Forward_Voltage=Propustné napětí
 
-# ./src/main/java/mods/eln/sixnode/TreeResinCollector/TreeResinCollectorDescriptor.java
-Produces_Tree_Resin_over\ntime_when_put_on_a_tree.=Produces Tree Resin over\ntime when put on a tree.
-This_block_can_only_be_placed_on_the_side_of_a_tree!=This block can only be placed on the side of a tree\!
+# src/main/java/mods/eln/sixnode/electricalalarm/ElectricalAlarmDescriptor.java
+Emits_an_acoustic_alarm_if\nthe_input_signal_is_high=Vydává zvukový alarm, pokud\nje vstupní signál vysoký
 
-# ./src/main/java/mods/eln/sixnode/batterycharger/BatteryChargerContainer.java
-Battery_slot=Battery slot
+# src/main/java/mods/eln/sixnode/electricalalarm/ElectricalAlarmElement.java
+Engaged=Aktivní
+Input_Voltage=Vstupní napětí
 
-# ./src/main/java/mods/eln/sixnode/batterycharger/BatteryChargerDescriptor.java
-Can_be_used_to_recharge\nelectrical_items_like\:\nFlash_Light,_X-Ray_scanner\nand_Portable_Battery_...=Can be used to recharge\nelectrical items like\:\nFlash Light, X-Ray scanner\nand Portable Battery ...
+# src/main/java/mods/eln/sixnode/electricalalarm/ElectricalAlarmGui.java
+Sound_is_muted=Zvuk je ztlumen
+Sound_is_not_muted=Zvuk není ztlumen
 
-# ./src/main/java/mods/eln/sixnode/batterycharger/BatteryChargerGui.java
+# src/main/java/mods/eln/sixnode/electricalbreaker/ElectricalBreakerContainer.java
 
-# ./src/main/java/mods/eln/sixnode/diode/DiodeDescriptor.java
-Electrical_current_can_only\nflow_through_the_diode\nfrom_anode_to_cathode=Electrical current can only\nflow through the diode\nfrom anode to cathode
+# src/main/java/mods/eln/sixnode/electricalbreaker/ElectricalBreakerDescriptor.java
+Protects_electrical_components\nOpens_contact_if\:\n__-_Voltage_exceeds_a_certain_level\n__-_Current_exceeds_the_cable_limit=Chrání elektrické součástky\nOtevře kontakt, pokud:\n  - Napětí překročí určitou úroveň\n  - Proud překročí limit kabelu
 
-# ./src/main/java/mods/eln/sixnode/electricalalarm/ElectricalAlarmDescriptor.java
-=
-Emits_an_acoustic_alarm_if\nthe_input_signal_is_high=Emits an acoustic alarm if\nthe input signal is high
+# src/main/java/mods/eln/sixnode/electricalbreaker/ElectricalBreakerElement.java
+Contact=Kontakt
 
-# ./src/main/java/mods/eln/sixnode/electricalalarm/ElectricalAlarmGui.java
-Sound_is_muted=Sound is muted
-Sound_is_not_muted=Sound is not muted
+# src/main/java/mods/eln/sixnode/electricalbreaker/ElectricalBreakerGui.java
+Maximum_voltage_before_cutting_off=Maximální napětí před odpojením
+Minimum_voltage_before_cutting_off=Minimální napětí před odpojením
+Switch_is_off=Spínač je vypnut
+Switch_is_on=Spínač je zapnut
 
-# ./src/main/java/mods/eln/sixnode/electricalbreaker/ElectricalBreakerContainer.java
+# src/main/java/mods/eln/sixnode/electricalcable/ElectricalCableDescriptor.java
+A_signal_is_electrical_information\nwhich_must_be_between_0V_and_%1$=Signál je elektrická informace\nkterá musí být mezi 0V a %1$
+Cable_is_adapted_to_conduct\nelectrical_signals.=Kabel je určen k vedení\nelektrických signálů.
+Not_adapted_to_transport_power.=Není určen k přenosu energie.
+__*_Wire_voltage/current_limits_are_arbitrary_values,_added_as_a_gameplay_mechanic=  * Limity napětí/proudu drátu jsou libovolné hodnoty, přidané jako herní mechanika
 
-# ./src/main/java/mods/eln/sixnode/electricalbreaker/ElectricalBreakerDescriptor.java
-Protects_electrical_components\nOpens_contact_if\:\n__-_Voltage_exceeds_a_certain_level\n-_Current_exceeds_the_cable_limit=Protects electrical components\nOpens contact if\:\n  - Voltage exceeds a certain level\n- Current exceeds the cable limit
+# src/main/java/mods/eln/sixnode/electricalcable/ElectricalCableElement.java
+Signal_Voltage=Signálové napětí
 
-# ./src/main/java/mods/eln/sixnode/electricalbreaker/ElectricalBreakerGui.java
-Maximum_voltage_before_cutting_off=Maximum voltage before cutting off
-Minimum_voltage_before_cutting_off=Minimum voltage before cutting off
-Switch_is_off=Switch is off
-Switch_is_on=Switch is on
+# src/main/java/mods/eln/sixnode/electricaldatalogger/ElectricalDataLoggerDescriptor.java
+It_can_store_up_to_256_points.=Může uložit až 256 bodů.
+Measures_the_voltage_of_an\nelectrical_signal_and_plots\nthe_data_in_real_time.=Měří napětí elektrického\nsignálu a zobrazuje\ndata v reálném čase.
 
-# ./src/main/java/mods/eln/sixnode/electricalcable/ElectricalCableDescriptor.java
-A_signal_is_electrical_information\nwhich_must_be_between_0V_and_%1$V=A signal is electrical information\nwhich must be between 0V and %1$V
-Cable_is_adapted_to_conduct\nelectrical_signals.=Cable is adapted to conduct\nelectrical signals.
-Current\:_%1$A=Current\: %1$A
-Not_adapted_to_transport_power.=Not adapted to transport power.
-Save_usage\:=Save usage\:
-Serial_resistance\:_%1$Ω=Serial resistance\: %1$Ω
+# src/main/java/mods/eln/sixnode/electricaldatalogger/ElectricalDataLoggerElement.java
+Current_value=Aktuální hodnota
 
-# ./src/main/java/mods/eln/sixnode/electricaldatalogger/ElectricalDataLoggerDescriptor.java
-It_can_store_up_to_256_points.=It can store up to 256 points.
-Measures_the_voltage_of_an\nelectrical_signal_and_plots\nthe_data_in_real_time.=Measures the voltage of an\nelectrical signal and plots\nthe data in real time.
+# src/main/java/mods/eln/sixnode/electricaldatalogger/ElectricalDataLoggerGui.java
+0_Line=0 Čára
+0_Line_Off=0 Čára Vyp
+0_Line_On=0 Čára Zap
+Back_to_display=Zpět na displej
+Configuration=Konfigurace
+Current_[A]=Proud [A]
+Energy_[J]=Energie [J]
+Humidity_[%%]=Vlhkost [%%]
+Percent_[-]%=Procento [-]%
+Power_[W]=Výkon [W]
+Print=Tisk
+Sampling_period=Vzorkovací perioda
+Temp_[C]=Teplota [C]
+Temp_[F]=Teplota [F]
+Unit=Jednotka
+Voltage_[V]=Napětí [V]
+Y-axis_max=Max. osa Y
+Y-axis_min=Min. osa Y
 
-# ./src/main/java/mods/eln/sixnode/electricaldatalogger/ElectricalDataLoggerGui.java
-Back_to_display=Back to display
-Configuration=Configuration
-Current_[A]=Current [A]
-Energy_[J]=Energy [J]
-Percent_[-]%=Percent [-]%
-Power_[W]=Power [W]
-Print=Print
-Sampling_period=Sampling period
-Temp._[*C]=Temp. [*C]
-Voltage_[V]=Voltage [V]
-Y-axis_max=Y-axis max
-Y-axis_min=Y-axis min
+# src/main/java/mods/eln/sixnode/electricaldigitaldisplay/ElectricalDigitalDisplayDescriptor.java
+Displays_signal_value.=Zobrazuje hodnotu signálu.
 
-# ./src/main/java/mods/eln/sixnode/electricalentitysensor/ElectricalEntitySensorContainer.java
+# src/main/java/mods/eln/sixnode/electricaldigitaldisplay/ElectricalDigitalDisplayElement.java
+Max=Max
+Min=Min
 
-# ./src/main/java/mods/eln/sixnode/electricalentitysensor/ElectricalEntitySensorDescriptor.java
-Output_voltage_increases\nif_entities_are_moving_around.=Output voltage increases\nif entities are moving around.
+# src/main/java/mods/eln/sixnode/electricaldigitaldisplay/ElectricalDigitalDisplayGui.java
 
-# ./src/main/java/mods/eln/sixnode/electricalfiredetector/ElectricalFireDetectorDescriptor.java
-Output_voltage_increases\nif_a_fire_has_been_detected.=Output voltage increases\nif a fire has been detected.
+# src/main/java/mods/eln/sixnode/electricalentitysensor/ElectricalEntitySensorContainer.java
 
-# ./src/main/java/mods/eln/sixnode/electricalgatesource/ElectricalGateSourceDescriptor.java
-Provides_configurable_signal\nvoltage.=Provides configurable signal\nvoltage.
+# src/main/java/mods/eln/sixnode/electricalentitysensor/ElectricalEntitySensorDescriptor.java
+Output_voltage_increases\nif_entities_are_moving_around.=Výstupní napětí se zvyšuje,\npokud se entity pohybují.
 
-# ./src/main/java/mods/eln/sixnode/electricalgatesource/ElectricalGateSourceGui.java
-Output_at_%1$%=Output at %1$%
+# src/main/java/mods/eln/sixnode/electricalentitysensor/ElectricalEntitySensorElement.java
+Entity_present=Entita přítomna
 
-# ./src/main/java/mods/eln/sixnode/electricallightsensor/ElectricalLightSensorDescriptor.java
-0V_at_night,_%1$V_at_noon.=0V at night, %1$V at noon.
-Provides_an_electrical_voltage\nin_the_presence_of_light.=Provides an electrical voltage\nin the presence of light.
-Provides_an_electrical_voltage\nwhich_is_proportional_to\nthe_intensity_of_daylight.=Provides an electrical voltage\nwhich is proportional to\nthe intensity of daylight.
+# src/main/java/mods/eln/sixnode/electricalfiredetector/ElectricalFireDetectorDescriptor.java
+Battery_powered_buzzer_\nactivated_in_presence_of_fire.=Baterií napájený bzučák \naktivovaný v přítomnosti ohně.
+Output_voltage_increases\nif_a_fire_has_been_detected.=Výstupní napětí se zvyšuje,\npokud byl zjištěn oheň.
 
-# ./src/main/java/mods/eln/sixnode/electricalmath/ElectricalMathContainer.java
+# src/main/java/mods/eln/sixnode/electricalfiredetector/ElectricalFireDetectorElement.java
+Fire_detected\:_=Oheň zjištěn:
+Fire_present=Oheň přítomen
 
-# ./src/main/java/mods/eln/sixnode/electricalmath/ElectricalMathDescriptor.java
-Applicable_boolean_operators\:=Applicable boolean operators\:
-Applicable_functions\:=Applicable functions\:
-Applicable_mathematical_operators\:=Applicable mathematical operators\:
-Calculates_an_output_signal_from\n3_inputs_(A,_B,_C)_using_an_equation.=Calculates an output signal from\n3 inputs (A, B, C) using an equation.
+# src/main/java/mods/eln/sixnode/electricalgatesource/ElectricalGateSourceDescriptor.java
+Provides_configurable_signal\nvoltage.=Poskytuje konfigurovatelné napětí\nsignálu.
 
-# ./src/main/java/mods/eln/sixnode/electricalmath/ElectricalMathGui.java
-%1$_Redstone(s)_required=%1$ Redstone(s) required
-Equation_required!=Equation required\!
-Inputs_are=Inputs are
-Invalid_equation!=Invalid equation\!
-Output_voltage_formula=Output voltage formula
-Waiting_for_completion...=Waiting for completion...
+# src/main/java/mods/eln/sixnode/electricalgatesource/ElectricalGateSourceElement.java
 
-# ./src/main/java/mods/eln/sixnode/electricalredstoneinput/ElectricalRedstoneInputDescriptor.java
-Converts_Redstone_signal\nto_an_electrical_voltage.=Converts Redstone signal\nto an electrical voltage.
+# src/main/java/mods/eln/sixnode/electricalgatesource/ElectricalGateSourceGui.java
+Output_at_%1$%=Výstup při %1$%
 
-# ./src/main/java/mods/eln/sixnode/electricalredstoneoutput/ElectricalRedstoneOutputDescriptor.java
-Converts_electrical_voltage\ninto_a_Redstone_signal.=Converts electrical voltage\ninto a Redstone signal.
+# src/main/java/mods/eln/sixnode/electricallightsensor/ElectricalLightSensorDescriptor.java
+0V_at_night,_%1$V_at_noon.=0V v noci, %1$V v poledne.
+Provides_an_electrical_voltage\nin_the_presence_of_light.=Poskytuje elektrické napětí\nv přítomnosti světla.
+Provides_an_electrical_voltage\nwhich_is_proportional_to\nthe_intensity_of_daylight.=Poskytuje elektrické napětí,\nkteré je úměrné\nintenzitě denního světla.
 
-# ./src/main/java/mods/eln/sixnode/electricalrelay/ElectricalRelayDescriptor.java
-A_relay_is_an_electrical\ncontact_that_conducts_electric\ncurrent_or_not,_depending\nthe_actual_input_signal_voltage.=A relay is an electrical\ncontact that conducts electric\ncurrent or not, depending\nthe actual input signal voltage.
+# src/main/java/mods/eln/sixnode/electricallightsensor/ElectricalLightSensorElement.java
+Light_level=Úroveň osvětlení
 
-# ./src/main/java/mods/eln/sixnode/electricalrelay/ElectricalRelayGui.java
-Normally_closed=Normally closed
-Normally_open=Normally open
+# src/main/java/mods/eln/sixnode/electricalmath/ElectricalMathContainer.java
 
-# ./src/main/java/mods/eln/sixnode/electricalsource/ElectricalSourceDescriptor.java
-Creative_block.=Creative block.
-Provides_an_ideal_voltage_source\nwithout_energy_or_power_limitation.=Provides an ideal voltage source\nwithout energy or power limitation.
+# src/main/java/mods/eln/sixnode/electricalmath/ElectricalMathDescriptor.java
+Applicable_boolean_operators\:=Použitelné logické operátory:
+Applicable_functions\:=Použitelné funkce:
+Applicable_mathematical_operators\:=Použitelné matematické operátory:
+Calculates_an_output_signal_from\n3_inputs_(A,_B,_C)_using_an_equation.=Vypočítá výstupní signál ze\n3 vstupů (A, B, C) pomocí rovnice.
 
-# ./src/main/java/mods/eln/sixnode/electricalsource/ElectricalSourceGui.java
-Output_voltage=Output voltage
+# src/main/java/mods/eln/sixnode/electricalmath/ElectricalMathElement.java
+Equation=Rovnice
+Input_voltages=Vstupní napětí
 
-# ./src/main/java/mods/eln/sixnode/electricalswitch/ElectricalSwitchDescriptor.java
-Can_break_an_electrical_circuit\ninterrupting_the_current.=Can break an electrical circuit\ninterrupting the current.
+# src/main/java/mods/eln/sixnode/electricalmath/ElectricalMathGui.java
+%1$_Redstone(s)_required=Vyžadováno %1$ Redstone
+Equation_required!=Rovnice vyžadována!
+Inputs_are=Vstupy jsou
+Invalid_equation!=Neplatná rovnice!
+Output_voltage_formula=Vzorec výstupního napětí
+Waiting_for_completion...=Čeká na dokončení...
 
-# ./src/main/java/mods/eln/sixnode/electricaltimeout/ElectricalTimeoutDescriptor.java
-Upon_application_of_a_high_signal,\nthe_timer_maintains_the_output_high_for\na_configurable_interval._Can_be_re-triggered.=Upon application of a high signal,\nthe timer maintains the output high for\na configurable interval. Can be re-triggered.
+# src/main/java/mods/eln/sixnode/electricalredstoneinput/ElectricalRedstoneInputDescriptor.java
+Converts_Redstone_signal\nto_an_electrical_voltage.=Převádí Redstone signál\nna elektrické napětí.
 
-# ./src/main/java/mods/eln/sixnode/electricaltimeout/ElectricalTimeoutGui.java
-Set=Set
-The_time_interval_the\noutput_is_kept_high.=The time interval the\noutput is kept high.
+# src/main/java/mods/eln/sixnode/electricalredstoneinput/ElectricalRedstoneInputElement.java
 
-# ./src/main/java/mods/eln/sixnode/electricalvumeter/ElectricalVuMeterDescriptor.java
-Displays_the_value_of_a_signal.=Displays the value of a signal.
+# src/main/java/mods/eln/sixnode/electricalredstoneoutput/ElectricalRedstoneOutputDescriptor.java
+Converts_electrical_voltage\ninto_a_Redstone_signal.=Převádí elektrické napětí\nna Redstone signál.
 
-# ./src/main/java/mods/eln/sixnode/electricalwatch/ElectricalWatchContainer.java
-Portable_battery_slot=Portable battery slot
+# src/main/java/mods/eln/sixnode/electricalredstoneoutput/ElectricalRedstoneOutputElement.java
 
-# ./src/main/java/mods/eln/sixnode/electricalweathersensor/ElectricalWeatherSensorDescriptor.java
-Clear\:_%1$V=Clear\: %1$V
-Provides_an_electrical_signal\ndepending_the_actual_weather.=Provides an electrical signal\ndepending the actual weather.
-Rain\:_%1$V=Rain\: %1$V
-Storm\:_%1$V=Storm\: %1$V
+# src/main/java/mods/eln/sixnode/electricalrelay/ElectricalRelayDescriptor.java
 
-# ./src/main/java/mods/eln/sixnode/electricalwindsensor/ElectricalWindSensorDescriptor.java
-Maximum_wind_speed_is_%1$m_s=Maximum wind speed is %1$m/s
-Provides_an_electrical_signal\ndependant_on_wind_speed.=Provides an electrical signal\ndependant on wind speed.
-You_can't_place_this_block_on_the_floor_or_the_ceiling=You can't place this block on the floor or the ceiling
+# src/main/java/mods/eln/sixnode/electricalrelay/ElectricalRelayElement.java
 
-# ./src/main/java/mods/eln/sixnode/electricasensor/ElectricalSensorDescriptor.java
-Can_measure_Voltage_Power_Current=Can measure Voltage/Power/Current
-Measures_electrical_values_on_cables.=Measures electrical values on cables.
-Measures_voltage_on_cables.=Measures voltage on cables.
+# src/main/java/mods/eln/sixnode/electricalrelay/ElectricalRelayGui.java
 
-# ./src/main/java/mods/eln/sixnode/electricasensor/ElectricalSensorGui.java
-Current=Current
-Measured_voltage\ncorresponding\nto_0%_output=Measured voltage\ncorresponding\nto 0% output
-Measured_voltage\ncorresponding\nto_100%_output=Measured voltage\ncorresponding\nto 100% output
-Voltage=Voltage
+# src/main/java/mods/eln/sixnode/electricalsensor/ElectricalSensorDescriptor.java
+Can_measure_Voltage/Power/Current=Může měřit napětí/výkon/proud
+Measures_electrical_values_on_cables.=Měří elektrické hodnoty na kabelech.
+Measures_voltage_on_cables.=Měří napětí na kabelech.
 
-# ./src/main/java/mods/eln/sixnode/energymeter/EnergyMeterGui.java
-Change_password=Change password
-Counter_Mode=Counter Mode
-Counts_the_energy_conducted_from\n\u00a74red\u00a7f_to_\u00a71blue\u00a7f.=Counts the energy conducted from\n\\u00a74red\\u00a7f to \\u00a71blue\\u00a7f.
-Energy_counter\:_%1$J=Energy counter\: %1$J
-Enter_new_energy=Enter new energy
-Enter_password=Vložte heslo
-Prepay_Mode=Prepay Mode
-Reset_time_counter=Reset time counter
-Set_energy_counter=Set energy counter
-Time_counter\:=Time counter\:
-Try_password=Try password
-You_can_set_an_initial\namount_of_available_energy.\nWhen_the_counter_arrives_at_0\nthe_contact_will_be_opened.=You can set an initial\namount of available energy.\nWhen the counter arrives at 0\nthe contact will be opened.
+# src/main/java/mods/eln/sixnode/electricalsensor/ElectricalSensorElement.java
+Measured_current=Měřený proud
+Measured_power=Měřený výkon
+Measured_voltage=Měřené napětí
+
+# src/main/java/mods/eln/sixnode/electricalsensor/ElectricalSensorGui.java
+Measured_voltage\ncorresponding\nto_0%_output=Měřené napětí\nodpovídající\n0% výstupu
+Measured_voltage\ncorresponding\nto_100%_output=Měřené napětí\nodpovídající\n100% výstupu
+
+# src/main/java/mods/eln/sixnode/electricalsource/ElectricalSourceDescriptor.java
+Acts_as_an_ideal_voltage_source,_with_a_small_inline_resistance=Funguje jako ideální zdroj napětí s malým sériovým odporem
+Provides_an_ideal_voltage_source\nwithout_energy_or_power_limitation.=Poskytuje ideální zdroj napětí\nbez omezení energie nebo výkonu.
+
+# src/main/java/mods/eln/sixnode/electricalswitch/ElectricalSwitchDescriptor.java
+Can_break_an_electrical_circuit\ninterrupting_the_current.=Může přerušit elektrický obvod\npřerušením proudu.
+
+# src/main/java/mods/eln/sixnode/electricaltimeout/ElectricalTimeoutDescriptor.java
+Upon_application_of_a_high_signal,\nthe_timer_maintains_the_output_high_for\na_configurable_interval._Can_be_re-triggered.=Po přiložení vysokého signálu\nčasovač udržuje výstup v horní úrovni po\nkonfigurovatelný interval. Lze znovu spustit.
+
+# src/main/java/mods/eln/sixnode/electricaltimeout/ElectricalTimeoutElement.java
+Remaining=Zbývající
+
+# src/main/java/mods/eln/sixnode/electricaltimeout/ElectricalTimeoutGui.java
+Set=Nastavit
+The_time_interval_the\noutput_is_kept_high.=Časový interval, po který\nje výstup držen v horní úrovni.
+
+# src/main/java/mods/eln/sixnode/electricalwatch/ElectricalWatchContainer.java
+
+# src/main/java/mods/eln/sixnode/electricalwatch/ElectricalWatchDescriptor.java
+Requires_batteries_for_operation.=Pro provoz vyžaduje baterie.
+Tells_the_time.=Ukazuje čas.
+
+# src/main/java/mods/eln/sixnode/electricalweathersensor/ElectricalWeatherSensorDescriptor.java
+Clear\:_%1$V=Jasno: %1$V
+Provides_an_electrical_signal\ndepending_the_actual_weather.=Poskytuje elektrický signál\nv závislosti na aktuálním počasí.
+Rain\:_%1$V=Déšť: %1$V
+Storm\:_%1$V=Bouře: %1$V
+
+# src/main/java/mods/eln/sixnode/electricalwindsensor/ElectricalWindSensorDescriptor.java
+Maximum_wind_speed_is_%1$m/s=Maximální rychlost větru je %1$m/s
+Provides_an_electrical_signal\ndependant_on_wind_speed.=Poskytuje elektrický signál\nzávislý na rychlosti větru.
+You_can't_place_this_block_on_the_floor_or_the_ceiling=Tento blok nelze umístit na podlahu ani na strop
+
+# src/main/java/mods/eln/sixnode/energymeter/EnergyMeterElement.java
+Counter=Počítadlo
+Energy_left=Zbývající energie
+Mode=Režim
+Prepay=Platba předem
+
+# src/main/java/mods/eln/sixnode/energymeter/EnergyMeterGui.java
+Change_password=Změnit heslo
+Counter_Mode=Režim počítadla
+Counts_the_energy_conducted_from\n§4red§f_to_§1blue§f.=Počítá energii vedenou od\n§4červené§f k §1modré§f.
+Energy_counter\:_%1$J=Energetické počítadlo: %1$J
+Enter_new_energy=Zadejte novou energii
+Enter_password=Zadejte heslo
+Prepay_Mode=Režim platby předem
+Reset_time_counter=Resetovat časovač
+Set_energy_counter=Nastavit energetické počítadlo
+Time_counter\:=Časovač:
+Try_password=Zkusit heslo
+You_can_set_an_initial\namount_of_available_energy.\nWhen_the_counter_arrives_at_0\nthe_contact_will_be_opened.=Můžete nastavit počáteční\nmnožství dostupné energie.\nKdyž počítadlo dosáhne 0,\nkontakt se otevře.
 is_off=je vypnuto
 is_on=je zapnuto
-value_in_kJ=value in kJ
+value_in_kJ=hodnota v kJ
 
-# ./src/main/java/mods/eln/sixnode/groundcable/GroundCableDescriptor.java
-Can_be_used_to_set_a_point_of_an\nelectrical_network_to_0V_potential.\nFor_example_to_ground_negative_battery_contacts.=Can be used to set a point of an\nelectrical network to 0V potential.\nFor example to ground negative battery contacts.
-Provides_a_zero_volt_reference.=Provides a zero volt reference.
+# src/main/java/mods/eln/sixnode/groundcable/GroundCableDescriptor.java
+Acts_as_a_ground_reference.=Slouží jako uzemnění.
+Can_be_used_to_set_a_point_of_an\nelectrical_network_to_0V_potential.\nFor_example_to_ground_negative_battery_contacts.=Lze použít k nastavení bodu\nelektrické sítě na potenciál 0V.\nNapříklad k uzemnění záporných kontaktů baterie.
+Has_a_small_resistance_inline=Má malý sériový odpor
+Provides_a_zero_volt_reference.=Poskytuje referenci nulového napětí.
 
-# ./src/main/java/mods/eln/sixnode/hub/HubDescriptor.java
-Allows_crossing_cables\non_one_single_block.=Allows crossing cables\non one single block.
+# src/main/java/mods/eln/sixnode/hub/HubDescriptor.java
+A_bit_contrived,_as_the_wires_could_just_cross_over_each_other._Realism_depends_on_the_wires_used.=Trochu umělé, protože dráty by se mohly jednoduše křížit. Realismus závisí na použitých drátech.
+Allows_crossing_cables\non_one_single_block.=Umožňuje křížení kabelů\nna jediném bloku.
 
-# ./src/main/java/mods/eln/sixnode/lampsocket/LampSocketDescriptor.java
-Angle\:_%1$°_to_%2$°=Angle\: %1$° to %2$°
-Spot_range\:_%1$_blocks=Spot range\: %1$ blocks
+# src/main/java/mods/eln/sixnode/lampsocket/LampSocketDescriptor.java
+Angle\:_%1$°_to_%2$°=Úhel: %1$° až %2$°
+Spot_range\:_%1$_blocks=Dosvit: %1$ bloků
+Wireless_mode_of_lights_intended_to_pretend_wires_are_in_the_walls=Bezdrátový režim osvětlení, který předstírá, že jsou dráty ve zdech
 
-# ./src/main/java/mods/eln/sixnode/lampsocket/LampSocketGuiDraw.java
-%1$_is_not_in_range!=%1$ is not in range\!
-Cable_slot_empty=Cable slot empty
-Orientation\:_%1$°=Orientation\: %1$°
+# src/main/java/mods/eln/sixnode/lampsocket/LampSocketElement.java
+Bulb=Žárovka
+Life_Left=Zbývající životnost
+
+# src/main/java/mods/eln/sixnode/lampsocket/LampSocketGuiDraw.java
+Cable_slot_empty=Slot kabelu je prázdný
+Orientation\:_%1$°=Orientace: %1$°
 Parallel=Paralelní
-Powered_by_Lamp_Supply=Powered by Lamp Supply
-Powered_by_cable=Powered by cable
-Serial=Sériová
-Specify_the_supply_channel=Specify the supply channel
+Serial=Sériové
 
-# ./src/main/java/mods/eln/sixnode/lampsupply/LampSupplyContainer.java
-Electrical_cable_slot\nBase_range_is_32_blocks.\nEach_additional_cable\nincreases_range_by_one.=Electrical cable slot\nBase range is 32 blocks.\nEach additional cable\nincreases range by one.
+# src/main/java/mods/eln/sixnode/lampsupply/LampSupplyContainer.java
+Electrical_cable_slot\nBase_range_is_32_blocks.\nEach_additional_cable\nincreases_range_by_one.=Slot elektrického kabelu\nZákladní dosah je 32 bloků.\nKaždý další kabel\nzvyšuje dosah o jeden blok.
 
-# ./src/main/java/mods/eln/sixnode/lampsupply/LampSupplyDescriptor.java
-Supplies_all_lamps_on_the_channel.=Supplies all lamps on the channel.
+# src/main/java/mods/eln/sixnode/lampsupply/LampSupplyDescriptor.java
+Capable_of_operating_3_light_channels.=Schopen obsluhovat 3 světelné kanály.
+Most_homes_have_a_circuit_breaker_panel_for_lights=Většina domů má jističový panel pro osvětlení
+Supplies_power_to_nearby_lamps.=Dodává energii blízkým lampám.
+Supports_control_from_a_wireless_signal\nchannel_for_each_lighting_channel.=Podporuje řízení z bezdrátového signálového\nkanálu pro každý osvětlovací kanál.
+The_wireless_power_aspect_is_pretending_there_are_wires_in_the_walls=Bezdrátové napájení předstírá, že ve zdech jsou dráty
+Wireless_control_signals_are_totally_possible=Bezdrátové řídicí signály jsou zcela možné
 
-# ./src/main/java/mods/eln/sixnode/lampsupply/LampSupplyGui.java
-Power_channel_name=Power channel name
-Wireless_channel_name=Wireless channel name
+# src/main/java/mods/eln/sixnode/lampsupply/LampSupplyElement.java
+Total_power=Celkový výkon
 
-# ./src/main/java/mods/eln/sixnode/modbusrtu/ModbusRtuGui.java
+# src/main/java/mods/eln/sixnode/lampsupply/LampSupplyGui.java
+Power_channel_name=Název napájecího kanálu
+Wireless_channel_name=Název bezdrátového kanálu
+
+# src/main/java/mods/eln/sixnode/modbusrtu/ModbusRtuElement.java
+Modbus_TCP=Modbus TCP
+Modbus_Unit_ID=ID jednotky Modbus
+Modbus_is_disabled,_enable_it_in_config/eln/eln.json=Modbus je zakázán, povolte jej v config/eln/eln.json
+
+# src/main/java/mods/eln/sixnode/modbusrtu/ModbusRtuGui.java
 Add=Přidat
 Channel_name=Název kanálu
-Modbus_ID=Modbus ID
+Modbus_ID=ID Modbus
 Modbus_RTU=Modbus RTU
 Station_ID=ID stanice
 Station_name=Název stanice
-Wireless_RX=Wireless RX
-Wireless_TX=Wireless TX
+Wireless_RX=Bezdrátový RX
+Wireless_TX=Bezdrátový TX
 
-# ./src/main/java/mods/eln/sixnode/powercapacitorsix/PowerCapacitorSixContainer.java
-(Increases_maximum_voltage)=(Increases maximum voltage)
+# src/main/java/mods/eln/sixnode/resistor/ResistorContainer.java
+(Sets_resistance)=(Nastavuje odpor)
+Coal_dust_slot=Slot uhlího prachu
 
-# ./src/main/java/mods/eln/sixnode/powercapacitorsix/PowerCapacitorSixGui.java
+# src/main/java/mods/eln/sixnode/resistor/ResistorDescriptor.java
+It's_a_resistor=Je to rezistor
 
-# ./src/main/java/mods/eln/sixnode/powerinductorsix/PowerInductorSixContainer.java
+# src/main/java/mods/eln/sixnode/resistor/ResistorElement.java
 
-# ./src/main/java/mods/eln/sixnode/powerinductorsix/PowerInductorSixGui.java
+# src/main/java/mods/eln/sixnode/thermalcable/ThermalCableDescriptor.java
+High_parallel_resistance\n_->_Low_power_dissipation.=Vysoký paralelní odpor\n -> Nízký ztrátový výkon.
+Low_serial_resistance\n_->_High_conductivity.=Nízký sériový odpor\n -> Vysoká vodivost.
+Min._temperature\:_%1$°C=Min. teplota: %1$°C
+Parallel_resistance\:_%1$K/W=Paralelní odpor: %1$K/W
+Serial_resistance\:_%1$K/W=Sériový odpor: %1$K/W
+The_thermal_simulator_doesn't_properly_manage_heat=Thermální simulátor správně nespravuje teplo
 
-# ./src/main/java/mods/eln/sixnode/powersocket/PowerSocketDescriptor.java
-Supplies_any_device\nplugged_in_with_energy.=Supplies any device\nplugged in with energy.
+# src/main/java/mods/eln/sixnode/thermalcable/ThermalCableElement.java
+Thermic_power=Tepelný výkon
 
-# ./src/main/java/mods/eln/sixnode/powersocket/PowerSocketGui.java
-Specify_the_device_to_supply_through_this_socket.=Specify the device to supply through this socket.
+# src/main/java/mods/eln/sixnode/thermalsensor/ThermalSensorContainer.java
+Cable_slot=Slot kabelu
 
-# ./src/main/java/mods/eln/sixnode/resistor/ResistorContainer.java
-(Sets_resistance)=(Sets resistance)
-Coal_dust_slot=Coal dust slot
+# src/main/java/mods/eln/sixnode/thermalsensor/ThermalSensorDescriptor.java
+Can_measure\:=Může měřit:
+Measures_temperature_of_cables.=Měří teplotu kabelů.
+Measures_thermal_values_on_cables.=Měří tepelné hodnoty na kabelech.
+__Temperature/Power_conducted=  Teplota/Vedený výkon
 
-# ./src/main/java/mods/eln/sixnode/thermalcable/ThermalCableDescriptor.java
-High_parallel_resistance\n_\=>_Low_power_dissipation.=High parallel resistance\n \=> Low power dissipation.
-Low_serial_resistance\n_\=>_High_conductivity.=Low serial resistance\n \=> High conductivity.
-Parallel_resistance\:_%1$K_W=Parallel resistance\: %1$K/W
-Serial_resistance\:_%1$K_W=Serial resistance\: %1$K/W
+# src/main/java/mods/eln/sixnode/thermalsensor/ThermalSensorElement.java
+Measured_temperature=Změřená teplota
+Measured_thermal_power=Změřený tepelný výkon
 
-# ./src/main/java/mods/eln/sixnode/thermalsensor/ThermalSensorContainer.java
-Cable_slot=Cable slot
+# src/main/java/mods/eln/sixnode/thermalsensor/ThermalSensorGui.java
 
-# ./src/main/java/mods/eln/sixnode/thermalsensor/ThermalSensorDescriptor.java
-Can_measure\:=Can measure\:
-Measures_temperature_of_cables.=Measures temperature of cables.
-Measures_thermal_values_on_cables.=Measures thermal values on cables.
-__Temperature_Power_conducted=Temperature/Power conducted
+# src/main/java/mods/eln/sixnode/tutorialsign/TutorialSignElement.java
+No_text_associated_to_this_beacon=K tomuto majáku není přiřazen žádný text
 
-# ./src/main/java/mods/eln/sixnode/thermalsensor/ThermalSensorGui.java
-Measured_temperature\ncorresponding\nto_0%_output=Measured temperature\ncorresponding\nto 0% output
-Measured_temperature\ncorresponding\nto_100%_output=Measured temperature\ncorresponding\nto 100% output
-Temperature=Temperature
+# src/main/java/mods/eln/sixnode/tutorialsign/TutorialSignGui.java
+Set_beacon_name=Nastavit název majáku
 
-# ./src/main/java/mods/eln/sixnode/tutorialsign/TutorialSignElement.java
-No_text_associated_to_this_beacon=No text associated to this beacon
+# src/main/java/mods/eln/sixnode/wirelesssignal/WirelessSignalAnalyserItemDescriptor.java
+No_wireless_signal_in_area!=V oblasti žádný bezdrátový signál!
+_Strength= Síla
+_Value= Hodnota
 
-# ./src/main/java/mods/eln/sixnode/tutorialsign/TutorialSignGui.java
-Set_beacon_name=Set beacon name
+# src/main/java/mods/eln/sixnode/wirelesssignal/repeater/WirelessSignalRepeaterDescriptor.java
+It_should_require_power_realistically=Mělo by realisticky vyžadovat napájení
+Repeats_all_wireless_signals_in_range=Opakuje všechny bezdrátové signály v dosahu
 
-# ./src/main/java/mods/eln/sixnode/wirelesssignal/rx/WirelessSignalRxGui.java
+# src/main/java/mods/eln/sixnode/wirelesssignal/rx/WirelessSignalRxDescriptor.java
+It_should_require_power_to_receive_and_propogate_the_signal_realistically=Mělo by realisticky vyžadovat napájení pro příjem a šíření signálu
+Receive_signal_voltage_on_selected_wireless_signal_channel=Přijímat napětí signálu na vybraném bezdrátovém kanálu
 
-# ./src/main/java/mods/eln/transparentnode/FuelGenerator.kt
-Nominal_power\:_%1$_W=Nominal power\: %1$ W
-Nominal_voltage\:_%1$_V=Nominal voltage\: %1$ V
-Produces_electricity_using_fuel.=Produces electricity using fuel.
+# src/main/java/mods/eln/sixnode/wirelesssignal/rx/WirelessSignalRxGui.java
 
-# ./src/main/java/mods/eln/transparentnode/LargeRheostat.kt
-Nom._Resistance\:_%1$=Nom. Resistance\: %1$
+# src/main/java/mods/eln/sixnode/wirelesssignal/source/WirelessSignalSourceDescriptor.java
 
-# ./src/main/java/mods/eln/transparentnode/autominer/AutoMinerContainer.java
-Drill_slot=Drill slot
-Mining_pipe_slot=Mining pipe slot
-Ore_scanner_slot=Ore scanner slot
+# src/main/java/mods/eln/sixnode/wirelesssignal/tx/WirelessSignalTxDescriptor.java
+Sends_signal_voltage_on_selected_wireless_signal_channel=Odesílat napětí signálu na vybraném bezdrátovém kanálu
 
-# ./src/main/java/mods/eln/transparentnode/autominer/AutoMinerDescriptor.java
-Excavates_on_a_small_radius.\nExtracts_ore_on_a_bigger_radius\:\n10_blocks_radius_after_10_blocks_depth.=Excavates on a small radius.\nExtracts ore on a bigger radius\:\n10 blocks radius after 10 blocks depth.
+# src/main/java/mods/eln/transparentnode/autominer/AutoMinerContainer.java
+Drill_slot=Slot vrtáku
+Mining_pipe_slot=Slot těžebního potrubí
+Ore_scanner_slot=Slot skeneru rud
 
-# ./src/main/java/mods/eln/transparentnode/autominer/AutoMinerGuiDraw.java
-Chest_missing_on_the\nback_of_the_auto_miner!=Chest missing on the\nback of the auto miner\!
-Halves_speed,_triples_power_draw=Halves speed, triples power draw
-Silk_Touch_Off=Silk Touch Off
-Silk_Touch_On=Silk Touch On
-Silk_touch=Silk touch
+# src/main/java/mods/eln/transparentnode/autominer/AutoMinerDescriptor.java
+Excavates_on_a_small_radius.\nExtracts_ore_on_a_bigger_radius\:\n10_blocks_radius_after_10_blocks_depth.=Vykopává na malý poloměr.\nTěží rudy na větším poloměru\:\n10 bloků poloměr po 10 blocích hloubky.
 
-# ./src/main/java/mods/eln/transparentnode/battery/BatteryContainer.java
-Overheating_protection=Overheating protection
-Overvoltage_protection=Overvoltage protection
+# src/main/java/mods/eln/transparentnode/autominer/AutoMinerElement.java
+Depth=Hloubka
+Silk_touch=Hedvábný dotek
 
-# ./src/main/java/mods/eln/transparentnode/battery/BatteryDescriptor.java
-Actual_charge\:_%1$%=Actual charge\: %1$%
-Energy_capacity\:_%1$J=Energy capacity\: %1$J
-_charged_at_%1$%=charged at %1$%
+# src/main/java/mods/eln/transparentnode/autominer/AutoMinerGuiDraw.java
+Chest_missing_on_the\nback_of_the_auto_miner!=Chybí truhla na\nzadní straně auto-těžače!
+Halves_speed,_triples_power_draw=Poloviční rychlost, trojnásobný příkon
+Silk_Touch=Hedvábný dotek
 
-# ./src/main/java/mods/eln/transparentnode/battery/BatteryGuiDraw.java
-Charge=Charge
-Charged=Charged
-Discharge=Discharge
-Energy\:=Energy\:
-Energy\:_%1$=Energy\: %1$
-Life\:=Life\:
-No_charge=No charge
-Power_in\:=Power in\:
-Power_out\:=Power out\:
+# src/main/java/mods/eln/transparentnode/eggincubator/EggIncubatorContainer.java
+Egg_slot=Slot vejce
 
-# ./src/main/java/mods/eln/transparentnode/eggincubator/EggIncubatorContainer.java
-Egg_slot=Egg slot
+# src/main/java/mods/eln/transparentnode/eggincubator/EggIncubatorElement.java
+Has_egg=Má vejce
 
-# ./src/main/java/mods/eln/transparentnode/electricalantennarx/ElectricalAntennaRxDescriptor.java
-Wireless_energy_receiver.=Wireless energy receiver.
+# src/main/java/mods/eln/transparentnode/electricalantennarx/ElectricalAntennaRxDescriptor.java
+Wireless_energy_receiver.=Bezdrátový přijímač energie.
 
-# ./src/main/java/mods/eln/transparentnode/electricalantennatx/ElectricalAntennaTxDescriptor.java
-Efficiency\:_%1$%_up_to_%2$%=Efficiency\: %1$% up to %2$%
-Wireless_energy_transmitter.=Wireless energy transmitter.
+# src/main/java/mods/eln/transparentnode/electricalantennarx/ElectricalAntennaRxElement.java
+Effective_power=Efektivní výkon
+Power_received=Přijatý výkon
+Receiving=Příjem
 
-# ./src/main/java/mods/eln/transparentnode/electricalfurnace/ElectricalFurnaceContainer.java
-Heating_corp_slot=Heating element slot
+# src/main/java/mods/eln/transparentnode/electricalantennatx/ElectricalAntennaTxDescriptor.java
+Efficiency\:_%1$%_up_to_%2$%=Účinnost: %1$% až %2$%
+Wireless_energy_transmitter.=Bezdrátový vysílač energie.
 
-# ./src/main/java/mods/eln/transparentnode/electricalfurnace/ElectricalFurnaceDescriptor.java
-Similar_to_a_vanilla_furnace,\nbut_heats_with_electricity.=Similar to a vanilla furnace,\nbut heats with electricity.
+# src/main/java/mods/eln/transparentnode/electricalantennatx/ElectricalAntennaTxElement.java
+Transmitting=Vysílání
 
-# ./src/main/java/mods/eln/transparentnode/electricalfurnace/ElectricalFurnaceGuiDraw.java
-Auto_shutdown=Auto shutdown
-Manual_shutdown=Manual shutdown
-Set_point\:_%1$°C=Set point\: %1$°C
+# src/main/java/mods/eln/transparentnode/electricalfurnace/ElectricalFurnaceContainer.java
+Heating_element_slot=Slot topného článku
 
-# ./src/main/java/mods/eln/transparentnode/electricalmachine/ElectricalMachineDescriptor.java
-Cost=Cost
+# src/main/java/mods/eln/transparentnode/electricalfurnace/ElectricalFurnaceDescriptor.java
+Similar_to_a_vanilla_furnace,\nbut_heats_with_electricity.=Podobná běžné peci,\nale vytápěná elektřinou.
 
-# ./src/main/java/mods/eln/transparentnode/heatfurnace/HeatFurnaceContainer.java
-Combustion_chamber_slot=Combustion chamber slot
-Fuel_slot=Fuel slot
+# src/main/java/mods/eln/transparentnode/electricalfurnace/ElectricalFurnaceElement.java
+Heating_element=Topný článek
 
-# ./src/main/java/mods/eln/transparentnode/heatfurnace/HeatFurnaceDescriptor.java
-Generates_heat_when_supplied_with_fuel.=Generates heat when supplied with fuel.
+# src/main/java/mods/eln/transparentnode/electricalfurnace/ElectricalFurnaceGuiDraw.java
+Actual\:_%1$=Skutečná: %1$
+Auto_shutdown=Automatické vypnutí
+Manual_shutdown=Ruční vypnutí
+Set_point\:_%1$=Nastavený bod: %1$
 
-# ./src/main/java/mods/eln/transparentnode/heatfurnace/HeatFurnaceGuiDraw.java
-Control_gauge_at_%1$%=Control gauge at %1$%
-Decline_fuel=Decline fuel
-External_control=External control
-Internal_control=Internal control
-Take_fuel=Take fuel
+# src/main/java/mods/eln/transparentnode/electricalmachine/ElectricalMachineDescriptor.java
+Cost=Náklady
 
-# ./src/main/java/mods/eln/transparentnode/powercapacitor/PowerCapacitorContainer.java
-(Increases_maximal_voltage)=(Increases maximal voltage)
+# src/main/java/mods/eln/transparentnode/electricalmachine/ElectricalMachineElement.java
+Power_provided=Poskytovaný výkon
 
-# ./src/main/java/mods/eln/transparentnode/solarpanel/SolarPanelContainer.java
-Solar_tracker_slot=Solar tracker slot
+# src/main/java/mods/eln/transparentnode/heatfurnace/HeatFurnaceContainer.java
+Combustion_chamber_slot=Slot spalovací komory
+Fuel_slot=Slot paliva
 
-# ./src/main/java/mods/eln/transparentnode/solarpanel/SolarPanelDescriptor.java
-Can_be_geared_towards_the_sun.=Can be geared towards the sun.
-Max._power\:_%1$W=Max. power\: %1$W
-Max._voltage\:_%1$V=Max. voltage\: %1$V
-Produces_power_from_solar_radiation.=Produces power from solar radiation.
+# src/main/java/mods/eln/transparentnode/heatfurnace/HeatFurnaceDescriptor.java
 
-# ./src/main/java/mods/eln/transparentnode/solarpanel/SolarPannelGuiDraw.java
-It_is_night=It is night
-Solar_panel_angle\:_%1$°=Solar panel angle\: %1$°
-Sun_angle\:_%1$°=Sun angle\: %1$°
+# src/main/java/mods/eln/transparentnode/heatfurnace/HeatFurnaceElement.java
+Set_temperature=Nastavená teplota
 
-# ./src/main/java/mods/eln/transparentnode/teleporter/TeleporterGui.java
-Destination_transporter=Destination transporter
-Power_consumption\:=Power consumption\:
-Power_consumption\:_%1$W=Power consumption\: %1$W
-Required_energy\:_%1$J=Required energy\: %1$J
-Start=Start
-Transporter_name=Transporter name
+# src/main/java/mods/eln/transparentnode/heatfurnace/HeatFurnaceGuiDraw.java
+Actual\:_%1$°C=Skutečná: %1$°C
+Control_gauge_at_%1$%=Řízení na %1$%
+Decline_fuel=Odmítnout palivo
+Take_fuel=Přijmout palivo
 
-# ./src/main/java/mods/eln/transparentnode/thermaldissipatoractive/ThermalDissipatorActiveDescriptor.java
-Fan_cooling_power\:_%1$W=Fan cooling power\: %1$W
-Fan_power_consumption\:_%1$W=Fan power consumption\: %1$W
-Fan_voltage\:_%1$V=Fan voltage\: %1$V
+# src/main/java/mods/eln/transparentnode/powercapacitor/PowerCapacitorContainer.java
+(Increases_maximal_voltage)=(Zvyšuje maximální napětí)
 
-# ./src/main/java/mods/eln/transparentnode/transformer/TransformerDescriptor.java
-The_voltage_ratio_is_proportional\nto_the_cable_stacks_count_ratio.=The voltage ratio is proportional\nto the cable stacks count ratio.
-Transforms_an_input_voltage_to\nan_output_voltage.=Transforms an input voltage to\nan output voltage.
+# src/main/java/mods/eln/transparentnode/powercapacitor/PowerCapacitorGui.java
 
-# ./src/main/java/mods/eln/transparentnode/turbine/TurbineDescriptor.java
-Generates_electricity_using_heat.=Generates electricity using heat.
-Temperature_difference\:_%1$°C=Temperature difference\: %1$°C
+# src/main/java/mods/eln/transparentnode/powerinductor/PowerInductorContainer.java
 
-# ./src/main/java/mods/eln/transparentnode/turret/TurretDescriptor.java
-CAUTION\:_Cables_can_get_quite_hot!=CAUTION\: Cables can get quite hot\!
-Laser_charge_power\:_%1$W...%2$kW=Laser charge power\: %1$W...%2$kW
-Scans_for_entities_and_shoots_if_the\nentity_matches_the_configurable_filter_criteria.=Scans for entities and shoots if the\nentity matches the configurable filter criteria.
-Standby_power\:_%1$W=Standby power\: %1$W
+# src/main/java/mods/eln/transparentnode/powerinductor/PowerInductorGui.java
 
-# ./src/main/java/mods/eln/transparentnode/turret/TurretGui.java
-Attack\:=Attack\:
-Do_not_attack\:=Do not attack\:
-Recharge_power\:=Recharge power\:
+# src/main/java/mods/eln/transparentnode/solarpanel/SolarPanelContainer.java
+Solar_tracker_slot=Slot solárního trackeru
 
-# ./src/main/java/mods/eln/transparentnode/waterturbine/WaterTurbineDescriptor.java
-Generates_energy_using_water_stream.=Generates energy using water stream.
-No_place_for_water_turbine!=No place for water turbine\!
+# src/main/java/mods/eln/transparentnode/solarpanel/SolarPanelDescriptor.java
+Can_be_geared_towards_the_sun.=Lze natočit směrem ke slunci.
+Max._power\:_%1$W=Max. výkon: %1$W
+Max._voltage\:_%1$V=Max. napětí: %1$V
+Produces_power_from_solar_radiation.=Vyrábí energii ze slunečního záření.
 
-# ./src/main/java/mods/eln/transparentnode/windturbine/WindTurbineDescriptor.java
-Front\:_%1$=Front\: %1$
-Generates_energy_from_wind.=Generates energy from wind.
-Left_Right\:_%1$=Left/Right\: %1$
-Up_Down\:_%1$=Up/Down\: %1$
-Wind_area\:=Wind area\:
+# src/main/java/mods/eln/transparentnode/solarpanel/SolarPanelElement.java
+Panel_angle=Úhel panelu
+Producing_energy=Výroba energie
+Sun_angle=Úhel slunce
 
-# ./src/main/java/mods/eln/wiki/Data.java
-Energy=Energy
-Light=Light
-Machine=Machine
-Ore=Ore
-Portable=Portable
-Resource=Resource
-Signal=Signal
-Thermal=Thermal
-Upgrade=Upgrade
-Utilities=Utilities
-Wiring=Wiring
+# src/main/java/mods/eln/transparentnode/solarpanel/SolarPannelGuiDraw.java
+It_is_night=Je noc
+Solar_panel_angle\:_%1$°=Úhel solárního panelu: %1$°
+Sun_angle\:_%1$°=Úhel slunce: %1$°
 
-# ./src/main/java/mods/eln/wiki/Default.java
-Previous=Previous
+# src/main/java/mods/eln/transparentnode/teleporter/TeleporterDescriptor.java
+It's_experimental!=Je to experimentální!
 
-# ./src/main/java/mods/eln/wiki/ItemDefault.java
-Can_be_used_to_craft\:=Can be used to craft\:
-Cannot_be_crafted!=Cannot be crafted\!
-Cost_%1$J=Cost %1$J
-Created_by\:=Created by\:
-Is_not_a_crafting_material!=Is not a crafting material\!
-Recipe\:=Recipe\:
+# src/main/java/mods/eln/transparentnode/teleporter/TeleporterElement.java
+Destination=Cíl
+Distance=Vzdálenost
+Required_energy=Požadovaná energie
 
-# Appearing in multiple source files
-(Increases_capacity)=(Increases capacity)
-(Increases_inductance)=(Increases inductance)
-Actual\:_%1$°C=Actual\: %1$°C
-Biggest=Biggest
-Booster_slot=Booster slot
-Can_create\:=Can create\:
-Capacity\:_%1$F=Capacity\: %1$F
-Charge_power\:_%1$W=Charge power\: %1$W
-Connected=Connected
-Cooling_power\:_%1$W=Cooling power\: %1$W
-Copper_cable_slot=Copper cable slot
-Dielectric_slot=Dielectric slot
-Discharge_power\:_%1$W=Discharge power\: %1$W
-Electrical_cable_slot=Electrical cable slot
-Entity_filter_slot=Entity filter slot
-Ferromagnetic_core_slot=Ferromagnetic core slot
-Has_a_signal_output.=Has a signal output.
-Inductance\:_%1$H=Inductance\: %1$H
-Internal_resistance\:_%1$Ω=Internal resistance\: %1$Ω
-Is_off=Is off
-Is_on=Is on
-Max._temperature\:_%1$°C=Max. temperature\: %1$°C
-Measured_value\ncorresponding\nto_0%_output=Measured value\ncorresponding\nto 0% output
-Measured_value\ncorresponding\nto_100%_output=Measured value\ncorresponding\nto 100% output
-Nominal\:=Nominal\:
-Nominal_power\:_%1$W=Nominal power\: %1$W
-Nominal_usage\:=Nominal usage\:
-Nominal_voltage\:_%1$V=Nominal voltage\: %1$V
-Not_connected=Nepřipojeno
-Not_enough_space_for_this_block=Not enough space for this block
-Power=Power
-Power\:_%1$W=Power\: %1$W
-Range\:_%1$_blocks=Range\: %1$ blocks
-Redstone_slot=Redstone slot
-Regulator_slot=Regulator slot
-Reset=Reset
-Resistance\:_%1$Ω=Resistance\: %1$Ω
-Smallest=Smallest
-Specify_the_channel=Specify the channel
-Stored_energy\:_%1$J_(%2$%)=Stored energy\: %1$J (%2$%)
-Temperature\:_%1$°C=Temperature\: %1$°C
-Temperature_gauge=Temperature gauge
-Thermal_isolator_slot=Thermal isolator slot
-Toggle=Toggle
-Toggle_switch=Toggle switch
-Toggles_the_output_each_time\nan_emitter's_value_rises.\nUseful_to_allow_multiple_buttons\nto_control_the_same_light.=Toggles the output each time\nan emitter's value rises.\nUseful to allow multiple buttons\nto control the same light.
-Used_to_cool_down_turbines.=Used to cool down turbines.
-Uses_the_biggest\nvalue_on_the_channel.=Uses the biggest\nvalue on the channel.
-Uses_the_smallest\nvalue_on_the_channel.=Uses the smallest\nvalue on the channel.
-Validate=Validate
-Voltage\:_%1$V=Voltage\: %1$V
-You_can't_place_this_block_at_this_side=You can't place this block at this side
+# src/main/java/mods/eln/transparentnode/teleporter/TeleporterGui.java
+Destination_transporter=Cílový transportér
+Power_consumption\:=Spotřeba energie:
+Power_consumption\:_%1$W=Spotřeba energie: %1$W
+Required_energy\:_%1$J=Požadovaná energie: %1$J
+Start=Spustit
+Transporter_name=Název transportéru
+
+# src/main/java/mods/eln/transparentnode/thermaldissipatoractive/ThermalDissipatorActiveDescriptor.java
+Fan_cooling_power\:_%1$W=Chladicí výkon ventilátoru: %1$W
+Fan_power_consumption\:_%1$W=Spotřeba ventilátoru: %1$W
+Fan_voltage\:_%1$V=Napětí ventilátoru: %1$V
+
+# src/main/java/mods/eln/transparentnode/thermaldissipatoractive/ThermalDissipatorActiveElement.java
+
+# src/main/java/mods/eln/transparentnode/turbine/TurbineDescriptor.java
+Generates_electricity_using_heat.=Vyrábí elektřinu pomocí tepla.
+Temperature_difference\:_%1$°C=Teplotní rozdíl: %1$°C
+
+# src/main/java/mods/eln/transparentnode/turbine/TurbineElement.java
+Nominal=Jmenovitý
+
+# src/main/java/mods/eln/transparentnode/turret/TurretDescriptor.java
+CAUTION\:_Cables_can_get_quite_hot!=POZOR: Kabely se mohou velmi zahřát!
+Laser_charge_power\:_%1$W...%2$kW=Nabíjecí výkon laseru: %1$W...%2$kW
+Scans_for_entities_and_shoots_if_the\nentity_matches_the_configurable_filter_criteria.=Skenuje entity a střílí, pokud\nentita odpovídá nastavitelným filtrům.
+Standby_power\:_%1$W=Spotřeba v pohotovosti: %1$W
+
+# src/main/java/mods/eln/transparentnode/turret/TurretElement.java
+??=??
+Charge_level=Úroveň nabití
+Shoot_=Střílet
+Shoot_everything=Střílet vše
+Shoot_nothing=Nestřílet nic
+Target=Cíl
+animals=zvířata
+monsters=příšery
+players=hráči
+
+# src/main/java/mods/eln/transparentnode/turret/TurretGui.java
+Attack\:=Útok:
+Do_not_attack\:=Neútočit na:
+Recharge_power\:=Nabíjecí výkon:
+
+# src/main/java/mods/eln/transparentnode/waterturbine/WaterTurbineDescriptor.java
+Generates_energy_using_water_stream.=Vyrábí energii z vodního proudu.
+No_place_for_water_turbine!=Není místo pro vodní turbínu!
+
+# src/main/java/mods/eln/transparentnode/waterturbine/WaterTurbineElement.java
+
+# src/main/java/mods/eln/transparentnode/windturbine/WindTurbineDescriptor.java
+Front\:_%1$=Přední: %1$
+Generates_energy_from_wind.=Vyrábí energii z větru.
+Left/Right\:_%1$=Vlevo/Vpravo: %1$
+Up/Down\:_%1$=Nahoru/Dolů: %1$
+Wind_area\:=Oblast větru:
+
+# src/main/java/mods/eln/wiki/Data.java
+Light=Světlo
+Machine=Stroj
+Ore=Ruda
+Portable=Přenosné
+Resource=Zdroj
+Thermal=Tepelné
+Upgrade=Vylepšení
+Utilities=Nástroje
+Wiring=Kabeláž
+
+# src/main/java/mods/eln/wiki/Default.java
+Previous=Předchozí
+
+# src/main/java/mods/eln/wiki/ItemDefault.java
+Can_be_used_to_craft\:=Lze použít k craftingu:
+Cannot_be_crafted!=Nelze vyrobit!
+Cost_%1$J=Cena %1$J
+Created_by\:=Vytvořeno pomocí:
+Is_not_a_crafting_material!=Není craftingový materiál!
+Recipe\:=Recept:
+
+# src/main/kotlin/mods/eln/Achievements.kt
+Electrical_Age_[WIP]=Electrical Age [WIP]
+achievement.craft_50v_macerator=Vyrobit 50V drtič
+achievement.craft_50v_macerator.desc=Vyrobit 50V drtič
+achievement.open_guide=Otevřít průvodce
+achievement.open_guide.desc=Otevřít průvodce
+
+# src/main/kotlin/mods/eln/block/ArcClayBlock.kt
+tile.arc_clay_block.name=Arcová jílová kostka
+tile.arc_metal_block.name=Arcová kovová kostka
+
+# src/main/kotlin/mods/eln/craft/CraftingRecipes.kt
+entity.EAReplicator.name=EA Replikátor
+entity.ElectricMinecart.name=Elektrický důlní vozík
+
+# src/main/kotlin/mods/eln/gridnode/GridSwitch.kt
+Closed?=Zavřeno?
+Drive=Pohon
+Left=Vlevo
+Right=Vpravo
+Transfer=Přenos
+
+# src/main/kotlin/mods/eln/item/BrushDescriptor.kt
+Brush_is_dry=Štětec je suchý
+Can_paint_%1$_blocks=Lze natřít %1$ bloků
+
+# src/main/kotlin/mods/eln/item/CaseItemDescriptor.kt
+Can_be_used_to_encase_EA_items_that_support_it=Lze použít k pouzdření EA předmětů, které to podporují
+
+# src/main/kotlin/mods/eln/item/FuelBurnerDescriptor.kt
+Burn_unit_for_the_gas_heat_furnace.=Spalovací jednotka pro plynovou tepelnou pec.
+Produced_heat_power\:_=Vyráběný tepelný výkon:
+
+# src/main/kotlin/mods/eln/item/LampDescriptor.kt
+Condition\:_%1$=Stav: %1$
+Current_lifetime\:_%1$h=Současná životnost: %1$h
+Nominal_lifetime\:_%1$h=Jmenovitá životnost: %1$h
+
+# src/main/kotlin/mods/eln/item/ThermalIsolatorElement.kt
+Organic_Asbestos™=Organický azbest™
+Upgrade_for_the_Stone_Heat_Furnace=Vylepšení pro kamennou tepelnou pec
+__Heat_tolerance\:=  Tepelná tolerance:
+__Insulation\:=  Izolace:
+
+# src/main/kotlin/mods/eln/item/ThermometerDescriptor.kt
+Biome_T\:=Biome T:
+RH\:=RH:
+Room_T\:=Místnost T:
+
+# src/main/kotlin/mods/eln/item/electricalitem/BatteryItem.kt
+
+# src/main/kotlin/mods/eln/item/electricalitem/ElectricalAxe.kt
+Cuts_down_trees._Right-click_to_make_it_act_like_a_regular_axe.=Kácí stromy. Pravým kliknutím se chová jako běžná sekera.
+
+# src/main/kotlin/mods/eln/item/electricalitem/ElectricalLampItem.kt
+State\:=Stav:
+Stored_Energy\:_%1$J_(%2$%)=Uložená energie: %1$J (%2$%)
+
+# src/main/kotlin/mods/eln/item/electricalitem/ElectricalPickaxe.kt
+Opens_holes._Right-click_to_open_smaller_holes.=Otvírá díry. Pravým kliknutím otevře menší díry.
+
+# src/main/kotlin/mods/eln/mechanical/Clutch.kt
+Bad=Špatný
+Clutch_Pin_=Spojkový kolík
+Clutch_Plate=Spojková deska
+Clutching=Zapojení spojky
+Condition\:=Stav:
+End_of_life=Konec životnosti
+Energies=Energie
+Good=Dobrý
+New=Nový
+Prevents_clutches_from_slipping\nagain_after_they_stop.=Zabraňuje skluzu spojek\nznovu po jejich zastavení.
+Speeds=Rychlosti
+Used=Použitý
+
+# src/main/kotlin/mods/eln/mechanical/CrankableShaft.kt
+Can_rotate_slowly=Může se pomalu otáčet
+Player_crankable_shaft=Hráčem otočný hřídel
+
+# src/main/kotlin/mods/eln/mechanical/Generator.kt
+Converts_mechanical_energy_into_electricity,_or_(badly)_vice_versa.=Převádí mechanickou energii na elektřinu, nebo (špatně) naopak.
+__Rads\:_=  Rads:
+__Voltage_out\:_=  Výstupní napětí:
+
+# src/main/kotlin/mods/eln/mechanical/Motor.kt
+Converts_electricity_into_mechanical_energy,_or_(badly)_vice_versa.=Převádí elektřinu na mechanickou energii, nebo (špatně) naopak.
+Max_rad/s\:_=Max rad/s:
+__Power_in\:_=  Vstupní výkon:
+__Voltage_in\:_=  Vstupní napětí:
+__rad/s\:_=  rad/s:
+
+# src/main/kotlin/mods/eln/mechanical/RadialMotor.kt
+%1$_input\:_%2$_mB/s=%1$ vstup: %2$ mB/s
+
+# src/main/kotlin/mods/eln/mechanical/RollingShaftMachine.kt
+Can_Process=Lze zpracovat
+Process_State=Stav procesu
+
+# src/main/kotlin/mods/eln/mechanical/Tachometer.kt
+Rads/s_corresponding\nto_0%_output=Rads/s odpovídající\n0% výstupu
+Rads/s_corresponding\nto_100%_output=Rads/s odpovídající\n100% výstupu
+
+# src/main/kotlin/mods/eln/mechanical/Turbines.kt
+%1$_input\:_%2$=%1$ vstup: %2$
+
+# src/main/kotlin/mods/eln/misc/UtilsClient.kt
+Hold_[ctrl]_for_realism_details=Podržte [ctrl] pro detaily realismu
+Hold_[shift]_for_details=Podržte [shift] pro detaily
+
+# src/main/kotlin/mods/eln/misc/Version.kt
+mod.name=Electrical Age
+
+# src/main/kotlin/mods/eln/node/six/SixNodeDescriptor.kt
+
+# src/main/kotlin/mods/eln/railroad/ElectricMinecartChargeReporter.kt
+Cart_Energy\:_=Energie vozíku:
+
+# src/main/kotlin/mods/eln/registration/ItemRegistration.kt
+200V_Copper_Heating_Element.name=200V měděný topný článek.name
+200V_Farming_Light_Bulb.name=200V zemědělská žárovka.name
+200V_Fluorescent_Light_Bulb.name=200V zářivka.name
+200V_Halogen_Light_Bulb.name=200V halogenová žárovka.name
+200V_Incandescent_Light_Bulb.name=200V žárovka.name
+200V_Iron_Heating_Element.name=200V železný topný článek.name
+200V_LED_Light_Bulb.name=200V LED žárovka.name
+200V_Tungsten_Heating_Element.name=200V wolframový topný článek.name
+2x_Graphite_Rods.name=2x grafitové tyče.name
+3.2kV_Tungsten_Heating_Element.name=3.2kV wolframový topný článek.name
+3x_Graphite_Rods.name=3x grafitové tyče.name
+4x_Graphite_Rods.name=4x grafitové tyče.name
+50V_Carbon_Incandescent_Light_Bulb.name=50V uhlíková žárovka.name
+50V_Copper_Heating_Element.name=50V měděný topný článek.name
+50V_Farming_Light_Bulb.name=50V zemědělská žárovka.name
+50V_Fluorescent_Light_Bulb.name=50V zářivka.name
+50V_Halogen_Light_Bulb.name=50V halogenová žárovka.name
+50V_Incandescent_Light_Bulb.name=50V žárovka.name
+50V_Iron_Heating_Element.name=50V železný topný článek.name
+50V_LED_Light_Bulb.name=50V LED žárovka.name
+50V_Tungsten_Heating_Element.name=50V wolframový topný článek.name
+800V_Tungsten_Heating_Element.name=800V wolframový topný článek.name
+Advanced_Chip.name=Pokročilý čip.name
+Advanced_Electrical_Motor.name=Pokročilý elektromotor.name
+Advanced_Machine_Block.name=Pokročilý strojní blok.name
+Advanced_Magnet.name=Pokročilý magnet.name
+AllMeter.name=Univerzální měřič.name
+Alloy_Dust.name=Prach ze slitiny.name
+Alloy_Ingot.name=Ingot ze slitiny.name
+Alloy_Plate.name=Plát ze slitiny.name
+Analogic_Regulator.name=Analogový regulátor.name
+Animal_Filter.name=Filtr zvířat.name
+Arc_Clay_Ingot.name=Ingot z obloukové hlíny.name
+Arc_Metal_Ingot.name=Ingot z obloukového kovu.name
+Arithmetic_Logic_Unit.name=Aritmeticko-logická jednotka.name
+Average_Electrical_Drill.name=Průměrný elektrický vrták.name
+Average_Ferromagnetic_Core.name=Průměrné feromagnetické jádro.name
+Basic_Magnet.name=Základní magnet.name
+Big_Fuel_Burner.name=Velký hořák.name
+Black_Brush.name=Černý štětec.name
+Blue_Brush.name=Modrý štětec.name
+Brown_Brush.name=Hnědý štětec.name
+Canister_of_Arc_Water.name=Kanystra obloukové vody.name
+Canister_of_Water.name=Kanystra vody.name
+Casing.name=Plášť.name
+Cheap_Chip.name=Levný čip.name
+Cheap_Electrical_Drill.name=Levný elektrický vrták.name
+Cheap_Ferromagnetic_Core.name=Levné feromagnetické jádro.name
+Cinnabar_Dust.name=Prach z rumělky.name
+Cinnabar_Ore.name=Ruda rumělky.name
+Clutch_Pin.name=Spojkový kolík.name
+Coal_Clutch_Plate.name=Uhlíková spojková deska.name
+Coal_Dust.name=Uhlí prach.name
+Coal_Plate.name=Uhlíková deska.name
+Combustion_Chamber.name=Spalovací komora.name
+Config_Copy_Tool.name=Nástroj pro kopírování konfigurace.name
+Copper_Cable.name=Měděný kabel.name
+Copper_Clutch_Plate.name=Měděná spojková deska.name
+Copper_Dust.name=Měděný prach.name
+Copper_Ingot.name=Měděný ingot.name
+Copper_Ore.name=Měděná ruda.name
+Copper_Plate.name=Měděný plát.name
+Cyan_Brush.name=Tyrkysový štětec.name
+Data_Logger_Print.name=Tisk záznamníku dat.name
+Diamond_Dust.name=Diamantový prach.name
+Dielectric.name=Dielektrikum.name
+Electric_Minecart.name=Elektrický vozík.name
+Electrical_Motor.name=Elektromotor.name
+Electrical_Probe_Chip.name=Elektrický sondovací čip.name
+Electrical_age_wrench,\nCan_be_used_to_turn\nsmall_wall_blocks=Klíč Electrical Age,\nLze použít k otáčení\nmalých bloků zdí
+Fast_Electrical_Drill.name=Rychlý elektrický vrták.name
+Ferrite_Ingot.name=Feritový ingot.name
+Gold_Clutch_Plate.name=Zlatá spojková deska.name
+Gold_Dust.name=Zlatý prach.name
+Gold_Plate.name=Zlatý plát.name
+Graphite_Rod.name=Grafitová tyč.name
+Gray_Brush.name=Šedý štětec.name
+Green_Brush.name=Zelený štětec.name
+Heavy_Winding.name=Těžké vinutí.name
+Improved_Flashlight.name=Vylepšená baterka.name
+Inert_Canister.name=Inertní kanystra.name
+Iron_Cable.name=Železný kabel.name
+Iron_Clutch_Plate.name=Železná spojková deska.name
+Iron_Dust.name=Železný prach.name
+Iron_Plate.name=Železný plát.name
+Irresponsible_Electrical_Drill.name=Nezodpovědný elektrický vrták.name
+Lapis_Dust.name=Lapis prach.name
+Lead_Clutch_Plate.name=Olověná spojková deska.name
+Lead_Dust.name=Olověný prach.name
+Lead_Ingot.name=Olověný ingot.name
+Lead_Ore.name=Olověná ruda.name
+Lead_Plate.name=Olověný plát.name
+Light_Blue_Brush.name=Světle modrý štětec.name
+Lime_Brush.name=Limetkový štětec.name
+Machine_Block.name=Strojní blok.name
+Machine_Booster.name=Strojní urychlovač.name
+Magenta_Brush.name=Purpurový štětec.name
+Medium_Fuel_Burner.name=Střední hořák.name
+Mercury.name=Rtuť.name
+Mining_Pipe.name=Těžební trubka.name
+Monster_Filter.name=Filtr příšer.name
+Motor_Cowling.name=Kapotáž motoru.name
+MultiMeter.name=Multimetr.name
+NTC_Thermistor.name=NTC termistor.name
+Nibble_Memory_Chip.name=Paměťový čip nibble.name
+On/OFF_Regulator_10_Percent.name=Zap/Vyp regulátor 10 procent.name
+On/OFF_Regulator_1_Percent.name=Zap/Vyp regulátor 1 procento.name
+Optimal_Ferromagnetic_Core.name=Optimální feromagnetické jádro.name
+Orange_Brush.name=Oranžový štětec.name
+Ore_Scanner.name=Skenér rud.name
+Overheating_Protection.name=Ochrana proti přehřátí.name
+Overvoltage_Protection.name=Ochrana proti přepětí.name
+Pink_Brush.name=Růžový štětec.name
+Player_Filter.name=Filtr hráčů.name
+Portable_Battery.name=Přenosná baterie.name
+Portable_Battery_Pack.name=Balíček přenosných baterií.name
+Portable_Condensator.name=Přenosný kondenzátor.name
+Portable_Condensator_Pack.name=Balíček přenosných kondenzátorů.name
+Portable_Electrical_Axe.name=Přenosná elektrická sekera.name
+Portable_Electrical_Mining_Drill.name=Přenosný elektrický těžební vrták.name
+Purple_Brush.name=Fialový štětec.name
+Really_useless=Opravdu k ničemu
+Red_Brush.name=Červený štětec.name
+Reinforced_Shaft.name=Vyztužený hřídel.name
+Rubber.name=Guma.name
+Signal_Antenna.name=Signálová anténa.name
+Silicon_Dust.name=Křemíkový prach.name
+Silicon_Ingot.name=Křemíkový ingot.name
+Silicon_Plate.name=Křemíkový plát.name
+Silicon_Wafer.name=Křemíkový plátek.name
+Silver_Brush.name=Stříbrný štětec.name
+Small_200V_Copper_Heating_Element.name=Malý 200V měděný topný článek.name
+Small_200V_Iron_Heating_Element.name=Malý 200V železný topný článek.name
+Small_200V_Tungsten_Heating_Element.name=Malý 200V wolframový topný článek.name
+Small_3.2kV_Tungsten_Heating_Element.name=Malý 3.2kV wolframový topný článek.name
+Small_50V_Carbon_Incandescent_Light_Bulb.name=Malá 50V uhlíková žárovka.name
+Small_50V_Copper_Heating_Element.name=Malý 50V měděný topný článek.name
+Small_50V_Fluorescent_Light_Bulb.name=Malá 50V zářivka.name
+Small_50V_Incandescent_Light_Bulb.name=Malá 50V žárovka.name
+Small_50V_Iron_Heating_Element.name=Malý 50V železný topný článek.name
+Small_50V_Tungsten_Heating_Element.name=Malý 50V wolframový topný článek.name
+Small_800V_Tungsten_Heating_Element.name=Malý 800V wolframový topný článek.name
+Small_Flashlight.name=Malá baterka.name
+Small_Fuel_Burner.name=Malý hořák.name
+Solar_Tracker.name=Solární sledovač.name
+Synthetic_Diamond.name=Syntetický diamant.name
+Thermal_Insulation.name=Tepelná izolace.name
+Thermal_Probe_Chip.name=Tepelný sondovací čip.name
+Thermometer.name=Teploměr.name
+Transistor.name=Tranzistor.name
+Tree_Resin.name=Stromová pryskyřice.name
+Tungsten_Cable.name=Wolframový kabel.name
+Tungsten_Dust.name=Wolframový prach.name
+Tungsten_Ingot.name=Wolframový ingot.name
+Tungsten_Ore.name=Wolframová ruda.name
+Turbine_Blade_Set.name=Sada lopatek turbíny.name
+Turbo_Electrical_Drill.name=Turbo elektrický vrták.name
+White_Brush.name=Bílý štětec.name
+Wireless_Analyser.name=Bezdrátový analyzátor.name
+Wrench.name=Klíč.name
+X-Ray_Scanner.name=Rentgenový skener.name
+Yellow_Brush.name=Žlutý štětec.name
+item.Copper Axe.name=Měděná sekera
+item.Copper Boots.name=Měděné boty
+item.Copper Chestplate.name=Měděný náprsník
+item.Copper Helmet.name=Měděná helma
+item.Copper Hoe.name=Měděná motyka
+item.Copper Leggings.name=Měděné kalhoty
+item.Copper Pickaxe.name=Měděný krumpác
+item.Copper Shovel.name=Měděná lopata
+item.Copper Sword.name=Měděný meč
+item.E-Coal Boots.name=E-Uhlí boty
+item.E-Coal Chestplate.name=E-Uhlí náprsník
+item.E-Coal Helmet.name=E-Uhlí helma
+item.E-Coal Leggings.name=E-Uhlí kalhoty
+miaou=mňau
+unreleasedium.name=nevydanium
+useless=nepotřebné
+
+# src/main/kotlin/mods/eln/registration/SingleNodeRegistration.kt
+tile.eln.Conduit.name=Kabelový kanál
+tile.eln.ElnProbe.name=ELN sonda
+tile.eln.EnergyConverter.name=Energetický převodník
+
+# src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt
+10A_Diode.name=10A dioda.name
+200V_Battery_Charger.name=200V nabíječka baterií.name
+200V_Emergency_Lamp.name=200V nouzová lampa.name
+25A_Diode.name=25A dioda.name
+50V_Battery_Charger.name=50V nabíječka baterií.name
+50V_Emergency_Lamp.name=50V nouzová lampa.name
+AND_Chip.name=AND čip.name
+Advanced_Energy_Meter.name=Pokročilý měřič energie.name
+Amplifier.name=Zesilovač.name
+Analog_Watch.name=Analogové hodinky.name
+Analog_vuMeter.name=Analogový vuMetr.name
+Blown_Lead_Fuse.name=Přepálená olověná pojistka.name
+Conduit.name=Kabelový kanál.name
+Configurable_summing_unit.name=Konfigurovatelná sčítací jednotka.name
+Copper_Thermal_Cable.name=Měděný tepelný kabel.name
+Creative_Cable.name=Kreativní kabel.name
+Current_Source.name=Zdroj proudu.name
+D_Flip_Flop_Chip.name=D klopný obvod čip.name
+Data_Logger.name=Záznamník dat.name
+Digital_Display.name=Digitální displej.name
+Digital_Watch.name=Digitální hodinky.name
+Electrical_Anemometer_Sensor.name=Elektrický anemometrický senzor.name
+Electrical_Breaker.name=Elektrický jistič.name
+Electrical_Daylight_Sensor.name=Elektrický senzor denního světla.name
+Electrical_Entity_Sensor.name=Elektrický senzor entit.name
+Electrical_Fire_Buzzer.name=Elektrická požární sirénka.name
+Electrical_Fire_Detector.name=Elektrický požární detektor.name
+Electrical_Fuse_Holder.name=Elektrický držák pojistky.name
+Electrical_Light_Sensor.name=Elektrický světelný senzor.name
+Electrical_Probe.name=Elektrická sonda.name
+Electrical_Source.name=Elektrický zdroj.name
+Electrical_Timer.name=Elektrický časovač.name
+Electrical_Weather_Sensor.name=Elektrický meteorologický senzor.name
+Energy_Meter.name=Měřič energie.name
+Flat_Lamp_Socket.name=Plochá objímka žárovky.name
+Fluorescent_Lamp_Socket.name=Fluorescenční objímka žárovky.name
+Ground_Cable.name=Uzemňovací kabel.name
+High_Current_Cable.name=Vysokoproudový kabel.name
+High_Current_Relay.name=Vysokoproudové relé.name
+High_Voltage_Cable.name=Vysokonapěťový kabel.name
+High_Voltage_Relay.name=Vysokonapěťové relé.name
+High_Voltage_Switch.name=Vysokonapěťový vypínač.name
+Hub.name=Rozbočovač.name
+Humidity_Sensor.name=Senzor vlhkosti.name
+Industrial_Data_Logger.name=Průmyslový záznamník dat.name
+JK_Flip_Flop_Chip.name=JK klopný obvod čip.name
+LED_vuMeter.name=LED vuMetr.name
+Lamp_Socket_A.name=Objímka žárovky A.name
+Lamp_Socket_B_Projector.name=Objímka žárovky B projektor.name
+Lamp_Supply.name=Napájení lampy.name
+Lead_Fuse_for_high_voltage_cables.name=Olověná pojistka pro vysokonapěťové kabely.name
+Lead_Fuse_for_low_voltage_cables.name=Olověná pojistka pro nízkonapěťové kabely.name
+Lead_Fuse_for_medium_voltage_cables.name=Olověná pojistka pro středněnapěťové kabely.name
+Lead_Fuse_for_very_high_voltage_cables.name=Olověná pojistka pro velmi vysokonapěťové kabely.name
+Long_Suspended_Lamp_Socket.name=Dlouhá závěsná objímka žárovky.name
+Long_Suspended_Lamp_Socket_(No_Swing).name=Dlouhá závěsná objímka žárovky (bez houpání).name
+Low_Current_Cable.name=Nízkoproudový kabel.name
+Low_Current_Relay.name=Nízkoproudové relé.name
+Low_Voltage_Cable.name=Nízkonapěťový kabel.name
+Low_Voltage_Relay.name=Nízkonapěťové relé.name
+Low_Voltage_Switch.name=Nízkonapěťový vypínač.name
+Lowpass_filter.name=Dolnopropustný filtr.name
+MQTT_Energy_Meter.name=MQTT měřič energie.name
+MQTT_Signal_Controller.name=MQTT řadič signálu.name
+Medium_Current_Cable.name=Střednoproudový kabel.name
+Medium_Current_Relay.name=Střednoproudové relé.name
+Medium_Voltage_Cable.name=Středněnapěťový kabel.name
+Medium_Voltage_Relay.name=Středněnapěťové relé.name
+Medium_Voltage_Switch.name=Středněnapěťový vypínač.name
+Modbus_RTU.name=Modbus RTU
+Modern_Data_Logger.name=Moderní záznamník dat.name
+Multicolor_LED_vuMeter.name=Vícebarevný LED vuMetr.name
+NAND_Chip.name=NAND čip.name
+NOR_Chip.name=NOR čip.name
+NOT_Chip.name=NOT čip.name
+Nuclear_Alarm.name=Jaderný alarm.name
+OR_Chip.name=OR čip.name
+OpAmp.name=Operační zesilovač.name
+Oscillator_Chip.name=Oscilátorový čip.name
+PAL_Chip.name=PAL čip.name
+PID_Regulator.name=PID regulátor.name
+Portable_NaN.name=Přenosný NaN.name
+Power_Capacitor.name=Výkonový kondenzátor.name
+Power_Inductor.name=Výkonová cívka.name
+Power_Resistor.name=Výkonový rezistor.name
+Redstone-to-Voltage_Converter.name=Redstone-na-napětí převodník.name
+Rheostat.name=Reostat.name
+Robust_Lamp_Socket.name=Robustní objímka žárovky.name
+Sample_and_hold.name=Vzorkování a uchování.name
+Scanner.name=Skener.name
+Schmitt_Trigger_Chip.name=Schmittův spínač čip.name
+Sconce_Lamp_Socket.name=Nástěnná objímka žárovky.name
+Signal_20H_inductor.name=Signálová 20H cívka.name
+Signal_Bus_Cable.name=Signálový sběrnicový kabel.name
+Signal_Button.name=Signálové tlačítko.name
+Signal_Cable.name=Signálový kabel.name
+Signal_Diode.name=Signálová dioda.name
+Signal_Processor.name=Signálový procesor.name
+Signal_Relay.name=Signálové relé.name
+Signal_Source.name=Signálový zdroj.name
+Signal_Switch.name=Signálový vypínač.name
+Signal_Switch_with_LED.name=Signálový vypínač s LED.name
+Signal_Trimmer.name=Signálový trimr.name
+Simple_Lamp_Socket.name=Jednoduchá objímka žárovky.name
+Standard_Alarm.name=Standardní alarm.name
+Street_Light.name=Pouliční osvětlení.name
+Suspended_Lamp_Socket.name=Závěsná objímka žárovky.name
+Suspended_Lamp_Socket_(No_Swing).name=Závěsná objímka žárovky (bez houpání).name
+Temperature_Probe.name=Teplotní sonda.name
+Thermal_Probe.name=Tepelná sonda.name
+Thermistor.name=Termistor.name
+Thermometer_Sensor.name=Teploměrný senzor.name
+Tree_Resin_Collector.name=Sběrač pryskyřice.name
+Tutorial_Sign.name=Výuková cedule.name
+Type_E_Socket.name=Zásuvka typ E.name
+Type_J_Socket.name=Zásuvka typ J.name
+Variable_inductor.name=Proměnná cívka.name
+Very_High_Voltage_Cable.name=Velmi vysokonapěťový kabel.name
+Very_High_Voltage_Relay.name=Velmi vysokonapěťové relé.name
+Very_High_Voltage_Switch.name=Velmi vysokonapěťový vypínač.name
+Voltage-to-Redstone_Converter.name=Napětí-na-Redstone převodník.name
+Voltage_Probe.name=Napěťová sonda.name
+Voltage_controlled_amplifier.name=Napětím řízený zesilovač.name
+Voltage_controlled_sawtooth_oscillator.name=Napětím řízený pilový oscilátor.name
+Voltage_controlled_sine_oscillator.name=Napětím řízený sinusový oscilátor.name
+Weak_50V_Battery_Charger.name=Slabá 50V nabíječka baterií.name
+Wireless_Button.name=Bezdrátové tlačítko.name
+Wireless_Signal_Receiver.name=Bezdrátový přijímač signálu.name
+Wireless_Signal_Repeater.name=Bezdrátový opakovač signálu.name
+Wireless_Signal_Transmitter.name=Bezdrátový vysílač signálu.name
+Wireless_Switch.name=Bezdrátový vypínač.name
+XNOR_Chip.name=XNOR čip.name
+XOR_Chip.name=XOR čip.name
+
+# src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt
+200V_Active_Thermal_Dissipator.name=200V aktivní tepelný dissipátor.name
+200V_Compressor.name=200V kompresor.name
+200V_Fuel_Generator.name=200V palivový generátor.name
+200V_Macerator.name=200V drtič.name
+200V_Magnetizer.name=200V magnetizér.name
+200V_Plate_Machine.name=200V lisovací stroj.name
+200V_Turbine.name=200V turbína.name
+2x3_Rotating_Solar_Panel.name=2x3 otočný solární panel.name
+2x3_Solar_Panel.name=2x3 solární panel.name
+50V_Compressor.name=50V kompresor.name
+50V_Egg_Incubator.name=50V inkubátor vajec.name
+50V_Fuel_Generator.name=50V palivový generátor.name
+50V_Macerator.name=50V drtič.name
+50V_Magnetizer.name=50V magnetizér.name
+50V_Plate_Machine.name=50V lisovací stroj.name
+50V_Turbine.name=50V turbína.name
+800V_Defence_Turret.name=800V obranná věž.name
+Auto_Miner.name=Automatický těžař.name
+Basic_Floodlight.name=Základní světlomet.name
+Capacity_Oriented_Battery.name=Baterie orientovaná na kapacitu.name
+Christmas_Tree.name=Vánoční stromek.name
+Clutch.name=Spojka.name
+Cost_Oriented_Battery.name=Baterie orientovaná na cenu.name
+Crank_Shaft.name=Kliková hřídel.name
+Current_Oriented_Battery.name=Baterie orientovaná na proud.name
+DC-DC_Converter.name=DC-DC převodník.name
+Direct_Utility_Pole.name=Přímý sloup veřejného osvětlení.name
+Electrical_Furnace.name=Elektrická pec.name
+Experimental_Battery.name=Experimentální baterie.name
+Experimental_Transporter.name=Experimentální transportér.name
+Fabricator.name=Fabrikátor.name
+Fixed_Shaft.name=Pevná hřídel.name
+Flywheel.name=Setrvačník.name
+Fuel_Heat_Furnace.name=Palivová tepelná pec.name
+Gas_Turbine.name=Plynová turbína.name
+Generator.name=Generátor.name
+Grid_DC-DC_Converter.name=Síťový DC-DC převodník.name
+Grid_Switch.name=Vypínač sítě.name
+High_Power_Receiver_Antenna.name=Anténa vysokopříkonového přijímače.name
+High_Power_Transmitter_Antenna.name=Anténa vysokopříkonového vysílače.name
+Holiday_Candle.name=Svícen na svátky.name
+Joint.name=Spoj.name
+Joint_hub.name=Rozbočovač spojek.name
+Large_Gas_Turbine.name=Velká plynová turbína.name
+Large_Generator.name=Velký generátor.name
+Large_Rheostat.name=Velký reostat.name
+Large_Shaft_Motor.name=Velký hřídelový motor.name
+Large_Steam_Turbine.name=Velká parní turbína.name
+Legacy_DC-DC_Converter.name=Starší DC-DC převodník.name
+Life_Oriented_Battery.name=Baterie orientovaná na životnost.name
+Low_Power_Receiver_Antenna.name=Anténa nízkopříkonového přijímače.name
+Low_Power_Transmitter_Antenna.name=Anténa nízkopříkonového vysílače.name
+Medium_Power_Receiver_Antenna.name=Anténa středněpříkonového přijímače.name
+Medium_Power_Transmitter_Antenna.name=Anténa středněpříkonového vysílače.name
+Motorized_Floodlight.name=Motorizovaný světlomet.name
+Nixie_Tube.name=Nixiovka.name
+Old_800V_Arc_Furnace.name=Stará 800V oblouková pec.name
+Overhead_Lines.name=Nadzemní vedení.name
+Polarized_Shaft_Generator.name=Polarizovaný hřídelový generátor.name
+Polarized_Shaft_Motor.name=Polarizovaný hřídelový motor.name
+Power_capacitor.name=Výkonový kondenzátor.name
+Power_inductor.name=Výkonová cívka.name
+Radial_Motor.name=Radiální motor.name
+Rolling_Shaft_Machine.name=Válcovací hřídelový stroj.name
+Shaft_Motor.name=Hřídelový motor.name
+Single-use_Battery.name=Jednorázová baterie.name
+Small_Active_Thermal_Dissipator.name=Malý aktivní tepelný dissipátor.name
+Small_Passive_Thermal_Dissipator.name=Malý pasivní tepelný dissipátor.name
+Small_Rotating_Solar_Panel.name=Malý otočný solární panel.name
+Small_Solar_Panel.name=Malý solární panel.name
+Steam_Turbine.name=Parní turbína.name
+Stone_Heat_Furnace.name=Kamenná tepelná pec.name
+StreetLightWall.name=Nástěnné pouliční osvětlení.name
+String_Lights.name=Řetězová světla.name
+Tachometer.name=Tachometr.name
+Thermal_Heat_Exchanger.name=Tepelný výměník.name
+Transmission_Tower.name=Vysokonapěťová věž.name
+Utility_Pole.name=Sloup veřejného osvětlení.name
+Utility_Pole_w/DC-DC_Converter.name=Sloup veřejného osvětlení s DC-DC převodníkem.name
+Variable_DC-DC_Converter.name=Proměnný DC-DC převodník.name
+Voltage_Oriented_Battery.name=Baterie orientovaná na napětí.name
+Water_Turbine.name=Vodní turbína.name
+Wind_Turbine.name=Větrná turbína.name
+
+# src/main/kotlin/mods/eln/sixnode/AnalogChips.kt
+A_voltage-controlled_amplifier_(VCA)\nis_an_electronic_amplifier_that_varies\nits_gain_depending_on_the_control_voltage.=Napěťově řízený zesilovač (VCA)\nje elektronický zesilovač, který mění\nsvé zesílení v závislosti na řídicím napětí.
+A_voltage-controlled_oscillator_or_VCO_is\nan_electronic_oscillator_whose_oscillation\nfrequency_is_controlled_by_a_voltage_input.=Napěťově řízený oscilátor neboli VCO je\nelektronický oscilátor, jehož kmitočet\noscilace je řízen napěťovým vstupem.
+An_amplifier_increases_the_voltage\nof_an_input_signal_by_a_configurable\ngain_and_outputs_that_voltage.=Zesilovač zvyšuje napětí\nvstupního signálu o konfigurovatelné\nzesílení a toto napětí vydává.
+Cut-off_frequency_%1$_Hz=Mezní kmitočet %1$ Hz
+Gain=Zesílení
+Gain_for_input_§13=Zesílení pro vstup §13
+Gain_for_input_§22=Zesílení pro vstup §22
+Gain_for_input_§41=Zesílení pro vstup §41
+Gains=Zesílení
+Lowpass_filter_-_Passes_signals_with_a\nfrequency_lower_than_a_certain_cutoff_frequency\nand_attenuates_signals_with_frequencies_higher\nthan_the_cutoff_frequency.=Dolnopropustný filtr - Propouští signály s\nkmitočtem nižším než určitá mezní frekvence\na tlumí signály s kmitočty vyššími\nnež je mezní frekvence.
+Operational_Amplifier_-_DC_coupled\nhigh-gain_voltage_amplifier_with\ndifferential_input._Can_be_used_to\ncompare_voltages_or_as_configurable_amplifier.=Operační zesilovač - stejnosměrně vázaný\nnapěťový zesilovač s vysokým zesílením a\n diferenciálním vstupem. Lze použít k\nporovnávání napětí nebo jako konfigurovatelný zesilovač.
+Params=Parametry
+Proportional–integral–derivative_controller._A_PID\ncontroller_continuously_calculates_an_error_value_as\nthe_difference_between_a_desired_setpoint_and_a_measured\nprocess_variable_and_applies_a_correction_based_on\nproportional,_integral,_and_derivative_terms.=Proporcionálně-integračně-derivační regulátor. PID\nregulátor průběžně počítá chybovou hodnotu jako\nrozdíl mezi požadovanou hodnotou a naměřenou\nveličinou procesu a aplikuje korekci na základě\nproporcionální, integrační a derivační složky.
+Samples_the_voltage_of_a_varying_analog_signal_when\nthe_clock_input_changes_from_0_to_1_and_holds_its\noutput_voltage_at_a_constant_level_until_next_clock_pulse.\nYou_can_see_it_as_an_analog_D-Flipflop.=Vzorkuje napětí proměnlivého analogového signálu, když\nse vstup hodin změní z 0 na 1, a udržuje\nvýstupní napětí na konstantní úrovni až do dalšího hodinového pulzu.\nMůžete to chápat jako analogový D-klopný obvod.
+The_summing_unit_outputs_the_sum_of\nthe_three_weighted_inputs.The\ngain_for_each_input_can_be_configured.=Sčítač vydává součet\ntří vážených vstupů. Zesílení\npro každý vstup lze konfigurovat.
+
+# src/main/kotlin/mods/eln/sixnode/ConduitCableDescriptor.kt
+A_conduit_to_run_your_cables_through=Potrubí pro vedení vašich kabelů
+Contained_Cables=Obsažené kabely
+__*_Thermal_Sim_is_disabled_in_the_conduit=  * Tepelná simulace je v potrubí vypnuta
+
+# src/main/kotlin/mods/eln/sixnode/CurrentSourceSix.kt
+Acts_as_an_ideal_current_source,_with_a_small_inline_resistance=Funguje jako ideální zdroj proudu s malým sériovým odporem
+Current_sourced=Dodávaný proud
+Provides_an_ideal_current_source\nwithout_energy_or_power_limitation.=Poskytuje ideální zdroj proudu\nbez omezení energie nebo výkonu.
+
+# src/main/kotlin/mods/eln/sixnode/ElectricalFuse.kt
+Protects_electrical_components.\nFuse_melts_if_current_exceeds_the\nfuse_limit=Chrání elektrické součástky.\nPojistka se roztaví, pokud proud překročí\nlimit pojistky
+
+# src/main/kotlin/mods/eln/sixnode/ElectricalVuMeter.kt
+Displays_a_color_based_on_the_value_of_a_signal=Zobrazuje barvu na základě hodnoty signálu
+Displays_the_value_of_a_signal.=Zobrazuje hodnotu signálu.
+
+# src/main/kotlin/mods/eln/sixnode/EmergencyLamp.kt
+As_long_as_power_is_provided,_the_internal_battery=Pokud je dodáván proud, interní baterie
+Batteries_empty=Baterie vybité
+Battery_capacity\:=Kapacita baterie:
+Charging...=Nabíjení...
+Fully_charged=Plně nabito
+Nominal_voltage\:=Jmenovité napětí:
+is_charged_and_the_lamp_is_off._On_a_power_failure,=se nabíjí a lampa je vypnutá. Při výpadku napájení,
+the_lamp_turns_on_and_runs_on_batteries.=lampa se zapne a běží na bateriích.
+
+# src/main/kotlin/mods/eln/sixnode/LogicGate.kt
+A_Programmable_Array_Logic_(PAL)_is_a_programmable\nlogic_device_semiconductors_used_to__implement_any_logic\nfunction_in_only_one_digital_circuit._The_function_is\nstateless,_which_means_that_no_intermediate_state_is_saved.=Programovatelná pole logiky (PAL) je programovatelné\npolovodičové logické zařízení sloužící k implementaci jakékoliv\nlogické funkce v jednom digitálním obvodu. Funkce je\nbezstavová, což znamená, že se neukládá žádný mezistav.
+If_the_input_J_is_1_(high)_and_K_is_0_(low)\nduring_a_clock_pulse,_the_output_becomes_1_(high).\nIf_J_is_0_(low)_and_K_is_1_(high)_during_the_pulse,\nthe_output_becomes_0_(low)._If_both_inputs_are_0_(low)\nduring_the_clock_pulse,_the_state_is_maintained._If_both\ninputs_are_1_(high)_the_input_is_toggled_if_a_rising_edge\nwas_detected_at_the_clock_input.=Pokud je vstup J 1 (vysoký) a K je 0 (nízký)\nběhem hodinového pulzu, výstup se stane 1 (vysoký).\nPokud je J 0 (nízký) a K je 1 (vysoký) během pulzu,\nvýstup se stane 0 (nízký). Pokud jsou oba vstupy 0 (nízké)\nběhem hodinového pulzu, stav je zachován. Pokud jsou oba\nvstupy 1 (vysoké), vstup se přepne, pokud byla detekována\nnáběžná hrana na hodinovém vstupu.
+If_the_input_voltage_is_lower_than_10V,_the\noutput_is_0_(low),_if_the_input_is_bigger_or\nequal_to_30V,_the_output_will_be_1_(high)._For\nall_voltages_in_between,_the_output_does_not_change.=Pokud je vstupní napětí nižší než 10V,\nvýstup je 0 (nízký), pokud je vstup větší nebo\nroven 30V, výstup bude 1 (vysoký). Pro všechna\nnapětí mezi tím se výstup nemění.
+Implements_an_exclusive_or.\nAn_output_of_1_(high)_results_if_one_or\nall_three_inputs_to_the_gate_are_1_(high).=Implementuje exkluzivní NEBO.\nVýstup 1 (vysoký) nastává, pokud jeden nebo\nvšechny tři vstupy hradla jsou 1 (vysoké).
+Implements_logical_conjunction.\nA_1_(high)_output_results_only_if_all_of\nthe_three_inputs_to_the_AND_gate_are_1_(high).=Implementuje logickou konjunkci.\nVýstup 1 (vysoký) nastává pouze, když všechny\ntři vstupy hradla AND jsou 1 (vysoké).
+Implements_logical_disjunction.\nA_1_(high)_output_results_if_at_least\none_input_to_the_gate_is_1_(high).=Implementuje logickou disjunkci.\nVýstup 1 (vysoký) nastává, pokud alespoň\njeden vstup hradla je 1 (vysoký).
+Inverts_the_input_signal.\nOutputs_a_voltage_representing_the\nopposite_logic-level_to_its_input.=Invertuje vstupní signál.\nVydává napětí představující\nopačnou logickou úroveň vůči vstupu.
+Its_output_is_complement_(inverted)\nto_that_of_the_AND_gate.=Jeho výstup je komplementární (invertovaný)\nk hradlu AND.
+Its_output_is_complement_(inverted)\nto_that_of_the_OR_gate.=Jeho výstup je komplementární (invertovaný)\nk hradlu OR.
+Its_output_is_complement_(inverted)\nto_that_of_the_XOR_gate.=Jeho výstup je komplementární (invertovaný)\nk hradlu XOR.
+Outputs_a_rectangular_signal_which's_frequency\ndepends_to_the_input_voltage._The_higher_the\ninput_voltage_-_the_higher_the_frequency.=Vydává obdélníkový signál, jehož kmitočet\nzávisí na vstupním napětí. Čím vyšší\nvstupní napětí, tím vyšší kmitočet.
+The_D_flip-flop_captures_the_value\nof_the_D-input_at_a_rising_edge\nportion_of_the_clock_cycle.=D-klopný obvod zachycuje hodnotu\nD-vstupu na náběžné hraně\nhodinového cyklu.
+UNDEF=NDEF
+
+# src/main/kotlin/mods/eln/sixnode/PortableNaN.kt
+A_debugging_feature_that_throws_NaN_(Not_a_Number)_anywhere_it_can_in_the_simulator_to_find_bugs=Ladicí funkce, která vkládá NaN (Not a Number) kdekoli je to možné v simulátoru pro hledání chyb
+Current\:_No=Proud: Ne
+Serial_Resistance\:_OK_Ω=Sériový odpor: OK Ω
+Voltage\:_Yes=Napětí: Ano
+
+# src/main/kotlin/mods/eln/sixnode/PowerCapacitor.kt
+(Increases_maximum_voltage)=(Zvyšuje maximální napětí)
+Capacity=Kapacita
+Provides_capacitance._Use_with_dielectrics_and_redstone=Poskytuje kapacitu. Použijte s dielektriky a redstonem
+
+# src/main/kotlin/mods/eln/sixnode/PowerInductorSix.kt
+Provides_inductance._Use_with_iron_cores_and_bare_copper_cables=Poskytuje indukčnost. Použijte se železnými jádry a holými měděnými kabely
+
+# src/main/kotlin/mods/eln/sixnode/PowerSinkSix.kt
+Provides_an_ideal_power_sink\nwithout_energy_or_power_limitation.=Poskytuje ideální spotřebič výkonu\nbez omezení energie nebo výkonu.
+
+# src/main/kotlin/mods/eln/sixnode/PowerSourceSix.kt
+Provides_an_ideal_power_source\nwithout_energy_or_power_limitation.=Poskytuje ideální zdroj výkonu\nbez omezení energie nebo výkonu.
+
+# src/main/kotlin/mods/eln/sixnode/Scanner.kt
+-_For_inventories,_outputs_either_total_fill_or_fraction_of_slots_with_any_items.=- Pro inventáře vydává buď celkové zaplnění nebo podíl slotů s předměty.
+-_For_tanks,_outputs_fill_percentage.=- Pro nádrže vydává procento zaplnění.
+Otherwise_behaves_as_a_vanilla_comparator.=Jinak se chová jako vanilla komparátor.
+Right-click_to_change_mode.=Klikněte pravým tlačítkem pro změnu režimu.
+Scans_blocks_to_produce_signals.=Skenuje bloky pro vytváření signálů.
+
+# src/main/kotlin/mods/eln/sixnode/VariableInductorSix.kt
+Connect_a_signal_wire_to_modulate_inductance=Připojte signálový drát pro modulaci indukčnosti
+Inductance_range\:_%1$-%2$=Rozsah indukčnosti: %1$-%2$
+Signal_controlled_inductor=Signálem řízená indukčnost
+
+# src/main/kotlin/mods/eln/sixnode/currentcable/CurrentCable.kt
+__*_Wire_current_limits_are_arbitrary_values,_added_as_a_gameplay_mechanic=  * Proudové limity kabelů jsou libovolné hodnoty přidané jako herní mechanika
+__*_Wire_voltage_limits_are_arbitrary_values,_picked_to_within_reasonable_simulator_error=  * Napěťové limity kabelů jsou libovolné hodnoty vybrané v rozumné toleranci simulátoru
+
+# src/main/kotlin/mods/eln/sixnode/electricalhumiditysensor/ElectricalHumiditySensorDescriptor.kt
+0%%_RH\:_%1$V=0%% RH: %1$V
+100%%_RH\:_%1$V=100%% RH: %1$V
+Humidity_follows_day/night\nand_rises_during_rain_or_snow.=Vlhkost se řídí dnem/nocí\na stoupá během deště nebo sněžení.
+Provides_an_electrical_signal\nfor_biome_relative_humidity.=Poskytuje elektrický signál\npro relativní vlhkost biomu.
+
+# src/main/kotlin/mods/eln/sixnode/electricalhumiditysensor/ElectricalHumiditySensorElement.kt
+Ambient_temperature=Okolní teplota
+Precipitation=Srážky
+
+# src/main/kotlin/mods/eln/sixnode/lampsocket/LampSlot.kt
+Lamp_slot=Slot pro žárovku
+
+# src/main/kotlin/mods/eln/sixnode/mqttmeter/MqttEnergyMeterElement.kt
+Elapsed_time=Uplynulý čas
+Energy_(kJ)=Energie (kJ)
+Meter_ID=ID měřiče
+
+# src/main/kotlin/mods/eln/sixnode/mqttmeter/MqttEnergyMeterGui.kt
+Meter_ID_(Read_Only)=ID měřiče (jen pro čtení)
+Meter_Name=Název měřiče
+Turn_off=Vypnout
+Turn_on=Zapnout
+
+# src/main/kotlin/mods/eln/sixnode/mqttsignal/MqttSignalControllerElement.kt
+Controller_ID=ID ovladače
+
+# src/main/kotlin/mods/eln/sixnode/mqttsignal/MqttSignalControllerGui.kt
+Controller_ID_(Read_Only)=ID ovladače (jen pro čtení)
+Disabled_-_ignored_by_MQTT=Zakázáno - ignorováno MQTT
+Read_-_publish_voltage_only=Čtení - publikuje pouze napětí
+Signal_Controller_Name=Název signálového ovladače
+Write_-_driven_by_MQTT=Zápis - řízeno MQTT
+
+# src/main/kotlin/mods/eln/sixnode/powersocket/PowerSocketDescriptor.kt
+Homes_have_power_sockets._These_are_not_them.=Domy mají napájecí zásuvky. Tyto to nejsou.
+Supplies_any_device\nplugged_in_with_energy.=Dodává energii jakémukoli\npřipojenému zařízení.
+
+# src/main/kotlin/mods/eln/sixnode/powersocket/PowerSocketGui.kt
+Specify_the_power_channel=Zadejte napájecí kanál
+
+# src/main/kotlin/mods/eln/sixnode/thermometersensor/ThermometerSensorDescriptor.kt
+0%%_output\:_%1$V=0%% výstup: %1$V
+100%%_output\:_%1$V=100%% výstup: %1$V
+Default_range\:_-40C_to_50C=Výchozí rozsah: -40C do 50C
+Provides_an_electrical_signal\nfor_biome_temperature.=Poskytuje elektrický signál\npro teplotu biomu.
+Set_min/max_values_in_GUI\nto_map_temperature_to_output.=Nastavte min/max hodnoty v GUI\npro mapování teploty na výstup.
+
+# src/main/kotlin/mods/eln/sixnode/thermometersensor/ThermometerSensorElement.kt
+Biome_temperature=Teplota biomu
+
+# src/main/kotlin/mods/eln/transparentnode/DcDc.kt
+This_DC/DC_has_unrealistic_capacitance_effects_and_can_sink/source_power_that_violates_Newton's_laws=Tento DC/DC má nerealistické kapacitní efekty a může přijímat/dodávat výkon porušující Newtonovy zákony
+
+# src/main/kotlin/mods/eln/transparentnode/Fabricator.kt
+Nominal_Ohms\:_%1$=Jmenovité Ohmy: %1$
+Operation=Operace
+The_Fabricator_creates_chips\nfrom_silicon_and_copper_plates=Fabricator vytváří čipy\nz křemíku a měděných plátů
+
+# src/main/kotlin/mods/eln/transparentnode/FuelGenerator.kt
+Fuel_level=Hladina paliva
+Nominal_power\:_%1$_W=Jmenovitý výkon: %1$ W
+Nominal_voltage\:_%1$_V=Jmenovité napětí: %1$ V
+Produces_electricity_using_gasoline.=Vyrábí elektřinu pomocí benzínu.
+
+# src/main/kotlin/mods/eln/transparentnode/FuelHeatFurnace.kt
+Actual\:_=Actual:
+Analog_regulator_slot=Slot analogového regulátoru
+Control_value_at_=Řídicí hodnota při
+Fuel_burner_slot=Slot palivového hořáku
+Furnace_is_off=Pec je vypnutá
+Furnace_is_on=Pec je zapnutá
+Heat_Power\:_=Heat Power:
+Set_point\:_=Set point:
+
+# src/main/kotlin/mods/eln/transparentnode/LargeRheostat.kt
+Control_resistance_with_signal=Řízení odporu signálem
+Dissapates_~4kW_of_heat_passively=Pasivně vyzařuje ~4kW tepla
+Nom._Resistance\:_%1$=Jmenovitý odpor: %1$
+Power_loss=Ztráta výkonu
+Set_resistance_with_coal_dust=Nastavte odpor uhelným prachem
+__*_Resistance_is_not_impacted_by_temperature=  * Odpor není ovlivněn teplotou
+__*_Signal_input_doesn't_require_power=  * Signálový vstup nevyžaduje napájení
+
+# src/main/kotlin/mods/eln/transparentnode/NixieTube.kt
+Blank=Prázdné
+Digit=Číslice
+Displays_a_single_glowing_digit.=Zobrazuje jednu svítící číslici.
+Dots=Tečky
+Nixie_tube_has_been_textured_realistically=Nixie tube byla texturována realisticky
+Signal_input_doesn't_require_power,_and_interfaces_are_tailored_to_gameplay=Signálový vstup nevyžaduje napájení a rozhraní jsou přizpůsobena hraní
+
+# src/main/kotlin/mods/eln/transparentnode/ThermalHeatExchanger.kt
+Ejects_out_ic2\:coolant=Vypouští ic2:coolant
+Generates_heat_when_supplied_with_ic2\:hotcoolant=Generuje teplo při dodání ic2:hotcoolant
+input_mB/t=vstup mB/t
+input_tank_level=úroveň vstupní nádrže
+joules_per_tick=jouly za tick
+output_mB/t=výstup mB/t
+output_tank_level=úroveň výstupní nádrže
+thermal_power=tepelný výkon
+
+# src/main/kotlin/mods/eln/transparentnode/VariableDcDc.kt
+4_Copper_Cables_Required=4 měděné kabely vyžadovány
+Control_Voltage=Řídicí napětí
+The_output_voltage_is_controlled\nfrom_a_signal_input=Výstupní napětí je řízeno\nze signálového vstupu
+This_variable_DC/DC_has_unrealistic_capacitance_effects_and_can_sink/source_power_that_violates_Newton's_laws=Tento proměnný DC/DC má nerealistické kapacitní efekty a může přijímat/dodávat výkon porušující Newtonovy zákony
+
+# src/main/kotlin/mods/eln/transparentnode/battery/BatteryDescriptor.kt
+Actual_charge\:_=Actual charge:
+Batteries_are_based_in_realistic_battery_designs_that_someone_might_implement_realistically\:=Baterie jsou založeny na realistických návrzích, které by někdo mohl skutečně implementovat:
+Battery_could_be_realistic_in_the_future=Baterie by mohla být realistická v budoucnosti
+Energy_capacity\:_=Energy capacity:
+Internal_resistance\:_=Internal resistance:
+Life\:_=Life:
+Nominal_power\:_=Nominal power:
+Nominal_voltage\:_=Nominal voltage:
+__*_Batteries_have_internal_resistance=  * Baterie mají vnitřní odpor
+__*_Current_oriented_uses_two_smaller_batteries_in_parallel_to_increase_current_capability=  * Proudově orientované používají dvě menší baterie paralelně pro zvýšení proudové kapacity
+__*_Not_currently_simulating_any_particular_chemistry_of_battery=  * Momentálně nesimuluje žádnou konkrétní chemii baterie
+__*_Single_use_batteries_emulate_a_voltaic_pile=  * Jednorázové baterie napodobují voltův článek
+__*_Voltage_oriented_uses_two_smaller_batteries_in_series_to_increase_voltage=  * Napěťově orientované používají dvě menší baterie sériově pro zvýšení napětí
+_charged_at_= nabito na
+
+# src/main/kotlin/mods/eln/transparentnode/battery/BatteryElement.kt
+Life=Životnost
+
+# src/main/kotlin/mods/eln/transparentnode/battery/BatteryGuiDraw.kt
+Charged=Nabito
+Discharge=Vybíjení
+Energy\:=Energie:
+Energy\:_=Energie:
+Life\:=Životnost:
+No_charge=Bez nabití
+Power_in\:=Příkon:
+Power_out\:=Výkon:
+
+# src/main/kotlin/mods/eln/transparentnode/festive/FestiveElement.kt
+It_probably_works_if_you_apply_~200v_to_the_xmas_wireless_channel=Pravděpodobně to funguje, pokud připojíte ~200V na vánoční bezdrátový kanál
+Not_as_warm_as_it_could_be=Není tak teplé, jak by mohlo být
+
+# src/main/kotlin/mods/eln/transparentnode/floodlight/FloodlightDescriptor.kt
+A_powerful_lamp_that_specializes_in\nthe_illumination_of_large_spaces.=Výkonná lampa specializující se na\nosvětlování velkých prostor.
+
+# src/main/kotlin/mods/eln/transparentnode/floodlight/FloodlightElement.kt
+Bulb_1=Žárovka 1
+Bulb_1_Life_Left=Žárovka 1 zbývající životnost
+Bulb_2=Žárovka 2
+Bulb_2_Life_Left=Žárovka 2 zbývající životnost
+Power_Consumption=Spotřeba výkonu
+_Hours= Hodiny
