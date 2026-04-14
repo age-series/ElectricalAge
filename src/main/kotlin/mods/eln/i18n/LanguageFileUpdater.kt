@@ -67,10 +67,10 @@ private fun parseLangFile(file: File): Map<String, String> {
         while (line != null) {
             val trimmed = line.trim()
             if (trimmed.isNotEmpty() && !trimmed.startsWith("#")) {
-                val separatorIndex = findUnescapedEquals(trimmed)
+                val separatorIndex = findUnescapedEquals(line)
                 if (separatorIndex > 0) {
-                    val key = I18N.resolveUnicodeEscapes(trimmed.substring(0, separatorIndex))
-                    val value = I18N.resolveUnicodeEscapes(trimmed.substring(separatorIndex + 1))
+                    val key = I18N.resolveUnicodeEscapes(line.substring(0, separatorIndex))
+                    val value = I18N.resolveUnicodeEscapes(line.substring(separatorIndex + 1))
                     result[key] = value
                 }
             }
