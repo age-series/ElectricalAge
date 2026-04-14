@@ -37,6 +37,7 @@ import mods.eln.ghost.GhostManager;
 import mods.eln.ghost.GhostManagerNbt;
 import mods.eln.item.*;
 import mods.eln.item.electricalinterface.ItemEnergyInventoryProcess;
+import mods.eln.config.OreScannerConfigLoader;
 import mods.eln.item.electricalitem.OreColorMapping;
 import mods.eln.item.electricalitem.OreScannerConfigElement;
 import mods.eln.misc.*;
@@ -604,43 +605,17 @@ public class Eln {
     public void regenOreScannerFactors() {
         oreScannerConfig.clear();
 
-        if (config.getBooleanOrElse("tools.xrayScanner.addOtherModOreToScan", true)) {
-            for (String name : OreDictionary.getOreNames()) {
-                if (name == null) continue;
-                if (name.startsWith("ore")) {
-                    for (ItemStack stack : OreDictionary.getOres(name)) {
-                        int damage = stack.getItemDamage();
-                        int meta = (damage == OreDictionary.WILDCARD_VALUE) ? 0 : stack.getItem().getMetadata(damage);
-                        int id = Utils.getItemId(stack) + 4096 * meta;
-                        boolean find = false;
-                        for (OreScannerConfigElement c : oreScannerConfig) {
-                            if (c.getBlockKey() == id) {
-                                find = true;
-                                break;
-                            }
-                        }
+        // Load from config (block references + OreDictionary names)
+        oreScannerConfig.addAll(OreScannerConfigLoader.INSTANCE.loadOreScannerConfig());
 
-                        if (!find) {
-                            Utils.println(id + " added to xRay (other mod)");
-                            oreScannerConfig.add(new OreScannerConfigElement(id, 0.15f));
-                        }
-                    }
-                }
-            }
+        // Auto-discover from OreDictionary (if enabled) — only adds entries not already in config
+        java.util.Map<Integer, Float> existingKeys = new java.util.LinkedHashMap<>();
+        for (OreScannerConfigElement e : oreScannerConfig) {
+            existingKeys.put(e.getBlockKey(), e.getFactor());
         }
+        oreScannerConfig.addAll(OreScannerConfigLoader.INSTANCE.loadOreDictionaryAutoDiscovery(existingKeys));
 
-        oreScannerConfig.add(new OreScannerConfigElement(Block.getIdFromBlock(Blocks.coal_ore), 5 / 100f));
-        oreScannerConfig.add(new OreScannerConfigElement(Block.getIdFromBlock(Blocks.iron_ore), 15 / 100f));
-        oreScannerConfig.add(new OreScannerConfigElement(Block.getIdFromBlock(Blocks.gold_ore), 40 / 100f));
-        oreScannerConfig.add(new OreScannerConfigElement(Block.getIdFromBlock(Blocks.lapis_ore), 40 / 100f));
-        oreScannerConfig.add(new OreScannerConfigElement(Block.getIdFromBlock(Blocks.redstone_ore), 40 / 100f));
-        oreScannerConfig.add(new OreScannerConfigElement(Block.getIdFromBlock(Blocks.diamond_ore), 100 / 100f));
-        oreScannerConfig.add(new OreScannerConfigElement(Block.getIdFromBlock(Blocks.emerald_ore), 40 / 100f));
-
-        oreScannerConfig.add(new OreScannerConfigElement(Block.getIdFromBlock(oreBlock) + (1 << 12), 10 / 100f));
-        oreScannerConfig.add(new OreScannerConfigElement(Block.getIdFromBlock(oreBlock) + (4 << 12), 20 / 100f));
-        oreScannerConfig.add(new OreScannerConfigElement(Block.getIdFromBlock(oreBlock) + (5 << 12), 20 / 100f));
-        oreScannerConfig.add(new OreScannerConfigElement(Block.getIdFromBlock(oreBlock) + (6 << 12), 20 / 100f));
+        // Build color mapping AFTER list is fully populated
         OreColorMapping.INSTANCE.updateColorMapping();
     }
 
