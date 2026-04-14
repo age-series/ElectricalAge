@@ -32,20 +32,21 @@ class LampSocketGui(player: EntityPlayer, val render: LampSocketRender) :
         super.initGui()
 
         buttonGrounded = newGuiButton(7, 56, 54, "")
-        buttonGrounded.visible = false // TODO: Whenever grounding is actually implemented, remove this.
+        //buttonGrounded.visible = false // TODO: Whenever grounding is actually implemented, remove this.
 
-        if (render.descriptor.enableProjectionRotation) {
-            buttonPowerSource = newGuiButton(7, 7, 144, "")
-            textboxLampSupplyChannel = newGuiTextField(7+1, 35+1, 144-2)
-        } else {
+        //if (render.descriptor.enableProjectionRotation) {
+        //    buttonPowerSource = newGuiButton(7, 7, 144, "")
+        //    textboxLampSupplyChannel = newGuiTextField(7+1, 35+1, 144-2)
+        //} else {
             buttonPowerSource = newGuiButton(16, 7, 144, "")
             textboxLampSupplyChannel = newGuiTextField(16+1, 35+1, 144-2)
-        }
+        //}
 
         textboxLampSupplyChannel.setComment(0, I18N.tr("Specify the lamp supply channel"))
         textboxLampSupplyChannel.setText(render.lampSupplyChannel)
 
-        trackbarRotationAngle = newGuiVerticalTrackBar(156, 7+2, 12, 68-4)
+        //trackbarRotationAngle = newGuiVerticalTrackBar(156, 7+2, 12, 68-4)
+        trackbarRotationAngle = newGuiHorizontalTrackBar(115,59,54, 14)
         trackbarRotationAngle.setRange(MIN_ROTATION_ANGLE.toFloat(), MAX_ROTATION_ANGLE.toFloat())
         trackbarRotationAngle.setStepIdMax(180)
         trackbarRotationAngle.value = render.projectionRotationAngle.toFloat()
@@ -66,14 +67,11 @@ class LampSocketGui(player: EntityPlayer, val render: LampSocketRender) :
             val lampStack = render.inventory.getStackInSlot(LampSocketContainer.LAMP_SLOT_ID)
             val cableStack = render.inventory.getStackInSlot(LampSocketContainer.CABLE_SLOT_ID)
 
-            if (cableStack == null) {
-                textboxLampSupplyChannel.setComment(1, "§4" + I18N.tr("Cable slot empty"))
-            } else if (lampStack == null) {
-                textboxLampSupplyChannel.setComment(1, "§4" + I18N.tr("Lamp slot empty"))
-            } else if (render.activeLampSupplyConnection) {
-                textboxLampSupplyChannel.setComment(1, "§2" + I18N.tr("Connected to ${render.lampSupplyChannel}"))
-            } else {
-                textboxLampSupplyChannel.setComment(1, "§4" + I18N.tr("${render.lampSupplyChannel} is not in range!"))
+            when {
+                cableStack == null -> textboxLampSupplyChannel.setComment(1, "§4" + I18N.tr("Cable slot empty"))
+                lampStack == null -> textboxLampSupplyChannel.setComment(1, "§4" + I18N.tr("Lamp slot empty"))
+                render.activeLampSupplyConnection -> textboxLampSupplyChannel.setComment(1, "§2" + I18N.tr("Connected to ${render.lampSupplyChannel}"))
+                else -> textboxLampSupplyChannel.setComment(1, "§4" + I18N.tr("${render.lampSupplyChannel} is not in range!"))
             }
         } else {
             textboxLampSupplyChannel.visible = false
