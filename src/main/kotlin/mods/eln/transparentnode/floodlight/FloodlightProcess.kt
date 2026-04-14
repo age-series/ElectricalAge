@@ -43,18 +43,22 @@ class FloodlightProcess(val element: FloodlightElement) : IProcess {
             if (lampStack != null) {
                 val lampDescriptor = getItemObject(lampStack) as LampDescriptor
                 val lampData = lampDescriptor.lampData
-                val lampTechnology = lampData.technology
                 val lampVoltage = abs(element.electricalLoad.voltage)
 
-                val num: Double = lampVoltage - (lampData.nominalU * lampTechnology.minimalUFactor)
-                val den: Double = lampData.nominalU - (lampData.nominalU * lampTechnology.minimalUFactor)
+                if (lampVoltage > (lampData.nominalU * lampData.technology.minimalUFactor)) {
+                    val num: Double = lampVoltage - (lampData.nominalU * lampData.technology.minimalUFactor)
+                    val den: Double = lampData.nominalU - (lampData.nominalU * lampData.technology.minimalUFactor)
 
-                lampLightValues.add(((num / den) * lampTechnology.nominalLightValue).toInt())
+                    lampLightValues.add(((num / den) * lampData.nominalLightValue).toInt())
 
-                if (lampLightValues[idx] < BoilerplateLampData.MIN_LIGHT_VALUE) lampLightValues[idx] = BoilerplateLampData.MIN_LIGHT_VALUE
-                else if (lampLightValues[idx] > BoilerplateLampData.MAX_LIGHT_VALUE) lampLightValues[idx] = BoilerplateLampData.MAX_LIGHT_VALUE
+                    if (lampLightValues[idx] < BoilerplateLampData.MIN_LIGHT_VALUE) lampLightValues[idx] = BoilerplateLampData.MIN_LIGHT_VALUE
+                    else if (lampLightValues[idx] > BoilerplateLampData.MAX_LIGHT_VALUE) lampLightValues[idx] = BoilerplateLampData.MAX_LIGHT_VALUE
 
-                lampLightRanges.add(BASE_THROW_DISTANCE)
+                    lampLightRanges.add(BASE_THROW_DISTANCE)
+                } else {
+                    lampLightValues.add(BoilerplateLampData.MIN_LIGHT_VALUE)
+                    lampLightRanges.add(0)
+                }
 
                 /* Only decrease the life of a bulb once a second. This reduces the update rate at which the NBT is changed
                  * to once per second from once per tick, reducing the probability of an NBT mismatch bug occurring when
@@ -114,8 +118,7 @@ class FloodlightProcess(val element: FloodlightElement) : IProcess {
             for (idx in beamCount downTo -beamCount) {
                 fractionTable.add(idx.toDouble() / beamCount.toDouble())
             }
-        }
-        else fractionTable.add(0.0)
+        } else fractionTable.add(0.0)
 
         for (idx in fractionTable.indices) {
             val offsetAngleFraction = offsetAngle * fractionTable[idx]

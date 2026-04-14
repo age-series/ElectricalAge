@@ -3,35 +3,32 @@ package mods.eln.item.lampitem
 import mods.eln.Eln
 import kotlin.math.abs
 import kotlin.math.pow
-import kotlin.math.sqrt
 
 object LampLists {
     val lampTechnologyList = mutableListOf<BoilerplateLampData>()
     val registeredLampList = mutableListOf<SpecificLampData>()
 
     init {
-        lampTechnologyList.add(BoilerplateLampData("incandescent", 16.0, false, 15, 1.0, 0.5, 0.0, 1.0))
-        lampTechnologyList.add(BoilerplateLampData("carbon", 6.0, false, 15, 1.0, 0.5, 0.0, 1.0))
-        lampTechnologyList.add(BoilerplateLampData("fluorescent", 64.0, false, 15, 1.0, 0.75, 4.0, 0.5))
-        lampTechnologyList.add(BoilerplateLampData("farming", 16.0, false, 15, 2.0, 0.5, 0.0, 1.5))
-        lampTechnologyList.add(BoilerplateLampData("led", 512.0, false, 15, 1.0, 0.75, 0.0, 0.5))
-        lampTechnologyList.add(BoilerplateLampData("halogen", 128.0, false, 15, 1.0, 0.5, 0.0, 2.0))
+        lampTechnologyList.add(BoilerplateLampData("incandescent", 24.0, false, 1.0, 0.5, 0.0, 1.0))
+        lampTechnologyList.add(BoilerplateLampData("carbon", 12.0, false, 1.0, 0.5, 0.0, 0.75))
+        lampTechnologyList.add(BoilerplateLampData("fluorescent", 168.0, false, 2.0, 0.75, 4.0, 0.5))
+        lampTechnologyList.add(BoilerplateLampData("farming", 48.0, false, 4.0, 0.5, 0.0, 2.0))
+        lampTechnologyList.add(BoilerplateLampData("led", 672.0, false, 2.0, 0.75, 0.0, 0.25))
+        lampTechnologyList.add(BoilerplateLampData("halogen", 96.0, false, 1.0, 0.5, 0.0, 3.0))
     }
 
     fun getLampData(lampType: String): BoilerplateLampData? {
         for (lampData in lampTechnologyList) {
             if (lampData.lampType == lampType) return lampData
         }
-
         return null
     }
 }
 
 data class BoilerplateLampData(
     val lampType: String,
-    var nominalLifeInHours: Double,
+    var nominalLifeInHours: Double, // IRL hours (1 hour = 3600 seconds = 72,000 ticks)
     var infiniteLifeEnabled: Boolean,
-    val nominalLightValue: Int,
     val cropGrowthRateFactor: Double,
     val minimalUFactor: Double,
     val timeUntilStableInSeconds: Double,
@@ -39,11 +36,17 @@ data class BoilerplateLampData(
 ) {
 
     companion object {
-        const val MIN_LIGHT_VALUE: Int = 0
-        const val MAX_LIGHT_VALUE: Int = 15
-        const val LAMP_BASE_POWER: Int = 60
-        const val MIN_LAMP_LIFE_IN_HOURS: Double = 0.016666666666666666 // 1 minute IRL
-        const val MAX_LAMP_LIFE_IN_HOURS: Double = 8760.0 // 1 year IRL
+        const val MIN_LIGHT_VALUE = 0
+        const val MAX_LIGHT_VALUE = 15
+
+        const val T0_NOMINAL_LIGHT_VALUE = 12 // Small 50V
+        const val T1_NOMINAL_LIGHT_VALUE = 15 // 50V
+        const val T2_NOMINAL_LIGHT_VALUE = 15 // 200V
+
+        const val LAMP_BASE_POWER = 60
+
+        const val MIN_LAMP_LIFE_IN_HOURS = 1.0
+        const val MAX_LAMP_LIFE_IN_HOURS = 8760.0 // 1 year (365 days) IRL
     }
 
     private val nominalLifePath: String
@@ -66,9 +69,19 @@ data class BoilerplateLampData(
 
 }
 
+/**
+ * The init{} block in the LampDescriptor class modifies some of these values for "small" bulb types.
+ * After the voltage tiering update, this behavior should be removed from there and implemented here,
+ * assuming "small" bulbs are given their own voltage tier.
+ */
 data class SpecificLampData(
     val technology: BoilerplateLampData,
     val nominalU: Double,
-    var nominalP: Double = BoilerplateLampData.LAMP_BASE_POWER * technology.basePowerMultiplier * sqrt(nominalU / Eln.LVU),
-    val resistance: Double = nominalU.pow(2) / nominalP
+    var nominalP: Double = BoilerplateLampData.LAMP_BASE_POWER * technology.basePowerMultiplier,
+    var resistance: Double = nominalU.pow(2) / nominalP,
+    var nominalLightValue: Int = when (nominalU) {
+        Eln.LVU -> BoilerplateLampData.T1_NOMINAL_LIGHT_VALUE
+        Eln.MVU -> BoilerplateLampData.T2_NOMINAL_LIGHT_VALUE
+        else -> BoilerplateLampData.MAX_LIGHT_VALUE
+    }
 )

@@ -7,6 +7,7 @@ import mods.eln.misc.Coordinate
 import mods.eln.misc.Utils
 import mods.eln.sim.IProcess
 import mods.eln.sixnode.lampsupply.LampSupplyElement
+import net.minecraft.item.ItemStack
 import net.minecraft.util.Vec3
 import java.io.ByteArrayOutputStream
 import java.io.DataOutputStream
@@ -21,6 +22,9 @@ class LampSocketProcess(var element: LampSocketElement) : IProcess {
     var cachedBestChannelHandle: Pair<Double, LampSupplyElement.PowerSupplyChannelHandle>? = null
     var stableLightProbability = 0.0
     var fastLightValue = 0
+
+    private var lampInInventory = false
+    private var cableInInventory = false
 
     override fun process(time: Double) {
         val lampStack = element.inventory.getStackInSlot(LampSocketContainer.LAMP_SLOT_ID)
@@ -48,19 +52,18 @@ class LampSocketProcess(var element: LampSocketElement) : IProcess {
             }
 
             val lampData = lampDescriptor.lampData
-            val lampTechnology = lampData.technology
             val lampVoltage = abs(element.lampResistor.voltage)
 
-            if (lampVoltage > (lampData.nominalU * lampTechnology.minimalUFactor)) {
-                val num: Double = lampVoltage - (lampData.nominalU * lampTechnology.minimalUFactor)
-                val den: Double = lampData.nominalU - (lampData.nominalU * lampTechnology.minimalUFactor)
+            if (lampVoltage > (lampData.nominalU * lampData.technology.minimalUFactor)) {
+                val num: Double = lampVoltage - (lampData.nominalU * lampData.technology.minimalUFactor)
+                val den: Double = lampData.nominalU - (lampData.nominalU * lampData.technology.minimalUFactor)
 
-                newLightValue = ((num / den) * lampTechnology.nominalLightValue).toInt()
+                newLightValue = ((num / den) * lampData.nominalLightValue).toInt()
 
                 // This code makes the fluorescent lights blink, and the other lights are just "stable"
-                if (lampTechnology.lampType == "fluorescent") {
+                if (lampData.technology.lampType == "fluorescent") {
                     if (newLightValue >= LampSocketRender.MIN_LIGHT_ON_VALUE && stableLightProbability <= 1.0) {
-                        stableLightProbability += (lampVoltage / lampData.nominalU) * (time / lampTechnology.timeUntilStableInSeconds)
+                        stableLightProbability += (lampVoltage / lampData.nominalU) * (time / lampData.technology.timeUntilStableInSeconds)
                         if (stableLightProbability < Math.random()) newLightValue = BoilerplateLampData.MIN_LIGHT_VALUE
                         if (stableLightProbability > 1.0) stableLightProbability = 1.0
                     } else {
@@ -78,7 +81,7 @@ class LampSocketProcess(var element: LampSocketElement) : IProcess {
             }
 
             if (element.coordinate!!.blockExist) {
-                updateNearbyBlocks(lampTechnology.cropGrowthRateFactor, lampTechnology.nominalLightValue, newLightValue, time)
+                updateNearbyBlocks(lampData.technology.cropGrowthRateFactor, lampData.nominalLightValue, newLightValue, time)
             }
 
             /* Only decrease the life of a bulb once a second. This reduces the update rate at which the NBT is changed
@@ -102,7 +105,9 @@ class LampSocketProcess(var element: LampSocketElement) : IProcess {
         if (newLightValue > BoilerplateLampData.MIN_LIGHT_VALUE) placeSpot(newLightValue)
 
         updateFastLight(newLightValue)
-        publishChanges(activeLampSupplyConnection, newLightValue)
+
+        // This logic ensures that needPublish() is not called multiple times
+        if (!updateInventory(lampStack, cableStack)) publishChanges(activeLampSupplyConnection, newLightValue)
 
         processElapsedTime += time
         if (processElapsedTime >= 1.0) processElapsedTime = 0.0
@@ -191,6 +196,27 @@ class LampSocketProcess(var element: LampSocketElement) : IProcess {
 
             element.sendPacketToAllClient(bos)
         }
+    }
+
+    /**
+     * Manually update the server-side inventory every time an item is inserted/removed from the GUI.
+     * This should be happening automatically, but it is not.
+     */
+    private fun updateInventory(lampStack: ItemStack?, cableStack: ItemStack?): Boolean {
+        var updateInventory = false
+
+        if (lampInInventory != (lampStack != null)) {
+            lampInInventory = (lampStack != null)
+            updateInventory = true
+        }
+
+        if (cableInInventory != (cableStack != null)) {
+            cableInInventory = (cableStack != null)
+            updateInventory = true
+        }
+
+        // Prevent duplicate function calls
+        return if (updateInventory) { element.inventoryChange(element.inventory); true } else false
     }
 
     private fun publishChanges(activeLampSupplyConnection: Boolean, newLightValue: Int) {
