@@ -405,11 +405,16 @@ class PortableOreScannerItem(name: String?, private val obj: Obj3D,
                                         val xLocal = xBlock and 0xF
                                         val yLocal = yBlock and 0xF
                                         val zLocal = zBlock and 0xF
-                                        var blockId = storage.blockLSBArray[yLocal shl 8 or (zLocal shl 4) or xLocal].toUByte()
-                                        if (storage.blockMSBArray != null) {
-                                            blockId = blockId or (storage.blockMSBArray[xLocal, yLocal, zLocal] shl 8).toUByte()
+                                        // Read block ID: LSB (8 bits) + optional MSB (4 bits)
+                                        // Must use Int arithmetic to avoid UByte truncation when combining MSB<<8
+                                        val blockLsb = storage.blockLSBArray[yLocal shl 8 or (zLocal shl 4) or xLocal].toInt() and 0xFF
+                                        val blockId = if (storage.blockMSBArray != null) {
+                                            blockLsb or (storage.blockMSBArray[xLocal, yLocal, zLocal] shl 8)
+                                        } else {
+                                            blockLsb
                                         }
-                                        blockKey = (blockId + (storage.getExtBlockMetadata(xLocal, yLocal, zLocal).toUInt() shl 12)).toUShort()
+                                        val rawMeta = storage.getExtBlockMetadata(xLocal, yLocal, zLocal)
+                                        blockKey = (blockId.toUInt() + (rawMeta.toUInt() shl 12)).toUShort()
                                     }
                                 }
                             }
@@ -423,6 +428,7 @@ class PortableOreScannerItem(name: String?, private val obj: Obj3D,
                             viewRange - d
                         }
                         stackGreen += blockKeyFactor[blockKey.toInt()] * dToStack
+
                         val b = Block.getBlockById((blockKey and 0xFFFU).toInt())
                         if (b !== Blocks.air && b !== Eln.lightBlock) {
                             stackRed += if (b.isOpaqueCube) 0.2f * dToStack else 0.1f * dToStack
@@ -509,33 +515,33 @@ private enum class State(val serialized: Byte) {
 private const val bootTime: Short = (4 * 20).toShort()
 private const val stopTime: Short = (1 * 20).toShort()
 
-@ExperimentalUnsignedTypes
-object OreColorMapping {
-    val map: FloatArray
-        get() {
-            return if (cache == null) {
-                updateColorMapping()
-            } else {
-                cache!!
+    @ExperimentalUnsignedTypes
+    object OreColorMapping {
+        val map: FloatArray
+            get() {
+                return if (cache == null) {
+                    updateColorMapping()
+                } else {
+                    cache!!
+                }
             }
-        }
 
-    private var cache: FloatArray? = null
+        private var cache: FloatArray? = null
 
-    fun updateColorMapping(): FloatArray {
-        val blockKeyMapping = FloatArray(1024 * 64)
-        for (blockId in 0..4095) {
-            for (meta in 0..15) {
-                blockKeyMapping[blockId + (meta shl 12)] = 0f
+        fun updateColorMapping(): FloatArray {
+            val blockKeyMapping = FloatArray(1024 * 64)
+            for (blockId in 0..4095) {
+                for (meta in 0..15) {
+                    blockKeyMapping[blockId + (meta shl 12)] = 0f
+                }
             }
-        }
 
-        for (c in Eln.oreScannerConfig) {
-            if (c.blockKey >= 0 && c.blockKey < blockKeyMapping.size)
-                blockKeyMapping[c.blockKey] = c.factor
-        }
+            for (c in Eln.oreScannerConfig) {
+                if (c.blockKey >= 0 && c.blockKey < blockKeyMapping.size)
+                    blockKeyMapping[c.blockKey] = c.factor
+            }
 
-        cache = blockKeyMapping
-        return blockKeyMapping
+            cache = blockKeyMapping
+            return blockKeyMapping
+        }
     }
-}
