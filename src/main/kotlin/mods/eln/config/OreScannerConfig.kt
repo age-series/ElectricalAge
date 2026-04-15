@@ -6,7 +6,6 @@ import mods.eln.misc.Utils
 import cpw.mods.fml.common.registry.GameRegistry
 import net.minecraft.block.Block
 import net.minecraftforge.oredict.OreDictionary
-import mods.eln.misc.Utils.println
 
 /**
  * Loads ore scanner configuration from JsonConfig and resolves ore entries
@@ -14,7 +13,7 @@ import mods.eln.misc.Utils.println
  */
 object OreScannerConfigLoader {
 
-    private const val ORES_PATH = "tools.xrayScanner.ores"
+    private const val ORE_FACTORS_PATH = "tools.xrayScanner.oreFactors"
     private const val AUTO_DISCOVERY_KEY = "tools.xrayScanner.addOtherModOreToScan"
     private const val OTHER_MOD_FACTOR_KEY = "tools.xrayScanner.otherModOreFactor"
     private const val DEFAULT_OTHER_MOD_FACTOR = 0.15
@@ -29,15 +28,15 @@ object OreScannerConfigLoader {
     fun loadOreScannerConfig(): List<OreScannerConfigElement> {
         val config = Eln.config
         val otherModFactor = config.getDoubleOrElse(OTHER_MOD_FACTOR_KEY, DEFAULT_OTHER_MOD_FACTOR).toFloat()
-        val oreKeys = config.getChildKeys(ORES_PATH)
+        val oreFactors = config.getStringDoubleMap(ORE_FACTORS_PATH)
         val blockKeyMap = linkedMapOf<Int, Float>()
 
-        for (key in oreKeys) {
-            val factor = config.getDoubleOrElse("$ORES_PATH.$key.factor", otherModFactor.toDouble()).toFloat()
+        for ((key, factor) in oreFactors) {
+            val f = factor.toFloat()
             if (key.contains(':')) {
-                resolveBlockReference(key, factor, blockKeyMap)
+                resolveBlockReference(key, f, blockKeyMap)
             } else {
-                resolveOreDictionaryName(key, factor, blockKeyMap)
+                resolveOreDictionaryName(key, f, blockKeyMap)
             }
         }
 
@@ -78,7 +77,6 @@ object OreScannerConfigLoader {
     private fun resolveBlockReference(key: String, factor: Float, blockKeyMap: MutableMap<Int, Float>) {
         val parts = key.split(':')
         if (parts.size < 2) {
-            println("OreScannerConfig: Invalid block reference '$key' — expected modid:name or modid:name:meta")
             return
         }
         val modid = parts[0]
@@ -87,7 +85,6 @@ object OreScannerConfigLoader {
 
         val block = GameRegistry.findBlock(modid, name)
         if (block == null) {
-            println("OreScannerConfig: Block '$modid:$name' not found, skipping")
             return
         }
 
@@ -98,7 +95,6 @@ object OreScannerConfigLoader {
     private fun resolveOreDictionaryName(key: String, factor: Float, blockKeyMap: MutableMap<Int, Float>) {
         val ores = OreDictionary.getOres(key)
         if (ores.isEmpty()) {
-            println("OreScannerConfig: OreDictionary name '$key' has no entries, skipping")
             return
         }
 
