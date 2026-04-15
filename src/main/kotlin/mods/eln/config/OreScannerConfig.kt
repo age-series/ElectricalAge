@@ -14,8 +14,8 @@ import net.minecraftforge.oredict.OreDictionary
 object OreScannerConfigLoader {
 
     private const val ORE_FACTORS_PATH = "tools.xrayScanner.oreFactors"
-    private const val AUTO_DISCOVERY_KEY = "tools.xrayScanner.addOtherModOreToScan"
-    private const val OTHER_MOD_FACTOR_KEY = "tools.xrayScanner.otherModOreFactor"
+    private const val AUTO_DISCOVERY_KEY = "tools.xrayScanner.autoDiscoverOreDictionaryOres"
+    private const val AUTO_DISCOVERY_FACTOR_KEY = "tools.xrayScanner.autoDiscoveryOreFactor"
     private const val DEFAULT_OTHER_MOD_FACTOR = 0.15
 
     /**
@@ -27,7 +27,7 @@ object OreScannerConfigLoader {
      */
     fun loadOreScannerConfig(): List<OreScannerConfigElement> {
         val config = Eln.config
-        val otherModFactor = config.getDoubleOrElse(OTHER_MOD_FACTOR_KEY, DEFAULT_OTHER_MOD_FACTOR).toFloat()
+        val otherModFactor = config.getDoubleOrElse(AUTO_DISCOVERY_FACTOR_KEY, DEFAULT_OTHER_MOD_FACTOR).toFloat()
         val oreFactors = config.getStringDoubleMap(ORE_FACTORS_PATH)
         val blockKeyMap = linkedMapOf<Int, Float>()
 
@@ -47,8 +47,8 @@ object OreScannerConfigLoader {
 
     /**
      * Auto-discovers ores from OreDictionary that are not already in configEntries.
-     * Only runs if addOtherModOreToScan is enabled.
-     * Uses otherModOreFactor for all auto-discovered ores.
+     * Only runs if autoDiscoverOreDictionaryOres is enabled.
+     * Uses autoDiscoveryOreFactor for all auto-discovered ores.
      */
     fun loadOreDictionaryAutoDiscovery(existingBlockKeys: Map<Int, Float>): List<OreScannerConfigElement> {
         val config = Eln.config
@@ -56,7 +56,7 @@ object OreScannerConfigLoader {
             return emptyList()
         }
 
-        val otherModFactor = config.getDoubleOrElse(OTHER_MOD_FACTOR_KEY, DEFAULT_OTHER_MOD_FACTOR).toFloat()
+        val otherModFactor = config.getDoubleOrElse(AUTO_DISCOVERY_FACTOR_KEY, DEFAULT_OTHER_MOD_FACTOR).toFloat()
         val results = mutableListOf<OreScannerConfigElement>()
 
         for (name in OreDictionary.getOreNames()) {

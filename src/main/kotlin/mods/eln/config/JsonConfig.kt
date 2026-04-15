@@ -132,10 +132,10 @@ class JsonConfig @JvmOverloads constructor(
         spec(path = "worldgen.ores.cinnabar.enabled", defaultValue = true),
         spec(path = "machines.fuelGenerator.tankCapacitySecondsAtNominalPower", defaultValue = 20.0 * 60.0),
         spec(path = "machines.heatFurnace.consumeFuel", defaultValue = false, comment = "Controls whether heat furnaces consume fuel."),
-        spec(path = "tools.xrayScanner.addOtherModOreToScan", defaultValue = true),
+        spec(path = "tools.xrayScanner.autoDiscoverOreDictionaryOres", defaultValue = true, comment = "Auto-discover ores from the Ore Dictionary that are not in oreFactors."),
         spec(path = "tools.xrayScanner.rangeBlocks", defaultValue = 5.0, comment = "X-ray scanner range in blocks. Intended range is 4 to 10."),
         spec(path = "tools.xrayScanner.canBeCrafted", defaultValue = true),
-        spec(path = "tools.xrayScanner.otherModOreFactor", defaultValue = 0.15, comment = "Default factor for auto-discovered mod ores not listed in ores config."),
+        spec(path = "tools.xrayScanner.autoDiscoveryOreFactor", defaultValue = 0.15, comment = "Default factor for auto-discovered ores not listed in oreFactors."),
         spec(
             path = "tools.xrayScanner.oreFactors",
             defaultValue = linkedMapOf(
@@ -904,7 +904,8 @@ class JsonConfig @JvmOverloads constructor(
         "worldgen.ores.cinnabar.enabled" -> listOf(LegacyKey("mapgenerate", "cinnabar"))
         "machines.fuelGenerator.tankCapacitySecondsAtNominalPower" -> listOf(LegacyKey("fuelGenerator", "tankCapacityInSecondsAtNominalPower"))
         "machines.heatFurnace.consumeFuel" -> listOf(LegacyKey("heatFurnace", "heatFurnaceConsumesFuel"))
-        "tools.xrayScanner.addOtherModOreToScan" -> listOf(LegacyKey("xrayscannerconfig", "addOtherModOreToXRay"))
+        "tools.xrayScanner.autoDiscoverOreDictionaryOres" -> listOf(LegacyKey("xrayscannerconfig", "addOtherModOreToXRay"))
+        "tools.xrayScanner.autoDiscoveryOreFactor" -> listOf(LegacyKey("xrayscannerconfig", "otherModOreFactor"))
         "tools.xrayScanner.rangeBlocks" -> listOf(LegacyKey("xrayscannerconfig", "rangeInBloc"))
         "tools.xrayScanner.canBeCrafted" -> listOf(LegacyKey("xrayscannerconfig", "canBeCrafted"))
         "simulation.electrical.frequency" -> listOf(LegacyKey("simulation", "electricalFrequency"), LegacyKey("simulation", "electricalFrequancy"))
