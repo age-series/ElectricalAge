@@ -53,6 +53,7 @@ class JsonConfig @JvmOverloads constructor(
     private val pathComments = linkedMapOf<String, String>()
     private val groupComments = linkedMapOf<String, String>()
     private val specs = if (includeDefaultSpecs) buildSpecs().toMutableList() else mutableListOf()
+    private val mapPaths = mutableSetOf<String>()
 
     private fun registerStaticComments() {
         groupComments["integrations"] = "Cross-mod integrations and external protocol bridges."
@@ -72,7 +73,7 @@ class JsonConfig @JvmOverloads constructor(
         groupComments["ui"] = "HUD and item icon presentation."
         groupComments["lighting"] = "Lamp technology settings generated from registered lamp types."
         groupComments["lighting.lamps"] = "Per-lamp-type durability tuning."
-        groupComments["tools.xrayScanner.ores"] = "Ore scanner detection factors. Keys with ':' are block references (modid:name or modid:name:meta), keys without ':' are OreDictionary names."
+        groupComments["tools.xrayScanner.oreFactors"] = "Ore scanner detection factors. Keys with ':' are block references (modid:name or modid:name:meta), keys without ':' are OreDictionary names."
     }
 
     private fun buildSpecs(): List<ConfigSpec> = listOf(
@@ -135,17 +136,23 @@ class JsonConfig @JvmOverloads constructor(
         spec(path = "tools.xrayScanner.rangeBlocks", defaultValue = 5.0, comment = "X-ray scanner range in blocks. Intended range is 4 to 10."),
         spec(path = "tools.xrayScanner.canBeCrafted", defaultValue = true),
         spec(path = "tools.xrayScanner.otherModOreFactor", defaultValue = 0.15, comment = "Default factor for auto-discovered mod ores not listed in ores config."),
-        spec(path = "tools.xrayScanner.ores.minecraft:coal_ore.factor", defaultValue = 0.05),
-        spec(path = "tools.xrayScanner.ores.minecraft:iron_ore.factor", defaultValue = 0.15),
-        spec(path = "tools.xrayScanner.ores.minecraft:gold_ore.factor", defaultValue = 0.40),
-        spec(path = "tools.xrayScanner.ores.minecraft:lapis_ore.factor", defaultValue = 0.40),
-        spec(path = "tools.xrayScanner.ores.minecraft:redstone_ore.factor", defaultValue = 0.40),
-        spec(path = "tools.xrayScanner.ores.minecraft:diamond_ore.factor", defaultValue = 1.00),
-        spec(path = "tools.xrayScanner.ores.minecraft:emerald_ore.factor", defaultValue = 0.40),
-        spec(path = "tools.xrayScanner.ores.Eln:Eln.Ore:1.factor", defaultValue = 0.10),
-        spec(path = "tools.xrayScanner.ores.Eln:Eln.Ore:4.factor", defaultValue = 0.20),
-        spec(path = "tools.xrayScanner.ores.Eln:Eln.Ore:5.factor", defaultValue = 0.20),
-        spec(path = "tools.xrayScanner.ores.Eln:Eln.Ore:6.factor", defaultValue = 0.20),
+        spec(
+            path = "tools.xrayScanner.oreFactors",
+            defaultValue = linkedMapOf(
+                "minecraft:coal_ore" to 0.05,
+                "minecraft:iron_ore" to 0.15,
+                "minecraft:gold_ore" to 0.40,
+                "minecraft:lapis_ore" to 0.40,
+                "minecraft:redstone_ore" to 0.40,
+                "minecraft:diamond_ore" to 1.00,
+                "minecraft:emerald_ore" to 0.40,
+                "Eln:Eln.Ore:1" to 0.10,
+                "Eln:Eln.Ore:4" to 0.20,
+                "Eln:Eln.Ore:5" to 0.20,
+                "Eln:Eln.Ore:6" to 0.20
+            ),
+            comment = "Ore scanner detection factors. Keys with ':' are block references (modid:name or modid:name:meta), keys without ':' are OreDictionary names."
+        ),
         spec(path = "simulation.electrical.frequency", defaultValue = 20.0, comment = "Set to a clean divisor of 20."),
         spec(path = "simulation.electrical.interSystemOverSampling", defaultValue = 50, comment = "Avoid setting this below 50."),
         spec(path = "simulation.thermal.frequency", defaultValue = 400.0, comment = "Thermal simulation update frequency."),
@@ -174,6 +181,7 @@ class JsonConfig @JvmOverloads constructor(
             registerStaticComments()
         }
         registerSpecComments()
+        populateMapPaths()
     }
 
     fun load() {
@@ -340,6 +348,9 @@ class JsonConfig @JvmOverloads constructor(
             pathComments.remove(canonicalPath)
         }
         values.putIfAbsent(canonicalPath, defaultValue)
+        if (defaultValue is Map<*, *>) {
+            mapPaths.add(canonicalPath)
+        }
         clearCollectionCaches()
     }
 
@@ -522,6 +533,24 @@ class JsonConfig @JvmOverloads constructor(
     }
 
     /**
+     * Reads a map-valued config entry whose keys are free-form strings (e.g. block references)
+     * and whose values are doubles. Returns an empty map if the path is missing or not a map.
+     */
+    fun getStringDoubleMap(path: String): LinkedHashMap<String, Double> {
+        populateDefaults()
+        val canonicalPath = path.trim().trim('.')
+        val value = values[canonicalPath]
+        if (value is Map<*, *>) {
+            val result = linkedMapOf<String, Double>()
+            for ((k, v) in value) {
+                if (k is String) result[k] = asDouble(v, 0.0)
+            }
+            return result
+        }
+        return linkedMapOf()
+    }
+
+    /**
      * Reads a string config value from the given path, throwing [IllegalArgumentException] with [message] if missing.
      */
     @Suppress("unused")
@@ -606,9 +635,20 @@ class JsonConfig @JvmOverloads constructor(
         for ((key, value) in obj.entrySet()) {
             if (key.startsWith("_comment") || key == "schemaVersion") continue
             val currentPath = prefix + key
+            val flatPath = joinPath(currentPath)
             when {
+                mapPaths.contains(flatPath) && value.isJsonObject -> {
+                    val map = linkedMapOf<String, Double>()
+                    for ((mapKey, mapVal) in value.asJsonObject.entrySet()) {
+                        if (mapKey.startsWith("_comment")) continue
+                        if (mapVal.isJsonPrimitive) {
+                            map[mapKey] = mapVal.asDouble
+                        }
+                    }
+                    values[flatPath] = map
+                }
                 value.isJsonObject -> flattenJson(value.asJsonObject, currentPath)
-                value.isJsonPrimitive -> values[joinPath(currentPath)] = primitiveToAny(value)
+                value.isJsonPrimitive -> values[flatPath] = primitiveToAny(value)
             }
         }
     }
@@ -746,6 +786,17 @@ class JsonConfig @JvmOverloads constructor(
             is Boolean -> parent.addProperty(key, value)
             is Int -> parent.addProperty(key, value)
             is Double -> parent.addProperty(key, value)
+            is Map<*, *> -> {
+                val obj = JsonObject()
+                for ((mapKey, mapVal) in value) {
+                    if (mapKey !is String) continue
+                    when (mapVal) {
+                        is Number -> obj.addProperty(mapKey, mapVal)
+                        else -> obj.addProperty(mapKey, mapVal?.toString() ?: "")
+                    }
+                }
+                parent.add(key, obj)
+            }
             else -> parent.addProperty(key, value.toString())
         }
     }
@@ -773,6 +824,14 @@ class JsonConfig @JvmOverloads constructor(
                 }
             }
         return Regex("^$regex$")
+    }
+
+    private fun populateMapPaths() {
+        for (spec in specs) {
+            if (spec.defaultValue is Map<*, *>) {
+                mapPaths.add(joinPath(spec.path))
+            }
+        }
     }
 
     private fun registerSpecComments() {
