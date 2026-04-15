@@ -27,7 +27,6 @@ object OreScannerConfigLoader {
      */
     fun loadOreScannerConfig(): List<OreScannerConfigElement> {
         val config = Eln.config
-        val otherModFactor = config.getDoubleOrElse(AUTO_DISCOVERY_FACTOR_KEY, DEFAULT_OTHER_MOD_FACTOR).toFloat()
         val oreFactors = config.getStringDoubleMap(ORE_FACTORS_PATH)
         val blockKeyMap = linkedMapOf<Int, Float>()
 
