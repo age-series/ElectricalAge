@@ -270,6 +270,13 @@ public class LampSupplyElement extends SixNodeElement implements IConfigurable {
     public boolean onBlockActivated(EntityPlayer entityPlayer, Direction side, float vx, float vy, float vz) {
         if (onBlockActivatedRotate(entityPlayer)) return true;
 
+        ItemStack playerEquippedItem = entityPlayer.getCurrentEquippedItem();
+        GenericItemBlockUsingDamageDescriptor desc = GenericItemBlockUsingDamageDescriptor.getDescriptor(playerEquippedItem, ElectricalCableDescriptor.class);
+        if (desc instanceof ElectricalCableDescriptor) {
+            if (!((ElectricalCableDescriptor) desc).signalWire) return inventory.take(entityPlayer.getCurrentEquippedItem(), this, false, true);
+            else return false;
+        }
+
         return inventory.take(entityPlayer.getCurrentEquippedItem(), this, false, true);
     }
 
@@ -457,7 +464,7 @@ public class LampSupplyElement extends SixNodeElement implements IConfigurable {
             }
             needPublish();
         }
-        if(ConfigCopyToolDescriptor.readCableType(compound, getInventory(), 0, invoker))
+        if(ConfigCopyToolDescriptor.readCableType(compound, getInventory(), 0, invoker, false))
             needPublish();
     }
 

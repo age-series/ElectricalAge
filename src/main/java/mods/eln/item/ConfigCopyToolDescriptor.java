@@ -10,6 +10,7 @@ import mods.eln.misc.Direction;
 import mods.eln.node.NodeBase;
 import mods.eln.node.NodeBlock;
 import mods.eln.node.NodeManager;
+import mods.eln.sixnode.currentcable.CurrentCableDescriptor;
 import mods.eln.sixnode.electricalcable.ElectricalCableDescriptor;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
@@ -40,6 +41,25 @@ public class ConfigCopyToolDescriptor extends GenericItemUsingDamageDescriptor {
         return false;
     }
 
+    public static boolean readCableType(NBTTagCompound compound, IInventory inv, int slot, EntityPlayer invoker, boolean acceptSignalCable) {
+        String name = "cable";
+
+        if (compound.hasKey(name + "Type")) {
+            int type = compound.getInteger(name + "Type");
+            GenericItemBlockUsingDamageDescriptor desc = Eln.sixNodeItem.getDescriptor(type);
+
+            if (desc instanceof ElectricalCableDescriptor) {
+                if (!(((ElectricalCableDescriptor) desc).signalWire && !acceptSignalCable)) {
+                    return readCableType(compound, inv, slot, invoker);
+                }
+            } else if (desc instanceof CurrentCableDescriptor) {
+                return readCableType(compound, inv, slot, invoker);
+            }
+        }
+
+        return false;
+    }
+
     public static boolean readCableType(NBTTagCompound compound, IInventory inv, int slot, EntityPlayer invoker) {
         return readCableType(compound, "cable", inv, slot, invoker);
     }
@@ -54,16 +74,18 @@ public class ConfigCopyToolDescriptor extends GenericItemUsingDamageDescriptor {
             ItemStack stackInSlot = inv.getStackInSlot(slot);
             if (stackInSlot != null) {
                 GenericItemBlockUsingDamageDescriptor thisCableDesc = GenericItemBlockUsingDamageDescriptor.getDescriptor(stackInSlot, ElectricalCableDescriptor.class);
+                if (thisCableDesc == null) thisCableDesc = GenericItemBlockUsingDamageDescriptor.getDescriptor(stackInSlot, CurrentCableDescriptor.class);
                 if(thisCableDesc != null) {
+                    final GenericItemBlockUsingDamageDescriptor cableDesc = thisCableDesc;
                     (new ItemMovingHelper() {
                         @Override
                         public boolean acceptsStack(ItemStack stack) {
-                            return thisCableDesc.checkSameItemStack(stack);
+                            return cableDesc.checkSameItemStack(stack);
                         }
 
                         @Override
                         public ItemStack newStackOfSize(int items) {
-                            return thisCableDesc.newItemStack(items);
+                            return cableDesc.newItemStack(items);
                         }
                     }).move(invoker.inventory, inv, slot, 0);
                 }
