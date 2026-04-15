@@ -117,7 +117,7 @@ class LampSocketElement(sixNode: SixNode, side: Direction, sixNodeDescriptor: Si
             }
         }
 
-        if (playerEquippedItem is ElectricalCableDescriptor || playerEquippedItem is CurrentCableDescriptor) {
+        if ((playerEquippedItem is ElectricalCableDescriptor && !playerEquippedItem.signalWire) || playerEquippedItem is CurrentCableDescriptor) {
             return acceptingInventory.take(
                 entityPlayer.currentEquippedItem, this, publish = true, notifyInventoryChange = true
             )
@@ -332,7 +332,7 @@ class LampSocketElement(sixNode: SixNode, side: Direction, sixNodeDescriptor: Si
             inventoryChanged = true
         }
 
-        if (ConfigCopyToolDescriptor.readCableType(compound, inventory, LampSocketContainer.CABLE_SLOT_ID, invoker)) {
+        if (ConfigCopyToolDescriptor.readCableType(compound, inventory, LampSocketContainer.CABLE_SLOT_ID, invoker, false)) {
             inventoryChanged = true
         }
 
