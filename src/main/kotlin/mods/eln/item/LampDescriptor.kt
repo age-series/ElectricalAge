@@ -90,13 +90,13 @@ class LampDescriptor(name: String, iconName: String, val lampData: SpecificLampD
     override fun addInformation(itemStack: ItemStack?, entityPlayer: EntityPlayer?, list: MutableList<String>, par4: Boolean) {
         super.addInformation(itemStack, entityPlayer, list, par4)
 
-        list.add(tr("Power: %1\$W", Utils.plotValue(lampData.nominalP)))
-        list.add(tr("Resistance: %1\$\u2126", Utils.plotValue(lampData.resistance)))
-        list.add(tr("Nominal lifetime: %1\$h", lampData.technology.nominalLifeInHours))
+        list.add(tr("Power: ${Utils.plotValue(lampData.nominalP)}W"))
+        list.add(tr("Resistance: ${Utils.plotValue(lampData.resistance)}\u2126"))
+        list.add(tr("Nominal lifetime: ${lampData.technology.nominalLifeInHours}h"))
 
         if (itemStack != null) {
-            if (Eln.config.getBooleanOrElse("debug.logging.enabled", false)) list.add(tr("Current lifetime: %1\$h", getLifeInTag(itemStack)))
-            list.add(tr("Condition: %1\$", getLampCondition(itemStack)))
+            if (Eln.config.getBooleanOrElse("debug.logging.enabled", false)) list.add(tr("Current lifetime: ${getLifeInTag(itemStack)}h"))
+            list.add(tr("Condition: ${getLampCondition(itemStack)}"))
         }
     }
 
