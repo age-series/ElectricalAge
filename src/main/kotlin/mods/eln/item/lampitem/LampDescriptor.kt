@@ -58,6 +58,7 @@ class LampDescriptor(name: String, iconName: String, val lampData: SpecificLampD
     /**
      * This function is currently set up to be called once per second (IRL). If the NBT update bug is ever fixed, this
      * function should be updated to run once per tick by dividing the life lost by 20 before calculating the new life.
+     * See https://www.desmos.com/calculator/0uuzozsiuu for a plot of the lamp aging function.
      */
     fun decreaseLampLife(lampStack: ItemStack, appliedVoltage: Double): Double {
         var currentLife = getLifeInTag(lampStack)
@@ -67,9 +68,8 @@ class LampDescriptor(name: String, iconName: String, val lampData: SpecificLampD
             currentLife = getLifeInTag(lampStack)
         }
 
-        // See https://www.desmos.com/calculator/0uuzozsiuu for a plot of the lamp aging function.
         if (!lampData.technology.infiniteLifeEnabled) {
-            // Divide by 3600 to convert seconds to hours
+            // Division by 3600 converts seconds to hours (IRL)
             val lifeLost = when {
                 // Life lost per second increases exponentially when voltage is above nominal (10x as fast at 1.25x nominal)
                 abs(appliedVoltage) > lampData.nominalU -> {
@@ -99,31 +99,31 @@ class LampDescriptor(name: String, iconName: String, val lampData: SpecificLampD
     override fun addInformation(itemStack: ItemStack?, entityPlayer: EntityPlayer?, list: MutableList<String>, par4: Boolean) {
         super.addInformation(itemStack, entityPlayer, list, par4)
 
-        list.add(I18N.tr("Nominal brightness: ${Utils.plotValue(lampData.nominalLightValue.toDouble())}"))
-        list.add(I18N.tr("Nominal voltage: ${Utils.plotValue(lampData.nominalU)}V"))
-        list.add(I18N.tr("Power: ${Utils.plotValue(lampData.nominalP)}W"))
-        list.add(I18N.tr("Resistance: ${Utils.plotValue(lampData.resistance)}\u2126"))
-        list.add(I18N.tr("Nominal lifetime: ${lampData.technology.nominalLifeInHours}h"))
+        list.add(I18N.tr("Nominal brightness: %1$", Utils.plotValue(lampData.nominalLightValue.toDouble())))
+        list.add(I18N.tr($$"Nominal voltage: %1$V", Utils.plotValue(lampData.nominalU)))
+        list.add(I18N.tr($$"Power: %1$W", Utils.plotValue(lampData.nominalP)))
+        list.add(I18N.tr("Resistance: %1$\u2126", Utils.plotValue(lampData.resistance)))
+        list.add(I18N.tr($$"Nominal lifetime: %1$h", lampData.technology.nominalLifeInHours))
 
         if (itemStack != null) {
             if (Eln.config.getBooleanOrElse("debug.logging.enabled", false)) {
-                list.add(I18N.tr("Current lifetime: ${getLifeInTag(itemStack)}h"))
+                list.add(I18N.tr($$"Current lifetime: %1$h", getLifeInTag(itemStack)))
             }
-            list.add(I18N.tr("Condition: ${getLampCondition(itemStack)}"))
+            list.add(I18N.tr("Condition: %1$", getLampCondition(itemStack)))
         }
     }
 
     private fun getLampCondition(itemStack: ItemStack): String {
         return if (!itemStack.hasTagCompound() || !itemStack.tagCompound.hasKey("life")) {
-            "New"
+            I18N.tr("New")
         } else {
             val lampLife = getLifeInTag(itemStack)
 
-            if (lampLife == lampData.technology.nominalLifeInHours) "New"
-            else if (lampLife > (0.5 * lampData.technology.nominalLifeInHours)) "Good"
-            else if (lampLife > (0.15 * lampData.technology.nominalLifeInHours)) "Used"
-            else if (lampLife > (0.01 * lampData.technology.nominalLifeInHours)) "Bad"
-            else "End of life"
+            if (lampLife == lampData.technology.nominalLifeInHours) I18N.tr("New")
+            else if (lampLife > (0.5 * lampData.technology.nominalLifeInHours)) I18N.tr("Good")
+            else if (lampLife > (0.15 * lampData.technology.nominalLifeInHours)) I18N.tr("Used")
+            else if (lampLife > (0.01 * lampData.technology.nominalLifeInHours)) I18N.tr("Bad")
+            else I18N.tr("End of life")
         }
     }
 

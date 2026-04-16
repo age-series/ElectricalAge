@@ -62,9 +62,9 @@ class FloodlightGui(player: EntityPlayer, val render: FloodlightRender) :
             beamAdjust.value = render.beamWidth.toFloat()
         }
 
-        horizontalAdjust.setComment(0, I18N.tr("Horizontal angle: ${(horizontalAdjust.value).toInt()}°"))
-        verticalAdjust.setComment(0, I18N.tr("Vertical angle: ${(verticalAdjust.value).toInt()}°"))
-        beamAdjust.setComment(0, I18N.tr("Beam width: ${(beamAdjust.value).toInt()}°"))
+        horizontalAdjust.setComment(0, I18N.tr("Horizontal angle: %1$\u00B0", horizontalAdjust.value.toInt()))
+        verticalAdjust.setComment(0, I18N.tr("Vertical angle: %1$\u00B0", verticalAdjust.value.toInt()))
+        beamAdjust.setComment(0, I18N.tr("Beam width: %1$\u00B0", beamAdjust.value.toInt()))
     }
 
     override fun guiObjectEvent(obj: IGuiObject) {

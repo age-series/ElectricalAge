@@ -8,7 +8,6 @@ import mods.eln.sixnode.lampsocket.LampSocketRender
 import net.minecraftforge.client.IItemRenderer.ItemRenderType
 import org.lwjgl.opengl.GL11
 
-// TODO: Revisit integration of this file with the rest of the six-node lamp socket code.
 class LampSocketSuspendedObjRender(obj: Obj3D, val onOffModel: Boolean, val length: Int, val canSwing: Boolean) : ILampSocketObjRender {
 
     private val socket = obj.getPart("socket")
@@ -23,10 +22,12 @@ class LampSocketSuspendedObjRender(obj: Obj3D, val onOffModel: Boolean, val leng
 
     override fun draw(descriptor: LampSocketDescriptor, type: ItemRenderType, distanceToPlayer: Double) {
         if (type == ItemRenderType.INVENTORY) {
+            GL11.glRotated(90.0, 0.0, 0.0, 1.0) // Undo initial rotation
             GL11.glScaled(0.5, 0.5, 0.5)
             GL11.glRotated(90.0, 0.0, 1.0, 0.0)
             GL11.glTranslated(-1.5, 0.0, 0.0)
         } else if (type == ItemRenderType.EQUIPPED_FIRST_PERSON) {
+            GL11.glRotated(90.0, 0.0, 0.0, 1.0) // Undo initial rotation
             GL11.glScaled(0.3, 0.3, 0.3)
             GL11.glRotated(45.0, 0.0, 1.0, 0.0)
             GL11.glTranslated(-1.5, 0.0, 0.4)

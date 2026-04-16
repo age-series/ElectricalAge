@@ -13,7 +13,6 @@ import mods.eln.misc.Utils.plotValue
 import mods.eln.misc.Utils.plotVolt
 import mods.eln.node.AutoAcceptInventoryProxy
 import mods.eln.node.NodeBase
-import mods.eln.node.published
 import mods.eln.node.transparent.TransparentNode
 import mods.eln.node.transparent.TransparentNodeDescriptor
 import mods.eln.node.transparent.TransparentNodeElement
@@ -56,9 +55,9 @@ class FloodlightElement(transparentNode: TransparentNode, transparentNodeDescrip
 
     var powered = false
 
-    var swivelAngle by published(0.0)
-    var headAngle by published(0.0)
-    var beamWidth by published(0.0)
+    var swivelAngle = 0.0
+    var headAngle = 0.0
+    var beamWidth = 0.0
 
     val electricalLoad = NbtElectricalLoad("electricalLoad")
     private val lamp1Resistor = Resistor(electricalLoad, null)
@@ -113,7 +112,7 @@ class FloodlightElement(transparentNode: TransparentNode, transparentNodeDescrip
 
         if (currentEquippedItem is LampDescriptor) {
             if (currentEquippedItem.lampData.technology in descriptor.acceptedLampTypes) {
-                return acceptingInventory.take(player.currentEquippedItem, this, publish = true, notifyInventoryChange = true)
+                return acceptingInventory.take(player.currentEquippedItem, this, notifyInventoryChange = true)
             }
         }
 

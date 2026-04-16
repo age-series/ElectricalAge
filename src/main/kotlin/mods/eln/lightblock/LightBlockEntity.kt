@@ -1,6 +1,7 @@
 package mods.eln.lightblock
 
 import mods.eln.Eln
+import mods.eln.i18n.I18N
 import mods.eln.misc.Coordinate
 import mods.eln.misc.INBTTReady
 import mods.eln.misc.Utils
@@ -28,7 +29,7 @@ class LightBlockEntity : TileEntity() {
             val t = w.getTileEntity(x, y, z)
 
             if (t is LightBlockEntity) t.addLight(light, timeout)
-            else Utils.println("Error in setting light at $x $y $z")
+            else Utils.println(I18N.tr("Error in setting light at %1$ %2$ %3$", x, y, z))
         }
 
         @JvmStatic
@@ -68,7 +69,7 @@ class LightBlockEntity : TileEntity() {
 
         if (lightList.isEmpty()) {
             worldObj.setBlockToAir(xCoord, yCoord, zCoord)
-            Utils.println("Destroy light at $xCoord $yCoord $zCoord")
+            Utils.println(I18N.tr("Destroy light at %1$ %2$ %3$", xCoord, yCoord, zCoord))
             return
         }
 

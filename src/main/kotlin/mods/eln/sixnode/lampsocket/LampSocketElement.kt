@@ -39,7 +39,6 @@ import java.io.DataOutputStream
 import java.io.IOException
 import kotlin.math.pow
 
-// TODO: Revisit integration of this file with the rest of the six-node lamp socket code.
 class LampSocketElement(sixNode: SixNode, side: Direction, sixNodeDescriptor: SixNodeDescriptor) :
     SixNodeElement(sixNode, side, sixNodeDescriptor), IConfigurable {
 
@@ -111,16 +110,12 @@ class LampSocketElement(sixNode: SixNode, side: Direction, sixNodeDescriptor: Si
 
         if (playerEquippedItem is LampDescriptor) {
             if (playerEquippedItem.lampData.technology in descriptor.acceptedLampTypes) {
-                return acceptingInventory.take(
-                    entityPlayer.currentEquippedItem, this, publish = true, notifyInventoryChange = true
-                )
+                return acceptingInventory.take(entityPlayer.currentEquippedItem, this, notifyInventoryChange = true)
             }
         }
 
         if ((playerEquippedItem is ElectricalCableDescriptor && !playerEquippedItem.signalWire) || playerEquippedItem is CurrentCableDescriptor) {
-            return acceptingInventory.take(
-                entityPlayer.currentEquippedItem, this, publish = true, notifyInventoryChange = true
-            )
+            return acceptingInventory.take(entityPlayer.currentEquippedItem, this, notifyInventoryChange = true)
         }
 
         return false

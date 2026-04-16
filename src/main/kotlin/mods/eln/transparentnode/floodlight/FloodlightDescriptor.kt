@@ -1,6 +1,6 @@
 package mods.eln.transparentnode.floodlight
 
-import mods.eln.i18n.I18N.tr
+import mods.eln.i18n.I18N
 import mods.eln.item.lampitem.LampLists
 import mods.eln.misc.*
 import mods.eln.misc.Utils.entityLivingHorizontalViewDirection
@@ -45,11 +45,11 @@ class FloodlightDescriptor(val itemName: String, val obj: Obj3D, val motorized: 
     override fun addInformation(itemStack: ItemStack, entityPlayer: EntityPlayer, list: MutableList<String>, par4: Boolean) {
         super.addInformation(itemStack, entityPlayer, list, par4)
 
-        Collections.addAll(list, *tr("A powerful lamp that specializes in\nthe illumination of large spaces.")!!
+        Collections.addAll(list, *I18N.tr("A powerful lamp that specializes in\nthe illumination of large spaces.")!!
             .split("\n".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray())
-        list.add(tr("Accepted lamp types: $acceptedLampTypesString"))
-        list.add(tr("Uses inserted light bulbs."))
-        list.add(if (motorized) tr("Intended for 240V bulb families.") else tr("Intended for 120V or 240V bulb families."))
+        list.add(I18N.tr("Accepted lamp types: $acceptedLampTypesString"))
+        list.add(I18N.tr("Uses inserted light bulbs."))
+        list.add(if (motorized) I18N.tr("Intended for 240V bulb families.") else I18N.tr("Intended for 120V or 240V bulb families."))
     }
 
     override fun addRealismContext(list: MutableList<String>?): RealisticEnum {
