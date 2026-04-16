@@ -9,7 +9,6 @@ import mods.eln.sixnode.lampsocket.LampSocketRender
 import net.minecraftforge.client.IItemRenderer.ItemRenderType
 import org.lwjgl.opengl.GL11
 
-// TODO: Revisit integration of this file with the rest of the six-node lamp socket code.
 class LampSocketStandardObjRender(obj: Obj3D, val onOffModel: Boolean) : ILampSocketObjRender {
 
     private val socket = obj.getPart("socket")

@@ -30,7 +30,6 @@ import kotlin.math.pow
 import kotlin.math.sign
 import kotlin.math.sin
 
-// TODO: Revisit integration of this file with the rest of the six-node lamp socket code.
 class LampSocketRender(tileEntity: SixNodeEntity, side: Direction, sixNodeDescriptor: SixNodeDescriptor) :
     SixNodeElementRender(tileEntity, side, sixNodeDescriptor) {
 
@@ -64,7 +63,6 @@ class LampSocketRender(tileEntity: SixNodeEntity, side: Direction, sixNodeDescri
                     if (rand > 0.1) play(SoundCommand("eln:neon_lamp").mulVolume(0.7f, (1.0 + (rand / 6.0)).toFloat()).smallRange())
                     else play(SoundCommand("eln:NEON_LFNOISE").mulVolume(0.2f, 1f).verySmallRange())
                 }
-
                 oldLightValue = lightValue
             }
         }

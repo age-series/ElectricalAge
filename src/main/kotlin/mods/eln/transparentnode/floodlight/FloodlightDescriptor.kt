@@ -1,6 +1,6 @@
 package mods.eln.transparentnode.floodlight
 
-import mods.eln.i18n.I18N.tr
+import mods.eln.i18n.I18N
 import mods.eln.item.lampitem.LampLists
 import mods.eln.misc.*
 import mods.eln.misc.Utils.entityLivingHorizontalViewDirection
@@ -45,9 +45,9 @@ class FloodlightDescriptor(val itemName: String, val obj: Obj3D, val motorized: 
     override fun addInformation(itemStack: ItemStack, entityPlayer: EntityPlayer, list: MutableList<String>, par4: Boolean) {
         super.addInformation(itemStack, entityPlayer, list, par4)
 
-        Collections.addAll(list, *tr("A powerful lamp that specializes in\nthe illumination of large spaces.")!!
+        Collections.addAll(list, *I18N.tr("A powerful lamp that specializes in\nthe illumination of large spaces.")!!
             .split("\n".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray())
-        list.add(tr("Accepted lamp types: $acceptedLampTypesString"))
+        list.add(I18N.tr("Accepted lamp types: %1$", I18N.tr(acceptedLampTypesString)))
     }
 
     override fun addRealismContext(list: MutableList<String>?): RealisticEnum {

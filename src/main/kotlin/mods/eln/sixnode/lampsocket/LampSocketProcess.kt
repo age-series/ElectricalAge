@@ -14,7 +14,6 @@ import java.io.DataOutputStream
 import java.io.IOException
 import kotlin.math.abs
 
-// TODO: Revisit integration of this file with the rest of the six-node lamp socket code.
 class LampSocketProcess(var element: LampSocketElement) : IProcess {
 
     private var processElapsedTime = 0.0
@@ -102,6 +101,7 @@ class LampSocketProcess(var element: LampSocketElement) : IProcess {
             stableLightProbability = 0.0
         }
 
+        // Only run raytracing when the lamp socket is actually on.
         if (newLightValue > BoilerplateLampData.MIN_LIGHT_VALUE) placeSpot(newLightValue)
 
         updateFastLight(newLightValue)
@@ -151,7 +151,13 @@ class LampSocketProcess(var element: LampSocketElement) : IProcess {
         element.side.rotateFromXN(rotationVector)
 
         val lbCoordinate = raytrace(rotationVector, 0)
-        LightBlockEntity.addLight(lbCoordinate, lightValue, 5)
+
+        // This makes the projected light "flicker" when a fluorescent bulb is turning on. It's not quite in sync with
+        // the bulb, but it's the best that can be done without rewriting the light block handler to allow updating the
+        // light value of an existing light block.
+        val lightTimeout = if (stableLightProbability <= 1.0) 1 else 5
+
+        LightBlockEntity.addLight(lbCoordinate, lightValue, lightTimeout)
     }
 
     private fun raytrace(rotationVector: Vec3, vectorLengthModifier: Int): Coordinate {

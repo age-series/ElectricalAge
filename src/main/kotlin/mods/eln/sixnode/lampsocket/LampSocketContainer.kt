@@ -8,8 +8,8 @@ import net.minecraft.inventory.IInventory
 
 class LampSocketContainer(player: EntityPlayer, inventory: IInventory, descriptor: LampSocketDescriptor) :
     BasicContainer(player, inventory, arrayOf(
-        LampItemSlot(inventory, LAMP_SLOT_ID, 70+1, 57+1, 1, descriptor.acceptedLampTypes),
-        CableItemSlot(inventory, CABLE_SLOT_ID, 88+1, 57+1, 1, false)
+        LampItemSlot(inventory, LAMP_SLOT_ID, 16+1, 59+1, 1, descriptor.acceptedLampTypes),
+        CableItemSlot(inventory, CABLE_SLOT_ID, 142+1, 59+1, 1, false)
     )) {
 
     companion object {
