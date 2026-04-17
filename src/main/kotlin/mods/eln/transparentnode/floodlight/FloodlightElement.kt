@@ -13,6 +13,7 @@ import mods.eln.misc.Utils.plotValue
 import mods.eln.misc.Utils.plotVolt
 import mods.eln.node.AutoAcceptInventoryProxy
 import mods.eln.node.NodeBase
+import mods.eln.node.published
 import mods.eln.node.transparent.TransparentNode
 import mods.eln.node.transparent.TransparentNodeDescriptor
 import mods.eln.node.transparent.TransparentNodeElement
@@ -55,9 +56,9 @@ class FloodlightElement(transparentNode: TransparentNode, transparentNodeDescrip
 
     var powered = false
 
-    var swivelAngle = 0.0
-    var headAngle = 0.0
-    var beamWidth = 0.0
+    var swivelAngle by published(0.0)
+    var headAngle by published(0.0)
+    var beamWidth by published(0.0)
 
     val electricalLoad = NbtElectricalLoad("electricalLoad")
     private val lamp1Resistor = Resistor(electricalLoad, null)
@@ -250,7 +251,7 @@ class FloodlightElement(transparentNode: TransparentNode, transparentNodeDescrip
             FloodlightGui.ADJUST_VERTICAL_ANGLE_EVENT -> headAngle = stream.readDouble()
             FloodlightGui.ADJUST_BEAM_WIDTH_EVENT -> beamWidth = stream.readDouble()
         }
-        inventoryChange(inventory)
+        needPublish()
         return unserializeNulldId
     }
 
@@ -298,7 +299,25 @@ class FloodlightElement(transparentNode: TransparentNode, transparentNodeDescrip
     }
 
     override fun readConfigTool(compound: NBTTagCompound, invoker: EntityPlayer) {
+        var publishChanges = false
         var inventoryChanged = false
+
+        if (!motorized) {
+            if (compound.hasKey("swivelAngle")) {
+                swivelAngle = compound.getDouble("swivelAngle")
+                publishChanges = true
+            }
+
+            if (compound.hasKey("headAngle")) {
+                headAngle = compound.getDouble("headAngle")
+                publishChanges = true
+            }
+
+            if (compound.hasKey("beamWidth")) {
+                beamWidth = compound.getDouble("beamWidth")
+                publishChanges = true
+            }
+        }
 
         if (ConfigCopyToolDescriptor.readLampDescriptor(compound, "lamp1", inventory, FloodlightContainer.LAMP_SLOT_1_ID, invoker, descriptor.acceptedLampTypes)) {
             inventoryChanged = true
@@ -308,11 +327,18 @@ class FloodlightElement(transparentNode: TransparentNode, transparentNodeDescrip
             inventoryChanged = true
         }
 
-        // Prevent duplicate function calls
+        // Prevent duplicate calls of these functions
         if (inventoryChanged) inventoryChange(inventory)
+        else if (publishChanges) needPublish()
     }
 
     override fun writeConfigTool(compound: NBTTagCompound, invoker: EntityPlayer) {
+        if (!motorized) {
+            compound.setDouble("swivelAngle", swivelAngle)
+            compound.setDouble("headAngle", headAngle)
+            compound.setDouble("beamWidth", beamWidth)
+        }
+
         ConfigCopyToolDescriptor.writeGenDescriptor(compound, "lamp1", inventory.getStackInSlot(FloodlightContainer.LAMP_SLOT_1_ID))
         ConfigCopyToolDescriptor.writeGenDescriptor(compound, "lamp2", inventory.getStackInSlot(FloodlightContainer.LAMP_SLOT_2_ID))
     }

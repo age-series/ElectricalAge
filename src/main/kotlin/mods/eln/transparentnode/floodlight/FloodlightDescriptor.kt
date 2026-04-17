@@ -40,6 +40,8 @@ class FloodlightDescriptor(val itemName: String, val obj: Obj3D, val motorized: 
             acceptedLampTypesString += lampData.lampType
             if (acceptedLampTypes.indexOf(lampData) < (acceptedLampTypes.size - 1)) acceptedLampTypesString += ", "
         }
+
+        acceptedLampTypesString = I18N.tr(acceptedLampTypesString)
     }
 
     override fun addInformation(itemStack: ItemStack, entityPlayer: EntityPlayer, list: MutableList<String>, par4: Boolean) {
@@ -47,7 +49,7 @@ class FloodlightDescriptor(val itemName: String, val obj: Obj3D, val motorized: 
 
         Collections.addAll(list, *I18N.tr("A powerful lamp that specializes in\nthe illumination of large spaces.")!!
             .split("\n".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray())
-        list.add(I18N.tr("Accepted lamp types: %1$", I18N.tr(acceptedLampTypesString)))
+        list.add(I18N.tr("Accepted lamp types: %1$", acceptedLampTypesString)) // acceptedLampTypesString is pre-translated
     }
 
     override fun addRealismContext(list: MutableList<String>?): RealisticEnum {

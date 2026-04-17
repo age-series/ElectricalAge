@@ -51,7 +51,7 @@ data class BoilerplateLampData(
     }
 
     private val nominalLifePath: String
-        get() = "lighting.lamps.${lampType}.nominalLifeHours"
+        get() = "lighting.lamps.${lampType}.nominalLifeInHours"
 
     private val infiniteLifePath: String
         get() = "lighting.lamps.${lampType}.infiniteLifeEnabled"
