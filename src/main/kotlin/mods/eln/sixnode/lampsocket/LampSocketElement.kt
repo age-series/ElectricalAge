@@ -258,12 +258,18 @@ class LampSocketElement(sixNode: SixNode, side: Direction, sixNodeDescriptor: Si
     override fun networkUnserialize(stream: DataInputStream) {
         try {
             when (stream.readByte()) {
-                LampSocketGui.TOGGLE_GROUNDED_EVENT -> grounded = !grounded
-                LampSocketGui.TOGGLE_POWER_SOURCE_EVENT -> poweredByLampSupply = !poweredByLampSupply
+                LampSocketGui.TOGGLE_GROUNDED_EVENT -> {
+                    grounded = !grounded
+                    reconnect()
+                }
+                LampSocketGui.TOGGLE_POWER_SOURCE_EVENT -> {
+                    poweredByLampSupply = !poweredByLampSupply
+                    reconnect()
+                }
                 LampSocketGui.UPDATE_LAMP_SUPPLY_CHANNEL_EVENT -> lampSupplyChannel = stream.readUTF()
                 LampSocketGui.ADJUST_ROTATION_ANGLE_EVENT -> projectionRotationAngle = stream.readDouble()
             }
-            inventoryChange(inventory)
+            needPublish()
         } catch (e: IOException) {
             e.printStackTrace()
         }
@@ -318,6 +324,11 @@ class LampSocketElement(sixNode: SixNode, side: Direction, sixNodeDescriptor: Si
             publishChanges = true
         }
 
+        if (descriptor.enableProjectionRotation && compound.hasKey("projectionRotationAngle")) {
+            projectionRotationAngle = compound.getDouble("projectionRotationAngle")
+            publishChanges = true
+        }
+
         if (compound.hasKey("grounded")) {
             grounded = compound.getBoolean("grounded")
             publishChanges = true
@@ -339,6 +350,7 @@ class LampSocketElement(sixNode: SixNode, side: Direction, sixNodeDescriptor: Si
     override fun writeConfigTool(compound: NBTTagCompound, invoker: EntityPlayer) {
         compound.setBoolean("poweredByLampSupply", poweredByLampSupply)
         compound.setString("lampSupplyChannel", lampSupplyChannel)
+        if (descriptor.enableProjectionRotation) compound.setDouble("projectionRotationAngle", projectionRotationAngle)
         compound.setBoolean("grounded", grounded)
         ConfigCopyToolDescriptor.writeGenDescriptor(compound, "lamp", inventory.getStackInSlot(LampSocketContainer.LAMP_SLOT_ID))
         ConfigCopyToolDescriptor.writeCableType(compound, inventory.getStackInSlot(LampSocketContainer.CABLE_SLOT_ID))

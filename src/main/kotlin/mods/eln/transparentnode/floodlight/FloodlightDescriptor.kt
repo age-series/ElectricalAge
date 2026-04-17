@@ -40,6 +40,8 @@ class FloodlightDescriptor(val itemName: String, val obj: Obj3D, val motorized: 
             acceptedLampTypesString += lampData.lampType
             if (acceptedLampTypes.indexOf(lampData) < (acceptedLampTypes.size - 1)) acceptedLampTypesString += ", "
         }
+
+        acceptedLampTypesString = I18N.tr(acceptedLampTypesString)
     }
 
     override fun addInformation(itemStack: ItemStack, entityPlayer: EntityPlayer, list: MutableList<String>, par4: Boolean) {
@@ -47,7 +49,7 @@ class FloodlightDescriptor(val itemName: String, val obj: Obj3D, val motorized: 
 
         Collections.addAll(list, *I18N.tr("A powerful lamp that specializes in\nthe illumination of large spaces.")!!
             .split("\n".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray())
-        list.add(I18N.tr("Accepted lamp types: $acceptedLampTypesString"))
+        list.add(I18N.tr("Accepted lamp types: $acceptedLampTypesString")) // acceptedLampTypesString is pre-translated
         list.add(I18N.tr("Uses inserted light bulbs."))
         list.add(if (motorized) I18N.tr("Intended for 240V bulb families.") else I18N.tr("Intended for 120V or 240V bulb families."))
     }

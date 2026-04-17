@@ -33,17 +33,17 @@ class FloodlightGui(player: EntityPlayer, val render: FloodlightRender) :
 
         horizontalAdjust = newGuiHorizontalTrackBar(7, 8, 162, 12)
         horizontalAdjust.setRange(MIN_HORIZONTAL_ANGLE.toFloat(), MAX_HORIZONTAL_ANGLE.toFloat())
-        horizontalAdjust.setStepIdMax(360)
+        horizontalAdjust.setStepIdMax((MAX_HORIZONTAL_ANGLE - MIN_HORIZONTAL_ANGLE).toInt())
         horizontalAdjust.value = render.swivelAngle.toFloat()
 
         verticalAdjust = newGuiHorizontalTrackBar(7, 26, 162, 12)
         verticalAdjust.setRange(MIN_VERTICAL_ANGLE.toFloat(), MAX_VERTICAL_ANGLE.toFloat())
-        verticalAdjust.setStepIdMax(180)
+        verticalAdjust.setStepIdMax((MAX_VERTICAL_ANGLE - MIN_VERTICAL_ANGLE).toInt())
         verticalAdjust.value = render.headAngle.toFloat()
 
         beamAdjust = newGuiHorizontalTrackBar(7, 44, 162, 12)
         beamAdjust.setRange(MIN_BEAM_WIDTH.toFloat(), MAX_BEAM_WIDTH.toFloat())
-        beamAdjust.setStepIdMax(180)
+        beamAdjust.setStepIdMax((MAX_BEAM_WIDTH - MIN_BEAM_WIDTH).toInt())
         beamAdjust.value = render.beamWidth.toFloat()
 
         if (render.motorized) {

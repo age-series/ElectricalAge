@@ -30,7 +30,13 @@ class LampSocketGui(player: EntityPlayer, val render: LampSocketRender) :
         super.initGui()
 
         buttonPowerSource = newGuiButton(16, 7, 144, "")
+
         buttonGrounded = newGuiButton(16, 33, 144, "")
+        buttonGrounded.setComment(0, "Toggle the internal ground connection")
+
+        // TODO: Remove the following two lines when grounding is implemented
+        buttonGrounded.setComment(1, "§4" + I18N.tr("This currently does nothing."))
+        buttonGrounded.enabled = false
 
         textboxLampSupplyChannel = newGuiTextField(16+1, 36+1, 144-2)
         textboxLampSupplyChannel.setComment(0, I18N.tr("Specify the lamp supply channel"))
@@ -38,7 +44,7 @@ class LampSocketGui(player: EntityPlayer, val render: LampSocketRender) :
 
         trackbarRotationAngle = newGuiHorizontalTrackBar(43,61,90, 14)
         trackbarRotationAngle.setRange(MIN_ROTATION_ANGLE.toFloat(), MAX_ROTATION_ANGLE.toFloat())
-        trackbarRotationAngle.setStepIdMax(180)
+        trackbarRotationAngle.setStepIdMax((MAX_ROTATION_ANGLE - MIN_ROTATION_ANGLE).toInt())
         trackbarRotationAngle.value = render.projectionRotationAngle.toFloat()
         trackbarRotationAngle.visible = render.descriptor.enableProjectionRotation
     }
