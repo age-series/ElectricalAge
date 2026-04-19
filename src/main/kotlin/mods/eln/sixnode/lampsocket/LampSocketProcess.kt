@@ -105,9 +105,7 @@ class LampSocketProcess(var element: LampSocketElement) : IProcess {
         if (newLightValue > BoilerplateLampData.MIN_LIGHT_VALUE) placeSpot(newLightValue)
 
         updateFastLight(newLightValue)
-
-        // This logic ensures that needPublish() is not called multiple times
-        if (!updateInventory(lampStack, cableStack)) publishChanges(activeLampSupplyConnection, newLightValue)
+        updateInventoryAndPublish(lampStack, cableStack, activeLampSupplyConnection, newLightValue)
 
         processElapsedTime += time
         if (processElapsedTime >= 1.0) processElapsedTime = 0.0
@@ -208,25 +206,19 @@ class LampSocketProcess(var element: LampSocketElement) : IProcess {
      * Manually update the server-side inventory every time an item is inserted/removed from the GUI.
      * This should be happening automatically, but it is not.
      */
-    private fun updateInventory(lampStack: ItemStack?, cableStack: ItemStack?): Boolean {
-        var updateInventory = false
+    private fun updateInventoryAndPublish(lampStack: ItemStack?, cableStack: ItemStack?, activeLampSupplyConnection: Boolean, newLightValue: Int) {
+        var inventoryChanged = false
+        var publishChanges = false
 
         if (lampInInventory != (lampStack != null)) {
             lampInInventory = (lampStack != null)
-            updateInventory = true
+            inventoryChanged = true
         }
 
         if (cableInInventory != (cableStack != null)) {
             cableInInventory = (cableStack != null)
-            updateInventory = true
+            inventoryChanged = true
         }
-
-        // Prevent duplicate function calls
-        return if (updateInventory) { element.inventoryChange(element.inventory); true } else false
-    }
-
-    private fun publishChanges(activeLampSupplyConnection: Boolean, newLightValue: Int) {
-        var publishChanges = false
 
         if (element.activeLampSupplyConnection != activeLampSupplyConnection) {
             element.activeLampSupplyConnection = activeLampSupplyConnection
@@ -238,8 +230,9 @@ class LampSocketProcess(var element: LampSocketElement) : IProcess {
             publishChanges = true
         }
 
-        // Prevent duplicate function calls
-        if (publishChanges) element.needPublish()
+        // Prevent duplicate calls of these functions
+        if (inventoryChanged) element.inventoryChange(element.inventory)
+        else if (publishChanges) element.needPublish()
     }
 
 }

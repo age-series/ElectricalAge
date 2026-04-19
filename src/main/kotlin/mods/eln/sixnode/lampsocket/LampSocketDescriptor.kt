@@ -32,11 +32,9 @@ class LampSocketDescriptor(itemName: String, val renderType: ILampSocketObjRende
         voltageLevelColor = VoltageLevelColor.Neutral
 
         for (lampData in acceptedLampTypes) {
-            acceptedLampTypesString += lampData.lampType
-            if (acceptedLampTypes.indexOf(lampData) < (acceptedLampTypes.size - 1)) acceptedLampTypesString += ", "
+            acceptedLampTypesString += lampData.translatedLampType
+            if (acceptedLampTypes.indexOf(lampData) < (acceptedLampTypes.size - 1)) acceptedLampTypesString += "/"
         }
-
-        acceptedLampTypesString = I18N.tr(acceptedLampTypesString)
     }
 
     override fun setParent(item: Item, damage: Int) {
@@ -77,7 +75,7 @@ class LampSocketDescriptor(itemName: String, val renderType: ILampSocketObjRende
 
         if (range != 0) list.add(I18N.tr("Spot range: %1$ blocks", range))
         if (enableProjectionRotation) list.add(I18N.tr("Angle: %1$\u00B0 to %2$\u00B0", LampSocketGui.MIN_ROTATION_ANGLE.toInt(), LampSocketGui.MAX_ROTATION_ANGLE.toInt()))
-        list.add(I18N.tr("Accepted lamp types: %1$", acceptedLampTypesString)) // acceptedLampTypesString is pre-translated
+        list.add(I18N.tr("Accepted lamp types: %1$", acceptedLampTypesString))
     }
 
     override fun addRealismContext(list: MutableList<String>): RealisticEnum {

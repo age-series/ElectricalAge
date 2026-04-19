@@ -15,12 +15,19 @@ import net.minecraft.item.ItemStack
  * there are specific families of cables that should be accepted/not accepted in certain inventories. See
  * LampItemSlot.kt for an idea of how to implement this behavior in the future, if needed.
  */
-class CableItemSlot(inventory: IInventory, slot: Int, x: Int, y: Int, stackLimit: Int, val acceptSignalCable: Boolean) :
-    SixNodeItemSlot(
-        inventory, slot, x, y, stackLimit, arrayOf(
-            ElectricalCableDescriptor::class.java, CurrentCableDescriptor::class.java
-        ), ISlotSkin.SlotSkin.medium, arrayOf(I18N.tr("Cable slot"))
-    ) {
+class CableItemSlot(
+    inventory: IInventory,
+    slot: Int,
+    x: Int,
+    y: Int,
+    stackLimit: Int,
+    val acceptSignalCable: Boolean,
+    comment: Array<String> = arrayOf(I18N.tr("Cable slot"))
+) : SixNodeItemSlot(
+    inventory, slot, x, y, stackLimit, arrayOf(
+        ElectricalCableDescriptor::class.java, CurrentCableDescriptor::class.java
+    ), ISlotSkin.SlotSkin.medium, comment
+) {
 
     override fun isItemValid(itemStack: ItemStack): Boolean {
         if (!super.isItemValid(itemStack)) return false
