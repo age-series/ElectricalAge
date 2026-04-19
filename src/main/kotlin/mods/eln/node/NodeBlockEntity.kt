@@ -82,11 +82,20 @@ abstract class NodeBlockEntity : TileEntity(), ITileEntitySpawnClient, INodeEnti
                 if (nodeFromCoordonate is Node) {
                     internalNode = nodeFromCoordonate
                 } else {
-                    println("ASSERT WRONG TYPE public Node getNode " + Coordinate(xCoord, yCoord, zCoord, worldObj))
+                    if (nodeFromCoordonate == null) {
+                        println("ASSERT NULL public Node getNode " + Coordinate(xCoord, yCoord, zCoord, worldObj))
+                    } else {
+                        println("ASSERT WRONG TYPE public Node getNode " + Coordinate(xCoord, yCoord, zCoord, worldObj))
+                    }
                 }
                 if (internalNode == null) {
                     Utils.println("This is actually used?")
-                    add(Coordinate(xCoord, yCoord, zCoord, worldObj))
+                    if (nodeFromCoordonate == null && !updateEntityFirst) {
+                        add(Coordinate(xCoord, yCoord, zCoord, worldObj))
+                    } else {
+                        val typeName = nodeFromCoordonate?.javaClass?.name ?: "null"
+                        println("NodeBlockEntity.getNode preserving block during load/type mismatch type=$typeName firstUpdate=$updateEntityFirst")
+                    }
                 }
             }
             return internalNode

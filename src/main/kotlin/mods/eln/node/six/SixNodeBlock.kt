@@ -40,10 +40,33 @@ class SixNodeBlock  // public static ArrayList<Integer> repertoriedItemStackId =
         if (entity != null) {
             val render = entity.elementRenderList[fromIntMinecraftSide(target.sideHit)!!.int]
             if (render != null) {
-                return render.sixNodeDescriptor.newItemStack()
+                findClosestMatchingHotbarStack(player, render.sixNodeDescriptor)?.let { return it.copy() }
+                return render.sixNodeDescriptor.newCreativeTabStack()
             }
         }
         return super.getPickBlock(target, world, x, y, z, player)
+    }
+
+    private fun findClosestMatchingHotbarStack(player: EntityPlayer, descriptor: SixNodeDescriptor): ItemStack? {
+        val inventory = player.inventory ?: return null
+        val currentSlot = inventory.currentItem
+        var bestStack: ItemStack? = null
+        var bestDistance = Int.MAX_VALUE
+        for (slot in 0 until 9) {
+            val stack = inventory.getStackInSlot(slot) ?: continue
+            if (!descriptor.checkSameItemStack(stack)) continue
+            val distance = hotbarDistance(currentSlot, slot)
+            if (distance < bestDistance) {
+                bestDistance = distance
+                bestStack = stack
+            }
+        }
+        return bestStack
+    }
+
+    private fun hotbarDistance(a: Int, b: Int): Int {
+        val direct = Math.abs(a - b)
+        return Math.min(direct, 9 - direct)
     }
 
     override fun registerBlockIcons(r: IIconRegister) {
@@ -200,6 +223,7 @@ class SixNodeBlock  // public static ArrayList<Integer> repertoriedItemStackId =
             val sixNode = tileEntity.node as SixNode? ?: return
             for (direction in Direction.values()) {
                 if (sixNode.getSideEnable(direction)) {
+                    println("SixNodeBlock.breakBlock deleting side=$direction at $x,$y,$z block=${par5.javaClass.simpleName}")
                     sixNode.deleteSubBlock(null, direction)
                 }
             }
@@ -213,6 +237,7 @@ class SixNodeBlock  // public static ArrayList<Integer> repertoriedItemStackId =
         for (direction in Direction.values()) {
             if (sixNode.getSideEnable(direction)) {
                 if (!getIfOtherBlockIsSolid(world, x, y, z, direction)) {
+                    println("SixNodeBlock.onNeighborBlockChange deleting side=$direction at $x,$y,$z dueTo=${b.javaClass.simpleName}")
                     sixNode.deleteSubBlock(null, direction)
                 }
             }
@@ -428,6 +453,10 @@ class SixNodeBlock  // public static ArrayList<Integer> repertoriedItemStackId =
         vect[1] = y
         vect[2] = z
         direction.applyTo(vect, 1)
+        // During chunk load, neighboring chunks can still be unavailable. Treat that as
+        // "unknown" instead of "air" so attached six-node parts do not self-delete
+        // before their support block has actually loaded.
+        if (!world.blockExists(vect[0], vect[1], vect[2])) return true
         val block = world.getBlock(vect[0], vect[1], vect[2])
         if (block === Blocks.air) return false
         return if (block.isOpaqueCube) true else false

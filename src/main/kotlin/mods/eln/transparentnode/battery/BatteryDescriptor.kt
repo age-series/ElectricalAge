@@ -139,6 +139,7 @@ class BatteryDescriptor(
         list?.add(tr("Battery could be realistic in the future"))
         list?.add(tr("  * Batteries have internal resistance"))
         list?.add(tr("  * Not currently simulating any particular chemistry of battery"))
+        list?.add(tr("  * Compact batteries are now intended around 12V, service batteries around 24V, and series batteries around 48V"))
         list?.add(tr("Batteries are based in realistic battery designs that someone might implement realistically:"))
         list?.add(tr("  * Single use batteries emulate a voltaic pile"))
         list?.add(tr("  * Current oriented uses two smaller batteries in parallel to increase current capability"))

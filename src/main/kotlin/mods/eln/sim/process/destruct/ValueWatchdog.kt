@@ -8,6 +8,7 @@ import mods.eln.sim.IProcess
 enum class WatchdogType {
     THERMAL,
     RESISTOR_HEAT,
+    CURRENT,
     VOLTAGE,
     SHAFT_SPEED,
     OTHER
@@ -67,6 +68,7 @@ abstract class ValueWatchdog : IProcess {
         return when (watchdogType) {
             WatchdogType.THERMAL -> Eln.config.getBooleanOrElse("simulation.watchdog.destruction.thermal", true)
             WatchdogType.RESISTOR_HEAT -> Eln.config.getBooleanOrElse("simulation.watchdog.destruction.resistorHeat", false)
+            WatchdogType.CURRENT -> Eln.config.getBooleanOrElse("simulation.watchdog.destruction.current", true)
             WatchdogType.VOLTAGE -> Eln.config.getBooleanOrElse("simulation.watchdog.destruction.voltage", true)
             WatchdogType.SHAFT_SPEED -> Eln.config.getBooleanOrElse("simulation.watchdog.destruction.shaftSpeed", true)
             WatchdogType.OTHER -> Eln.config.getBooleanOrElse("simulation.watchdog.destruction.other", true)

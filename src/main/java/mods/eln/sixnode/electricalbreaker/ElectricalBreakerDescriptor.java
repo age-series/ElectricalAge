@@ -4,6 +4,7 @@ import mods.eln.misc.Direction;
 import mods.eln.misc.LRDU;
 import mods.eln.misc.Obj3D;
 import mods.eln.misc.Obj3D.Obj3DPart;
+import mods.eln.misc.Utils;
 import mods.eln.misc.VoltageLevelColor;
 import mods.eln.node.six.SixNodeDescriptor;
 import mods.eln.wiki.Data;
@@ -26,10 +27,17 @@ public class ElectricalBreakerDescriptor extends SixNodeDescriptor {
     private Obj3DPart led;
 
     float alphaOff, alphaOn, speed;
+    public double currentLimit;
+    public float[] pinDistance;
 
     public ElectricalBreakerDescriptor(String name, Obj3D obj) {
+        this(name, obj, Double.POSITIVE_INFINITY);
+    }
+
+    public ElectricalBreakerDescriptor(String name, Obj3D obj, double currentLimit) {
         super(name, ElectricalBreakerElement.class, ElectricalBreakerRender.class);
         this.obj = obj;
+        this.currentLimit = currentLimit;
         if (obj != null) {
             main = obj.getPart("case");
             lever = obj.getPart("lever");
@@ -39,6 +47,7 @@ public class ElectricalBreakerDescriptor extends SixNodeDescriptor {
                 alphaOff = lever.getFloat("alphaOff");
                 alphaOn = lever.getFloat("alphaOn");
             }
+            pinDistance = Utils.getSixNodePinDistance(main);
         }
 
         voltageLevelColor = VoltageLevelColor.Neutral;
@@ -84,6 +93,9 @@ public class ElectricalBreakerDescriptor extends SixNodeDescriptor {
     public void addInformation(ItemStack itemStack, EntityPlayer entityPlayer, List list, boolean par4) {
         super.addInformation(itemStack, entityPlayer, list, par4);
         Collections.addAll(list, (tr("Protects electrical components\nOpens contact if:\n  - Voltage exceeds a certain level\n  - Current exceeds the cable limit").split("\n")));
+        if (Double.isFinite(currentLimit)) {
+            list.add(tr("Breaker rating: %1$A", mods.eln.misc.Utils.plotValue(currentLimit)));
+        }
     }
 
     @Nullable

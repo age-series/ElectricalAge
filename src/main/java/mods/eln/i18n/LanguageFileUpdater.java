@@ -41,7 +41,7 @@ class LanguageFileUpdater {
 
             Set<TranslationItem> item = new TreeSet<>();
 
-            item.add(new TranslationItem("Grid_DC-DC_Converter.name", "Grid Transformer"));
+            item.add(new TranslationItem("Grid_DC-DC_Converter.name", "Grid DC-DC Converter"));
             item.add(new TranslationItem("Transmission_Tower.name", "T2 Transmission Tower"));
             item.add(new TranslationItem("Utility_Pole.name", "T1 Utility Pole"));
             item.add(new TranslationItem("Utility_Pole_w/DC-DC_Converter.name", "T1 Utility Pole with Transformer"));

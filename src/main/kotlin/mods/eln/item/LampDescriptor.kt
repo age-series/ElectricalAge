@@ -90,6 +90,7 @@ class LampDescriptor(name: String, iconName: String, val lampData: SpecificLampD
     override fun addInformation(itemStack: ItemStack?, entityPlayer: EntityPlayer?, list: MutableList<String>, par4: Boolean) {
         super.addInformation(itemStack, entityPlayer, list, par4)
 
+        list.add(tr("Nominal voltage: ${Utils.plotValue(lampData.nominalU)}V"))
         list.add(tr("Power: ${Utils.plotValue(lampData.nominalP)}W"))
         list.add(tr("Resistance: ${Utils.plotValue(lampData.resistance)}\u2126"))
         list.add(tr("Nominal lifetime: ${lampData.technology.nominalLifeInHours}h"))

@@ -9,6 +9,7 @@ If you learn things about making the gradle build work in the sandbox, document 
 * Java source files belong in the `src/main/java` directory. Kotlin source files belong in the `src/main/kotlin` directory.
 * Do not update the gralde configuration or wrapper without asking first. They are from an upstream repository.
 * If you create documentation, please add it do the `docs` directory.
+* Do not move the `id` or `subId` of existing registered items or blocks unless explicitly asked. Those values are world-save sensitive and changing unrelated ones breaks existing saves.
 
 # Sandbox
 

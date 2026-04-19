@@ -1,8 +1,10 @@
 package mods.eln.sixnode.electricalrelay;
 
+import mods.eln.Eln;
 import mods.eln.misc.*;
 import mods.eln.misc.Obj3D.Obj3DPart;
 import mods.eln.node.six.SixNodeDescriptor;
+import mods.eln.node.NodeBase;
 import mods.eln.sim.ElectricalLoad;
 import mods.eln.sim.mna.component.Resistor;
 import mods.eln.sixnode.electricalcable.ElectricalCableDescriptor;
@@ -28,6 +30,14 @@ public class ElectricalRelayDescriptor extends SixNodeDescriptor {
     private Obj3D obj;
 
     ElectricalCableDescriptor cable;
+    public double contactNominalVoltage;
+    public double currentRating;
+    public double damageCurrentLimit;
+    public double contactResistance;
+    public double controlVoltage;
+    public boolean signalWire;
+    public int nodeMask;
+    public boolean currentWatchdogEnabled;
 
     float r0rOff, r0rOn, r1rOff, r1rOn;
     public float speed;
@@ -54,15 +64,60 @@ public class ElectricalRelayDescriptor extends SixNodeDescriptor {
             }
         }
 
+        contactNominalVoltage = cable.electricalNominalVoltage;
+        currentRating = cable.electricalMaximalCurrent;
+        damageCurrentLimit = currentRating * ElectricalSafety.CONTINUOUS_TO_DAMAGE_CURRENT_FACTOR;
+        contactResistance = cable.electricalRs;
+        controlVoltage = Eln.SVU;
+        signalWire = cable.signalWire;
+        nodeMask = cable.getNodeMask();
+        currentWatchdogEnabled = false;
         voltageLevelColor = VoltageLevelColor.fromCable(cable);
     }
 
+    public ElectricalRelayDescriptor(String name, Obj3D obj, double contactNominalVoltage, double currentRating, double contactResistance, double controlVoltage) {
+        super(name, ElectricalRelayElement.class, ElectricalRelayRender.class);
+        this.obj = obj;
+        this.cable = null;
+        this.contactNominalVoltage = contactNominalVoltage;
+        this.currentRating = currentRating;
+        this.damageCurrentLimit = currentRating * ElectricalSafety.CONTINUOUS_TO_DAMAGE_CURRENT_FACTOR;
+        this.contactResistance = contactResistance;
+        this.controlVoltage = controlVoltage;
+        this.signalWire = false;
+        this.nodeMask = NodeBase.maskElectricalPower;
+        this.currentWatchdogEnabled = true;
+
+        if (obj != null) {
+            main = obj.getPart("main");
+            relay0 = obj.getPart("relay0");
+            relay1 = obj.getPart("relay1");
+            backplate = obj.getPart("backplate");
+
+            if (relay0 != null) {
+                r0rOff = relay0.getFloat("rOff");
+                r0rOn = relay0.getFloat("rOn");
+                speed = relay0.getFloat("speed");
+            }
+            if (relay1 != null) {
+                r1rOff = relay1.getFloat("rOff");
+                r1rOn = relay1.getFloat("rOn");
+            }
+        }
+
+        voltageLevelColor = VoltageLevelColor.fromVoltage(contactNominalVoltage);
+    }
+
     void applyTo(ElectricalLoad load) {
-        cable.applyTo(load);
+        load.setSerialResistance(contactResistance);
     }
 
     void applyTo(Resistor load) {
-        cable.applyTo(load);
+        load.setResistance(contactResistance);
+    }
+
+    public int getNodeMask() {
+        return nodeMask;
     }
 
     @Override
@@ -76,6 +131,12 @@ public class ElectricalRelayDescriptor extends SixNodeDescriptor {
         super.addInformation(itemStack, entityPlayer, list, par4);
         Collections.addAll(list, tr("A relay is an electrical\ncontact that conducts\ncurrent when a signal\nvoltage is applied.").split("\n"));
         Collections.addAll(list, tr("The relay's input behaves\nlike a Schmitt Trigger.").split("\n"));
+        list.add(tr("Control voltage: %1$V", Utils.plotValue(controlVoltage)));
+        list.add(tr("Contact voltage: %1$V", Utils.plotValue(contactNominalVoltage)));
+        list.add(tr("Contact current rating: %1$A", Utils.plotValue(currentRating)));
+        if (currentWatchdogEnabled) {
+            list.add(tr("Damage current: %1$A after %2$s", Utils.plotValue(damageCurrentLimit), Utils.plotTime(ElectricalSafety.SHORT_OVERLOAD_GRACE_SECONDS)));
+        }
     }
 
     @Override

@@ -25,11 +25,18 @@ public class LampSupplyDescriptor extends SixNodeDescriptor {
     public boolean isWireless;
     public int range;
     public int channelCount = 3;
+    public double nominalVoltage;
 
     public LampSupplyDescriptor(String name, Obj3D obj, int range) {
+        this(name, obj, range, NominalVoltage.V120);
+    }
+
+    public LampSupplyDescriptor(String name, Obj3D obj, int range, double nominalVoltage) {
         super(name, LampSupplyElement.class, LampSupplyRender.class);
         this.isWireless = isWireless;
         this.range = range;
+        this.nominalVoltage = nominalVoltage;
+        setDefaultIcon("lampsupply");
         this.obj = obj;
         if (obj != null) {
             base = obj.getPart("base");
@@ -93,6 +100,7 @@ public class LampSupplyDescriptor extends SixNodeDescriptor {
     public void addInformation(ItemStack itemStack, EntityPlayer entityPlayer, List list, boolean par4) {
         super.addInformation(itemStack, entityPlayer, list, par4);
         list.add(tr("Supplies power to nearby lamps."));
+        list.add(tr("Nominal mains class: %1$V", Utils.plotValue(nominalVoltage)));
         list.add(tr("Capable of operating 3 light channels."));
         Collections.addAll(list,tr("Supports control from a wireless signal\nchannel for each lighting channel.").split("\n"));
     }

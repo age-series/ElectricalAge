@@ -963,7 +963,7 @@ class ElnSimSnapshotCommand: IConsoleCommand {
 
 class ElnWatchdogCommand: IConsoleCommand {
     override val name = "watchdog"
-    private val validTypes = listOf("all", "thermal", "resistorHeat", "voltage", "shaftSpeed", "other", "defaults")
+    private val validTypes = listOf("all", "thermal", "resistorHeat", "current", "voltage", "shaftSpeed", "other", "defaults")
 
     override fun runCommand(ics: ICommandSender, args: List<String>) {
         if (args.isEmpty() || args.size > 2) {
@@ -983,7 +983,7 @@ class ElnWatchdogCommand: IConsoleCommand {
             }
             applyDefaults()
             saveWatchdogConfig()
-            cprint(ics, "Watchdog defaults restored (thermal=true, resistorHeat=false, voltage=true, shaftSpeed=true, other=true).", indent = 1)
+            cprint(ics, "Watchdog defaults restored (thermal=true, resistorHeat=false, current=true, voltage=true, shaftSpeed=true, other=true).", indent = 1)
             return
         }
         if (args.size != 2) {
@@ -996,12 +996,14 @@ class ElnWatchdogCommand: IConsoleCommand {
             "all" -> {
                 Eln.config.setBoolean("simulation.watchdog.destruction.thermal", watchdogEnabled)
                 Eln.config.setBoolean("simulation.watchdog.destruction.resistorHeat", watchdogEnabled)
+                Eln.config.setBoolean("simulation.watchdog.destruction.current", watchdogEnabled)
                 Eln.config.setBoolean("simulation.watchdog.destruction.voltage", watchdogEnabled)
                 Eln.config.setBoolean("simulation.watchdog.destruction.shaftSpeed", watchdogEnabled)
                 Eln.config.setBoolean("simulation.watchdog.destruction.other", watchdogEnabled)
             }
             "thermal" -> Eln.config.setBoolean("simulation.watchdog.destruction.thermal", watchdogEnabled)
             "resistorheat" -> Eln.config.setBoolean("simulation.watchdog.destruction.resistorHeat", watchdogEnabled)
+            "current" -> Eln.config.setBoolean("simulation.watchdog.destruction.current", watchdogEnabled)
             "voltage" -> Eln.config.setBoolean("simulation.watchdog.destruction.voltage", watchdogEnabled)
             "shaftspeed" -> Eln.config.setBoolean("simulation.watchdog.destruction.shaftSpeed", watchdogEnabled)
             "other" -> Eln.config.setBoolean("simulation.watchdog.destruction.other", watchdogEnabled)
@@ -1019,6 +1021,7 @@ class ElnWatchdogCommand: IConsoleCommand {
     private fun applyDefaults() {
         Eln.config.setBoolean("simulation.watchdog.destruction.thermal", true)
         Eln.config.setBoolean("simulation.watchdog.destruction.resistorHeat", false)
+        Eln.config.setBoolean("simulation.watchdog.destruction.current", true)
         Eln.config.setBoolean("simulation.watchdog.destruction.voltage", true)
         Eln.config.setBoolean("simulation.watchdog.destruction.shaftSpeed", true)
         Eln.config.setBoolean("simulation.watchdog.destruction.other", true)
@@ -1027,6 +1030,7 @@ class ElnWatchdogCommand: IConsoleCommand {
     private fun saveWatchdogConfig() {
         saveConfigPath("simulation.watchdog.destruction.thermal", Eln.config.getBooleanOrElse("simulation.watchdog.destruction.thermal", true))
         saveConfigPath("simulation.watchdog.destruction.resistorHeat", Eln.config.getBooleanOrElse("simulation.watchdog.destruction.resistorHeat", false))
+        saveConfigPath("simulation.watchdog.destruction.current", Eln.config.getBooleanOrElse("simulation.watchdog.destruction.current", true))
         saveConfigPath("simulation.watchdog.destruction.voltage", Eln.config.getBooleanOrElse("simulation.watchdog.destruction.voltage", true))
         saveConfigPath("simulation.watchdog.destruction.shaftSpeed", Eln.config.getBooleanOrElse("simulation.watchdog.destruction.shaftSpeed", true))
         saveConfigPath("simulation.watchdog.destruction.other", Eln.config.getBooleanOrElse("simulation.watchdog.destruction.other", true))
@@ -1038,7 +1042,7 @@ class ElnWatchdogCommand: IConsoleCommand {
         cprint(ics, "This also updates config/eln/eln.json.", indent = 1)
         cprint(ics, "")
         cprint(ics, "Parameters:", indent = 1)
-        cprint(ics, "@0:string : Watchdog type (all, thermal, resistorHeat, voltage, shaftSpeed, other, defaults).", indent = 2)
+        cprint(ics, "@0:string : Watchdog type (all, thermal, resistorHeat, current, voltage, shaftSpeed, other, defaults).", indent = 2)
         cprint(ics, "@1:bool : Destruction state (enabled/disabled). Not used by defaults.", indent = 2)
         cprint(ics, "")
     }

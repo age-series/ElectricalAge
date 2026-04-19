@@ -98,6 +98,12 @@ import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.oredict.OreDictionary;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.core.LoggerContext;
+import org.apache.logging.log4j.core.appender.FileAppender;
+import org.apache.logging.log4j.core.config.Configuration;
+import org.apache.logging.log4j.core.config.LoggerConfig;
+import org.apache.logging.log4j.core.layout.PatternLayout;
 
 import java.io.File;
 import java.util.*;
@@ -287,6 +293,7 @@ public class Eln {
 
     @EventHandler
     public void preInit(FMLPreInitializationEvent event) {
+        configureElnLogFile(event);
 
         elnNetwork = NetworkRegistry.INSTANCE.newSimpleChannel("electrical-age");
         elnNetwork.registerMessage(AchievePacketHandler.class, AchievePacket.class, 0, Side.SERVER);
@@ -416,6 +423,49 @@ public class Eln {
 
         AnalyticsHandler.INSTANCE.submitUpstreamAnalytics();
         AnalyticsHandler.INSTANCE.submitAgeSeriesAnalytics();
+    }
+
+    private void configureElnLogFile(FMLPreInitializationEvent event) {
+        File runtimeDir = event.getSuggestedConfigurationFile().getParentFile().getParentFile();
+        if (runtimeDir == null) return;
+
+        File logDir = new File(runtimeDir, "logs");
+        if (!logDir.exists() && !logDir.mkdirs()) return;
+
+        LoggerContext context = (LoggerContext) LogManager.getContext(false);
+        Configuration configuration = context.getConfiguration();
+        final String appenderName = "ELN_FILE";
+        if (configuration.getAppenders().containsKey(appenderName)) return;
+
+        PatternLayout layout = PatternLayout.createLayout(
+            "[%d{HH:mm:ss}] [%t/%level] [%logger]: %msg%n",
+            configuration,
+            null,
+            null,
+            null
+        );
+
+        FileAppender appender = FileAppender.createAppender(
+            new File(logDir, "eln.log").getAbsolutePath(),
+            "true",
+            "false",
+            appenderName,
+            "true",
+            "false",
+            "false",
+            layout,
+            null,
+            "false",
+            null,
+            configuration
+        );
+        if (appender == null) return;
+
+        appender.start();
+
+        LoggerConfig loggerConfig = configuration.getLoggerConfig("ELN");
+        loggerConfig.addAppender(appender, Level.INFO, null);
+        context.updateLoggers();
     }
 
     @EventHandler

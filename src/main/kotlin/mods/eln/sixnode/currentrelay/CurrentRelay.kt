@@ -94,6 +94,7 @@ class CurrentRelayDescriptor(
 
     override fun addInformation(itemStack: ItemStack?, entityPlayer: EntityPlayer?, list: MutableList<String>, par4: Boolean) {
         super.addInformation(itemStack, entityPlayer, list, par4)
+        list.add(tr("Deprecated legacy relay. Prefer relays that follow the AWG/mm cable system."))
         list.addAll(
             tr("A relay is an electrical\ncontact that conducts\ncurrent when a signal\nvoltage is applied.")
                 .split("\n".toRegex()).dropLastWhile { it.isEmpty() }

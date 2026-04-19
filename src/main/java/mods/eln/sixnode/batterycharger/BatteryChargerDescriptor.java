@@ -115,13 +115,17 @@ public class BatteryChargerDescriptor extends SixNodeDescriptor {
     public void addInformation(ItemStack itemStack, EntityPlayer entityPlayer, List list, boolean par4) {
         super.addInformation(itemStack, entityPlayer, list, par4);
         Collections.addAll(list, tr("Can be used to recharge\nelectrical items like:\nFlash Light, X-Ray scanner\nand Portable Battery ...").split("\\\n"));
+        list.add(tr("Nominal voltage: %1$V", Utils.plotValue(nominalVoltage)));
         list.add(tr("Nominal power: %1$W", Utils.plotValue(nominalPower)));
+        list.add(tr("Approx. output current: %1$A", Utils.plotValue(nominalPower / nominalVoltage)));
     }
 
     @Override
     public RealisticEnum addRealismContext(List<String> list) {
         super.addRealismContext(list);
-        list.add(tr("This battery charger doesn't take into account battery chemistry"));
+        list.add(tr("This battery charger is an idealized mains-fed charger."));
+        list.add(tr("  * It does not model battery chemistry or charging curves"));
+        list.add(tr("  * It exposes a nominal mains class instead of wall-plug details"));
         return RealisticEnum.IDEAL;
     }
 
