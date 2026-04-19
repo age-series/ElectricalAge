@@ -3,6 +3,7 @@ package mods.eln.gridnode
 import mods.eln.Eln
 import mods.eln.i18n.I18N.tr
 import mods.eln.misc.*
+import mods.eln.misc.NominalVoltage
 import mods.eln.node.NodeBase
 import mods.eln.node.transparent.TransparentNode
 import mods.eln.node.transparent.TransparentNodeDescriptor
@@ -31,15 +32,15 @@ class GridSwitchDescriptor(
     GridSwitchElement::class.java,
     GridSwitchRender::class.java,
     "textures/wire.png",
-    Eln.instance.highVoltageCableDescriptor,
+    Eln.instance.veryHighVoltageCableDescriptor,
     12
 ) {
     var rebound: Double = 0.0  // coef. of restitution
     var nominalAccel: Double = 1.0  // rad/s^2
     var damping: Double = 4.0
     var drag: Double = 0.2  // 1/s
-    var nominalU: Double = Eln.MVU
-    val resistance = Eln.instance.highVoltageCableDescriptor.electricalRs
+    var nominalU: Double = NominalVoltage.V24
+    val resistance = Eln.instance.veryHighVoltageCableDescriptor.electricalRs
     var sinkMin = 20  // Essentially: full load
     var sinkMax = 1000  // Essentially: leakage
     var arcSound = "eln:arc"
@@ -150,7 +151,7 @@ class GridSwitchElement(node: TransparentNode, descriptor: TransparentNodeDescri
 
     val control = NbtElectricalGateInput("control")
     val power = NbtElectricalLoad("power").apply {
-        Eln.instance.meduimVoltageCableDescriptor.applyTo(this)
+        Eln.instance.lowVoltageCableDescriptor.applyTo(this)
     }
     val powerSink = Resistor(power, null).apply { resistance = desc.sinkMax.toDouble() }
 

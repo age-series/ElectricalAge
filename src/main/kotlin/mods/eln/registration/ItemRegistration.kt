@@ -16,6 +16,7 @@ import mods.eln.item.regulator.RegulatorAnalogDescriptor
 import mods.eln.item.regulator.RegulatorOnOffDescriptor
 import mods.eln.mechanical.ClutchPinItem
 import mods.eln.mechanical.ClutchPlateItem
+import mods.eln.misc.NominalVoltage
 import mods.eln.ore.OreDescriptor
 import mods.eln.railroad.ElectricMinecartItem
 import mods.eln.sixnode.electricaldatalogger.DataLogsPrintDescriptor
@@ -69,6 +70,7 @@ object ItemRegistration {
         mapSharedGroup(120, Eln.creativeTabMachines)
         mapSharedGroup(121, Eln.creativeTabToolsArmor)
         mapSharedGroup(122, Eln.creativeTabToolsArmor)
+        mapSharedGroup(123, Eln.creativeTabToolsArmor)
         mapSharedGroup(124, Eln.creativeTabPowerElectronics)
         mapSharedGroup(126, Eln.creativeTabOresMaterials)
         mapSharedGroup(127, Eln.creativeTabToolsArmor)
@@ -115,7 +117,7 @@ object ItemRegistration {
 
         registerBasicItems(126)
         registerElectricMinecartItems(127)
-        registerWireToolItems(127)
+        registerWireToolItems(123)
         registerWireMachineItems(118)
 
         registerArmor()
@@ -132,192 +134,208 @@ object ItemRegistration {
             subId = 0
             completId = subId + (id shl 6)
             element = HeatingCorpElement(
-                I18N.TR_NAME(I18N.Type.NONE, "Small 50V Copper Heating Element"),
-                Eln.LVU,
+                I18N.TR_NAME(I18N.Type.NONE, "Small 48V Copper Heating Element"),
+                NominalVoltage.V48,
                 150.0,
                 190.0,
                 instance.lowVoltageCableDescriptor
             )
+            element.setDefaultIcon("small50vcopperheatingelement")
             Eln.sharedItem.addElement(completId, element)
         }
         run {
             subId = 1
             completId = subId + (id shl 6)
             element = HeatingCorpElement(
-                I18N.TR_NAME(I18N.Type.NONE, "50V Copper Heating Element"),
-                Eln.LVU,
+                I18N.TR_NAME(I18N.Type.NONE, "48V Copper Heating Element"),
+                NominalVoltage.V48,
                 250.0,
                 320.0,
                 instance.lowVoltageCableDescriptor
             )
+            element.setDefaultIcon("50vcopperheatingelement")
             Eln.sharedItem.addElement(completId, element)
         }
         run {
             subId = 2
             completId = subId + (id shl 6)
             element = HeatingCorpElement(
-                I18N.TR_NAME(I18N.Type.NONE, "Small 200V Copper Heating Element"),
-                Eln.MVU,
+                I18N.TR_NAME(I18N.Type.NONE, "Small 240V Copper Heating Element"),
+                NominalVoltage.V240,
                 400.0,
                 500.0,
                 instance.meduimVoltageCableDescriptor
             )
+            element.setDefaultIcon("small200vcopperheatingelement")
             Eln.sharedItem.addElement(completId, element)
         }
         run {
             subId = 3
             completId = subId + (id shl 6)
             element = HeatingCorpElement(
-                I18N.TR_NAME(I18N.Type.NONE, "200V Copper Heating Element"),
-                Eln.MVU,
+                I18N.TR_NAME(I18N.Type.NONE, "240V Copper Heating Element"),
+                NominalVoltage.V240,
                 600.0,
                 750.0,
                 instance.highVoltageCableDescriptor
             )
+            element.setDefaultIcon("200vcopperheatingelement")
             Eln.sharedItem.addElement(completId, element)
         }
         run {
             subId = 4
             completId = subId + (id shl 6)
             element = HeatingCorpElement(
-                I18N.TR_NAME(I18N.Type.NONE, "Small 50V Iron Heating Element"),
-                Eln.LVU,
+                I18N.TR_NAME(I18N.Type.NONE, "Small 48V Iron Heating Element"),
+                NominalVoltage.V48,
                 180.0,
                 225.0,
                 instance.lowVoltageCableDescriptor
             )
+            element.setDefaultIcon("small50vironheatingelement")
             Eln.sharedItem.addElement(completId, element)
         }
         run {
             subId = 5
             completId = subId + (id shl 6)
             element = HeatingCorpElement(
-                I18N.TR_NAME(I18N.Type.NONE, "50V Iron Heating Element"),
-                Eln.LVU,
+                I18N.TR_NAME(I18N.Type.NONE, "48V Iron Heating Element"),
+                NominalVoltage.V48,
                 375.0,
                 480.0,
                 instance.lowVoltageCableDescriptor
             )
+            element.setDefaultIcon("50vironheatingelement")
             Eln.sharedItem.addElement(completId, element)
         }
         run {
             subId = 6
             completId = subId + (id shl 6)
             element = HeatingCorpElement(
-                I18N.TR_NAME(I18N.Type.NONE, "Small 200V Iron Heating Element"),
-                Eln.MVU,
+                I18N.TR_NAME(I18N.Type.NONE, "Small 240V Iron Heating Element"),
+                NominalVoltage.V240,
                 600.0,
                 750.0,
                 instance.meduimVoltageCableDescriptor
             )
+            element.setDefaultIcon("small200vironheatingelement")
             Eln.sharedItem.addElement(completId, element)
         }
         run {
             subId = 7
             completId = subId + (id shl 6)
             element = HeatingCorpElement(
-                I18N.TR_NAME(I18N.Type.NONE, "200V Iron Heating Element"),
-                Eln.MVU,
+                I18N.TR_NAME(I18N.Type.NONE, "240V Iron Heating Element"),
+                NominalVoltage.V240,
                 900.0,
                 1050.0,
                 instance.highVoltageCableDescriptor
             )
+            element.setDefaultIcon("200vironheatingelement")
             Eln.sharedItem.addElement(completId, element)
         }
         run {
             subId = 8
             completId = subId + (id shl 6)
             element = HeatingCorpElement(
-                I18N.TR_NAME(I18N.Type.NONE, "Small 50V Tungsten Heating Element"),
-                Eln.LVU,
+                I18N.TR_NAME(I18N.Type.NONE, "Small 48V Tungsten Heating Element"),
+                NominalVoltage.V48,
                 240.0,
                 300.0,
                 instance.lowVoltageCableDescriptor
             )
+            element.setDefaultIcon("small50vtungstenheatingelement")
             Eln.sharedItem.addElement(completId, element)
         }
         run {
             subId = 9
             completId = subId + (id shl 6)
             element = HeatingCorpElement(
-                I18N.TR_NAME(I18N.Type.NONE, "50V Tungsten Heating Element"),
-                Eln.LVU,
+                I18N.TR_NAME(I18N.Type.NONE, "48V Tungsten Heating Element"),
+                NominalVoltage.V48,
                 500.0,
                 640.0,
                 instance.lowVoltageCableDescriptor
             )
+            element.setDefaultIcon("50vtungstenheatingelement")
             Eln.sharedItem.addElement(completId, element)
         }
         run {
             subId = 10
             completId = subId + (id shl 6)
             element = HeatingCorpElement(
-                I18N.TR_NAME(I18N.Type.NONE, "Small 200V Tungsten Heating Element"),
-                Eln.MVU,
+                I18N.TR_NAME(I18N.Type.NONE, "Small 240V Tungsten Heating Element"),
+                NominalVoltage.V240,
                 800.0,
                 1000.0,
                 instance.meduimVoltageCableDescriptor
             )
+            element.setDefaultIcon("small200vtungstenheatingelement")
             Eln.sharedItem.addElement(completId, element)
         }
         run {
             subId = 11
             completId = subId + (id shl 6)
             element = HeatingCorpElement(
-                I18N.TR_NAME(I18N.Type.NONE, "200V Tungsten Heating Element"),
-                Eln.MVU,
+                I18N.TR_NAME(I18N.Type.NONE, "240V Tungsten Heating Element"),
+                NominalVoltage.V240,
                 1200.0,
                 1500.0,
                 instance.highVoltageCableDescriptor
             )
+            element.setDefaultIcon("200vtungstenheatingelement")
             Eln.sharedItem.addElement(completId, element)
         }
         run {
             subId = 12
             completId = subId + (id shl 6)
             element = HeatingCorpElement(
-                I18N.TR_NAME(I18N.Type.NONE, "Small 800V Tungsten Heating Element"),
-                Eln.HVU,
+                I18N.TR_NAME(I18N.Type.NONE, "Small 480V Tungsten Heating Element"),
+                NominalVoltage.V480,
                 3600.0,
                 4800.0,
                 instance.veryHighVoltageCableDescriptor
             )
+            element.setDefaultIcon("small800vtungstenheatingelement")
             Eln.sharedItem.addElement(completId, element)
         }
         run {
             subId = 13
             completId = subId + (id shl 6)
             element = HeatingCorpElement(
-                I18N.TR_NAME(I18N.Type.NONE, "800V Tungsten Heating Element"),
-                Eln.HVU,
+                I18N.TR_NAME(I18N.Type.NONE, "480V Tungsten Heating Element"),
+                NominalVoltage.V480,
                 4812.0,
                 6015.0,
                 instance.veryHighVoltageCableDescriptor
             )
+            element.setDefaultIcon("800vtungstenheatingelement")
             Eln.sharedItem.addElement(completId, element)
         }
         run {
             subId = 14
             completId = subId + (id shl 6)
             element = HeatingCorpElement(
-                I18N.TR_NAME(I18N.Type.NONE, "Small 3.2kV Tungsten Heating Element"),
-                Eln.VVU,
+                I18N.TR_NAME(I18N.Type.NONE, "Small 480V Heavy Tungsten Heating Element"),
+                NominalVoltage.V480,
                 4000.0,
                 6000.0,
                 instance.veryHighVoltageCableDescriptor
             )
+            element.setDefaultIcon("small3.2kvtungstenheatingelement")
             Eln.sharedItem.addElement(completId, element)
         }
         run {
             subId = 15
             completId = subId + (id shl 6)
             element = HeatingCorpElement(
-                I18N.TR_NAME(I18N.Type.NONE, "3.2kV Tungsten Heating Element"),
-                Eln.VVU,
+                I18N.TR_NAME(I18N.Type.NONE, "480V Heavy Tungsten Heating Element"),
+                NominalVoltage.V480,
                 12000.0,
                 15000.0,
                 instance.veryHighVoltageCableDescriptor
             )
+            element.setDefaultIcon("3.2kvtungstenheatingelement")
             Eln.sharedItem.addElement(completId, element)
         }
     }
@@ -429,8 +447,8 @@ object ItemRegistration {
             subId = 0
             completeId = subId + (id shl 6)
             descriptor = LampDescriptor(
-                I18N.TR_NAME(I18N.Type.NONE, "Small 50V Incandescent Light Bulb"), "incandescentironlamp",
-                SpecificLampData(LampLists.getLampData("incandescent")!!, Eln.LVU)
+                I18N.TR_NAME(I18N.Type.NONE, "Small 12V Incandescent Light Bulb"), "incandescentironlamp",
+                SpecificLampData(LampLists.getLampData("incandescent")!!, NominalVoltage.V12)
             )
             Eln.sharedItem.addElement(completeId, descriptor)
         }
@@ -438,8 +456,8 @@ object ItemRegistration {
             subId = 1
             completeId = subId + (id shl 6)
             descriptor = LampDescriptor(
-                I18N.TR_NAME(I18N.Type.NONE, "50V Incandescent Light Bulb"), "incandescentironlamp",
-                SpecificLampData(LampLists.getLampData("incandescent")!!, Eln.LVU)
+                I18N.TR_NAME(I18N.Type.NONE, "12V Incandescent Light Bulb"), "incandescentironlamp",
+                SpecificLampData(LampLists.getLampData("incandescent")!!, NominalVoltage.V12)
             )
             Eln.sharedItem.addElement(completeId, descriptor)
         }
@@ -447,8 +465,8 @@ object ItemRegistration {
             subId = 2
             completeId = subId + (id shl 6)
             descriptor = LampDescriptor(
-                I18N.TR_NAME(I18N.Type.NONE, "200V Incandescent Light Bulb"), "incandescentironlamp",
-                SpecificLampData(LampLists.getLampData("incandescent")!!, Eln.MVU)
+                I18N.TR_NAME(I18N.Type.NONE, "240V Incandescent Light Bulb"), "incandescentironlamp",
+                SpecificLampData(LampLists.getLampData("incandescent")!!, NominalVoltage.V240)
             )
             Eln.sharedItem.addElement(completeId, descriptor)
         }
@@ -456,8 +474,8 @@ object ItemRegistration {
             subId = 4
             completeId = subId + (id shl 6)
             descriptor = LampDescriptor(
-                I18N.TR_NAME(I18N.Type.NONE, "Small 50V Carbon Incandescent Light Bulb"), "incandescentcarbonlamp",
-                SpecificLampData(LampLists.getLampData("carbonIncandescent")!!, Eln.LVU)
+                I18N.TR_NAME(I18N.Type.NONE, "Small 12V Carbon Incandescent Light Bulb"), "incandescentcarbonlamp",
+                SpecificLampData(LampLists.getLampData("carbonIncandescent")!!, NominalVoltage.V12)
             )
             Eln.sharedItem.addElement(completeId, descriptor)
         }
@@ -465,8 +483,8 @@ object ItemRegistration {
             subId = 5
             completeId = subId + (id shl 6)
             descriptor = LampDescriptor(
-                I18N.TR_NAME(I18N.Type.NONE, "50V Carbon Incandescent Light Bulb"), "incandescentcarbonlamp",
-                SpecificLampData(LampLists.getLampData("carbonIncandescent")!!, Eln.LVU)
+                I18N.TR_NAME(I18N.Type.NONE, "12V Carbon Incandescent Light Bulb"), "incandescentcarbonlamp",
+                SpecificLampData(LampLists.getLampData("carbonIncandescent")!!, NominalVoltage.V12)
             )
             Eln.sharedItem.addElement(completeId, descriptor)
         }
@@ -474,8 +492,8 @@ object ItemRegistration {
             subId = 16
             completeId = subId + (id shl 6)
             descriptor = LampDescriptor(
-                I18N.TR_NAME(I18N.Type.NONE, "Small 50V Fluorescent Light Bulb"), "fluorescentlamp",
-                SpecificLampData(LampLists.getLampData("fluorescent")!!, Eln.LVU)
+                I18N.TR_NAME(I18N.Type.NONE, "Small 12V Fluorescent Light Bulb"), "fluorescentlamp",
+                SpecificLampData(LampLists.getLampData("fluorescent")!!, NominalVoltage.V12)
             )
             Eln.sharedItem.addElement(completeId, descriptor)
         }
@@ -483,8 +501,8 @@ object ItemRegistration {
             subId = 17
             completeId = subId + (id shl 6)
             descriptor = LampDescriptor(
-                I18N.TR_NAME(I18N.Type.NONE, "50V Fluorescent Light Bulb"), "fluorescentlamp",
-                SpecificLampData(LampLists.getLampData("fluorescent")!!, Eln.LVU)
+                I18N.TR_NAME(I18N.Type.NONE, "12V Fluorescent Light Bulb"), "fluorescentlamp",
+                SpecificLampData(LampLists.getLampData("fluorescent")!!, NominalVoltage.V12)
             )
             Eln.sharedItem.addElement(completeId, descriptor)
         }
@@ -492,8 +510,8 @@ object ItemRegistration {
             subId = 18
             completeId = subId + (id shl 6)
             descriptor = LampDescriptor(
-                I18N.TR_NAME(I18N.Type.NONE, "200V Fluorescent Light Bulb"), "fluorescentlamp",
-                SpecificLampData(LampLists.getLampData("fluorescent")!!, Eln.MVU)
+                I18N.TR_NAME(I18N.Type.NONE, "240V Fluorescent Light Bulb"), "fluorescentlamp",
+                SpecificLampData(LampLists.getLampData("fluorescent")!!, NominalVoltage.V240)
             )
             Eln.sharedItem.addElement(completeId, descriptor)
         }
@@ -501,8 +519,8 @@ object ItemRegistration {
             subId = 32
             completeId = subId + (id shl 6)
             descriptor = LampDescriptor(
-                I18N.TR_NAME(I18N.Type.NONE, "50V Farming Light Bulb"), "farminglamp",
-                SpecificLampData(LampLists.getLampData("farming")!!, Eln.LVU)
+                I18N.TR_NAME(I18N.Type.NONE, "12V Farming Light Bulb"), "farminglamp",
+                SpecificLampData(LampLists.getLampData("farming")!!, NominalVoltage.V12)
             )
             Eln.sharedItem.addElement(completeId, descriptor)
         }
@@ -510,8 +528,8 @@ object ItemRegistration {
             subId = 36
             completeId = subId + (id shl 6)
             descriptor = LampDescriptor(
-                I18N.TR_NAME(I18N.Type.NONE, "200V Farming Light Bulb"), "farminglamp",
-                SpecificLampData(LampLists.getLampData("farming")!!, Eln.MVU)
+                I18N.TR_NAME(I18N.Type.NONE, "240V Farming Light Bulb"), "farminglamp",
+                SpecificLampData(LampLists.getLampData("farming")!!, NominalVoltage.V240)
             )
             Eln.sharedItem.addElement(completeId, descriptor)
         }
@@ -519,8 +537,8 @@ object ItemRegistration {
             subId = 37
             completeId = subId + (id shl 6)
             descriptor = LampDescriptor(
-                I18N.TR_NAME(I18N.Type.NONE, "50V LED Light Bulb"), "ledlamp",
-                SpecificLampData(LampLists.getLampData("led")!!, Eln.LVU)
+                I18N.TR_NAME(I18N.Type.NONE, "12V LED Light Bulb"), "ledlamp",
+                SpecificLampData(LampLists.getLampData("led")!!, NominalVoltage.V12)
             )
             Eln.sharedItem.addElement(completeId, descriptor)
         }
@@ -528,8 +546,8 @@ object ItemRegistration {
             subId = 38
             completeId = subId + (id shl 6)
             descriptor = LampDescriptor(
-                I18N.TR_NAME(I18N.Type.NONE, "200V LED Light Bulb"), "ledlamp",
-                SpecificLampData(LampLists.getLampData("led")!!, Eln.MVU)
+                I18N.TR_NAME(I18N.Type.NONE, "240V LED Light Bulb"), "ledlamp",
+                SpecificLampData(LampLists.getLampData("led")!!, NominalVoltage.V240)
             )
             Eln.sharedItem.addElement(completeId, descriptor)
         }
@@ -537,8 +555,8 @@ object ItemRegistration {
             subId = 44
             completeId = subId + (id shl 6)
             descriptor = LampDescriptor(
-                I18N.TR_NAME(I18N.Type.NONE, "50V Halogen Light Bulb"), "halogenlamp",
-                SpecificLampData(LampLists.getLampData("halogen")!!, Eln.LVU)
+                I18N.TR_NAME(I18N.Type.NONE, "12V Halogen Light Bulb"), "halogenlamp",
+                SpecificLampData(LampLists.getLampData("halogen")!!, NominalVoltage.V12)
             )
             Eln.sharedItem.addElement(completeId, descriptor)
         }
@@ -546,8 +564,8 @@ object ItemRegistration {
             subId = 45
             completeId = subId + (id shl 6)
             descriptor = LampDescriptor(
-                I18N.TR_NAME(I18N.Type.NONE, "200V Halogen Light Bulb"), "halogenlamp",
-                SpecificLampData(LampLists.getLampData("halogen")!!, Eln.MVU)
+                I18N.TR_NAME(I18N.Type.NONE, "240V Halogen Light Bulb"), "halogenlamp",
+                SpecificLampData(LampLists.getLampData("halogen")!!, NominalVoltage.V240)
             )
             Eln.sharedItem.addElement(completeId, descriptor)
         }

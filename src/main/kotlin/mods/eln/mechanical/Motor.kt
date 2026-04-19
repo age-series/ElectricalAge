@@ -30,6 +30,8 @@ import java.awt.Color
 import java.io.DataInputStream
 import java.io.DataOutputStream
 
+private const val MACHINE_INTERNAL_RESISTANCE_FACTOR = 0.1
+
 class MotorDescriptor(
     val name: String,
     obj: Obj3D,
@@ -60,6 +62,16 @@ class MotorDescriptor(
 
     val customSound = "eln:shaft_motor"
     val efficiency = 0.99
+    val nominalCurrent = nominalP / nominalU
+    val driveRampTime = 1.5
+    val driveCurrentLimit = nominalCurrent * 1.75
+    val driveSpeedKp = nominalCurrent / nominalRads
+    val driveSpeedKi = driveSpeedKp * 0.5
+    val driveVoltageFilterTime = 0.25
+    val driveOutputFilterTime = 0.1
+    val driveStartupSpeedLimit = 20.0
+    val driveStallSpeedThreshold = nominalRads * 0.05
+    val driveStallDetectTime = 0.75
 
     override val obj = obj
     override val static = arrayOf(
@@ -84,10 +96,12 @@ class MotorDescriptor(
 
     override fun addInformation(stack: ItemStack, player: EntityPlayer, list: MutableList<String>, par4: Boolean) {
         list.add(tr("Converts electricity into mechanical energy, or (badly) vice versa."))
+        list.add(tr("Integrated drive: soft-starts to nominal speed."))
         list.add(tr("Nominal usage ->"))
         list.add(Utils.plotVolt(tr("  Voltage in: "), nominalU.toDouble()))
         list.add(Utils.plotPower(tr("  Power in: "), nominalP.toDouble()))
         list.add(Utils.plotRads(tr("  rad/s: "), nominalRads.toDouble()))
+        list.add(Utils.plotAmpere(tr("Drive current limit: "), driveCurrentLimit.toDouble()))
         list.add(Utils.plotRads(tr("Max rad/s: "), absoluteMaximumShaftSpeed))
     }
 }
@@ -95,8 +109,8 @@ class MotorDescriptor(
 class MotorRender(entity: TransparentNodeEntity, desc_: TransparentNodeDescriptor) : ShaftRender(entity, desc_) {
     val entity = entity
 
-    override val cableRender = Eln.instance.stdCableRender3200V
     val desc = desc_ as MotorDescriptor
+    override val cableRender get() = desc.cable.render
 
     val ledColors: Array<Color> = arrayOf(
         java.awt.Color.black,
@@ -158,7 +172,7 @@ class MotorRender(entity: TransparentNodeEntity, desc_: TransparentNodeDescripto
     override fun getCableRenderSide(side: Direction, lrdu: LRDU): CableRenderDescriptor? {
         val f = front ?: return null
         if (lrdu == LRDU.Down && (side == f || (desc.bipolarTerminals && side == f.back()))) {
-            return Eln.instance.stdCableRender3200V
+            return desc.cable.render
         }
         return null
     }
@@ -175,6 +189,12 @@ class MotorRender(entity: TransparentNodeEntity, desc_: TransparentNodeDescripto
 class MotorElement(node: TransparentNode, desc_: TransparentNodeDescriptor) :
     SimpleShaftElement(node, desc_) {
     val desc = desc_ as MotorDescriptor
+    private var driveSpeedTarget = 0.0
+    private var driveIntegrator = 0.0
+    private var driveCurrentRequest = 0.0
+    private var driveFilteredSupplyVoltage = 0.0
+    private var driveFilteredOutputVoltage = 0.0
+    private var driveStallTimer = 0.0
 
     internal val wireLoad = NbtElectricalLoad("wireLoad")
     internal val negativeLoad = NbtElectricalLoad("negativeLoad")
@@ -201,7 +221,7 @@ class MotorElement(node: TransparentNode, desc_: TransparentNodeDescriptor) :
 
         desc.cable.applyTo(wireLoad)
         desc.cable.applyTo(shaftLoad)
-        desc.cable.applyTo(wireShaftResistor)
+        desc.cable.applyTo(wireShaftResistor, MACHINE_INTERNAL_RESISTANCE_FACTOR)
 
         desc.thermalLoadInitializer.applyTo(thermal)
         desc.thermalLoadInitializer.applyTo(thermalWatchdog)
@@ -217,6 +237,7 @@ class MotorElement(node: TransparentNode, desc_: TransparentNodeDescriptor) :
     inner class MotorElectricalProcess : IProcess, IRootSystemPreStepProcess {
         override fun process(time: Double) {
             val noTorqueU = desc.radsToU.getValue(shaft.rads)
+            val dt = if (time > 0.0) time else Eln.simulator.electricalPeriod
 
             // Most of this was copied from Generator.kt, and bears the same
             // admonition: I don't actually know how this works.
@@ -225,22 +246,84 @@ class MotorElement(node: TransparentNode, desc_: TransparentNodeDescriptor) :
                 th.voltage = noTorqueU
                 th.resistance = MnaConst.highImpedance
             }
-            var U: Double
-            if(noTorqueU < th.voltage) {
-                // Input is greater than our output, spin up the shaft
-                U = th.voltage * 0.997 + noTorqueU * 0.003
-            } else if(th.isHighImpedance()) {
-                // No actual connection, let the system float
-                U = noTorqueU
-            } else {
-                // Provide an output voltage by
-                // solving a quadratic, I guess?
-                val a = 1 / th.resistance
-                val b = desc.elecPPerDU - th.voltage / th.resistance
-                val c = -desc.elecPPerDU * noTorqueU
-                U = (-b + Math.sqrt(b * b - 4 * a * c)) / (2 * a)
+            val supplyPresent = !th.isHighImpedance() && th.voltage > desc.nominalU * 0.1
+            if (!supplyPresent) {
+                driveSpeedTarget = 0.0
+                driveIntegrator = 0.0
+                driveCurrentRequest = 0.0
+                driveFilteredSupplyVoltage = th.voltage.coerceAtLeast(0.0)
+                driveStallTimer = 0.0
+                val idleVoltage = if (th.isHighImpedance()) {
+                    noTorqueU
+                } else {
+                    maxOf(noTorqueU, th.voltage)
+                }
+                driveFilteredOutputVoltage = idleVoltage
+                powerSource.setVoltage(idleVoltage)
+                return
             }
-            powerSource.setVoltage(U)
+
+            val rawSupplyVoltage = th.voltage.coerceAtLeast(0.0)
+            driveFilteredSupplyVoltage = if (driveFilteredSupplyVoltage <= 0.0) {
+                rawSupplyVoltage
+            } else {
+                val alpha = (dt / desc.driveVoltageFilterTime).coerceIn(0.0, 1.0)
+                driveFilteredSupplyVoltage + (rawSupplyVoltage - driveFilteredSupplyVoltage) * alpha
+            }
+            var commandedTargetSpeed =
+                (desc.nominalRads * (driveFilteredSupplyVoltage / desc.nominalU).coerceIn(0.0, 1.0)).toDouble()
+            if (shaft.rads < desc.driveStartupSpeedLimit) {
+                commandedTargetSpeed = commandedTargetSpeed.coerceAtMost(desc.driveStartupSpeedLimit.toDouble())
+            }
+            val rampRate = desc.nominalRads / desc.driveRampTime
+            driveSpeedTarget = when {
+                driveSpeedTarget < commandedTargetSpeed ->
+                    (driveSpeedTarget + rampRate * dt).coerceAtMost(commandedTargetSpeed)
+                else ->
+                    (driveSpeedTarget - rampRate * dt).coerceAtLeast(commandedTargetSpeed)
+            }
+
+            val speedError = (driveSpeedTarget - shaft.rads).coerceAtLeast(0.0)
+            val nextIntegrator = (driveIntegrator + speedError * dt).coerceIn(0.0, desc.nominalRads.toDouble() * 4.0)
+            val requestedCurrent =
+                (desc.driveSpeedKp * speedError + desc.driveSpeedKi * nextIntegrator).coerceIn(0.0, desc.driveCurrentLimit.toDouble())
+            val availableCurrent = if (th.isHighImpedance() || th.resistance <= 0.0) {
+                0.0
+            } else {
+                ((th.voltage - noTorqueU) / th.resistance).coerceAtLeast(0.0)
+            }
+            val effectiveCurrent = requestedCurrent.coerceAtMost(availableCurrent)
+
+            if (effectiveCurrent < desc.driveCurrentLimit * 0.999) {
+                driveIntegrator = nextIntegrator
+            }
+            driveCurrentRequest = effectiveCurrent
+
+            val stalled = shaft.rads >= 0.0 &&
+                shaft.rads < desc.driveStallSpeedThreshold &&
+                effectiveCurrent >= desc.driveCurrentLimit * 0.95
+            driveStallTimer = if (stalled) {
+                driveStallTimer + dt
+            } else {
+                0.0
+            }
+            if (driveStallTimer >= desc.driveStallDetectTime) {
+                driveSpeedTarget = shaft.rads.coerceAtLeast(0.0)
+                driveIntegrator = 0.0
+            }
+
+            val commandedVoltage = if (th.isHighImpedance()) {
+                noTorqueU
+            } else {
+                th.voltage - driveCurrentRequest * th.resistance
+            }
+            driveFilteredOutputVoltage = if (driveFilteredOutputVoltage <= 0.0) {
+                commandedVoltage
+            } else {
+                val alpha = (dt / desc.driveOutputFilterTime).coerceIn(0.0, 1.0)
+                driveFilteredOutputVoltage + (commandedVoltage - driveFilteredOutputVoltage) * alpha
+            }
+            powerSource.setVoltage(driveFilteredOutputVoltage)
         }
 
         override fun rootSystemPreStepProcess() {
@@ -320,6 +403,8 @@ class MotorElement(node: TransparentNode, desc_: TransparentNodeDescriptor) :
         if(Eln.config.getBooleanOrElse("ui.waila.easyMode", false)) {
             info.put(tr("Voltage"), Utils.plotVolt("", powerSource.voltage))
             info.put(tr("Current"), Utils.plotAmpere("", powerSource.current))
+            info.put(tr("Drive target"), Utils.plotRads("", driveSpeedTarget))
+            info.put(tr("Drive current request"), Utils.plotAmpere("", driveCurrentRequest))
             info.put(tr("Temperature"), plotAmbientCelsius("", thermal.temperature))
         }
         return info

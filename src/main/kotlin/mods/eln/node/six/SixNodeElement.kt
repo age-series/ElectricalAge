@@ -334,6 +334,7 @@ abstract class SixNodeElement(sixNode: SixNode, @JvmField var side: Direction, d
     }
 
     private fun selfDestroy() {
+        println("SixNodeElement.selfDestroy deleting side=$side at ${sixNode!!.coordinate}")
         sixNode!!.deleteSubBlock(null, side)
     }
 

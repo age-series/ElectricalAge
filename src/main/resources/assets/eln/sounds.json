@@ -332,6 +332,34 @@
 			}
 		]
 	},
+	"circuit_breaker_close": {
+		"category": "block",
+		"sounds": [
+			{
+				"name": "circuit_breaker_close",
+				"stream": false
+			}
+		]
+	},
+	"circuit_breaker_open": {
+		"category": "block",
+		"sounds": [
+			{
+				"name": "circuit_breaker_open",
+				"stream": false
+			}
+		]
+	},
+	"circuit_breaker_trip": {
+		"category": "block",
+		"sounds": [
+			{
+				"name": "circuit_breaker_trip",
+				"stream": false,
+				"volume": 3.0
+			}
+		]
+	},
 	"beep_accept": {
 		"category": "player",
 		"sounds": [

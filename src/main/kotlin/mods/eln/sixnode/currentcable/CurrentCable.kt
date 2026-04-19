@@ -104,6 +104,7 @@ class CurrentCableDescriptor(
 
     override fun addInformation(itemStack: ItemStack, entityPlayer: EntityPlayer, list: MutableList<String>, par4: Boolean) {
         super.addInformation(itemStack, entityPlayer, list, par4)
+        list.add(tr("Deprecated legacy cable. Prefer AWG/mm utility cables for new builds."))
         list.add(tr("Nominal Ratings:"))
         list.add("  " + tr("Voltage: %1\$V", plotValue(electricalNominalVoltage)))
         list.add("  " + tr("Current: %1\$A", plotValue(electricalNominalPower / electricalNominalVoltage)))
@@ -112,6 +113,7 @@ class CurrentCableDescriptor(
     }
 
     override fun addRealismContext(list: MutableList<String>): RealisticEnum? {
+        list.add(tr("This current-tier cable family is deprecated in the rebalance."))
         list.add(tr("Has some caveats:"))
         list.add(tr("  * Wire resistance is much higher than normal"))
         list.add(tr("  * Wire resistance is not impacted by temperature"))

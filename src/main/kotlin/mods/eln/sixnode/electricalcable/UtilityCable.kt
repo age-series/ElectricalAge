@@ -92,6 +92,22 @@ class UtilityCableDescriptor(
 
         @JvmStatic
         fun allDescriptors(): List<UtilityCableDescriptor> = registry
+
+        @JvmStatic
+        fun isGroundColorCode(color: Int): Boolean {
+            return when (color and 0xF) {
+                2, 5, 13 -> true
+                else -> false
+            }
+        }
+
+        @JvmStatic
+        fun isNeutralColorCode(color: Int): Boolean {
+            return when (color and 0xF) {
+                7, 11, 15 -> true
+                else -> false
+            }
+        }
     }
 
     @JvmField
@@ -343,11 +359,32 @@ class UtilityCableElement(
                 val otherColors = el.activePalette().conductorColors
                 val primaryThis = defaultConductorIndex()
                 val primaryOther = el.defaultConductorIndex()
+                Utils.println(
+                    "UtilityCable connect %s side=%s primary=%d colors=%s <-> %s side=%s primary=%d colors=%s",
+                    coordinate,
+                    side,
+                    primaryThis,
+                    thisColors.joinToString(","),
+                    el.coordinate,
+                    el.side,
+                    primaryOther,
+                    otherColors.joinToString(",")
+                )
                 for (idx in conductorLoads.indices) {
                     if (idx == primaryThis) continue
                     val color = thisColors.getOrElse(idx) { continue }
                     val otherIdx = otherColors.indexOfFirst { it == color }
                     if (otherIdx < 0 || otherIdx == primaryOther || otherIdx > el.conductorLoads.lastIndex) continue
+                    Utils.println(
+                        "UtilityCable extra conductor %s side=%s color=%d idx=%d -> %s side=%s otherIdx=%d",
+                        coordinate,
+                        side,
+                        color,
+                        idx,
+                        el.coordinate,
+                        el.side,
+                        otherIdx
+                    )
                     val econ = ElectricalConnection(conductorLoads[idx], el.conductorLoads[otherIdx])
                     Eln.simulator.addElectricalComponent(econ)
                     connection.addConnection(econ)
@@ -435,9 +472,49 @@ class UtilityCableElement(
         return descriptor.colorPalettes[paletteIndex.coerceIn(0, descriptor.colorPalettes.lastIndex)]
     }
 
+    fun activeConductorColors(): IntArray {
+        return activePalette().conductorColors.copyOf()
+    }
+
+    fun hasActiveConductorColor(color: Int): Boolean {
+        return activePalette().conductorColors.any { (it and 0xF) == (color and 0xF) }
+    }
+
+    fun maskForConductorColor(color: Int): Int {
+        return descriptor.nodeMask + ((color and 0xF) shl NodeBase.maskColorShift) + (1 shl NodeBase.maskColorCareShift)
+    }
+
+    fun activeGroundConductorColor(): Int {
+        return activePalette().conductorColors.firstOrNull { isGroundColor(it) } ?: -1
+    }
+
+    fun activeNeutralConductorColor(): Int {
+        return activePalette().conductorColors.firstOrNull { isNeutralColor(it) } ?: -1
+    }
+
+    fun activeHotConductorColors(): IntArray {
+        return activePalette().conductorColors.filterNot { isGroundColor(it) || isNeutralColor(it) }.toIntArray()
+    }
+
+    private fun isGroundColor(color: Int): Boolean {
+        return UtilityCableDescriptor.isGroundColorCode(color)
+    }
+
+    private fun isNeutralColor(color: Int): Boolean {
+        return UtilityCableDescriptor.isNeutralColorCode(color)
+    }
+
     private fun defaultConductorIndex(): Int {
         val colors = activePalette().conductorColors
-        val groundIdx = colors.indexOfFirst { it == 5 }
+        val hotIdx = colors.indexOfFirst { !isGroundColor(it) && !isNeutralColor(it) }
+        if (hotIdx >= 0) {
+            return hotIdx.coerceIn(0, conductorLoads.lastIndex)
+        }
+        val neutralIdx = colors.indexOfFirst { isNeutralColor(it) }
+        if (neutralIdx >= 0) {
+            return neutralIdx.coerceIn(0, conductorLoads.lastIndex)
+        }
+        val groundIdx = colors.indexOfFirst { isGroundColor(it) }
         if (groundIdx >= 0) {
             return groundIdx.coerceIn(0, conductorLoads.lastIndex)
         }
@@ -446,47 +523,48 @@ class UtilityCableElement(
 
     private fun conductorLabel(index: Int): String {
         val color = activePalette().conductorColors.getOrElse(index) { -1 }
-        return if (color == 5) tr("Ground") else tr(dyeName(color))
+        return if (isGroundColor(color)) tr("Ground") else tr(dyeName(color))
     }
 
     private fun dyeName(color: Int): String {
         return when (color and 0xF) {
             0 -> "Black"
-            1 -> "Blue"
+            1 -> "Red"
             2 -> "Green"
-            3 -> "Cyan"
-            4 -> "Brown"
-            5 -> "Ground"
-            6 -> "Orange"
-            7 -> "Gray"
-            8 -> "Dark Gray"
-            9 -> "Light Blue"
+            3 -> "Brown"
+            4 -> "Blue"
+            5 -> "Purple"
+            6 -> "Cyan"
+            7 -> "Silver"
+            8 -> "Gray"
+            9 -> "Pink"
             10 -> "Lime"
-            11 -> "White"
-            12 -> "Red"
+            11 -> "Yellow"
+            12 -> "Light Blue"
             13 -> "Magenta"
-            14 -> "Yellow"
+            14 -> "Orange"
             else -> "White"
         }
     }
 
     private fun dyeToChat(color: Int): EnumChatFormatting {
+        if (isGroundColor(color)) return EnumChatFormatting.DARK_GREEN
         return when (color and 0xF) {
             0 -> EnumChatFormatting.BLACK
-            1 -> EnumChatFormatting.DARK_BLUE
+            1 -> EnumChatFormatting.RED
             2 -> EnumChatFormatting.DARK_GREEN
-            3 -> EnumChatFormatting.DARK_AQUA
-            4 -> EnumChatFormatting.DARK_RED
-            5 -> EnumChatFormatting.DARK_GREEN
-            6 -> EnumChatFormatting.GOLD
+            3 -> EnumChatFormatting.GOLD
+            4 -> EnumChatFormatting.BLUE
+            5 -> EnumChatFormatting.DARK_PURPLE
+            6 -> EnumChatFormatting.AQUA
             7 -> EnumChatFormatting.GRAY
             8 -> EnumChatFormatting.DARK_GRAY
-            9 -> EnumChatFormatting.BLUE
+            9 -> EnumChatFormatting.LIGHT_PURPLE
             10 -> EnumChatFormatting.GREEN
-            11 -> EnumChatFormatting.AQUA
-            12 -> EnumChatFormatting.RED
+            11 -> EnumChatFormatting.YELLOW
+            12 -> EnumChatFormatting.BLUE
             13 -> EnumChatFormatting.DARK_PURPLE
-            14 -> EnumChatFormatting.YELLOW
+            14 -> EnumChatFormatting.GOLD
             else -> EnumChatFormatting.WHITE
         }
     }
@@ -720,10 +798,12 @@ class UtilityCableRender(
             }
             when (palette.conductorColors[idx] and 0xF) {
                 0 -> GL11.glColor3f(0.12f, 0.12f, 0.12f)
+                1 -> GL11.glColor3f(0.77f, 0.18f, 0.16f)
+                2 -> GL11.glColor3f(0.19f, 0.65f, 0.22f)
                 5 -> GL11.glColor3f(0.19f, 0.65f, 0.22f)
-                11 -> GL11.glColor3f(0.26f, 0.49f, 0.86f)
-                12 -> GL11.glColor3f(0.77f, 0.18f, 0.16f)
-                14 -> GL11.glColor3f(0.92f, 0.88f, 0.22f)
+                11 -> GL11.glColor3f(0.92f, 0.88f, 0.22f)
+                12 -> GL11.glColor3f(0.26f, 0.49f, 0.86f)
+                14 -> GL11.glColor3f(0.95f, 0.54f, 0.20f)
                 15 -> GL11.glColor3f(0.88f, 0.88f, 0.84f)
                 else -> setGlColorFromDye(palette.conductorColors[idx], 1.0f)
             }

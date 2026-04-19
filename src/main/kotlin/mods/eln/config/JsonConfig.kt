@@ -91,6 +91,7 @@ class JsonConfig @JvmOverloads constructor(
         spec(path = "gameplay.cables.creativeFreeLength", defaultValue = true, comment = "When enabled, creative players do not consume utility cable length when placing cables or connecting poles."),
         spec(path = "simulation.watchdog.destruction.thermal", defaultValue = true, comment = "Allow thermal watchdogs to destroy blocks except resistor heat watchdogs."),
         spec(path = "simulation.watchdog.destruction.resistorHeat", defaultValue = false, comment = "Allow resistor heat watchdogs to destroy blocks."),
+        spec(path = "simulation.watchdog.destruction.current", defaultValue = true, comment = "Allow current watchdogs to destroy blocks."),
         spec(path = "simulation.watchdog.destruction.voltage", defaultValue = true, comment = "Allow voltage watchdogs to destroy blocks."),
         spec(path = "simulation.watchdog.destruction.shaftSpeed", defaultValue = true, comment = "Allow shaft speed watchdogs to destroy blocks."),
         spec(path = "simulation.watchdog.destruction.other", defaultValue = true, comment = "Allow all other watchdog types to destroy blocks."),
@@ -783,6 +784,7 @@ class JsonConfig @JvmOverloads constructor(
         "gameplay.crafting.verticalIronCableCrafting" -> listOf(LegacyKey("general", "verticalIronCableCrafting"))
         "simulation.watchdog.destruction.thermal" -> listOf(LegacyKey("watchdog", "thermal"))
         "simulation.watchdog.destruction.resistorHeat" -> listOf(LegacyKey("watchdog", "resistorHeat"))
+        "simulation.watchdog.destruction.current" -> listOf(LegacyKey("watchdog", "current"))
         "simulation.watchdog.destruction.voltage" -> listOf(LegacyKey("watchdog", "voltage"), LegacyKey("watchdog", "electrical"))
         "simulation.watchdog.destruction.shaftSpeed" -> listOf(LegacyKey("watchdog", "shaftSpeed"))
         "simulation.watchdog.destruction.other" -> listOf(LegacyKey("watchdog", "other"))
