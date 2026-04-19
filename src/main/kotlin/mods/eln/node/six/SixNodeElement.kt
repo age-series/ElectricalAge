@@ -17,6 +17,7 @@ import mods.eln.node.INodeElement
 import mods.eln.node.NodeConnection
 import mods.eln.sim.ElectricalLoad
 import mods.eln.sim.IProcess
+import mods.eln.sim.SignalLoadSupport
 import mods.eln.sim.ThermalConnection
 import mods.eln.sim.ThermalLoad
 import mods.eln.sim.mna.component.Component
@@ -44,6 +45,7 @@ abstract class SixNodeElement(sixNode: SixNode, @JvmField var side: Direction, d
     var electricalProcessList = ArrayList<IProcess>(4)
     @JvmField
     var electricalComponentList = ArrayList<Component>(4)
+    private var signalReadComponentList = ArrayList<Component>(0)
     @JvmField
     var electricalLoadList = ArrayList<NbtElectricalLoad>(4)
     @JvmField
@@ -116,12 +118,15 @@ abstract class SixNodeElement(sixNode: SixNode, @JvmField var side: Direction, d
         if (sixNode != null && sixNode!!.isDestructing) return
         val ownerTag = describeSimOwner()
         electricalComponentList.forEach { it.setOwner(ownerTag) }
+        signalReadComponentList = SignalLoadSupport.createReadComponents(electricalLoadList)
+        signalReadComponentList.forEach { it.setOwner(ownerTag) }
         electricalLoadList.forEach { it.setOwner(ownerTag) }
         val coord = coordinate
         if (coord != null) {
             thermalLoadList.forEach { it.setSimCoordinate(coord.dimension, coord.x, coord.y, coord.z) }
         }
         Eln.simulator.addAllElectricalComponent(electricalComponentList)
+        Eln.simulator.addAllElectricalComponent(signalReadComponentList)
         Eln.simulator.addAllThermalConnection(thermalConnectionList)
         for (load in electricalLoadList) Eln.simulator.addElectricalLoad(load)
         for (load in thermalLoadList) Eln.simulator.addThermalLoad(load)
@@ -297,6 +302,8 @@ abstract class SixNodeElement(sixNode: SixNode, @JvmField var side: Direction, d
     open fun disconnectJob() {
         for (load in thermalLoadList) load.clearSimCoordinate()
         Eln.simulator.removeAllElectricalComponent(electricalComponentList)
+        Eln.simulator.removeAllElectricalComponent(signalReadComponentList)
+        signalReadComponentList.clear()
         Eln.simulator.removeAllThermalConnection(thermalConnectionList)
         for (load in electricalLoadList) Eln.simulator.removeElectricalLoad(load)
         for (load in thermalLoadList) Eln.simulator.removeThermalLoad(load)

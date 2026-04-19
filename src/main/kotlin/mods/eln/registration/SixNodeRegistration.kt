@@ -214,7 +214,7 @@ object SixNodeRegistration {
             desc = ElectricalCableDescriptor(name, Eln.instance.stdCableRenderSignal, "For signal transmission.", true).signal()
             Eln.instance.signalCableDescriptor = desc
             desc.setPhysicalConstantLikeNormalCable(
-                Eln.SVU, Eln.SVP, 0.02 / 50 * Eln.gateOutputCurrent / Eln.SVII, Eln.SVU * 1.3,
+                Eln.SVU, Eln.SVP, 0.02 / 50 * Eln.SVU, Eln.SVU * 1.3,
                 Eln.SVP * 1.2, 0.5, Eln.cableWarmLimit, -100.0, Eln.cableHeatingTime, 1.0
             )
             Eln.sixNodeItem.addDescriptor(subId + (id shl 6), desc)
@@ -301,7 +301,7 @@ object SixNodeRegistration {
             desc = ElectricalCableDescriptor(name, Eln.instance.stdCableRenderSignalBus, "For transmitting many signals.", true).signal()
             Eln.instance.signalBusCableDescriptor = desc
             desc.setPhysicalConstantLikeNormalCable(
-                Eln.SVU, Eln.SVP, 0.02 / 50 * Eln.gateOutputCurrent / Eln.SVII, Eln.SVU * 1.3,
+                Eln.SVU, Eln.SVP, 0.02 / 50 * Eln.SVU, Eln.SVU * 1.3,
                 Eln.SVP * 1.2, 0.5, Eln.cableWarmLimit, -100.0, Eln.cableHeatingTime, 1.0
             )
             desc.ElementClass = ElectricalSignalBusCableElement::class.java

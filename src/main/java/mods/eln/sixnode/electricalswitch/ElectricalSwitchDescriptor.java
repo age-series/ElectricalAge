@@ -196,7 +196,7 @@ public class ElectricalSwitchDescriptor extends SixNodeDescriptor {
 
     public int getNodeMask() {
         if (signalSwitch)
-            return NodeBase.maskElectricalGate;
+            return NodeBase.maskElectricalAll;
         else
             return NodeBase.maskElectricalPower;
     }
