@@ -37,6 +37,7 @@ import mods.eln.ghost.GhostManager;
 import mods.eln.ghost.GhostManagerNbt;
 import mods.eln.item.*;
 import mods.eln.item.electricalinterface.ItemEnergyInventoryProcess;
+import mods.eln.item.lampitem.LampLists;
 import mods.eln.lightblock.LightBlock;
 import mods.eln.lightblock.LightBlockEntity;
 import mods.eln.misc.*;
@@ -407,6 +408,8 @@ public class Eln {
         oreItem = (OreItem) Item.getItemFromBlock(oreBlock);
 
         SixNode.sixNodeCacheList.add(new SixNodeCacheStd());
+
+        LampLists.translateLampTypes(); // This MUST be called before block/item registration!
 
         SingleNodeRegistration.INSTANCE.registerSingle();
         SixNodeRegistration.INSTANCE.registerSix();

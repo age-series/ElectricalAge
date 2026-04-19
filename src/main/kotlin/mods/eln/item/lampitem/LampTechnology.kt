@@ -18,11 +18,25 @@ object LampLists {
         lampTechnologyList.add(BoilerplateLampData("halogen", 96.0, false, 1.0, 0.5, 0.0, 3.0))
     }
 
+    @JvmStatic
     fun getLampData(lampType: String): BoilerplateLampData? {
         for (lampData in lampTechnologyList) {
             if (lampData.lampType == lampType) return lampData
         }
         return null
+    }
+
+    /**
+     * This function should be called exactly ONCE during the loading process, BEFORE block/item registration occurs!
+     */
+    @JvmStatic
+    fun translateLampTypes() {
+        getLampData("incandescent")!!.translatedLampType = I18N.tr("incandescent")
+        getLampData("carbon")!!.translatedLampType = I18N.tr("carbon")
+        getLampData("fluorescent")!!.translatedLampType = I18N.tr("fluorescent")
+        getLampData("farming")!!.translatedLampType = I18N.tr("farming")
+        getLampData("led")!!.translatedLampType = I18N.tr("led")
+        getLampData("halogen")!!.translatedLampType = I18N.tr("halogen")
     }
 }
 
@@ -33,7 +47,8 @@ data class BoilerplateLampData(
     val cropGrowthRateFactor: Double,
     val minimalUFactor: Double,
     val timeUntilStableInSeconds: Double,
-    val basePowerMultiplier: Double
+    val basePowerMultiplier: Double,
+    var translatedLampType: String = "" // Initialized later in the loading process; used for WAILA and context menus
 ) {
 
     companion object {
