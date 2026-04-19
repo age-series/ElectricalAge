@@ -2,6 +2,7 @@ package mods.eln.sim.nbt;
 
 import mods.eln.Eln;
 import mods.eln.misc.Utils;
+import mods.eln.sim.SignalLoadSupport;
 
 public class NbtElectricalGateInput extends NbtElectricalLoad {
 
@@ -15,24 +16,18 @@ public class NbtElectricalGateInput extends NbtElectricalLoad {
     }
 
     public boolean stateHigh() {
-        return getVoltage() > Eln.SVU * 0.6;
+        return getSignalVoltage() > Eln.SVU * 0.6;
     }
 
     public boolean stateLow() {
-        return getVoltage() < Eln.SVU * 0.2;
+        return getSignalVoltage() < Eln.SVU * 0.2;
     }
 
     public double getNormalized() {
-        double norm = getVoltage() * Eln.SVUinv;
-        if (norm < 0.0) norm = 0.0;
-        if (norm > 1.0) norm = 1.0;
-        return norm;
+        return SignalLoadSupport.toNormalized(getVoltage());
     }
 
     public double getSignalVoltage() {
-        double voltage = this.getVoltage();
-        if (voltage < 0.0) voltage = 0.0;
-        if (voltage > Eln.SVU) voltage = Eln.SVU;
-        return voltage;
+        return SignalLoadSupport.clampSignalVoltage(getVoltage());
     }
 }

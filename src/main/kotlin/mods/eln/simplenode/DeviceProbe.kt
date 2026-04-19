@@ -64,7 +64,7 @@ class DeviceProbeNode: SimpleNode() {
         get() = getNodeUuidStatic()
 
     override fun getSideConnectionMask(side: Direction, lrdu: LRDU): Int {
-        return maskElectricalGate
+        return maskElectricalAll
     }
 
     override fun getThermalLoad(side: Direction, lrdu: LRDU, mask: Int): ThermalLoad? {

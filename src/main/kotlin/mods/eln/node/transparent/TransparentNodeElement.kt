@@ -14,6 +14,7 @@ import mods.eln.environment.BiomeClimateService
 import mods.eln.node.INodeElement
 import mods.eln.sim.ElectricalLoad
 import mods.eln.sim.IProcess
+import mods.eln.sim.SignalLoadSupport
 import mods.eln.sim.ThermalConnection
 import mods.eln.sim.ThermalLoad
 import mods.eln.sim.mna.component.Component
@@ -46,6 +47,7 @@ abstract class TransparentNodeElement(@JvmField var node: TransparentNode?, @Jvm
     var electricalProcessList = ArrayList<IProcess>(4)
     @JvmField
     var electricalComponentList = ArrayList<Component>(4)
+    private var signalReadComponentList = ArrayList<Component>(0)
     @JvmField
     var electricalLoadList = ArrayList<State>(4)
     @JvmField
@@ -72,6 +74,8 @@ abstract class TransparentNodeElement(@JvmField var node: TransparentNode?, @Jvm
         if (node != null && node!!.isDestructing) return
         val ownerTag = describeSimOwner()
         electricalComponentList.forEach { it.setOwner(ownerTag) }
+        signalReadComponentList = SignalLoadSupport.createReadComponents(electricalLoadList)
+        signalReadComponentList.forEach { it.setOwner(ownerTag) }
         electricalLoadList.forEach { it.setOwner(ownerTag) }
         val coord = node?.coordinate
         if (coord != null) {
@@ -81,6 +85,7 @@ abstract class TransparentNodeElement(@JvmField var node: TransparentNode?, @Jvm
         for (p in slowPreProcessList) Eln.simulator.addSlowPreProcess(p)
         for (p in slowPostProcessList) Eln.simulator.addSlowPostProcess(p)
         Eln.simulator.addAllElectricalComponent(electricalComponentList)
+        Eln.simulator.addAllElectricalComponent(signalReadComponentList)
         for (load in electricalLoadList) Eln.simulator.addElectricalLoad(load)
         Eln.simulator.addAllElectricalProcess(electricalProcessList)
         Eln.simulator.addAllThermalConnection(thermalConnectionList)
@@ -94,6 +99,8 @@ abstract class TransparentNodeElement(@JvmField var node: TransparentNode?, @Jvm
         for (p in slowPreProcessList) Eln.simulator.removeSlowPreProcess(p)
         for (p in slowPostProcessList) Eln.simulator.removeSlowPostProcess(p)
         Eln.simulator.removeAllElectricalComponent(electricalComponentList)
+        Eln.simulator.removeAllElectricalComponent(signalReadComponentList)
+        signalReadComponentList.clear()
         for (load in electricalLoadList) Eln.simulator.removeElectricalLoad(load)
         Eln.simulator.removeAllElectricalProcess(electricalProcessList)
         Eln.simulator.removeAllThermalConnection(thermalConnectionList)

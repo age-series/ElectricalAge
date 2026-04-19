@@ -448,8 +448,8 @@ abstract class NodeBase {
         const val maskThermal = 1 shl 1
         const val maskElectricalGate = 1 shl 2
         const val maskElectricalAll = maskElectricalPower or maskElectricalGate
-        const val maskElectricalInputGate = maskElectricalGate
-        const val maskElectricalOutputGate = maskElectricalGate
+        const val maskElectricalInputGate = maskElectricalAll
+        const val maskElectricalOutputGate = maskElectricalAll
         const val maskWire = 0
         const val maskElectricalWire = 1 shl 3
         const val maskThermalWire = maskWire + maskThermal

@@ -152,7 +152,7 @@ class RadialMotorElement(node: TransparentNode, transparentNodeDescriptor: Trans
     override fun getElectricalLoad(side: Direction, lrdu: LRDU) = throttle
     override fun getThermalLoad(side: Direction, lrdu: LRDU) = null
     override fun getConnectionMask(side: Direction, lrdu: LRDU): Int {
-        return NodeBase.maskElectricalGate
+        return NodeBase.maskElectricalInputGate
     }
 
     override fun thermoMeterString(side: Direction): String = Utils.plotPercent(" Eff:", efficiency.toDouble()) + fluidRate.toString() + "mB/s"

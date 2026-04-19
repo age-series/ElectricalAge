@@ -240,7 +240,7 @@ class GridSwitchElement(node: TransparentNode, descriptor: TransparentNodeDescri
         ghostControl = GhostPowerNode(
             node!!.coordinate, front,
             Coordinate(-1, 0, 0, 0),
-            control, NodeBase.maskElectricalGate
+            control, NodeBase.maskElectricalInputGate
         )
         ghostControl!!.initialize()
         Utils.println("GS.i: ghost power at ${ghostPower!!.coord}, control at ${ghostControl!!.coord}")

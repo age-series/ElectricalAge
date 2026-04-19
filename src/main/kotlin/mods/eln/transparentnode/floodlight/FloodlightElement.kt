@@ -229,9 +229,9 @@ class FloodlightElement(transparentNode: TransparentNode, transparentNodeDescrip
 
         return if (motorized) when (side.toHybridNodeDirection()) {
             blockFacing.back() -> NodeBase.maskElectricalPower
-            blockFacing.right(rotationAxis) -> NodeBase.maskElectricalGate
-            blockFacing.left(rotationAxis) -> NodeBase.maskElectricalGate
-            blockFacing.front() -> NodeBase.maskElectricalGate
+            blockFacing.right(rotationAxis) -> NodeBase.maskElectricalInputGate
+            blockFacing.left(rotationAxis) -> NodeBase.maskElectricalInputGate
+            blockFacing.front() -> NodeBase.maskElectricalInputGate
             else -> 0
         }
         else when (side.toHybridNodeDirection()) {

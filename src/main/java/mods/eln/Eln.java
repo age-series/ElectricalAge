@@ -132,7 +132,8 @@ public class Eln {
     public static final byte packetFalstadImport = 23;
     public static final Obj3DFolder obj = new Obj3DFolder();
     public static final ArrayList<OreScannerConfigElement> oreScannerConfig = new ArrayList<OreScannerConfigElement>();
-    public static final double gateOutputCurrent = 0.100;
+    public static final double gateInputCurrent = 0.00005;
+    public static final double gateOutputCurrent = 0.005;
     public static final double LVU = 50;
     public static final double MVU = 200;
     public static final double HVU = 800;
@@ -248,7 +249,10 @@ public class Eln {
     public RecipesList magnetiserRecipes = new RecipesList();
     public GenericItemUsingDamageDescriptorWithComment copperIngot, plumbIngot, tungstenIngot;
     public DataLogsPrintDescriptor dataLogsPrintDescriptor;
-    public static final double SVU = 5, SVII = gateOutputCurrent / SVU, SVUinv = 1.0 / SVU;
+    public static final double SVU = 5;
+    public static final double signalVoltageAcceptNegative = -0.5;
+    public static final double signalVoltageAcceptPositive = SVU + 0.5;
+    public static final double SVII = gateInputCurrent / SVU, SVUinv = 1.0 / SVU;
     public EnergyConverterElnToOtherBlock elnToOtherBlockConverter;
     public ComputerProbeBlock computerProbeBlock;
     public static final double SVP = gateOutputCurrent * SVU;

@@ -68,7 +68,7 @@ public class ElectricalSourceElement extends SixNodeElement implements IConfigur
     @Override
     public int getConnectionMask(LRDU lrdu) {
         if (((ElectricalSourceDescriptor) sixNodeElementDescriptor).isSignalSource()) {
-            return NodeBase.maskElectricalGate;
+            return NodeBase.maskElectricalOutputGate;
         } else {
             return NodeBase.maskElectricalPower;
         }
