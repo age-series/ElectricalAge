@@ -384,6 +384,18 @@ object SixNodeRegistration {
     private fun registerUtilityCables(vararg groups: Int) {
         val allocator = UtilityDescriptorAllocator(groups)
         val renderCache = linkedMapOf<String, CableRenderDescriptor>()
+        val signalCategoryAreaThresholdMm2 = 1.5
+
+        fun <T : GenericItemBlockUsingDamageDescriptor> categoriseUtilityCable(desc: T, conductorAreaMm2: Double): T {
+            return if (conductorAreaMm2 < signalCategoryAreaThresholdMm2) desc.signal() else desc.cables()
+        }
+
+        fun <T : GenericItemBlockUsingDamageDescriptor> maybeHideSmallAluminum(desc: T, material: UtilityCableMaterial, conductorAreaMm2: Double): T {
+            if (material == UtilityCableMaterial.ALUMINUM && conductorAreaMm2 < signalCategoryAreaThresholdMm2) {
+                desc.hideFromCreative()
+            }
+            return desc
+        }
 
         fun render(texture: String, width: Float, height: Float): CableRenderDescriptor {
             val key = "$texture:$width:$height"
@@ -564,6 +576,21 @@ object SixNodeRegistration {
         )
         val eu3g = arrayOf(UtilityCablePalette("eu", "EU", intArrayOf(12, 11, 5)), UtilityCablePalette("us", "US", intArrayOf(15, 0, 13)))
         val eu5g = arrayOf(UtilityCablePalette("eu", "EU", intArrayOf(12, 15, 7, 11, 5)), UtilityCablePalette("us", "US", intArrayOf(15, 14, 11, 0, 13)))
+        val signal2 = arrayOf(
+            UtilityCablePalette("std", "Signal", intArrayOf(12, 0))
+        )
+        val signal3 = arrayOf(
+            UtilityCablePalette("std", "Signal", intArrayOf(12, 15, 0))
+        )
+        val signal4 = arrayOf(
+            UtilityCablePalette("std", "Signal", intArrayOf(12, 15, 2, 0))
+        )
+        val signal5 = arrayOf(
+            UtilityCablePalette("std", "Signal", intArrayOf(12, 15, 2, 1, 0))
+        )
+        val signal8 = arrayOf(
+            UtilityCablePalette("std", "Signal", intArrayOf(12, 15, 2, 1, 14, 4, 6, 0))
+        )
         val triplex120240 = arrayOf(
             UtilityCablePalette("us", "US Split-Phase", intArrayOf(0, 12, 7)),
             UtilityCablePalette("eu", "EU", intArrayOf(4, 11, 7))
@@ -574,6 +601,16 @@ object SixNodeRegistration {
         )
 
         val multis = listOf(
+            UtilityMultiSpec("2C 18 AWG", "0.75", 0.75, 2, 7.0, 300.0, 90.0, false, signal2),
+            UtilityMultiSpec("3C 18 AWG", "0.75", 0.75, 3, 7.0, 300.0, 90.0, false, signal3),
+            UtilityMultiSpec("4C 18 AWG", "0.75", 0.75, 4, 7.0, 300.0, 90.0, false, signal4),
+            UtilityMultiSpec("5C 18 AWG", "0.75", 0.75, 5, 7.0, 300.0, 90.0, false, signal5),
+            UtilityMultiSpec("8C 18 AWG", "0.75", 0.75, 8, 7.0, 300.0, 90.0, false, signal8),
+            UtilityMultiSpec("2C 20 AWG", "0.5", 0.5, 2, 5.0, 300.0, 80.0, false, signal2),
+            UtilityMultiSpec("3C 20 AWG", "0.5", 0.5, 3, 5.0, 300.0, 80.0, false, signal3),
+            UtilityMultiSpec("4C 20 AWG", "0.5", 0.5, 4, 5.0, 300.0, 80.0, false, signal4),
+            UtilityMultiSpec("5C 20 AWG", "0.5", 0.5, 5, 5.0, 300.0, 80.0, false, signal5),
+            UtilityMultiSpec("8C 20 AWG", "0.5", 0.5, 8, 5.0, 300.0, 80.0, false, signal8),
             UtilityMultiSpec("14/2", "2.5", 2.5, 3, 15.0, 600.0, 105.0, true, us2),
             UtilityMultiSpec("14/3", "2.5", 2.5, 4, 15.0, 600.0, 105.0, true, us3),
             UtilityMultiSpec("12/2", "4", 4.0, 3, 20.0, 600.0, 105.0, true, us2),
@@ -604,15 +641,15 @@ object SixNodeRegistration {
             for (spec in singles) {
                 val bare = newSingleDescriptor(spec, material, insulated = false)
                 bare.moltenPileDescriptor = moltenPileByMaterial[material]
-                Eln.sixNodeItem.addDescriptor(allocator.nextId(), bare.cables())
+                Eln.sixNodeItem.addDescriptor(allocator.nextId(), categoriseUtilityCable(maybeHideSmallAluminum(bare, material, spec.metricArea), spec.metricArea))
 
                 val insulated = newSingleDescriptor(spec, material, insulated = true)
                 val melted = newSingleDescriptor(spec, material, insulated = true, melted = true)
                 insulated.meltedDescriptor = melted
                 insulated.moltenPileDescriptor = moltenPileByMaterial[material]
                 melted.moltenPileDescriptor = moltenPileByMaterial[material]
-                Eln.sixNodeItem.addDescriptor(allocator.nextId(), insulated.cables())
-                Eln.sixNodeItem.addDescriptor(allocator.nextId(), melted.cables())
+                Eln.sixNodeItem.addDescriptor(allocator.nextId(), categoriseUtilityCable(maybeHideSmallAluminum(insulated, material, spec.metricArea), spec.metricArea))
+                Eln.sixNodeItem.addDescriptor(allocator.nextId(), categoriseUtilityCable(maybeHideSmallAluminum(melted, material, spec.metricArea), spec.metricArea))
             }
         }
 
@@ -623,8 +660,8 @@ object SixNodeRegistration {
                 multi.meltedDescriptor = melted
                 multi.moltenPileDescriptor = moltenPileByMaterial[material]
                 melted.moltenPileDescriptor = moltenPileByMaterial[material]
-                Eln.sixNodeItem.addDescriptor(allocator.nextId(), multi.cables())
-                Eln.sixNodeItem.addDescriptor(allocator.nextId(), melted.cables())
+                Eln.sixNodeItem.addDescriptor(allocator.nextId(), categoriseUtilityCable(maybeHideSmallAluminum(multi, material, spec.metricArea), spec.metricArea))
+                Eln.sixNodeItem.addDescriptor(allocator.nextId(), categoriseUtilityCable(maybeHideSmallAluminum(melted, material, spec.metricArea), spec.metricArea))
             }
         }
     }
