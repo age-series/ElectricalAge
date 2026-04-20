@@ -1,0 +1,224 @@
+rank	score	steps	depth	unique_items	base_inputs	machine_steps	item
+1	26	1	1	2	1	0	Clutch Pin
+2	26	1	1	2	1	0	Name
+3	26	1	1	2	1	0	Tree Resin Collector
+4	31	1	1	3	2	0	Animal Filter
+5	31	1	1	3	2	0	Direct Utility Pole
+6	31	1	1	3	2	0	Monster Filter
+7	31	1	1	3	2	0	Player Filter
+8	31	1	1	3	2	0	Thermal Insulation
+9	32	1	1	2	1	1	Output
+10	32	1	1	2	1	1	ingotLead
+11	32	1	1	2	1	1	minecraft:blocks_lapis_block
+12	32	1	1	2	1	1	minecraft:items_emerald
+13	53	2	2	3	1	1	Boots Copper
+14	53	2	2	3	1	1	Chestplate Copper
+15	53	2	2	3	1	1	Helmet Copper
+16	53	2	2	3	1	1	Legs Copper
+17	58	2	2	4	2	1	Axe Copper
+18	58	2	2	4	2	1	Electrical Entity Sensor
+19	58	2	2	4	2	1	Hoe Copper
+20	58	2	2	4	2	1	Lamp Socket B Projector
+21	58	2	2	4	2	1	Lead Clutch Plate
+22	58	2	2	4	2	1	Pickaxe Copper
+23	58	2	2	4	2	1	Shovel Copper
+24	58	2	2	4	2	1	Simple Lamp Socket
+25	58	2	2	4	2	1	Street Light
+26	58	2	2	4	2	1	Sword Copper
+27	59	2	2	3	1	2	Lead Plate
+28	59	2	2	3	1	2	Mercury
+29	74	3	3	4	1	1	Casing
+30	74	3	3	4	1	1	Electrical Fuse Holder
+31	74	3	3	4	1	1	Fluorescent Lamp Socket
+32	74	3	3	4	1	1	Ground Cable
+33	74	3	3	4	1	1	Thermistor
+34	77	3	2	5	2	2	Lamp Supply
+35	79	3	3	5	2	1	Flat Lamp Socket
+36	79	3	3	5	2	1	Lamp Socket A
+37	79	3	3	5	2	1	Long Suspended Lamp Socket (No Swing)
+38	79	3	3	5	2	1	Suspended Lamp Socket (No Swing)
+39	84	3	3	6	3	1	Small 50V Economic Light Bulb
+40	92	4	3	6	2	1	Long Suspended Lamp Socket
+41	92	4	3	6	2	1	Suspended Lamp Socket
+42	93	4	3	5	1	2	Power Capacitor
+43	97	4	3	7	3	1	Big Fuel Burner
+44	97	4	3	7	3	1	Medium Fuel Burner
+45	97	4	3	7	3	1	Small Fuel Burner
+46	97	4	3	7	3	1	Stone Heat Furnace
+47	98	4	3	6	2	2	Analog Watch
+48	98	4	3	6	2	2	Digital Display
+49	98	4	3	6	2	2	Digital Watch
+50	98	4	3	6	2	2	Electrical Anemometer Sensor
+51	98	4	3	6	2	2	On/OFF Regulator 1 Percent
+52	98	4	3	6	2	2	On/OFF Regulator 10 Percent
+53	98	4	3	6	2	2	Power Inductor
+54	99	4	3	5	1	3	Electrical Weather Sensor
+55	103	4	3	7	3	2	Nixie Tube
+56	103	4	3	7	3	2	Small 50V Carbon Incandescent Light Bulb
+57	103	4	3	7	3	2	Small 50V Incandescent Light Bulb
+58	104	4	3	6	2	3	Copper Clutch Plate
+59	104	4	3	6	2	3	Gold Clutch Plate
+60	104	4	3	6	2	3	Iron Clutch Plate
+61	106	4	2	8	4	3	Solar Tracker
+62	109	4	3	7	3	3	Sconce Lamp Socket
+63	111	5	3	7	2	2	Hub
+64	117	5	3	7	2	3	NTC Thermistor
+65	120	5	4	6	1	3	Lead Fuse for low voltage cables
+66	120	5	4	6	1	3	Signal Bus Cable
+67	130	5	4	8	3	3	50V Economic Light Bulb
+68	130	5	4	8	3	3	LED vuMeter
+69	131	5	4	7	2	4	Coal Clutch Plate
+70	133	6	4	7	1	3	Low Voltage Switch
+71	136	6	3	8	2	4	Signal Diode
+72	137	6	6	7	1	1	200V Copper Heating Element
+73	137	6	6	7	1	1	200V Iron Heating Element
+74	141	6	5	7	1	3	Lead Fuse for medium voltage cables
+75	143	6	4	9	3	3	Nuclear Alarm
+76	143	6	4	9	3	3	Standard Alarm
+77	144	6	4	8	2	4	Signal Button
+78	144	6	4	8	2	4	Signal Switch
+79	149	6	4	9	3	4	50V Carbon Incandescent Light Bulb
+80	149	6	4	9	3	4	50V Farming Lamp
+81	149	6	4	9	3	4	Electrical Furnace
+82	149	6	4	9	3	4	Multicolor LED vuMeter
+83	149	6	4	9	3	4	Signal Trimmer
+84	151	6	5	9	3	3	200V Economic Light Bulb
+85	151	7	4	9	2	3	Crank Shaft
+86	151	7	4	9	2	3	Joint
+87	151	7	4	9	2	3	Joint hub
+88	152	6	5	8	2	4	OR Chip
+89	152	6	5	8	2	4	XOR Chip
+90	154	7	5	8	1	3	Medium Voltage Switch
+91	157	6	5	9	3	4	Electrical Timer
+92	157	6	5	9	3	4	Voltage-to-Redstone Converter
+93	157	7	4	9	2	4	25A Diode
+94	157	7	4	9	2	4	Variable inductor
+95	161	7	4	11	4	3	Transmission Tower
+96	162	7	4	10	3	4	Portable Condensator Pack
+97	162	7	4	10	3	4	Wireless Analyser
+98	162	7	6	8	1	3	Lead Fuse for high voltage cables
+99	167	7	4	11	4	4	Analog vuMeter
+100	170	7	5	10	3	4	200V Farming Lamp
+101	170	7	5	10	3	4	200V Incandescent Light Bulb
+102	170	8	4	10	2	4	Clutch
+103	170	8	4	10	2	4	Rolling Shaft Machine
+104	175	8	4	11	3	4	Flywheel
+105	175	8	6	9	1	3	High Voltage Switch
+106	178	7	6	10	3	4	Scanner
+107	181	8	4	11	3	5	Weak 50V Battery Charger
+108	189	8	5	11	3	5	AND Chip
+109	189	8	5	11	3	5	NAND Chip
+110	189	8	5	11	3	5	NOR Chip
+111	189	8	5	11	3	5	NOT Chip
+112	189	8	5	11	3	5	XNOR Chip
+113	194	9	4	12	3	5	Temperature Probe
+114	194	9	4	12	3	5	Thermal Probe
+115	195	8	5	11	3	6	Data Logger
+116	195	8	5	11	3	6	Low Power Receiver Antenna
+117	195	8	5	11	3	6	Low Power Transmitter Antenna
+118	199	9	4	13	4	5	High Current Relay
+119	199	9	4	13	4	5	Low Current Relay
+120	199	9	4	13	4	5	Low Voltage Relay
+121	199	9	4	13	4	5	Medium Current Relay
+122	199	9	4	13	4	5	Signal Relay
+123	202	9	5	12	3	5	Wireless Signal Repeater
+124	208	8	8	10	2	5	Creative Cable
+125	209	10	5	13	3	4	Small Active Thermal Dissipator
+126	210	9	6	12	3	5	Amplifier
+127	210	9	6	12	3	5	Configurable summing unit
+128	210	9	6	12	3	5	OpAmp
+129	210	9	6	12	3	5	PAL Chip
+130	210	9	6	12	3	5	PID Regulator
+131	210	9	6	12	3	5	Sample and hold
+132	210	9	6	12	3	5	Schmitt Trigger Chip
+133	210	9	6	12	3	5	Voltage controlled sawtooth oscillator
+134	210	9	6	12	3	5	Voltage controlled sine oscillator
+135	213	9	5	13	4	6	Variable DC-DC Converter
+136	216	9	6	12	3	6	High Power Transmitter Antenna
+137	216	9	6	12	3	6	Industrial Data Logger
+138	216	9	6	12	3	6	Medium Power Receiver Antenna
+139	216	9	6	12	3	6	Medium Power Transmitter Antenna
+140	216	9	6	12	3	6	Modern Data Logger
+141	220	10	5	14	4	5	Medium Voltage Relay
+142	220	10	5	14	4	5	Portable Electrical Axe
+143	221	10	10	11	1	1	3.2kV Tungsten Heating Element
+144	222	11	5	14	3	4	50V Turbine
+145	223	10	6	13	3	5	Config Copy Tool
+146	223	11	5	13	2	5	Water Turbine
+147	223	11	5	13	2	5	Wind Turbine
+148	226	10	5	14	4	6	Energy Meter
+149	227	10	5	13	3	7	Signal Processor
+150	228	11	5	14	3	5	50V Magnetizer
+151	228	11	5	14	3	5	50V Plate Machine
+152	229	10	6	13	3	6	D Flip Flop Chip
+153	229	10	6	13	3	6	JK Flip Flop Chip
+154	231	10	5	15	5	6	50V Egg Incubator
+155	231	10	5	15	5	6	Small Flashlight
+156	235	10	6	13	3	7	Lead Fuse for very high voltage cables
+157	240	11	5	14	3	7	Wireless Button
+158	240	11	5	14	3	7	Wireless Switch
+159	244	11	7	14	3	5	Electrical Probe
+160	244	11	7	14	3	5	Voltage Probe
+161	247	12	5	15	3	6	50V Compressor
+162	248	11	6	14	3	7	Oscillator Chip
+163	253	11	6	15	4	7	Holiday Candle
+164	254	11	6	14	3	8	Electrical Fire Buzzer
+165	258	11	6	16	5	7	Electrical Daylight Sensor
+166	260	11	7	16	5	6	Christmas Tree
+167	264	12	5	16	4	8	50V Battery Charger
+168	270	12	5	16	4	9	Electrical Fire Detector
+169	270	12	5	16	4	9	Lowpass filter
+170	271	13	5	17	4	7	50V Macerator
+171	272	12	6	16	4	8	Very High Voltage Switch
+172	278	12	6	16	4	9	Small Rotating Solar Panel
+173	282	12	6	18	6	8	Electrical Light Sensor
+174	282	13	5	18	5	8	50V Emergency Lamp
+175	282	13	5	18	5	8	Improved Flashlight
+176	283	14	7	17	3	5	Tachometer
+177	284	13	6	18	5	7	X-Ray Scanner
+178	285	12	7	17	5	8	Radial Motor
+179	285	13	6	17	4	8	Voltage controlled amplifier
+180	287	13	7	17	4	7	MQTT Energy Meter
+181	290	12	7	18	6	8	Steam Turbine
+182	296	14	8	18	4	5	AllMeter
+183	297	13	6	17	4	10	Type J Socket
+184	298	14	6	18	4	8	200V Battery Charger
+185	298	14	6	18	4	8	Machine Booster
+186	300	14	5	20	6	8	Fuel Heat Furnace
+187	300	15	6	18	3	7	Eln Computer Probe
+188	302	12	11	14	2	8	minecraft:items_ender_pearl
+189	303	14	6	19	5	8	200V Emergency Lamp
+190	306	16	6	20	4	5	Utility Pole w/DC-DC Converter
+191	310	14	6	18	4	10	Type E Socket
+192	317	14	7	19	5	9	Grid DC-DC Converter
+193	322	14	7	20	6	9	Thermal Heat Exchanger
+194	325	17	6	21	4	6	Large Rheostat
+195	328	13	12	16	3	8	Canister of Arc Water
+196	330	15	7	20	5	9	2x3 Rotating Solar Panel
+197	333	15	6	21	6	10	Very High Voltage Relay
+198	335	16	6	21	5	9	Energy Exporter
+199	343	17	6	21	4	9	50V Fuel Generator
+200	379	17	9	21	4	11	High Power Receiver Antenna
+201	386	18	7	24	6	11	200V Active Thermal Dissipator
+202	392	18	7	24	6	12	Experimental Transporter
+203	397	20	8	25	5	8	Electrical Breaker
+204	403	18	7	25	7	13	Grid Switch
+205	413	20	7	25	5	12	Shaft Motor
+206	418	20	7	26	6	12	200V Turbine
+207	418	20	7	26	6	12	Generator
+208	427	20	8	25	5	13	Old 800V Arc Furnace
+209	428	20	7	28	8	12	Gas Turbine
+210	429	20	8	29	9	10	Large Steam Turbine
+211	449	22	9	27	5	11	Experimental Battery
+212	451	22	8	29	7	11	Large Generator
+213	451	22	8	29	7	11	Large Shaft Motor
+214	455	22	7	29	7	13	800V Defence Turret
+215	474	23	8	32	9	11	Large Gas Turbine
+216	488	24	7	30	6	15	200V Compressor
+217	488	24	7	30	6	15	200V Magnetizer
+218	488	24	7	30	6	15	200V Plate Machine
+219	520	26	7	32	6	16	200V Fuel Generator
+220	551	28	7	35	7	16	Auto Miner
+221	586	29	9	36	7	17	Irresponsible Electrical Drill
+222	600	30	9	36	6	18	200V Macerator
+223	617	30	10	39	9	17	Portable Electrical Mining Drill
