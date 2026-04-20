@@ -13,17 +13,6 @@ class RollerWheelDescriptor(name: String, private val materialName: String, icon
     }
 }
 
-class InsulationCompoundDescriptor(name: String) : GenericItemUsingDamageDescriptor(name, "ingotrubber") {
-    companion object {
-        const val METERS_PER_ITEM = 64.0
-    }
-
-    override fun addInformation(itemStack: ItemStack?, entityPlayer: EntityPlayer?, list: MutableList<String>, par4: Boolean) {
-        super.addInformation(itemStack, entityPlayer, list, par4)
-        list.add(tr("Provides %1$ m of wire insulation", METERS_PER_ITEM.toInt()))
-    }
-}
-
 class WoundWireBundleDescriptor(name: String) : GenericItemUsingDamageDescriptor(name, "coppercable") {
     companion object {
         private const val NBT_TARGET_LABEL = "wireBundleTargetLabel"

@@ -9,9 +9,7 @@ import mods.eln.sim.mna.misc.ISubSystemProcessI;
 import mods.eln.sim.mna.misc.MnaConst;
 import mods.eln.sim.mna.state.State;
 import mods.eln.sim.mna.state.VoltageState;
-import org.apache.commons.math3.linear.MatrixUtils;
-import org.apache.commons.math3.linear.QRDecomposition;
-import org.apache.commons.math3.linear.RealMatrix;
+import org.apache.commons.numbers.core.DD;
 
 import mods.eln.Eln;
 import java.util.ArrayList;
@@ -32,10 +30,10 @@ public class SubSystem {
     boolean matrixValid = false;
 
     int stateCount;
-    RealMatrix A;
+    double[][] A;
     boolean singularMatrix;
 
-    double[][] AInvdata;
+    DD[][] AInvdata;
     double[] Idata;
 
     double[] XtempData;
@@ -108,7 +106,7 @@ public class SubSystem {
         Profiler p = new Profiler();
         p.add("Inversse with " + stateCount + " state : ");
 
-        A = MatrixUtils.createRealMatrix(stateCount, stateCount);
+        A = new double[stateCount][stateCount];
         Idata = new double[stateCount];
         XtempData = new double[stateCount];
         {
@@ -125,12 +123,11 @@ public class SubSystem {
         //	org.apache.commons.math3.linear.
 
         try {
-            //FieldLUDecomposition QRDecomposition  LUDecomposition RRQRDecomposition
-            RealMatrix Ainv = new QRDecomposition(A).getSolver().getInverse();
-            AInvdata = Ainv.getData();
+            AInvdata = invertMatrix(A);
             singularMatrix = false;
         } catch (Exception e) {
             singularMatrix = true;
+            AInvdata = null;
             if (stateCount > 1) {
                 int idx = 0;
                 idx++;
@@ -152,7 +149,7 @@ public class SubSystem {
             generateMatrix();
         }
 
-        double[][] matrixCopy = A != null ? A.getData() : new double[0][0];
+        double[][] matrixCopy = copyMatrix(A);
         double[] rhsCopy = Idata != null ? Idata.clone() : new double[0];
 
         String[] stateDescriptions = new String[stateCount];
@@ -226,7 +223,7 @@ public class SubSystem {
     public void addToA(State a, State b, double v) {
         if (a == null || b == null)
             return;
-        A.addToEntry(a.getId(), b.getId(), v);
+        A[a.getId()][b.getId()] += v;
     }
 
     public void addToI(State s, double v) {
@@ -253,11 +250,12 @@ public class SubSystem {
             }
 
             for (int idx2 = 0; idx2 < stateCount; idx2++) {
-                double stack = 0;
+                DD stack = DD.ZERO;
+                DD[] inverseRow = AInvdata[idx2];
                 for (int idx = 0; idx < stateCount; idx++) {
-                    stack += AInvdata[idx2][idx] * Idata[idx];
+                    stack = stack.add(inverseRow[idx].multiply(Idata[idx]));
                 }
-                XtempData[idx2] = stack;
+                XtempData[idx2] = stack.doubleValue();
             }
         }
     }
@@ -276,13 +274,87 @@ public class SubSystem {
             }
 
             int idx2 = pin.getId();
-            double stack = 0;
+            DD stack = DD.ZERO;
+            DD[] inverseRow = AInvdata[idx2];
             for (int idx = 0; idx < stateCount; idx++) {
-                stack += AInvdata[idx2][idx] * Idata[idx];
+                stack = stack.add(inverseRow[idx].multiply(Idata[idx]));
             }
-            return stack;
+            return stack.doubleValue();
         }
         return 0;
+    }
+
+    private static double[][] copyMatrix(double[][] source) {
+        if (source == null) {
+            return new double[0][0];
+        }
+        double[][] copy = new double[source.length][];
+        for (int idx = 0; idx < source.length; idx++) {
+            copy[idx] = source[idx].clone();
+        }
+        return copy;
+    }
+
+    private static DD[][] invertMatrix(double[][] matrix) {
+        int size = matrix.length;
+        DD[][] augmented = new DD[size][size * 2];
+
+        for (int row = 0; row < size; row++) {
+            for (int col = 0; col < size; col++) {
+                augmented[row][col] = DD.of(matrix[row][col]);
+                augmented[row][size + col] = row == col ? DD.ONE : DD.ZERO;
+            }
+        }
+
+        for (int pivotColumn = 0; pivotColumn < size; pivotColumn++) {
+            int pivotRow = pivotColumn;
+            double pivotMagnitude = 0.0;
+            for (int row = pivotColumn; row < size; row++) {
+                double magnitude = augmented[row][pivotColumn].abs().doubleValue();
+                if (magnitude > pivotMagnitude) {
+                    pivotMagnitude = magnitude;
+                    pivotRow = row;
+                }
+            }
+
+            if (pivotMagnitude == 0.0) {
+                throw new IllegalStateException("Matrix is singular");
+            }
+
+            if (pivotRow != pivotColumn) {
+                DD[] swap = augmented[pivotColumn];
+                augmented[pivotColumn] = augmented[pivotRow];
+                augmented[pivotRow] = swap;
+            }
+
+            DD pivot = augmented[pivotColumn][pivotColumn];
+            for (int col = pivotColumn; col < size * 2; col++) {
+                augmented[pivotColumn][col] = augmented[pivotColumn][col].divide(pivot);
+            }
+            augmented[pivotColumn][pivotColumn] = DD.ONE;
+
+            for (int row = 0; row < size; row++) {
+                if (row == pivotColumn) {
+                    continue;
+                }
+
+                DD factor = augmented[row][pivotColumn];
+                if (factor.isZero()) {
+                    continue;
+                }
+
+                for (int col = pivotColumn; col < size * 2; col++) {
+                    augmented[row][col] = augmented[row][col].subtract(factor.multiply(augmented[pivotColumn][col]));
+                }
+                augmented[row][pivotColumn] = DD.ZERO;
+            }
+        }
+
+        DD[][] inverse = new DD[size][size];
+        for (int row = 0; row < size; row++) {
+            System.arraycopy(augmented[row], size, inverse[row], 0, size);
+        }
+        return inverse;
     }
 
     public void stepFlush() {

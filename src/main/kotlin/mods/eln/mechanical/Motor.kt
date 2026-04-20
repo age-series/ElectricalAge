@@ -32,6 +32,10 @@ import java.io.DataOutputStream
 
 private const val MACHINE_INTERNAL_RESISTANCE_FACTOR = 0.1
 
+private data class MotorSupplyThevenin(val voltage: Double, val resistance: Double) {
+    fun isHighImpedance() = resistance > 1e8
+}
+
 class MotorDescriptor(
     val name: String,
     obj: Obj3D,
@@ -64,7 +68,7 @@ class MotorDescriptor(
     val efficiency = 0.99
     val nominalCurrent = nominalP / nominalU
     val driveRampTime = 1.5
-    val driveCurrentLimit = nominalCurrent * 1.75
+    val driveCurrentLimit = nominalCurrent
     val driveSpeedKp = nominalCurrent / nominalRads
     val driveSpeedKi = driveSpeedKp * 0.5
     val driveVoltageFilterTime = 0.25
@@ -239,13 +243,7 @@ class MotorElement(node: TransparentNode, desc_: TransparentNodeDescriptor) :
             val noTorqueU = desc.radsToU.getValue(shaft.rads)
             val dt = if (time > 0.0) time else Eln.simulator.electricalPeriod
 
-            // Most of this was copied from Generator.kt, and bears the same
-            // admonition: I don't actually know how this works.
-            val th = wireLoad.subSystem.getTh(wireLoad, powerSource)
-            if (th.voltage.isNaN()) {
-                th.voltage = noTorqueU
-                th.resistance = MnaConst.highImpedance
-            }
+            val th = getSupplyThevenin(noTorqueU)
             val supplyPresent = !th.isHighImpedance() && th.voltage > desc.nominalU * 0.1
             if (!supplyPresent) {
                 driveSpeedTarget = 0.0
@@ -287,10 +285,11 @@ class MotorElement(node: TransparentNode, desc_: TransparentNodeDescriptor) :
             val nextIntegrator = (driveIntegrator + speedError * dt).coerceIn(0.0, desc.nominalRads.toDouble() * 4.0)
             val requestedCurrent =
                 (desc.driveSpeedKp * speedError + desc.driveSpeedKi * nextIntegrator).coerceIn(0.0, desc.driveCurrentLimit.toDouble())
-            val availableCurrent = if (th.isHighImpedance() || th.resistance <= 0.0) {
+            val seriesResistance = getDriveSeriesResistance(th)
+            val availableCurrent = if (th.isHighImpedance() || seriesResistance <= 0.0) {
                 0.0
             } else {
-                ((th.voltage - noTorqueU) / th.resistance).coerceAtLeast(0.0)
+                ((th.voltage - noTorqueU) / seriesResistance).coerceAtLeast(0.0)
             }
             val effectiveCurrent = requestedCurrent.coerceAtMost(availableCurrent)
 
@@ -315,7 +314,7 @@ class MotorElement(node: TransparentNode, desc_: TransparentNodeDescriptor) :
             val commandedVoltage = if (th.isHighImpedance()) {
                 noTorqueU
             } else {
-                th.voltage - driveCurrentRequest * th.resistance
+                th.voltage - driveCurrentRequest * seriesResistance
             }
             driveFilteredOutputVoltage = if (driveFilteredOutputVoltage <= 0.0) {
                 commandedVoltage
@@ -324,6 +323,27 @@ class MotorElement(node: TransparentNode, desc_: TransparentNodeDescriptor) :
                 driveFilteredOutputVoltage + (commandedVoltage - driveFilteredOutputVoltage) * alpha
             }
             powerSource.setVoltage(driveFilteredOutputVoltage)
+        }
+
+        private fun getSupplyThevenin(noTorqueU: Double): MotorSupplyThevenin {
+            val positive = wireLoad.subSystem.getTh(wireLoad, powerSource)
+            if (positive.voltage.isNaN()) {
+                positive.voltage = noTorqueU
+                positive.resistance = MnaConst.highImpedance
+            }
+
+            if (!desc.bipolarTerminals) {
+                return MotorSupplyThevenin(positive.voltage, positive.resistance)
+            }
+
+            return MotorSupplyThevenin(
+                positive.voltage - negativeLoad.voltage,
+                positive.resistance
+            )
+        }
+
+        private fun getDriveSeriesResistance(th: MotorSupplyThevenin): Double {
+            return th.resistance + wireShaftResistor.resistance
         }
 
         override fun rootSystemPreStepProcess() {

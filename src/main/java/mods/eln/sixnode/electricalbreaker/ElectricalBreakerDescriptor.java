@@ -8,11 +8,15 @@ import mods.eln.misc.Utils;
 import mods.eln.misc.VoltageLevelColor;
 import mods.eln.node.six.SixNodeDescriptor;
 import mods.eln.wiki.Data;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.lwjgl.opengl.GL11;
 
 import java.util.Collections;
 import java.util.List;
@@ -78,8 +82,32 @@ public class ElectricalBreakerDescriptor extends SixNodeDescriptor {
     public void renderItem(ItemRenderType type, ItemStack item, Object... data) {
         if (type == ItemRenderType.INVENTORY) /*GL11.glScalef(1.8f, 1.8f, 1.8f);*/ {
             super.renderItem(type, item, data);
+            renderCurrentLimitOverlay();
         } else
             draw(0f, 0f);
+    }
+
+    private void renderCurrentLimitOverlay() {
+        if (!Double.isFinite(currentLimit)) return;
+
+        FontRenderer font = Minecraft.getMinecraft().fontRenderer;
+        String overlay = currentLimit == Math.rint(currentLimit)
+            ? Integer.toString((int) currentLimit)
+            : Double.toString(currentLimit);
+        float scale = 0.5f;
+        float scaledWidth = font.getStringWidth(overlay) * scale;
+        int x = (int) ((16f - scaledWidth) / scale);
+        int y = 2;
+
+        GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
+        RenderHelper.disableStandardItemLighting();
+        GL11.glDisable(GL11.GL_LIGHTING);
+        GL11.glDisable(GL11.GL_DEPTH_TEST);
+        GL11.glPushMatrix();
+        GL11.glScalef(scale, scale, 1f);
+        font.drawStringWithShadow(overlay, x, y, 0xFFFFFF);
+        GL11.glPopMatrix();
+        GL11.glPopAttrib();
     }
 
     public void draw(float on, float distance) {

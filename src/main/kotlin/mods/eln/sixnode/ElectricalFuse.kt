@@ -63,7 +63,7 @@ class ElectricalFuseHolderDescriptor(name: String, obj: Obj3D) :
             VoltageLevelColor.fromCable(installedFuse.cableDescriptor).setGLColor()
             fuseType?.draw()
             GL11.glColor3f(1f, 1f, 1f)
-            if (installedFuse.cableDescriptor != null) {
+            if (installedFuse.isUsable()) {
                 fuseOk?.draw()
             }
             fuse?.draw()
@@ -99,15 +99,15 @@ class ElectricalFuseHolderElement(sixNode: SixNode, side: Direction, descriptor:
 
     private val fuseProcess = IProcess { time ->
         val I = aLoad.current
-        val cable = installedFuse?.cableDescriptor
-        if (cable == null) {
+        val fuse = installedFuse
+        if (fuse == null || !fuse.isUsable()) {
             T = 0.0
         } else {
-            val P = I * I * cable.electricalRs * 2.0 - T / cable.thermalRp * 0.9
+            val P = I * I * fuse.resistanceOhms() - T / fuse.thermalRp() * 0.9
 
-            T += P / cable.thermalC * time
+            T += P / fuse.thermalC() * time
         }
-        if (T > cable?.thermalWarmLimit ?: 0.0 * 0.8) {
+        if (T > ((fuse?.warmLimitCelsius() ?: 0.0) * 0.8)) {
             installedFuse = ElectricalFuseDescriptor.BlownFuse
         }
     }
@@ -179,7 +179,12 @@ class ElectricalFuseHolderElement(sixNode: SixNode, side: Direction, descriptor:
     }
 
     fun refreshSwitchResistor() {
-        installedFuse?.cableDescriptor?.applyTo(fuseResistor) ?: fuseResistor.highImpedance()
+        val fuse = installedFuse
+        if (fuse != null && fuse.isUsable()) {
+            fuseResistor.resistance = fuse.resistanceOhms()
+        } else {
+            fuseResistor.highImpedance()
+        }
     }
 
     override fun initialize() {
