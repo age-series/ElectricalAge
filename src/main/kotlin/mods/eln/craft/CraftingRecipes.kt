@@ -2111,14 +2111,14 @@ object CraftingRecipes {
             "AIA", "ACA", "AIA",
             'A', "ingotAlloy",
             'I', "ingotIron",
-            'C', findItemStack("Advanced Chip")
+            'C', findItemStack("Advanced Machine Block")
         )
         addRecipe(
             findItemStack("Tungsten Turbine Blade"),
             "TAT", "ACA", "TAT",
             'T', Eln.config.getStringOrElse("runtime.dictionary.tungstenIngot", "ingotElnTungsten"),
             'A', "ingotAlloy",
-            'C', findItemStack("Advanced Chip")
+            'C', findItemStack("Advanced Machine Block")
         )
     }
 
