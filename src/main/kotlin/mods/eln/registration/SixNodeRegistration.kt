@@ -50,6 +50,7 @@ import mods.eln.sixnode.electricalwatch.ElectricalWatchDescriptor
 import mods.eln.sixnode.electricalweathersensor.ElectricalWeatherSensorDescriptor
 import mods.eln.sixnode.electricalwindsensor.ElectricalWindSensorDescriptor
 import mods.eln.sixnode.energymeter.EnergyMeterDescriptor
+import mods.eln.sixnode.fibercable.FiberCableDescriptor
 import mods.eln.sixnode.mqttmeter.MqttEnergyMeterElement
 import mods.eln.sixnode.mqttmeter.MqttEnergyMeterRender
 import mods.eln.sixnode.mqttsignal.MqttSignalControllerDescriptor
@@ -127,6 +128,7 @@ object SixNodeRegistration {
         registerGround(2)
         registerElectricalSource(3)
         registerElectricalCable(32)
+        registerFiberCable(32)
         registerCurrentCables(33)
         registerUtilityCables(34, 35, 36, 37)
         registerThermalCable(48)
@@ -675,6 +677,14 @@ object SixNodeRegistration {
                 Eln.sixNodeItem.addDescriptor(allocator.nextId(), categoriseUtilityCable(maybeHideSmallAluminum(melted, material, spec.metricArea), spec.metricArea))
             }
         }
+    }
+
+    private fun registerFiberCable(id: Int) {
+        val subId = 28
+        val name = I18N.TR_NAME(I18N.Type.NONE, "Fiber Optic Cable")
+        val render = CableRenderDescriptor("eln", "sprites/cable.png", 0.49f, 0.49f)
+        val desc = FiberCableDescriptor(name, render).signal()
+        Eln.sixNodeItem.addDescriptor(subId + (id shl 6), desc)
     }
 
     private fun registerCurrentRelays(id: Int) {

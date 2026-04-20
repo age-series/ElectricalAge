@@ -42,7 +42,12 @@ import mods.eln.transparentnode.heatfurnace.HeatFurnaceDescriptor
 import mods.eln.transparentnode.powercapacitor.PowerCapacitorDescriptor
 import mods.eln.transparentnode.powerinductor.PowerInductorDescriptor
 import mods.eln.transparentnode.solarpanel.SolarPanelDescriptor
+import mods.eln.transparentnode.distributionpole.DistributionPoleDescriptor
+import mods.eln.transparentnode.subtransmissionpole.SubTransmissionPoleCeilingDescriptor
+import mods.eln.transparentnode.subtransmissionpole.SubTransmissionPoleDescriptor
+import mods.eln.transparentnode.subtransmissionpole.SubTransmissionPoleWallDescriptor
 import mods.eln.transparentnode.teleporter.TeleporterDescriptor
+import mods.eln.transparentnode.telecompole.TelecomPoleDescriptor
 import mods.eln.transparentnode.themralheatexchanger.ThermalHeatExchangerDescriptor
 import mods.eln.transparentnode.thermaldissipatoractive.ThermalDissipatorActiveDescriptor
 import mods.eln.transparentnode.thermaldissipatorpassive.ThermalDissipatorPassiveDescriptor
@@ -118,6 +123,7 @@ object TransparentNodeRegistration {
         Eln.transparentNodeItem.setCreativeTabForGroup(96, Eln.creativeTabPowerElectronics)
         Eln.transparentNodeItem.setCreativeTabForGroup(117, Eln.creativeTabSignalProcessing)
         Eln.transparentNodeItem.setCreativeTabForGroup(123, Eln.creativeTabPowerElectronics)
+        Eln.transparentNodeItem.setCreativeTabForGroup(124, Eln.creativeTabPowerElectronics)
 
         registerPowerComponent(1)
         registerTransformer(2)
@@ -147,6 +153,7 @@ object TransparentNodeRegistration {
         registerLargeRheostat() // 96, but from the wrong side.
         registerNixieTube() // 117, but from the wrong side.
         registerGridDevices(123)
+        registerDistributionPoles(124)
     }
 
 
@@ -1361,6 +1368,66 @@ object TransparentNodeRegistration {
             )
             transparentNodeItem.addDescriptor(subId + (id shl 6), desc)
         }
+    }
+
+    private fun registerDistributionPoles(id: Int) {
+        run {
+            val subId = 0
+            val name = TR_NAME(I18N.Type.NONE, "Distribution Pole")
+            val ghostGroup = GhostGroup().apply {
+                addRectangle(0, 0, 0, 8, 0, 0)
+                // Avoid adding the root block to the ghost group.
+                removeElement(0, 0, 0)
+            }
+            val desc = DistributionPoleDescriptor(name, Eln.obj.getObj("DistributionPole"), ghostGroup)
+            transparentNodeItem.addDescriptor(subId + (id shl 6), desc)
+        }
+
+        run {
+            val subId = 1
+            val name = TR_NAME(I18N.Type.NONE, "Telecom Pole")
+            val ghostGroup = GhostGroup().apply {
+                addRectangle(0, 0, 0, 5, 0, 0)
+                // Avoid adding the root block to the ghost group.
+                removeElement(0, 0, 0)
+            }
+            val desc = TelecomPoleDescriptor(name, Eln.obj.getObj("TelComPole"), ghostGroup)
+            transparentNodeItem.addDescriptor(subId + (id shl 6), desc)
+        }
+
+        run {
+            val subId = 2
+            val name = TR_NAME(I18N.Type.NONE, "Sub Transmission Pole")
+            val ghostGroup = GhostGroup().apply {
+                addRectangle(0, 0, 0, 7, 0, 0)
+                removeElement(0, 0, 0)
+            }
+            val desc = SubTransmissionPoleDescriptor(name, Eln.obj.getObj("SubTransmissionPole"), ghostGroup)
+            transparentNodeItem.addDescriptor(subId + (id shl 6), desc)
+        }
+
+        run {
+            val subId = 3
+            val name = TR_NAME(I18N.Type.NONE, "Sub Transmission Pole Wall")
+            val ghostGroup = GhostGroup().apply {
+                addRectangle(0, 0, 0, 4, 0, 0)
+                removeElement(0, 0, 0)
+            }
+            val desc = SubTransmissionPoleWallDescriptor(name, Eln.obj.getObj("UtilityPoleWall"), ghostGroup)
+            transparentNodeItem.addDescriptor(subId + (id shl 6), desc)
+        }
+
+        run {
+            val subId = 4
+            val name = TR_NAME(I18N.Type.NONE, "Sub Transmission Pole Ceiling")
+            val ghostGroup = GhostGroup().apply {
+                addRectangle(0, 0, 0, 4, 0, 0)
+                removeElement(0, 0, 0)
+            }
+            val desc = SubTransmissionPoleCeilingDescriptor(name, Eln.obj.getObj("UtilityPoleCeiling"), ghostGroup)
+            transparentNodeItem.addDescriptor(subId + (id shl 6), desc)
+        }
+
     }
 
     private fun registerTurret(id: Int) {
