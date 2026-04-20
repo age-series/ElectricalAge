@@ -386,13 +386,6 @@ object ItemRegistration {
             Eln.sharedItem.addElement(subId + (id shl 6), desc)
         }
         run {
-            val subId = 3
-            val name = I18N.TR_NAME(I18N.Type.NONE, "Insulation Compound")
-            val desc = InsulationCompoundDescriptor(name).inOresAndMaterialsTab()
-            instance.insulationCompoundDescriptor = desc
-            Eln.sharedItem.addElement(subId + (id shl 6), desc)
-        }
-        run {
             val subId = 4
             val name = I18N.TR_NAME(I18N.Type.NONE, "Wound Wire Bundle")
             val desc = WoundWireBundleDescriptor(name).inOresAndMaterialsTab()

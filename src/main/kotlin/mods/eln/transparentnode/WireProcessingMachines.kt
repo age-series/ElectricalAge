@@ -10,7 +10,6 @@ import mods.eln.gui.IGuiObject
 import mods.eln.gui.ISlotSkin.SlotSkin
 import mods.eln.gui.SlotWithSkinAndComment
 import mods.eln.i18n.I18N.tr
-import mods.eln.item.InsulationCompoundDescriptor
 import mods.eln.item.RollerWheelDescriptor
 import mods.eln.item.WoundWireBundleDescriptor
 import mods.eln.misc.Direction
@@ -524,9 +523,8 @@ class WireMachineElement(node: TransparentNode, descriptor: TransparentNodeDescr
 
     private fun absorbInsulationInput() {
         val input = inventory.getStackInSlot(1) ?: return
-        val descriptor = Eln.instance.insulationCompoundDescriptor ?: return
-        if (!descriptor.checkSameItemStack(input)) return
-        insulationMetersBuffer += input.stackSize * InsulationCompoundDescriptor.METERS_PER_ITEM
+        if (!input.matchesOre("itemRubber")) return
+        insulationMetersBuffer += input.stackSize * 32.0
         inventory.setInventorySlotContents(1, null)
         inventory.markDirty()
     }
@@ -819,7 +817,7 @@ private fun WireMachineKind.slots(inventory: IInventory): Array<net.minecraft.in
     )
     WireMachineKind.INSULATOR -> arrayOf(
         SlotWithSkinAndComment(inventory, 0, 8, 18, SlotSkin.medium, arrayOf("Bare Wire or Bundle Input")),
-        SlotWithSkinAndComment(inventory, 1, 30, 18, SlotSkin.medium, arrayOf("Insulation Compound")),
+        SlotWithSkinAndComment(inventory, 1, 30, 18, SlotSkin.medium, arrayOf("Rubber Insulation Input")),
         SlotWithSkinAndComment(inventory, 2, 134, 18, SlotSkin.big, arrayOf("Insulated Output"))
     )
     WireMachineKind.COMBINER -> arrayOf(

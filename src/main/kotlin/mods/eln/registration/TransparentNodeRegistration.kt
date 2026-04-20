@@ -208,7 +208,7 @@ object TransparentNodeRegistration {
                 WireMachineKind.ROLLER,
                 Eln.obj.getObj("platemachinea")
             )
-            desc.setDefaultIcon("iron_block")
+            desc.setDefaultIcon("50vplatemachine")
             transparentNodeItem.addDescriptor(subId + (id shl 6), desc)
         }
         run {
@@ -218,7 +218,7 @@ object TransparentNodeRegistration {
                 WireMachineKind.INSULATOR,
                 Eln.obj.getObj("fabricator")
             )
-            desc.setDefaultIcon("iron_block")
+            desc.setDefaultIcon("machineblock")
             transparentNodeItem.addDescriptor(subId + (id shl 6), desc)
         }
         run {
@@ -228,7 +228,7 @@ object TransparentNodeRegistration {
                 WireMachineKind.COMBINER,
                 Eln.obj.getObj("magnetizera")
             )
-            desc.setDefaultIcon("iron_block")
+            desc.setDefaultIcon("50vmagnetizer")
             transparentNodeItem.addDescriptor(subId + (id shl 6), desc)
         }
     }
@@ -261,6 +261,7 @@ object TransparentNodeRegistration {
             subId = 0
             name = TR_NAME(I18N.Type.NONE, "120V Basic Floodlight")
             val desc = FloodlightDescriptor(name, Eln.obj.getObj("Floodlight"), false)
+            desc.setDefaultIcon("basicfloodlight")
             transparentNodeItem.addDescriptor(subId + (id shl 6), desc)
         }
 
@@ -268,6 +269,7 @@ object TransparentNodeRegistration {
             subId = 1
             name = TR_NAME(I18N.Type.NONE, "240V Motorized Floodlight")
             val desc = FloodlightDescriptor(name, Eln.obj.getObj("FloodlightMotor"), true)
+            desc.setDefaultIcon("motorizedfloodlight")
             transparentNodeItem.addDescriptor(subId + (id shl 6), desc)
         }
 
@@ -391,6 +393,7 @@ object TransparentNodeRegistration {
                     nominalU, nominalP, nominalP / 40, instance.lowVoltageCableDescriptor.electricalRs * RsFactor, 25.0,
                     nominalDeltaT / 40, nominalP / (nominalU / 25), "eln:heat_turbine_50v"
                 )
+            desc.setDefaultIcon("50vturbine")
             transparentNodeItem.addDescriptor(subId + (id shl 6), desc)
         }
 
@@ -408,6 +411,7 @@ object TransparentNodeRegistration {
                     nominalU, nominalP, nominalP / 40, instance.meduimVoltageCableDescriptor.electricalRs * RsFactor, 50.0,
                     nominalDeltaT / 40, nominalP / (nominalU / 25), "eln:heat_turbine_200v"
                 )
+            desc.setDefaultIcon("200vturbine")
             transparentNodeItem.addDescriptor(subId + (id shl 6), desc)
         }
 
@@ -704,6 +708,7 @@ object TransparentNodeRegistration {
                 name, "maceratora", NominalVoltage.V48, 200.0, NominalVoltage.V48 * 1.25,
                 ThermalLoadInitializer(80.0, -100.0, 10.0, 100000.0), instance.lowVoltageCableDescriptor, instance.maceratorRecipes
             )
+            desc.setDefaultIcon("50vmacerator")
             transparentNodeItem.addDescriptor(subId + (id shl 6), desc)
             desc.setRunningSound("eln:macerator")
         }
@@ -716,6 +721,7 @@ object TransparentNodeRegistration {
                 ThermalLoadInitializer(80.0, -100.0, 10.0, 100000.0), instance.meduimVoltageCableDescriptor,  // cable
                 instance.maceratorRecipes
             )
+            desc.setDefaultIcon("200vmacerator")
             transparentNodeItem.addDescriptor(subId + (id shl 6), desc)
             desc.setRunningSound("eln:macerator")
         }
@@ -733,6 +739,7 @@ object TransparentNodeRegistration {
                 instance.arcFurnaceRecipes
             )
             transparentNodeItem.addDescriptor(subId + (id shl 6), desc)
+            desc.setDefaultIcon("old800varcfurnace")
             desc.setRunningSound("eln:Arcfurnace_loop")
         }
         /*
@@ -764,6 +771,7 @@ object TransparentNodeRegistration {
                 NominalVoltage.V48 * 1.25, ThermalLoadInitializer(80.0, -100.0, 10.0, 100000.0), instance.lowVoltageCableDescriptor,
                 instance.plateMachineRecipes
             )
+            desc.setDefaultIcon("50vplatemachine")
             transparentNodeItem.addDescriptor(subId + (id shl 6), desc)
             desc.setRunningSound("eln:plate_machine")
         }
@@ -776,6 +784,7 @@ object TransparentNodeRegistration {
                 NominalVoltage.V240 * 1.25, ThermalLoadInitializer(80.0, -100.0, 10.0, 100000.0), instance.meduimVoltageCableDescriptor,
                 instance.plateMachineRecipes
             )
+            desc.setDefaultIcon("200vplatemachine")
             transparentNodeItem.addDescriptor(subId + (id shl 6), desc)
             desc.setRunningSound("eln:plate_machine")
         }
@@ -791,6 +800,7 @@ object TransparentNodeRegistration {
                 name, Eln.obj.getObj("eggincubator"),
                 instance.lowVoltageCableDescriptor, NominalVoltage.V24, 50.0
             )
+            desc.setDefaultIcon("50veggincubator")
             transparentNodeItem.addDescriptor(subId + (id shl 6), desc)
         }
     }
@@ -806,6 +816,7 @@ object TransparentNodeRegistration {
                 NominalVoltage.V48 * 1.25, ThermalLoadInitializer(80.0, -100.0, 10.0, 100000.0), instance.lowVoltageCableDescriptor,
                 instance.compressorRecipes
             )
+            desc.setDefaultIcon("50vcompressor")
             transparentNodeItem.addDescriptor(subId + (id shl 6), desc)
             desc.setRunningSound("eln:compressor_run")
             desc.setEndSound(SoundCommand("eln:compressor_end"))
@@ -819,6 +830,7 @@ object TransparentNodeRegistration {
                 NominalVoltage.V240 * 1.25, ThermalLoadInitializer(80.0, -100.0, 10.0, 100000.0), instance.meduimVoltageCableDescriptor,
                 instance.compressorRecipes
             )
+            desc.setDefaultIcon("200vcompressor")
             transparentNodeItem.addDescriptor(subId + (id shl 6), desc)
             desc.setRunningSound("eln:compressor_run")
             desc.setEndSound(SoundCommand("eln:compressor_end"))
@@ -836,6 +848,7 @@ object TransparentNodeRegistration {
                 NominalVoltage.V48 * 1.25, ThermalLoadInitializer(80.0, -100.0, 10.0, 100000.0), instance.lowVoltageCableDescriptor,
                 instance.magnetiserRecipes
             )
+            desc.setDefaultIcon("50vmagnetizer")
             transparentNodeItem.addDescriptor(subId + (id shl 6), desc)
             desc.setRunningSound("eln:Motor")
         }
@@ -848,6 +861,7 @@ object TransparentNodeRegistration {
                 NominalVoltage.V240 * 1.25, ThermalLoadInitializer(80.0, -100.0, 10.0, 100000.0), instance.meduimVoltageCableDescriptor,
                 instance.magnetiserRecipes
             )
+            desc.setDefaultIcon("200vmagnetizer")
             transparentNodeItem.addDescriptor(subId + (id shl 6), desc)
             desc.setRunningSound("eln:Motor")
         }
@@ -1244,6 +1258,7 @@ object TransparentNodeRegistration {
                 NominalVoltage.V48 * 1.25,
                 fuelGeneratorTankCapacity
             )
+            descriptor.setDefaultIcon("50vfuelgenerator")
             transparentNodeItem.addDescriptor(subId + (id shl 6), descriptor)
         }
         run {
@@ -1255,6 +1270,7 @@ object TransparentNodeRegistration {
                 ), Eln.obj.getObj("FuelGenerator200V"), instance.meduimVoltageCableDescriptor,
                 fuelGeneratorPowerFactor * 6000, NominalVoltage.V240 * 1.25, fuelGeneratorTankCapacity
             )
+            descriptor.setDefaultIcon("200vfuelgenerator")
             transparentNodeItem.addDescriptor(subId + (id shl 6), descriptor)
         }
     }
@@ -1270,6 +1286,7 @@ object TransparentNodeRegistration {
                     "passivethermaldissipatora"
                 ), 200.0, -100.0, 250.0, 30.0, 10.0, 1.0
             )
+            desc.setDefaultIcon("smallpassivethermaldissipator")
             transparentNodeItem.addDescriptor(subId + (id shl 6), desc)
         }
 
@@ -1281,6 +1298,7 @@ object TransparentNodeRegistration {
                     "activethermaldissipatora"
                 ), NominalVoltage.V24, 50.0, 800.0, instance.lowVoltageCableDescriptor, 130.0, -100.0, 200.0, 30.0, 10.0, 1.0
             )
+            desc.setDefaultIcon("smallactivethermaldissipator")
             transparentNodeItem.addDescriptor(subId + (id shl 6), desc)
         }
 
@@ -1293,6 +1311,7 @@ object TransparentNodeRegistration {
                 ), NominalVoltage.V240, 60.0, 1200.0, instance.meduimVoltageCableDescriptor, 130.0, -100.0, 200.0, 30.0,
                 10.0, 1.0
             )
+            desc.setDefaultIcon("200vactivethermaldissipator")
             transparentNodeItem.addDescriptor(subId + (id shl 6), desc)
         }
     }
@@ -1349,6 +1368,7 @@ object TransparentNodeRegistration {
             val subId = 0
             val name = TR_NAME(I18N.Type.NONE, "480V Defence Turret")
             val desc = TurretDescriptor(name, "Turret")
+            desc.setDefaultIcon("800vdefenceturret")
             transparentNodeItem.addDescriptor(subId + (id shl 6), desc)
         }
     }
@@ -1394,6 +1414,7 @@ object TransparentNodeRegistration {
             subId = 0
             val desc =
                 FabricatorDescriptor(TR_NAME(I18N.Type.NONE, "Fabricator")).machines()
+            desc.setDefaultIcon("machineblock")
             transparentNodeItem.addDescriptor(subId + (id shl 6), desc)
         }
     }

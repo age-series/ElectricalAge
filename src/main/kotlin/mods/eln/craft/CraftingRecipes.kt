@@ -2382,6 +2382,30 @@ object CraftingRecipes {
     private fun recipeFuses() {
         addRecipe(Eln.findItemStack("Electrical Fuse Holder", 1), "i", " ", "i", 'i', findItemStack("Iron Cable"))
         addRecipe(
+            Eln.findItemStack("5A Lead Fuse", 4), "rcr", 'r', findItemStack("itemRubber"), 'c',
+            findItemStack("Copper 20 AWG Cable 300V")
+        )
+        addRecipe(
+            Eln.findItemStack("10A Lead Fuse", 4), "rcr", 'r', findItemStack("itemRubber"), 'c',
+            findItemStack("Copper 16 AWG Cable 300V")
+        )
+        addRecipe(
+            Eln.findItemStack("15A Lead Fuse", 4), "rcr", 'r', findItemStack("itemRubber"), 'c',
+            findItemStack("Copper 14 AWG Cable 600V")
+        )
+        addRecipe(
+            Eln.findItemStack("20A Lead Fuse", 4), "rcr", 'r', findItemStack("itemRubber"), 'c',
+            findItemStack("Copper 12 AWG Cable 600V")
+        )
+        addRecipe(
+            Eln.findItemStack("30A Lead Fuse", 4), "rcr", 'r', findItemStack("itemRubber"), 'c',
+            findItemStack("Copper 10 AWG Cable 600V")
+        )
+        addRecipe(
+            Eln.findItemStack("50A Lead Fuse", 4), "rcr", 'r', findItemStack("itemRubber"), 'c',
+            findItemStack("Copper 6 AWG Cable 600V")
+        )
+        addRecipe(
             Eln.findItemStack("Lead Fuse for low voltage cables", 4), "rcr", 'r', findItemStack("itemRubber"), 'c',
             findItemStack("Low Voltage Cable")
         )
