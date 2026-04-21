@@ -8,6 +8,7 @@ import mods.eln.item.IConfigurable
 import mods.eln.item.lampitem.LampDescriptor
 import mods.eln.misc.Direction
 import mods.eln.misc.LRDU
+import mods.eln.misc.NominalVoltage
 import mods.eln.misc.Utils
 import mods.eln.misc.Utils.getItemObject
 import mods.eln.misc.Utils.plotAmpere
@@ -68,8 +69,8 @@ class LampSocketElement(sixNode: SixNode, side: Direction, sixNodeDescriptor: Si
     private var grounded = true
 
     init {
-        // We currently have both 50V and 200V bulbs, so lamp sockets should be able to handle voltages up to 200V nominal
-        voltageWatchdog.setNominalVoltage(Eln.MVU)
+        // We currently have 12V, 120V, and 240V bulbs, so lamp sockets should be able to handle voltages up to 240V nominal
+        voltageWatchdog.setNominalVoltage(NominalVoltage.V240)
 
         slowProcessList.add(watchdogProcess)
         slowProcessList.add(monsterPopProcess)

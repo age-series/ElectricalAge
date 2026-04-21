@@ -85,8 +85,8 @@ class FloodlightElement(transparentNode: TransparentNode, transparentNodeDescrip
         // Internal cable has no resistance, for simplicity
         electricalLoad.serialResistance = MnaConst.noImpedance
 
-        // We currently have both 50V and 200V bulbs, so floodlights should be able to handle voltages up to 200V nominal
-        voltageWatchdog.setNominalVoltage(Eln.MVU)
+        if (motorized) voltageWatchdog.setNominalVoltage(NominalVoltage.V240)
+        else voltageWatchdog.setNominalVoltage(NominalVoltage.V120)
 
         slowProcessList.add(watchdogProcess)
         slowProcessList.add(monsterPopProcess)

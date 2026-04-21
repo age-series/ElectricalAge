@@ -749,21 +749,19 @@ object SixNodeRegistration {
      * in a more logical way. Thus, take care when adding new lamp socket types. Current subId associations:
      * - 0: Classic Lamp Socket
      * - 1: Spot Lamp Socket
-     * - 2:
-     * - 3:
+     * - (2-3):
      * - 4: Robust Lamp Socket
      * - 5: Flat Lamp Socket
      * - 6: Simple Lamp Socket
      * - 7: Fluorescent Lamp Socket
      * - 8: Streetlight
      * - 9: Sconce Lamp Socket
-     * - 10:
-     * - 11:
+     * - (10-11):
      * - 12: Suspended Lamp Socket
      * - 13: Long Suspended Lamp Socket
-     * - 14:
-     * - 15: 50V Emergency Lamp
-     * - 16: 200V Emergency Lamp
+     * - (14):
+     * - 15: 120V Emergency Lamp
+     * - 16: 240V Emergency Lamp
      * - 17: Suspended Lamp Socket (No Swing)
      * - 18: Long Suspended Lamp Socket (No Swing)
      */
@@ -830,6 +828,21 @@ object SixNodeRegistration {
         }
 
         run {
+            subId = 5
+            completeId = subId + (id shl 6)
+            descriptor = LampSocketDescriptor(
+                I18N.TR_NAME(I18N.Type.NONE, "Flat Lamp Socket"),
+                LampSocketStandardObjRender(Eln.obj.getObj("FlatLamp"), true),
+                3,
+                arrayOf(
+                    LampLists.getLampData("fluorescent")!!,
+                    LampLists.getLampData("led")!!
+                )
+            )
+            Eln.sixNodeItem.addDescriptor(completeId, descriptor)
+        }
+
+        run {
             subId = 6
             completeId = subId + (id shl 6)
             descriptor = LampSocketDescriptor(
@@ -840,40 +853,6 @@ object SixNodeRegistration {
                     LampLists.getLampData("incandescent")!!,
                     LampLists.getLampData("carbon")!!,
                     LampLists.getLampData("farming")!!,
-                    LampLists.getLampData("led")!!
-                )
-            )
-            Eln.sixNodeItem.addDescriptor(completeId, descriptor)
-        }
-
-        run {
-            subId = 9
-            completeId = subId + (id shl 6)
-            descriptor = LampSocketDescriptor(
-                I18N.TR_NAME(I18N.Type.NONE, "Sconce Lamp Socket"),
-                LampSocketStandardObjRender(Eln.obj.getObj("SconceLamp"), true),
-                3,
-                arrayOf(
-                    LampLists.getLampData("incandescent")!!,
-                    LampLists.getLampData("carbon")!!,
-                    LampLists.getLampData("farming")!!,
-                    LampLists.getLampData("led")!!
-                )
-            )
-            descriptor.paintable = true
-            descriptor.initialRenderAngleOffset = -90.0
-            Eln.sixNodeItem.addDescriptor(completeId, descriptor)
-        }
-
-        run {
-            subId = 5
-            completeId = subId + (id shl 6)
-            descriptor = LampSocketDescriptor(
-                I18N.TR_NAME(I18N.Type.NONE, "Flat Lamp Socket"),
-                LampSocketStandardObjRender(Eln.obj.getObj("FlatLamp"), true),
-                3,
-                arrayOf(
-                    LampLists.getLampData("fluorescent")!!,
                     LampLists.getLampData("led")!!
                 )
             )
@@ -893,6 +872,25 @@ object SixNodeRegistration {
                 )
             )
             descriptor.renderSideCables = false
+            Eln.sixNodeItem.addDescriptor(completeId, descriptor)
+        }
+
+        run {
+            subId = 9
+            completeId = subId + (id shl 6)
+            descriptor = LampSocketDescriptor(
+                I18N.TR_NAME(I18N.Type.NONE, "Sconce Lamp Socket"),
+                LampSocketStandardObjRender(Eln.obj.getObj("SconceLamp"), true),
+                3,
+                arrayOf(
+                    LampLists.getLampData("incandescent")!!,
+                    LampLists.getLampData("carbon")!!,
+                    LampLists.getLampData("farming")!!,
+                    LampLists.getLampData("led")!!
+                )
+            )
+            descriptor.paintable = true
+            descriptor.initialRenderAngleOffset = -90.0
             Eln.sixNodeItem.addDescriptor(completeId, descriptor)
         }
 

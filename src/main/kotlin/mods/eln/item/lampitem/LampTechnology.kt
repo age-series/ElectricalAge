@@ -2,6 +2,7 @@ package mods.eln.item.lampitem
 
 import mods.eln.Eln
 import mods.eln.i18n.I18N
+import mods.eln.misc.NominalVoltage
 import kotlin.math.abs
 import kotlin.math.pow
 
@@ -55,11 +56,15 @@ data class BoilerplateLampData(
         const val MIN_LIGHT_VALUE = 0
         const val MAX_LIGHT_VALUE = 15
 
-        const val T0_NOMINAL_LIGHT_VALUE = 12 // Small 50V
-        const val T1_NOMINAL_LIGHT_VALUE = 14 // 50V
-        const val T2_NOMINAL_LIGHT_VALUE = 14 // 200V
+        const val V12_NOMINAL_LIGHT_VALUE = 12
+        const val V120_NOMINAL_LIGHT_VALUE = 14
+        const val V240_NOMINAL_LIGHT_VALUE = 14
 
-        const val LAMP_BASE_POWER = 60
+        const val LAMP_BASE_POWER = 60.0
+
+        const val V12_POWER_MULTIPLIER = 0.2
+        const val V120_POWER_MULTIPLIER = 1.0
+        const val V240_POWER_MULTIPLIER = 1.5
 
         const val MIN_LAMP_LIFE_IN_HOURS = 1.0
         const val MAX_LAMP_LIFE_IN_HOURS = 8760.0 // 1 year (365 days) IRL
@@ -88,19 +93,20 @@ data class BoilerplateLampData(
 
 }
 
-/**
- * The init{} block in the LampDescriptor class modifies some of these values for "small" bulb types.
- * After the voltage tiering update, this behavior should be removed from there and implemented here,
- * assuming "small" bulbs are given their own voltage tier.
- */
 data class SpecificLampData(
     val technology: BoilerplateLampData,
     val nominalU: Double,
-    var nominalP: Double = BoilerplateLampData.LAMP_BASE_POWER * technology.basePowerMultiplier,
-    var resistance: Double = nominalU.pow(2) / nominalP,
-    var nominalLightValue: Int = when (nominalU) {
-        Eln.LVU -> BoilerplateLampData.T1_NOMINAL_LIGHT_VALUE
-        Eln.MVU -> BoilerplateLampData.T2_NOMINAL_LIGHT_VALUE
+    val nominalP: Double = when (nominalU) {
+        NominalVoltage.V12 -> BoilerplateLampData.LAMP_BASE_POWER * BoilerplateLampData.V12_POWER_MULTIPLIER * technology.basePowerMultiplier
+        NominalVoltage.V120 -> BoilerplateLampData.LAMP_BASE_POWER * BoilerplateLampData.V120_POWER_MULTIPLIER * technology.basePowerMultiplier
+        NominalVoltage.V240 -> BoilerplateLampData.LAMP_BASE_POWER * BoilerplateLampData.V240_POWER_MULTIPLIER * technology.basePowerMultiplier
+        else -> BoilerplateLampData.LAMP_BASE_POWER
+    },
+    val resistance: Double = nominalU.pow(2) / nominalP,
+    val nominalLightValue: Int = when (nominalU) {
+        NominalVoltage.V12 -> BoilerplateLampData.V12_NOMINAL_LIGHT_VALUE
+        NominalVoltage.V120 -> BoilerplateLampData.V120_NOMINAL_LIGHT_VALUE
+        NominalVoltage.V240 -> BoilerplateLampData.V240_NOMINAL_LIGHT_VALUE
         else -> BoilerplateLampData.MAX_LIGHT_VALUE
     }
 )

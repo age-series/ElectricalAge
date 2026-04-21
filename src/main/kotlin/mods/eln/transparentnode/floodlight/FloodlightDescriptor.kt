@@ -45,11 +45,15 @@ class FloodlightDescriptor(val itemName: String, val obj: Obj3D, val motorized: 
     override fun addInformation(itemStack: ItemStack, entityPlayer: EntityPlayer, list: MutableList<String>, par4: Boolean) {
         super.addInformation(itemStack, entityPlayer, list, par4)
 
-        Collections.addAll(list, *I18N.tr("A powerful lamp that specializes in\nthe illumination of large spaces.")!!
-            .split("\n".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray())
+        Collections.addAll(list, *I18N.tr(
+            "A powerful lamp that specializes in\n" +
+                    "the illumination of large spaces.\n" +
+                    "Uses inserted light bulbs."
+        )!!.split("\n".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray())
+
+        if (motorized) list.add(I18N.tr("Intended for 240V bulb families."))
+        else list.add(I18N.tr("Intended for 120V bulb families."))
         list.add(I18N.tr("Accepted lamp types: %1$", acceptedLampTypesString))
-        list.add(I18N.tr("Uses inserted light bulbs."))
-        list.add(if (motorized) I18N.tr("Intended for 240V bulb families.") else I18N.tr("Intended for 120V or 240V bulb families."))
     }
 
     override fun addRealismContext(list: MutableList<String>?): RealisticEnum {

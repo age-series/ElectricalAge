@@ -39,7 +39,7 @@ class EmergencyLampDescriptor(name: String, val cable: ElectricalCableDescriptor
     val lightWall: Obj3D.Obj3DPart = model.getPart("lightWall")
 
     init {
-        voltageLevelColor = VoltageLevelColor.fromCable(cable)
+        voltageLevelColor = VoltageLevelColor.fromVoltage(nominalVoltage)
         setDefaultIcon("emergencylamp")
     }
 

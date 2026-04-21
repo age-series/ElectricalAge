@@ -245,7 +245,7 @@ object TransparentNodeRegistration {
                 TR_NAME(I18N.Type.NONE, "120V Basic Floodlight"),
                 Eln.obj.getObj("Floodlight"),
                 false)
-            desc.setDefaultIcon("basicfloodlight")
+            descriptor.setDefaultIcon("basicfloodlight")
             transparentNodeItem.addDescriptor(completeId, descriptor)
         }
 
@@ -256,7 +256,7 @@ object TransparentNodeRegistration {
                 TR_NAME(I18N.Type.NONE, "240V Motorized Floodlight"),
                 Eln.obj.getObj("FloodlightMotor"),
                 true)
-            desc.setDefaultIcon("motorizedfloodlight")
+            descriptor.setDefaultIcon("motorizedfloodlight")
             transparentNodeItem.addDescriptor(completeId, descriptor)
         }
     }

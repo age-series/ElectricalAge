@@ -19,12 +19,6 @@ class LampDescriptor(name: String, iconName: String, val lampData: SpecificLampD
     init {
         setDefaultIcon(iconName)
         voltageLevelColor = VoltageLevelColor.fromVoltage(lampData.nominalU)
-
-        if (name.contains("Small")) {
-            lampData.nominalP /= 2.0
-            lampData.resistance *= 2.0
-            lampData.nominalLightValue = BoilerplateLampData.T0_NOMINAL_LIGHT_VALUE
-        }
         LampLists.registeredLampList.add(lampData)
     }
 
@@ -99,10 +93,10 @@ class LampDescriptor(name: String, iconName: String, val lampData: SpecificLampD
     override fun addInformation(itemStack: ItemStack?, entityPlayer: EntityPlayer?, list: MutableList<String>, par4: Boolean) {
         super.addInformation(itemStack, entityPlayer, list, par4)
 
-        list.add(I18N.tr("Nominal brightness: %1$", Utils.plotValue(lampData.nominalLightValue.toDouble())))
         list.add(I18N.tr($$"Nominal voltage: %1$V", Utils.plotValue(lampData.nominalU)))
-        list.add(I18N.tr($$"Power: %1$W", Utils.plotValue(lampData.nominalP)))
+        list.add(I18N.tr($$"Nominal power: %1$W", Utils.plotValue(lampData.nominalP)))
         list.add(I18N.tr("Resistance: %1$\u2126", Utils.plotValue(lampData.resistance)))
+        list.add(I18N.tr("Nominal brightness: %1$", Utils.plotValue(lampData.nominalLightValue.toDouble())))
         list.add(I18N.tr($$"Nominal lifetime: %1$h", lampData.technology.nominalLifeInHours))
 
         if (itemStack != null) {
