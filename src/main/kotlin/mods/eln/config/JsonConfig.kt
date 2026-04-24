@@ -641,7 +641,11 @@ class JsonConfig @JvmOverloads constructor(
                     for ((mapKey, mapVal) in value.asJsonObject.entrySet()) {
                         if (mapKey.startsWith("_comment")) continue
                         if (mapVal.isJsonPrimitive) {
-                            map[mapKey] = mapVal.asDouble
+                            val primitive = mapVal.asJsonPrimitive
+                            map[mapKey] = when {
+                                primitive.isNumber -> primitive.asDouble
+                                else -> primitive.asString.toDoubleOrNull() ?: 0.0
+                            }
                         }
                     }
                     values[flatPath] = map
