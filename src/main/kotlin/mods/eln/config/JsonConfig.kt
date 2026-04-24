@@ -904,7 +904,6 @@ class JsonConfig @JvmOverloads constructor(
         "machines.fuelGenerator.tankCapacitySecondsAtNominalPower" -> listOf(LegacyKey("fuelGenerator", "tankCapacityInSecondsAtNominalPower"))
         "machines.heatFurnace.consumeFuel" -> listOf(LegacyKey("heatFurnace", "heatFurnaceConsumesFuel"))
         "tools.xrayScanner.autoDiscoverOreDictionaryOres" -> listOf(LegacyKey("xrayscannerconfig", "addOtherModOreToXRay"))
-        "tools.xrayScanner.autoDiscoveryOreFactor" -> listOf(LegacyKey("xrayscannerconfig", "otherModOreFactor"))
         "tools.xrayScanner.rangeBlocks" -> listOf(LegacyKey("xrayscannerconfig", "rangeInBloc"))
         "tools.xrayScanner.canBeCrafted" -> listOf(LegacyKey("xrayscannerconfig", "canBeCrafted"))
         "simulation.electrical.frequency" -> listOf(LegacyKey("simulation", "electricalFrequency"), LegacyKey("simulation", "electricalFrequancy"))
