@@ -150,7 +150,7 @@ class JsonConfig @JvmOverloads constructor(
                 "Eln:Eln.Ore:5" to 0.20,
                 "Eln:Eln.Ore:6" to 0.20
             ),
-            comment = "Ore scanner detection factors. Keys with ':' are block references (modid:name or modid:name:meta), keys without ':' are OreDictionary names."
+            comment = "Ore scanner detection factors. Keys with ':' are block references (modid:name or modid:name:meta), keys without ':' are OreDictionary names. The ELN ores at the top are, in order: Copper Ore, Lead Ore, Tungsten Ore, and Cinnabar Ore."
         ),
         spec(path = "simulation.electrical.frequency", defaultValue = 20.0, comment = "Set to a clean divisor of 20."),
         spec(path = "simulation.electrical.interSystemOverSampling", defaultValue = 50, comment = "Avoid setting this below 50."),
