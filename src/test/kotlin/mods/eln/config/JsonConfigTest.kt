@@ -151,6 +151,65 @@ class JsonConfigTest {
     }
 
     @Test
+    fun mapConfigDefaultWritesToJsonAndReloads() {
+        val dir = Files.createTempDirectory("eln-map-config-test").toFile()
+        val config = JsonConfig(dir.resolve("Eln.cfg"))
+        config.load()
+
+        val map = config.getStringDoubleMap("tools.xrayScanner.oreFactors")
+        assertTrue(map.isNotEmpty(), "Expected default oreFactors map to be populated.")
+        assertEquals(0.05, map["minecraft:coal_ore"])
+        assertEquals(1.00, map["minecraft:diamond_ore"])
+
+        config.save()
+
+        val reloaded = JsonConfig(dir.resolve("Eln.cfg"))
+        reloaded.load()
+        val reloadedMap = reloaded.getStringDoubleMap("tools.xrayScanner.oreFactors")
+        assertEquals(map.keys.toList(), reloadedMap.keys.toList(), "Key order should be preserved after reload.")
+        for ((key, value) in map) {
+            assertEquals(value, reloadedMap[key]!!, 1e-9, "Value for key '$key' should match after reload.")
+        }
+    }
+
+    @Test
+    fun getStringDoubleMapPreservesKeyOrder() {
+        val dir = Files.createTempDirectory("eln-map-order-test").toFile()
+        val config = JsonConfig(dir.resolve("Eln.cfg"))
+        config.load()
+
+        val map = config.getStringDoubleMap("tools.xrayScanner.oreFactors")
+        val keys = map.keys.toList()
+        assertTrue(keys.indexOf("minecraft:coal_ore") < keys.indexOf("minecraft:iron_ore"))
+        assertTrue(keys.indexOf("minecraft:diamond_ore") < keys.indexOf("Eln:Eln.Ore:1"))
+    }
+
+    @Test
+    fun invalidMapValuesDoNotResetUnrelatedPaths() {
+        val dir = Files.createTempDirectory("eln-map-invalid-test").toFile()
+        val config = JsonConfig(dir.resolve("Eln.cfg"))
+        config.load()
+        config.save()
+
+        val jsonFile = dir.resolve("eln/eln.json")
+        val originalText = jsonFile.readText()
+        val tamperedText = originalText.replace(
+            Regex("\"minecraft:coal_ore\"\\s*:\\s*[0-9.]+"),
+            "\"minecraft:coal_ore\": \"not_a_number\""
+        )
+        jsonFile.writeText(tamperedText)
+
+        val reloaded = JsonConfig(dir.resolve("Eln.cfg"))
+        reloaded.load()
+
+        val map = reloaded.getStringDoubleMap("tools.xrayScanner.oreFactors")
+        assertEquals(0.0, map["minecraft:coal_ore"], "Invalid entry should default to 0.0 instead of crashing.")
+        assertEquals(1.00, map["minecraft:diamond_ore"], "Unrelated entries should not be affected.")
+        assertTrue(reloaded.getBooleanOrElse("tools.xrayScanner.autoDiscoverOreDictionaryOres", false))
+        assertEquals(5.0, reloaded.getDoubleOrElse("tools.xrayScanner.rangeBlocks", 0.0), 1e-9)
+    }
+
+    @Test
     fun regexReadAndWriteWorkForConfigPaths() {
         val dir = Files.createTempDirectory("eln-json-regex-test").toFile()
         val config = JsonConfig(dir.resolve("Eln.cfg"))
