@@ -37,9 +37,7 @@ import mods.eln.ghost.GhostManager;
 import mods.eln.ghost.GhostManagerNbt;
 import mods.eln.item.*;
 import mods.eln.item.electricalinterface.ItemEnergyInventoryProcess;
-import mods.eln.config.OreScannerConfigLoader;
-import mods.eln.item.electricalitem.OreColorMapping;
-import mods.eln.item.electricalitem.OreScannerConfigElement;
+import mods.eln.ore.OreScannerManager;
 import mods.eln.misc.*;
 import mods.eln.mqtt.MqttManager;
 import mods.eln.node.NodeBlockEntity;
@@ -138,9 +136,8 @@ public class Eln {
     public static final byte packetServerToClientInfo = 22;
     public static final byte packetFalstadImport = 23;
     public static final Obj3DFolder obj = new Obj3DFolder();
-    public static final ArrayList<OreScannerConfigElement> oreScannerConfig = new ArrayList<OreScannerConfigElement>();
     public static final double gateInputCurrent = 0.00005;
-    public static final double gateOutputCurrent = 0.005;
+    public static final double gateOutputCurrent = 0.100;
     public static final double LVU = 50;
     public static final double MVU = 200;
     public static final double HVU = 800;
@@ -585,7 +582,7 @@ public class Eln {
             ServerCommandManager manager = (ServerCommandManager) command;
             manager.registerCommand(new ElnConsoleCommands());
         }
-        regenOreScannerFactors();
+        OreScannerManager.regenOreScannerFactors();
         BiomeClimateService.auditMissingBiomeProfilesAtStartup();
     }
 
@@ -600,23 +597,6 @@ public class Eln {
     }
     public double VVP() {
         return 15000 * config.getDoubleOrElse("balance.cables.powerFactor", 1.0);
-    }
-
-    public void regenOreScannerFactors() {
-        oreScannerConfig.clear();
-
-        // Load from config (block references + OreDictionary names)
-        oreScannerConfig.addAll(OreScannerConfigLoader.INSTANCE.loadOreScannerConfig());
-
-        // Auto-discover from OreDictionary (if enabled) — only adds entries not already in config
-        java.util.Map<Integer, Float> existingKeys = new java.util.LinkedHashMap<>();
-        for (OreScannerConfigElement e : oreScannerConfig) {
-            existingKeys.put(e.getBlockKey(), e.getFactor());
-        }
-        oreScannerConfig.addAll(OreScannerConfigLoader.INSTANCE.loadOreDictionaryAutoDiscovery(existingKeys));
-
-        // Build color mapping AFTER list is fully populated
-        OreColorMapping.INSTANCE.updateColorMapping();
     }
 
     private void updateCreativeTabIcons() {

@@ -2,6 +2,7 @@ package mods.eln.item.electricalitem
 
 import mods.eln.Eln
 import mods.eln.generic.GenericItemUsingDamageDescriptor
+import mods.eln.ore.OreColorMapping
 import mods.eln.i18n.I18N.tr
 import mods.eln.item.electricalinterface.IItemEnergyBattery
 import mods.eln.misc.Obj3D
@@ -514,34 +515,3 @@ private enum class State(val serialized: Byte) {
 
 private const val bootTime: Short = (4 * 20).toShort()
 private const val stopTime: Short = (1 * 20).toShort()
-
-    @ExperimentalUnsignedTypes
-    object OreColorMapping {
-        val map: FloatArray
-            get() {
-                return if (cache == null) {
-                    updateColorMapping()
-                } else {
-                    cache!!
-                }
-            }
-
-        private var cache: FloatArray? = null
-
-        fun updateColorMapping(): FloatArray {
-            val blockKeyMapping = FloatArray(1024 * 64)
-            for (blockId in 0..4095) {
-                for (meta in 0..15) {
-                    blockKeyMapping[blockId + (meta shl 12)] = 0f
-                }
-            }
-
-            for (c in Eln.oreScannerConfig) {
-                if (c.blockKey >= 0 && c.blockKey < blockKeyMapping.size)
-                    blockKeyMapping[c.blockKey] = c.factor
-            }
-
-            cache = blockKeyMapping
-            return blockKeyMapping
-        }
-    }
