@@ -73,7 +73,6 @@ class JsonConfig @JvmOverloads constructor(
         groupComments["ui"] = "HUD and item icon presentation."
         groupComments["lighting"] = "Lamp technology settings generated from registered lamp types."
         groupComments["lighting.lamps"] = "Per-lamp-type durability tuning."
-        groupComments["tools.xrayScanner.oreFactors"] = "Ore scanner detection factors. Keys with ':' are block references (modid:name or modid:name:meta), keys without ':' are OreDictionary names."
     }
 
     private fun buildSpecs(): List<ConfigSpec> = listOf(
