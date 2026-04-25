@@ -1,33 +1,20 @@
 package mods.eln.sixnode.lampsocket
 
-import mods.eln.gui.ISlotSkin.SlotSkin
-import mods.eln.i18n.I18N.tr
-import mods.eln.item.LampLists
+import mods.eln.cable.CableItemSlot
+import mods.eln.item.lampitem.LampItemSlot
 import mods.eln.misc.BasicContainer
-import mods.eln.node.six.SixNodeItemSlot
-import mods.eln.sixnode.electricalcable.ElectricalCableDescriptor
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.inventory.IInventory
 
-class LampSocketContainer(player: EntityPlayer, inventory: IInventory) : BasicContainer(player, inventory, arrayOf(
-        LampSlot(inventory, LAMP_SLOT_ID, 70+0, 57, 1, ACCEPTED_LAMP_TYPES),
-        SixNodeItemSlot(inventory, CABLE_SLOT_ID, 70+18, 57, 1, arrayOf(ElectricalCableDescriptor::class.java),
-            SlotSkin.medium, arrayOf(tr("Electrical cable slot"))
-        )
-)) {
+class LampSocketContainer(player: EntityPlayer, inventory: IInventory, descriptor: LampSocketDescriptor) :
+    BasicContainer(player, inventory, arrayOf(
+        LampItemSlot(inventory, LAMP_SLOT_ID, 16+1, 59+1, 1, descriptor.acceptedLampTypes),
+        CableItemSlot(inventory, CABLE_SLOT_ID, 142+1, 59+1, 1, false)
+    )) {
 
     companion object {
         const val LAMP_SLOT_ID: Int = 0
         const val CABLE_SLOT_ID: Int = 1
-
-        @JvmField
-        val ACCEPTED_LAMP_TYPES = arrayOf(
-            LampLists.getLampData("incandescent")!!,
-            LampLists.getLampData("carbonIncandescent")!!,
-            LampLists.getLampData("fluorescent")!!,
-            LampLists.getLampData("farming")!!,
-            LampLists.getLampData("led")!!
-        )
     }
 
 }

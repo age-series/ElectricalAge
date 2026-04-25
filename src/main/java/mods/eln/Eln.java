@@ -37,7 +37,9 @@ import mods.eln.ghost.GhostManager;
 import mods.eln.ghost.GhostManagerNbt;
 import mods.eln.item.*;
 import mods.eln.item.electricalinterface.ItemEnergyInventoryProcess;
-import mods.eln.ore.OreScannerManager;
+import mods.eln.item.lampitem.LampLists;
+import mods.eln.lightblock.LightBlock;
+import mods.eln.lightblock.LightBlockEntity;
 import mods.eln.misc.*;
 import mods.eln.mqtt.MqttManager;
 import mods.eln.node.NodeBlockEntity;
@@ -49,6 +51,7 @@ import mods.eln.node.transparent.*;
 import mods.eln.ore.OreBlock;
 import mods.eln.ore.OreDescriptor;
 import mods.eln.ore.OreItem;
+import mods.eln.ore.OreScannerManager;
 import mods.eln.packets.*;
 import mods.eln.registration.ItemRegistration;
 import mods.eln.registration.SingleNodeRegistration;
@@ -67,8 +70,6 @@ import mods.eln.sixnode.PortableNaNDescriptor;
 import mods.eln.sixnode.currentcable.CurrentCableDescriptor;
 import mods.eln.sixnode.electricalcable.ElectricalCableDescriptor;
 import mods.eln.sixnode.electricaldatalogger.DataLogsPrintDescriptor;
-import mods.eln.sixnode.lampsocket.LightBlock;
-import mods.eln.sixnode.lampsocket.LightBlockEntity;
 import mods.eln.sixnode.lampsupply.LampSupplyElement;
 import mods.eln.sixnode.modbusrtu.ModbusTcpServer;
 import mods.eln.sixnode.tutorialsign.TutorialSignElement;
@@ -122,7 +123,7 @@ public class Eln {
     public final static String NAME = "Electrical Age - jrddunbr's build";
     public final static String UPDATE_URL = "https://github.com/age-series/ElectricalAge/releases";
     public final static String[] AUTHORS = {"Dolu1990", "jrddunbr", "Baughn", "Grissess", "Caeleron", "Omega_Haxors",
-     "lambdaShade", "cm0x4D", "metc"};
+     "lambdaShade", "cm0x4D", "metc", "TheBuilderBoy76"};
     public static final String channelName = "miaouMod";
     public static final double solarPanelBasePower = 65.0;
     public static final byte packetPlayerKey = 14;
@@ -407,6 +408,8 @@ public class Eln {
         oreItem = (OreItem) Item.getItemFromBlock(oreBlock);
 
         SixNode.sixNodeCacheList.add(new SixNodeCacheStd());
+
+        LampLists.translateLampTypes(); // This MUST be called before block/item registration!
 
         SingleNodeRegistration.INSTANCE.registerSingle();
         SixNodeRegistration.INSTANCE.registerSix();

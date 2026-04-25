@@ -5,8 +5,8 @@ import com.google.gson.JsonElement
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import mods.eln.Other
-import mods.eln.item.LampLists
 import mods.eln.item.TurbineBladeLists
+import mods.eln.item.lampitem.LampLists
 import mods.eln.misc.Utils
 import java.io.File
 import java.io.FileReader
@@ -130,7 +130,7 @@ class JsonConfig @JvmOverloads constructor(
         spec(path = "worldgen.ores.tungsten.enabled", defaultValue = true),
         spec(path = "worldgen.ores.cinnabar.enabled", defaultValue = true),
         spec(path = "machines.fuelGenerator.tankCapacitySecondsAtNominalPower", defaultValue = 20.0 * 60.0),
-        spec(path = "machines.heatFurnace.consumeFuel", defaultValue = false, comment = "Controls whether heat furnaces consume fuel."),
+        spec(path = "machines.heatFurnace.consumeFuel", defaultValue = true, comment = "Controls whether heat furnaces consume fuel."),
         spec(path = "tools.xrayScanner.autoDiscoverOreDictionaryOres", defaultValue = true, comment = "Auto-discover ores from the Ore Dictionary that are not in oreFactors."),
         spec(path = "tools.xrayScanner.rangeBlocks", defaultValue = 5.0, comment = "X-ray scanner range in blocks. Intended range is 4 to 10."),
         spec(path = "tools.xrayScanner.canBeCrafted", defaultValue = true),

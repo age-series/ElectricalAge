@@ -4,7 +4,7 @@ import mods.eln.Eln
 import mods.eln.i18n.I18N
 import mods.eln.item.ConfigCopyToolDescriptor
 import mods.eln.item.IConfigurable
-import mods.eln.item.LampDescriptor
+import mods.eln.item.lampitem.LampDescriptor
 import mods.eln.misc.*
 import mods.eln.misc.Utils.getItemObject
 import mods.eln.misc.Utils.plotAmpere
@@ -22,6 +22,7 @@ import mods.eln.sim.ElectricalLoad
 import mods.eln.sim.MonsterPopFreeProcess
 import mods.eln.sim.ThermalLoad
 import mods.eln.sim.mna.component.Resistor
+import mods.eln.sim.mna.misc.MnaConst
 import mods.eln.sim.nbt.NbtElectricalGateInput
 import mods.eln.sim.nbt.NbtElectricalLoad
 import mods.eln.sim.process.destruct.VoltageStateWatchDog
@@ -33,14 +34,10 @@ import net.minecraft.nbt.NBTTagCompound
 import java.io.DataInputStream
 import java.io.DataOutputStream
 import java.io.IOException
+import kotlin.math.pow
 
-class FloodlightElement(transparentNode: TransparentNode, transparentNodeDescriptor: TransparentNodeDescriptor) : TransparentNodeElement(transparentNode, transparentNodeDescriptor), IConfigurable {
-
-    companion object {
-        const val HORIZONTAL_ADJUST_EVENT: Byte = 0
-        const val VERTICAL_ADJUST_EVENT: Byte = 1
-        const val BEAM_ADJUST_EVENT: Byte = 2
-    }
+class FloodlightElement(transparentNode: TransparentNode, transparentNodeDescriptor: TransparentNodeDescriptor) :
+    TransparentNodeElement(transparentNode, transparentNodeDescriptor), IConfigurable {
 
     override val inventory = TransparentNodeElementInventory(2, 64, this)
 
@@ -63,11 +60,9 @@ class FloodlightElement(transparentNode: TransparentNode, transparentNodeDescrip
     var headAngle by published(0.0)
     var beamWidth by published(0.0)
 
-    var lightRange = 0
-
     val electricalLoad = NbtElectricalLoad("electricalLoad")
-    private val lamp1Resistor: Resistor = Resistor(electricalLoad, null)
-    private val lamp2Resistor: Resistor = Resistor(electricalLoad, null)
+    private val lamp1Resistor = Resistor(electricalLoad, null)
+    private val lamp2Resistor = Resistor(electricalLoad, null)
 
     val swivelControl = NbtElectricalGateInput("swivelControl")
     val headControl = NbtElectricalGateInput("headControl")
@@ -76,13 +71,9 @@ class FloodlightElement(transparentNode: TransparentNode, transparentNodeDescrip
     private val voltageWatchdog = VoltageStateWatchDog(electricalLoad)
 
     private val watchdogProcess = voltageWatchdog.setDestroys(WorldExplosion(this).machineExplosion())
+    private val monsterPopProcess = MonsterPopFreeProcess(transparentNode.coordinate,
+        Eln.config.getIntOrElse("entities.mobSpawning.preventNearLampsRange", 9))
     private val floodlightProcess = FloodlightProcess(this)
-    private val monsterPopProcess = MonsterPopFreeProcess(
-        transparentNode.coordinate,
-        Eln.config.getIntOrElse("entities.mobSpawning.preventNearLampsRange", 9)
-    )
-
-    var processElapsedTime = 0.0
 
     init {
         if (motorized) {
@@ -91,17 +82,19 @@ class FloodlightElement(transparentNode: TransparentNode, transparentNodeDescrip
             electricalLoadList.add(beamControl)
         }
 
-        // NOTE: Power factor (0.005) comes from MV cable registration
-        electricalLoad.serialResistance = ((Eln.MVU * Eln.MVU) / Eln.instance.MVP()) * 0.005
-        voltageWatchdog.setNominalVoltage(Eln.MVU)
+        // Internal cable has no resistance, for simplicity
+        electricalLoad.serialResistance = MnaConst.noImpedance
+
+        if (motorized) voltageWatchdog.setNominalVoltage(NominalVoltage.V240)
+        else voltageWatchdog.setNominalVoltage(NominalVoltage.V120)
 
         slowProcessList.add(watchdogProcess)
-        slowProcessList.add(floodlightProcess)
         slowProcessList.add(monsterPopProcess)
+        slowProcessList.add(floodlightProcess)
     }
 
     override fun newContainer(side: Direction, player: EntityPlayer): Container {
-        return FloodlightContainer(player, inventory)
+        return FloodlightContainer(player, inventory, descriptor)
     }
 
     override fun hasGui(): Boolean {
@@ -119,8 +112,8 @@ class FloodlightElement(transparentNode: TransparentNode, transparentNodeDescrip
         val currentEquippedItem = getItemObject(player.currentEquippedItem)
 
         if (currentEquippedItem is LampDescriptor) {
-            if (currentEquippedItem.lampData.technology in FloodlightContainer.ACCEPTED_LAMP_TYPES) {
-                return acceptingInventory.take(player.currentEquippedItem, this, true, true)
+            if (currentEquippedItem.lampData.technology in descriptor.acceptedLampTypes) {
+                return acceptingInventory.take(player.currentEquippedItem, this, notifyInventoryChange = true)
             }
         }
 
@@ -140,7 +133,6 @@ class FloodlightElement(transparentNode: TransparentNode, transparentNodeDescrip
         swivelAngle = nbt.getDouble("swivelAngle")
         headAngle = nbt.getDouble("headAngle")
         beamWidth = nbt.getDouble("beamWidth")
-        lightRange = nbt.getInteger("lightRange")
     }
 
     override fun writeToNBT(nbt: NBTTagCompound) {
@@ -152,7 +144,6 @@ class FloodlightElement(transparentNode: TransparentNode, transparentNodeDescrip
         nbt.setDouble("swivelAngle", swivelAngle)
         nbt.setDouble("headAngle", headAngle)
         nbt.setDouble("beamWidth", beamWidth)
-        nbt.setInteger("lightRange", lightRange)
     }
 
     override fun initialize() {
@@ -183,9 +174,8 @@ class FloodlightElement(transparentNode: TransparentNode, transparentNodeDescrip
     }
 
     override fun inventoryChange(inventory: IInventory?) {
-        disconnect()
         computeInventory()
-        connect()
+        reconnect()
         needPublish()
     }
 
@@ -195,12 +185,12 @@ class FloodlightElement(transparentNode: TransparentNode, transparentNodeDescrip
 
         when (lamp1Stack) {
             null -> lamp1Resistor.highImpedance()
-            else -> lamp1Resistor.resistance = (getItemObject(lamp1Stack) as LampDescriptor).lampData.resistance
+            else -> (getItemObject(lamp1Stack) as LampDescriptor).applyTo(lamp1Resistor)
         }
 
         when (lamp2Stack) {
             null -> lamp2Resistor.highImpedance()
-            else -> lamp2Resistor.resistance = (getItemObject(lamp2Stack) as LampDescriptor).lampData.resistance
+            else -> (getItemObject(lamp2Stack) as LampDescriptor).applyTo(lamp2Resistor)
         }
     }
 
@@ -213,8 +203,7 @@ class FloodlightElement(transparentNode: TransparentNode, transparentNodeDescrip
             blockFacing.left(rotationAxis) -> swivelControl
             blockFacing.front() -> beamControl
             else -> null
-        }
-        else when (side.toHybridNodeDirection()) {
+        } else when (side.toHybridNodeDirection()) {
             blockFacing.back() -> electricalLoad
             else -> null
         }
@@ -233,8 +222,7 @@ class FloodlightElement(transparentNode: TransparentNode, transparentNodeDescrip
             blockFacing.left(rotationAxis) -> NodeBase.maskElectricalInputGate
             blockFacing.front() -> NodeBase.maskElectricalInputGate
             else -> 0
-        }
-        else when (side.toHybridNodeDirection()) {
+        } else when (side.toHybridNodeDirection()) {
             blockFacing.back() -> NodeBase.maskElectricalPower
             else -> 0
         }
@@ -252,18 +240,18 @@ class FloodlightElement(transparentNode: TransparentNode, transparentNodeDescrip
             stream.writeDouble(beamWidth)
             Utils.serialiseItemStack(stream, inventory.getStackInSlot(FloodlightContainer.LAMP_SLOT_1_ID))
             Utils.serialiseItemStack(stream, inventory.getStackInSlot(FloodlightContainer.LAMP_SLOT_2_ID))
-        }
-        catch (e: IOException) {
+        } catch (e: IOException) {
             e.printStackTrace()
         }
     }
 
     override fun networkUnserialize(stream: DataInputStream): Byte {
         when (super.networkUnserialize(stream)) {
-            HORIZONTAL_ADJUST_EVENT -> swivelAngle = stream.readDouble()
-            VERTICAL_ADJUST_EVENT -> headAngle = stream.readDouble()
-            BEAM_ADJUST_EVENT -> beamWidth = stream.readDouble()
+            FloodlightGui.ADJUST_HORIZONTAL_ANGLE_EVENT -> swivelAngle = stream.readDouble()
+            FloodlightGui.ADJUST_VERTICAL_ANGLE_EVENT -> headAngle = stream.readDouble()
+            FloodlightGui.ADJUST_BEAM_WIDTH_EVENT -> beamWidth = stream.readDouble()
         }
+        needPublish()
         return unserializeNulldId
     }
 
@@ -278,14 +266,14 @@ class FloodlightElement(transparentNode: TransparentNode, transparentNodeDescrip
     override fun getWaila(): Map<String, String> {
         val info: MutableMap<String, String> = LinkedHashMap()
 
-        info[I18N.tr("Power Consumption")] = plotPower("", electricalLoad.voltage * electricalLoad.current)
+        val parallelResistance = (lamp1Resistor.resistance * lamp2Resistor.resistance) / (lamp1Resistor.resistance + lamp2Resistor.resistance)
+        info[I18N.tr("Power Consumption")] = plotPower("", electricalLoad.voltage.pow(2) / parallelResistance)
 
         val lamp1Stack = inventory.getStackInSlot(FloodlightContainer.LAMP_SLOT_1_ID)
-        val lamp2Stack = inventory.getStackInSlot(FloodlightContainer.LAMP_SLOT_2_ID)
-
         if (lamp1Stack != null) info[I18N.tr("Bulb 1")] = lamp1Stack.displayName
         else info[I18N.tr("Bulb 1")] = I18N.tr("None")
 
+        val lamp2Stack = inventory.getStackInSlot(FloodlightContainer.LAMP_SLOT_2_ID)
         if (lamp2Stack != null) info[I18N.tr("Bulb 2")] = lamp2Stack.displayName
         else info[I18N.tr("Bulb 2")] = I18N.tr("None")
 
@@ -296,21 +284,61 @@ class FloodlightElement(transparentNode: TransparentNode, transparentNodeDescrip
                 val lamp1Descriptor = getItemObject(lamp1Stack) as LampDescriptor
                 info[I18N.tr("Bulb 1 Life Left")] = plotValue(lamp1Descriptor.getLifeInTag(lamp1Stack)) + I18N.tr(" Hours")
             }
+
             if (lamp2Stack != null) {
                 val lamp2Descriptor = getItemObject(lamp2Stack) as LampDescriptor
                 info[I18N.tr("Bulb 2 Life Left")] = plotValue(lamp2Descriptor.getLifeInTag(lamp2Stack)) + I18N.tr(" Hours")
             }
         }
 
+        if (Eln.config.getBooleanOrElse("debug.logging.enabled", false)) {
+            info[I18N.tr("Lamp Brightness")] = plotValue(node!!.lightValue.toDouble())
+        }
+
         return info
     }
 
     override fun readConfigTool(compound: NBTTagCompound, invoker: EntityPlayer) {
-        if (ConfigCopyToolDescriptor.readGenDescriptor(compound, "lamp1", inventory, FloodlightContainer.LAMP_SLOT_1_ID, invoker)) inventoryChange(inventory)
-        if (ConfigCopyToolDescriptor.readGenDescriptor(compound, "lamp2", inventory, FloodlightContainer.LAMP_SLOT_2_ID, invoker)) inventoryChange(inventory)
+        var publishChanges = false
+        var inventoryChanged = false
+
+        if (!motorized) {
+            if (compound.hasKey("swivelAngle")) {
+                swivelAngle = compound.getDouble("swivelAngle")
+                publishChanges = true
+            }
+
+            if (compound.hasKey("headAngle")) {
+                headAngle = compound.getDouble("headAngle")
+                publishChanges = true
+            }
+
+            if (compound.hasKey("beamWidth")) {
+                beamWidth = compound.getDouble("beamWidth")
+                publishChanges = true
+            }
+        }
+
+        if (ConfigCopyToolDescriptor.readLampDescriptor(compound, "lamp1", inventory, FloodlightContainer.LAMP_SLOT_1_ID, invoker, descriptor.acceptedLampTypes)) {
+            inventoryChanged = true
+        }
+
+        if (ConfigCopyToolDescriptor.readLampDescriptor(compound, "lamp2", inventory, FloodlightContainer.LAMP_SLOT_2_ID, invoker, descriptor.acceptedLampTypes)) {
+            inventoryChanged = true
+        }
+
+        // Prevent duplicate calls of these functions
+        if (inventoryChanged) inventoryChange(inventory)
+        else if (publishChanges) needPublish()
     }
 
     override fun writeConfigTool(compound: NBTTagCompound, invoker: EntityPlayer) {
+        if (!motorized) {
+            compound.setDouble("swivelAngle", swivelAngle)
+            compound.setDouble("headAngle", headAngle)
+            compound.setDouble("beamWidth", beamWidth)
+        }
+
         ConfigCopyToolDescriptor.writeGenDescriptor(compound, "lamp1", inventory.getStackInSlot(FloodlightContainer.LAMP_SLOT_1_ID))
         ConfigCopyToolDescriptor.writeGenDescriptor(compound, "lamp2", inventory.getStackInSlot(FloodlightContainer.LAMP_SLOT_2_ID))
     }

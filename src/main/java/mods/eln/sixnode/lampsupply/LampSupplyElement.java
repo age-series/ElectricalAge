@@ -22,7 +22,9 @@ import mods.eln.sim.mna.misc.MnaConst;
 import mods.eln.sim.nbt.NbtElectricalLoad;
 import mods.eln.sim.process.destruct.VoltageStateWatchDog;
 import mods.eln.sim.process.destruct.WorldExplosion;
+import mods.eln.sixnode.currentcable.CurrentCableDescriptor;
 import mods.eln.sixnode.electricalcable.ElectricalCableDescriptor;
+import mods.eln.sixnode.genericcable.GenericCableDescriptor;
 import mods.eln.sixnode.wirelesssignal.IWirelessSignalSpot;
 import mods.eln.sixnode.wirelesssignal.IWirelessSignalTx;
 import mods.eln.sixnode.wirelesssignal.WirelessUtils;
@@ -65,7 +67,7 @@ public class LampSupplyElement extends SixNodeElement implements IConfigurable {
     public IProcess lampSupplySlowProcess = new LampSupplySlowProcess();
 
     private AutoAcceptInventoryProxy inventory = (new AutoAcceptInventoryProxy(new SixNodeElementInventory(1, 64, this)))
-        .acceptIfIncrement(0, 64, ElectricalCableDescriptor.class);
+        .acceptIfIncrement(0, 64, ElectricalCableDescriptor.class, CurrentCableDescriptor.class);
 
 
     static class Entry {
@@ -268,6 +270,13 @@ public class LampSupplyElement extends SixNodeElement implements IConfigurable {
     public boolean onBlockActivated(EntityPlayer entityPlayer, Direction side, float vx, float vy, float vz) {
         if (onBlockActivatedRotate(entityPlayer)) return true;
 
+        ItemStack playerEquippedItem = entityPlayer.getCurrentEquippedItem();
+        GenericItemBlockUsingDamageDescriptor desc = GenericItemBlockUsingDamageDescriptor.getDescriptor(playerEquippedItem, ElectricalCableDescriptor.class);
+        if (desc instanceof ElectricalCableDescriptor) {
+            if (!((ElectricalCableDescriptor) desc).signalWire) return inventory.take(entityPlayer.getCurrentEquippedItem(), this, false, true);
+            else return false;
+        }
+
         return inventory.take(entityPlayer.getCurrentEquippedItem(), this, false, true);
     }
 
@@ -338,8 +347,10 @@ public class LampSupplyElement extends SixNodeElement implements IConfigurable {
     void setupFromInventory() {
         ItemStack cableStack = getInventory().getStackInSlot(LampSupplyContainer.cableSlotId);
         if (cableStack != null) {
-            ElectricalCableDescriptor desc = (ElectricalCableDescriptor) GenericItemBlockUsingDamageDescriptor.getDescriptor(
-                cableStack, ElectricalCableDescriptor.class);
+            GenericCableDescriptor desc = (ElectricalCableDescriptor) GenericItemBlockUsingDamageDescriptor.getDescriptor(
+                    cableStack, ElectricalCableDescriptor.class);
+            if (desc == null) desc = (CurrentCableDescriptor) GenericItemBlockUsingDamageDescriptor.getDescriptor(
+                    cableStack, CurrentCableDescriptor.class);
             if (desc != null) {
                 desc.applyTo(powerLoad);
                 voltageWatchdog.setNominalVoltage(desc.electricalNominalVoltage);
@@ -453,7 +464,7 @@ public class LampSupplyElement extends SixNodeElement implements IConfigurable {
             }
             needPublish();
         }
-        if(ConfigCopyToolDescriptor.readCableType(compound, getInventory(), 0, invoker))
+        if(ConfigCopyToolDescriptor.readCableType(compound, getInventory(), 0, invoker, false))
             needPublish();
     }
 

@@ -3,11 +3,14 @@ package mods.eln.item;
 import mods.eln.Eln;
 import mods.eln.generic.GenericItemBlockUsingDamageDescriptor;
 import mods.eln.generic.GenericItemUsingDamageDescriptor;
+import mods.eln.item.lampitem.BoilerplateLampData;
+import mods.eln.item.lampitem.LampDescriptor;
 import mods.eln.misc.Coordinate;
 import mods.eln.misc.Direction;
 import mods.eln.node.NodeBase;
 import mods.eln.node.NodeBlock;
 import mods.eln.node.NodeManager;
+import mods.eln.sixnode.currentcable.CurrentCableDescriptor;
 import mods.eln.sixnode.electricalcable.ElectricalCableDescriptor;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
@@ -16,6 +19,8 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
+
+import javax.annotation.Nullable;
 
 public class ConfigCopyToolDescriptor extends GenericItemUsingDamageDescriptor {
     public ConfigCopyToolDescriptor(String name) { super(name); }
@@ -36,6 +41,25 @@ public class ConfigCopyToolDescriptor extends GenericItemUsingDamageDescriptor {
         return false;
     }
 
+    public static boolean readCableType(NBTTagCompound compound, IInventory inv, int slot, EntityPlayer invoker, boolean acceptSignalCable) {
+        String name = "cable";
+
+        if (compound.hasKey(name + "Type")) {
+            int type = compound.getInteger(name + "Type");
+            GenericItemBlockUsingDamageDescriptor desc = Eln.sixNodeItem.getDescriptor(type);
+
+            if (desc instanceof ElectricalCableDescriptor) {
+                if (!(((ElectricalCableDescriptor) desc).signalWire && !acceptSignalCable)) {
+                    return readCableType(compound, inv, slot, invoker);
+                }
+            } else if (desc instanceof CurrentCableDescriptor) {
+                return readCableType(compound, inv, slot, invoker);
+            }
+        }
+
+        return false;
+    }
+
     public static boolean readCableType(NBTTagCompound compound, IInventory inv, int slot, EntityPlayer invoker) {
         return readCableType(compound, "cable", inv, slot, invoker);
     }
@@ -50,16 +74,18 @@ public class ConfigCopyToolDescriptor extends GenericItemUsingDamageDescriptor {
             ItemStack stackInSlot = inv.getStackInSlot(slot);
             if (stackInSlot != null) {
                 GenericItemBlockUsingDamageDescriptor thisCableDesc = GenericItemBlockUsingDamageDescriptor.getDescriptor(stackInSlot, ElectricalCableDescriptor.class);
+                if (thisCableDesc == null) thisCableDesc = GenericItemBlockUsingDamageDescriptor.getDescriptor(stackInSlot, CurrentCableDescriptor.class);
                 if(thisCableDesc != null) {
+                    final GenericItemBlockUsingDamageDescriptor cableDesc = thisCableDesc;
                     (new ItemMovingHelper() {
                         @Override
                         public boolean acceptsStack(ItemStack stack) {
-                            return thisCableDesc.checkSameItemStack(stack);
+                            return cableDesc.checkSameItemStack(stack);
                         }
 
                         @Override
                         public ItemStack newStackOfSize(int items) {
-                            return thisCableDesc.newItemStack(items);
+                            return cableDesc.newItemStack(items);
                         }
                     }).move(invoker.inventory, inv, slot, 0);
                 }
@@ -69,12 +95,16 @@ public class ConfigCopyToolDescriptor extends GenericItemUsingDamageDescriptor {
                 (new ItemMovingHelper() {
                     @Override
                     public boolean acceptsStack(ItemStack stack) {
-                        return cableDesc.checkSameItemStack(stack);
+                        if (cableDesc != null) {
+                            return cableDesc.checkSameItemStack(stack);
+                        } else return false;
                     }
 
-                    @Override
+                    @Override @Nullable
                     public ItemStack newStackOfSize(int items) {
-                        return cableDesc.newItemStack(items);
+                        if (cableDesc != null) {
+                            return cableDesc.newItemStack(items);
+                        } else return null; // This is okay because all usages of this function handle null values safely.
                     }
                 }).move(invoker.inventory, inv, slot, amt);
             }
@@ -100,6 +130,23 @@ public class ConfigCopyToolDescriptor extends GenericItemUsingDamageDescriptor {
             Eln.logger.info("CCT Copy: " + name + "Type: -1");
             compound.setInteger(name + "Type", -1);
         }
+    }
+
+    public static boolean readLampDescriptor(NBTTagCompound compound, String name, IInventory inv, int slot, EntityPlayer invoker, BoilerplateLampData[] acceptedLampTypes) {
+        if (compound.hasKey(name)) {
+            String type = compound.getString(name);
+            GenericItemUsingDamageDescriptor desc = GenericItemUsingDamageDescriptor.getByName(type);
+
+            if (desc instanceof LampDescriptor) {
+                for (BoilerplateLampData acceptedLampType : acceptedLampTypes) {
+                    if (((LampDescriptor) desc).getLampData().getTechnology() == acceptedLampType) {
+                        return readGenDescriptor(compound, name, inv, slot, invoker);
+                    }
+                }
+            }
+        }
+
+        return false;
     }
 
     public static boolean readGenDescriptor(NBTTagCompound compound, String name, IInventory inv, int slot, EntityPlayer invoker) {
@@ -128,12 +175,16 @@ public class ConfigCopyToolDescriptor extends GenericItemUsingDamageDescriptor {
                 (new ItemMovingHelper() {
                     @Override
                     public boolean acceptsStack(ItemStack stack) {
-                        return newDesc.checkSameItemStack(stack);
+                        if (newDesc != null) {
+                            return newDesc.checkSameItemStack(stack);
+                        } else return false;
                     }
 
-                    @Override
+                    @Override @Nullable
                     public ItemStack newStackOfSize(int items) {
-                        return newDesc.newItemStack(items);
+                        if (newDesc != null) {
+                            return newDesc.newItemStack(items);
+                        } else return null; // This is okay because all usages of this function handle null values safely.
                     }
                 }).move(invoker.inventory, inv, slot, amt);
             }

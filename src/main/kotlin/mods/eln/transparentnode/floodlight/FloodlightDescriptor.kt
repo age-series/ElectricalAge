@@ -1,6 +1,7 @@
 package mods.eln.transparentnode.floodlight
 
-import mods.eln.i18n.I18N.tr
+import mods.eln.i18n.I18N
+import mods.eln.item.lampitem.LampLists
 import mods.eln.misc.*
 import mods.eln.misc.Utils.entityLivingHorizontalViewDirection
 import mods.eln.node.transparent.TransparentNodeDescriptor
@@ -13,7 +14,8 @@ import net.minecraftforge.client.IItemRenderer
 import org.lwjgl.opengl.GL11
 import java.util.*
 
-class FloodlightDescriptor(val name: String, val obj: Obj3D, val motorized: Boolean) : TransparentNodeDescriptor(name, FloodlightElement::class.java, FloodlightRender::class.java) {
+class FloodlightDescriptor(val itemName: String, val obj: Obj3D, val motorized: Boolean) :
+    TransparentNodeDescriptor(itemName, FloodlightElement::class.java, FloodlightRender::class.java) {
 
     private val base: Obj3D.Obj3DPart = obj.getPart("Lamp_Base_Cube.008")
     private val swivel: Obj3D.Obj3DPart = obj.getPart("Lamp_Swivel_Cube.014")
@@ -25,16 +27,33 @@ class FloodlightDescriptor(val name: String, val obj: Obj3D, val motorized: Bool
 
     var placementSide: Direction = Direction.XN
 
+    val acceptedLampTypes = arrayOf(
+        LampLists.getLampData("halogen")!!,
+        LampLists.getLampData("led")!!
+    )
+    private var acceptedLampTypesString: String = ""
+
     init {
         voltageLevelColor = VoltageLevelColor.Neutral
+
+        for (lampData in acceptedLampTypes) {
+            acceptedLampTypesString += lampData.translatedLampType
+            if (acceptedLampTypes.indexOf(lampData) < (acceptedLampTypes.size - 1)) acceptedLampTypesString += "/"
+        }
     }
 
     override fun addInformation(itemStack: ItemStack, entityPlayer: EntityPlayer, list: MutableList<String>, par4: Boolean) {
         super.addInformation(itemStack, entityPlayer, list, par4)
-        Collections.addAll(list, *tr("A powerful lamp that specializes in\nthe illumination of large spaces.")!!
-            .split("\n".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray())
-        list.add(tr("Uses inserted light bulbs."))
-        list.add(if (motorized) tr("Intended for 240V bulb families.") else tr("Intended for 120V or 240V bulb families."))
+
+        Collections.addAll(list, *I18N.tr(
+            "A powerful lamp that specializes in\n" +
+                    "the illumination of large spaces.\n" +
+                    "Uses inserted light bulbs."
+        )!!.split("\n".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray())
+
+        if (motorized) list.add(I18N.tr("Intended for 240V bulb families."))
+        else list.add(I18N.tr("Intended for 120V bulb families."))
+        list.add(I18N.tr("Accepted lamp types: %1$", acceptedLampTypesString))
     }
 
     override fun addRealismContext(list: MutableList<String>?): RealisticEnum {
