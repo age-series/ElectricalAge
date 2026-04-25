@@ -68,6 +68,11 @@ internal class KotlinAstParser {
                             extractTrCall(valueArgs, result)
                         }
                     }
+                    "TR_GROUP" -> {
+                        if (isQualified || "mods.eln.i18n.I18N.TR_GROUP" in importPaths || importsI18N) {
+                            extractTrGroupCall(valueArgs, result)
+                        }
+                    }
                     "TR_NAME" -> {
                         if (isQualified || importsTR_NAME || importsI18N) {
                             extractForgeCall(valueArgs, "name", result)
@@ -86,6 +91,18 @@ internal class KotlinAstParser {
             println("Failed to parse Kotlin file: ${file.name}, error: ${e.message}")
             return emptySet()
         }
+    }
+
+    private fun extractTrGroupCall(
+        args: List<KtValueArgument>,
+        result: MutableSet<TranslationItem>
+    ) {
+        if (args.size < 2) return
+        val groupIdExpr = args[0].getArgumentExpression() ?: return
+        val groupId = resolveStringLiteral(groupIdExpr) ?: return
+        val nameExpr = args[1].getArgumentExpression() ?: return
+        val englishName = resolveStringLiteral(nameExpr) ?: return
+        result.add(TranslationItem("itemGroup.$groupId", englishName))
     }
 
     private fun extractTrCall(

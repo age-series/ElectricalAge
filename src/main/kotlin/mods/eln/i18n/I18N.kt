@@ -199,4 +199,23 @@ object I18N {
             return text
         }
     }
+
+    /**
+     * Registers an item group (creative tab) translation.
+     *
+     * The [groupId] is the label passed to `CreativeTabs` constructor (e.g. "ElnCables").
+     * Forge automatically looks up the translation key `itemGroup.{groupId}` at runtime.
+     * The [englishName] is the display name used as the value in the generated language files.
+     *
+     * Example: `TR_GROUP("ElnCables", "Electrical Age - Cables")`
+     * → generates key `itemGroup.ElnCables` with value `Electrical Age - Cables`
+     *
+     * @param groupId     The creative tab label (without the `itemGroup.` prefix).
+     * @param englishName The English display name for this creative tab.
+     * @return The group ID, so it can be passed directly to the `GenericCreativeTab` constructor.
+     */
+    @JvmStatic
+    fun TR_GROUP(groupId: String, englishName: String): String {
+        return groupId
+    }
 }

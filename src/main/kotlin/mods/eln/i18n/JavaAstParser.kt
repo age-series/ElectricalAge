@@ -48,6 +48,18 @@ internal object JavaAstParser {
                         results.add(TranslationItem(text))
                     }
 
+                    methodName == "TR_GROUP" -> {
+                        if (call.arguments.size != 2) continue
+
+                        val groupIdArg = call.arguments[0] ?: continue
+                        val groupId = resolveStringLiteral(groupIdArg, sourceLines) ?: continue
+
+                        val nameArg = call.arguments[1] ?: continue
+                        val englishName = resolveStringLiteral(nameArg, sourceLines) ?: continue
+
+                        results.add(TranslationItem("itemGroup.$groupId", englishName))
+                    }
+
                     methodName == "TR_NAME" || methodName == "TR_DESC" -> {
                         val property = methodName.removePrefix("TR_").lowercase()
                         if (call.arguments.size != 2) continue
