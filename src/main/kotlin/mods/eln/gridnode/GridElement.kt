@@ -1,5 +1,6 @@
 package mods.eln.gridnode
 
+import mods.eln.Eln
 import mods.eln.generic.GenericItemBlockUsingDamageDescriptor
 import mods.eln.misc.*
 import mods.eln.node.transparent.TransparentNode
@@ -7,6 +8,7 @@ import mods.eln.node.transparent.TransparentNodeDescriptor
 import mods.eln.node.transparent.TransparentNodeElement
 import mods.eln.sim.ElectricalLoad
 import mods.eln.sixnode.electricalcable.ElectricalCableDescriptor
+import mods.eln.sixnode.electricalcable.UtilityCableDescriptor
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.entity.player.EntityPlayerMP
 import net.minecraft.item.ItemStack
@@ -30,6 +32,11 @@ abstract class GridElement(transparentNode: TransparentNode, descriptor: Transpa
         this.desc = descriptor as GridDescriptor
     }
 
+    private fun shouldConsumeUtilityCableLength(player: EntityPlayer): Boolean {
+        val creativeFreeLength = Eln.config.getBooleanOrElse("gameplay.cables.creativeFreeLength", true)
+        return !(creativeFreeLength && player is EntityPlayerMP && Utils.isCreative(player))
+    }
+
     /* Connect one GridNode to another. */
     override fun onBlockActivated(player: EntityPlayer, side: Direction, vx: Float, vy: Float, vz: Float): Boolean {
         // Check if user is holding an appropriate tool.
@@ -51,8 +58,8 @@ abstract class GridElement(transparentNode: TransparentNode, descriptor: Transpa
             other = GridLink.getElementFromCoordinate(p.left)
         }
         // Check if it's the *correct* cable descriptor.
-        if (cable != desc.cableDescriptor) {
-            Utils.addChatMessage(entityPlayer, "Wrong cable, you need " + desc.cableDescriptor.name)
+        if (!desc.acceptsGridCable(cable)) {
+            Utils.addChatMessage(entityPlayer, "Wrong cable for this pole")
             return true
         }
         if(other == this) {
@@ -68,9 +75,11 @@ abstract class GridElement(transparentNode: TransparentNode, descriptor: Transpa
             val cableLength = Math.ceil(distance).toInt()
             val range = Math.min(connectRange, other.connectRange)
             val stackSize = entityPlayer.totalItemsCarried(stack)
+            val consumeLength = shouldConsumeUtilityCableLength(entityPlayer)
+            val availableLength = if (cable is UtilityCableDescriptor && consumeLength) cable.getRemainingLengthMeters(stack).toInt() else stackSize
 
-            if (stackSize < distance && !Utils.isCreative(entityPlayer as EntityPlayerMP)) {
-                Utils.addChatMessage(entityPlayer, "You need $cableLength units of cable")
+            if (availableLength < cableLength && !Utils.isCreative(entityPlayer as EntityPlayerMP)) {
+                Utils.addChatMessage(entityPlayer, "You need $cableLength m of cable")
             } else if (distance > range) {
                 Utils.addChatMessage(entityPlayer, "Cannot connect, range " + Math.ceil(distance) + " and limit " + range + " blocks")
             } else if (!this.canConnect(other)) {
@@ -79,9 +88,22 @@ abstract class GridElement(transparentNode: TransparentNode, descriptor: Transpa
                 Utils.addChatMessage(entityPlayer, "Cannot connect, no line of sight")
             } else {
                 try {
-                    GridLink.addLink(this, other, side, p!!.right, cable, cableLength)
+                    val linkStack = if (cable is UtilityCableDescriptor) {
+                        cable.newItemStack(1).also { cable.setRemainingLengthMeters(it, cableLength.toDouble()) }
+                    } else {
+                        null
+                    }
+                    GridLink.addLink(this, other, side, p!!.right, cable, cableLength, linkStack)
                     Utils.addChatMessage(entityPlayer, "Added connection")
-                    entityPlayer.removeMultipleItems(stack, cableLength)
+                    if (cable is UtilityCableDescriptor && consumeLength) {
+                        cable.setRemainingLengthMeters(stack, cable.getRemainingLengthMeters(stack) - cableLength)
+                        if (cable.getRemainingLengthMeters(stack) <= 0.0) {
+                            stack.stackSize -= 1
+                        }
+                        entityPlayer.inventory.markDirty()
+                    } else if (cable !is UtilityCableDescriptor) {
+                        entityPlayer.removeMultipleItems(stack, cableLength)
+                    }
                 } catch (e: UserError) {
                     Utils.addChatMessage(entityPlayer, e.message)
                 }

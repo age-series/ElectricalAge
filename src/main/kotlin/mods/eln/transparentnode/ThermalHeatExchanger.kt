@@ -226,7 +226,7 @@ class ThermalHeatExchangerElement(
     override fun getConnectionMask(side: Direction, lrdu: LRDU) = when (lrdu) {
         LRDU.Down -> when (side) {
             front.inverse -> NodeBase.maskThermal
-            front -> NodeBase.maskElectricalGate
+            front -> NodeBase.maskElectricalInputGate
             else -> 0
         }
         else -> 0

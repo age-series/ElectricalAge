@@ -37,7 +37,8 @@ class ElnConsoleCommands: ICommand {
             ElnResetAmbientTempsCommand(),
             ElnZoneDumpCommand(),
             ElnZoneCleanCommand(),
-            ElnZoneRemoveCommand()
+            ElnZoneRemoveCommand(),
+            ElnZoneDestroyCommand()
         ))
     }
 

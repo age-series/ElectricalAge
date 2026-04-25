@@ -45,6 +45,8 @@ public class ElectricalSwitchDescriptor extends SixNodeDescriptor {
 
     double nominalVoltage, nominalPower;
     double maximalVoltage, maximalPower;
+    double currentRating;
+    double damageCurrentLimit;
     public float[] pinDistance;
 
     public ElectricalSwitchDescriptor(
@@ -92,6 +94,8 @@ public class ElectricalSwitchDescriptor extends SixNodeDescriptor {
         }
         this.thermal = thermal;
         double I = maximalPower / nominalVoltage;
+        currentRating = I;
+        damageCurrentLimit = currentRating * ElectricalSafety.CONTINUOUS_TO_DAMAGE_CURRENT_FACTOR;
         thermal.setMaximalPower(I * I * electricalRs);
         this.signalSwitch = signalSwitch;
 
@@ -196,15 +200,28 @@ public class ElectricalSwitchDescriptor extends SixNodeDescriptor {
 
     public int getNodeMask() {
         if (signalSwitch)
-            return NodeBase.maskElectricalGate;
+            return NodeBase.maskElectricalAll;
         else
             return NodeBase.maskElectricalPower;
+    }
+
+    public double getCurrentLimit() {
+        return currentRating;
+    }
+
+    public double getDamageCurrentLimit() {
+        return damageCurrentLimit;
     }
 
     @Override
     public void addInformation(ItemStack itemStack, EntityPlayer entityPlayer, List list, boolean par4) {
         super.addInformation(itemStack, entityPlayer, list, par4);
         Collections.addAll(list, tr("Can break an electrical circuit\ninterrupting the current.").split("\n"));
+        list.add(tr("Voltage rating: %1$V", Utils.plotValue(nominalVoltage)));
+        list.add(tr("Current rating: %1$A", Utils.plotValue(getCurrentLimit())));
+        if (!signalSwitch) {
+            list.add(tr("Damage current: %1$A after %2$s", Utils.plotValue(getDamageCurrentLimit()), Utils.plotTime(ElectricalSafety.SHORT_OVERLOAD_GRACE_SECONDS)));
+        }
     }
 
     @Nullable

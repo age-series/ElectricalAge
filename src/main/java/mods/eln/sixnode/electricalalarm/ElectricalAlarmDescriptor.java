@@ -29,15 +29,21 @@ public class ElectricalAlarmDescriptor extends SixNodeDescriptor {
     String soundName;
     double soundTime;
     float soundLevel;
+    double nominalControlVoltage;
     public float rotSpeed = 0f;
 
     public ElectricalAlarmDescriptor(String name, Obj3D obj, int light, String soundName, double soundTime, float soundLevel) {
+        this(name, obj, light, soundName, soundTime, soundLevel, NominalVoltage.V12);
+    }
+
+    public ElectricalAlarmDescriptor(String name, Obj3D obj, int light, String soundName, double soundTime, float soundLevel, double nominalControlVoltage) {
         super(name, ElectricalAlarmElement.class, ElectricalAlarmRender.class);
         this.obj = obj;
         this.soundName = soundName;
         this.soundTime = soundTime;
         this.soundLevel = soundLevel;
         this.light = light;
+        this.nominalControlVoltage = nominalControlVoltage;
 
         if (obj != null) {
             main = obj.getPart("main");
@@ -107,6 +113,7 @@ public class ElectricalAlarmDescriptor extends SixNodeDescriptor {
     public void addInformation(ItemStack itemStack, EntityPlayer entityPlayer, List list, boolean par4) {
         super.addInformation(itemStack, entityPlayer, list, par4);
         Collections.addAll(list, tr("Emits an acoustic alarm if\nthe input signal is high").split("\n"));
+        list.add(tr("Intended field supply: %1$V", Utils.plotValue(nominalControlVoltage)));
     }
 
     @Nullable

@@ -8,7 +8,7 @@ public class ElectricalRelayGateProcess extends NodeElectricalGateInputHysteresi
     ElectricalRelayElement element;
 
     public ElectricalRelayGateProcess(ElectricalRelayElement element, String name, NbtElectricalGateInput gate) {
-        super(name, gate);
+        super(name, gate, element.descriptor.controlVoltage * 0.3, element.descriptor.controlVoltage * 0.7);
         this.element = element;
     }
 

@@ -22,7 +22,7 @@ class NodeManager(par1Str: String?) : WorldSavedData(par1Str) {
             nodes.remove(old)
         }
         nodes.add(node)
-        println("NodeManager has " + nodeArray.size + "node")
+        // println("NodeManager has " + nodeArray.size + "node")
         // nodeArray.put(new NodeIdentifier(node), node);
     }
 
@@ -30,14 +30,14 @@ class NodeManager(par1Str: String?) : WorldSavedData(par1Str) {
         if (node == null) return
         nodeArray.remove(node.coordinate)
         nodes.remove(node)
-        println("NodeManager has " + nodeArray.size + "node")
+        // println("NodeManager has " + nodeArray.size + "node")
     }
 
     fun removeCoordonate(c: Coordinate?) {
         // nodeArray.remove(node);
         val n = nodeArray.remove(c)
         if (n != null) nodes.remove(n)
-        println("NodeManager has " + nodeArray.size + "node")
+        // println("NodeManager has " + nodeArray.size + "node")
     }
 
     override fun isDirty(): Boolean {

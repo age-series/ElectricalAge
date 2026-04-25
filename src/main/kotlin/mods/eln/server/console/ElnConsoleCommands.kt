@@ -9,8 +9,8 @@ import mods.eln.gridnode.electricalpole.ElectricalPoleElement
 import mods.eln.gridnode.transformer.GridTransformerElement
 import mods.eln.mechanical.ShaftElement
 import mods.eln.environment.BiomeClimateService
-import mods.eln.item.LampLists
 import mods.eln.misc.Coordinate
+import mods.eln.misc.Direction
 import mods.eln.misc.FC
 import mods.eln.misc.Version
 import mods.eln.node.NodeBase
@@ -19,6 +19,7 @@ import mods.eln.node.GhostNode
 import mods.eln.node.simple.SimpleNode
 import mods.eln.node.six.SixNode
 import mods.eln.node.transparent.TransparentNode
+import mods.eln.server.ElnDestroyHelper
 import mods.eln.server.console.ElnConsoleCommands.Companion.boolToStr
 import mods.eln.server.console.ElnConsoleCommands.Companion.cprint
 import mods.eln.server.console.ElnConsoleCommands.Companion.getArgBool
@@ -83,17 +84,6 @@ private fun parseZoneBounds(ics: EntityPlayerMP, args: List<String>, commandName
         min(coords[2], coords[5]),
         max(coords[2], coords[5])
     )
-}
-
-private fun clearElnBlock(world: World, x: Int, y: Int, z: Int): Boolean {
-    val block = world.getBlock(x, y, z)
-    val isElnBlock =
-        block == Eln.sixNodeBlock ||
-            block == Eln.transparentNodeBlock ||
-            block == Eln.ghostBlock
-    if (!isElnBlock) return false
-    world.setBlockToAir(x, y, z)
-    return true
 }
 
 private fun saveConfigPath(path: String, value: Any): String =
@@ -241,7 +231,6 @@ open class ElnAboutCommand: IConsoleCommand {
 
 // Since we tell people to run /eln version a lot, might as well have this alias.
 class ElnVersionCommand: ElnAboutCommand() { override val name = "version"}
-
 class ElnNewWindDirectionCommand: IConsoleCommand {
     override val name = "newWind"
 
@@ -522,7 +511,7 @@ class ElnZoneCleanCommand : IConsoleCommand {
                     if (!isNodeBlock) continue
                     val coord = Coordinate(x, y, z, dim)
                     if (coordKeyedNodes.containsKey(coord)) continue
-                    if (clearElnBlock(world, x, y, z)) {
+                    if (ElnDestroyHelper.clearElnBlock(world, x, y, z)) {
                         orphanBlocks++
                     }
                 }
@@ -612,7 +601,7 @@ class ElnZoneRemoveCommand : IConsoleCommand {
         for (x in minX..maxX) {
             for (y in minY..maxY) {
                 for (z in minZ..maxZ) {
-                    if (clearElnBlock(world, x, y, z)) {
+                    if (ElnDestroyHelper.clearElnBlock(world, x, y, z)) {
                         blocksCleared++
                     }
                 }
@@ -648,6 +637,48 @@ class ElnZoneRemoveCommand : IConsoleCommand {
             coord.z == minZ || coord.z == maxZ
     }
 
+}
+
+class ElnZoneDestroyCommand : IConsoleCommand {
+    override val name = "zonedestroy"
+
+    override fun runCommand(ics: ICommandSender, args: List<String>) {
+        if (ics !is EntityPlayerMP) {
+            cprint(ics, "${FC.BRIGHT_RED}This command can only be run by a player.", indent = 1)
+            return
+        }
+        val bounds = parseZoneBounds(ics, args, name) ?: return
+        val world = ics.worldObj
+        val nodeManager = NodeManager.instance
+        if (nodeManager == null) {
+            cprint(ics, "${FC.BRIGHT_RED}Node manager unavailable, cannot run zonedestroy.", indent = 1)
+            return
+        }
+        val summary = ElnDestroyHelper.destroyWithinBounds(
+            world = world,
+            nodeManager = nodeManager,
+            minX = bounds.minX,
+            maxX = bounds.maxX,
+            minY = bounds.minY,
+            maxY = bounds.maxY,
+            minZ = bounds.minZ,
+            maxZ = bounds.maxZ,
+            player = ics
+        )
+
+        cprint(
+            ics,
+            "${FC.BRIGHT_GREEN}Zone destroy complete: destroyed ${summary.nodesDestroyed} nodes and cleared ${summary.blocksCleared} blocks without dropping items.",
+            indent = 1
+        )
+    }
+
+    override fun getManPage(ics: ICommandSender, args: List<String>) {
+        cprint(ics, "Destroys all Eln nodes and blocks within a rectangular zone without dropping items.", indent = 1)
+        cprint(ics, "Usage: /eln zonedestroy <radius>", indent = 1)
+        cprint(ics, "Usage: /eln zonedestroy x1 y1 z1 x2 y2 z2", indent = 1)
+        cprint(ics, "")
+    }
 }
 
 class ElnStopShaftCommand : IConsoleCommand {
@@ -930,7 +961,7 @@ class ElnSimSnapshotCommand: IConsoleCommand {
 
 class ElnWatchdogCommand: IConsoleCommand {
     override val name = "watchdog"
-    private val validTypes = listOf("all", "thermal", "resistorHeat", "voltage", "shaftSpeed", "other", "defaults")
+    private val validTypes = listOf("all", "thermal", "resistorHeat", "current", "voltage", "shaftSpeed", "other", "defaults")
 
     override fun runCommand(ics: ICommandSender, args: List<String>) {
         if (args.isEmpty() || args.size > 2) {
@@ -950,7 +981,7 @@ class ElnWatchdogCommand: IConsoleCommand {
             }
             applyDefaults()
             saveWatchdogConfig()
-            cprint(ics, "Watchdog defaults restored (thermal=true, resistorHeat=false, voltage=true, shaftSpeed=true, other=true).", indent = 1)
+            cprint(ics, "Watchdog defaults restored (thermal=true, resistorHeat=false, current=true, voltage=true, shaftSpeed=true, other=true).", indent = 1)
             return
         }
         if (args.size != 2) {
@@ -963,12 +994,14 @@ class ElnWatchdogCommand: IConsoleCommand {
             "all" -> {
                 Eln.config.setBoolean("simulation.watchdog.destruction.thermal", watchdogEnabled)
                 Eln.config.setBoolean("simulation.watchdog.destruction.resistorHeat", watchdogEnabled)
+                Eln.config.setBoolean("simulation.watchdog.destruction.current", watchdogEnabled)
                 Eln.config.setBoolean("simulation.watchdog.destruction.voltage", watchdogEnabled)
                 Eln.config.setBoolean("simulation.watchdog.destruction.shaftSpeed", watchdogEnabled)
                 Eln.config.setBoolean("simulation.watchdog.destruction.other", watchdogEnabled)
             }
             "thermal" -> Eln.config.setBoolean("simulation.watchdog.destruction.thermal", watchdogEnabled)
             "resistorheat" -> Eln.config.setBoolean("simulation.watchdog.destruction.resistorHeat", watchdogEnabled)
+            "current" -> Eln.config.setBoolean("simulation.watchdog.destruction.current", watchdogEnabled)
             "voltage" -> Eln.config.setBoolean("simulation.watchdog.destruction.voltage", watchdogEnabled)
             "shaftspeed" -> Eln.config.setBoolean("simulation.watchdog.destruction.shaftSpeed", watchdogEnabled)
             "other" -> Eln.config.setBoolean("simulation.watchdog.destruction.other", watchdogEnabled)
@@ -986,6 +1019,7 @@ class ElnWatchdogCommand: IConsoleCommand {
     private fun applyDefaults() {
         Eln.config.setBoolean("simulation.watchdog.destruction.thermal", true)
         Eln.config.setBoolean("simulation.watchdog.destruction.resistorHeat", false)
+        Eln.config.setBoolean("simulation.watchdog.destruction.current", true)
         Eln.config.setBoolean("simulation.watchdog.destruction.voltage", true)
         Eln.config.setBoolean("simulation.watchdog.destruction.shaftSpeed", true)
         Eln.config.setBoolean("simulation.watchdog.destruction.other", true)
@@ -994,6 +1028,7 @@ class ElnWatchdogCommand: IConsoleCommand {
     private fun saveWatchdogConfig() {
         saveConfigPath("simulation.watchdog.destruction.thermal", Eln.config.getBooleanOrElse("simulation.watchdog.destruction.thermal", true))
         saveConfigPath("simulation.watchdog.destruction.resistorHeat", Eln.config.getBooleanOrElse("simulation.watchdog.destruction.resistorHeat", false))
+        saveConfigPath("simulation.watchdog.destruction.current", Eln.config.getBooleanOrElse("simulation.watchdog.destruction.current", true))
         saveConfigPath("simulation.watchdog.destruction.voltage", Eln.config.getBooleanOrElse("simulation.watchdog.destruction.voltage", true))
         saveConfigPath("simulation.watchdog.destruction.shaftSpeed", Eln.config.getBooleanOrElse("simulation.watchdog.destruction.shaftSpeed", true))
         saveConfigPath("simulation.watchdog.destruction.other", Eln.config.getBooleanOrElse("simulation.watchdog.destruction.other", true))
@@ -1005,7 +1040,7 @@ class ElnWatchdogCommand: IConsoleCommand {
         cprint(ics, "This also updates config/eln/eln.json.", indent = 1)
         cprint(ics, "")
         cprint(ics, "Parameters:", indent = 1)
-        cprint(ics, "@0:string : Watchdog type (all, thermal, resistorHeat, voltage, shaftSpeed, other, defaults).", indent = 2)
+        cprint(ics, "@0:string : Watchdog type (all, thermal, resistorHeat, current, voltage, shaftSpeed, other, defaults).", indent = 2)
         cprint(ics, "@1:bool : Destruction state (enabled/disabled). Not used by defaults.", indent = 2)
         cprint(ics, "")
     }

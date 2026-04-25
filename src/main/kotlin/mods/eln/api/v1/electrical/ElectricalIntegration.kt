@@ -13,6 +13,7 @@ import mods.eln.node.NodeBase
 import mods.eln.sim.ElectricalConnection
 import mods.eln.sim.ElectricalLoad as SimElectricalLoad
 import mods.eln.sim.IProcess
+import mods.eln.sim.SignalLoadSupport
 import mods.eln.sim.Simulator
 import mods.eln.sim.mna.component.Component
 import mods.eln.sim.mna.component.Resistor
@@ -194,13 +195,11 @@ object ElectricalIntegration {
             get() = Eln.SVU
 
         fun clampVoltage(voltage: Double): Double {
-            if (voltage.isNaN()) return 0.0
-            return Utils.limit(voltage, 0.0, MAX_VOLTAGE)
+            return SignalLoadSupport.clampSignalVoltage(voltage)
         }
 
         fun clampNormalized(value: Double): Double {
-            if (value.isNaN()) return 0.0
-            return Utils.limit(value, 0.0, 1.0)
+            return SignalLoadSupport.clampNormalized(value)
         }
 
         fun toVoltage(normalizedValue: Double): Double {

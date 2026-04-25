@@ -93,6 +93,16 @@ public class GenericItemBlockUsingDamageDescriptor {
         return new ItemStack(parentItem, 1, parentItemDamage);
     }
 
+    public ItemStack newCreativeTabStack() {
+        ItemStack stack = new ItemStack(parentItem, 1, parentItemDamage);
+        stack.setTagCompound(getDefaultNBT());
+        return stack;
+    }
+
+    public int getItemStackLimit(ItemStack stack) {
+        return 64;
+    }
+
     public boolean checkSameItemStack(ItemStack stack) {
         if(stack == null) return false;
         if(stack.getItem() != parentItem || stack.getItemDamage() != parentItemDamage) return false;

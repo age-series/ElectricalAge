@@ -1,6 +1,8 @@
 package mods.eln;
 
 import cpw.mods.fml.common.network.IGuiHandler;
+import mods.eln.item.WireSnipsContainer;
+import mods.eln.item.WireSnipsGui;
 import mods.eln.misc.Direction;
 import mods.eln.misc.Utils;
 import mods.eln.misc.UtilsClient;
@@ -26,6 +28,7 @@ public class GuiHandler implements IGuiHandler {
     @Override
     public Object getServerGuiElement(int id, EntityPlayer player, World world,
                                       int x, int y, int z) {
+        if (id == wireSnipsOpen) return new WireSnipsContainer(player);
         INodeEntity nodeEntity = getNodeEntity(world, x, y, z);
         if (nodeEntity == null) return null;
         Direction side = Direction.fromInt(id - nodeBaseOpen);
@@ -50,6 +53,7 @@ public class GuiHandler implements IGuiHandler {
     }
 
     public static final int genericOpen = 5977;
+    public static final int wireSnipsOpen = 5978;
     public static final int nodeBaseOpen = 6935;
 
     // returns an instance of the Gui you made earlier
@@ -58,6 +62,9 @@ public class GuiHandler implements IGuiHandler {
                                       int x, int y, int z) {
         if (id == genericOpen) {
             return UtilsClient.guiLastOpen;
+        }
+        if (id == wireSnipsOpen) {
+            return new WireSnipsGui(player);
         }
 
         if (id >= nodeBaseOpen && id <= nodeBaseOpen + 5) {

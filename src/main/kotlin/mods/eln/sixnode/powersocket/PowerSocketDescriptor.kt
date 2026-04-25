@@ -17,18 +17,23 @@ class PowerSocketDescriptor(subID: Int, name: String, obj: Obj3D) :
     SixNodeDescriptor(name, PowerSocketElement::class.java, PowerSocketRender::class.java) {
     private var base: Obj3DPart? = null
     private var socket: Obj3DPart? = null
+    private var nominalVoltage = NominalVoltage.V240
 
     init {
         base = obj.getPart("SocketBase")
         when (subID) {
             1 -> {
                 socket = obj.getPart("Socket50V") // Type J socket - 10 amps specification
+                nominalVoltage = NominalVoltage.V240
                 voltageLevelColor = VoltageLevelColor.Neutral
+                setDefaultIcon("typejsocket")
             }
 
             2 -> {
                 socket = obj.getPart("Socket200V") // Type E socket - 16 amps specification
+                nominalVoltage = NominalVoltage.V240
                 voltageLevelColor = VoltageLevelColor.Neutral
+                setDefaultIcon("typeesocket")
             }
             else -> socket = null
         }
@@ -84,6 +89,7 @@ class PowerSocketDescriptor(subID: Int, name: String, obj: Obj3D) :
         list?.addAll(tr("Supplies any device\nplugged in with energy.").split("\n".toRegex())
             .dropLastWhile { it.isEmpty() }
             .toTypedArray())
+        list?.add(tr("Nominal mains class: %1\$V", Utils.plotValue(nominalVoltage)))
     }
 
     override fun addRealismContext(list: MutableList<String?>): RealisticEnum {

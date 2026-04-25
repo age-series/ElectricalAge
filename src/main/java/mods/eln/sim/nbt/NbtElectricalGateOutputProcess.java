@@ -2,8 +2,8 @@ package mods.eln.sim.nbt;
 
 import mods.eln.Eln;
 import mods.eln.misc.INBTTReady;
-import mods.eln.misc.Utils;
 import mods.eln.sim.ElectricalLoad;
+import mods.eln.sim.SignalLoadSupport;
 import mods.eln.sim.mna.SubSystem;
 import mods.eln.sim.mna.component.Capacitor;
 import net.minecraft.nbt.NBTTagCompound;
@@ -74,10 +74,7 @@ public class NbtElectricalGateOutputProcess extends Capacitor implements INBTTRe
     }
 
     public void setOutputNormalizedSafe(double value) {
-        if (value > 1.0) value = 1.0;
-        if (value < 0.0) value = 0.0;
-        if (Double.isNaN(value)) value = 0.0;
-        voltage = value * Eln.SVU;
+        voltage = SignalLoadSupport.toVoltage(value);
     }
 
     public void setVoltage(double U) {
@@ -85,9 +82,7 @@ public class NbtElectricalGateOutputProcess extends Capacitor implements INBTTRe
     }
 
     public void setVoltageSafe(double value) {
-        value = Utils.limit(value, 0, Eln.SVU);
-        if (Double.isNaN(value)) value = 0.0;
-        voltage = value;
+        voltage = SignalLoadSupport.clampSignalVoltage(value);
     }
 
     public double getVoltage() {

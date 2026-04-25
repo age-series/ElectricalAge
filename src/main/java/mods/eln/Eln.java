@@ -98,6 +98,12 @@ import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.oredict.OreDictionary;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.core.LoggerContext;
+import org.apache.logging.log4j.core.appender.FileAppender;
+import org.apache.logging.log4j.core.config.Configuration;
+import org.apache.logging.log4j.core.config.LoggerConfig;
+import org.apache.logging.log4j.core.layout.PatternLayout;
 
 import java.io.File;
 import java.util.*;
@@ -129,9 +135,11 @@ public class Eln {
     public static final byte packetDestroyUuid = 20;
     public static final byte packetClientToServerConnection = 21;
     public static final byte packetServerToClientInfo = 22;
+    public static final byte packetFalstadImport = 23;
     public static final Obj3DFolder obj = new Obj3DFolder();
     public static final ArrayList<OreScannerConfigElement> oreScannerConfig = new ArrayList<OreScannerConfigElement>();
-    public static final double gateOutputCurrent = 0.100;
+    public static final double gateInputCurrent = 0.00005;
+    public static final double gateOutputCurrent = 0.005;
     public static final double LVU = 50;
     public static final double MVU = 200;
     public static final double HVU = 800;
@@ -163,6 +171,7 @@ public class Eln {
     public static CreativeTabs creativeTabPowerElectronics;
     public static CreativeTabs creativeTabSignalProcessing;
     public static CreativeTabs creativeTabLighting;
+    public static CreativeTabs creativeTabCables;
     public static CreativeTabs creativeTabToolsArmor;
     public static CreativeTabs creativeTabOresMaterials;
     public static CreativeTabs creativeTabMachines;
@@ -203,6 +212,7 @@ public class Eln {
     public static WindProcess wind;
     static public GenericItemUsingDamageDescriptor multiMeterElement, thermometerElement, allMeterElement;
     static public GenericItemUsingDamageDescriptor configCopyToolElement;
+    static public GenericItemUsingDamageDescriptor falstadImportToolElement;
     public static TreeResin treeResin;
     public static MiningPipeDescriptor miningPipeDescriptor;
     static NodeServer nodeServer;
@@ -211,6 +221,8 @@ public class Eln {
     public static GenericItemUsingDamageDescriptorWithComment dustCopper;
     public ArrayList<IConfigSharing> configShared = new ArrayList<>();
     public CopperCableDescriptor copperCableDescriptor;
+    public WireScrapDescriptor wireScrapDescriptor;
+    public WoundWireBundleDescriptor woundWireBundleDescriptor;
     public ElectricalCableDescriptor creativeCableDescriptor;
     public ElectricalCableDescriptor veryHighVoltageCableDescriptor;
     public ElectricalCableDescriptor highVoltageCableDescriptor;
@@ -242,7 +254,10 @@ public class Eln {
     public RecipesList magnetiserRecipes = new RecipesList();
     public GenericItemUsingDamageDescriptorWithComment copperIngot, plumbIngot, tungstenIngot;
     public DataLogsPrintDescriptor dataLogsPrintDescriptor;
-    public static final double SVU = 5, SVII = gateOutputCurrent / SVU, SVUinv = 1.0 / SVU;
+    public static final double SVU = 5;
+    public static final double signalVoltageAcceptNegative = -0.5;
+    public static final double signalVoltageAcceptPositive = SVU + 0.5;
+    public static final double SVII = gateInputCurrent / SVU, SVUinv = 1.0 / SVU;
     public EnergyConverterElnToOtherBlock elnToOtherBlockConverter;
     public ComputerProbeBlock computerProbeBlock;
     public static final double SVP = gateOutputCurrent * SVU;
@@ -277,6 +292,7 @@ public class Eln {
 
     @EventHandler
     public void preInit(FMLPreInitializationEvent event) {
+        configureElnLogFile(event);
 
         elnNetwork = NetworkRegistry.INSTANCE.newSimpleChannel("electrical-age");
         elnNetwork.registerMessage(AchievePacketHandler.class, AchievePacket.class, 0, Side.SERVER);
@@ -338,6 +354,7 @@ public class Eln {
         GameRegistry.registerItem(itemCreativeTab, "eln.itemCreativeTab");
 
         creativeTabPowerElectronics = new GenericCreativeTab("ElnPowerElectronics", Items.redstone);
+        creativeTabCables = new GenericCreativeTab("ElnCables", Items.string);
         creativeTabSignalProcessing = new GenericCreativeTab("ElnSignalProcessing", Items.comparator);
         creativeTabLighting = new GenericCreativeTab("ElnLighting", Item.getItemFromBlock(Blocks.redstone_lamp));
         creativeTabToolsArmor = new GenericCreativeTab("ElnToolsArmor", Items.iron_pickaxe);
@@ -407,6 +424,49 @@ public class Eln {
         AnalyticsHandler.INSTANCE.submitAgeSeriesAnalytics();
     }
 
+    private void configureElnLogFile(FMLPreInitializationEvent event) {
+        File runtimeDir = event.getSuggestedConfigurationFile().getParentFile().getParentFile();
+        if (runtimeDir == null) return;
+
+        File logDir = new File(runtimeDir, "logs");
+        if (!logDir.exists() && !logDir.mkdirs()) return;
+
+        LoggerContext context = (LoggerContext) LogManager.getContext(false);
+        Configuration configuration = context.getConfiguration();
+        final String appenderName = "ELN_FILE";
+        if (configuration.getAppenders().containsKey(appenderName)) return;
+
+        PatternLayout layout = PatternLayout.createLayout(
+            "[%d{HH:mm:ss}] [%t/%level] [%logger]: %msg%n",
+            configuration,
+            null,
+            null,
+            null
+        );
+
+        FileAppender appender = FileAppender.createAppender(
+            new File(logDir, "eln.log").getAbsolutePath(),
+            "true",
+            "false",
+            appenderName,
+            "true",
+            "false",
+            "false",
+            layout,
+            null,
+            "false",
+            null,
+            configuration
+        );
+        if (appender == null) return;
+
+        appender.start();
+
+        LoggerConfig loggerConfig = configuration.getLoggerConfig("ELN");
+        loggerConfig.addAppender(appender, Level.INFO, null);
+        context.updateLoggers();
+    }
+
     @EventHandler
     public void modsLoaded(FMLPostInitializationEvent event) {
         Other.check();
@@ -430,6 +490,7 @@ public class Eln {
         TR("itemGroup.ElnPowerElectronics");
         TR("itemGroup.ElnSignalProcessing");
         TR("itemGroup.ElnLighting");
+        TR("itemGroup.ElnCables");
         TR("itemGroup.ElnToolsArmor");
         TR("itemGroup.ElnOresMaterials");
         TR("itemGroup.ElnMachines");
@@ -586,6 +647,7 @@ public class Eln {
         setTabIcon(creativeTabPowerElectronics, stack(sixNodeItem, meta(33, 1)));
         setTabIcon(creativeTabSignalProcessing, stack(sixNodeItem, meta(32, 0)));
         setTabIcon(creativeTabLighting, stack(sharedItem, meta(4, 37)));
+        setTabIcon(creativeTabCables, stack(sixNodeItem, meta(34, 2)));
         setTabIcon(creativeTabToolsArmor, stack(sharedItem, meta(14, 0)));
         setTabIcon(creativeTabOresMaterials, stack(sharedItem, meta(8, 7)));
         setTabIcon(creativeTabMachines, stack(transparentNodeItem, meta(33, 4)));

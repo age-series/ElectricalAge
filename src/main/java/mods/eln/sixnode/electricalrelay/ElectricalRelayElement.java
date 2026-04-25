@@ -4,6 +4,7 @@ import mods.eln.Eln;
 import mods.eln.i18n.I18N;
 import mods.eln.item.IConfigurable;
 import mods.eln.misc.Direction;
+import mods.eln.misc.ElectricalSafety;
 import mods.eln.misc.LRDU;
 import mods.eln.misc.Utils;
 import mods.eln.node.NodeBase;
@@ -17,6 +18,8 @@ import mods.eln.sim.mna.component.ResistorSwitch;
 import mods.eln.sim.mna.misc.MnaConst;
 import mods.eln.sim.nbt.NbtElectricalGateInput;
 import mods.eln.sim.nbt.NbtElectricalLoad;
+import mods.eln.sim.process.destruct.CableMelt;
+import mods.eln.sim.process.destruct.ResistorCurrentWatchdog;
 import mods.eln.sim.process.destruct.VoltageStateWatchDog;
 import mods.eln.sim.process.destruct.WorldExplosion;
 import mods.eln.sixnode.electricalcable.ElectricalCableDescriptor;
@@ -39,7 +42,8 @@ public class ElectricalRelayElement extends SixNodeElement implements IConfigura
     public NbtElectricalLoad bLoad = new NbtElectricalLoad("bLoad");
     public ResistorSwitch switchResistor = new ResistorSwitch("switchRes", aLoad, bLoad);
     public NbtElectricalGateInput gate = new NbtElectricalGateInput("gate");
-    public ElectricalRelayGateProcess gateProcess = new ElectricalRelayGateProcess(this, "GP", gate);
+    public ElectricalRelayGateProcess gateProcess;
+    public ResistorCurrentWatchdog currentWatchdog;
 
     VoltageStateWatchDog voltageWatchDogA = new VoltageStateWatchDog(aLoad);
     VoltageStateWatchDog voltageWatchDogB = new VoltageStateWatchDog(bLoad);
@@ -55,7 +59,8 @@ public class ElectricalRelayElement extends SixNodeElement implements IConfigura
         super(sixNode, side, descriptor);
 
         this.descriptor = (ElectricalRelayDescriptor) descriptor;
-        if (this.descriptor.cable.signalWire) {
+        gateProcess = new ElectricalRelayGateProcess(this, "GP", gate);
+        if (this.descriptor.signalWire) {
             switchResistor.setOffResistance(MnaConst.ultraImpedance);
         }
 
@@ -68,15 +73,22 @@ public class ElectricalRelayElement extends SixNodeElement implements IConfigura
         electricalComponentList.add(new Resistor(bLoad, null).pullDown());
         electricalComponentList.add(new Resistor(aLoad, null).pullDown());
 
-        //slowProcessList.add(currentWatchDog);
         slowProcessList.add(voltageWatchDogA);
         slowProcessList.add(voltageWatchDogB);
 
         WorldExplosion exp = new WorldExplosion(this).cableExplosion();
+        if (this.descriptor.currentWatchdogEnabled) {
+            currentWatchdog = new ResistorCurrentWatchdog(switchResistor).setMaximumCurrent(
+                this.descriptor.damageCurrentLimit,
+                ElectricalSafety.SHORT_OVERLOAD_GRACE_SECONDS
+            );
+            slowProcessList.add(currentWatchdog);
+            currentWatchdog.setDestroys(new CableMelt(this));
+        }
 
         //currentWatchDog.set(switchResistor).setIAbsMax(this.descriptor.cable.electricalMaximalCurrent).set(exp);
-        voltageWatchDogA.setNominalVoltage(this.descriptor.cable.electricalNominalVoltage).setDestroys(exp);
-        voltageWatchDogB.setNominalVoltage(this.descriptor.cable.electricalNominalVoltage).setDestroys(exp);
+        voltageWatchDogA.setNominalVoltage(this.descriptor.contactNominalVoltage).setDestroys(exp);
+        voltageWatchDogB.setNominalVoltage(this.descriptor.contactNominalVoltage).setDestroys(exp);
     }
 
     public static boolean canBePlacedOnSide(Direction side, int type) {
@@ -116,8 +128,8 @@ public class ElectricalRelayElement extends SixNodeElement implements IConfigura
 
     @Override
     public int getConnectionMask(LRDU lrdu) {
-        if (front.left() == lrdu) return descriptor.cable.getNodeMask();
-        if (front.right() == lrdu) return descriptor.cable.getNodeMask();
+        if (front.left() == lrdu) return descriptor.getNodeMask();
+        if (front.right() == lrdu) return descriptor.getNodeMask();
         if (front == lrdu) return NodeBase.maskElectricalInputGate;
         return 0;
     }

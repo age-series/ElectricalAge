@@ -151,21 +151,19 @@ abstract class NodeBase {
             val equipped = entityPlayer.currentEquippedItem
             if (Eln.multiMeterElement.checkSameItemStack(equipped)) {
                 val str = multiMeterString(side)
-                addChatMessage(entityPlayer, str)
+                addMeterChatMessages(entityPlayer, str)
                 return true
             }
             if (Eln.thermometerElement.checkSameItemStack(equipped)) {
                 val str = thermoMeterString(side)
-                addChatMessage(entityPlayer, str)
+                addMeterChatMessages(entityPlayer, str)
                 return true
             }
             if (Eln.allMeterElement.checkSameItemStack(equipped)) {
                 val str1 = multiMeterString(side)
                 val str2 = thermoMeterString(side)
-                var str = ""
-                str += str1
-                str += str2
-                if (str != "") addChatMessage(entityPlayer, str)
+                val str = listOf(str1, str2).filter { it.isNotEmpty() }.joinToString("\n")
+                if (str.isNotEmpty()) addMeterChatMessages(entityPlayer, str)
                 return true
             }
             if (Eln.configCopyToolElement.checkSameItemStack(equipped)) {
@@ -199,6 +197,13 @@ abstract class NodeBase {
             return true
         }
         return false
+    }
+
+    private fun addMeterChatMessages(entityPlayer: EntityPlayer, text: String) {
+        text.split('\n')
+            .map { it.trimEnd('\r') }
+            .filter { it.isNotEmpty() }
+            .forEach { addChatMessage(entityPlayer, it) }
     }
 
     fun reconnect() {
@@ -287,7 +292,7 @@ abstract class NodeBase {
 
     fun disconnect() {
         if (!isAdded) {
-            println("Node destroy error already destroy")
+            // println("Node destroy error already destroy")
             return
         }
         disconnectJob()
@@ -443,8 +448,8 @@ abstract class NodeBase {
         const val maskThermal = 1 shl 1
         const val maskElectricalGate = 1 shl 2
         const val maskElectricalAll = maskElectricalPower or maskElectricalGate
-        const val maskElectricalInputGate = maskElectricalGate
-        const val maskElectricalOutputGate = maskElectricalGate
+        const val maskElectricalInputGate = maskElectricalAll
+        const val maskElectricalOutputGate = maskElectricalAll
         const val maskWire = 0
         const val maskElectricalWire = 1 shl 3
         const val maskThermalWire = maskWire + maskThermal

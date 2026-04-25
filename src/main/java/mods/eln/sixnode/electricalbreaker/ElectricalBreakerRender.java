@@ -1,15 +1,14 @@
 package mods.eln.sixnode.electricalbreaker;
 
 import mods.eln.cable.CableRenderDescriptor;
+import mods.eln.misc.Coordinate;
 import mods.eln.misc.*;
 import mods.eln.node.six.SixNodeDescriptor;
 import mods.eln.node.six.SixNodeElementInventory;
 import mods.eln.node.six.SixNodeElementRender;
 import mods.eln.node.six.SixNodeEntity;
-import mods.eln.sixnode.electricalcable.ElectricalCableDescriptor;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -20,7 +19,7 @@ import java.io.IOException;
 
 public class ElectricalBreakerRender extends SixNodeElementRender {
 
-    SixNodeElementInventory inventory = new SixNodeElementInventory(1, 64, this);
+    SixNodeElementInventory inventory = new SixNodeElementInventory(0, 64, this);
     ElectricalBreakerDescriptor descriptor;
     long time;
 
@@ -46,6 +45,7 @@ public class ElectricalBreakerRender extends SixNodeElementRender {
         super.draw();
 
         front.glRotateOnX();
+        drawInternalPins();
         descriptor.draw(interpol.get(), UtilsClient.distanceFromClientPlayer(getTileEntity()));
     }
 
@@ -58,7 +58,8 @@ public class ElectricalBreakerRender extends SixNodeElementRender {
     @Nullable
     @Override
     public CableRenderDescriptor getCableRender(@NotNull LRDU lrdu) {
-        return cableRender;
+        CableRenderDescriptor adjacentRender = resolveAdjacentCableRender(lrdu);
+        return adjacentRender != null ? adjacentRender : cableRender;
     }
 
     @Override
@@ -69,17 +70,7 @@ public class ElectricalBreakerRender extends SixNodeElementRender {
             switchState = stream.readBoolean();
             uMax = stream.readFloat();
             uMin = stream.readFloat();
-
-            ItemStack itemStack = Utils.unserialiseItemStack(stream);
-            if (itemStack != null) {
-                ElectricalCableDescriptor desc = (ElectricalCableDescriptor) ElectricalCableDescriptor.getDescriptor(itemStack, ElectricalCableDescriptor.class);
-                if (desc == null)
-                    cableRender = null;
-                else
-                    cableRender = desc.render;
-            } else {
-                cableRender = null;
-            }
+            cableRender = null;
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -141,5 +132,37 @@ public class ElectricalBreakerRender extends SixNodeElementRender {
     @Override
     public GuiScreen newGuiDraw(@NotNull Direction side, @NotNull EntityPlayer player) {
         return new ElectricalBreakerGui(player, inventory, this);
+    }
+
+    @Nullable
+    private CableRenderDescriptor resolveAdjacentCableRender(@NotNull LRDU lrdu) {
+        Direction worldDirection = side.applyLRDU(lrdu);
+        Coordinate neighborCoordinate = new Coordinate(getTileEntity()).moved(worldDirection);
+        if (!neighborCoordinate.getBlockExist()) return null;
+        if (!(neighborCoordinate.world().getTileEntity(neighborCoordinate.x, neighborCoordinate.y, neighborCoordinate.z) instanceof SixNodeEntity)) {
+            return null;
+        }
+
+        SixNodeEntity neighbor = (SixNodeEntity) neighborCoordinate.world().getTileEntity(
+            neighborCoordinate.x,
+            neighborCoordinate.y,
+            neighborCoordinate.z
+        );
+        Direction neighborSide = worldDirection.getInverse();
+        if (neighbor.elementRenderList[neighborSide.getInt()] == null) return null;
+
+        for (LRDU neighborLrdu : LRDU.values()) {
+            CableRenderDescriptor render = neighbor.elementRenderList[neighborSide.getInt()].getCableRender(neighborLrdu);
+            if (render != null) return render;
+        }
+        return null;
+    }
+
+    private void drawInternalPins() {
+        if (descriptor.pinDistance == null) {
+            return;
+        }
+        drawPowerPin(LRDU.Left, descriptor.pinDistance);
+        drawPowerPin(LRDU.Right, descriptor.pinDistance);
     }
 }

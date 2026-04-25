@@ -3,6 +3,7 @@ package mods.eln.sixnode.electricalswitch;
 import mods.eln.Eln;
 import mods.eln.i18n.I18N;
 import mods.eln.misc.Direction;
+import mods.eln.misc.ElectricalSafety;
 import mods.eln.misc.LRDU;
 import mods.eln.misc.Utils;
 import mods.eln.node.NodeBase;
@@ -15,6 +16,8 @@ import mods.eln.sim.mna.component.Resistor;
 import mods.eln.sim.mna.component.ResistorSwitch;
 import mods.eln.sim.mna.misc.MnaConst;
 import mods.eln.sim.nbt.NbtElectricalLoad;
+import mods.eln.sim.process.destruct.CableMelt;
+import mods.eln.sim.process.destruct.ResistorCurrentWatchdog;
 import mods.eln.sim.process.destruct.VoltageStateWatchDog;
 import mods.eln.sim.process.destruct.WorldExplosion;
 import mods.eln.sound.SoundCommand;
@@ -35,6 +38,7 @@ public class ElectricalSwitchElement extends SixNodeElement {
     public NbtElectricalLoad aLoad = new NbtElectricalLoad("aLoad");
     public NbtElectricalLoad bLoad = new NbtElectricalLoad("bLoad");
     public ResistorSwitch switchResistor = new ResistorSwitch("switchRes", aLoad, bLoad);
+    public ResistorCurrentWatchdog currentWatchdog;
 
     VoltageStateWatchDog voltageWatchDogA = new VoltageStateWatchDog(aLoad);
     VoltageStateWatchDog voltageWatchDogB = new VoltageStateWatchDog(bLoad);
@@ -48,6 +52,10 @@ public class ElectricalSwitchElement extends SixNodeElement {
         electricalLoadList.add(aLoad);
         electricalLoadList.add(bLoad);
         electricalComponentList.add(switchResistor);
+        currentWatchdog = new ResistorCurrentWatchdog(switchResistor).setMaximumCurrent(
+            ((ElectricalSwitchDescriptor) descriptor).getDamageCurrentLimit(),
+            ElectricalSafety.SHORT_OVERLOAD_GRACE_SECONDS
+        );
         electricalComponentList.add(new Resistor(bLoad, null).pullDown());
         electricalComponentList.add(new Resistor(aLoad, null).pullDown());
 
@@ -55,11 +63,12 @@ public class ElectricalSwitchElement extends SixNodeElement {
 
         WorldExplosion exp = new WorldExplosion(this).cableExplosion();
 
-        //	slowProcessList.add(currentWatchDog);
+        slowProcessList.add(currentWatchdog);
         slowProcessList.add(voltageWatchDogA);
         slowProcessList.add(voltageWatchDogB);
 
         //currentWatchDog.set(switchResistor).setIAbsMax(this.descriptor.maximalPower/this.descriptor.nominalVoltage).set(exp);
+        currentWatchdog.setDestroys(new CableMelt(this));
         voltageWatchDogA.setNominalVoltage(this.descriptor.nominalVoltage).setDestroys(exp);
         voltageWatchDogB.setNominalVoltage(this.descriptor.nominalVoltage).setDestroys(exp);
     }
@@ -150,6 +159,10 @@ public class ElectricalSwitchElement extends SixNodeElement {
         switchState = state;
         switchResistor.setState(state);
         needPublish();
+    }
+
+    public boolean getSwitchState() {
+        return switchState;
     }
 
     @Override

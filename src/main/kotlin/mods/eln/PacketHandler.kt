@@ -5,6 +5,7 @@ import cpw.mods.fml.common.network.FMLNetworkEvent.ServerCustomPacketEvent
 import io.netty.channel.ChannelHandler.Sharable
 import mods.eln.client.ClientKeyHandler
 import mods.eln.client.ClientProxy
+import mods.eln.item.FalstadImportPacketHandler
 import mods.eln.misc.Coordinate
 import mods.eln.misc.Utils.println
 import mods.eln.misc.Utils.sendPacketToClient
@@ -45,6 +46,7 @@ class PacketHandler {
                 Eln.packetDestroyUuid -> packetDestroyUuid(stream, manager, player)
                 Eln.packetClientToServerConnection -> packetNewClient(manager, player)
                 Eln.packetServerToClientInfo -> packetServerInfo(stream, manager, player)
+                Eln.packetFalstadImport -> packetFalstadImport(stream, manager, player)
             }
         } catch (e: IOException) {
             e.printStackTrace()
@@ -139,7 +141,7 @@ class PacketHandler {
                         }
                     }
                 }
-            } else println("No node found for $x $y $z")
+            }
         } catch (e: IOException) {
             e.printStackTrace()
         }
@@ -167,7 +169,7 @@ class PacketHandler {
                             stream.readByte()
                         }
                     }
-                } else println("No node found for $x $y $z")
+                }
             }
         } catch (e: IOException) {
             e.printStackTrace()
@@ -179,6 +181,17 @@ class PacketHandler {
             val name = stream.readUTF()
             val state = stream.readBoolean()
             ServerKeyHandler.set(name, state)
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
+    }
+
+    private fun packetFalstadImport(stream: DataInputStream, @Suppress("UNUSED_PARAMETER") manager: NetworkManager, player: EntityPlayer) {
+        try {
+            val length = stream.readInt()
+            val bytes = ByteArray(length)
+            stream.readFully(bytes)
+            FalstadImportPacketHandler.handle(player as EntityPlayerMP, bytes)
         } catch (e: IOException) {
             e.printStackTrace()
         }

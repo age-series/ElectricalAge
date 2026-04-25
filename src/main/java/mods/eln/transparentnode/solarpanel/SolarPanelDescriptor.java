@@ -128,6 +128,7 @@ public class SolarPanelDescriptor extends TransparentNodeDescriptor {
         list.add(tr("Produces power from solar radiation."));
         list.add("  " + tr("Max. voltage: %1$V", Utils.plotValue(electricalUmax)));
         list.add("  " + tr("Max. power: %1$W", Utils.plotValue(electricalPmax)));
+        list.add("  " + tr("Max. current: %1$A", Utils.plotValue(electricalPmax / electricalUmax)));
         if (canRotate) list.add(tr("Can be geared towards the sun."));
     }
 

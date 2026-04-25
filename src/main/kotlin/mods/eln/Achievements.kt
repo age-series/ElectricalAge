@@ -24,7 +24,7 @@ object Achievements {
 
         craft50VMacerator = Achievement(
             tr("achievement.craft_50v_macerator"),
-            "craft_50v_macerator", 0, 2, Eln.findItemStack("50V Macerator", 0), openGuide
+            "craft_50v_macerator", 0, 2, Eln.findItemStack("48V Macerator", 0), openGuide
         ).registerStat()
 
         I18N.TR_DESC(I18N.Type.ACHIEVEMENT, "craft_50v_macerator")

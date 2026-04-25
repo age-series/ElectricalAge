@@ -6,6 +6,7 @@ import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import mods.eln.Other
 import mods.eln.item.LampLists
+import mods.eln.item.TurbineBladeLists
 import mods.eln.misc.Utils
 import java.io.File
 import java.io.FileReader
@@ -88,8 +89,10 @@ class JsonConfig @JvmOverloads constructor(
         spec(path = "gameplay.hazards.explosionsEnabled", defaultValue = false, comment = "Make explosions a bit bigger."),
         spec(path = "gameplay.seasonal.enableFestiveItems", defaultValue = true, comment = "Set false to disable festive items."),
         spec(path = "gameplay.crafting.verticalIronCableCrafting", defaultValue = false, comment = "Craft iron cables with vertical ingots instead of horizontal ones."),
+        spec(path = "gameplay.cables.creativeFreeLength", defaultValue = true, comment = "When enabled, creative players do not consume utility cable length when placing cables or connecting poles."),
         spec(path = "simulation.watchdog.destruction.thermal", defaultValue = true, comment = "Allow thermal watchdogs to destroy blocks except resistor heat watchdogs."),
         spec(path = "simulation.watchdog.destruction.resistorHeat", defaultValue = false, comment = "Allow resistor heat watchdogs to destroy blocks."),
+        spec(path = "simulation.watchdog.destruction.current", defaultValue = true, comment = "Allow current watchdogs to destroy blocks."),
         spec(path = "simulation.watchdog.destruction.voltage", defaultValue = true, comment = "Allow voltage watchdogs to destroy blocks."),
         spec(path = "simulation.watchdog.destruction.shaftSpeed", defaultValue = true, comment = "Allow shaft speed watchdogs to destroy blocks."),
         spec(path = "simulation.watchdog.destruction.other", defaultValue = true, comment = "Allow all other watchdog types to destroy blocks."),
@@ -209,6 +212,7 @@ class JsonConfig @JvmOverloads constructor(
         load()
 
         for (lampData in LampLists.lampTechnologyList) lampData.loadConfig()
+        for (bladeData in TurbineBladeLists.bladeConfigList) bladeData.loadConfig()
 
         val analyticsEnabled = getBooleanOrElse("analytics.enabled", true)
         if (analyticsEnabled) {
@@ -716,6 +720,10 @@ class JsonConfig @JvmOverloads constructor(
                 defaults["lighting.lamps.${lamp.lampType}.nominalLifeHours"] = lamp.nominalLifeInHours
                 defaults["lighting.lamps.${lamp.lampType}.infiniteLifeEnabled"] = lamp.infiniteLifeEnabled
             }
+            for (blade in TurbineBladeLists.bladeConfigList) {
+                defaults["items.turbineBlades.${blade.tierName}.nominalLifeHours"] = blade.nominalLifeInHours
+                defaults["items.turbineBlades.${blade.tierName}.infiniteLifeEnabled"] = blade.infiniteLifeEnabled
+            }
         }
         return defaults
     }
@@ -763,6 +771,10 @@ class JsonConfig @JvmOverloads constructor(
             pathComments["lighting.lamps.${lamp.lampType}.nominalLifeHours"] = "Nominal lamp lifetime in hours for ${lamp.lampType} bulbs."
             pathComments["lighting.lamps.${lamp.lampType}.infiniteLifeEnabled"] = "Disable bulb wear-out for ${lamp.lampType} bulbs."
         }
+        for (blade in TurbineBladeLists.bladeConfigList) {
+            pathComments["items.turbineBlades.${blade.tierName}.nominalLifeHours"] = "Nominal turbine blade lifetime in hours for the ${blade.tierName} tier."
+            pathComments["items.turbineBlades.${blade.tierName}.infiniteLifeEnabled"] = "Disable wear-out for ${blade.tierName} turbine blades."
+        }
     }
 
     private fun legacyKeysFor(spec: ConfigSpec): List<LegacyKey> = when (joinPath(spec.path)) {
@@ -782,6 +794,7 @@ class JsonConfig @JvmOverloads constructor(
         "gameplay.crafting.verticalIronCableCrafting" -> listOf(LegacyKey("general", "verticalIronCableCrafting"))
         "simulation.watchdog.destruction.thermal" -> listOf(LegacyKey("watchdog", "thermal"))
         "simulation.watchdog.destruction.resistorHeat" -> listOf(LegacyKey("watchdog", "resistorHeat"))
+        "simulation.watchdog.destruction.current" -> listOf(LegacyKey("watchdog", "current"))
         "simulation.watchdog.destruction.voltage" -> listOf(LegacyKey("watchdog", "voltage"), LegacyKey("watchdog", "electrical"))
         "simulation.watchdog.destruction.shaftSpeed" -> listOf(LegacyKey("watchdog", "shaftSpeed"))
         "simulation.watchdog.destruction.other" -> listOf(LegacyKey("watchdog", "other"))

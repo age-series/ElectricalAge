@@ -37,6 +37,7 @@ public class ElectricalBreakerGui extends GuiContainerEln {
         setUmax.setComment(0, tr("Maximum voltage before cutting off"));
 
         toogleSwitch = newGuiButton(72 - 2, 58 / 2 - 10, 70, tr("Toggle switch"));
+        ((GuiButtonEln) toogleSwitch).setPlayPressSound(false);
     }
 
     @Override
