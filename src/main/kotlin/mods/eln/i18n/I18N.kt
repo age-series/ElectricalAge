@@ -218,4 +218,36 @@ object I18N {
     fun TR_GROUP(groupId: String, englishName: String): String {
         return groupId
     }
+
+    /**
+     * Registers dynamically generated names by declaring a format string and the axis arrays
+     * whose Cartesian product produces every concrete name.
+     *
+     * The [format] string uses `%s` placeholders which are substituted with values from [axes]
+     * in positional order. The AST parser expands all combinations and generates a
+     * [TranslationItem] for each, using the same key encoding as [TR_NAME].
+     *
+     * Example:
+     * ```kotlin
+     * TR_EXPAND(Type.NONE, "%s %s Cable %s",
+     *     arrayOf("Copper", "Aluminum"),
+     *     arrayOf("26 AWG", "24 AWG"),
+     *     arrayOf("Bare", "300V", "Melted")
+     * )
+     * ```
+     * This generates 12 translation keys:
+     * `Copper_26_AWG_Cable_Bare.name`, `Copper_26_AWG_Cable_300V.name`, …
+     *
+     * At runtime this method returns [format] unchanged — it is purely a marker for the
+     * build-time language file generator.
+     *
+     * @param type   The translation type (determines key prefix and encoding).
+     * @param format Format string with `%s` placeholders, one per axis.
+     * @param axes   String arrays whose Cartesian product fills the placeholders.
+     * @return The format string unchanged.
+     */
+    @JvmStatic
+    fun TR_EXPAND(type: Type, format: String, vararg axes: Array<String>): String {
+        return format
+    }
 }

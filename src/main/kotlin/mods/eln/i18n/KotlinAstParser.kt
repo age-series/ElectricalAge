@@ -83,6 +83,11 @@ internal class KotlinAstParser {
                             extractForgeCall(valueArgs, "desc", result)
                         }
                     }
+                    "TR_EXPAND" -> {
+                        if (isQualified || "mods.eln.i18n.I18N.TR_EXPAND" in importPaths || importsI18N) {
+                            extractExpandCall(valueArgs, result)
+                        }
+                    }
                 }
             }
 
@@ -135,6 +140,46 @@ internal class KotlinAstParser {
                 text
             )
         )
+    }
+
+    private fun extractExpandCall(
+        args: List<KtValueArgument>,
+        result: MutableSet<TranslationItem>
+    ) {
+        if (args.size < 3) return
+
+        val typeArg = args[0].getArgumentExpression()?.text ?: return
+        val cleaned = typeArg.removePrefix("I18N.Type.").removePrefix("Type.")
+        val type = try { I18N.Type.valueOf(cleaned) } catch (_: Exception) { return }
+
+        val formatExpr = args[1].getArgumentExpression() ?: return
+        val format = resolveStringLiteral(formatExpr) ?: return
+
+        val axisArrays = mutableListOf<List<String>>()
+        for (i in 2 until args.size) {
+            val axisExpr = args[i].getArgumentExpression() ?: return
+            val values = resolveStringArrayLiteral(axisExpr) ?: return
+            axisArrays.add(values)
+        }
+
+        for (combo in cartesianProduct(axisArrays)) {
+            val name = substituteFormat(format, combo)
+            result.add(
+                TranslationItem(
+                    type.prefix + I18N.encodeLangKey(name, type.isWhitespacesInFileReplaced()) + ".name",
+                    name
+                )
+            )
+        }
+    }
+
+    private fun resolveStringArrayLiteral(expr: KtExpression): List<String>? {
+        if (expr !is KtCallExpression) return null
+        if (expr.calleeExpression?.text != "arrayOf") return null
+        val values = expr.valueArguments.mapNotNull { arg ->
+            arg.getArgumentExpression()?.let { resolveStringLiteral(it) }
+        }
+        return values.takeIf { it.size == expr.valueArguments.size }
     }
 
     private fun resolveStringLiteral(expr: KtExpression): String? {
