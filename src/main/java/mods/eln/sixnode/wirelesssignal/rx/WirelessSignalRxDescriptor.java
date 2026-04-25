@@ -89,7 +89,7 @@ public class WirelessSignalRxDescriptor extends SixNodeDescriptor {
     @Override
     public RealisticEnum addRealismContext(List<String> list) {
         super.addRealismContext(list);
-        list.add(tr("It should require power to receive and propogate the signal realistically"));
+        list.add(tr("It should require power to receive and propagate the signal realistically"));
         return RealisticEnum.IDEAL;
     }
 }
