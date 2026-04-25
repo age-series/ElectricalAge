@@ -16,26 +16,23 @@ internal object LanguageFileGenerator {
         strings: Map<String, Set<TranslationItem>>,
         existingTranslations: Map<String, String>?
     ) {
-        val writer = OutputStreamWriter(FileOutputStream(file), StandardCharsets.UTF_8)
+        OutputStreamWriter(FileOutputStream(file), StandardCharsets.UTF_8).use { writer ->
+            // Write header.
+            writer.append(FILE_HEADER)
 
-        // Write header.
-        writer.append(FILE_HEADER)
+            // For each source file with translations create the file comment.
+            for (sourceFile in strings.keys) {
+                // Standardise file paths for every platforms
+                val sourcePath = sourceFile.replace("\\", "/")
+                writer.append("\n# ").append(sourcePath).append("\n")
 
-        // For each source file with translations create the file comment.
-        for (sourceFile in strings.keys) {
-            // Standardise file paths for every platforms
-            val sourcePath = sourceFile.replace("\\", "/")
-            writer.append("\n# ").append(sourcePath).append("\n")
-
-            // For each translated string in that source file, add translation text.
-            for (text2Translate in strings[sourceFile]!!) {
-                val effectiveText = existingTranslations?.get(text2Translate.key) ?: text2Translate.text
-                val resolvedText = I18N.resolveUnicodeEscapes(effectiveText).replace("\\\"", "\"")
-                writer.append("${text2Translate.key}=$resolvedText\n")
+                // For each translated string in that source file, add translation text.
+                for (text2Translate in strings[sourceFile]!!) {
+                    val effectiveText = existingTranslations?.get(text2Translate.key) ?: text2Translate.text
+                    val resolvedText = I18N.resolveUnicodeEscapes(effectiveText).replace("\\\"", "\"")
+                    writer.append("${text2Translate.key}=$resolvedText\n")
+                }
             }
         }
-
-        // Close writer.
-        writer.close()
     }
 }
