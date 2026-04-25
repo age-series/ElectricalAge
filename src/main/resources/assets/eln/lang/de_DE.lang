@@ -519,7 +519,7 @@ It_should_require_power_realistically=Erfordert realistisch Leistung
 Repeats_all_wireless_signals_in_range=Wiederholt alle drahtlosen Signale in Reichweite
 
 # src/main/java/mods/eln/sixnode/wirelesssignal/rx/WirelessSignalRxDescriptor.java
-It_should_require_power_to_receive_and_propogate_the_signal_realistically=Erfordert realistisch Leistung zum Empfangen und Weiterleiten des Signals
+It_should_require_power_to_receive_and_propagate_the_signal_realistically=It should require power to receive and propagate the signal realistically
 Receive_signal_voltage_on_selected_wireless_signal_channel=Empfängt Signalspannung auf dem ausgewählten drahtlosen Signalkanal
 
 # src/main/java/mods/eln/sixnode/wirelesssignal/rx/WirelessSignalRxGui.java
@@ -750,11 +750,6 @@ Can_be_used_to_encase_EA_items_that_support_it=Kann verwendet werden, um EA-Gege
 # src/main/kotlin/mods/eln/item/FuelBurnerDescriptor.kt
 Burn_unit_for_the_gas_heat_furnace.=Brenneinheit für den Gas-Wärmeofen.
 Produced_heat_power\:_=Erzeugte Wärmeleistung:
-
-# src/main/kotlin/mods/eln/item/LampDescriptor.kt
-Condition\:_%1$=Zustand: %1$
-Current_lifetime\:_%1$h=Aktuelle Lebensdauer: %1$h
-Nominal_lifetime\:_%1$h=Nennlebensdauer: %1$h
 
 # src/main/kotlin/mods/eln/item/ThermalIsolatorElement.kt
 Organic_Asbestos™=Organic Asbestos™
@@ -1412,7 +1407,7 @@ Set_point\:_=Sollwert:
 
 # src/main/kotlin/mods/eln/transparentnode/LargeRheostat.kt
 Control_resistance_with_signal=Widerstand mit Signal steuern
-Dissapates_~4kW_of_heat_passively=Leitet ~4kW Wärme passiv ab
+Dissipates_~4kW_of_heat_passively=Dissipates ~4kW of heat passively
 Nom._Resistance\:_%1$=Nennwiderstand: %1$
 Power_loss=Verlustleistung
 Set_resistance_with_coal_dust=Widerstand mit Kohlestaub einstellen

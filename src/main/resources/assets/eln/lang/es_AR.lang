@@ -519,7 +519,7 @@ It_should_require_power_realistically=It should require power realistically
 Repeats_all_wireless_signals_in_range=Repeats all wireless signals in range
 
 # src/main/java/mods/eln/sixnode/wirelesssignal/rx/WirelessSignalRxDescriptor.java
-It_should_require_power_to_receive_and_propogate_the_signal_realistically=It should require power to receive and propogate the signal realistically
+It_should_require_power_to_receive_and_propagate_the_signal_realistically=It should require power to receive and propagate the signal realistically
 Receive_signal_voltage_on_selected_wireless_signal_channel=Receive signal voltage on selected wireless signal channel
 
 # src/main/java/mods/eln/sixnode/wirelesssignal/rx/WirelessSignalRxGui.java
@@ -750,11 +750,6 @@ Can_be_used_to_encase_EA_items_that_support_it=Can be used to encase EA items th
 # src/main/kotlin/mods/eln/item/FuelBurnerDescriptor.kt
 Burn_unit_for_the_gas_heat_furnace.=Burn unit for the gas heat furnace.
 Produced_heat_power\:_=Produced heat power:
-
-# src/main/kotlin/mods/eln/item/LampDescriptor.kt
-Condition\:_%1$=Condition: %1$
-Current_lifetime\:_%1$h=Current lifetime: %1$h
-Nominal_lifetime\:_%1$h=Vida útil nominal\: %1$h
 
 # src/main/kotlin/mods/eln/item/ThermalIsolatorElement.kt
 Organic_Asbestos™=Organic Asbestos™
@@ -1412,7 +1407,7 @@ Set_point\:_=Set point:
 
 # src/main/kotlin/mods/eln/transparentnode/LargeRheostat.kt
 Control_resistance_with_signal=Control resistance with signal
-Dissapates_~4kW_of_heat_passively=Dissapates ~4kW of heat passively
+Dissipates_~4kW_of_heat_passively=Dissipates ~4kW of heat passively
 Nom._Resistance\:_%1$=Nom. Resistance\: %1$
 Power_loss=Power loss
 Set_resistance_with_coal_dust=Set resistance with coal dust

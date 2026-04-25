@@ -519,7 +519,7 @@ It_should_require_power_realistically=现实中它应该需要电力
 Repeats_all_wireless_signals_in_range=转发范围内所有无线信号
 
 # src/main/java/mods/eln/sixnode/wirelesssignal/rx/WirelessSignalRxDescriptor.java
-It_should_require_power_to_receive_and_propogate_the_signal_realistically=现实中它应该需要供电以接收和传播信号
+It_should_require_power_to_receive_and_propagate_the_signal_realistically=现实中它应该需要供电以接收和传播信号
 Receive_signal_voltage_on_selected_wireless_signal_channel=接收选定无线信号频道的信号电压
 
 # src/main/java/mods/eln/sixnode/wirelesssignal/rx/WirelessSignalRxGui.java
@@ -750,11 +750,6 @@ Can_be_used_to_encase_EA_items_that_support_it=可以用来封装变压器
 # src/main/kotlin/mods/eln/item/FuelBurnerDescriptor.kt
 Burn_unit_for_the_gas_heat_furnace.=燃油加热炉的燃烧装置。
 Produced_heat_power\:_=产热功率:
-
-# src/main/kotlin/mods/eln/item/LampDescriptor.kt
-Condition\:_%1$=状态: %1$
-Current_lifetime\:_%1$h=当前寿命: %1$h
-Nominal_lifetime\:_%1$h=额定寿命: %1$h
 
 # src/main/kotlin/mods/eln/item/ThermalIsolatorElement.kt
 Organic_Asbestos™=有机石棉™
@@ -1412,7 +1407,7 @@ Set_point\:_=设定值:
 
 # src/main/kotlin/mods/eln/transparentnode/LargeRheostat.kt
 Control_resistance_with_signal=用信号控制电阻
-Dissapates_~4kW_of_heat_passively=提供4000W的被动散热
+Dissipates_~4kW_of_heat_passively=提供4000W的被动散热
 Nom._Resistance\:_%1$=额定电阻: %1$
 Power_loss=功率损耗
 Set_resistance_with_coal_dust=用碳粉增加电阻
