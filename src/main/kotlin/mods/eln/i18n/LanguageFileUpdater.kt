@@ -50,12 +50,16 @@ private fun updateLanguageFile(languageFile: File, stringsToTranslate: Map<Strin
 }
 
 /**
- * Parses a .lang file into a key-value map without decoding escape sequences.
+ * Parses a .lang file into a key-value map.
  *
  * Unlike `Properties.load()` which decodes `\n` → newline, `\=` → `=`, `\:` → `:`,
  * this parser preserves keys exactly as written in the file. This ensures keys
  * match the format produced by `I18N.encodeLangKey()`, so existing translations
  * are correctly found during regeneration.
+ *
+ * Unicode escape sequences (`\uXXXX`) in both keys and values are resolved via
+ * `I18N.resolveUnicodeEscapes()` so they are handled consistently with the
+ * source code extraction pipeline.
  */
 @Throws(IOException::class)
 private fun parseLangFile(file: File): Map<String, String> {
