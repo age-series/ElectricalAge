@@ -14,7 +14,7 @@ internal object JavaAstParser {
     fun parseFile(file: File): Set<TranslationItem> {
         try {
             val sourceText = file.readText(StandardCharsets.UTF_8)
-            val sourceLines = sourceText.split("\n", "\r\n", "\r")
+            val sourceLines = sourceText.lines()
             val cu = StaticJavaParser.parse(sourceText)
 
             val hasI18NImport = cu.imports.any {
