@@ -108,6 +108,7 @@ import java.io.File;
 import java.util.*;
 
 import static mods.eln.i18n.I18N.TR;
+import static mods.eln.i18n.I18N.TR_GROUP;
 import static mods.eln.i18n.I18N.tr;
 
 @Mod(modid = Eln.MODID, name = Eln.NAME, version = Tags.VERSION, dependencies = "after:CoFHCore;after:CoFHAPI;" +
@@ -484,16 +485,16 @@ public class Eln {
         final String[] names = OreDictionary.getOreNames();
         Collections.addAll(oreNames, names);
         proxy.registerRenderers();
-        TR("itemGroup.Eln");
-        TR("itemGroup.ElnPowerElectronics");
-        TR("itemGroup.ElnSignalProcessing");
-        TR("itemGroup.ElnLighting");
-        TR("itemGroup.ElnCables");
-        TR("itemGroup.ElnToolsArmor");
-        TR("itemGroup.ElnOresMaterials");
-        TR("itemGroup.ElnMachines");
-        TR("itemGroup.ElnCreative");
-        TR("itemGroup.ElnOther");
+        TR_GROUP("Eln", "Electrical Age");
+        TR_GROUP("ElnPowerElectronics", "Electrical Age - Power Electronics");
+        TR_GROUP("ElnSignalProcessing", "Electrical Age - Signal Processing");
+        TR_GROUP("ElnLighting", "Electrical Age - Lighting");
+        TR_GROUP("ElnCables", "Electrical Age - Cables");
+        TR_GROUP("ElnToolsArmor", "Electrical Age - Tools & Armor");
+        TR_GROUP("ElnOresMaterials", "Electrical Age - Ores & Materials");
+        TR_GROUP("ElnMachines", "Electrical Age - Machines");
+        TR_GROUP("ElnCreative", "Electrical Age - Creative");
+        TR_GROUP("ElnOther", "Electrical Age - Other");
         if (isDevelopmentRun()) {
             Achievements.init();
         }

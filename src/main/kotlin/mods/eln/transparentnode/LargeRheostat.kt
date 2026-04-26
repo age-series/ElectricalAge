@@ -46,7 +46,7 @@ class LargeRheostatDescriptor(name: String, val dissipator: ThermalDissipatorPas
             // TODO: Substantiate this with some data
             list.add(tr("Set resistance with coal dust"))
             list.add(tr("Control resistance with signal"))
-            list.add(tr("Dissapates ~4kW of heat passively"))
+            list.add(tr("Dissipates ~4kW of heat passively"))
         }
     }
 

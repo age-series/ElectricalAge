@@ -648,6 +648,45 @@ object SixNodeRegistration {
             }
         }
 
+        I18N.TR_EXPAND(I18N.Type.NONE, "%s Molten Metal Pile",
+            arrayOf("Copper", "Aluminum")
+        )
+
+        I18N.TR_EXPAND(I18N.Type.NONE, "%s %s Cable %s",
+            arrayOf("Copper", "Aluminum"),
+            arrayOf("26 AWG", "24 AWG", "22 AWG", "20 AWG", "18 AWG", "16 AWG"),
+            arrayOf("Bare", "300V", "Melted")
+        )
+        I18N.TR_EXPAND(I18N.Type.NONE, "%s %s Cable %s",
+            arrayOf("Copper", "Aluminum"),
+            arrayOf("14 AWG", "12 AWG", "10 AWG", "8 AWG", "6 AWG", "4 AWG", "2 AWG"),
+            arrayOf("Bare", "600V", "Melted")
+        )
+        I18N.TR_EXPAND(I18N.Type.NONE, "%s %s Cable %s",
+            arrayOf("Copper", "Aluminum"),
+            arrayOf("1/0 AWG", "2/0 AWG", "4/0 AWG",
+                "250 kcmil", "350 kcmil", "500 kcmil", "750 kcmil", "1000 kcmil"),
+            arrayOf("Bare", "1000V", "Melted")
+        )
+
+        I18N.TR_EXPAND(I18N.Type.NONE, "%s %s Cable %s",
+            arrayOf("Copper", "Aluminum"),
+            arrayOf(
+                "2C 18 AWG", "3C 18 AWG", "4C 18 AWG", "5C 18 AWG", "8C 18 AWG",
+                "2C 20 AWG", "3C 20 AWG", "4C 20 AWG", "5C 20 AWG", "8C 20 AWG"
+            ),
+            arrayOf("300V", "Melted")
+        )
+        I18N.TR_EXPAND(I18N.Type.NONE, "%s %s Cable %s",
+            arrayOf("Copper", "Aluminum"),
+            arrayOf(
+                "14/2", "14/3", "12/2", "12/3", "10/2", "10/3", "8/2", "8/3",
+                "3G1.5", "3G2.5", "3G4", "5G1.5", "5G2.5", "5G4",
+                "Triplex 1/0", "Triplex 4/0", "Quadruplex 1/0", "Quadruplex 4/0"
+            ),
+            arrayOf("600V", "Melted")
+        )
+
         for (material in UtilityCableMaterial.values()) {
             for (spec in singles) {
                 val bare = newSingleDescriptor(spec, material, insulated = false)

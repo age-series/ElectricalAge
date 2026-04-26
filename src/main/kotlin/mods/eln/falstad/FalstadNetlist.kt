@@ -4,6 +4,7 @@ import org.w3c.dom.Element
 import java.io.StringReader
 import javax.xml.parsers.DocumentBuilderFactory
 import org.xml.sax.InputSource
+import mods.eln.i18n.I18N.tr
 import kotlin.math.max
 import kotlin.math.min
 
@@ -119,7 +120,7 @@ object FalstadNetlistParser {
                 val x = parts.getOrNull(1)?.toIntOrNull()
                 val y = parts.getOrNull(2)?.toIntOrNull()
                 if (x == null || y == null) {
-                    warnings += "Line $lineNumber: malformed ground coordinates"
+                    warnings += tr("Line %1$: malformed ground coordinates", lineNumber)
                     return@forEachIndexed
                 }
                 components += FalstadComponent(code, FalstadPoint(x, y), FalstadPoint(x, y), parts.drop(3), lineNumber, line)
@@ -127,7 +128,7 @@ object FalstadNetlistParser {
             }
 
             if (parts.size < 5) {
-                warnings += "Line $lineNumber: too few fields for component '$code'"
+                warnings += tr("Line %1$: too few fields for component '%2$'", lineNumber, code)
                 return@forEachIndexed
             }
 
@@ -136,13 +137,13 @@ object FalstadNetlistParser {
             val x2 = parts[3].toIntOrNull()
             val y2 = parts[4].toIntOrNull()
             if (x1 == null || y1 == null || x2 == null || y2 == null) {
-                warnings += "Line $lineNumber: malformed coordinates"
+                warnings += tr("Line %1$: malformed coordinates", lineNumber)
                 return@forEachIndexed
             }
 
             val rawParams = parts.drop(5)
             val normalized = normalizeFalstadComponent(code, rawParams)
-            normalized.warning?.let { warnings += "Line $lineNumber: $it" }
+            normalized.warning?.let { warnings += tr("Line %1$: %2$", lineNumber, it) }
 
             components += FalstadComponent(
                 code = normalized.code,
@@ -175,7 +176,7 @@ object FalstadNetlistParser {
         return NormalizedFalstadComponent(
             code = "vs",
             params = listOf("0", "0", "0", initialValue.toString(), "0"),
-            warning = "adjustable voltage source imported as a fixed DC source"
+            warning = tr("adjustable voltage source imported as a fixed DC source")
         )
     }
 }
@@ -203,7 +204,7 @@ object FalstadDeviceParser {
 
             val points = child.pointListAttribute("x")
             if (code != "g" && (points == null || points.size != 4)) {
-                warnings += "Element ${index + 1}: missing or invalid x attribute for <$code>"
+                warnings += tr("Element %1$: missing or invalid x attribute for <%2$>", index + 1, code)
                 continue
             }
 
@@ -211,7 +212,7 @@ object FalstadDeviceParser {
                 val x = child.intAttribute("x") ?: child.pointListAttribute("x")?.getOrNull(0)
                 val y = child.intAttribute("y") ?: child.pointListAttribute("x")?.getOrNull(1)
                 if (x == null || y == null) {
-                    warnings += "Element ${index + 1}: malformed ground element"
+                    warnings += tr("Element %1$: malformed ground element", index + 1)
                     continue
                 }
                 FalstadPoint(x, y)
@@ -247,7 +248,7 @@ object FalstadDeviceParser {
                 "z" -> listOf(child.attribute("f").orEmpty(), child.attribute("vz").orEmpty())
                 "g" -> listOf(child.attribute("f").orEmpty())
                 else -> {
-                    warnings += "Element ${index + 1}: unsupported <$code> element"
+                    warnings += tr("Element %1$: unsupported <%2$> element", index + 1, code)
                     continue
                 }
             }
@@ -346,13 +347,13 @@ object FalstadLayoutPlanner {
         }
 
         fun placeSpdtSwitch(component: FalstadComponent, start: FalstadPoint, end: FalstadPoint, axis: FalstadAxis) {
-            val substitutions = listOf("SPDT switch substituted with two complementary maintained switches")
+            val substitutions = listOf(tr("SPDT switch substituted with two complementary maintained switches"))
             val selectedAlternate = parseFalstadSwitchState(component)
 
             if (axis == FalstadAxis.VERTICAL) {
                 val endIndex = xValues.indexOf(component.end.x)
                 if (endIndex <= 0 || endIndex >= xValues.lastIndex) {
-                    warnings += "Line ${component.lineNumber}: SPDT switch requires connections on both throws"
+                    warnings += tr("Line %1$: SPDT switch requires connections on both throws", component.lineNumber)
                     return
                 }
                 val throwXs = listOf(xMap.getValue(xValues[endIndex - 1]), xMap.getValue(xValues[endIndex + 1]))
@@ -383,7 +384,7 @@ object FalstadLayoutPlanner {
 
             val endIndex = yValues.indexOf(component.end.y)
             if (endIndex <= 0 || endIndex >= yValues.lastIndex) {
-                warnings += "Line ${component.lineNumber}: SPDT switch requires connections on both throws"
+                warnings += tr("Line %1$: SPDT switch requires connections on both throws", component.lineNumber)
                 return
             }
             val throwYs = listOf(yMap.getValue(yValues[endIndex - 1]), yMap.getValue(yValues[endIndex + 1]))
@@ -428,14 +429,14 @@ object FalstadLayoutPlanner {
 
         fun placeFalstadTwoInputGate(component: FalstadComponent, start: FalstadPoint, end: FalstadPoint, kind: FalstadPlacedKind, chipName: String) {
             if (start.y != end.y) {
-                warnings += "Line ${component.lineNumber}: gate '${component.code}' is only supported horizontally"
+                warnings += tr("Line %1$: gate '%2$' is only supported horizontally", component.lineNumber, component.code)
                 return
             }
 
             val upperInput = nearestConnectionOnAxis(component, start.x, start.y, above = true)
             val lowerInput = nearestConnectionOnAxis(component, start.x, start.y, above = false)
             if (upperInput == null || lowerInput == null) {
-                warnings += "Line ${component.lineNumber}: gate '${component.code}' is missing stretched input connections"
+                warnings += tr("Line %1$: gate '%2$' is missing stretched input connections", component.lineNumber, component.code)
                 return
             }
 
@@ -458,7 +459,7 @@ object FalstadLayoutPlanner {
                 end = lowerInput,
                 axis = FalstadAxis.HORIZONTAL,
                 source = component,
-                substitutions = listOf("Falstad gate ${component.code} substituted with $chipName"),
+                substitutions = listOf(tr("Falstad gate %1$ substituted with %2$", component.code, chipName)),
                 extraPoints = listOf(outputPin, upperPin, lowerPin)
             )
         }
@@ -489,7 +490,7 @@ object FalstadLayoutPlanner {
                 end = end,
                 axis = if (horizontal) FalstadAxis.HORIZONTAL else FalstadAxis.VERTICAL,
                 source = component,
-                substitutions = listOf("Falstad gate ${component.code} substituted with NOT Chip"),
+                substitutions = listOf(tr("Falstad gate %1$ substituted with NOT Chip", component.code)),
                 extraPoints = listOf(outputPin, inputPin)
             )
         }
@@ -510,7 +511,7 @@ object FalstadLayoutPlanner {
                 end = end,
                 axis = axis,
                 source = component,
-                substitutions = listOf("Falstad logic input substituted with Signal Switch"),
+                substitutions = listOf(tr("Falstad logic input substituted with Signal Switch")),
                 forcedSwitchState = parseFalstadLogicState(component)
             )
         }
@@ -531,7 +532,7 @@ object FalstadLayoutPlanner {
                 end = end,
                 axis = axis,
                 source = component,
-                substitutions = listOf("Falstad logic output substituted with LED vuMeter")
+                substitutions = listOf(tr("Falstad logic output substituted with LED vuMeter"))
             )
         }
 
@@ -553,7 +554,7 @@ object FalstadLayoutPlanner {
             val horizontal = start.y == end.y
             val vertical = start.x == end.x
             if (!horizontal && !vertical) {
-                warnings += "Line ${component.lineNumber}: diagonal component '${component.code}' is not supported"
+                warnings += tr("Line %1$: diagonal component '%2$' is not supported", component.lineNumber, component.code)
                 continue
             }
 
@@ -606,7 +607,7 @@ object FalstadLayoutPlanner {
                 "l" -> FalstadPlacedKind.INDUCTOR
                 "d" -> FalstadPlacedKind.DIODE
                 "z" -> {
-                    substitutions += "Zener diode substituted with a standard diode"
+                    substitutions += tr("Zener diode substituted with a standard diode")
                     FalstadPlacedKind.DIODE
                 }
                 "v" -> FalstadPlacedKind.VOLTAGE_SOURCE
@@ -615,11 +616,11 @@ object FalstadLayoutPlanner {
                 "s" -> FalstadPlacedKind.SWITCH
                 "o" -> FalstadPlacedKind.PROBE_DISPLAY
                 "p" -> {
-                    substitutions += "Push switch substituted with a maintained switch"
+                    substitutions += tr("Push switch substituted with a maintained switch")
                     FalstadPlacedKind.SWITCH
                 }
                 else -> {
-                    warnings += "Line ${component.lineNumber}: unsupported component '${component.code}'"
+                    warnings += tr("Line %1$: unsupported component '%2$'", component.lineNumber, component.code)
                     continue
                 }
             }

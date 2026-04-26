@@ -47,4 +47,7 @@ dependencies {
     compileOnly "ic2:IC2Classic:1.2.1.8:dev"
     compileOnly "li.cil.oc:OpenComputers:MC1.7.10-1.7.2.1204:dev"
     compileOnly "dan200.computercraft:ComputerCraft:1.75"
+    // i18n AST string extraction (build-time only, not in published jar)
+    devOnlyNonPublishable "com.github.javaparser:javaparser-core:3.26.3"
+    devOnlyNonPublishable "org.jetbrains.kotlin:kotlin-compiler-embeddable:2.2.21"
 }
