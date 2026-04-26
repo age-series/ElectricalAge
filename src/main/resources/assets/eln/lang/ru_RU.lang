@@ -8,6 +8,7 @@
 A_relay_is_an_electrical\ncontact_that_conducts\ncurrent_when_a_signal\nvoltage_is_applied.=A relay is an electrical\ncontact that conducts\ncurrent when a signal\nvoltage is applied.
 Acts_like_a\npush_button.=Acts like a\npush button.
 Acts_like_a\ntoggle_switch.=Acts like a\ntoggle switch.
+Bad=Плохое
 Battery_level=Battery level
 Biggest=Наибольш.
 Booster_slot=Слот для ускорителя
@@ -35,14 +36,17 @@ Disabled=Disabled
 Discharge_power\:_%1$W=Мощность разрядки\: %1$Вт
 Efficiency=Efficiency
 Electrical_cable_slot=Слот для провода
+End_of_life=Окончание срока службы
 Energy=Энергия
 Entity_filter_slot=Слот для фильтра существ
 External_control=Внешн. контроль
+Falstad_import\:_clipboard_is_not_valid_Falstad_data.=Falstad import: clipboard is not valid Falstad data.
 Ferromagnetic_core_slot=Слот для ферромагнитного ядра
 Fuel_usage=Fuel usage
 Generated_power=Generated power
 Generates_heat_when_supplied_with_fuel.=Генерирует тепло, когда в нем есть топливо.
 Generating=Generating
+Good=Хорошее
 Has_a_signal_output.=Имеет выходной сигнал.
 Has_some_caveats\:=Has some caveats:
 Inductance=Inductance
@@ -68,6 +72,7 @@ Measured_temperature\ncorresponding\nto_100%_output=Измеренная тем�
 Measured_value\ncorresponding\nto_0%_output=Измеренное значение\nблизко к 0%
 Measured_value\ncorresponding\nto_100%_output=Измеренное значение\nблизко к 100%
 Mode=Mode
+New=Новое
 No=No
 No_valid_fluids_for_this_turbine!=No valid fluids for this turbine!
 Nominal\:=Минимум\:
@@ -128,6 +133,7 @@ Toggle=Переключать
 Toggle_switch=Переключить
 Toggles_the_output_each_time\nan_emitter's_value_rises.\nUseful_to_allow_multiple_buttons\nto_control_the_same_light.=Переключает выход каждый\nраз, когда входное значение\nувеличивается.\nПолезно для переключения\nодной и той же лампочки при \nпомощи нескольких кнопок.
 Transforms_an_input_voltage_to\nan_output_voltage.=Превращает входное напряжение \nв выходное.
+Used=Уже использованное
 Used_to_cool_down_turbines.=Используется для охлаждения тепловых турбин.
 Uses_the_biggest\nvalue_on_the_channel.=Использует наибольшее \nзначение в канале.
 Uses_the_smallest\nvalue_on_the_channel.=Использует наименьшее \nзначение в канале.
@@ -750,6 +756,97 @@ tile.arc_metal_block.name=arc_metal_block
 entity.EAReplicator.name=Репликатор
 entity.ElectricMinecart.name=ElectricMinecart
 
+# src/main/kotlin/mods/eln/falstad/FalstadImporter.kt
+%1$x%2$_blocks=%1$x%2$ blocks
+%1$x%2$_blocks_(%3$x%4$_rotated_also_works)=%1$x%2$ blocks (%3$x%4$ rotated also works)
+Adjustable_voltage_source_substituted_with_Electrical_Source=Adjustable voltage source substituted with Electrical Source
+Coal_Dust_descriptor_not_found.=Coal Dust descriptor not found.
+Current_source_placed,_but_couldn't_configure_its_current.=Current source placed, but couldn't configure its current.
+Current_source_substituted_with_Current_Source_+_Ground=Current source substituted with Current Source + Ground
+Debug_%1$_at_%2$,%3$\:_%4$=Debug %1$ at %2$,%3$: %4$
+Debug_Falstad_current_source_at_%1$,%2$\:_%3$=Debug Falstad current source at %1$,%2$: %3$
+Debug_Falstad_gate_at_%1$,%2$\:_%3$=Debug Falstad gate at %1$,%2$: %3$
+Debug_Falstad_logic_input_at_%1$,%2$\:_%3$=Debug Falstad logic input at %1$,%2$: %3$
+Debug_Falstad_logic_output_at_%1$,%2$\:_%3$=Debug Falstad logic output at %1$,%2$: %3$
+Debug_Falstad_probe/display_at_%1$,%2$\:_%3$=Debug Falstad probe/display at %1$,%2$: %3$
+Debug_Falstad_voltage_source_at_%1$,%2$\:_%3$=Debug Falstad voltage source at %1$,%2$: %3$
+Debug_wire_at_%1$,%2$\:_%3$=Debug wire at %1$,%2$: %3$
+Dielectric_descriptor_not_found.=Dielectric descriptor not found.
+Failed_to_place_%1$_at_%2$,%3$=Failed to place %1$ at %2$,%3$
+Failed_to_place_Falstad_current_source_at_%1$,%2$=Failed to place Falstad current source at %1$,%2$
+Failed_to_place_Falstad_gate_at_%1$,%2$=Failed to place Falstad gate at %1$,%2$
+Failed_to_place_Falstad_logic_input_at_%1$,%2$=Failed to place Falstad logic input at %1$,%2$
+Failed_to_place_Falstad_logic_output_at_%1$,%2$=Failed to place Falstad logic output at %1$,%2$
+Failed_to_place_Falstad_probe/display_at_%1$,%2$=Failed to place Falstad probe/display at %1$,%2$
+Failed_to_place_Falstad_voltage_source_at_%1$,%2$=Failed to place Falstad voltage source at %1$,%2$
+Failed_to_place_wire_at_%1$,%2$=Failed to place wire at %1$,%2$
+Falstad_import\:_%1$=Falstad import: %1$
+Falstad_import\:_additional_warnings_omitted.=Falstad import: additional warnings omitted.
+Falstad_import\:_couldn't_find_a_flat,_clear_area_near_the_player_for_%1$.%2$=Falstad import: couldn't find a flat, clear area near the player for %1$.%2$
+Falstad_import\:_no_components_found.=Falstad import: no components found.
+Falstad_import\:_placed_%1$_blocks.=Falstad import: placed %1$ blocks.
+Falstad_import\:_requires_a_flat,_clear_area_of_%1$._Planned_orientation\:_original.=Falstad import: requires a flat, clear area of %1$. Planned orientation: original.
+Falstad_import\:_using_%1$_placement_(%2$x%3$).=Falstad import: using %1$ placement (%2$x%3$).
+Falstad_scope_output_substituted_with_Voltage_Probe_+_Digital_Display=Falstad scope output substituted with Voltage Probe + Digital Display
+Inductor_support_items_not_found.=Inductor support items not found.
+Largest_nearby_area_found_was_%1$x%2$_blocks.=Largest nearby area found was %1$x%2$ blocks.
+Line_%1$\:_invalid_capacitance_value.=Line %1$: invalid capacitance value.
+Line_%1$\:_invalid_current_value.=Line %1$: invalid current value.
+Line_%1$\:_invalid_inductance_value.=Line %1$: invalid inductance value.
+Line_%1$\:_invalid_resistance_value.=Line %1$: invalid resistance value.
+Line_%1$\:_non-DC_source_imported_as_DC.=Line %1$: non-DC source imported as DC.
+Missing_ELN_descriptor_for_%1$=Missing ELN descriptor for %1$
+Resistor_descriptor_unavailable.=Resistor descriptor unavailable.
+Signal_switch_placed,_but_couldn't_configure_its_state.=Signal switch placed, but couldn't configure its state.
+Voltage_source_placed,_but_couldn't_configure_its_voltage.=Voltage source placed, but couldn't configure its voltage.
+Voltage_source_substituted_with_Electrical_Source_+_Ground=Voltage source substituted with Electrical Source + Ground
+missing_descriptor\:_Current_Source=missing descriptor: Current Source
+missing_descriptor\:_Digital_Display=missing descriptor: Digital Display
+missing_descriptor\:_Electrical_Source=missing descriptor: Electrical Source
+missing_descriptor\:_LED_vuMeter=missing descriptor: LED vuMeter
+missing_descriptor\:_NAND_Chip=missing descriptor: NAND Chip
+missing_descriptor\:_Signal_Source=missing descriptor: Signal Source
+missing_descriptor\:_Signal_Switch=missing descriptor: Signal Switch
+missing_descriptor\:_Voltage_Probe=missing descriptor: Voltage Probe
+original=original
+placed_Digital_Display_but_couldn't_find_top_element=placed Digital Display but couldn't find top element
+placed_Signal_Source_but_couldn't_find_top_element=placed Signal Source but couldn't find top element
+placed_Voltage_Probe_but_couldn't_find_top_element=placed Voltage Probe but couldn't find top element
+placed_block_but_couldn't_find_top_element=placed block but couldn't find top element
+rotated_clockwise=rotated clockwise
+
+# src/main/kotlin/mods/eln/falstad/FalstadNetlist.kt
+Element_%1$\:_malformed_ground_element=Element %1$: malformed ground element
+Element_%1$\:_missing_or_invalid_x_attribute_for_<%2$>=Element %1$: missing or invalid x attribute for <%2$>
+Element_%1$\:_unsupported_<%2$>_element=Element %1$: unsupported <%2$> element
+Falstad_gate_%1$_substituted_with_%2$=Falstad gate %1$ substituted with %2$
+Falstad_gate_%1$_substituted_with_NOT_Chip=Falstad gate %1$ substituted with NOT Chip
+Falstad_logic_input_substituted_with_Signal_Switch=Falstad logic input substituted with Signal Switch
+Falstad_logic_output_substituted_with_LED_vuMeter=Falstad logic output substituted with LED vuMeter
+Line_%1$\:_%2$=Line %1$: %2$
+Line_%1$\:_SPDT_switch_requires_connections_on_both_throws=Line %1$: SPDT switch requires connections on both throws
+Line_%1$\:_diagonal_component_'%2$'_is_not_supported=Line %1$: diagonal component '%2$' is not supported
+Line_%1$\:_gate_'%2$'_is_missing_stretched_input_connections=Line %1$: gate '%2$' is missing stretched input connections
+Line_%1$\:_gate_'%2$'_is_only_supported_horizontally=Line %1$: gate '%2$' is only supported horizontally
+Line_%1$\:_malformed_coordinates=Line %1$: malformed coordinates
+Line_%1$\:_malformed_ground_coordinates=Line %1$: malformed ground coordinates
+Line_%1$\:_too_few_fields_for_component_'%2$'=Line %1$: too few fields for component '%2$'
+Line_%1$\:_unsupported_component_'%2$'=Line %1$: unsupported component '%2$'
+Push_switch_substituted_with_a_maintained_switch=Push switch substituted with a maintained switch
+SPDT_switch_substituted_with_two_complementary_maintained_switches=SPDT switch substituted with two complementary maintained switches
+Zener_diode_substituted_with_a_standard_diode=Zener diode substituted with a standard diode
+adjustable_voltage_source_imported_as_a_fixed_DC_source=adjustable voltage source imported as a fixed DC source
+
+# src/main/kotlin/mods/eln/gridnode/GridElement.kt
+Added_connection=Added connection
+Cancelled_connection=Cancelled connection
+Cannot_connect,_no_line_of_sight=Cannot connect, no line of sight
+Cannot_connect,_range_%1$_and_limit_%2$_blocks=Cannot connect, range %1$ and limit %2$ blocks
+Cannot_connect_these_two_objects=Cannot connect these two objects
+Setting_starting_point=Setting starting point
+Wrong_cable_for_this_pole=Wrong cable for this pole
+You_need_%1$_m_of_cable=You need %1$ m of cable
+
 # src/main/kotlin/mods/eln/gridnode/GridSwitch.kt
 Closed?=Closed?
 Drive=Drive
@@ -768,7 +865,6 @@ Can_be_used_to_encase_EA_items_that_support_it=Can be used to encase EA items th
 Cancel=Cancel
 Falstad_Import_Tool=Falstad Import Tool
 Falstad_import\:_clipboard_is_empty.=Falstad import: clipboard is empty.
-Falstad_import\:_clipboard_is_not_valid_Falstad_data.=Falstad import: clipboard is not valid Falstad data.
 Falstad_import\:_netlist_is_too_large_to_send_(%1$_bytes,_limit_%2$).=Falstad import: netlist is too large to send (%1$ bytes, limit %2$).
 Paste_Clipboard=Paste Clipboard
 Places_a_simplified_ELN_build_on_flat_ground_near_the_player.=Places a simplified ELN build on flat ground near the player.
@@ -795,6 +891,9 @@ __Insulation\:=  Insulation:
 Biome_T\:=Biome T:
 RH\:=RH:
 Room_T\:=Room T:
+
+# src/main/kotlin/mods/eln/item/TurbineBladeDescriptor.kt
+Condition\:_%1$=Condition: %1$
 
 # src/main/kotlin/mods/eln/item/WireMachineItems.kt
 Length\:_%1$_m=Length: %1$ m
@@ -829,18 +928,13 @@ Stored_Energy\:_%1$J_(%2$%)=Содержащаяся энергия\: %1$Дж (%
 Opens_holes._Right-click_to_open_smaller_holes.=Opens holes. Right-click to open smaller holes.
 
 # src/main/kotlin/mods/eln/mechanical/Clutch.kt
-Bad=Плохое
 Clutch_Pin=Clutch Pin
 Clutch_Plate=Clutch Plate
 Clutching=Clutching
 Condition\:=Условие\:
-End_of_life=Окончание срока службы
 Energies=Energies
-Good=Хорошее
-New=Новое
 Prevents_clutches_from_slipping\nagain_after_they_stop.=Prevents clutches from slipping\nagain after they stop.
 Speeds=Speeds
-Used=Уже использованное
 
 # src/main/kotlin/mods/eln/mechanical/CrankableShaft.kt
 Can_rotate_slowly=Can rotate slowly
@@ -1705,18 +1799,35 @@ Molten_metal=Molten metal
 # src/main/kotlin/mods/eln/sixnode/electricalcable/UtilityCable.kt
 %1$V=%1$V
 Bare=Bare
+Black=Black
+Blue=Blue
+Brown=Brown
 Brush\:_paint_conductor_color=Brush: paint conductor color
 Conductor=Conductor
 Conductor\:_%1$_%2$_(%3$_mm2)=Conductor: %1$ %2$ (%3$ mm2)
 Conductor_colors\:_%1$=Conductor colors: %1$
 Conductors\:_%1$=Conductors: %1$
+Cyan=Cyan
+Gray=Gray
+Green=Green
 Ground=Ground
 Insulation\:_%1$=Insulation: %1$
+Light_Blue=Light Blue
+Lime=Lime
+Magenta=Magenta
 Max_temperature\:_%1$C=Max temperature: %1$C
+Orange=Orange
 Palette=Palette
+Pink=Pink
 Placement_usage\:_%1$_m=Placement usage: %1$ m
+Purple=Purple
+Red=Red
 Remaining_length\:_%1$_m=Remaining length: %1$ m
+Silver=Silver
+White=White
+Wire_color_care_%1$=Wire color care %1$
 Wrench\:_cycle_conductor_colors=Wrench: cycle conductor colors
+Yellow=Yellow
 
 # src/main/kotlin/mods/eln/sixnode/electricalhumiditysensor/ElectricalHumiditySensorDescriptor.kt
 0%%_RH\:_%1$V=0%% RH: %1$V
@@ -1829,17 +1940,30 @@ This_variable_DC/DC_has_unrealistic_capacitance_effects_and_can_sink/source_powe
 # src/main/kotlin/mods/eln/transparentnode/WireProcessingMachines.kt
 %1$_/_%2$=%1$ / %2$
 %1$_kg=%1$ kg
+Bare_Wire_or_Bundle_Input=Bare Wire or Bundle Input
 Buffer\:_%1$_kg_%2$=Buffer: %1$ kg %2$
 Builds_wound_bundles_for_later_insulation=Builds wound bundles for later insulation
+Input_1=Input 1
+Input_2=Input 2
+Input_3=Input 3
+Input_4=Input 4
+Input_5=Input 5
+Insulated_Output=Insulated Output
 Insulation_Buffer=Insulation Buffer
 Insulation_Buffer\:_%1$=Insulation Buffer: %1$
+Left_Roller_Wheel=Left Roller Wheel
 Loaded_Material=Loaded Material
 Metal_Buffer=Metal Buffer
+Metal_Ingot_Input=Metal Ingot Input
 Output\:_%1$=Output: %1$
 Progress=Progress
 Progress\:_%1$_/_%2$=Progress: %1$ / %2$
+Right_Roller_Wheel=Right Roller Wheel
+Rolled_Bare_Wire=Rolled Bare Wire
+Rubber_Insulation_Input=Rubber Insulation Input
 Target_Length=Target Length
 Target_length_in_meters=Target length in meters
+Wound_Bundle_Output=Wound Bundle Output
 
 # src/main/kotlin/mods/eln/transparentnode/battery/BatteryDescriptor.kt
 Actual_charge\:_=Actual charge: 
