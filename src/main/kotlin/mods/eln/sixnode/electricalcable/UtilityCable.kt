@@ -446,7 +446,7 @@ class UtilityCableElement(
                 addChatMessage(entityPlayer, tr("Conductor colors: %1$", activePalette().displayName))
             } else {
                 colorCare = colorCare xor 1
-                addChatMessage(entityPlayer, "Wire color care $colorCare")
+                addChatMessage(entityPlayer, tr("Wire color care %1$", colorCare))
             }
             reconnect()
             return true
@@ -528,22 +528,22 @@ class UtilityCableElement(
 
     private fun dyeName(color: Int): String {
         return when (color and 0xF) {
-            0 -> "Black"
-            1 -> "Red"
-            2 -> "Green"
-            3 -> "Brown"
-            4 -> "Blue"
-            5 -> "Purple"
-            6 -> "Cyan"
-            7 -> "Silver"
-            8 -> "Gray"
-            9 -> "Pink"
-            10 -> "Lime"
-            11 -> "Yellow"
-            12 -> "Light Blue"
-            13 -> "Magenta"
-            14 -> "Orange"
-            else -> "White"
+            0 -> tr("Black")
+            1 -> tr("Red")
+            2 -> tr("Green")
+            3 -> tr("Brown")
+            4 -> tr("Blue")
+            5 -> tr("Purple")
+            6 -> tr("Cyan")
+            7 -> tr("Silver")
+            8 -> tr("Gray")
+            9 -> tr("Pink")
+            10 -> tr("Lime")
+            11 -> tr("Yellow")
+            12 -> tr("Light Blue")
+            13 -> tr("Magenta")
+            14 -> tr("Orange")
+            else -> tr("White")
         }
     }
 

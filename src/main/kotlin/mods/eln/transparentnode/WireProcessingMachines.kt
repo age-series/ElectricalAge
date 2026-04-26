@@ -766,7 +766,7 @@ class WireMachineGui(player: EntityPlayer, inventory: IInventory, private val re
 
     override fun postDraw(f: Float, x: Int, y: Int) {
         super.postDraw(f, x, y)
-        drawString(8, 6, descriptor.kind.displayName)
+        drawString(8, 6, tr(descriptor.kind.displayName))
         if (descriptor.kind == WireMachineKind.INSULATOR) {
             drawString(8, 54, tr("Output: %1$", render.optionName()))
         } else if (descriptor.kind == WireMachineKind.COMBINER) {
@@ -810,23 +810,23 @@ private fun WireMachineKind.slotCount(): Int = when (this) {
 
 private fun WireMachineKind.slots(inventory: IInventory): Array<net.minecraft.inventory.Slot> = when (this) {
     WireMachineKind.ROLLER -> arrayOf(
-        SlotWithSkinAndComment(inventory, 0, 8, 18, SlotSkin.medium, arrayOf("Metal Ingot Input")),
-        SlotWithSkinAndComment(inventory, 1, 30, 18, SlotSkin.medium, arrayOf("Left Roller Wheel")),
-        SlotWithSkinAndComment(inventory, 2, 52, 18, SlotSkin.medium, arrayOf("Right Roller Wheel")),
-        SlotWithSkinAndComment(inventory, 3, 134, 18, SlotSkin.big, arrayOf("Rolled Bare Wire"))
+        SlotWithSkinAndComment(inventory, 0, 8, 18, SlotSkin.medium, arrayOf(tr("Metal Ingot Input"))),
+        SlotWithSkinAndComment(inventory, 1, 30, 18, SlotSkin.medium, arrayOf(tr("Left Roller Wheel"))),
+        SlotWithSkinAndComment(inventory, 2, 52, 18, SlotSkin.medium, arrayOf(tr("Right Roller Wheel"))),
+        SlotWithSkinAndComment(inventory, 3, 134, 18, SlotSkin.big, arrayOf(tr("Rolled Bare Wire")))
     )
     WireMachineKind.INSULATOR -> arrayOf(
-        SlotWithSkinAndComment(inventory, 0, 8, 18, SlotSkin.medium, arrayOf("Bare Wire or Bundle Input")),
-        SlotWithSkinAndComment(inventory, 1, 30, 18, SlotSkin.medium, arrayOf("Rubber Insulation Input")),
-        SlotWithSkinAndComment(inventory, 2, 134, 18, SlotSkin.big, arrayOf("Insulated Output"))
+        SlotWithSkinAndComment(inventory, 0, 8, 18, SlotSkin.medium, arrayOf(tr("Bare Wire or Bundle Input"))),
+        SlotWithSkinAndComment(inventory, 1, 30, 18, SlotSkin.medium, arrayOf(tr("Rubber Insulation Input"))),
+        SlotWithSkinAndComment(inventory, 2, 134, 18, SlotSkin.big, arrayOf(tr("Insulated Output")))
     )
     WireMachineKind.COMBINER -> arrayOf(
-        SlotWithSkinAndComment(inventory, 0, 8, 18, SlotSkin.medium, arrayOf("Input 1")),
-        SlotWithSkinAndComment(inventory, 1, 30, 18, SlotSkin.medium, arrayOf("Input 2")),
-        SlotWithSkinAndComment(inventory, 2, 52, 18, SlotSkin.medium, arrayOf("Input 3")),
-        SlotWithSkinAndComment(inventory, 3, 74, 18, SlotSkin.medium, arrayOf("Input 4")),
-        SlotWithSkinAndComment(inventory, 4, 96, 18, SlotSkin.medium, arrayOf("Input 5")),
-        SlotWithSkinAndComment(inventory, 5, 134, 18, SlotSkin.big, arrayOf("Wound Bundle Output"))
+        SlotWithSkinAndComment(inventory, 0, 8, 18, SlotSkin.medium, arrayOf(tr("Input 1"))),
+        SlotWithSkinAndComment(inventory, 1, 30, 18, SlotSkin.medium, arrayOf(tr("Input 2"))),
+        SlotWithSkinAndComment(inventory, 2, 52, 18, SlotSkin.medium, arrayOf(tr("Input 3"))),
+        SlotWithSkinAndComment(inventory, 3, 74, 18, SlotSkin.medium, arrayOf(tr("Input 4"))),
+        SlotWithSkinAndComment(inventory, 4, 96, 18, SlotSkin.medium, arrayOf(tr("Input 5"))),
+        SlotWithSkinAndComment(inventory, 5, 134, 18, SlotSkin.big, arrayOf(tr("Wound Bundle Output")))
     )
 }
 

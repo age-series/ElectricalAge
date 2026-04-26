@@ -2,6 +2,7 @@ package mods.eln.gridnode
 
 import mods.eln.Eln
 import mods.eln.generic.GenericItemBlockUsingDamageDescriptor
+import mods.eln.i18n.I18N.tr
 import mods.eln.misc.*
 import mods.eln.node.transparent.TransparentNode
 import mods.eln.node.transparent.TransparentNodeDescriptor
@@ -59,16 +60,16 @@ abstract class GridElement(transparentNode: TransparentNode, descriptor: Transpa
         }
         // Check if it's the *correct* cable descriptor.
         if (!desc.acceptsGridCable(cable)) {
-            Utils.addChatMessage(entityPlayer, "Wrong cable for this pole")
+            Utils.addChatMessage(entityPlayer, tr("Wrong cable for this pole"))
             return true
         }
         if(other == this) {
-            Utils.addChatMessage(entityPlayer, "Cancelled connection")
+            Utils.addChatMessage(entityPlayer, tr("Cancelled connection"))
             pending.remove(uuid)
             return true
         }
         if (other == null) {
-            Utils.addChatMessage(entityPlayer, "Setting starting point")
+            Utils.addChatMessage(entityPlayer, tr("Setting starting point"))
             pending.put(uuid, Pair.of(this.coordinate(), side))
         } else {
             val distance = other.coordinate().trueDistanceTo(this.coordinate())
@@ -79,13 +80,13 @@ abstract class GridElement(transparentNode: TransparentNode, descriptor: Transpa
             val availableLength = if (cable is UtilityCableDescriptor && consumeLength) cable.getRemainingLengthMeters(stack).toInt() else stackSize
 
             if (availableLength < cableLength && !Utils.isCreative(entityPlayer as EntityPlayerMP)) {
-                Utils.addChatMessage(entityPlayer, "You need $cableLength m of cable")
+                Utils.addChatMessage(entityPlayer, tr("You need %1$ m of cable", cableLength))
             } else if (distance > range) {
-                Utils.addChatMessage(entityPlayer, "Cannot connect, range " + Math.ceil(distance) + " and limit " + range + " blocks")
+                Utils.addChatMessage(entityPlayer, tr("Cannot connect, range %1$ and limit %2$ blocks", Math.ceil(distance).toInt(), range))
             } else if (!this.canConnect(other)) {
-                Utils.addChatMessage(entityPlayer, "Cannot connect these two objects")
+                Utils.addChatMessage(entityPlayer, tr("Cannot connect these two objects"))
             } else if (!this.validLOS(other)) {
-                Utils.addChatMessage(entityPlayer, "Cannot connect, no line of sight")
+                Utils.addChatMessage(entityPlayer, tr("Cannot connect, no line of sight"))
             } else {
                 try {
                     val linkStack = if (cable is UtilityCableDescriptor) {
@@ -94,7 +95,7 @@ abstract class GridElement(transparentNode: TransparentNode, descriptor: Transpa
                         null
                     }
                     GridLink.addLink(this, other, side, p!!.right, cable, cableLength, linkStack)
-                    Utils.addChatMessage(entityPlayer, "Added connection")
+                    Utils.addChatMessage(entityPlayer, tr("Added connection"))
                     if (cable is UtilityCableDescriptor && consumeLength) {
                         cable.setRemainingLengthMeters(stack, cable.getRemainingLengthMeters(stack) - cableLength)
                         if (cable.getRemainingLengthMeters(stack) <= 0.0) {

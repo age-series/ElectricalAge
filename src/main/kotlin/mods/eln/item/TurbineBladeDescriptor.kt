@@ -116,14 +116,14 @@ class TurbineBladeDescriptor(
     }
 
     private fun getConditionLabel(stack: ItemStack): String {
-        if (!stack.hasTagCompound() || !stack.tagCompound.hasKey("condition")) return "New"
+        if (!stack.hasTagCompound() || !stack.tagCompound.hasKey("condition")) return tr("New")
         val c = getCondition(stack)
         return when {
-            c >= 1.0  -> "New"
-            c > 0.5   -> "Good"
-            c > 0.15  -> "Used"
-            c > 0.01  -> "Bad"
-            else      -> "End of life"
+            c >= 1.0  -> tr("New")
+            c > 0.5   -> tr("Good")
+            c > 0.15  -> tr("Used")
+            c > 0.01  -> tr("Bad")
+            else      -> tr("End of life")
         }
     }
 
@@ -135,7 +135,7 @@ class TurbineBladeDescriptor(
     ) {
         super.addInformation(stack, player, list, par4)
         list.add(tr("Nominal Lifetime: ${nominalLifeInHours.toInt()}h"))
-        if (stack != null) list.add(tr("Condition: ${getConditionLabel(stack)}"))
+        if (stack != null) list.add(tr("Condition: %1$", getConditionLabel(stack)))
         if (tierDescription.isNotEmpty()) list.add(tr(tierDescription))
     }
 
