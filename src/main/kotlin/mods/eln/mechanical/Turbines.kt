@@ -303,7 +303,7 @@ class TurbineElement(node: TransparentNode, desc_: TransparentNodeDescriptor) :
                 lifeLeftH < 1.0  -> "<1h"
                 else             -> String.format("%.1fh", lifeLeftH)
             }
-            info[tr("Blade")] = blade.name
+            info[tr("Blade")] = bladeStack.displayName
             info[tr("Life Left")] = lifeLeftStr
         } else {
             info[tr("Blade")] = tr("None")

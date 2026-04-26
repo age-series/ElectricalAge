@@ -894,6 +894,7 @@ Room_T\:=室内温度:
 
 # src/main/kotlin/mods/eln/item/TurbineBladeDescriptor.kt
 Condition\:_%1$=状况: %1$
+Nominal_Lifetime\:_%1$h=额定寿命: %1$h
 
 # src/main/kotlin/mods/eln/item/WireMachineItems.kt
 Length\:_%1$_m=长度: %1$ m
@@ -1071,6 +1072,8 @@ Gold_Plate.name=金板
 Graphite_Rod.name=碳棒
 Gray_Brush.name=刷子(灰)
 Green_Brush.name=刷子(绿)
+Handles_extreme_conditions=能够应对极端条件
+Handles_moderate_conditions=可应对中等条件
 Heavy_Winding.name=重型绕组
 Improved_Flashlight.name=改进的手电筒
 Inert_Canister.name=惰性炭罐
@@ -1142,6 +1145,8 @@ Small_Fuel_Burner.name=小型燃料燃烧器
 Solar_Tracker.name=太阳追踪组件
 Steel_Roller_Wheel.name=钢轧轮
 Steel_Turbine_Blade.name=钢涡轮叶片
+Suitable_for_mild,_clean_fuels=适用于温和、清洁的燃料
+Suitable_for_most_fuel_types=适用于大多数燃料类型
 Synthetic_Diamond.name=人造钻石
 The_Nope_Wand.name=清除魔杖
 Thermal_Insulation.name=石棉网

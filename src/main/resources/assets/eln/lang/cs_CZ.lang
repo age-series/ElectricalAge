@@ -894,6 +894,7 @@ Room_T\:=Místnost T:
 
 # src/main/kotlin/mods/eln/item/TurbineBladeDescriptor.kt
 Condition\:_%1$=Condition: %1$
+Nominal_Lifetime\:_%1$h=Nominal Lifetime: %1$h
 
 # src/main/kotlin/mods/eln/item/WireMachineItems.kt
 Length\:_%1$_m=Length: %1$ m
@@ -1071,6 +1072,8 @@ Gold_Plate.name=Zlatý plát.name
 Graphite_Rod.name=Grafitová tyč.name
 Gray_Brush.name=Šedý štětec.name
 Green_Brush.name=Zelený štětec.name
+Handles_extreme_conditions=Handles extreme conditions
+Handles_moderate_conditions=Handles moderate conditions
 Heavy_Winding.name=Těžké vinutí.name
 Improved_Flashlight.name=Vylepšená baterka.name
 Inert_Canister.name=Inertní kanystra.name
@@ -1142,6 +1145,8 @@ Small_Fuel_Burner.name=Malý hořák.name
 Solar_Tracker.name=Solární sledovač.name
 Steel_Roller_Wheel.name=Steel Roller Wheel
 Steel_Turbine_Blade.name=Steel Turbine Blade
+Suitable_for_mild,_clean_fuels=Suitable for mild, clean fuels
+Suitable_for_most_fuel_types=Suitable for most fuel types
 Synthetic_Diamond.name=Syntetický diamant.name
 The_Nope_Wand.name=The Nope Wand
 Thermal_Insulation.name=Tepelná izolace.name

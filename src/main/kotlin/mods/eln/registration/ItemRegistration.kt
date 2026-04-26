@@ -1341,7 +1341,7 @@ object ItemRegistration {
                 tierName = "iron",
                 temperatureResistance = 0.8,
                 corrosionResistance = 0.8,
-                tierDescription = "Suitable for mild, clean fuels"
+                tierDescription = tr("Suitable for mild, clean fuels")
             )
         )
         Eln.sharedItemStackOne.addElement(
@@ -1350,7 +1350,7 @@ object ItemRegistration {
                 tierName = "steel",
                 temperatureResistance = 1.2,
                 corrosionResistance = 1.2,
-                tierDescription = "Handles moderate conditions"
+                tierDescription = tr("Handles moderate conditions")
             )
         )
         Eln.sharedItemStackOne.addElement(
@@ -1359,7 +1359,7 @@ object ItemRegistration {
                 tierName = "alloy",
                 temperatureResistance = 2.0,
                 corrosionResistance = 2.0,
-                tierDescription = "Suitable for most fuel types"
+                tierDescription = tr("Suitable for most fuel types")
             )
         )
         Eln.sharedItemStackOne.addElement(
@@ -1368,7 +1368,7 @@ object ItemRegistration {
                 tierName = "tungsten",
                 temperatureResistance = 3.5,
                 corrosionResistance = 3.5,
-                tierDescription = "Handles extreme conditions"
+                tierDescription = tr("Handles extreme conditions")
             )
         )
     }

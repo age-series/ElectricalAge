@@ -134,7 +134,7 @@ class TurbineBladeDescriptor(
         par4: Boolean
     ) {
         super.addInformation(stack, player, list, par4)
-        list.add(tr("Nominal Lifetime: ${nominalLifeInHours.toInt()}h"))
+        list.add(tr($$"Nominal Lifetime: %1$h",nominalLifeInHours.toInt()))
         if (stack != null) list.add(tr("Condition: %1$", getConditionLabel(stack)))
         if (tierDescription.isNotEmpty()) list.add(tr(tierDescription))
     }
