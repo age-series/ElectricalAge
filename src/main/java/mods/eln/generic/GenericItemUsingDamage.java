@@ -114,6 +114,11 @@ public class GenericItemUsingDamage<Descriptor extends GenericItemUsingDamageDes
         }
     }
 
+    @Override
+    public String getUnlocalizedNameInefficiently(ItemStack stack) {
+        return getUnlocalizedName(stack);
+    }
+
 	/*
 	@Override
 	public String getItemStackDisplayName(ItemStack par1ItemStack) {
