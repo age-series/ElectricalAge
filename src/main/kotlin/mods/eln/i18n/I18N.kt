@@ -8,7 +8,9 @@ import mods.eln.misc.Utils
  * Internationalization and localization helper class.
  */
 object I18N {
-    private val languageRegistry: LanguageRegistry = LanguageRegistry.instance()
+    private val languageRegistry: LanguageRegistry? by lazy {
+        try { LanguageRegistry.instance() } catch (_: Throwable) { null }
+    }
 
     /**
      * Defines the different translatable types.
@@ -133,9 +135,10 @@ object I18N {
         // Try to find the translation for the string using forge API.
         var translation: String? = null
         try {
-            translation = languageRegistry.getStringLocalization(encodeLangKey(text))
-        } catch (_: NullPointerException) {
-            Utils.println("Unable to translate string: $text")
+            translation = languageRegistry?.getStringLocalization(encodeLangKey(text))
+        } catch (_: Throwable) {
+            // Forge classes may not be available in test environments (ExceptionInInitializerError,
+            // NoClassDefFoundError, etc.). Fall back to the original text.
         }
 
         // If no translation was found, just use the original text.
