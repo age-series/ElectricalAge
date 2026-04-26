@@ -12,6 +12,7 @@ Battery_level=Battery level
 Biggest=Biggest
 Booster_slot=Booster slot
 Can_create\:=Can create:
+Capacity=Capacity
 Capacity\:_%1$F=Capacity: %1$F
 Casing_slot=Casing slot
 Channel=Channel
@@ -27,6 +28,7 @@ Copper_cable_slot=Copper cable slot
 Creative_block.=Creative block.
 Current=Current
 Current\:_%1$A=Current: %1$A
+Damage_current\:_%1$A_after_%2$s=Damage current: %1$A after %2$s
 Default_position=Default position
 Dielectric_slot=Dielectric slot
 Disabled=Disabled
@@ -55,17 +57,22 @@ Is_on=Is on
 It_doesn't_really_behave_well_for_DC=It doesn't really behave well for DC
 It_is_made_this_way_to_improve_the_performance_of_the_simulator_in_large_power_networks=It is made this way to improve the performance of the simulator in large power networks
 It_should_require_power_to_transmit_realistically=It should require power to transmit realistically
+Length_(m)=Length (m)
+Life_Left=Life Left
 MQTT_server=MQTT server
+Material\:_%1$=Material: %1$
 Max._temperature\:_%1$°C=Max. temperature: %1$°C
 Max_rads\:__=Max rads:  
 Measured_temperature\ncorresponding\nto_0%_output=Measured temperature\ncorresponding\nto 0% output
 Measured_temperature\ncorresponding\nto_100%_output=Measured temperature\ncorresponding\nto 100% output
 Measured_value\ncorresponding\nto_0%_output=Measured value\ncorresponding\nto 0% output
 Measured_value\ncorresponding\nto_100%_output=Measured value\ncorresponding\nto 100% output
+Mode=Mode
 No=No
 No_valid_fluids_for_this_turbine!=No valid fluids for this turbine!
 Nominal\:=Nominal:
 Nominal_Ratings\:=Nominal Ratings:
+Nominal_mains_class\:_%1$V=Nominal mains class: %1$V
 Nominal_power\:_%1$W=Nominal power: %1$W
 Nominal_usage\:=Nominal usage:
 Nominal_usage_->=Nominal usage ->
@@ -141,6 +148,7 @@ __Power_out\:_=  Power out:
 
 # src/main/java/mods/eln/Eln.java
 itemGroup.Eln=Electrical Age
+itemGroup.ElnCables=Electrical Age - Cables
 itemGroup.ElnCreative=Electrical Age - Creative
 itemGroup.ElnLighting=Electrical Age - Lighting
 itemGroup.ElnMachines=Electrical Age - Machines
@@ -186,8 +194,11 @@ This_block_can_only_be_placed_on_the_side_of_a_tree!=This block can only be plac
 Battery_slot=Battery slot
 
 # src/main/java/mods/eln/sixnode/batterycharger/BatteryChargerDescriptor.java
+Approx._output_current\:_%1$A=Approx. output current: %1$A
 Can_be_used_to_recharge\nelectrical_items_like\:\nFlash_Light,_X-Ray_scanner\nand_Portable_Battery_...=Can be used to recharge\nelectrical items like:\nFlash Light, X-Ray scanner\nand Portable Battery ...
-This_battery_charger_doesn't_take_into_account_battery_chemistry=This battery charger doesn't take into account battery chemistry
+This_battery_charger_is_an_idealized_mains-fed_charger.=This battery charger is an idealized mains-fed charger.
+__*_It_does_not_model_battery_chemistry_or_charging_curves=  * It does not model battery chemistry or charging curves
+__*_It_exposes_a_nominal_mains_class_instead_of_wall-plug_details=  * It exposes a nominal mains class instead of wall-plug details
 
 # src/main/java/mods/eln/sixnode/batterycharger/BatteryChargerElement.java
 Charge_Current=Charge Current
@@ -203,6 +214,7 @@ Forward_Voltage=Forward Voltage
 
 # src/main/java/mods/eln/sixnode/electricalalarm/ElectricalAlarmDescriptor.java
 Emits_an_acoustic_alarm_if\nthe_input_signal_is_high=Emits an acoustic alarm if\nthe input signal is high
+Intended_field_supply\:_%1$V=Intended field supply: %1$V
 
 # src/main/java/mods/eln/sixnode/electricalalarm/ElectricalAlarmElement.java
 Engaged=Engaged
@@ -212,9 +224,8 @@ Input_Voltage=Input Voltage
 Sound_is_muted=Sound is muted
 Sound_is_not_muted=Sound is not muted
 
-# src/main/java/mods/eln/sixnode/electricalbreaker/ElectricalBreakerContainer.java
-
 # src/main/java/mods/eln/sixnode/electricalbreaker/ElectricalBreakerDescriptor.java
+Breaker_rating\:_%1$A=Breaker rating: %1$A
 Protects_electrical_components\nOpens_contact_if\:\n__-_Voltage_exceeds_a_certain_level\n__-_Current_exceeds_the_cable_limit=Protects electrical components\nOpens contact if:\n  - Voltage exceeds a certain level\n  - Current exceeds the cable limit
 
 # src/main/java/mods/eln/sixnode/electricalbreaker/ElectricalBreakerElement.java
@@ -334,10 +345,15 @@ Converts_electrical_voltage\ninto_a_Redstone_signal.=Converts electrical voltage
 # src/main/java/mods/eln/sixnode/electricalredstoneoutput/ElectricalRedstoneOutputElement.java
 
 # src/main/java/mods/eln/sixnode/electricalrelay/ElectricalRelayDescriptor.java
+Contact_current_rating\:_%1$A=Contact current rating: %1$A
+Contact_voltage\:_%1$V=Contact voltage: %1$V
+Control_voltage\:_%1$V=Control voltage: %1$V
 
 # src/main/java/mods/eln/sixnode/electricalrelay/ElectricalRelayElement.java
 
 # src/main/java/mods/eln/sixnode/electricalrelay/ElectricalRelayGui.java
+
+# src/main/java/mods/eln/sixnode/electricalsensor/ElectricalSensorContainer.java
 
 # src/main/java/mods/eln/sixnode/electricalsensor/ElectricalSensorDescriptor.java
 Can_measure_Voltage/Power/Current=Can measure Voltage/Power/Current
@@ -359,6 +375,8 @@ Provides_an_ideal_voltage_source\nwithout_energy_or_power_limitation.=Provides a
 
 # src/main/java/mods/eln/sixnode/electricalswitch/ElectricalSwitchDescriptor.java
 Can_break_an_electrical_circuit\ninterrupting_the_current.=Can break an electrical circuit\ninterrupting the current.
+Current_rating\:_%1$A=Current rating: %1$A
+Voltage_rating\:_%1$V=Voltage rating: %1$V
 
 # src/main/java/mods/eln/sixnode/electricaltimeout/ElectricalTimeoutDescriptor.java
 Upon_application_of_a_high_signal,\nthe_timer_maintains_the_output_high_for\na_configurable_interval._Can_be_re-triggered.=Upon application of a high signal,\nthe timer maintains the output high for\na configurable interval. Can be re-triggered.
@@ -390,7 +408,6 @@ You_can't_place_this_block_on_the_floor_or_the_ceiling=You can't place this bloc
 # src/main/java/mods/eln/sixnode/energymeter/EnergyMeterElement.java
 Counter=Counter
 Energy_left=Energy left
-Mode=Mode
 Prepay=Prepay
 
 # src/main/java/mods/eln/sixnode/energymeter/EnergyMeterGui.java
@@ -427,7 +444,6 @@ Wireless_mode_of_lights_intended_to_pretend_wires_are_in_the_walls=Wireless mode
 
 # src/main/java/mods/eln/sixnode/lampsocket/LampSocketElement.java
 Bulb=Bulb
-Life_Left=Life Left
 
 # src/main/java/mods/eln/sixnode/lampsocket/LampSocketGuiDraw.java
 Cable_slot_empty=Cable slot empty
@@ -617,6 +633,7 @@ Solar_tracker_slot=Solar tracker slot
 
 # src/main/java/mods/eln/transparentnode/solarpanel/SolarPanelDescriptor.java
 Can_be_geared_towards_the_sun.=Can be geared towards the sun.
+Max._current\:_%1$A=Max. current: %1$A
 Max._power\:_%1$W=Max. power: %1$W
 Max._voltage\:_%1$V=Max. voltage: %1$V
 Produces_power_from_solar_radiation.=Produces power from solar radiation.
@@ -747,9 +764,26 @@ Can_paint_%1$_blocks=Can paint %1$ blocks
 # src/main/kotlin/mods/eln/item/CaseItemDescriptor.kt
 Can_be_used_to_encase_EA_items_that_support_it=Can be used to encase EA items that support it
 
+# src/main/kotlin/mods/eln/item/FalstadImportTool.kt
+Cancel=Cancel
+Falstad_Import_Tool=Falstad Import Tool
+Falstad_import\:_clipboard_is_empty.=Falstad import: clipboard is empty.
+Falstad_import\:_clipboard_is_not_valid_Falstad_data.=Falstad import: clipboard is not valid Falstad data.
+Falstad_import\:_netlist_is_too_large_to_send_(%1$_bytes,_limit_%2$).=Falstad import: netlist is too large to send (%1$ bytes, limit %2$).
+Paste_Clipboard=Paste Clipboard
+Places_a_simplified_ELN_build_on_flat_ground_near_the_player.=Places a simplified ELN build on flat ground near the player.
+Reads_Falstad_text_from_the_system_clipboard.=Reads Falstad text from the system clipboard.
+Right_click_to_import_a_Falstad_netlist_from_the_clipboard.=Right click to import a Falstad netlist from the clipboard.
+
 # src/main/kotlin/mods/eln/item/FuelBurnerDescriptor.kt
 Burn_unit_for_the_gas_heat_furnace.=Burn unit for the gas heat furnace.
 Produced_heat_power\:_=Produced heat power: 
+
+# src/main/kotlin/mods/eln/item/NopeWandDescriptor.kt
+Removes_them_without_dropping_items,_much_like_/eln_zonedestroy.=Removes them without dropping items, much like /eln zonedestroy.
+Right_click_to_immediately_remove_ELN_nodes_and_blocks_in_a_10-block_radius.=Right click to immediately remove ELN nodes and blocks in a 10-block radius.
+The_Nope_Wand_fizzles\:_node_manager_unavailable.=The Nope Wand fizzles: node manager unavailable.
+The_Nope_Wand_removed_%1$_ELN_nodes_and_cleared_%2$_ELN_blocks_in_a_%3$-block_radius.=The Nope Wand removed %1$ ELN nodes and cleared %2$ ELN blocks in a %3$-block radius.
 
 # src/main/kotlin/mods/eln/item/ThermalIsolatorElement.kt
 Organic_Asbestos™=Organic Asbestos™
@@ -761,6 +795,26 @@ __Insulation\:=  Insulation:
 Biome_T\:=Biome T:
 RH\:=RH:
 Room_T\:=Room T:
+
+# src/main/kotlin/mods/eln/item/WireMachineItems.kt
+Length\:_%1$_m=Length: %1$ m
+Target\:_%1$=Target: %1$
+
+# src/main/kotlin/mods/eln/item/WireScrapDescriptor.kt
+Recovered_from\:_%1$=Recovered from: %1$
+Type\:_%1$_(%2$_mm2),_%3$_conductors,_%4$=Type: %1$ (%2$ mm2), %3$ conductors, %4$
+bare=bare
+insulated=insulated
+
+# src/main/kotlin/mods/eln/item/WireSnipsDescriptor.kt
+Cut_Wire=Cut Wire
+Cut_length_in_whole_meters=Cut length in whole meters
+Input_Wire=Input Wire
+Input_must_be_a_utility_wire=Input must be a utility wire
+Insert_a_wire_coil_to_cut=Insert a wire coil to cut
+Remaining\:_%1$_m=Remaining: %1$ m
+Right_click_to_cut_utility_wire_in_your_inventory=Right click to cut utility wire in your inventory
+Wire_Snips=Wire Snips
 
 # src/main/kotlin/mods/eln/item/electricalitem/BatteryItem.kt
 
@@ -776,7 +830,7 @@ Opens_holes._Right-click_to_open_smaller_holes.=Opens holes. Right-click to open
 
 # src/main/kotlin/mods/eln/mechanical/Clutch.kt
 Bad=Bad
-Clutch_Pin_=Clutch Pin 
+Clutch_Pin=Clutch Pin
 Clutch_Plate=Clutch Plate
 Clutching=Clutching
 Condition\:=Condition:
@@ -794,11 +848,19 @@ Player_crankable_shaft=Player crankable shaft
 
 # src/main/kotlin/mods/eln/mechanical/Generator.kt
 Converts_mechanical_energy_into_electricity,_or_(badly)_vice_versa.=Converts mechanical energy into electricity, or (badly) vice versa.
+Integrated_regulator\:_ramps_field_and_limits_output_current.=Integrated regulator: ramps field and limits output current.
+Regulator_current_limit=Regulator current limit
+Regulator_current_limit\:_=Regulator current limit: 
+Regulator_target=Regulator target
 __Rads\:_=  Rads: 
 __Voltage_out\:_=  Voltage out: 
 
 # src/main/kotlin/mods/eln/mechanical/Motor.kt
 Converts_electricity_into_mechanical_energy,_or_(badly)_vice_versa.=Converts electricity into mechanical energy, or (badly) vice versa.
+Drive_current_limit\:_=Drive current limit: 
+Drive_current_request=Drive current request
+Drive_target=Drive target
+Integrated_drive\:_soft-starts_to_nominal_speed.=Integrated drive: soft-starts to nominal speed.
 Max_rad/s\:_=Max rad/s: 
 __Power_in\:_=  Power in: 
 __Voltage_in\:_=  Voltage in: 
@@ -817,6 +879,9 @@ Rads/s_corresponding\nto_100%_output=Rads/s corresponding\nto 100% output
 
 # src/main/kotlin/mods/eln/mechanical/Turbines.kt
 %1$_input\:_%2$=%1$ input: %2$
+Blade=Blade
+Requires_a_turbine_blade_to_operate.=Requires a turbine blade to operate.
+Turbine_blade_slot=Turbine blade slot
 
 # src/main/kotlin/mods/eln/misc/UtilsClient.kt
 Hold_[ctrl]_for_realism_details=Hold [ctrl] for realism details
@@ -831,28 +896,28 @@ mod.name=Electrical Age
 Cart_Energy\:_=Cart Energy: 
 
 # src/main/kotlin/mods/eln/registration/ItemRegistration.kt
-200V_Copper_Heating_Element.name=200V Copper Heating Element
-200V_Farming_Light_Bulb.name=200V Farming Light Bulb
-200V_Fluorescent_Light_Bulb.name=200V Fluorescent Light Bulb
-200V_Halogen_Light_Bulb.name=200V Halogen Light Bulb
-200V_Incandescent_Light_Bulb.name=200V Incandescent Light Bulb
-200V_Iron_Heating_Element.name=200V Iron Heating Element
-200V_LED_Light_Bulb.name=200V LED Light Bulb
-200V_Tungsten_Heating_Element.name=200V Tungsten Heating Element
+12V_Carbon_Incandescent_Light_Bulb.name=12V Carbon Incandescent Light Bulb
+12V_Farming_Light_Bulb.name=12V Farming Light Bulb
+12V_Fluorescent_Light_Bulb.name=12V Fluorescent Light Bulb
+12V_Halogen_Light_Bulb.name=12V Halogen Light Bulb
+12V_Incandescent_Light_Bulb.name=12V Incandescent Light Bulb
+12V_LED_Light_Bulb.name=12V LED Light Bulb
+240V_Copper_Heating_Element.name=240V Copper Heating Element
+240V_Farming_Light_Bulb.name=240V Farming Light Bulb
+240V_Fluorescent_Light_Bulb.name=240V Fluorescent Light Bulb
+240V_Halogen_Light_Bulb.name=240V Halogen Light Bulb
+240V_Incandescent_Light_Bulb.name=240V Incandescent Light Bulb
+240V_Iron_Heating_Element.name=240V Iron Heating Element
+240V_LED_Light_Bulb.name=240V LED Light Bulb
+240V_Tungsten_Heating_Element.name=240V Tungsten Heating Element
 2x_Graphite_Rods.name=2x Graphite Rods
-3.2kV_Tungsten_Heating_Element.name=3.2kV Tungsten Heating Element
 3x_Graphite_Rods.name=3x Graphite Rods
+480V_Heavy_Tungsten_Heating_Element.name=480V Heavy Tungsten Heating Element
+480V_Tungsten_Heating_Element.name=480V Tungsten Heating Element
+48V_Copper_Heating_Element.name=48V Copper Heating Element
+48V_Iron_Heating_Element.name=48V Iron Heating Element
+48V_Tungsten_Heating_Element.name=48V Tungsten Heating Element
 4x_Graphite_Rods.name=4x Graphite Rods
-50V_Carbon_Incandescent_Light_Bulb.name=50V Carbon Incandescent Light Bulb
-50V_Copper_Heating_Element.name=50V Copper Heating Element
-50V_Farming_Light_Bulb.name=50V Farming Light Bulb
-50V_Fluorescent_Light_Bulb.name=50V Fluorescent Light Bulb
-50V_Halogen_Light_Bulb.name=50V Halogen Light Bulb
-50V_Incandescent_Light_Bulb.name=50V Incandescent Light Bulb
-50V_Iron_Heating_Element.name=50V Iron Heating Element
-50V_LED_Light_Bulb.name=50V LED Light Bulb
-50V_Tungsten_Heating_Element.name=50V Tungsten Heating Element
-800V_Tungsten_Heating_Element.name=800V Tungsten Heating Element
 Advanced_Chip.name=Advanced Chip
 Advanced_Electrical_Motor.name=Advanced Electrical Motor
 Advanced_Machine_Block.name=Advanced Machine Block
@@ -861,6 +926,8 @@ AllMeter.name=Universal-Meter
 Alloy_Dust.name=Alloy Dust
 Alloy_Ingot.name=Alloy Ingot
 Alloy_Plate.name=Alloy Plate
+Alloy_Turbine_Blade.name=Alloy Turbine Blade
+Aluminum_Roller_Wheel.name=Aluminum Roller Wheel
 Analogic_Regulator.name=Analogic Regulator
 Animal_Filter.name=Animal Filter
 Arc_Clay_Ingot.name=Arc Clay Ingot
@@ -901,6 +968,7 @@ Electric_Minecart.name=Electric Minecart
 Electrical_Motor.name=Electrical Motor
 Electrical_Probe_Chip.name=Electrical Probe Chip
 Electrical_age_wrench,\nCan_be_used_to_turn\nsmall_wall_blocks=Electrical age wrench,\nCan be used to turn\nsmall wall blocks
+Falstad_Import_Tool.name=Falstad Import Tool
 Fast_Electrical_Drill.name=Fast Electrical Drill
 Ferrite_Ingot.name=Ferrite Ingot
 Gold_Clutch_Plate.name=Gold Clutch Plate
@@ -916,6 +984,8 @@ Iron_Cable.name=Iron Cable
 Iron_Clutch_Plate.name=Iron Clutch Plate
 Iron_Dust.name=Iron Dust
 Iron_Plate.name=Iron Plate
+Iron_Roller_Wheel.name=Iron Roller Wheel
+Iron_Turbine_Blade.name=Iron Turbine Blade
 Irresponsible_Electrical_Drill.name=Irresponsible Electrical Drill
 Lapis_Dust.name=Lapis Dust
 Lead_Clutch_Plate.name=Lead Clutch Plate
@@ -962,21 +1032,24 @@ Silicon_Ingot.name=Silicon Ingot
 Silicon_Plate.name=Silicon Plate
 Silicon_Wafer.name=Silicon Wafer
 Silver_Brush.name=Silver Brush
-Small_200V_Copper_Heating_Element.name=Small 200V Copper Heating Element
-Small_200V_Iron_Heating_Element.name=Small 200V Iron Heating Element
-Small_200V_Tungsten_Heating_Element.name=Small 200V Tungsten Heating Element
-Small_3.2kV_Tungsten_Heating_Element.name=Small 3.2kV Tungsten Heating Element
-Small_50V_Carbon_Incandescent_Light_Bulb.name=Small 50V Carbon Incandescent Light Bulb
-Small_50V_Copper_Heating_Element.name=Small 50V Copper Heating Element
-Small_50V_Fluorescent_Light_Bulb.name=Small 50V Fluorescent Light Bulb
-Small_50V_Incandescent_Light_Bulb.name=Small 50V Incandescent Light Bulb
-Small_50V_Iron_Heating_Element.name=Small 50V Iron Heating Element
-Small_50V_Tungsten_Heating_Element.name=Small 50V Tungsten Heating Element
-Small_800V_Tungsten_Heating_Element.name=Small 800V Tungsten Heating Element
+Small_12V_Carbon_Incandescent_Light_Bulb.name=Small 12V Carbon Incandescent Light Bulb
+Small_12V_Fluorescent_Light_Bulb.name=Small 12V Fluorescent Light Bulb
+Small_12V_Incandescent_Light_Bulb.name=Small 12V Incandescent Light Bulb
+Small_240V_Copper_Heating_Element.name=Small 240V Copper Heating Element
+Small_240V_Iron_Heating_Element.name=Small 240V Iron Heating Element
+Small_240V_Tungsten_Heating_Element.name=Small 240V Tungsten Heating Element
+Small_480V_Heavy_Tungsten_Heating_Element.name=Small 480V Heavy Tungsten Heating Element
+Small_480V_Tungsten_Heating_Element.name=Small 480V Tungsten Heating Element
+Small_48V_Copper_Heating_Element.name=Small 48V Copper Heating Element
+Small_48V_Iron_Heating_Element.name=Small 48V Iron Heating Element
+Small_48V_Tungsten_Heating_Element.name=Small 48V Tungsten Heating Element
 Small_Flashlight.name=Small Flashlight
 Small_Fuel_Burner.name=Small Fuel Burner
 Solar_Tracker.name=Solar Tracker
+Steel_Roller_Wheel.name=Steel Roller Wheel
+Steel_Turbine_Blade.name=Steel Turbine Blade
 Synthetic_Diamond.name=Synthetic Diamond
+The_Nope_Wand.name=The Nope Wand
 Thermal_Insulation.name=Thermal Insulation
 Thermal_Probe_Chip.name=Thermal Probe Chip
 Thermometer.name=Thermometer
@@ -986,10 +1059,14 @@ Tungsten_Cable.name=Tungsten Cable
 Tungsten_Dust.name=Tungsten Dust
 Tungsten_Ingot.name=Tungsten Ingot
 Tungsten_Ore.name=Tungsten Ore
+Tungsten_Turbine_Blade.name=Tungsten Turbine Blade
 Turbine_Blade_Set.name=Turbine Blade Set
 Turbo_Electrical_Drill.name=Turbo Electrical Drill
 White_Brush.name=White Brush
+Wire_Scraps.name=Wire Scraps
+Wire_Snips.name=Wire Snips
 Wireless_Analyser.name=Wireless Analyzer
+Wound_Wire_Bundle.name=Wound Wire Bundle
 Wrench.name=Wrench
 X-Ray_Scanner.name=X-Ray Scanner
 Yellow_Brush.name=Yellow Brush
@@ -1016,29 +1093,302 @@ tile.eln.ElnProbe.name=Eln Computer Probe
 tile.eln.EnergyConverter.name=Energy Exporter
 
 # src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt
+100A_Electrical_Breaker.name=100A Electrical Breaker
+100A_Switch.name=100A Switch
 10A_Diode.name=10A Diode
-200V_Battery_Charger.name=200V Battery Charger
-200V_Emergency_Lamp.name=200V Emergency Lamp
+10A_Electrical_Breaker.name=10A Electrical Breaker
+10A_Lead_Fuse.name=10A Lead Fuse
+120V_Battery_Charger.name=120V Battery Charger
+120V_Fast_Battery_Charger.name=120V Fast Battery Charger
+120V_Lamp_Supply.name=120V Lamp Supply
+125A_Electrical_Breaker.name=125A Electrical Breaker
+12V_Control_Relay_100A.name=12V Control Relay 100A
+12V_Control_Relay_20A.name=12V Control Relay 20A
+12V_Control_Relay_50A.name=12V Control Relay 50A
+12V_Emergency_Lamp.name=12V Emergency Lamp
+15A_Electrical_Breaker.name=15A Electrical Breaker
+15A_Lead_Fuse.name=15A Lead Fuse
+200A_Electrical_Breaker.name=200A Electrical Breaker
+20A_Electrical_Breaker.name=20A Electrical Breaker
+20A_Lead_Fuse.name=20A Lead Fuse
+20A_Switch.name=20A Switch
+240V_Battery_Charger.name=240V Battery Charger
+240V_Emergency_Lamp.name=240V Emergency Lamp
+240V_Lamp_Supply.name=240V Lamp Supply
+240V_Type_E_Socket.name=240V Type E Socket
+240V_Type_J_Socket.name=240V Type J Socket
 25A_Diode.name=25A Diode
-50V_Battery_Charger.name=50V Battery Charger
-50V_Emergency_Lamp.name=50V Emergency Lamp
+30A_Electrical_Breaker.name=30A Electrical Breaker
+30A_Lead_Fuse.name=30A Lead Fuse
+400A_Electrical_Breaker.name=400A Electrical Breaker
+40A_Electrical_Breaker.name=40A Electrical Breaker
+50A_Electrical_Breaker.name=50A Electrical Breaker
+50A_Lead_Fuse.name=50A Lead Fuse
+50A_Switch.name=50A Switch
+5A_Electrical_Breaker.name=5A Electrical Breaker
+5A_Lead_Fuse.name=5A Lead Fuse
+5A_Switch.name=5A Switch
+5V_Control_Relay_10A.name=5V Control Relay 10A
+60A_Electrical_Breaker.name=60A Electrical Breaker
 AND_Chip.name=AND Chip
 Advanced_Energy_Meter.name=Advanced Energy Meter
+Aluminum_1/0_AWG_Cable_1000V.name=Aluminum 1/0 AWG Cable 1000V
+Aluminum_1/0_AWG_Cable_Bare.name=Aluminum 1/0 AWG Cable Bare
+Aluminum_1/0_AWG_Cable_Melted.name=Aluminum 1/0 AWG Cable Melted
+Aluminum_10/2_Cable_600V.name=Aluminum 10/2 Cable 600V
+Aluminum_10/2_Cable_Melted.name=Aluminum 10/2 Cable Melted
+Aluminum_10/3_Cable_600V.name=Aluminum 10/3 Cable 600V
+Aluminum_10/3_Cable_Melted.name=Aluminum 10/3 Cable Melted
+Aluminum_1000_kcmil_Cable_1000V.name=Aluminum 1000 kcmil Cable 1000V
+Aluminum_1000_kcmil_Cable_Bare.name=Aluminum 1000 kcmil Cable Bare
+Aluminum_1000_kcmil_Cable_Melted.name=Aluminum 1000 kcmil Cable Melted
+Aluminum_10_AWG_Cable_600V.name=Aluminum 10 AWG Cable 600V
+Aluminum_10_AWG_Cable_Bare.name=Aluminum 10 AWG Cable Bare
+Aluminum_10_AWG_Cable_Melted.name=Aluminum 10 AWG Cable Melted
+Aluminum_12/2_Cable_600V.name=Aluminum 12/2 Cable 600V
+Aluminum_12/2_Cable_Melted.name=Aluminum 12/2 Cable Melted
+Aluminum_12/3_Cable_600V.name=Aluminum 12/3 Cable 600V
+Aluminum_12/3_Cable_Melted.name=Aluminum 12/3 Cable Melted
+Aluminum_12_AWG_Cable_600V.name=Aluminum 12 AWG Cable 600V
+Aluminum_12_AWG_Cable_Bare.name=Aluminum 12 AWG Cable Bare
+Aluminum_12_AWG_Cable_Melted.name=Aluminum 12 AWG Cable Melted
+Aluminum_14/2_Cable_600V.name=Aluminum 14/2 Cable 600V
+Aluminum_14/2_Cable_Melted.name=Aluminum 14/2 Cable Melted
+Aluminum_14/3_Cable_600V.name=Aluminum 14/3 Cable 600V
+Aluminum_14/3_Cable_Melted.name=Aluminum 14/3 Cable Melted
+Aluminum_14_AWG_Cable_600V.name=Aluminum 14 AWG Cable 600V
+Aluminum_14_AWG_Cable_Bare.name=Aluminum 14 AWG Cable Bare
+Aluminum_14_AWG_Cable_Melted.name=Aluminum 14 AWG Cable Melted
+Aluminum_16_AWG_Cable_300V.name=Aluminum 16 AWG Cable 300V
+Aluminum_16_AWG_Cable_Bare.name=Aluminum 16 AWG Cable Bare
+Aluminum_16_AWG_Cable_Melted.name=Aluminum 16 AWG Cable Melted
+Aluminum_18_AWG_Cable_300V.name=Aluminum 18 AWG Cable 300V
+Aluminum_18_AWG_Cable_Bare.name=Aluminum 18 AWG Cable Bare
+Aluminum_18_AWG_Cable_Melted.name=Aluminum 18 AWG Cable Melted
+Aluminum_2/0_AWG_Cable_1000V.name=Aluminum 2/0 AWG Cable 1000V
+Aluminum_2/0_AWG_Cable_Bare.name=Aluminum 2/0 AWG Cable Bare
+Aluminum_2/0_AWG_Cable_Melted.name=Aluminum 2/0 AWG Cable Melted
+Aluminum_20_AWG_Cable_300V.name=Aluminum 20 AWG Cable 300V
+Aluminum_20_AWG_Cable_Bare.name=Aluminum 20 AWG Cable Bare
+Aluminum_20_AWG_Cable_Melted.name=Aluminum 20 AWG Cable Melted
+Aluminum_22_AWG_Cable_300V.name=Aluminum 22 AWG Cable 300V
+Aluminum_22_AWG_Cable_Bare.name=Aluminum 22 AWG Cable Bare
+Aluminum_22_AWG_Cable_Melted.name=Aluminum 22 AWG Cable Melted
+Aluminum_24_AWG_Cable_300V.name=Aluminum 24 AWG Cable 300V
+Aluminum_24_AWG_Cable_Bare.name=Aluminum 24 AWG Cable Bare
+Aluminum_24_AWG_Cable_Melted.name=Aluminum 24 AWG Cable Melted
+Aluminum_250_kcmil_Cable_1000V.name=Aluminum 250 kcmil Cable 1000V
+Aluminum_250_kcmil_Cable_Bare.name=Aluminum 250 kcmil Cable Bare
+Aluminum_250_kcmil_Cable_Melted.name=Aluminum 250 kcmil Cable Melted
+Aluminum_26_AWG_Cable_300V.name=Aluminum 26 AWG Cable 300V
+Aluminum_26_AWG_Cable_Bare.name=Aluminum 26 AWG Cable Bare
+Aluminum_26_AWG_Cable_Melted.name=Aluminum 26 AWG Cable Melted
+Aluminum_2C_18_AWG_Cable_300V.name=Aluminum 2C 18 AWG Cable 300V
+Aluminum_2C_18_AWG_Cable_Melted.name=Aluminum 2C 18 AWG Cable Melted
+Aluminum_2C_20_AWG_Cable_300V.name=Aluminum 2C 20 AWG Cable 300V
+Aluminum_2C_20_AWG_Cable_Melted.name=Aluminum 2C 20 AWG Cable Melted
+Aluminum_2_AWG_Cable_600V.name=Aluminum 2 AWG Cable 600V
+Aluminum_2_AWG_Cable_Bare.name=Aluminum 2 AWG Cable Bare
+Aluminum_2_AWG_Cable_Melted.name=Aluminum 2 AWG Cable Melted
+Aluminum_350_kcmil_Cable_1000V.name=Aluminum 350 kcmil Cable 1000V
+Aluminum_350_kcmil_Cable_Bare.name=Aluminum 350 kcmil Cable Bare
+Aluminum_350_kcmil_Cable_Melted.name=Aluminum 350 kcmil Cable Melted
+Aluminum_3C_18_AWG_Cable_300V.name=Aluminum 3C 18 AWG Cable 300V
+Aluminum_3C_18_AWG_Cable_Melted.name=Aluminum 3C 18 AWG Cable Melted
+Aluminum_3C_20_AWG_Cable_300V.name=Aluminum 3C 20 AWG Cable 300V
+Aluminum_3C_20_AWG_Cable_Melted.name=Aluminum 3C 20 AWG Cable Melted
+Aluminum_3G1.5_Cable_600V.name=Aluminum 3G1.5 Cable 600V
+Aluminum_3G1.5_Cable_Melted.name=Aluminum 3G1.5 Cable Melted
+Aluminum_3G2.5_Cable_600V.name=Aluminum 3G2.5 Cable 600V
+Aluminum_3G2.5_Cable_Melted.name=Aluminum 3G2.5 Cable Melted
+Aluminum_3G4_Cable_600V.name=Aluminum 3G4 Cable 600V
+Aluminum_3G4_Cable_Melted.name=Aluminum 3G4 Cable Melted
+Aluminum_4/0_AWG_Cable_1000V.name=Aluminum 4/0 AWG Cable 1000V
+Aluminum_4/0_AWG_Cable_Bare.name=Aluminum 4/0 AWG Cable Bare
+Aluminum_4/0_AWG_Cable_Melted.name=Aluminum 4/0 AWG Cable Melted
+Aluminum_4C_18_AWG_Cable_300V.name=Aluminum 4C 18 AWG Cable 300V
+Aluminum_4C_18_AWG_Cable_Melted.name=Aluminum 4C 18 AWG Cable Melted
+Aluminum_4C_20_AWG_Cable_300V.name=Aluminum 4C 20 AWG Cable 300V
+Aluminum_4C_20_AWG_Cable_Melted.name=Aluminum 4C 20 AWG Cable Melted
+Aluminum_4_AWG_Cable_600V.name=Aluminum 4 AWG Cable 600V
+Aluminum_4_AWG_Cable_Bare.name=Aluminum 4 AWG Cable Bare
+Aluminum_4_AWG_Cable_Melted.name=Aluminum 4 AWG Cable Melted
+Aluminum_500_kcmil_Cable_1000V.name=Aluminum 500 kcmil Cable 1000V
+Aluminum_500_kcmil_Cable_Bare.name=Aluminum 500 kcmil Cable Bare
+Aluminum_500_kcmil_Cable_Melted.name=Aluminum 500 kcmil Cable Melted
+Aluminum_5C_18_AWG_Cable_300V.name=Aluminum 5C 18 AWG Cable 300V
+Aluminum_5C_18_AWG_Cable_Melted.name=Aluminum 5C 18 AWG Cable Melted
+Aluminum_5C_20_AWG_Cable_300V.name=Aluminum 5C 20 AWG Cable 300V
+Aluminum_5C_20_AWG_Cable_Melted.name=Aluminum 5C 20 AWG Cable Melted
+Aluminum_5G1.5_Cable_600V.name=Aluminum 5G1.5 Cable 600V
+Aluminum_5G1.5_Cable_Melted.name=Aluminum 5G1.5 Cable Melted
+Aluminum_5G2.5_Cable_600V.name=Aluminum 5G2.5 Cable 600V
+Aluminum_5G2.5_Cable_Melted.name=Aluminum 5G2.5 Cable Melted
+Aluminum_5G4_Cable_600V.name=Aluminum 5G4 Cable 600V
+Aluminum_5G4_Cable_Melted.name=Aluminum 5G4 Cable Melted
+Aluminum_6_AWG_Cable_600V.name=Aluminum 6 AWG Cable 600V
+Aluminum_6_AWG_Cable_Bare.name=Aluminum 6 AWG Cable Bare
+Aluminum_6_AWG_Cable_Melted.name=Aluminum 6 AWG Cable Melted
+Aluminum_750_kcmil_Cable_1000V.name=Aluminum 750 kcmil Cable 1000V
+Aluminum_750_kcmil_Cable_Bare.name=Aluminum 750 kcmil Cable Bare
+Aluminum_750_kcmil_Cable_Melted.name=Aluminum 750 kcmil Cable Melted
+Aluminum_8/2_Cable_600V.name=Aluminum 8/2 Cable 600V
+Aluminum_8/2_Cable_Melted.name=Aluminum 8/2 Cable Melted
+Aluminum_8/3_Cable_600V.name=Aluminum 8/3 Cable 600V
+Aluminum_8/3_Cable_Melted.name=Aluminum 8/3 Cable Melted
+Aluminum_8C_18_AWG_Cable_300V.name=Aluminum 8C 18 AWG Cable 300V
+Aluminum_8C_18_AWG_Cable_Melted.name=Aluminum 8C 18 AWG Cable Melted
+Aluminum_8C_20_AWG_Cable_300V.name=Aluminum 8C 20 AWG Cable 300V
+Aluminum_8C_20_AWG_Cable_Melted.name=Aluminum 8C 20 AWG Cable Melted
+Aluminum_8_AWG_Cable_600V.name=Aluminum 8 AWG Cable 600V
+Aluminum_8_AWG_Cable_Bare.name=Aluminum 8 AWG Cable Bare
+Aluminum_8_AWG_Cable_Melted.name=Aluminum 8 AWG Cable Melted
+Aluminum_Molten_Metal_Pile.name=Aluminum Molten Metal Pile
+Aluminum_Quadruplex_1/0_Cable_600V.name=Aluminum Quadruplex 1/0 Cable 600V
+Aluminum_Quadruplex_1/0_Cable_Melted.name=Aluminum Quadruplex 1/0 Cable Melted
+Aluminum_Quadruplex_4/0_Cable_600V.name=Aluminum Quadruplex 4/0 Cable 600V
+Aluminum_Quadruplex_4/0_Cable_Melted.name=Aluminum Quadruplex 4/0 Cable Melted
+Aluminum_Triplex_1/0_Cable_600V.name=Aluminum Triplex 1/0 Cable 600V
+Aluminum_Triplex_1/0_Cable_Melted.name=Aluminum Triplex 1/0 Cable Melted
+Aluminum_Triplex_4/0_Cable_600V.name=Aluminum Triplex 4/0 Cable 600V
+Aluminum_Triplex_4/0_Cable_Melted.name=Aluminum Triplex 4/0 Cable Melted
 Amplifier.name=Amplifier
 Analog_Watch.name=Analog Watch
 Analog_vuMeter.name=Analog Gauge
 Blown_Lead_Fuse.name=Blown Lead Fuse
 Conduit.name=Conduit Cable
 Configurable_summing_unit.name=Configurable summing unit
+Copper_1/0_AWG_Cable_1000V.name=Copper 1/0 AWG Cable 1000V
+Copper_1/0_AWG_Cable_Bare.name=Copper 1/0 AWG Cable Bare
+Copper_1/0_AWG_Cable_Melted.name=Copper 1/0 AWG Cable Melted
+Copper_10/2_Cable_600V.name=Copper 10/2 Cable 600V
+Copper_10/2_Cable_Melted.name=Copper 10/2 Cable Melted
+Copper_10/3_Cable_600V.name=Copper 10/3 Cable 600V
+Copper_10/3_Cable_Melted.name=Copper 10/3 Cable Melted
+Copper_1000_kcmil_Cable_1000V.name=Copper 1000 kcmil Cable 1000V
+Copper_1000_kcmil_Cable_Bare.name=Copper 1000 kcmil Cable Bare
+Copper_1000_kcmil_Cable_Melted.name=Copper 1000 kcmil Cable Melted
+Copper_10_AWG_Cable_600V.name=Copper 10 AWG Cable 600V
+Copper_10_AWG_Cable_Bare.name=Copper 10 AWG Cable Bare
+Copper_10_AWG_Cable_Melted.name=Copper 10 AWG Cable Melted
+Copper_12/2_Cable_600V.name=Copper 12/2 Cable 600V
+Copper_12/2_Cable_Melted.name=Copper 12/2 Cable Melted
+Copper_12/3_Cable_600V.name=Copper 12/3 Cable 600V
+Copper_12/3_Cable_Melted.name=Copper 12/3 Cable Melted
+Copper_12_AWG_Cable_600V.name=Copper 12 AWG Cable 600V
+Copper_12_AWG_Cable_Bare.name=Copper 12 AWG Cable Bare
+Copper_12_AWG_Cable_Melted.name=Copper 12 AWG Cable Melted
+Copper_14/2_Cable_600V.name=Copper 14/2 Cable 600V
+Copper_14/2_Cable_Melted.name=Copper 14/2 Cable Melted
+Copper_14/3_Cable_600V.name=Copper 14/3 Cable 600V
+Copper_14/3_Cable_Melted.name=Copper 14/3 Cable Melted
+Copper_14_AWG_Cable_600V.name=Copper 14 AWG Cable 600V
+Copper_14_AWG_Cable_Bare.name=Copper 14 AWG Cable Bare
+Copper_14_AWG_Cable_Melted.name=Copper 14 AWG Cable Melted
+Copper_16_AWG_Cable_300V.name=Copper 16 AWG Cable 300V
+Copper_16_AWG_Cable_Bare.name=Copper 16 AWG Cable Bare
+Copper_16_AWG_Cable_Melted.name=Copper 16 AWG Cable Melted
+Copper_18_AWG_Cable_300V.name=Copper 18 AWG Cable 300V
+Copper_18_AWG_Cable_Bare.name=Copper 18 AWG Cable Bare
+Copper_18_AWG_Cable_Melted.name=Copper 18 AWG Cable Melted
+Copper_2/0_AWG_Cable_1000V.name=Copper 2/0 AWG Cable 1000V
+Copper_2/0_AWG_Cable_Bare.name=Copper 2/0 AWG Cable Bare
+Copper_2/0_AWG_Cable_Melted.name=Copper 2/0 AWG Cable Melted
+Copper_20_AWG_Cable_300V.name=Copper 20 AWG Cable 300V
+Copper_20_AWG_Cable_Bare.name=Copper 20 AWG Cable Bare
+Copper_20_AWG_Cable_Melted.name=Copper 20 AWG Cable Melted
+Copper_22_AWG_Cable_300V.name=Copper 22 AWG Cable 300V
+Copper_22_AWG_Cable_Bare.name=Copper 22 AWG Cable Bare
+Copper_22_AWG_Cable_Melted.name=Copper 22 AWG Cable Melted
+Copper_24_AWG_Cable_300V.name=Copper 24 AWG Cable 300V
+Copper_24_AWG_Cable_Bare.name=Copper 24 AWG Cable Bare
+Copper_24_AWG_Cable_Melted.name=Copper 24 AWG Cable Melted
+Copper_250_kcmil_Cable_1000V.name=Copper 250 kcmil Cable 1000V
+Copper_250_kcmil_Cable_Bare.name=Copper 250 kcmil Cable Bare
+Copper_250_kcmil_Cable_Melted.name=Copper 250 kcmil Cable Melted
+Copper_26_AWG_Cable_300V.name=Copper 26 AWG Cable 300V
+Copper_26_AWG_Cable_Bare.name=Copper 26 AWG Cable Bare
+Copper_26_AWG_Cable_Melted.name=Copper 26 AWG Cable Melted
+Copper_2C_18_AWG_Cable_300V.name=Copper 2C 18 AWG Cable 300V
+Copper_2C_18_AWG_Cable_Melted.name=Copper 2C 18 AWG Cable Melted
+Copper_2C_20_AWG_Cable_300V.name=Copper 2C 20 AWG Cable 300V
+Copper_2C_20_AWG_Cable_Melted.name=Copper 2C 20 AWG Cable Melted
+Copper_2_AWG_Cable_600V.name=Copper 2 AWG Cable 600V
+Copper_2_AWG_Cable_Bare.name=Copper 2 AWG Cable Bare
+Copper_2_AWG_Cable_Melted.name=Copper 2 AWG Cable Melted
+Copper_350_kcmil_Cable_1000V.name=Copper 350 kcmil Cable 1000V
+Copper_350_kcmil_Cable_Bare.name=Copper 350 kcmil Cable Bare
+Copper_350_kcmil_Cable_Melted.name=Copper 350 kcmil Cable Melted
+Copper_3C_18_AWG_Cable_300V.name=Copper 3C 18 AWG Cable 300V
+Copper_3C_18_AWG_Cable_Melted.name=Copper 3C 18 AWG Cable Melted
+Copper_3C_20_AWG_Cable_300V.name=Copper 3C 20 AWG Cable 300V
+Copper_3C_20_AWG_Cable_Melted.name=Copper 3C 20 AWG Cable Melted
+Copper_3G1.5_Cable_600V.name=Copper 3G1.5 Cable 600V
+Copper_3G1.5_Cable_Melted.name=Copper 3G1.5 Cable Melted
+Copper_3G2.5_Cable_600V.name=Copper 3G2.5 Cable 600V
+Copper_3G2.5_Cable_Melted.name=Copper 3G2.5 Cable Melted
+Copper_3G4_Cable_600V.name=Copper 3G4 Cable 600V
+Copper_3G4_Cable_Melted.name=Copper 3G4 Cable Melted
+Copper_4/0_AWG_Cable_1000V.name=Copper 4/0 AWG Cable 1000V
+Copper_4/0_AWG_Cable_Bare.name=Copper 4/0 AWG Cable Bare
+Copper_4/0_AWG_Cable_Melted.name=Copper 4/0 AWG Cable Melted
+Copper_4C_18_AWG_Cable_300V.name=Copper 4C 18 AWG Cable 300V
+Copper_4C_18_AWG_Cable_Melted.name=Copper 4C 18 AWG Cable Melted
+Copper_4C_20_AWG_Cable_300V.name=Copper 4C 20 AWG Cable 300V
+Copper_4C_20_AWG_Cable_Melted.name=Copper 4C 20 AWG Cable Melted
+Copper_4_AWG_Cable_600V.name=Copper 4 AWG Cable 600V
+Copper_4_AWG_Cable_Bare.name=Copper 4 AWG Cable Bare
+Copper_4_AWG_Cable_Melted.name=Copper 4 AWG Cable Melted
+Copper_500_kcmil_Cable_1000V.name=Copper 500 kcmil Cable 1000V
+Copper_500_kcmil_Cable_Bare.name=Copper 500 kcmil Cable Bare
+Copper_500_kcmil_Cable_Melted.name=Copper 500 kcmil Cable Melted
+Copper_5C_18_AWG_Cable_300V.name=Copper 5C 18 AWG Cable 300V
+Copper_5C_18_AWG_Cable_Melted.name=Copper 5C 18 AWG Cable Melted
+Copper_5C_20_AWG_Cable_300V.name=Copper 5C 20 AWG Cable 300V
+Copper_5C_20_AWG_Cable_Melted.name=Copper 5C 20 AWG Cable Melted
+Copper_5G1.5_Cable_600V.name=Copper 5G1.5 Cable 600V
+Copper_5G1.5_Cable_Melted.name=Copper 5G1.5 Cable Melted
+Copper_5G2.5_Cable_600V.name=Copper 5G2.5 Cable 600V
+Copper_5G2.5_Cable_Melted.name=Copper 5G2.5 Cable Melted
+Copper_5G4_Cable_600V.name=Copper 5G4 Cable 600V
+Copper_5G4_Cable_Melted.name=Copper 5G4 Cable Melted
+Copper_6_AWG_Cable_600V.name=Copper 6 AWG Cable 600V
+Copper_6_AWG_Cable_Bare.name=Copper 6 AWG Cable Bare
+Copper_6_AWG_Cable_Melted.name=Copper 6 AWG Cable Melted
+Copper_750_kcmil_Cable_1000V.name=Copper 750 kcmil Cable 1000V
+Copper_750_kcmil_Cable_Bare.name=Copper 750 kcmil Cable Bare
+Copper_750_kcmil_Cable_Melted.name=Copper 750 kcmil Cable Melted
+Copper_8/2_Cable_600V.name=Copper 8/2 Cable 600V
+Copper_8/2_Cable_Melted.name=Copper 8/2 Cable Melted
+Copper_8/3_Cable_600V.name=Copper 8/3 Cable 600V
+Copper_8/3_Cable_Melted.name=Copper 8/3 Cable Melted
+Copper_8C_18_AWG_Cable_300V.name=Copper 8C 18 AWG Cable 300V
+Copper_8C_18_AWG_Cable_Melted.name=Copper 8C 18 AWG Cable Melted
+Copper_8C_20_AWG_Cable_300V.name=Copper 8C 20 AWG Cable 300V
+Copper_8C_20_AWG_Cable_Melted.name=Copper 8C 20 AWG Cable Melted
+Copper_8_AWG_Cable_600V.name=Copper 8 AWG Cable 600V
+Copper_8_AWG_Cable_Bare.name=Copper 8 AWG Cable Bare
+Copper_8_AWG_Cable_Melted.name=Copper 8 AWG Cable Melted
+Copper_Molten_Metal_Pile.name=Copper Molten Metal Pile
+Copper_Quadruplex_1/0_Cable_600V.name=Copper Quadruplex 1/0 Cable 600V
+Copper_Quadruplex_1/0_Cable_Melted.name=Copper Quadruplex 1/0 Cable Melted
+Copper_Quadruplex_4/0_Cable_600V.name=Copper Quadruplex 4/0 Cable 600V
+Copper_Quadruplex_4/0_Cable_Melted.name=Copper Quadruplex 4/0 Cable Melted
 Copper_Thermal_Cable.name=Copper Thermal Cable
+Copper_Triplex_1/0_Cable_600V.name=Copper Triplex 1/0 Cable 600V
+Copper_Triplex_1/0_Cable_Melted.name=Copper Triplex 1/0 Cable Melted
+Copper_Triplex_4/0_Cable_600V.name=Copper Triplex 4/0 Cable 600V
+Copper_Triplex_4/0_Cable_Melted.name=Copper Triplex 4/0 Cable Melted
 Creative_Cable.name=Creative Cable
+Creative_Power_Capacitor.name=Creative Power Capacitor
+Creative_Power_Inductor.name=Creative Power Inductor
+Creative_Power_Resistor.name=Creative Power Resistor
 Current_Source.name=Current Source
 D_Flip_Flop_Chip.name=D Flip Flop Chip
 Data_Logger.name=Data Logger
 Digital_Display.name=Digital Display
 Digital_Watch.name=Digital Watch
 Electrical_Anemometer_Sensor.name=Electrical Anemometer Sensor
-Electrical_Breaker.name=Electrical Breaker
 Electrical_Daylight_Sensor.name=Electrical Daylight Sensor
 Electrical_Entity_Sensor.name=Electrical Entity Sensor
 Electrical_Fire_Buzzer.name=Electrical Fire Buzzer
@@ -1065,7 +1415,6 @@ JK_Flip_Flop_Chip.name=JK Flip Flop Chip
 LED_vuMeter.name=LED vuMeter
 Lamp_Socket_A.name=Lamp Socket A
 Lamp_Socket_B_Projector.name=Lamp Socket B Projector
-Lamp_Supply.name=Lamp Supply
 Lead_Fuse_for_high_voltage_cables.name=Lead Fuse for high voltage cables
 Lead_Fuse_for_low_voltage_cables.name=Lead Fuse for low voltage cables
 Lead_Fuse_for_medium_voltage_cables.name=Lead Fuse for medium voltage cables
@@ -1130,8 +1479,6 @@ Thermistor.name=Thermistor
 Thermometer_Sensor.name=Thermometer Sensor
 Tree_Resin_Collector.name=Tree Resin Collector
 Tutorial_Sign.name=Tutorial Sign
-Type_E_Socket.name=Type E Socket
-Type_J_Socket.name=Type J Socket
 Variable_inductor.name=Variable Inductor
 Very_High_Voltage_Cable.name=Very High Voltage Cable
 Very_High_Voltage_Relay.name=Very High Voltage Relay
@@ -1141,7 +1488,6 @@ Voltage_Probe.name=Voltage Probe
 Voltage_controlled_amplifier.name=Voltage controlled amplifier
 Voltage_controlled_sawtooth_oscillator.name=Voltage controlled sawtooth oscillator
 Voltage_controlled_sine_oscillator.name=Voltage controlled sine oscillator
-Weak_50V_Battery_Charger.name=Weak 50V Battery Charger
 Wireless_Button.name=Wireless Button
 Wireless_Signal_Receiver.name=Wireless Signal Receiver
 Wireless_Signal_Repeater.name=Wireless Signal Repeater
@@ -1151,25 +1497,27 @@ XNOR_Chip.name=XNOR Chip
 XOR_Chip.name=XOR Chip
 
 # src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt
-200V_Active_Thermal_Dissipator.name=200V Active Thermal Dissipator
-200V_Compressor.name=200V Compressor
-200V_Fuel_Generator.name=200V Fuel Generator
-200V_Macerator.name=200V Macerator
-200V_Magnetizer.name=200V Magnetizer
-200V_Plate_Machine.name=200V Plate Machine
-200V_Turbine.name=200V Turbine
+120V_Basic_Floodlight.name=120V Basic Floodlight
+240V_Active_Thermal_Dissipator.name=240V Active Thermal Dissipator
+240V_Compressor.name=240V Compressor
+240V_Fuel_Generator.name=240V Fuel Generator
+240V_Macerator.name=240V Macerator
+240V_Magnetizer.name=240V Magnetizer
+240V_Motorized_Floodlight.name=240V Motorized Floodlight
+240V_Plate_Machine.name=240V Plate Machine
+240V_Turbine.name=240V Turbine
+24V_Egg_Incubator.name=24V Egg Incubator
+24V_Small_Active_Thermal_Dissipator.name=24V Small Active Thermal Dissipator
 2x3_Rotating_Solar_Panel.name=2x3 Rotating Solar Panel
 2x3_Solar_Panel.name=2x3 Solar Panel
-50V_Compressor.name=50V Compressor
-50V_Egg_Incubator.name=50V Egg Incubator
-50V_Fuel_Generator.name=50V Fuel Generator
-50V_Macerator.name=50V Macerator
-50V_Magnetizer.name=50V Magnetizer
-50V_Plate_Machine.name=50V Plate Machine
-50V_Turbine.name=50V Turbine
-800V_Defence_Turret.name=800V Defence Turret
+480V_Defence_Turret.name=480V Defence Turret
+48V_Compressor.name=48V Compressor
+48V_Fuel_Generator.name=48V Fuel Generator
+48V_Macerator.name=48V Macerator
+48V_Magnetizer.name=48V Magnetizer
+48V_Plate_Machine.name=48V Plate Machine
+48V_Turbine.name=48V Turbine
 Auto_Miner.name=Auto Miner
-Basic_Floodlight.name=Basic Floodlight
 Capacity_Oriented_Battery.name=Capacity Oriented Battery
 Christmas_Tree.name=Christmas Tree
 Clutch.name=Clutch
@@ -1205,9 +1553,8 @@ Low_Power_Receiver_Antenna.name=Low Power Receiver Antenna
 Low_Power_Transmitter_Antenna.name=Low Power Transmitter Antenna
 Medium_Power_Receiver_Antenna.name=Medium Power Receiver Antenna
 Medium_Power_Transmitter_Antenna.name=Medium Power Transmitter Antenna
-Motorized_Floodlight.name=Motorized Floodlight
 Nixie_Tube.name=Nixie Tube
-Old_800V_Arc_Furnace.name=800V Arc Furnace
+Old_480V_Arc_Furnace.name=Old 480V Arc Furnace
 Overhead_Lines.name=Overhead Lines
 Polarized_Shaft_Generator.name=Polarized Shaft Generator
 Polarized_Shaft_Motor.name=Polarized Shaft Motor
@@ -1217,7 +1564,6 @@ Radial_Motor.name=Radial Motor
 Rolling_Shaft_Machine.name=Rolling Shaft Machine
 Shaft_Motor.name=Shaft Motor
 Single-use_Battery.name=Single-use Battery
-Small_Active_Thermal_Dissipator.name=Small Active Thermal Dissipator
 Small_Passive_Thermal_Dissipator.name=Small Passive Thermal Dissipator
 Small_Rotating_Solar_Panel.name=Small Rotating Solar Panel
 Small_Solar_Panel.name=Small Solar Panel
@@ -1234,6 +1580,9 @@ Variable_DC-DC_Converter.name=Variable DC-DC Converter
 Voltage_Oriented_Battery.name=Voltage Oriented Battery
 Water_Turbine.name=Water Turbine
 Wind_Turbine.name=Wind Turbine
+Wire_Combiner.name=Wire Combiner
+Wire_Insulator.name=Wire Insulator
+Wire_Roller.name=Wire Roller
 
 # src/main/kotlin/mods/eln/sixnode/AnalogChips.kt
 A_voltage-controlled_amplifier_(VCA)\nis_an_electronic_amplifier_that_varies\nits_gain_depending_on_the_control_voltage.=A voltage-controlled amplifier (VCA)\nis an electronic amplifier that varies\nits gain depending on the control voltage.
@@ -1256,6 +1605,21 @@ The_summing_unit_outputs_the_sum_of\nthe_three_weighted_inputs.The\ngain_for_eac
 A_conduit_to_run_your_cables_through=A conduit to run your cables through
 Contained_Cables=Contained Cables
 __*_Thermal_Sim_is_disabled_in_the_conduit=  * Thermal Sim is disabled in the conduit
+
+# src/main/kotlin/mods/eln/sixnode/CreativePassiveSix.kt
+Capacitance=Capacitance
+Capacitance_in_farads=Capacitance in farads
+Creative_Power_Capacitor=Creative Power Capacitor
+Creative_Power_Inductor=Creative Power Inductor
+Creative_Power_Resistor=Creative Power Resistor
+Creative_capacitor_with_direct_value_entry.=Creative capacitor with direct value entry.
+Creative_inductor_with_direct_value_entry.=Creative inductor with direct value entry.
+Creative_resistor_with_direct_value_entry.=Creative resistor with direct value entry.
+Inductance_in_henries=Inductance in henries
+MNA_capacitor_solving_can_produce_unrealistic_results.=MNA capacitor solving can produce unrealistic results.
+MNA_inductor_solving_can_produce_unrealistic_results.=MNA inductor solving can produce unrealistic results.
+Resistance_in_ohms=Resistance in ohms
+Timestep-dependent_behavior_can_make_reactive_simulation_inaccurate.=Timestep-dependent behavior can make reactive simulation inaccurate.
 
 # src/main/kotlin/mods/eln/sixnode/CurrentSourceSix.kt
 Acts_as_an_ideal_current_source,_with_a_small_inline_resistance=Acts as an ideal current source, with a small inline resistance
@@ -1302,7 +1666,6 @@ Voltage\:_Yes=Voltage: Yes
 
 # src/main/kotlin/mods/eln/sixnode/PowerCapacitor.kt
 (Increases_maximum_voltage)=(Increases maximum voltage)
-Capacity=Capacity
 Provides_capacitance._Use_with_dielectrics_and_redstone=Provides capacitance. Use with dielectrics and redstone
 
 # src/main/kotlin/mods/eln/sixnode/PowerInductorSix.kt
@@ -1327,8 +1690,33 @@ Inductance_range\:_%1$-%2$=Inductance range: %1$-%2$
 Signal_controlled_inductor=Signal controlled inductor
 
 # src/main/kotlin/mods/eln/sixnode/currentcable/CurrentCable.kt
+Deprecated_legacy_cable._Prefer_AWG/mm_utility_cables_for_new_builds.=Deprecated legacy cable. Prefer AWG/mm utility cables for new builds.
+This_current-tier_cable_family_is_deprecated_in_the_rebalance.=This current-tier cable family is deprecated in the rebalance.
 __*_Wire_current_limits_are_arbitrary_values,_added_as_a_gameplay_mechanic=  * Wire current limits are arbitrary values, added as a gameplay mechanic
 __*_Wire_voltage_limits_are_arbitrary_values,_picked_to_within_reasonable_simulator_error=  * Wire voltage limits are arbitrary values, picked to within reasonable simulator error
+
+# src/main/kotlin/mods/eln/sixnode/currentrelay/CurrentRelay.kt
+Deprecated_legacy_relay._Prefer_relays_that_follow_the_AWG/mm_cable_system.=Deprecated legacy relay. Prefer relays that follow the AWG/mm cable system.
+
+# src/main/kotlin/mods/eln/sixnode/electricalcable/MoltenMetalPile.kt
+A_puddle_of_molten_%1$_from_an_overheated_cable.=A puddle of molten %1$ from an overheated cable.
+Molten_metal=Molten metal
+
+# src/main/kotlin/mods/eln/sixnode/electricalcable/UtilityCable.kt
+%1$V=%1$V
+Bare=Bare
+Brush\:_paint_conductor_color=Brush: paint conductor color
+Conductor=Conductor
+Conductor\:_%1$_%2$_(%3$_mm2)=Conductor: %1$ %2$ (%3$ mm2)
+Conductor_colors\:_%1$=Conductor colors: %1$
+Conductors\:_%1$=Conductors: %1$
+Ground=Ground
+Insulation\:_%1$=Insulation: %1$
+Max_temperature\:_%1$C=Max temperature: %1$C
+Palette=Palette
+Placement_usage\:_%1$_m=Placement usage: %1$ m
+Remaining_length\:_%1$_m=Remaining length: %1$ m
+Wrench\:_cycle_conductor_colors=Wrench: cycle conductor colors
 
 # src/main/kotlin/mods/eln/sixnode/electricalhumiditysensor/ElectricalHumiditySensorDescriptor.kt
 0%%_RH\:_%1$V=0%% RH: %1$V
@@ -1438,6 +1826,21 @@ Control_Voltage=Control Voltage
 The_output_voltage_is_controlled\nfrom_a_signal_input=The output voltage is controlled\nfrom a signal input
 This_variable_DC/DC_has_unrealistic_capacitance_effects_and_can_sink/source_power_that_violates_Newton's_laws=This variable DC/DC has unrealistic capacitance effects and can sink/source power that violates Newton's laws
 
+# src/main/kotlin/mods/eln/transparentnode/WireProcessingMachines.kt
+%1$_/_%2$=%1$ / %2$
+%1$_kg=%1$ kg
+Buffer\:_%1$_kg_%2$=Buffer: %1$ kg %2$
+Builds_wound_bundles_for_later_insulation=Builds wound bundles for later insulation
+Insulation_Buffer=Insulation Buffer
+Insulation_Buffer\:_%1$=Insulation Buffer: %1$
+Loaded_Material=Loaded Material
+Metal_Buffer=Metal Buffer
+Output\:_%1$=Output: %1$
+Progress=Progress
+Progress\:_%1$_/_%2$=Progress: %1$ / %2$
+Target_Length=Target Length
+Target_length_in_meters=Target length in meters
+
 # src/main/kotlin/mods/eln/transparentnode/battery/BatteryDescriptor.kt
 Actual_charge\:_=Actual charge: 
 Batteries_are_based_in_realistic_battery_designs_that_someone_might_implement_realistically\:=Batteries are based in realistic battery designs that someone might implement realistically:
@@ -1448,6 +1851,7 @@ Life\:_=Life:
 Nominal_power\:_=Nominal power: 
 Nominal_voltage\:_=Nominal voltage: 
 __*_Batteries_have_internal_resistance=  * Batteries have internal resistance
+__*_Compact_batteries_are_now_intended_around_12V,_service_batteries_around_24V,_and_series_batteries_around_48V=  * Compact batteries are now intended around 12V, service batteries around 24V, and series batteries around 48V
 __*_Current_oriented_uses_two_smaller_batteries_in_parallel_to_increase_current_capability=  * Current oriented uses two smaller batteries in parallel to increase current capability
 __*_Not_currently_simulating_any_particular_chemistry_of_battery=  * Not currently simulating any particular chemistry of battery
 __*_Single_use_batteries_emulate_a_voltaic_pile=  * Single use batteries emulate a voltaic pile
@@ -1473,6 +1877,9 @@ Not_as_warm_as_it_could_be=Not as warm as it could be
 
 # src/main/kotlin/mods/eln/transparentnode/floodlight/FloodlightDescriptor.kt
 A_powerful_lamp_that_specializes_in\nthe_illumination_of_large_spaces.=A powerful lamp that specializes in\nthe illumination of large spaces.
+Intended_for_120V_or_240V_bulb_families.=Intended for 120V or 240V bulb families.
+Intended_for_240V_bulb_families.=Intended for 240V bulb families.
+Uses_inserted_light_bulbs.=Uses inserted light bulbs.
 
 # src/main/kotlin/mods/eln/transparentnode/floodlight/FloodlightElement.kt
 Bulb_1=Bulb 1
