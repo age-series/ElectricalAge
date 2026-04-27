@@ -17,6 +17,10 @@ import mods.eln.simplenode.energyconverter.EnergyConverterElnToOtherDescriptor
 import mods.eln.simplenode.energyconverter.EnergyConverterElnToOtherEntity
 import mods.eln.simplenode.energyconverter.EnergyConverterElnToOtherNode
 import mods.eln.simplenode.energyconverter.EnergyConverterElnToOtherNode.Companion.nodeUuidStatic
+import mods.eln.railroad.ThirdRailBlock
+import mods.eln.railroad.ThirdRailItem
+import mods.eln.railroad.ThirdRailNode
+import mods.eln.railroad.ThirdRailTileEntity
 import net.minecraft.tileentity.TileEntity
 
 object SingleNodeRegistration {
@@ -27,6 +31,7 @@ object SingleNodeRegistration {
         }
         registerEnergyConverter()
         registerComputer()
+        registerThirdRail()
     }
 
 
@@ -90,4 +95,15 @@ object SingleNodeRegistration {
         */
     }
 
+    private fun registerThirdRail() {
+        val entityName = I18N.TR_NAME(I18N.Type.TILE, "eln.thirdRail")
+        TileEntity.addMapping(ThirdRailTileEntity::class.java, "eln.ThirdRail")
+        registerUuid(ThirdRailNode.NODE_UUID, ThirdRailNode::class.java)
+
+        Eln.instance.thirdRailBlock = ThirdRailBlock()
+        Eln.instance.thirdRailBlock
+            .setCreativeTab(Eln.creativeTabPowerElectronics)
+            .setBlockName(entityName)
+        GameRegistry.registerBlock(Eln.instance.thirdRailBlock, ThirdRailItem::class.java, entityName)
+    }
 }

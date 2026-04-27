@@ -11,6 +11,8 @@ import mods.eln.node.six.SixNodeEntity;
 import mods.eln.node.six.SixNodeRender;
 import mods.eln.node.transparent.TransparentNodeEntity;
 import mods.eln.node.transparent.TransparentNodeRender;
+import mods.eln.railroad.ThirdRailTileEntity;
+import mods.eln.railroad.ThirdRailRenderer;
 import mods.eln.sixnode.tutorialsign.TutorialSignOverlay;
 import mods.eln.sound.SoundClientEventListener;
 import net.minecraft.client.model.ModelSilverfish;
@@ -28,6 +30,7 @@ public class ClientProxy extends CommonProxy {
         new ClientPacketHandler();
         ClientRegistry.bindTileEntitySpecialRenderer(SixNodeEntity.class, new SixNodeRender());
         ClientRegistry.bindTileEntitySpecialRenderer(TransparentNodeEntity.class, new TransparentNodeRender());
+        ClientRegistry.bindTileEntitySpecialRenderer(ThirdRailTileEntity.class, new ThirdRailRenderer());
 
         MinecraftForgeClient.registerItemRenderer(Eln.transparentNodeItem, Eln.transparentNodeItem);
         MinecraftForgeClient.registerItemRenderer(Eln.sixNodeItem, Eln.sixNodeItem);

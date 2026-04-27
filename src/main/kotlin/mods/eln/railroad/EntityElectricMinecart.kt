@@ -3,12 +3,14 @@ package mods.eln.railroad
 import mods.eln.Eln
 import mods.eln.misc.Coordinate
 import mods.eln.node.NodeManager
+import mods.eln.node.transparent.TransparentNode
 import mods.eln.sim.mna.misc.MnaConst
 import net.minecraft.block.Block
 import net.minecraft.entity.item.EntityMinecart
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.init.Blocks
 import net.minecraft.nbt.NBTTagCompound
+import net.minecraft.util.MathHelper
 import net.minecraft.world.World
 import kotlin.math.abs
 import kotlin.math.sign
@@ -25,7 +27,12 @@ class EntityElectricMinecart(world: World, x: Double, y: Double, z: Double): Ent
 
     override fun onUpdate() {
         super.onUpdate()
-        val cartCoordinate = Coordinate(posX.toInt(), posY.toInt(), posZ.toInt(), worldObj)
+        val cartCoordinate = Coordinate(
+            MathHelper.floor_double(posX),
+            MathHelper.floor_double(posY),
+            MathHelper.floor_double(posZ),
+            worldObj
+        )
         val overheadWires = getOverheadWires(cartCoordinate)
         val underTrackWires = getUnderTrackWires(cartCoordinate)
 
@@ -50,8 +57,15 @@ class EntityElectricMinecart(world: World, x: Double, y: Double, z: Double): Ent
             }
 
             if (energyBufferJoules < energyBufferTargetJoules) {
-                val chargeRateInv = energyBufferTargetJoules / (abs(energyBufferTargetJoules - energyBufferJoules) * 2)
-                PoweredMinecartSimulationSingleton.powerCart(this, chargeRateInv * locomotiveMaximumResistance, 0.1)
+                val deficit = abs(energyBufferTargetJoules - energyBufferJoules)
+                val rawChargeRateInv = if (deficit < 1e-6) {
+                    0.0
+                } else {
+                    energyBufferTargetJoules / (deficit * 2)
+                }
+                val requestedResistance = (rawChargeRateInv * locomotiveMaximumResistance)
+                    .coerceAtLeast(PoweredMinecartSimulationSingleton.MINIMUM_CART_RESISTANCE)
+                PoweredMinecartSimulationSingleton.powerCart(this, requestedResistance, 0.1)
             } else {
                 PoweredMinecartSimulationSingleton.powerCart(this, MnaConst.highImpedance, 0.1)
             }
@@ -103,25 +117,48 @@ class EntityElectricMinecart(world: World, x: Double, y: Double, z: Double): Ent
         pushZ = 0.0
     }
 
-    private fun getOverheadWires(coordinate: Coordinate): OverheadLinesElement? {
-        // Pass coordinate of tracks and check vertically the next 3 blocks (4 up looks visually weird)
-        val originalY = coordinate.y
-        while (coordinate.y <= (originalY + 3)) {
-            coordinate.y
-            val node = NodeManager.instance!!.getTransparentNodeFromCoordinate(coordinate)
-            if (node is OverheadLinesElement) {
-                return node
+    private fun getOverheadWires(coordinate: Coordinate): RailroadPowerInterface? {
+        val base = Coordinate(coordinate)
+        val startY = base.y
+        for (offset in 1..3) {
+            val current = Coordinate(base)
+            current.y = startY + offset
+            val candidate = getRailroadPowerInterfaceAt(current)
+            if (candidate != null) {
+                return candidate
             }
-            coordinate.y++
         }
         return null
     }
 
-    private fun getUnderTrackWires(coordinate: Coordinate): UnderTrackPowerElement? {
-        coordinate.y -= 1 // check the block below the cart
-        val node = NodeManager.instance!!.getTransparentNodeFromCoordinate(coordinate)
-        if (node is UnderTrackPowerElement) {
+    private fun getUnderTrackWires(coordinate: Coordinate): RailroadPowerInterface? {
+        val trackCoord = Coordinate(coordinate)
+        getRailroadPowerInterfaceAt(trackCoord)?.let { return it }
+
+        val below = Coordinate(coordinate)
+        below.y -= 1
+        return getRailroadPowerInterfaceAt(below)
+    }
+
+    private fun getRailroadPowerInterfaceAt(coordinate: Coordinate): RailroadPowerInterface? {
+        val node = NodeManager.instance!!.getNodeFromCoordonate(coordinate)
+        if (node is RailroadPowerInterface) {
             return node
+        }
+        if (node is TransparentNode) {
+            val element = node.element
+            if (element is RailroadPowerInterface) {
+                return element
+            }
+        }
+        if (coordinate.dimension == worldObj.provider.dimensionId) {
+            val tile = worldObj.getTileEntity(coordinate.x, coordinate.y, coordinate.z)
+            if (tile is ThirdRailTileEntity) {
+                val thirdRailNode = tile.node
+                if (thirdRailNode is RailroadPowerInterface) {
+                    return thirdRailNode
+                }
+            }
         }
         return null
     }
@@ -166,4 +203,5 @@ class EntityElectricMinecart(world: World, x: Double, y: Double, z: Double): Ent
     override fun func_145820_n(): Block? {
         return Blocks.iron_block
     }
+
 }
