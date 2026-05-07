@@ -5,6 +5,7 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.Phase;
 import cpw.mods.fml.common.gameevent.TickEvent.ServerTickEvent;
 import mods.eln.environment.RoomThermalManager;
+import mods.eln.item.lampitem.LampLists;
 import mods.eln.misc.Utils;
 import mods.eln.sim.mna.RootSystem;
 import mods.eln.sim.mna.component.Component;
@@ -49,6 +50,7 @@ public class Simulator /* ,IPacketHandler */ {
     double thermalTimeout = 0;
 
     private int printTimeCounter = 0;
+    private int resetLampLifeTimeoutCounter = 0;
 
     public ArrayList<IProcess> getElectricalProcessList() {
         return electricalProcessList;
@@ -449,6 +451,14 @@ public class Simulator /* ,IPacketHandler */ {
             thermalFastNsStack = 0;
             slowNsStack = 0;
             thermalSlowNsStack = 0;
+
+            if (LampLists.INSTANCE.getResetLampLifeFlag()) {
+                if (++resetLampLifeTimeoutCounter == 2) { // Ensure that all lamp sockets have time to react to the flag by waiting between 1 and 2 seconds to reset the flag
+                    LampLists.INSTANCE.setResetLampLifeFlag(false);
+                    Utils.println("Reset all lamp lives to nominal.");
+                    resetLampLifeTimeoutCounter = 0;
+                }
+            }
         }
 
         for(IProcess o : slowPostProcessList) {

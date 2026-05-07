@@ -6,6 +6,7 @@ import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import mods.eln.Other
 import mods.eln.item.TurbineBladeLists
+import mods.eln.item.lampitem.BoilerplateLampData
 import mods.eln.item.lampitem.LampLists
 import mods.eln.misc.Utils
 import java.io.File
@@ -231,7 +232,7 @@ class JsonConfig @JvmOverloads constructor(
     fun loadConfig() {
         load()
 
-        for (lampData in LampLists.lampTechnologyList) lampData.loadConfig()
+        LampLists.loadLampConfig()
         for (bladeData in TurbineBladeLists.bladeConfigList) bladeData.loadConfig()
 
         val analyticsEnabled = getBooleanOrElse("analytics.enabled", true)
@@ -292,12 +293,35 @@ class JsonConfig @JvmOverloads constructor(
         save()
     }
 
+    private fun populateWildcardPathEntries(): List<String> {
+        val existingKeys = values.keys.sorted().toMutableList()
+        val possibleWildcardKeys = mutableListOf<String>()
+
+        existingKeys.forEach {
+            if (it.lastIndexOf(".") != -1) {
+                val suffix = it.substring(it.lastIndexOf(".")..it.lastIndexOf(it.last()))
+                val itNoSuffix = it.removeSuffix(suffix)
+
+                if (itNoSuffix.lastIndexOf(".") != -1) {
+                    val wildcardCandidate = itNoSuffix.substring(itNoSuffix.lastIndexOf(".")..itNoSuffix.lastIndexOf(itNoSuffix.last()))
+                    val prefix = itNoSuffix.removeSuffix(wildcardCandidate)
+
+                    possibleWildcardKeys.add("${prefix}.*${suffix}")
+                }
+            }
+        }
+
+        possibleWildcardKeys.groupingBy { it }.eachCount().forEach { if (it.value > 1) existingKeys.add(it.key) }
+
+        return existingKeys.sorted()
+    }
+
     fun listPaths(prefix: String? = null): List<String> {
         populateDefaults()
         val normalizedPrefix = prefix?.trim()?.takeIf { it.isNotEmpty() }
-        return values.keys
-            .sorted()
-            .filter { normalizedPrefix == null || it.startsWith(normalizedPrefix, ignoreCase = true) }
+
+        // Path list with wildcards is presorted
+        return populateWildcardPathEntries().filter { normalizedPrefix == null || it.startsWith(normalizedPrefix, ignoreCase = true) }
     }
 
     fun readPath(path: String): Any? {
@@ -402,6 +426,13 @@ class JsonConfig @JvmOverloads constructor(
         populateDefaults()
         val canonicalPath = path.trim()
         val existing = values[canonicalPath] ?: throw IllegalArgumentException("Unknown config path '$canonicalPath'")
+
+        // Prevent invalid lamp nominal life values from propagating to config file
+        if (canonicalPath.startsWith("lighting.lamps") && canonicalPath.contains("nominalLifeInHours")) {
+            val formattedValue = parseRawValue(rawValue, 0.0) as Double // Second argument can be any double
+            if (!BoilerplateLampData.isValidNominalLife(formattedValue)) return "lighting.lamps"
+        }
+
         values[canonicalPath] = parseRawValue(rawValue, existing)
         save()
         loadConfig()
@@ -427,6 +458,13 @@ class JsonConfig @JvmOverloads constructor(
         if (matchedPaths.isEmpty()) {
             throw IllegalArgumentException("No config paths matched '$canonicalPattern'")
         }
+
+        // Prevent invalid lamp nominal life values from propagating to config file
+        if (canonicalPattern.startsWith("lighting.lamps") && canonicalPattern.contains("nominalLifeInHours")) {
+            val formattedValue = parseRawValue(rawValue, 0.0) as Double // Second argument can be any double
+            if (!BoilerplateLampData.isValidNominalLife(formattedValue)) return listOf("lighting.lamps")
+        }
+
         matchedPaths.forEach { path ->
             val existing = values.getValue(path)
             values[path] = parseRawValue(rawValue, existing)
@@ -773,8 +811,8 @@ class JsonConfig @JvmOverloads constructor(
         }
         if (includeDefaultSpecs) {
             for (lamp in LampLists.lampTechnologyList) {
-                defaults["lighting.lamps.${lamp.lampType}.nominalLifeHours"] = lamp.nominalLifeInHours
-                defaults["lighting.lamps.${lamp.lampType}.infiniteLifeEnabled"] = lamp.infiniteLifeEnabled
+                defaults[lamp.nominalLifePath] = lamp.nominalLifeInHours
+                defaults[lamp.infiniteLifePath] = lamp.infiniteLifeEnabled
             }
             for (blade in TurbineBladeLists.bladeConfigList) {
                 defaults["items.turbineBlades.${blade.tierName}.nominalLifeHours"] = blade.nominalLifeInHours

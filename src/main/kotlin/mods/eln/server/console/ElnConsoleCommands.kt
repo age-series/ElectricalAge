@@ -9,8 +9,9 @@ import mods.eln.gridnode.electricalpole.ElectricalPoleElement
 import mods.eln.gridnode.transformer.GridTransformerElement
 import mods.eln.mechanical.ShaftElement
 import mods.eln.environment.BiomeClimateService
+import mods.eln.item.lampitem.BoilerplateLampData
+import mods.eln.item.lampitem.LampLists
 import mods.eln.misc.Coordinate
-import mods.eln.misc.Direction
 import mods.eln.misc.FC
 import mods.eln.misc.Version
 import mods.eln.node.NodeBase
@@ -25,7 +26,6 @@ import mods.eln.server.console.ElnConsoleCommands.Companion.cprint
 import mods.eln.server.console.ElnConsoleCommands.Companion.getArgBool
 import net.minecraft.command.ICommandSender
 import net.minecraft.entity.player.EntityPlayerMP
-import net.minecraft.world.World
 import java.io.BufferedWriter
 import java.io.File
 import java.io.FileWriter
@@ -147,13 +147,21 @@ class ElnConfigCommand : IConsoleCommand {
                 try {
                     if (isConfigPathPattern(path)) {
                         val matchedPaths = Eln.config.writePathsMatching(path, rawValue)
-                        cprint(ics, "${FC.BRIGHT_GREEN}Updated ${matchedPaths.size} config paths.", indent = 1)
-                        matchedPaths.forEach { matchedPath ->
-                            cprint(ics, "$matchedPath = ${Eln.config.readPath(matchedPath)}", indent = 2)
+                        if (matchedPaths.contains("lighting.lamps")) { // This is only true if attempting to assign an invalid nominal life to lamp(s)
+                            cprint(ics, "${FC.BRIGHT_RED}${BoilerplateLampData.SET_NOMINAL_LIFE_ERROR_MESSAGE}", indent = 1)
+                            return
+                        } else {
+                            cprint(ics, "${FC.BRIGHT_GREEN}Updated ${matchedPaths.size} config paths.", indent = 1)
+                            matchedPaths.forEach { matchedPath ->
+                                cprint(ics, "$matchedPath = ${Eln.config.readPath(matchedPath)}", indent = 2)
+                            }
                         }
                     } else {
                         val writtenValue = Eln.config.writePath(path, rawValue)
-                        cprint(ics, "${FC.BRIGHT_GREEN}$path = $writtenValue", indent = 1)
+                        if (writtenValue == "lighting.lamps") { // This is only true if attempting to assign an invalid nominal life to lamp(s)
+                            cprint(ics, "${FC.BRIGHT_RED}${BoilerplateLampData.SET_NOMINAL_LIFE_ERROR_MESSAGE}", indent = 1)
+                            return
+                        } else cprint(ics, "${FC.BRIGHT_GREEN}$path = $writtenValue", indent = 1)
                     }
                     cprint(ics, "Changes saved to config/eln/eln.json.", indent = 1)
                 } catch (e: IllegalArgumentException) {
@@ -327,7 +335,7 @@ class ElnManCommand: IConsoleCommand {
         return if (args.isEmpty() || args[0] == "") {
             ElnConsoleCommandList.map {it.name}.toMutableList()
         } else {
-            return ElnConsoleCommandList.filter {it.name.startsWith(args[0], ignoreCase = true)}.map{it.name}.toMutableList()
+            ElnConsoleCommandList.filter {it.name.startsWith(args[0], ignoreCase = true)}.map{it.name}.toMutableList()
         }
     }
 }
@@ -757,7 +765,7 @@ class ElnStopShaftCommand : IConsoleCommand {
 }
 
 class ElnResetAmbientTempsCommand : IConsoleCommand {
-    override val name = "reset-ambient-temps"
+    override val name = "resetAmbientTemps"
 
     override fun runCommand(ics: ICommandSender, args: List<String>) {
         if (ics !is EntityPlayerMP) {
@@ -765,7 +773,7 @@ class ElnResetAmbientTempsCommand : IConsoleCommand {
             return
         }
         if (args.size != 1) {
-            cprint(ics, "${FC.BRIGHT_YELLOW}Usage: /eln reset-ambient-temps <range 1..32>", indent = 1)
+            cprint(ics, "${FC.BRIGHT_YELLOW}Usage: /eln resetAmbientTemps <range 1..32>", indent = 1)
             return
         }
 
@@ -853,9 +861,31 @@ class ElnResetAmbientTempsCommand : IConsoleCommand {
 
     override fun getManPage(ics: ICommandSender, args: List<String>) {
         cprint(ics, "Resets nearby Eln device temperatures to local biome ambient temperature.", indent = 1)
-        cprint(ics, "Usage: /eln reset-ambient-temps <range 1..32>", indent = 1)
+        cprint(ics, "Usage: /eln resetAmbientTemps <range 1..32>", indent = 1)
         cprint(ics, "")
     }
+}
+
+class ElnResetLampLifeCommand: IConsoleCommand {
+    override val name = "resetLampLives"
+
+    override fun runCommand(ics: ICommandSender, args: List<String>) {
+        if (args.isEmpty()) {
+            LampLists.resetLampLifeFlag = true // This flag is automatically set to false up to two seconds after this command is called.
+            cprint(ics, "All lamp lives successfully reset to default!", indent = 1)
+        } else {
+            cprint(ics, "This command does not take any arguments.", indent = 1)
+        }
+    }
+
+    override fun getManPage(ics: ICommandSender, args: List<String>) {
+        cprint(ics, "Resets the actual lives of all light bulbs installed in lamp", indent = 1)
+        cprint(ics, "sockets to the nominal values as defined in the config file.", indent = 1)
+        cprint(ics, "")
+        cprint(ics, "No parameters.", indent = 1)
+    }
+
+    override fun requiredPermission() = listOf(UserPermission.IS_OPERATOR)
 }
 
 class ElnWailaEasyModeCommand: IConsoleCommand {
@@ -887,7 +917,7 @@ class ElnWailaEasyModeCommand: IConsoleCommand {
         return if (args.isEmpty() || args[0] == "") {
             options
         } else {
-            return options.filter {it.startsWith(args[0], ignoreCase = true)}
+            options.filter {it.startsWith(args[0], ignoreCase = true)}
         }
     }
 }
@@ -921,7 +951,7 @@ class ElnDebugCommand: IConsoleCommand {
         return if (args.isEmpty() || args[0] == "") {
             options
         } else {
-            return options.filter {it.startsWith(args[0], ignoreCase = true)}
+            options.filter {it.startsWith(args[0], ignoreCase = true)}
         }
     }
 }
@@ -1086,7 +1116,7 @@ class ElnIconsCommand: IConsoleCommand {
         return if (args.isEmpty() || args[0] == "") {
             options
         } else {
-            return options.filter {it.startsWith(args[0], ignoreCase = true)}
+            options.filter {it.startsWith(args[0], ignoreCase = true)}
         }
     }
 }

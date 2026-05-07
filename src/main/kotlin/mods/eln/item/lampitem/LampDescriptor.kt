@@ -57,7 +57,7 @@ class LampDescriptor(name: String, iconName: String, val lampData: SpecificLampD
     fun decreaseLampLife(lampStack: ItemStack, appliedVoltage: Double): Double {
         var currentLife = getLifeInTag(lampStack)
 
-        if (currentLife > lampData.technology.nominalLifeInHours) {
+        if (currentLife > lampData.technology.nominalLifeInHours || LampLists.resetLampLifeFlag) {
             setLifeInTag(lampStack, lampData.technology.nominalLifeInHours)
             currentLife = getLifeInTag(lampStack)
         }

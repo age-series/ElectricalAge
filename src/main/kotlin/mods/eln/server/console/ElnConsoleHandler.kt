@@ -35,6 +35,7 @@ class ElnConsoleCommands: ICommand {
             ElnPoleMapCommand(),
             ElnStopShaftCommand(),
             ElnResetAmbientTempsCommand(),
+            ElnResetLampLifeCommand(),
             ElnZoneDumpCommand(),
             ElnZoneCleanCommand(),
             ElnZoneRemoveCommand(),

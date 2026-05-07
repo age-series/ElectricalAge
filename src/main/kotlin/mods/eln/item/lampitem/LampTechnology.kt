@@ -4,12 +4,13 @@ import mods.eln.Eln
 import mods.eln.i18n.I18N
 import mods.eln.misc.NominalVoltage
 import mods.eln.misc.Utils
-import kotlin.math.abs
 import kotlin.math.pow
 
 object LampLists {
     val lampTechnologyList = mutableListOf<BoilerplateLampData>()
     val registeredLampList = mutableListOf<SpecificLampData>()
+
+    var resetLampLifeFlag = false
 
     init {
         lampTechnologyList.add(BoilerplateLampData("incandescent", 24.0, false, 1.0, 0.5, 0.0, 1.0))
@@ -40,6 +41,16 @@ object LampLists {
         getLampData("led")!!.translatedLampType = I18N.tr("led")
         getLampData("halogen")!!.translatedLampType = I18N.tr("halogen")
     }
+
+    @JvmStatic
+    fun loadLampConfig() {
+        for (lampData in lampTechnologyList) {
+            val configNominalLife = Eln.config.getDoubleOrElse(lampData.nominalLifePath, lampData.nominalLifeInHours)
+            if (BoilerplateLampData.isValidNominalLife(configNominalLife)) lampData.nominalLifeInHours = configNominalLife
+
+            lampData.infiniteLifeEnabled = Eln.config.getBooleanOrElse(lampData.infiniteLifePath, lampData.infiniteLifeEnabled)
+        }
+    }
 }
 
 data class BoilerplateLampData(
@@ -52,6 +63,9 @@ data class BoilerplateLampData(
     val basePowerMultiplier: Double,
     var translatedLampType: String = "" // Initialized later in the loading process; used for WAILA and context menus
 ) {
+
+    val nominalLifePath = "lighting.lamps.${this.lampType}.nominalLifeInHours"
+    val infiniteLifePath = "lighting.lamps.${this.lampType}.infiniteLifeEnabled"
 
     companion object {
         const val MIN_LIGHT_VALUE = 0
@@ -69,25 +83,15 @@ data class BoilerplateLampData(
 
         const val MIN_LAMP_LIFE_IN_HOURS = 1.0
         const val MAX_LAMP_LIFE_IN_HOURS = 8760.0 // 1 year (365 days) IRL
-    }
 
-    private val nominalLifePath: String
-        get() = "lighting.lamps.${lampType}.nominalLifeInHours"
+        const val SET_NOMINAL_LIFE_ERROR_MESSAGE = "Nominal lamp life must be within the range " +
+                "($MIN_LAMP_LIFE_IN_HOURS, $MAX_LAMP_LIFE_IN_HOURS)! Config changes not applied!"
 
-    private val infiniteLifePath: String
-        get() = "lighting.lamps.${lampType}.infiniteLifeEnabled"
-
-    fun loadConfig() {
-        val configNominalLife = abs(Eln.config.getDoubleOrElse(nominalLifePath, this.nominalLifeInHours))
-
-        if (configNominalLife !in MIN_LAMP_LIFE_IN_HOURS..MAX_LAMP_LIFE_IN_HOURS) {
-            Utils.println("ELN config: Nominal lamp life of type ${this.lampType} must be within the range " +
-                    "($MIN_LAMP_LIFE_IN_HOURS, $MAX_LAMP_LIFE_IN_HOURS)! Changes not applied!")
-        } else {
-            this.nominalLifeInHours = configNominalLife
+        @JvmStatic
+        fun isValidNominalLife(newLife: Double): Boolean {
+            return if (newLife in MIN_LAMP_LIFE_IN_HOURS..MAX_LAMP_LIFE_IN_HOURS) true
+            else { Utils.println(SET_NOMINAL_LIFE_ERROR_MESSAGE); false }
         }
-
-        this.infiniteLifeEnabled = Eln.config.getBooleanOrElse(infiniteLifePath, this.infiniteLifeEnabled)
     }
 
 }

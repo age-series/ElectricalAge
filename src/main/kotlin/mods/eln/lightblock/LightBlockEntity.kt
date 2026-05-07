@@ -28,7 +28,7 @@ class LightBlockEntity : TileEntity() {
             val t = w.getTileEntity(x, y, z)
 
             if (t is LightBlockEntity) t.addLight(light, timeout)
-            else Utils.println("Error in setting light at $x $y $z")
+            else Utils.println("Error in setting light at %d %d %d", x, y, z)
         }
 
         @JvmStatic
@@ -68,7 +68,7 @@ class LightBlockEntity : TileEntity() {
 
         if (lightList.isEmpty()) {
             worldObj.setBlockToAir(xCoord, yCoord, zCoord)
-            Utils.println("Destroy light at $xCoord $yCoord $zCoord")
+            Utils.println("Destroy light at %d %d %d", xCoord, yCoord, zCoord)
             return
         }
 
