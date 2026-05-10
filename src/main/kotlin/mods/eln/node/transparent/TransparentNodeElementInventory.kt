@@ -3,28 +3,37 @@ package mods.eln.node.transparent
 import mods.eln.misc.INBTTReady
 import mods.eln.misc.Utils.readFromNBT
 import mods.eln.misc.Utils.writeToNBT
+import mods.eln.sixnode.electricalcable.IUtilityCableInventory
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.inventory.ISidedInventory
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
 
-open class TransparentNodeElementInventory : ISidedInventory, INBTTReady {
+open class TransparentNodeElementInventory : ISidedInventory, INBTTReady, IUtilityCableInventory {
     @JvmField
     protected var transparentNodeRender: TransparentNodeElementRender? = null
     @JvmField
     protected var transparentNodeElement: TransparentNodeElement? = null
     var stackLimit: Int
+    override var requiredCableLength: Double = IUtilityCableInventory.DEFAULT_REQUIRED_LENGTH
 
-    constructor(size: Int, stackLimit: Int, TransparentnodeRender: TransparentNodeElementRender?) {
+    constructor(size: Int, stackLimit: Int, transparentNodeRender: TransparentNodeElementRender?) {
         inv = arrayOfNulls(size)
         this.stackLimit = stackLimit
-        transparentNodeRender = TransparentnodeRender
+        this.transparentNodeRender = transparentNodeRender
     }
 
-    constructor(size: Int, stackLimit: Int, TransparentNodeElement: TransparentNodeElement?) {
+    constructor(size: Int, stackLimit: Int, transparentNodeElement: TransparentNodeElement?) {
         inv = arrayOfNulls(size)
         this.stackLimit = stackLimit
-        transparentNodeElement = TransparentNodeElement
+        this.transparentNodeElement = transparentNodeElement
+    }
+
+    constructor(size: Int, stackLimit: Int, transparentNodeElement: TransparentNodeElement?, requiredCableLength: Double) {
+        inv = arrayOfNulls(size)
+        this.stackLimit = stackLimit
+        this.transparentNodeElement = transparentNodeElement
+        this.requiredCableLength = requiredCableLength
     }
 
     private var inv: Array<ItemStack?>

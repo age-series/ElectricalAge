@@ -31,7 +31,6 @@ import mods.eln.sim.process.destruct.VoltageStateWatchDog
 import mods.eln.sim.process.destruct.WorldExplosion
 import mods.eln.sixnode.currentcable.CurrentCableDescriptor
 import mods.eln.sixnode.electricalcable.ElectricalCableDescriptor
-import mods.eln.sixnode.electricalcable.UtilityCableDescriptor
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.inventory.Container
 import net.minecraft.inventory.IInventory
@@ -44,9 +43,10 @@ import kotlin.math.pow
 class LampSocketElement(sixNode: SixNode, side: Direction, sixNodeDescriptor: SixNodeDescriptor) :
     SixNodeElement(sixNode, side, sixNodeDescriptor), IConfigurable {
 
-    override val inventory = SixNodeElementInventory(2, 64, this)
+    override val inventory = SixNodeElementInventory(2, 64, this, LampSocketContainer.REQUIRED_CABLE_LENGTH)
 
-    private val acceptingInventory = AutoAcceptInventoryProxy(inventory)
+    // ElectricalCableDescriptor here covers utility cables
+    private val inventoryAcceptor = AutoAcceptInventoryProxy(inventory)
         .acceptIfEmpty(LampSocketContainer.LAMP_SLOT_ID, LampDescriptor::class.java)
         .acceptIfEmpty(LampSocketContainer.CABLE_SLOT_ID, ElectricalCableDescriptor::class.java, CurrentCableDescriptor::class.java)
 
@@ -115,15 +115,8 @@ class LampSocketElement(sixNode: SixNode, side: Direction, sixNodeDescriptor: Si
                 takeItem = equippedItemDescriptor.lampData.technology in descriptor.acceptedLampTypes
             }
 
-            // TODO: Add the ability to auto-trim a wire segment from an existing spool
-            is UtilityCableDescriptor -> {
-                // TODO: NBT tag is not currently copied when accepting item from right click, so this is temporarily disabled
-                /*
-                val cableLength = equippedItemDescriptor.getRemainingLengthMeters(entityPlayer.currentEquippedItem).toInt()
-                takeItem = cableLength == LampSocketContainer.REQUIRED_CABLE_LENGTH
-                */
-            }
-
+            // ElectricalCableDescriptor here covers utility cables (utility cables are not signal cables)
+            // Spool length check and trimming are handled in AutoAcceptInventoryProxy
             is ElectricalCableDescriptor -> {
                 takeItem = !equippedItemDescriptor.signalWire
             }
@@ -134,7 +127,7 @@ class LampSocketElement(sixNode: SixNode, side: Direction, sixNodeDescriptor: Si
         }
 
         return if (takeItem) {
-            acceptingInventory.take(entityPlayer.currentEquippedItem, this, notifyInventoryChange = true)
+            inventoryAcceptor.take(entityPlayer.currentEquippedItem, this, notifyInventoryChange = true)
         } else false
     }
 

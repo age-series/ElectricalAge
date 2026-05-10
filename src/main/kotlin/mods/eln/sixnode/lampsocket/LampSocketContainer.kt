@@ -19,7 +19,7 @@ class LampSocketContainer(player: EntityPlayer, inventory: IInventory, descripto
         const val CABLE_SLOT_ID = 1
 
         // This applies only for utility cables
-        const val REQUIRED_CABLE_LENGTH = 1
+        const val REQUIRED_CABLE_LENGTH = 1.0
     }
 
 }

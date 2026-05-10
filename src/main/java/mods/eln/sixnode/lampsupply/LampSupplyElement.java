@@ -24,9 +24,7 @@ import mods.eln.sim.process.destruct.VoltageStateWatchDog;
 import mods.eln.sim.process.destruct.WorldExplosion;
 import mods.eln.sixnode.currentcable.CurrentCableDescriptor;
 import mods.eln.sixnode.electricalcable.ElectricalCableDescriptor;
-import mods.eln.sixnode.electricalcable.UtilityCableDescriptor;
 import mods.eln.sixnode.genericcable.GenericCableDescriptor;
-import mods.eln.sixnode.lampsocket.LampSocketContainer;
 import mods.eln.sixnode.wirelesssignal.IWirelessSignalSpot;
 import mods.eln.sixnode.wirelesssignal.IWirelessSignalTx;
 import mods.eln.sixnode.wirelesssignal.WirelessUtils;
@@ -68,9 +66,11 @@ public class LampSupplyElement extends SixNodeElement implements IConfigurable {
     public Resistor loadResistor;
     public IProcess lampSupplySlowProcess = new LampSupplySlowProcess();
 
-    private AutoAcceptInventoryProxy inventory = (new AutoAcceptInventoryProxy(new SixNodeElementInventory(1, 64, this)))
-        .acceptIfIncrement(0, 64, ElectricalCableDescriptor.class, CurrentCableDescriptor.class);
+    private final IInventory inventory = new SixNodeElementInventory(1, 64, this, LampSupplyContainer.requiredCableLength);
 
+    // ElectricalCableDescriptor here covers utility cables
+    private final AutoAcceptInventoryProxy inventoryAcceptor = (new AutoAcceptInventoryProxy(inventory))
+        .acceptIfEmpty(0, ElectricalCableDescriptor.class, CurrentCableDescriptor.class);
 
     static class Entry {
         Entry(String powerChannel, String wirelessChannel, int aggregator) {
@@ -98,8 +98,8 @@ public class LampSupplyElement extends SixNodeElement implements IConfigurable {
 
     @Override
     public IInventory getInventory() {
-        if (inventory != null)
-            return inventory.getInventory();
+        if (inventoryAcceptor != null)
+            return inventoryAcceptor.getInventory();
         else
             return null;
     }
@@ -107,7 +107,7 @@ public class LampSupplyElement extends SixNodeElement implements IConfigurable {
     @Nullable
     @Override
     public Container newContainer(@NotNull Direction side, @NotNull EntityPlayer player) {
-        return new LampSupplyContainer(player, inventory.getInventory());
+        return new LampSupplyContainer(player, inventoryAcceptor.getInventory());
     }
 
     public LampSupplyElement(SixNode sixNode, Direction side, SixNodeDescriptor descriptor) {
@@ -276,26 +276,20 @@ public class LampSupplyElement extends SixNodeElement implements IConfigurable {
 
         // ElectricalCableDescriptor here covers utility cables
         GenericItemBlockUsingDamageDescriptor desc = GenericItemBlockUsingDamageDescriptor.getDescriptor(playerEquippedItem, ElectricalCableDescriptor.class);
-        if (desc == null) GenericItemBlockUsingDamageDescriptor.getDescriptor(playerEquippedItem, CurrentCableDescriptor.class);
+        if (desc == null) desc = GenericItemBlockUsingDamageDescriptor.getDescriptor(playerEquippedItem, CurrentCableDescriptor.class);
 
         boolean takeItem = false;
 
-        // TODO: Add the ability to auto-trim a wire segment from an existing spool after rewriting in Kotlin
-        if (desc instanceof UtilityCableDescriptor) {
-            // TODO: NBT tag is not currently copied when accepting item from right click, so this is temporarily disabled
-            // TODO: getRemainingLengthMeters is not static and cannot be called until this file is rewritten in Kotlin
-            /*
-            int cableLength = playerEquippedItem.getRemainingLengthMeters(entityPlayer.playerEquippedItem).toInt();
-            takeItem = cableLength == LampSocketContainer.REQUIRED_CABLE_LENGTH;
-            */
-        } else if (desc instanceof ElectricalCableDescriptor) {
+        // ElectricalCableDescriptor here covers utility cables (utility cables are not signal cables)
+        // Spool length check and trimming are handled in AutoAcceptInventoryProxy
+        if (desc instanceof ElectricalCableDescriptor) {
             takeItem = !((ElectricalCableDescriptor) desc).signalWire;
         } else if (desc instanceof CurrentCableDescriptor) {
             takeItem = true;
         }
 
         if (takeItem) {
-            return inventory.take(entityPlayer.getCurrentEquippedItem(), this, false, true);
+            return inventoryAcceptor.take(playerEquippedItem, this, false, true);
         } else return false;
     }
 
@@ -448,7 +442,7 @@ public class LampSupplyElement extends SixNodeElement implements IConfigurable {
     }
 
     public int getRange() {
-        return getRange(descriptor, inventory.getInventory());
+        return getRange(descriptor, inventoryAcceptor.getInventory());
     }
 
     private int getRange(LampSupplyDescriptor desc, IInventory inventory2) {

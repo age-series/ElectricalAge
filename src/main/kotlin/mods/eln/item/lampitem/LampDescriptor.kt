@@ -55,11 +55,12 @@ class LampDescriptor(name: String, iconName: String, val lampData: SpecificLampD
      * See https://www.desmos.com/calculator/0uuzozsiuu for a plot of the lamp aging function.
      */
     fun decreaseLampLife(lampStack: ItemStack, appliedVoltage: Double): Double {
-        var currentLife = getLifeInTag(lampStack)
+        val currentLife = getLifeInTag(lampStack)
 
+        // resetLampLifeFlag should be automatically set to false after 1-2 seconds (see usage in Simulator.java)
         if (currentLife > lampData.technology.nominalLifeInHours || LampLists.resetLampLifeFlag) {
             setLifeInTag(lampStack, lampData.technology.nominalLifeInHours)
-            currentLife = getLifeInTag(lampStack)
+            return getLifeInTag(lampStack)
         }
 
         if (!lampData.technology.infiniteLifeEnabled) {
@@ -85,9 +86,9 @@ class LampDescriptor(name: String, iconName: String, val lampData: SpecificLampD
 
             setLifeInTag(lampStack, newLife)
             return newLife
+        } else {
+            return currentLife
         }
-
-        return currentLife
     }
 
     override fun addInformation(itemStack: ItemStack?, entityPlayer: EntityPlayer?, list: MutableList<String>, par4: Boolean) {

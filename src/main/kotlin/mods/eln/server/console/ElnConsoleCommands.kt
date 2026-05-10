@@ -872,17 +872,17 @@ class ElnResetLampLifeCommand: IConsoleCommand {
     override fun runCommand(ics: ICommandSender, args: List<String>) {
         if (args.isEmpty()) {
             LampLists.resetLampLifeFlag = true // This flag is automatically set to false up to two seconds after this command is called.
-            cprint(ics, "All lamp lives successfully reset to default!", indent = 1)
+            cprint(ics, "Resetting the lives of all light bulbs to their default values...", indent = 1)
         } else {
             cprint(ics, "This command does not take any arguments.", indent = 1)
         }
     }
 
     override fun getManPage(ics: ICommandSender, args: List<String>) {
-        cprint(ics, "Resets the actual lives of all light bulbs installed in lamp", indent = 1)
-        cprint(ics, "sockets to the nominal values as defined in the config file.", indent = 1)
+        cprint(ics, "Resets the lives of all light bulbs installed in lamp sockets to the nominal values defined in the config file.", indent = 1)
+        cprint(ics, "If the config file entries are invalid, the lives are reset to the default nominal values defined in the codebase.", indent = 1)
         cprint(ics, "")
-        cprint(ics, "No parameters.", indent = 1)
+        cprint(ics, "This command does not have any parameters.", indent = 1)
     }
 
     override fun requiredPermission() = listOf(UserPermission.IS_OPERATOR)

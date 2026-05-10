@@ -232,7 +232,7 @@ class JsonConfig @JvmOverloads constructor(
     fun loadConfig() {
         load()
 
-        LampLists.loadLampConfig()
+        LampLists.loadAllLampConfigs()
         for (bladeData in TurbineBladeLists.bladeConfigList) bladeData.loadConfig()
 
         val analyticsEnabled = getBooleanOrElse("analytics.enabled", true)
@@ -293,26 +293,38 @@ class JsonConfig @JvmOverloads constructor(
         save()
     }
 
+    /**
+     * Wildcard config paths are only possible if the parent paths contain at least three fields (example: "xx.yy.zz").
+     * In this example, a wildcard path of the form "xx.*.zz" is only generated if at least two paths "xx.yy1.zz" and
+     * "xx.yy2.zz" exist. Otherwise, a wildcard path is unnecessary. Note that wildcard paths can only be generated for
+     * the second-to-last field in an existing path (in other words, the wildcard path "aa.*.cc.dd" is not possible).
+     */
     private fun populateWildcardPathEntries(): List<String> {
         val existingKeys = values.keys.sorted().toMutableList()
         val possibleWildcardKeys = mutableListOf<String>()
 
         existingKeys.forEach {
+            // Only proceed if path has more than one field
             if (it.lastIndexOf(".") != -1) {
+                // Pick off the final field of the path
                 val suffix = it.substring(it.lastIndexOf(".")..it.lastIndexOf(it.last()))
                 val itNoSuffix = it.removeSuffix(suffix)
 
+                // Only proceed if more than one field remains in the path
                 if (itNoSuffix.lastIndexOf(".") != -1) {
+                    // Pick off the second-to-last field of the path
                     val wildcardCandidate = itNoSuffix.substring(itNoSuffix.lastIndexOf(".")..itNoSuffix.lastIndexOf(itNoSuffix.last()))
                     val prefix = itNoSuffix.removeSuffix(wildcardCandidate)
 
+                    // Concatenate the first field(s) and the last field, replacing the second-to-last field with the wildcard symbol (*)
                     possibleWildcardKeys.add("${prefix}.*${suffix}")
                 }
             }
         }
 
+        // This expression sorts the list of possible wildcard paths and counts duplicates. Wildcard paths are only
+        // added to the final list of all paths if they occur more than once (otherwise they are pointless to have).
         possibleWildcardKeys.groupingBy { it }.eachCount().forEach { if (it.value > 1) existingKeys.add(it.key) }
-
         return existingKeys.sorted()
     }
 
@@ -427,7 +439,7 @@ class JsonConfig @JvmOverloads constructor(
         val canonicalPath = path.trim()
         val existing = values[canonicalPath] ?: throw IllegalArgumentException("Unknown config path '$canonicalPath'")
 
-        // Prevent invalid lamp nominal life values from propagating to config file
+        // Prevent propagation of invalid lamp life values to the config file
         if (canonicalPath.startsWith("lighting.lamps") && canonicalPath.contains("nominalLifeInHours")) {
             val formattedValue = parseRawValue(rawValue, 0.0) as Double // Second argument can be any double
             if (!BoilerplateLampData.isValidNominalLife(formattedValue)) return "lighting.lamps"
@@ -459,7 +471,7 @@ class JsonConfig @JvmOverloads constructor(
             throw IllegalArgumentException("No config paths matched '$canonicalPattern'")
         }
 
-        // Prevent invalid lamp nominal life values from propagating to config file
+        // Prevent propagation of invalid lamp life values to the config file
         if (canonicalPattern.startsWith("lighting.lamps") && canonicalPattern.contains("nominalLifeInHours")) {
             val formattedValue = parseRawValue(rawValue, 0.0) as Double // Second argument can be any double
             if (!BoilerplateLampData.isValidNominalLife(formattedValue)) return listOf("lighting.lamps")

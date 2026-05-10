@@ -10,6 +10,7 @@ object LampLists {
     val lampTechnologyList = mutableListOf<BoilerplateLampData>()
     val registeredLampList = mutableListOf<SpecificLampData>()
 
+    // This is used in conjunction with the "resetLampLives" command to reset the nominal lives of all bulbs in lamp sockets to default.
     var resetLampLifeFlag = false
 
     init {
@@ -43,7 +44,7 @@ object LampLists {
     }
 
     @JvmStatic
-    fun loadLampConfig() {
+    fun loadAllLampConfigs() {
         for (lampData in lampTechnologyList) {
             val configNominalLife = Eln.config.getDoubleOrElse(lampData.nominalLifePath, lampData.nominalLifeInHours)
             if (BoilerplateLampData.isValidNominalLife(configNominalLife)) lampData.nominalLifeInHours = configNominalLife
@@ -63,7 +64,6 @@ data class BoilerplateLampData(
     val basePowerMultiplier: Double,
     var translatedLampType: String = "" // Initialized later in the loading process; used for WAILA and context menus
 ) {
-
     val nominalLifePath = "lighting.lamps.${this.lampType}.nominalLifeInHours"
     val infiniteLifePath = "lighting.lamps.${this.lampType}.infiniteLifeEnabled"
 
@@ -93,7 +93,6 @@ data class BoilerplateLampData(
             else { Utils.println(SET_NOMINAL_LIFE_ERROR_MESSAGE); false }
         }
     }
-
 }
 
 data class SpecificLampData(

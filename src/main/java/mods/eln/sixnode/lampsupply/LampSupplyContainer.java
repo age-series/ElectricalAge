@@ -10,7 +10,7 @@ import net.minecraft.inventory.Slot;
 public class LampSupplyContainer extends BasicContainer {
 
     public static final int cableSlotId = 0;
-    public static final int requiredCableLength = 1; // This applies only for utility cables
+    public static final double requiredCableLength = 1.0; // This applies only for utility cables
 
     public LampSupplyContainer(EntityPlayer player, IInventory inventory) {
         super(player, inventory, new Slot[]{new CableItemSlot(inventory, cableSlotId, 184, 144, 64, false,

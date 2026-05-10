@@ -22,7 +22,7 @@ class CableItemSlot(
     y: Int,
     stackLimit: Int,
     val acceptSignalCable: Boolean,
-    val expectedCableLength: Int,
+    val expectedCableLength: Double,
     comment: Array<String> = arrayOf(I18N.tr("Cable slot"))
 ) : SixNodeItemSlot(
     inventory, slot, x, y, stackLimit, arrayOf(
@@ -33,14 +33,12 @@ class CableItemSlot(
     override fun isItemValid(itemStack: ItemStack): Boolean {
         if (!super.isItemValid(itemStack)) return false
 
-        val cableDescriptor = Utils.getItemObject(itemStack)
-
-        if (cableDescriptor is UtilityCableDescriptor) {
-            val cableLength = cableDescriptor.getRemainingLengthMeters(itemStack).toInt()
-            return cableLength == expectedCableLength
+        return when (val cableDescriptor = Utils.getItemObject(itemStack)) {
+            is UtilityCableDescriptor -> cableDescriptor.getRemainingLengthMeters(itemStack) == expectedCableLength
+            is ElectricalCableDescriptor -> !(cableDescriptor.signalWire && !acceptSignalCable)
+            is CurrentCableDescriptor -> true
+            else -> false
         }
-
-        return if (cableDescriptor is ElectricalCableDescriptor) !(cableDescriptor.signalWire && !acceptSignalCable) else true
     }
 
 }

@@ -1,10 +1,12 @@
 package mods.eln.item;
 
+import mods.eln.generic.GenericItemBlockUsingDamageDescriptor;
 import mods.eln.misc.Utils;
+import mods.eln.sixnode.electricalcable.UtilityCableDescriptor;
+import mods.eln.sixnode.electricalcable.UtilityCableItemMovingHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.init.Items;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
@@ -37,6 +39,17 @@ public abstract class ItemMovingHelper {
                 ItemStack invStack = src.getStackInSlot(idx);
                 if(invStack == null) continue;
                 if(!acceptsStack(invStack)) continue;
+                GenericItemBlockUsingDamageDescriptor itemDesc = GenericItemBlockUsingDamageDescriptor.getDescriptor(invStack, UtilityCableDescriptor.class);
+                if (itemDesc instanceof UtilityCableDescriptor) {
+                    if (UtilityCableItemMovingHelper.trimCable(invStack, dst, dstSlot)) {
+                        if (invStack.stackSize == 0) {
+                            invStack = null;
+                            src.setInventorySlotContents(idx, invStack);
+                        }
+                        syncItemInSlot(src, idx);
+                        return;
+                    } else continue;
+                }
                 int move = Math.min(invStack.stackSize, diff);
                 diff -= move;
                 invStack.stackSize -= move;
