@@ -110,8 +110,11 @@ import java.util.*;
 import static mods.eln.i18n.I18N.TR;
 import static mods.eln.i18n.I18N.tr;
 
-@Mod(modid = Eln.MODID, name = Eln.NAME, version = Tags.VERSION, dependencies = "after:CoFHCore;after:CoFHAPI;" +
-        "after:CoFHAPI|energy")
+@Mod(
+        modid = Eln.MODID,
+        name = Eln.NAME,
+        version = Tags.VERSION,
+        dependencies = "required-after:CoFHCore")
 public class Eln {
     @Instance("Eln")
     public static Eln instance;
