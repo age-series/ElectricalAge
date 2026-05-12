@@ -46,7 +46,7 @@ class LampSocketElement(sixNode: SixNode, side: Direction, sixNodeDescriptor: Si
     override val inventory = SixNodeElementInventory(2, 64, this, LampSocketContainer.REQUIRED_CABLE_LENGTH)
 
     // ElectricalCableDescriptor here covers utility cables
-    private val inventoryAcceptor = AutoAcceptInventoryProxy(inventory)
+    private val inventoryProxy = AutoAcceptInventoryProxy(inventory)
         .acceptIfEmpty(LampSocketContainer.LAMP_SLOT_ID, LampDescriptor::class.java)
         .acceptIfEmpty(LampSocketContainer.CABLE_SLOT_ID, ElectricalCableDescriptor::class.java, CurrentCableDescriptor::class.java)
 
@@ -127,7 +127,7 @@ class LampSocketElement(sixNode: SixNode, side: Direction, sixNodeDescriptor: Si
         }
 
         return if (takeItem) {
-            inventoryAcceptor.take(entityPlayer.currentEquippedItem, this, notifyInventoryChange = true)
+            inventoryProxy.take(entityPlayer.currentEquippedItem, this, notifyInventoryChange = true)
         } else false
     }
 

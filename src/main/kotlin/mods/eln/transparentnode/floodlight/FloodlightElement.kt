@@ -41,7 +41,7 @@ class FloodlightElement(transparentNode: TransparentNode, transparentNodeDescrip
 
     override val inventory = TransparentNodeElementInventory(2, 64, this)
 
-    private val inventoryAcceptor = AutoAcceptInventoryProxy(inventory)
+    private val inventoryProxy = AutoAcceptInventoryProxy(inventory)
         .acceptIfEmpty(FloodlightContainer.LAMP_SLOT_1_ID, LampDescriptor::class.java)
         .acceptIfEmpty(FloodlightContainer.LAMP_SLOT_2_ID, LampDescriptor::class.java)
 
@@ -113,7 +113,7 @@ class FloodlightElement(transparentNode: TransparentNode, transparentNodeDescrip
 
         if (currentEquippedItem is LampDescriptor) {
             if (currentEquippedItem.lampData.technology in descriptor.acceptedLampTypes) {
-                return inventoryAcceptor.take(player.currentEquippedItem, this, notifyInventoryChange = true)
+                return inventoryProxy.take(player.currentEquippedItem, this, notifyInventoryChange = true)
             }
         }
 

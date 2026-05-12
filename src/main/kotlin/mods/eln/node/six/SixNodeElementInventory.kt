@@ -27,6 +27,10 @@ class SixNodeElementInventory : IInventory, INBTTReady, IUtilityCableInventory {
         this.sixNodeElement = sixNodeElement
     }
 
+    /**
+     * Constructor for inventories which require a different length of utility cable than the default.
+     * This is a separate constructor because Java sucks and does not allow for default values in constructors.
+     */
     constructor(size: Int, stackLimit: Int, sixNodeElement: SixNodeElement?, requiredCableLength: Double) {
         inv = arrayOfNulls(size)
         this.stackLimit = stackLimit

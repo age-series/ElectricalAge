@@ -69,7 +69,7 @@ public class LampSupplyElement extends SixNodeElement implements IConfigurable {
     private final IInventory inventory = new SixNodeElementInventory(1, 64, this, LampSupplyContainer.requiredCableLength);
 
     // ElectricalCableDescriptor here covers utility cables
-    private final AutoAcceptInventoryProxy inventoryAcceptor = (new AutoAcceptInventoryProxy(inventory))
+    private final AutoAcceptInventoryProxy inventoryProxy = (new AutoAcceptInventoryProxy(inventory))
         .acceptIfEmpty(0, ElectricalCableDescriptor.class, CurrentCableDescriptor.class);
 
     static class Entry {
@@ -98,8 +98,8 @@ public class LampSupplyElement extends SixNodeElement implements IConfigurable {
 
     @Override
     public IInventory getInventory() {
-        if (inventoryAcceptor != null)
-            return inventoryAcceptor.getInventory();
+        if (inventoryProxy != null)
+            return inventoryProxy.getInventory();
         else
             return null;
     }
@@ -107,7 +107,7 @@ public class LampSupplyElement extends SixNodeElement implements IConfigurable {
     @Nullable
     @Override
     public Container newContainer(@NotNull Direction side, @NotNull EntityPlayer player) {
-        return new LampSupplyContainer(player, inventoryAcceptor.getInventory());
+        return new LampSupplyContainer(player, inventoryProxy.getInventory());
     }
 
     public LampSupplyElement(SixNode sixNode, Direction side, SixNodeDescriptor descriptor) {
@@ -273,11 +273,7 @@ public class LampSupplyElement extends SixNodeElement implements IConfigurable {
         if (onBlockActivatedRotate(entityPlayer)) return true;
 
         ItemStack playerEquippedItem = entityPlayer.getCurrentEquippedItem();
-
-        // ElectricalCableDescriptor here covers utility cables
-        GenericItemBlockUsingDamageDescriptor desc = GenericItemBlockUsingDamageDescriptor.getDescriptor(playerEquippedItem, ElectricalCableDescriptor.class);
-        if (desc == null) desc = GenericItemBlockUsingDamageDescriptor.getDescriptor(playerEquippedItem, CurrentCableDescriptor.class);
-
+        GenericItemBlockUsingDamageDescriptor desc = GenericItemBlockUsingDamageDescriptor.getDescriptor(playerEquippedItem, GenericCableDescriptor.class);
         boolean takeItem = false;
 
         // ElectricalCableDescriptor here covers utility cables (utility cables are not signal cables)
@@ -289,7 +285,7 @@ public class LampSupplyElement extends SixNodeElement implements IConfigurable {
         }
 
         if (takeItem) {
-            return inventoryAcceptor.take(playerEquippedItem, this, false, true);
+            return inventoryProxy.take(playerEquippedItem, this, false, true);
         } else return false;
     }
 
@@ -360,14 +356,10 @@ public class LampSupplyElement extends SixNodeElement implements IConfigurable {
     void setupFromInventory() {
         ItemStack cableStack = getInventory().getStackInSlot(LampSupplyContainer.cableSlotId);
         if (cableStack != null) {
-            // ElectricalCableDescriptor here covers utility cables
-            GenericCableDescriptor desc = (ElectricalCableDescriptor) GenericItemBlockUsingDamageDescriptor.getDescriptor(
-                    cableStack, ElectricalCableDescriptor.class);
-            if (desc == null) desc = (CurrentCableDescriptor) GenericItemBlockUsingDamageDescriptor.getDescriptor(
-                    cableStack, CurrentCableDescriptor.class);
-            if (desc != null) {
-                desc.applyTo(powerLoad);
-                voltageWatchdog.setNominalVoltage(desc.electricalNominalVoltage);
+            GenericItemBlockUsingDamageDescriptor desc = GenericItemBlockUsingDamageDescriptor.getDescriptor(cableStack, GenericCableDescriptor.class);
+            if (desc instanceof GenericCableDescriptor) {
+                ((GenericCableDescriptor) desc).applyTo(powerLoad);
+                voltageWatchdog.setNominalVoltage(((GenericCableDescriptor) desc).electricalNominalVoltage);
             } else {
                 voltageWatchdog.setNominalVoltage(10000);
                 powerLoad.highImpedance();
@@ -442,7 +434,7 @@ public class LampSupplyElement extends SixNodeElement implements IConfigurable {
     }
 
     public int getRange() {
-        return getRange(descriptor, inventoryAcceptor.getInventory());
+        return getRange(descriptor, inventoryProxy.getInventory());
     }
 
     private int getRange(LampSupplyDescriptor desc, IInventory inventory2) {

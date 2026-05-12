@@ -64,19 +64,59 @@ data class UtilityCablePalette(
 )
 
 /**
- * This is primarily used with AutoAcceptInventoryProxy and the Config Copy Tool for determining whether to trim length
- * from an existing cable spool, accept the spool directly, or do nothing when implementing right-click-to-insert behavior.
+ * This interface is used to add support for custom-length utility cables to AutoAcceptInventoryProxy (right-click-to-
+ * insert) and the Config Copy Tool. SixNodeElementInventory and TransparentNodeElementInventory have been set up to
+ * implement this interface using the default cable length (1 meter). This automatically adds basic utility cable
+ * support to the above methods for all sixnode/transparentnode devices which already accept electrical/utility cables
+ * in their inventories. If different cable lengths are desired for specific devices, use the alternative constructors
+ * when instantiating the sixnode/transparentnode inventory classes. Note that a particular device must make use of the
+ * CableItemSlot class (within its container class) to fully support utility cables (only accept cables of a certain
+ * length when manually inserting from the GUI). See the lamp socket and lamp supply code for examples.
  */
 interface IUtilityCableInventory {
+
     val requiredCableLength: Double
 
     companion object {
         const val DEFAULT_REQUIRED_LENGTH = 1.0
+
+        /**
+         * Trims a length of cable from an existing spool of wire. Supports variable cable lengths - the destination
+         * inventory must extend the IUtilityCableInventory interface and define an expected cable length; otherwise
+         * this function will trim a default length of 1 meter of wire. Automatically updates the destination inventory
+         * (marks it as dirty) if a cable is added. Sets the stack size of the source spool to zero if its length drops
+         * to ~zero after trimming a wire segment. Updating the source inventory (that of the player) is not performed
+         * here - the calling code is expected to perform this duty, if needed. The calling code is also expected to
+         * check if the destination inventory is empty. Otherwise, this function will overwrite an existing item.
+         *
+         * @return `true` if a wire segment is successfully trimmed from the spool; `false` if the spool is too short
+         * or the function is called on a non-utility cable item
+         */
+        @JvmStatic
+        fun trimCable(srcItemStack: ItemStack, dstInventory: IInventory, dstIndex: Int): Boolean {
+            val srcCableDesc = Utils.getItemObject(srcItemStack) as? UtilityCableDescriptor ?: return false
+
+            val dstItemStack = srcCableDesc.newItemStack()
+            val existingCableLength = srcCableDesc.getRemainingLengthMeters(srcItemStack)
+            val requiredCableLength =
+                if (dstInventory is IUtilityCableInventory) dstInventory.requiredCableLength
+                else DEFAULT_REQUIRED_LENGTH
+
+            if (existingCableLength >= requiredCableLength) {
+                srcCableDesc.setRemainingLengthMeters(dstItemStack, requiredCableLength)
+                srcCableDesc.setRemainingLengthMeters(srcItemStack, existingCableLength - requiredCableLength)
+                if (abs(srcCableDesc.getRemainingLengthMeters(srcItemStack)) < UtilityCableDescriptor.LENGTH_METERS_EPSILON) srcItemStack.stackSize -= 1
+                dstInventory.setInventorySlotContents(dstIndex, dstItemStack)
+                dstInventory.markDirty()
+                return true
+            } else return false
+        }
     }
+
 }
 
 /**
- * This is used with the Config Copy Tool for shuffling cable spools around between inventories.
+ * This class is used with the Config Copy Tool for shuffling cable spools around between inventories.
  */
 class UtilityCableItemMovingHelper(val cableDesc: UtilityCableDescriptor, val cableLength: Double) : ItemMovingHelper() {
 
@@ -87,40 +127,9 @@ class UtilityCableItemMovingHelper(val cableDesc: UtilityCableDescriptor, val ca
 
     override fun newStackOfSize(items: Int): ItemStack {
         val newItemStack = cableDesc.newItemStack(items)
-
-        val newItemDesc = Utils.getItemObject(newItemStack) as? UtilityCableDescriptor
-        newItemDesc?.setRemainingLengthMeters(newItemStack, cableLength)
-
+        val newItemDesc = Utils.getItemObject(newItemStack) as UtilityCableDescriptor
+        newItemDesc.setRemainingLengthMeters(newItemStack, cableLength)
         return newItemStack
-    }
-
-    companion object {
-        @JvmStatic
-        fun trimCable(srcItemStack: ItemStack, dstInventory: IInventory, dstIndex: Int): Boolean {
-            val srcCableDesc = Utils.getItemObject(srcItemStack)
-
-            // This check MUST be performed to prevent NPEs from calling this function on a non-utility cable item!
-            if (srcCableDesc is UtilityCableDescriptor) {
-                val dstItemStack = srcCableDesc.newItemStack()
-
-                val existingCableLength = srcCableDesc.getRemainingLengthMeters(srcItemStack)
-                val requiredCableLength =
-                    if (dstInventory is IUtilityCableInventory) dstInventory.requiredCableLength
-                    else IUtilityCableInventory.DEFAULT_REQUIRED_LENGTH
-
-                if (existingCableLength >= requiredCableLength) {
-                    srcCableDesc.setRemainingLengthMeters(dstItemStack, requiredCableLength)
-                    srcCableDesc.setRemainingLengthMeters(srcItemStack, existingCableLength - requiredCableLength)
-                    if (srcCableDesc.getRemainingLengthMeters(srcItemStack) <= 0.0) srcItemStack.stackSize -= 1
-
-                    dstInventory.setInventorySlotContents(dstIndex, dstItemStack)
-                    dstInventory.markDirty()
-                    return true
-                }
-            }
-
-            return false
-        }
     }
 
 }
@@ -147,6 +156,7 @@ class UtilityCableDescriptor(
         private const val creativeLengthMeters = 128.0
         private const val defaultMaterialMassKg = 10.0
         private const val placeLengthMeters = 1.0
+        const val LENGTH_METERS_EPSILON = 1e-6 // 1 micrometer
         private const val nbtLengthMeters = "utilityLengthMeters"
         private const val nbtUniqueId = "utilityLengthUid"
         private val registry = mutableListOf<UtilityCableDescriptor>()

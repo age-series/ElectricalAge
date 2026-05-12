@@ -4,8 +4,8 @@ import mods.eln.generic.GenericItemBlockUsingDamageDescriptor
 import mods.eln.generic.GenericItemUsingDamageDescriptor
 import mods.eln.item.ItemMovingHelper
 import mods.eln.item.electricalinterface.IItemEnergyBattery
+import mods.eln.sixnode.electricalcable.IUtilityCableInventory
 import mods.eln.sixnode.electricalcable.UtilityCableDescriptor
-import mods.eln.sixnode.electricalcable.UtilityCableItemMovingHelper
 import net.minecraft.entity.player.InventoryPlayer
 import net.minecraft.inventory.IInventory
 import net.minecraft.item.ItemStack
@@ -43,7 +43,8 @@ class AutoAcceptInventoryProxy(val inventory: IInventory) {
                     GenericItemBlockUsingDamageDescriptor.getDescriptor(itemStack)?.let { desc ->
                         if (acceptedItems.any { it.isAssignableFrom(desc.javaClass) }) {
                             if (desc is UtilityCableDescriptor) {
-                                return UtilityCableItemMovingHelper.trimCable(itemStack, inventory, index)
+                                // trimCable handles all required behavior for utility cables
+                                return IUtilityCableInventory.trimCable(itemStack, inventory, index)
                             }
                             itemStack.stackSize -= 1
                             inventory.setInventorySlotContents(index, desc.newItemStack())

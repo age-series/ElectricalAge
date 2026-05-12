@@ -1,9 +1,8 @@
 package mods.eln.item;
 
-import mods.eln.generic.GenericItemBlockUsingDamageDescriptor;
 import mods.eln.misc.Utils;
+import mods.eln.sixnode.electricalcable.IUtilityCableInventory;
 import mods.eln.sixnode.electricalcable.UtilityCableDescriptor;
-import mods.eln.sixnode.electricalcable.UtilityCableItemMovingHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -39,15 +38,13 @@ public abstract class ItemMovingHelper {
                 ItemStack invStack = src.getStackInSlot(idx);
                 if(invStack == null) continue;
                 if(!acceptsStack(invStack)) continue;
-                GenericItemBlockUsingDamageDescriptor itemDesc = GenericItemBlockUsingDamageDescriptor.getDescriptor(invStack, UtilityCableDescriptor.class);
-                if (itemDesc instanceof UtilityCableDescriptor) {
-                    if (UtilityCableItemMovingHelper.trimCable(invStack, dst, dstSlot)) {
-                        if (invStack.stackSize == 0) {
-                            invStack = null;
-                            src.setInventorySlotContents(idx, invStack);
-                        }
+                if (Utils.getItemObject(invStack) instanceof UtilityCableDescriptor) {
+                    if (IUtilityCableInventory.trimCable(invStack, dst, dstSlot)) {
+                        if (invStack.stackSize == 0) src.setInventorySlotContents(idx, null);
                         syncItemInSlot(src, idx);
-                        return;
+                        diff -= Math.min(invStack.stackSize, diff);
+                        Utils.println(String.format("IMH.m: moved %d into node", (desired - now) - diff));
+                        return; // trimCable automatically marks the destination inventory as dirty, if necessary
                     } else continue;
                 }
                 int move = Math.min(invStack.stackSize, diff);

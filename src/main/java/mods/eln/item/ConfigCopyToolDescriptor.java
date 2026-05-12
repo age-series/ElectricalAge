@@ -12,8 +12,10 @@ import mods.eln.node.NodeBlock;
 import mods.eln.node.NodeManager;
 import mods.eln.sixnode.currentcable.CurrentCableDescriptor;
 import mods.eln.sixnode.electricalcable.ElectricalCableDescriptor;
+import mods.eln.sixnode.electricalcable.IUtilityCableInventory;
 import mods.eln.sixnode.electricalcable.UtilityCableDescriptor;
 import mods.eln.sixnode.electricalcable.UtilityCableItemMovingHelper;
+import mods.eln.sixnode.genericcable.GenericCableDescriptor;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
@@ -47,7 +49,6 @@ public class ConfigCopyToolDescriptor extends GenericItemUsingDamageDescriptor {
         if (compound.hasKey(name + "Type")) {
             int type = compound.getInteger(name + "Type");
             GenericItemBlockUsingDamageDescriptor desc = Eln.sixNodeItem.getDescriptor(type);
-
             boolean readCable = false;
 
             // ElectricalCableDescriptor here covers utility cables (utility cables are not signal cables)
@@ -76,26 +77,22 @@ public class ConfigCopyToolDescriptor extends GenericItemUsingDamageDescriptor {
 
             // MOVE THE OLD ITEM OUT OF THE DESTINATION INVENTORY (INTO THE PLAYER INVENTORY)
             if (stackInSlot != null) {
-                // ElectricalCableDescriptor here covers utility cables
-                GenericItemBlockUsingDamageDescriptor thisCableDesc = GenericItemBlockUsingDamageDescriptor.getDescriptor(stackInSlot, ElectricalCableDescriptor.class);
-                if (thisCableDesc == null) thisCableDesc = GenericItemBlockUsingDamageDescriptor.getDescriptor(stackInSlot, CurrentCableDescriptor.class);
-
+                GenericItemBlockUsingDamageDescriptor thisCableDesc = GenericItemBlockUsingDamageDescriptor.getDescriptor(stackInSlot, GenericCableDescriptor.class);
                 if (thisCableDesc != null) {
                     if (thisCableDesc instanceof UtilityCableDescriptor) {
                         double cableLength = ((UtilityCableDescriptor) thisCableDesc).getRemainingLengthMeters(stackInSlot);
                         UtilityCableItemMovingHelper itemMover = new UtilityCableItemMovingHelper((UtilityCableDescriptor) thisCableDesc, cableLength);
                         itemMover.move(invoker.inventory, inv, slot, 0);
                     } else {
-                        GenericItemBlockUsingDamageDescriptor finalThisCableDesc = thisCableDesc;
                         (new ItemMovingHelper() {
                             @Override
                             public boolean acceptsStack(ItemStack stack) {
-                                return finalThisCableDesc.checkSameItemStack(stack);
+                                return thisCableDesc.checkSameItemStack(stack);
                             }
 
                             @Override
                             public ItemStack newStackOfSize(int items) {
-                                return finalThisCableDesc.newItemStack(items);
+                                return thisCableDesc.newItemStack(items);
                             }
                         }).move(invoker.inventory, inv, slot, 0);
                     }
@@ -106,8 +103,9 @@ public class ConfigCopyToolDescriptor extends GenericItemUsingDamageDescriptor {
             if (type != -1) {
                 GenericItemBlockUsingDamageDescriptor cableDesc = Eln.sixNodeItem.getDescriptor(type);
                 if (cableDesc != null) {
-                    if (cableDesc instanceof UtilityCableDescriptor && compound.hasKey(name + "Length")) {
-                        double cableLength = compound.getDouble(name + "Length");
+                    if (cableDesc instanceof UtilityCableDescriptor) {
+                        double cableLength = IUtilityCableInventory.DEFAULT_REQUIRED_LENGTH;
+                        if (compound.hasKey(name + "Length")) cableLength = compound.getDouble(name + "Length");
                         UtilityCableItemMovingHelper itemMover = new UtilityCableItemMovingHelper((UtilityCableDescriptor) cableDesc, cableLength);
                         itemMover.move(invoker.inventory, inv, slot, amt);
                     } else {
@@ -172,9 +170,7 @@ public class ConfigCopyToolDescriptor extends GenericItemUsingDamageDescriptor {
     public static boolean readGenDescriptor(NBTTagCompound compound, String name, IInventory inv, int slot, EntityPlayer invoker) {
         if (compound.hasKey(name)) {
             int amt = 1;
-            if (compound.hasKey(name + "Amt")) {
-                amt = compound.getInteger(name + "Amt");
-            }
+            if (compound.hasKey(name + "Amt")) amt = compound.getInteger(name + "Amt");
             String type = compound.getString(name);
             GenericItemUsingDamageDescriptor desc = GenericItemUsingDamageDescriptor.getDescriptor(inv.getStackInSlot(slot));
 
