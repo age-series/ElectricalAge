@@ -246,7 +246,7 @@ public class RootSystem {
 
         profiler.stop();
 
-        if (Eln.simMetricsEnabled) {
+        if (MetricsSubsystem.isSimulatorMetricsActive()) {
             collectAndPublishSimMetrics();
         }
     }

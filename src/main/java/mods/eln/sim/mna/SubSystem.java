@@ -2,6 +2,7 @@ package mods.eln.sim.mna;
 
 import mods.eln.misc.Profiler;
 import mods.eln.misc.Utils;
+import mods.eln.metrics.MetricsSubsystem;
 import mods.eln.sim.mna.component.*;
 import mods.eln.sim.mna.misc.IDestructor;
 import mods.eln.sim.mna.misc.ISubSystemProcessFlush;
@@ -126,11 +127,12 @@ public class SubSystem {
 
         //	org.apache.commons.math3.linear.
 
-        long inversionStartNanoseconds = Eln.simMetricsEnabled ? System.nanoTime() : 0L;
+        boolean captureMetrics = MetricsSubsystem.isSimulatorMetricsActive();
+        long inversionStartNanoseconds = captureMetrics ? System.nanoTime() : 0L;
         try {
             AInvdata = invertMatrix(A);
             singularMatrix = false;
-            if (Eln.simMetricsEnabled) {
+            if (captureMetrics) {
                 long inversionTimeNanoseconds = System.nanoTime() - inversionStartNanoseconds;
                 inversionCountSinceLastDrain++;
                 inversionTotalNanosecondsSinceLastDrain += inversionTimeNanoseconds;

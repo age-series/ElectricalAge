@@ -103,6 +103,7 @@ private class MqttSimMetricsSink(
 object MetricsSubsystem {
     private const val DUMMY_SERVER_NAME = "dummy"
     private val running = AtomicBoolean(false)
+    private val simulatorMetricsActive = AtomicBoolean(false)
     private val queue = ConcurrentLinkedQueue<MetricsPayload>()
     private val sinks = mutableListOf<MetricsSink>()
     private val dummyPublishCount = AtomicInteger(0)
@@ -115,6 +116,7 @@ object MetricsSubsystem {
     @JvmStatic
     @Synchronized
     fun refreshFromConfig() {
+        simulatorMetricsActive.set(false)
         sinks.clear()
         dummyPublishCount.set(0)
         dummyInversionCount.set(0)
@@ -139,6 +141,7 @@ object MetricsSubsystem {
                     }
                 }
             )
+            simulatorMetricsActive.set(true)
             startWorkerIfNeeded()
             return
         }
@@ -148,7 +151,13 @@ object MetricsSubsystem {
             return
         }
         sinks.add(MqttSimMetricsSink(serverName, streamId))
+        simulatorMetricsActive.set(true)
         startWorkerIfNeeded()
+    }
+
+    @JvmStatic
+    fun isSimulatorMetricsActive(): Boolean {
+        return simulatorMetricsActive.get()
     }
 
     @JvmStatic
@@ -222,6 +231,7 @@ object MetricsSubsystem {
     @JvmStatic
     @Synchronized
     fun shutdown() {
+        simulatorMetricsActive.set(false)
         stopWorker()
         queue.clear()
         sinks.clear()

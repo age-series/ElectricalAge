@@ -13,12 +13,44 @@ import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
 class RootSystemSimMetricsProfilingTest {
+    private enum class ScenarioShape {
+        SINGLE_SYSTEM,
+        MANY_SUBSYSTEMS
+    }
+
     data class ScenarioResult(
         val elapsedRunsNanos: List<Long>,
         val matrixRows: Int,
         val matrixCols: Int,
+        val subsystemCount: Int,
         val dummyPublishes: Int
     )
+
+    @Test
+    fun keepsSimulatorMetricsInactiveWhenMqttIsDisabled() {
+        disableLog4jJmx()
+        Eln.debugEnabled = false
+        Eln.mqttEnabled = false
+        Eln.simMetricsEnabled = true
+        Eln.simMetricsMqttServer = "dummy"
+        Eln.simMetricsId = "disabled-mqtt"
+        Eln.simMetricsPublishIntervalTicks = 1
+        MetricsSubsystem.shutdown()
+        MetricsSubsystem.refreshFromConfig()
+
+        assertFalse(MetricsSubsystem.isSimulatorMetricsActive())
+
+        val root = buildComplexRootSystem(40)
+        root.generate()
+        repeat(50) { root.step() }
+        Thread.sleep(50)
+
+        assertEquals(0, MetricsSubsystem.getDummyPublishCountForTests())
+        assertEquals(0, MetricsSubsystem.getDummyInversionCountForTests())
+        assertEquals(0, MetricsSubsystem.getDummySingularCountForTests())
+
+        MetricsSubsystem.shutdown()
+    }
 
     @Test
     fun profilesMnaWithAndWithoutDummyMqttMetrics() {
@@ -27,6 +59,7 @@ class RootSystemSimMetricsProfilingTest {
 
         val withoutMetrics = runScenario(
             enableMetrics = false,
+            shape = ScenarioShape.SINGLE_SYSTEM,
             matrixSize = 100,
             repetitions = 3,
             warmupSteps = 30,
@@ -34,6 +67,7 @@ class RootSystemSimMetricsProfilingTest {
         )
         val withMetrics = runScenario(
             enableMetrics = true,
+            shape = ScenarioShape.SINGLE_SYSTEM,
             matrixSize = 100,
             repetitions = 3,
             warmupSteps = 30,
@@ -42,8 +76,10 @@ class RootSystemSimMetricsProfilingTest {
 
         assertEquals(100, withoutMetrics.matrixRows)
         assertEquals(100, withoutMetrics.matrixCols)
+        assertEquals(1, withoutMetrics.subsystemCount)
         assertEquals(100, withMetrics.matrixRows)
         assertEquals(100, withMetrics.matrixCols)
+        assertEquals(1, withMetrics.subsystemCount)
         assertEquals(0, withoutMetrics.dummyPublishes)
         assertTrue(withMetrics.dummyPublishes > 0, "Expected dummy MQTT metrics sink to receive publishes")
 
@@ -62,6 +98,7 @@ class RootSystemSimMetricsProfilingTest {
         val matrixSize = 220
         val withoutMetrics = runScenario(
             enableMetrics = false,
+            shape = ScenarioShape.SINGLE_SYSTEM,
             matrixSize = matrixSize,
             repetitions = 12,
             warmupSteps = 50,
@@ -69,6 +106,7 @@ class RootSystemSimMetricsProfilingTest {
         )
         val withMetrics = runScenario(
             enableMetrics = true,
+            shape = ScenarioShape.SINGLE_SYSTEM,
             matrixSize = matrixSize,
             repetitions = 12,
             warmupSteps = 50,
@@ -77,8 +115,10 @@ class RootSystemSimMetricsProfilingTest {
 
         assertEquals(matrixSize, withoutMetrics.matrixRows)
         assertEquals(matrixSize, withoutMetrics.matrixCols)
+        assertEquals(1, withoutMetrics.subsystemCount)
         assertEquals(matrixSize, withMetrics.matrixRows)
         assertEquals(matrixSize, withMetrics.matrixCols)
+        assertEquals(1, withMetrics.subsystemCount)
         assertEquals(0, withoutMetrics.dummyPublishes)
         assertTrue(withMetrics.dummyPublishes > 0, "Expected dummy MQTT metrics sink to receive publishes")
 
@@ -88,6 +128,8 @@ class RootSystemSimMetricsProfilingTest {
         val ratioP95 = percentile(ratios, 0.95)
         println(
             "SIM_METRICS_BENCH matrix=${matrixSize}x${matrixSize} runs=${ratios.size} " +
+                "baseline_mean_ns=${meanLong(withoutMetrics.elapsedRunsNanos)} baseline_median_ns=${percentileLong(withoutMetrics.elapsedRunsNanos, 0.5)} " +
+                "instrumented_mean_ns=${meanLong(withMetrics.elapsedRunsNanos)} instrumented_median_ns=${percentileLong(withMetrics.elapsedRunsNanos, 0.5)} " +
                 "ratio_mean=$ratioMean ratio_median=$ratioMedian ratio_p95=$ratioP95 " +
                 "dummyPublishes=${withMetrics.dummyPublishes}"
         )
@@ -107,6 +149,7 @@ class RootSystemSimMetricsProfilingTest {
         sizes.forEach { size ->
             val withoutMetrics = runScenario(
                 enableMetrics = false,
+                shape = ScenarioShape.SINGLE_SYSTEM,
                 matrixSize = size,
                 repetitions = 12,
                 warmupSteps = 50,
@@ -114,6 +157,7 @@ class RootSystemSimMetricsProfilingTest {
             )
             val withMetrics = runScenario(
                 enableMetrics = true,
+                shape = ScenarioShape.SINGLE_SYSTEM,
                 matrixSize = size,
                 repetitions = 12,
                 warmupSteps = 50,
@@ -122,8 +166,10 @@ class RootSystemSimMetricsProfilingTest {
 
             assertEquals(size, withoutMetrics.matrixRows)
             assertEquals(size, withoutMetrics.matrixCols)
+            assertEquals(1, withoutMetrics.subsystemCount)
             assertEquals(size, withMetrics.matrixRows)
             assertEquals(size, withMetrics.matrixCols)
+            assertEquals(1, withMetrics.subsystemCount)
             assertEquals(0, withoutMetrics.dummyPublishes)
             assertTrue(withMetrics.dummyPublishes > 0)
 
@@ -146,8 +192,54 @@ class RootSystemSimMetricsProfilingTest {
         println("SIM_METRICS_SWEEP_COMPARE tiny_p95=$tinyP95 small_p95=$smallP95 medium_p95=$mediumP95 large_p95=$largeP95")
     }
 
+    @Test
+    fun profilesManySubsystemWorldOverhead() {
+        disableLog4jJmx()
+        Eln.debugEnabled = false
+
+        val withoutMetrics = runScenario(
+            enableMetrics = false,
+            shape = ScenarioShape.MANY_SUBSYSTEMS,
+            matrixSize = 10,
+            repetitions = 10,
+            warmupSteps = 40,
+            measuredSteps = 600
+        )
+        val withMetrics = runScenario(
+            enableMetrics = true,
+            shape = ScenarioShape.MANY_SUBSYSTEMS,
+            matrixSize = 10,
+            repetitions = 10,
+            warmupSteps = 40,
+            measuredSteps = 600
+        )
+
+        assertEquals(10, withoutMetrics.matrixRows)
+        assertEquals(10, withoutMetrics.matrixCols)
+        assertTrue(withoutMetrics.subsystemCount >= 24, "Expected fragmented subsystem scenario")
+        assertEquals(withoutMetrics.subsystemCount, withMetrics.subsystemCount)
+        assertEquals(0, withoutMetrics.dummyPublishes)
+        assertTrue(withMetrics.dummyPublishes > 0)
+
+        val ratios = pairedRatios(withoutMetrics.elapsedRunsNanos, withMetrics.elapsedRunsNanos)
+        val ratioMean = mean(ratios)
+        val ratioMedian = percentile(ratios, 0.5)
+        val ratioP95 = percentile(ratios, 0.95)
+        println(
+            "SIM_METRICS_FRAGMENTED subsystems=${withMetrics.subsystemCount} matrix=10x10 runs=${ratios.size} " +
+                "baseline_mean_ns=${meanLong(withoutMetrics.elapsedRunsNanos)} baseline_median_ns=${percentileLong(withoutMetrics.elapsedRunsNanos, 0.5)} " +
+                "instrumented_mean_ns=${meanLong(withMetrics.elapsedRunsNanos)} instrumented_median_ns=${percentileLong(withMetrics.elapsedRunsNanos, 0.5)} " +
+                "ratio_mean=$ratioMean ratio_median=$ratioMedian ratio_p95=$ratioP95 " +
+                "dummyPublishes=${withMetrics.dummyPublishes}"
+        )
+
+        assertTrue(ratios.isNotEmpty(), "Expected ratio measurements")
+        assertTrue(ratioP95 <= 1.75, "Fragmented-world simulator overhead too high: p95=$ratioP95 ratios=$ratios")
+    }
+
     private fun runScenario(
         enableMetrics: Boolean,
+        shape: ScenarioShape,
         matrixSize: Int,
         repetitions: Int,
         warmupSteps: Int,
@@ -164,11 +256,16 @@ class RootSystemSimMetricsProfilingTest {
         val elapsedRuns = ArrayList<Long>(repetitions)
         var matrixRows = 0
         var matrixCols = 0
+        var subsystemCount = 0
 
         repeat(repetitions) {
-            val root = buildComplexRootSystem(matrixSize)
+            val root = when (shape) {
+                ScenarioShape.SINGLE_SYSTEM -> buildComplexRootSystem(matrixSize)
+                ScenarioShape.MANY_SUBSYSTEMS -> buildFragmentedRootSystem(matrixSize, subsystemCount = 24)
+            }
             root.generate()
             assertTrue(root.systems.isNotEmpty())
+            subsystemCount = root.systems.size
 
             val snapshot = root.systems[0].captureDebugSnapshot()
             assertFalse(snapshot.isSingular)
@@ -187,7 +284,7 @@ class RootSystemSimMetricsProfilingTest {
         }
         val publishes = MetricsSubsystem.getDummyPublishCountForTests()
         MetricsSubsystem.shutdown()
-        return ScenarioResult(elapsedRuns, matrixRows, matrixCols, publishes)
+        return ScenarioResult(elapsedRuns, matrixRows, matrixCols, subsystemCount, publishes)
     }
 
     private fun buildComplexRootSystem(matrixSize: Int): RootSystem {
@@ -228,6 +325,18 @@ class RootSystemSimMetricsProfilingTest {
         return root
     }
 
+    private fun buildFragmentedRootSystem(matrixSize: Int, subsystemCount: Int): RootSystem {
+        require(matrixSize >= 4)
+        require(subsystemCount >= 2)
+        val root = RootSystem(0.1, 1)
+        repeat(subsystemCount) {
+            val subsystem = buildComplexRootSystem(matrixSize)
+            subsystem.addStates.forEach { root.addState(it) }
+            subsystem.addComponents.forEach { root.addComponent(it) }
+        }
+        return root
+    }
+
     private fun bestNanos(result: ScenarioResult): Long {
         return result.elapsedRunsNanos.minOrNull() ?: Long.MAX_VALUE
     }
@@ -249,8 +358,21 @@ class RootSystemSimMetricsProfilingTest {
         return values.sum() / values.size.toDouble()
     }
 
+    private fun meanLong(values: List<Long>): Double {
+        if (values.isEmpty()) return Double.NaN
+        return values.sum().toDouble() / values.size.toDouble()
+    }
+
     private fun percentile(values: List<Double>, p: Double): Double {
         if (values.isEmpty()) return Double.NaN
+        val sorted = values.sorted()
+        val clamped = p.coerceIn(0.0, 1.0)
+        val index = ((sorted.size - 1) * clamped).toInt()
+        return sorted[index]
+    }
+
+    private fun percentileLong(values: List<Long>, p: Double): Long {
+        if (values.isEmpty()) return Long.MIN_VALUE
         val sorted = values.sorted()
         val clamped = p.coerceIn(0.0, 1.0)
         val index = ((sorted.size - 1) * clamped).toInt()

@@ -451,7 +451,7 @@ public class Simulator /* ,IPacketHandler */ {
                 + "    " + thermalSlowProcessList.size() + " TSP"
                 + "    " + slowProcessList.size() + " SP"
             );
-            if (Eln.simMetricsEnabled) {
+            if (MetricsSubsystem.isSimulatorMetricsActive()) {
                 MetricsSubsystem.publishSimulatorRuntimeMetrics(
                     avgTickMicroseconds,
                     electricalMicroseconds,

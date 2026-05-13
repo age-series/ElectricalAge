@@ -5,6 +5,7 @@ import com.google.gson.JsonElement
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import mods.eln.Eln
+import mods.eln.metrics.MetricsSubsystem
 import mods.eln.Other
 import mods.eln.item.TurbineBladeLists
 import mods.eln.item.lampitem.BoilerplateLampData
@@ -257,6 +258,7 @@ class JsonConfig @JvmOverloads constructor(
         Eln.simMetricsId = getStringOrElse("integrations.mqtt.simMetrics.id", "server")
         Eln.simMetricsPublishIntervalTicks = max(1, getIntOrElse("integrations.mqtt.simMetrics.publishIntervalTicks", 20))
         Eln.debugEnabled = getBooleanOrElse("debug.logging.enabled", false)
+        MetricsSubsystem.refreshFromConfig()
 
         setRuntimeValue(
             "runtime.items.batteries.standardHalfLifeTicks",
