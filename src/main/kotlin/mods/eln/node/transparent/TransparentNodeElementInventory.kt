@@ -17,23 +17,16 @@ open class TransparentNodeElementInventory : ISidedInventory, INBTTReady, IUtili
     var stackLimit: Int
     override var requiredCableLength: Double = IUtilityCableInventory.DEFAULT_REQUIRED_LENGTH
 
-    constructor(size: Int, stackLimit: Int, transparentNodeRender: TransparentNodeElementRender?) {
+    @JvmOverloads
+    constructor(size: Int, stackLimit: Int, transparentNodeRender: TransparentNodeElementRender?, requiredCableLength: Double = IUtilityCableInventory.DEFAULT_REQUIRED_LENGTH) {
         inv = arrayOfNulls(size)
         this.stackLimit = stackLimit
         this.transparentNodeRender = transparentNodeRender
+        this.requiredCableLength = requiredCableLength
     }
 
-    constructor(size: Int, stackLimit: Int, transparentNodeElement: TransparentNodeElement?) {
-        inv = arrayOfNulls(size)
-        this.stackLimit = stackLimit
-        this.transparentNodeElement = transparentNodeElement
-    }
-
-    /**
-     * Constructor for inventories which require a different length of utility cable than the default.
-     * This is a separate constructor because Java sucks and does not allow for default values in constructors.
-     */
-    constructor(size: Int, stackLimit: Int, transparentNodeElement: TransparentNodeElement?, requiredCableLength: Double) {
+    @JvmOverloads
+    constructor(size: Int, stackLimit: Int, transparentNodeElement: TransparentNodeElement?, requiredCableLength: Double = IUtilityCableInventory.DEFAULT_REQUIRED_LENGTH) {
         inv = arrayOfNulls(size)
         this.stackLimit = stackLimit
         this.transparentNodeElement = transparentNodeElement

@@ -38,7 +38,7 @@ class LampSocketRender(tileEntity: SixNodeEntity, side: Direction, sixNodeDescri
         const val DEFAULT_PAINT_COLOR = 15
     }
 
-    override val inventory = SixNodeElementInventory(2, 64, this)
+    override val inventory = SixNodeElementInventory(2, 64, this, LampSocketContainer.REQUIRED_CABLE_LENGTH)
     val descriptor = sixNodeDescriptor as LampSocketDescriptor
 
     var lampDescriptor: LampDescriptor? = null

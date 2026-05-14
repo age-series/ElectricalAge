@@ -153,7 +153,7 @@ class LampSocketProcess(var element: LampSocketElement) : IProcess {
         // This makes the projected light "flicker" when a fluorescent bulb is turning on. It's not quite in sync with
         // the bulb, but it's the best that can be done without rewriting the light block handler to allow updating the
         // light value of an existing light block.
-        val lightTimeout = if (stableLightProbability <= 1.0) 1 else 5
+        val lightTimeout = if (stableLightProbability <= 0.999) 1 else 5
 
         LightBlockEntity.addLight(lbCoordinate, lightValue, lightTimeout)
     }

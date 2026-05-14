@@ -31,7 +31,7 @@ public class LampSupplyRender extends SixNodeElementRender {
 
     CableRenderDescriptor cableRender;
 
-    SixNodeElementInventory inventory = new SixNodeElementInventory(1, 64, this);
+    SixNodeElementInventory inventory = new SixNodeElementInventory(1, 64, this, LampSupplyContainer.REQUIRED_CABLE_LENGTH);
 
     public LampSupplyRender(SixNodeEntity tileEntity, Direction side, SixNodeDescriptor descriptor) {
         super(tileEntity, side, descriptor);
