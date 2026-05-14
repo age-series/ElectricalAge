@@ -26,6 +26,7 @@ import mods.eln.eventhandlers.ElnForgeEventsHandler;
 import mods.eln.eventhandlers.RoomThermalBlockEventsHandler;
 import mods.eln.fluid.ElnFluidRegistry;
 import mods.eln.fluid.FuelRegistry;
+import mods.eln.fluid.ThermalRegistry;
 import mods.eln.fluid.FluidRegistrationKt;
 import mods.eln.environment.BiomeClimateService;
 import mods.eln.generic.GenericCreativeTab;
@@ -338,6 +339,7 @@ public class Eln {
         config.loadConfig();
         config.writeExampleFile();
         FuelRegistry.init(event.getSuggestedConfigurationFile());
+        ThermalRegistry.init(event.getSuggestedConfigurationFile());
         MqttManager.init();
         MetricsSubsystem.refreshFromConfig();
 
