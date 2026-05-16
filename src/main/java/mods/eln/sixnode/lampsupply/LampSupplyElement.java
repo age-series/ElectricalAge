@@ -66,7 +66,7 @@ public class LampSupplyElement extends SixNodeElement implements IConfigurable {
     public Resistor loadResistor;
     public IProcess lampSupplySlowProcess = new LampSupplySlowProcess();
 
-    private final IInventory inventory = new SixNodeElementInventory(1, 64, this, LampSupplyContainer.requiredCableLength);
+    private final IInventory inventory = new SixNodeElementInventory(1, 64, this, LampSupplyContainer.REQUIRED_CABLE_LENGTH);
 
     // ElectricalCableDescriptor here covers utility cables
     // Java reports the Kotlin vararg of descriptor classes as an unchecked array creation here.
@@ -209,7 +209,7 @@ public class LampSupplyElement extends SixNodeElement implements IConfigurable {
 
     @Override
     public ElectricalLoad getElectricalLoad(LRDU lrdu, int mask) {
-        if (getInventory().getStackInSlot(LampSupplyContainer.cableSlotId) == null) return null;
+        if (getInventory().getStackInSlot(LampSupplyContainer.CABLE_SLOT_ID) == null) return null;
         if (front == lrdu) return powerLoad;
         return null;
     }
@@ -222,7 +222,7 @@ public class LampSupplyElement extends SixNodeElement implements IConfigurable {
 
     @Override
     public int getConnectionMask(LRDU lrdu) {
-        if (getInventory().getStackInSlot(LampSupplyContainer.cableSlotId) == null) return 0;
+        if (getInventory().getStackInSlot(LampSupplyContainer.CABLE_SLOT_ID) == null) return 0;
         if (front == lrdu) return NodeBase.maskElectricalPower;
         return 0;
     }
@@ -356,7 +356,7 @@ public class LampSupplyElement extends SixNodeElement implements IConfigurable {
     }
 
     void setupFromInventory() {
-        ItemStack cableStack = getInventory().getStackInSlot(LampSupplyContainer.cableSlotId);
+        ItemStack cableStack = getInventory().getStackInSlot(LampSupplyContainer.CABLE_SLOT_ID);
         if (cableStack != null) {
             GenericItemBlockUsingDamageDescriptor desc = GenericItemBlockUsingDamageDescriptor.getDescriptor(cableStack, GenericCableDescriptor.class);
             if (desc instanceof GenericCableDescriptor) {
@@ -421,7 +421,7 @@ public class LampSupplyElement extends SixNodeElement implements IConfigurable {
                 stream.writeChar(e.aggregator);
             }
 
-            Utils.serialiseItemStack(stream, getInventory().getStackInSlot(LampSupplyContainer.cableSlotId));
+            Utils.serialiseItemStack(stream, getInventory().getStackInSlot(LampSupplyContainer.CABLE_SLOT_ID));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -440,7 +440,7 @@ public class LampSupplyElement extends SixNodeElement implements IConfigurable {
     }
 
     private int getRange(LampSupplyDescriptor desc, IInventory inventory2) {
-        ItemStack stack = getInventory().getStackInSlot(LampSupplyContainer.cableSlotId);
+        ItemStack stack = getInventory().getStackInSlot(LampSupplyContainer.CABLE_SLOT_ID);
         if (stack == null) return desc.range;
         return desc.range + stack.stackSize;
     }
