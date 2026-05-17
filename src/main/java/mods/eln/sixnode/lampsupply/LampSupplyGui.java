@@ -67,7 +67,7 @@ public class LampSupplyGui extends GuiContainerEln {
         int y = 6;
 
         int x;
-        for (int id = 0; id < render.descriptor.channelCount; id++) {
+        for (int id = 0; id < LampSupplyDescriptor.CHANNEL_COUNT; id++) {
             x = 6;
 
             LampSupplyElement.Entry e = render.entries.get(id);

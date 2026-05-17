@@ -14,8 +14,7 @@ import net.minecraft.item.ItemStack
 import net.minecraftforge.client.IItemRenderer.ItemRenderType
 import net.minecraftforge.client.IItemRenderer.ItemRendererHelper
 import org.lwjgl.opengl.GL11
-import java.util.Collections
-import kotlin.text.split
+import java.util.*
 
 class LampSocketDescriptor(itemName: String, val renderType: ILampSocketObjRender, val range: Int, val acceptedLampTypes: Array<BoilerplateLampData>) :
     SixNodeDescriptor(itemName, LampSocketElement::class.java, LampSocketRender::class.java) {
@@ -30,7 +29,6 @@ class LampSocketDescriptor(itemName: String, val renderType: ILampSocketObjRende
 
     init {
         voltageLevelColor = VoltageLevelColor.Neutral
-
         for (lampData in acceptedLampTypes) {
             acceptedLampTypesString += lampData.translatedLampType
             if (acceptedLampTypes.indexOf(lampData) < (acceptedLampTypes.size - 1)) acceptedLampTypesString += "/"
@@ -72,7 +70,6 @@ class LampSocketDescriptor(itemName: String, val renderType: ILampSocketObjRende
 
     override fun addInformation(itemStack: ItemStack, entityPlayer: EntityPlayer, list: MutableList<String>, par4: Boolean) {
         super.addInformation(itemStack, entityPlayer, list, par4)
-
         if (range != 0) list.add(I18N.tr("Spot range: %1$ blocks", range))
         if (enableProjectionRotation) list.add(I18N.tr("Angle: %1$\u00B0 to %2$\u00B0", LampSocketGui.MIN_ROTATION_ANGLE.toInt(), LampSocketGui.MAX_ROTATION_ANGLE.toInt()))
         list.add(I18N.tr("Accepted lamp types: %1$", acceptedLampTypesString))
@@ -80,10 +77,11 @@ class LampSocketDescriptor(itemName: String, val renderType: ILampSocketObjRende
 
     override fun addRealismContext(list: MutableList<String>): RealisticEnum {
         super.addRealismContext(list)
-
-        Collections.addAll(list, *I18N.tr("Wireless mode of lights is intended \nto pretend wires are in the walls.")!!
-            .split("\n".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray())
-
+        Collections.addAll(
+            list,
+            *I18N.tr("Wireless mode of lights is intended \nto pretend wires are in the walls.").split(
+                "\n".toRegex()
+            ).dropLastWhile { it.isEmpty() }.toTypedArray())
         return RealisticEnum.REALISTIC
     }
 

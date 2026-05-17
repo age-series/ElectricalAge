@@ -1,6 +1,7 @@
 package mods.eln.sixnode.lampsupply;
 
 import mods.eln.Eln;
+import mods.eln.generic.GenericItemBlockUsingDamageDescriptor;
 import mods.eln.i18n.I18N;
 import mods.eln.item.ConfigCopyToolDescriptor;
 import mods.eln.item.IConfigurable;
@@ -9,7 +10,6 @@ import mods.eln.misc.LRDU;
 import mods.eln.misc.Utils;
 import mods.eln.node.AutoAcceptInventoryProxy;
 import mods.eln.node.NodeBase;
-import mods.eln.generic.GenericItemBlockUsingDamageDescriptor;
 import mods.eln.node.six.SixNode;
 import mods.eln.node.six.SixNodeDescriptor;
 import mods.eln.node.six.SixNodeElement;
@@ -37,7 +37,9 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.*;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
+import net.minecraft.nbt.NBTTagString;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -126,9 +128,9 @@ public class LampSupplyElement extends SixNodeElement implements IConfigurable {
 
         slowProcessList.add(voltageWatchdog);
         voltageWatchdog.setDestroys(new WorldExplosion(this).cableExplosion());
-        channelStates = new boolean[this.descriptor.channelCount];
-        aggregators = new IWirelessSignalAggregator[this.descriptor.channelCount][3];
-        for (int idx = 0; idx < this.descriptor.channelCount; idx++) {
+        channelStates = new boolean[LampSupplyDescriptor.CHANNEL_COUNT];
+        aggregators = new IWirelessSignalAggregator[LampSupplyDescriptor.CHANNEL_COUNT][3];
+        for (int idx = 0; idx < LampSupplyDescriptor.CHANNEL_COUNT; idx++) {
             channelStates[idx] = false;
             entries.add(new Entry("", "", 2));
 
@@ -164,7 +166,7 @@ public class LampSupplyElement extends SixNodeElement implements IConfigurable {
             }
 
 
-            for (int idx = 0; idx < LampSupplyElement.this.descriptor.channelCount; idx++) {
+            for (int idx = 0; idx < LampSupplyDescriptor.CHANNEL_COUNT; idx++) {
                 Entry e = entries.get(idx);
                 if (e.wirelessChannel.equals("")) {
                     channelStates[idx] = true;
@@ -449,7 +451,7 @@ public class LampSupplyElement extends SixNodeElement implements IConfigurable {
     public void readConfigTool(NBTTagCompound compound, EntityPlayer invoker) {
         if(compound.hasKey("powerChannels")) {
             NBTTagList list = compound.getTagList("powerChannels", 8);
-            for(int idx = 0; idx < descriptor.channelCount && idx < list.tagCount(); idx++) {
+            for(int idx = 0; idx < LampSupplyDescriptor.CHANNEL_COUNT && idx < list.tagCount(); idx++) {
                 channelRemove(this, idx, entries.get(idx).powerChannel);
                 entries.get(idx).powerChannel = list.getStringTagAt(idx);
                 channelRegister(this, idx, entries.get(idx).powerChannel);
@@ -458,7 +460,7 @@ public class LampSupplyElement extends SixNodeElement implements IConfigurable {
         }
         if(compound.hasKey("wirelessChannels")) {
             NBTTagList list = compound.getTagList("wirelessChannels", 8);
-            for(int idx = 0; idx < descriptor.channelCount && idx < list.tagCount(); idx++) {
+            for(int idx = 0; idx < LampSupplyDescriptor.CHANNEL_COUNT && idx < list.tagCount(); idx++) {
                 channelRemove(this, idx, entries.get(idx).wirelessChannel);
                 entries.get(idx).wirelessChannel = list.getStringTagAt(idx);
                 channelRegister(this, idx, entries.get(idx).wirelessChannel);
@@ -467,7 +469,7 @@ public class LampSupplyElement extends SixNodeElement implements IConfigurable {
         }
         if(compound.hasKey("aggregators")) {
             int[] aggregators = compound.getIntArray("aggregators");
-            for(int idx = 0; idx < descriptor.channelCount && idx < aggregators.length; idx++) {
+            for(int idx = 0; idx < LampSupplyDescriptor.CHANNEL_COUNT && idx < aggregators.length; idx++) {
                 entries.get(idx).aggregator = aggregators[idx];
             }
             needPublish();
@@ -480,8 +482,8 @@ public class LampSupplyElement extends SixNodeElement implements IConfigurable {
     public void writeConfigTool(NBTTagCompound compound, EntityPlayer invoker) {
         NBTTagList powerList = new NBTTagList();
         NBTTagList wirelessList = new NBTTagList();
-        int[] aggregators = new int[descriptor.channelCount];
-        for(int idx = 0; idx < descriptor.channelCount; idx++) {
+        int[] aggregators = new int[LampSupplyDescriptor.CHANNEL_COUNT];
+        for(int idx = 0; idx < LampSupplyDescriptor.CHANNEL_COUNT; idx++) {
             powerList.appendTag(new NBTTagString(entries.get(idx).powerChannel));
             wirelessList.appendTag(new NBTTagString(entries.get(idx).wirelessChannel));
             aggregators[idx] = entries.get(idx).aggregator;

@@ -38,7 +38,7 @@ public class LampSupplyRender extends SixNodeElementRender {
         this.descriptor = (LampSupplyDescriptor) descriptor;
         interpolator = new PhysicalInterpolator(0.4f, 8.0f, 0.9f, 0.2f);
         coord = new Coordinate(tileEntity);
-        for (int i = 0; i < ((LampSupplyDescriptor) descriptor).channelCount; i++) {
+        for (int i = 0; i < LampSupplyDescriptor.CHANNEL_COUNT; i++) {
             entries.add(new LampSupplyElement.Entry("", "", 2));
         }
     }
