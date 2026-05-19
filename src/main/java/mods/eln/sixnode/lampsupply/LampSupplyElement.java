@@ -76,7 +76,7 @@ public class LampSupplyElement extends SixNodeElement implements IConfigurable {
     private final AutoAcceptInventoryProxy inventoryProxy = (new AutoAcceptInventoryProxy(inventory))
         .acceptIfEmpty(0, ElectricalCableDescriptor.class, CurrentCableDescriptor.class);
 
-    static class Entry {
+    public static class Entry {
         Entry(String powerChannel, String wirelessChannel, int aggregator) {
             this.powerChannel = powerChannel;
             this.wirelessChannel = wirelessChannel;
@@ -420,7 +420,7 @@ public class LampSupplyElement extends SixNodeElement implements IConfigurable {
             for (Entry e : entries) {
                 stream.writeUTF(e.powerChannel);
                 stream.writeUTF(e.wirelessChannel);
-                stream.writeChar(e.aggregator);
+                stream.writeInt(e.aggregator);
             }
 
             Utils.serialiseItemStack(stream, getInventory().getStackInSlot(LampSupplyContainer.CABLE_SLOT_ID));

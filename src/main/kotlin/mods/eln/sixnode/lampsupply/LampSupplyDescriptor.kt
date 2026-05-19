@@ -33,17 +33,22 @@ class LampSupplyDescriptor(name: String, val obj: Obj3D, @JvmField val range: In
 
     fun draw(openFactor: Float) {
         if (base != null) base.draw()
+
         UtilsClient.disableCulling()
         //UtilsClient.disableDepthTest()
         UtilsClient.enableBlend()
+
         obj.bindTexture("Glass.png")
+
         val rotYaw = Minecraft.getMinecraft().thePlayer.rotationYaw / 360f
         val rotPitch = Minecraft.getMinecraft().thePlayer.rotationPitch / 180f
         val pos = (Minecraft.getMinecraft().thePlayer.posX + Minecraft.getMinecraft().thePlayer.posZ).toFloat() / 64f
+
         if (window != null) {
             val windowOpenAngle = window.getFloat("windowOpenAngle")
             window.draw((1f - openFactor) * windowOpenAngle, 0f, 0f, 1f, rotYaw + pos + (openFactor * 0.5f), rotPitch * 0.65f)
         }
+
         UtilsClient.disableBlend()
         //UtilsClient.enableDepthTest()
         UtilsClient.enableCulling()
