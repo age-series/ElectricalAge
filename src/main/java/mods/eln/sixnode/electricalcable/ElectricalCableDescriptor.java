@@ -121,7 +121,7 @@ public class ElectricalCableDescriptor extends GenericCableDescriptor {
     }
 
     @Override
-    public void addInformation(ItemStack itemStack, EntityPlayer entityPlayer, List list, boolean par4) {
+    public void addInformation(ItemStack itemStack, EntityPlayer entityPlayer, List<String> list, boolean par4) {
         super.addInformation(itemStack, entityPlayer, list, par4);
         if (signalWire) {
             Collections.addAll(list, tr("Cable is adapted to conduct\nelectrical signals.").split("\n"));
@@ -148,7 +148,7 @@ public class ElectricalCableDescriptor extends GenericCableDescriptor {
     }
 
     @Override
-    public RealisticEnum addRealismContext(List list) {
+    public RealisticEnum addRealismContext(List<String> list) {
         list.add(tr("Has some caveats:"));
         list.add(tr("  * Wire resistance is much higher than normal"));
         list.add(tr("  * Wire resistance is not impacted by temperature"));

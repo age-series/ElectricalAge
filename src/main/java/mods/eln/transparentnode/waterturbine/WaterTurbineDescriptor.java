@@ -110,7 +110,7 @@ public class WaterTurbineDescriptor extends TransparentNodeDescriptor {
 
     @Override
     public void addInformation(ItemStack itemStack, EntityPlayer entityPlayer,
-                               List list, boolean par4) {
+                               List<String> list, boolean par4) {
 
         super.addInformation(itemStack, entityPlayer, list, par4);
 
@@ -145,4 +145,3 @@ public class WaterTurbineDescriptor extends TransparentNodeDescriptor {
         return false;
     }
 }
-

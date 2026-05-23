@@ -59,8 +59,11 @@ public class ElectricalMachineElement extends TransparentNodeElement implements 
         inSlotId += this.descriptor.outStackCount;
         boosterSlotId += this.descriptor.outStackCount;
         inventory = new ElectricalMachineInventory(2 + this.descriptor.outStackCount, 64, this);
-        booterAccepter = new AutoAcceptInventoryProxy(inventory)
+        // Java reports the Kotlin vararg of descriptor classes as an unchecked array creation here.
+        @SuppressWarnings("unchecked")
+        AutoAcceptInventoryProxy configuredBooterAccepter = new AutoAcceptInventoryProxy(inventory)
             .acceptIfIncrement(this.descriptor.outStackCount + 1, 5, MachineBoosterDescriptor.class);
+        booterAccepter = configuredBooterAccepter;
 
         slowRefreshProcess = new ElectricalStackMachineProcess(
             inventory, inSlotId, outSlotId, this.descriptor.outStackCount,

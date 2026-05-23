@@ -28,7 +28,9 @@ class OreBlock : Block(Material.rock) {
         tab: CreativeTabs,
         l: List<*>?
     ) {
-        Eln.oreItem.getSubItems(i, tab, l)
+        // Block#getSubBlocks exposes a raw list to Kotlin, but the item path consumes ItemStack entries.
+        @Suppress("UNCHECKED_CAST")
+        Eln.oreItem.getSubItems(i, tab, l as MutableList<ItemStack?>?)
     }
 
     @SideOnly(Side.CLIENT)

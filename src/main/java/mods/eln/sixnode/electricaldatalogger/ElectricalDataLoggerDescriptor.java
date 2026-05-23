@@ -170,7 +170,7 @@ public class ElectricalDataLoggerDescriptor extends SixNodeDescriptor {
     }
 
     @Override
-    public void addInformation(ItemStack itemStack, EntityPlayer entityPlayer, List list, boolean par4) {
+    public void addInformation(ItemStack itemStack, EntityPlayer entityPlayer, List<String> list, boolean par4) {
         super.addInformation(itemStack, entityPlayer, list, par4);
         Collections.addAll(list, tr("Measures the voltage of an\nelectrical signal and plots\nthe data in real time.").split("\n"));
         list.add(tr("It can store up to 256 points."));

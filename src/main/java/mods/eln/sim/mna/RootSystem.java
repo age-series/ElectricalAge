@@ -61,7 +61,7 @@ public class RootSystem {
     }
 
     public void addState(State s) {
-        for (Component c : (ArrayList<Component>) s.getConnectedComponentsNotAbstracted().clone()) {
+        for (Component c : new ArrayList<Component>(s.getConnectedComponentsNotAbstracted())) {
             if (c.getSubSystem() != null)
                 breakSystems(c.getSubSystem());
         }

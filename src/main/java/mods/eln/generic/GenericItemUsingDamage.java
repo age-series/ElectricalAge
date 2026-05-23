@@ -147,7 +147,10 @@ public class GenericItemUsingDamage<Descriptor extends GenericItemUsingDamageDes
 
     @Override
     @SideOnly(Side.CLIENT)
+    // Forge keeps this override raw, so we cast once to a typed item list locally.
+    @SuppressWarnings("unchecked")
     public void getSubItems(Item itemID, CreativeTabs tabs, List list) {
+        List<ItemStack> typedList = (List<ItemStack>) list;
         // You can also take a more direct approach and do each one individual but I prefer the lazy / right way
         for (int id : orderList) {
             Descriptor descriptor = subItemList.get(id);
@@ -155,11 +158,13 @@ public class GenericItemUsingDamage<Descriptor extends GenericItemUsingDamageDes
             CreativeTabs descriptorTab = descriptor.getCreativeTab();
             if (descriptorTab == null) descriptorTab = Eln.creativeTabOther;
             if (tabs == null || tabs == descriptorTab || tabs == CreativeTabs.tabAllSearch) {
-                descriptor.getSubItems(list);
+                descriptor.getSubItems(typedList);
             }
         }
     }
 
+    // Forge's tooltip callback also uses a raw List, but this path only appends strings.
+    @SuppressWarnings("unchecked")
     public void addInformation(ItemStack itemStack, EntityPlayer entityPlayer, List list, boolean par4) {
 		/*Descriptor desc = getDescriptor(itemStack);
 		if (desc == null)
@@ -168,11 +173,11 @@ public class GenericItemUsingDamage<Descriptor extends GenericItemUsingDamageDes
 		*/
         Descriptor desc = getDescriptor(itemStack);
         if (desc == null) return;
-        List listFromDescriptor = new ArrayList();
-        List realismData = new ArrayList();
+        List<String> listFromDescriptor = new ArrayList<String>();
+        List<String> realismData = new ArrayList<String>();
         desc.addInformation(itemStack, entityPlayer, listFromDescriptor, par4);
         RealisticEnum realism = desc.addRealismContext(realismData);
-        UtilsClient.showItemTooltip(listFromDescriptor, realismData, realism, list);
+        UtilsClient.showItemTooltip(listFromDescriptor, realismData, realism, (List<String>) list);
     }
 
     /**

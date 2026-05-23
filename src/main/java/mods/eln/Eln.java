@@ -218,8 +218,8 @@ public class Eln {
     public static String dictNibbleMemory;
     public static String dictALU;
     public static FMLEventChannel eventChannel;
-    public static Map<ElnFluidRegistry, Fluid> fluids = new EnumMap(ElnFluidRegistry.class);
-    public static Map<ElnFluidRegistry, Block> fluidBlocks = new EnumMap(ElnFluidRegistry.class);
+    public static Map<ElnFluidRegistry, Fluid> fluids = new EnumMap<ElnFluidRegistry, Fluid>(ElnFluidRegistry.class);
+    public static Map<ElnFluidRegistry, Block> fluidBlocks = new EnumMap<ElnFluidRegistry, Block>(ElnFluidRegistry.class);
     public static WindProcess wind;
     static public GenericItemUsingDamageDescriptor multiMeterElement, thermometerElement, allMeterElement;
     static public GenericItemUsingDamageDescriptor configCopyToolElement;

@@ -54,7 +54,7 @@ public class HeatingCorpElement extends GenericItemUsingDamageDescriptorUpgrade 
     }
 
     @Override
-    public void addInformation(ItemStack itemStack, EntityPlayer entityPlayer, List list, boolean par4) {
+    public void addInformation(ItemStack itemStack, EntityPlayer entityPlayer, List<String> list, boolean par4) {
         super.addInformation(itemStack, entityPlayer, list, par4);
 
         list.add(tr("Nominal:"));

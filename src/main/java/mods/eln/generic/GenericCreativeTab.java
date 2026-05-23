@@ -45,10 +45,12 @@ public class GenericCreativeTab extends CreativeTabs {
 
     @Override
     @SideOnly(Side.CLIENT)
+    // The superclass override is raw, so the local cast is required to forward a typed ItemStack list.
+    @SuppressWarnings("unchecked")
     public void displayAllReleventItems(List list) {
         super.displayAllReleventItems(list);
         if (this != Eln.creativeTabOther) {
-            CreativeTabPopulator.addEntries(this, list);
+            CreativeTabPopulator.addEntries(this, (List<ItemStack>) list);
         }
     }
 }

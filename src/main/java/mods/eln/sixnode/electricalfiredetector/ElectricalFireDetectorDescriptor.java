@@ -64,7 +64,7 @@ public class ElectricalFireDetectorDescriptor extends SixNodeDescriptor {
     }
 
     @Override
-    public void addInformation(ItemStack itemStack, EntityPlayer entityPlayer, List list, boolean par4) {
+    public void addInformation(ItemStack itemStack, EntityPlayer entityPlayer, List<String> list, boolean par4) {
         super.addInformation(itemStack, entityPlayer, list, par4);
         if (batteryPowered) {
             Collections.addAll(list, tr("Battery powered buzzer \nactivated in presence of fire.").split("\n"));

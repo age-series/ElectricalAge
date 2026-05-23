@@ -35,6 +35,8 @@ public class ElectricalEntitySensorElement extends SixNodeElement {
     public NbtElectricalGateOutputProcess outputGateProcess = new NbtElectricalGateOutputProcess("outputGateProcess", outputGate);
     public ElectricalEntitySensorSlowProcess slowProcess = new ElectricalEntitySensorSlowProcess(this);
 
+    // Java reports the Kotlin vararg of descriptor classes as an unchecked array creation here.
+    @SuppressWarnings("unchecked")
     private AutoAcceptInventoryProxy inventory = (new AutoAcceptInventoryProxy(new SixNodeElementInventory(1, 64, this)))
         .acceptAlways(0, 1, new AutoAcceptInventoryProxy.SimpleItemDropper(sixNode), EntitySensorFilterDescriptor.class);
 

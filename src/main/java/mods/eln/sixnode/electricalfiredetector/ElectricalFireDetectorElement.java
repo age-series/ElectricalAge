@@ -56,8 +56,11 @@ public class ElectricalFireDetectorElement extends SixNodeElement {
             electricalComponentList.add(outputGateProcess);
         } else {
             powered = false;
-            inventory = new AutoAcceptInventoryProxy(new SixNodeElementInventory(1, 64, this))
+            // Java reports the Kotlin vararg of descriptor classes as an unchecked array creation here.
+            @SuppressWarnings("unchecked")
+            AutoAcceptInventoryProxy configuredInventory = new AutoAcceptInventoryProxy(new SixNodeElementInventory(1, 64, this))
                 .acceptIfEmpty(0, BatteryItem.class);
+            inventory = configuredInventory;
         }
 
         slowProcessList.add(slowProcess);

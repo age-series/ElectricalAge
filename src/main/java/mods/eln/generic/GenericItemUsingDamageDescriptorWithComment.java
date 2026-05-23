@@ -18,7 +18,7 @@ public class GenericItemUsingDamageDescriptorWithComment extends GenericItemUsin
     }
 
     @Override
-    public void addInformation(ItemStack itemStack, EntityPlayer entityPlayer, List list, boolean par4) {
+    public void addInformation(ItemStack itemStack, EntityPlayer entityPlayer, List<String> list, boolean par4) {
         super.addInformation(itemStack, entityPlayer, list, par4);
         for (String str : description) {
             Collections.addAll(list, tr(str).split("\n"));

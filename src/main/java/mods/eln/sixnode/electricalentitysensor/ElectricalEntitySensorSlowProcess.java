@@ -50,7 +50,7 @@ public class ElectricalEntitySensorSlowProcess implements IProcess, INBTTReady {
             Coordinate coord = element.sixNode.coordinate;
             ItemStack filterStack = element.getInventory().getStackInSlot(ElectricalEntitySensorContainer.filterId);
 
-            Class filterClass = EntityLivingBase.class;
+            Class<?> filterClass = EntityLivingBase.class;
 
             if (filterStack != null) {
                 GenericItemUsingDamageDescriptor gen = EntitySensorFilterDescriptor.getDescriptor(filterStack);
@@ -63,11 +63,15 @@ public class ElectricalEntitySensorSlowProcess implements IProcess, INBTTReady {
             World world = coord.world();
             double rayMax = element.descriptor.maxRange;
             AxisAlignedBB bb = coord.getAxisAlignedBB((int) rayMax);
-            List list = world.getEntitiesWithinAABB(filterClass, bb);
+            // World#getEntitiesWithinAABB is raw in 1.7.10, but this query asks specifically for EntityLivingBase.
+            @SuppressWarnings("unchecked")
+            List<EntityLivingBase> list = world.getEntitiesWithinAABB(EntityLivingBase.class, bb);
             double output = 0;
 
-            for (Object o : list) {
-                Entity e = (Entity) o;
+            for (EntityLivingBase e : list) {
+                if (!filterClass.isAssignableFrom(e.getClass())) {
+                    continue;
+                }
                 Vec3 lastPos;
                 if ((lastPos = lastEPos.get(e)) != null) {
                     double weight = 0.4;

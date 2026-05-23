@@ -213,6 +213,8 @@ public class SolarPanelElement extends TransparentNodeElement {
         return unserializeNulldId;
     }
 
+    // Java reports the Kotlin vararg of descriptor classes as an unchecked array creation here.
+    @SuppressWarnings("unchecked")
     private final AutoAcceptInventoryProxy inventory =
         (new AutoAcceptInventoryProxy(new TransparentNodeElementInventory(1, 64, this)))
             .acceptIfEmpty(0, SolarTrackerDescriptor.class);

@@ -35,6 +35,8 @@ import java.util.Map;
 
 public class AutoMinerElement extends TransparentNodeElement {
 
+    // Java reports the Kotlin vararg of descriptor classes as an unchecked array creation here.
+    @SuppressWarnings("unchecked")
     AutoAcceptInventoryProxy inventory =
         (new AutoAcceptInventoryProxy(new TransparentNodeElementInventory(AutoMinerContainer.inventorySize, 64, this)))
             .acceptIfIncrement(2, 64, MiningPipeDescriptor.class)

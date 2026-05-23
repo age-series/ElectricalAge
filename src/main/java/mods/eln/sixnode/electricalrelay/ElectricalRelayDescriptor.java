@@ -127,7 +127,7 @@ public class ElectricalRelayDescriptor extends SixNodeDescriptor {
     }
 
     @Override
-    public void addInformation(ItemStack itemStack, EntityPlayer entityPlayer, List list, boolean par4) {
+    public void addInformation(ItemStack itemStack, EntityPlayer entityPlayer, List<String> list, boolean par4) {
         super.addInformation(itemStack, entityPlayer, list, par4);
         Collections.addAll(list, tr("A relay is an electrical\ncontact that conducts\ncurrent when a signal\nvoltage is applied.").split("\n"));
         Collections.addAll(list, tr("The relay's input behaves\nlike a Schmitt Trigger.").split("\n"));

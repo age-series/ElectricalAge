@@ -122,7 +122,7 @@ public class SolarPanelDescriptor extends TransparentNodeDescriptor {
     }
 
     @Override
-    public void addInformation(ItemStack itemStack, EntityPlayer entityPlayer, List list, boolean par4) {
+    public void addInformation(ItemStack itemStack, EntityPlayer entityPlayer, List<String> list, boolean par4) {
         super.addInformation(itemStack, entityPlayer, list, par4);
 
         list.add(tr("Produces power from solar radiation."));
@@ -133,7 +133,7 @@ public class SolarPanelDescriptor extends TransparentNodeDescriptor {
     }
 
     @Override
-    public void addCollisionBoxesToList(AxisAlignedBB par5AxisAlignedBB, List list, World world, int x, int y, int z) {
+    public void addCollisionBoxesToList(AxisAlignedBB par5AxisAlignedBB, List<AxisAlignedBB> list, World world, int x, int y, int z) {
         if (canRotate) {
             super.addCollisionBoxesToList(par5AxisAlignedBB, list, world, x, y, z);
             return;

@@ -14,7 +14,7 @@ public class CombustionChamber extends GenericItemUsingDamageDescriptorUpgrade {
     }
 
     @Override
-    public void addInformation(ItemStack itemStack, EntityPlayer entityPlayer, List list, boolean par4) {
+    public void addInformation(ItemStack itemStack, EntityPlayer entityPlayer, List<String> list, boolean par4) {
         super.addInformation(itemStack, entityPlayer, list, par4);
         list.add(tr("Upgrade for the Stone Heat Furnace."));
     }

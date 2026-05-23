@@ -69,6 +69,8 @@ public class LampSupplyElement extends SixNodeElement implements IConfigurable {
     private final IInventory inventory = new SixNodeElementInventory(1, 64, this, LampSupplyContainer.requiredCableLength);
 
     // ElectricalCableDescriptor here covers utility cables
+    // Java reports the Kotlin vararg of descriptor classes as an unchecked array creation here.
+    @SuppressWarnings("unchecked")
     private final AutoAcceptInventoryProxy inventoryProxy = (new AutoAcceptInventoryProxy(inventory))
         .acceptIfEmpty(0, ElectricalCableDescriptor.class, CurrentCableDescriptor.class);
 

@@ -1,14 +1,15 @@
 package mods.eln.item;
 
+import net.minecraft.entity.Entity;
 import org.lwjgl.opengl.GL11;
 
 public class EntitySensorFilterDescriptor extends GenericItemUsingDamageDescriptorUpgrade {
 
-    public Class entityClass;
+    public Class<?> entityClass;
 
     float r, g, b;
 
-    public EntitySensorFilterDescriptor(String name, Class entityClass, float r, float g, float b) {
+    public EntitySensorFilterDescriptor(String name, Class<?> entityClass, float r, float g, float b) {
         super(name);
         this.entityClass = entityClass;
         this.r = r;

@@ -105,7 +105,9 @@ class SixNodeBlock  // public static ArrayList<Integer> repertoriedItemStackId =
         /*
 		 * for (Integer id : repertoriedItemStackId) { subItems.add(new ItemStack(this, 1, id)); }
 		 */
-        Eln.sixNodeItem.getSubItems(par1, tab, subItems)
+        // Block#getSubBlocks exposes a raw list to Kotlin, but the item path consumes ItemStack entries.
+        @Suppress("UNCHECKED_CAST")
+        Eln.sixNodeItem.getSubItems(par1, tab, subItems as MutableList<ItemStack?>?)
     }
 
     override fun isOpaqueCube(): Boolean {
