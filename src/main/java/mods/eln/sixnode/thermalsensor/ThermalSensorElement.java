@@ -64,11 +64,17 @@ public class ThermalSensorElement extends SixNodeElement implements IConfigurabl
         this.descriptor = (ThermalSensorDescriptor) descriptor;
 
         if (this.descriptor.temperatureOnly) {
-            inventory = (new AutoAcceptInventoryProxy(new SixNodeElementInventory(1, 64, this)))
+            // Java reports the Kotlin vararg of descriptor classes as an unchecked array creation here.
+            @SuppressWarnings("unchecked")
+            AutoAcceptInventoryProxy configuredInventory = (new AutoAcceptInventoryProxy(new SixNodeElementInventory(1, 64, this)))
                 .acceptIfEmpty(0, ThermalCableDescriptor.class, ElectricalCableDescriptor.class, CurrentCableDescriptor.class);
+            inventory = configuredInventory;
         } else {
-            inventory = (new AutoAcceptInventoryProxy(new SixNodeElementInventory(1, 64, this)))
+            // Java reports the Kotlin vararg of descriptor classes as an unchecked array creation here.
+            @SuppressWarnings("unchecked")
+            AutoAcceptInventoryProxy configuredInventory = (new AutoAcceptInventoryProxy(new SixNodeElementInventory(1, 64, this)))
                 .acceptIfEmpty(0, ThermalCableDescriptor.class);
+            inventory = configuredInventory;
         }
     }
 

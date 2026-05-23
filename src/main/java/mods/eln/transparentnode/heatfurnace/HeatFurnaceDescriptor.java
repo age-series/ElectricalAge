@@ -121,7 +121,7 @@ public class HeatFurnaceDescriptor extends TransparentNodeDescriptor {
     }
 
     @Override
-    public void addInformation(ItemStack itemStack, EntityPlayer entityPlayer, List list, boolean par4) {
+    public void addInformation(ItemStack itemStack, EntityPlayer entityPlayer, List<String> list, boolean par4) {
         super.addInformation(itemStack, entityPlayer, list, par4);
         list.add(tr("Generates heat when supplied with fuel."));
         list.add("  " + tr("Nominal power: %1$W", Utils.plotValue(nominalPower)));

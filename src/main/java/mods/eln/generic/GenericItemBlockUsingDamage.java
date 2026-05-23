@@ -141,7 +141,10 @@ public class GenericItemBlockUsingDamage<Descriptor extends GenericItemBlockUsin
 
     @SideOnly(Side.CLIENT)
     @Override
+    // Forge keeps this override raw, so we cast once to a typed item list locally.
+    @SuppressWarnings("unchecked")
     public void getSubItems(Item itemID, CreativeTabs tabs, List list) {
+        List<ItemStack> typedList = (List<ItemStack>) list;
         // You can also take a more direct approach and do each one individual but I prefer the lazy / right way
         //for(Entry<Integer, Descriptor> entry : subItemList.entrySet())
         for (int id : orderList) {
@@ -150,19 +153,21 @@ public class GenericItemBlockUsingDamage<Descriptor extends GenericItemBlockUsin
             CreativeTabs descriptorTab = descriptor.getCreativeTab();
             if (descriptorTab == null) descriptorTab = Eln.creativeTabOther;
             if (tabs == null || tabs == descriptorTab || tabs == CreativeTabs.tabAllSearch) {
-                list.add(descriptor.newCreativeTabStack());
+                typedList.add(descriptor.newCreativeTabStack());
             }
         }
     }
 
+    // Forge's tooltip callback also uses a raw List, but this path only appends strings.
+    @SuppressWarnings("unchecked")
     public void addInformation(ItemStack itemStack, EntityPlayer entityPlayer, List list, boolean par4) {
         Descriptor desc = getDescriptor(itemStack);
         if (desc == null) return;
-        List listFromDescriptor = new ArrayList();
-        List realismData = new ArrayList();
+        List<String> listFromDescriptor = new ArrayList<String>();
+        List<String> realismData = new ArrayList<String>();
         desc.addInformation(itemStack, entityPlayer, listFromDescriptor, par4);
         RealisticEnum realism = desc.addRealismContext(realismData);
-        UtilsClient.showItemTooltip(listFromDescriptor, realismData, realism, list);
+        UtilsClient.showItemTooltip(listFromDescriptor, realismData, realism, (List<String>) list);
     }
 
     public boolean onEntityItemUpdate(EntityItem entityItem) {

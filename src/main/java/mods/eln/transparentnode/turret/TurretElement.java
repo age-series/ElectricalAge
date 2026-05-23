@@ -53,6 +53,8 @@ public class TurretElement extends TransparentNodeElement implements IConfigurab
     final NbtElectricalLoad load = new NbtElectricalLoad("load");
     final NbtResistor powerResistor = new NbtResistor("powerResistor", load, null);
 
+    // Java reports the Kotlin vararg of descriptor classes as an unchecked array creation here.
+    @SuppressWarnings("unchecked")
     final AutoAcceptInventoryProxy acceptingInventory =
         (new AutoAcceptInventoryProxy(new TransparentNodeElementInventory(1, 64, this)))
             .acceptAlways(0, 1, new AutoAcceptInventoryProxy.SimpleItemDropper(node), EntitySensorFilterDescriptor.class);

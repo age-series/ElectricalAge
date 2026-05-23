@@ -29,6 +29,8 @@ public class ElectricalWatchElement extends SixNodeElement {
 
     public ElectricalWatchSlowProcess slowProcess = new ElectricalWatchSlowProcess(this);
 
+    // Java reports the Kotlin vararg of descriptor classes as an unchecked array creation here.
+    @SuppressWarnings("unchecked")
     private AutoAcceptInventoryProxy inventory = (new AutoAcceptInventoryProxy(new SixNodeElementInventory(1, 64, this)))
         .acceptIfEmpty(0, BatteryItem.class);
 

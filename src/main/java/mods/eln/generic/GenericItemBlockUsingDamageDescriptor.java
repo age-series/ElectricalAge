@@ -117,10 +117,10 @@ public class GenericItemBlockUsingDamageDescriptor {
         return genItem.getDescriptor(stack);
     }
 
-    public static GenericItemBlockUsingDamageDescriptor getDescriptor(ItemStack stack, Class extendClass) {
+    public static GenericItemBlockUsingDamageDescriptor getDescriptor(ItemStack stack, Class<?> extendClass) {
         GenericItemBlockUsingDamageDescriptor desc = getDescriptor(stack);
         if (desc == null) return null;
-        if (extendClass.isAssignableFrom(desc.getClass()) == false) return null;
+        if (!extendClass.isAssignableFrom(desc.getClass())) return null;
         return desc;
     }
 

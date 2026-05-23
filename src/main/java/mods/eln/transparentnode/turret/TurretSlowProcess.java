@@ -151,7 +151,7 @@ public class TurretSlowProcess extends StateMachine {
             if (lastScanWasBefore < element.getDescriptor().getProperties().entityDetectionInterval) return null;
             lastScanWasBefore = 0;
 
-            Class filterClass = null;
+            Class<?> filterClass = null;
             ItemStack filterStack = element.getInventory().getStackInSlot(TurretContainer.filterId);
             if (filterStack != null) {
                 GenericItemUsingDamageDescriptor gen = EntitySensorFilterDescriptor.getDescriptor(filterStack);
@@ -163,6 +163,7 @@ public class TurretSlowProcess extends StateMachine {
 
             Coordinate coord = element.coordinate();
             AxisAlignedBB bb = coord.getAxisAlignedBB((int) element.getDescriptor().getProperties().detectionDistance);
+            // World#getEntitiesWithinAABB is raw in 1.7.10, but this query asks specifically for EntityLivingBase.
             @SuppressWarnings("unchecked")
             List<EntityLivingBase> list = coord.world().getEntitiesWithinAABB(EntityLivingBase.class, bb);
             for (EntityLivingBase entity : list) {
@@ -246,7 +247,7 @@ public class TurretSlowProcess extends StateMachine {
         public State state(double time) {
             if (target.getHealth()<=0) return new SeekingState();
 
-            Class filterClass = null;
+            Class<?> filterClass = null;
             ItemStack filterStack = element.getInventory().getStackInSlot(TurretContainer.filterId);
             if (filterStack != null) {
                 GenericItemUsingDamageDescriptor gen = EntitySensorFilterDescriptor.getDescriptor(filterStack);

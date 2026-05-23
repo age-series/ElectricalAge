@@ -10,6 +10,7 @@ import net.minecraft.entity.Entity
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.entity.player.EntityPlayerMP
 import net.minecraft.item.Item
+import net.minecraft.item.ItemStack
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.util.AxisAlignedBB
 import net.minecraft.world.IBlockAccess
@@ -21,7 +22,9 @@ import java.util.*
 class TransparentNodeBlock(material: Material?, tileEntityClass: Class<*>?) : NodeBlock(material, tileEntityClass!!, 0) {
 
     override fun getSubBlocks(par1: Item, tab: CreativeTabs?, subItems: List<*>?) {
-        Eln.transparentNodeItem.getSubItems(par1, tab, subItems)
+        // Block#getSubBlocks exposes a raw list to Kotlin, but the item path consumes ItemStack entries.
+        @Suppress("UNCHECKED_CAST")
+        Eln.transparentNodeItem.getSubItems(par1, tab, subItems as MutableList<ItemStack?>?)
     }
 
     override fun isOpaqueCube(): Boolean {
@@ -76,6 +79,7 @@ class TransparentNodeBlock(material: Material?, tileEntityClass: Class<*>?) : No
         if (tileEntity == null || tileEntity !is TransparentNodeEntity) {
             super.addCollisionBoxesToList(world, x, y, z, par5AxisAlignedBB, list, entity)
         } else {
+            // Forge passes a raw collision list here; the tile entity only appends AxisAlignedBB instances.
             @Suppress("UNCHECKED_CAST") tileEntity.addCollisionBoxesToList(par5AxisAlignedBB, list as MutableList<AxisAlignedBB?>, null)
         }
     }

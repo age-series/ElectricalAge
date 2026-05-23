@@ -61,7 +61,7 @@ public class ElectricalWindSensorDescriptor extends SixNodeDescriptor {
     }
 
     @Override
-    public void addInformation(ItemStack itemStack, EntityPlayer entityPlayer, List list, boolean par4) {
+    public void addInformation(ItemStack itemStack, EntityPlayer entityPlayer, List<String> list, boolean par4) {
         super.addInformation(itemStack, entityPlayer, list, par4);
         Collections.addAll(list, tr("Provides an electrical signal\ndependant on wind speed.").split("\n"));
         list.add(tr("Maximum wind speed is %1$m/s", Utils.plotValue(windMax)));

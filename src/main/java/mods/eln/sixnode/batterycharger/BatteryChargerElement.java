@@ -42,6 +42,8 @@ public class BatteryChargerElement extends SixNodeElement {
     public BatteryChargerSlowProcess slowProcess = new BatteryChargerSlowProcess();
     Resistor powerResistor = new Resistor(powerLoad, null);
 
+    // Java reports the Kotlin vararg of descriptor classes as an unchecked array creation here.
+    @SuppressWarnings("unchecked")
     AutoAcceptInventoryProxy inventory = (new AutoAcceptInventoryProxy(new SixNodeElementInventory(5, 64, this)))
         .acceptIfEmpty(0, IItemEnergyBattery.class)
         .acceptIfEmpty(1, IItemEnergyBattery.class)

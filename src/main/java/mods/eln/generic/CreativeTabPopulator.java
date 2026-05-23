@@ -3,6 +3,7 @@ package mods.eln.generic;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.item.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +32,7 @@ public final class CreativeTabPopulator {
     }
 
     @SideOnly(Side.CLIENT)
-    public static void addEntries(CreativeTabs tab, List list) {
+    public static void addEntries(CreativeTabs tab, List<ItemStack> list) {
         for (GenericItemBlockUsingDamage<?> item : BLOCK_ITEMS) {
             item.getSubItems(item, tab, list);
         }

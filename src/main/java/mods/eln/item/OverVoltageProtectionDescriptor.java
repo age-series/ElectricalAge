@@ -15,7 +15,7 @@ public class OverVoltageProtectionDescriptor extends GenericItemUsingDamageDescr
     }
 
     @Override
-    public void addInformation(ItemStack itemStack, EntityPlayer entityPlayer, List list, boolean par4) {
+    public void addInformation(ItemStack itemStack, EntityPlayer entityPlayer, List<String> list, boolean par4) {
         super.addInformation(itemStack, entityPlayer, list, par4);
         Collections.addAll(list, tr("Useful to prevent over-voltage\nof Batteries").split("\\\n"));
     }
