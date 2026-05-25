@@ -132,16 +132,15 @@ class ThermalHeatExchangerElement(
         val canMoveOutputMb = tank.fill(OUTPUT_SIDE, FluidStack(outputFluid, maxMbOutputPerTick), false)
         //println("canMoveOutputMb: $canMoveOutputMb")
         var inTempRange = 1.0
-        if (minTemp != null && thermalLoad.temperatureCelsius < minTemp) {
-            val floor = minTemp * 0.5
-            if (thermalLoad.temperatureCelsius <= floor) {
+        if (minTemp != null) {
+            if (thermalLoad.temperatureCelsius < minTemp) {
                 inTempRange = 0.0
-            } else {
-                inTempRange *= (thermalLoad.temperatureCelsius - floor) / (minTemp - floor)
             }
         }
-        if (maxTemp != null && thermalLoad.temperatureCelsius > maxTemp) {
-            inTempRange *= Math.max(maxTemp / thermalLoad.temperatureCelsius, 0.0)
+        if (maxTemp != null) {
+            if (thermalLoad.temperatureCelsius > maxTemp) {
+                inTempRange = 0.0
+            }
         }
         val shouldMoveOutputMb = min(maxMbOutputPerTick * electricalControlLoad.normalized, canMoveOutputMb.toDouble()) * inTempRange
         //println("shouldMoveOutputMb: $shouldMoveOutputMb")
