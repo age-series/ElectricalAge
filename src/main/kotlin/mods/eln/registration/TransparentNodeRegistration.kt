@@ -652,6 +652,16 @@ object TransparentNodeRegistration {
             )
             transparentNodeItem.addDescriptor(subId + (id shl 6), desc)
         }
+
+        run {
+            subId = 28
+            val desc = FlywheelDescriptor(
+                TR_NAME(I18N.Type.NONE, "Large Flywheel"),
+                Eln.obj.getObj("Flywheel"),
+                LARGE_MACHINE_VOLUME_SCALE
+            ).applyLargeMachineLayout()
+            transparentNodeItem.addDescriptor(subId + (id shl 6), desc)
+        }
     }
 
     private fun registerElectricalFurnace(id: Int) {

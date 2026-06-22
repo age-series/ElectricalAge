@@ -14,7 +14,7 @@ import net.minecraft.entity.Entity
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.util.DamageSource
 
-class FlywheelDescriptor(baseName: String, obj: Obj3D) : SimpleShaftDescriptor(baseName,
+class FlywheelDescriptor(baseName: String, obj: Obj3D, val capacityScale: Float = 1f) : SimpleShaftDescriptor(baseName,
     FlyWheelElement::class, ShaftRender::class, EntityMetaTag.Basic) {
     override val obj = obj
     override val static = arrayOf(obj.getPart("Stand"), obj.getPart("Cowl"))
@@ -22,7 +22,8 @@ class FlywheelDescriptor(baseName: String, obj: Obj3D) : SimpleShaftDescriptor(b
 }
 
 class FlyWheelElement(node: TransparentNode, desc_: TransparentNodeDescriptor) : StraightJointElement(node, desc_) {
-    override val shaftMass = Eln.config.getDoubleOrElse("balance.mechanics.flywheelMass", 50.0)
+    val massScale = (desc_ as FlywheelDescriptor).capacityScale.toDouble()
+    override val shaftMass = Eln.config.getDoubleOrElse("balance.mechanics.flywheelMass", 50.0) * massScale
 
     inner class FlyWheelFlingProcess : IProcess {
         val interval = 0.05
