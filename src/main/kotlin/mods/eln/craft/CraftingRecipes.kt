@@ -755,6 +755,15 @@ object CraftingRecipes {
             )
         )
         addRecipe(
+            findItemStack("Large Flywheel"),
+            "PPP",
+            "RMR",
+            "PPP",
+            'P', firstExistingOre("blockLead", "ingotLead"),
+            'R', findItemStack("Reinforced Shaft"),
+            'M', findItemStack("Advanced Machine Block")
+        )
+        addRecipe(
             findItemStack("Tachometer"), "p  ", "iii", "cm ", 'i', "ingotIron", 'm', findItemStack(
                 "Machine " +
                         "Block"

@@ -1649,6 +1649,7 @@ High_Power_Transmitter_Antenna.name=天线(发射,800V)
 Holiday_Candle.name=节日蜡烛
 Joint.name=转轴
 Joint_hub.name=万向节
+Large_Flywheel.name=Large Flywheel
 Large_Gas_Turbine.name=大型发动机(燃气)
 Large_Generator.name=大型发电机(动能,12.8kV)
 Large_Rheostat.name=变阻器(大型)
