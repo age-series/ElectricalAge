@@ -27,8 +27,8 @@ class FlyWheelElement(node: TransparentNode, desc_: TransparentNodeDescriptor) :
 
     inner class FlyWheelFlingProcess : IProcess {
         val interval = 0.05
-        val yTolerance = 1.0
-        val xzTolerance = 0.5
+        val yTolerance = if (massScale > 1.0) 2.0 else 1.0
+        val xzTolerance = if (massScale > 1.0) 1.5 else 0.5
         val minRads = 5.0
         val velocityF = LinearFunction(0f, 0f, absoluteMaximumShaftSpeed.toFloat(), 1f)
         val damageF = LinearFunction(5f, 1f, absoluteMaximumShaftSpeed.toFloat(), 20f)
@@ -48,7 +48,8 @@ class FlyWheelElement(node: TransparentNode, desc_: TransparentNodeDescriptor) :
             val rads = shaft.rads
             if(rads < minRads) return
             val coord = coordinate()
-            val objects = coord.world().getEntitiesWithinAABB(Entity::class.java, coord.getAxisAlignedBB(1))
+            val bbRay = if (massScale > 1.0) 3 else 1
+            val objects = coord.world().getEntitiesWithinAABB(Entity::class.java, coord.getAxisAlignedBB(bbRay))
             //if(objects.size > 0) Utils.println("FFP.sP: within range: " + objects.size)
             for(obj in objects) {
                 val ent = obj as Entity
