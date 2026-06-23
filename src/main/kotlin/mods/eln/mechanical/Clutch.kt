@@ -36,6 +36,10 @@ class ClutchPlateItem(
     val maxDTF: Float, val minDTF: Float,
     val wearSpeed: Float, public val explodes: Boolean
 ) : GenericItemUsingDamageDescriptor(name) {
+    companion object {
+        var infiniteLifeEnabled: Boolean = false
+    }
+
     override fun getDefaultNBT() = NBTTagCompound()
 
     fun setWear(stack: ItemStack, wear: Double) {
@@ -290,7 +294,7 @@ class ClutchElement(node: TransparentNode, desc_: TransparentNodeDescriptor) : S
                 if (Math.signum(rightShaft.rads - leftShaft.rads) != Math.signum(preRads[RIGHT] - preRads[LEFT]))
                 {
                     if (!canClutchStopSlipping(leftShaft, rightShaft)) {
-                        clutchPlateDescriptor!!.setWear(clutchPlateStack!!, wear + clutching * slipWearF.getValue(Math.abs(deltaR)))
+                        if (!ClutchPlateItem.infiniteLifeEnabled) clutchPlateDescriptor!!.setWear(clutchPlateStack!!, wear + clutching * slipWearF.getValue(Math.abs(deltaR)))
                         slipping = false
                         return
                     }
@@ -314,7 +318,7 @@ class ClutchElement(node: TransparentNode, desc_: TransparentNodeDescriptor) : S
                         slower.rads = finalW
                     }
                 } else {
-                    clutchPlateDescriptor!!.setWear(clutchPlateStack!!, wear + clutching * slipWearF.getValue(Math.abs(deltaR)))
+                    if (!ClutchPlateItem.infiniteLifeEnabled) clutchPlateDescriptor!!.setWear(clutchPlateStack!!, wear + clutching * slipWearF.getValue(Math.abs(deltaR)))
                 }
             } else {
                 val maxE = clutching * maxStaticEnergyF.getValue(wear)

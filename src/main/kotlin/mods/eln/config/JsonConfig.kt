@@ -10,6 +10,7 @@ import mods.eln.Other
 import mods.eln.item.TurbineBladeLists
 import mods.eln.item.lampitem.BoilerplateLampData
 import mods.eln.item.lampitem.LampLists
+import mods.eln.mechanical.ClutchPlateItem
 import mods.eln.misc.Utils
 import java.io.File
 import java.io.FileReader
@@ -240,6 +241,7 @@ class JsonConfig @JvmOverloads constructor(
 
         LampLists.loadAllLampConfigs()
         for (bladeData in TurbineBladeLists.bladeConfigList) bladeData.loadConfig()
+        ClutchPlateItem.infiniteLifeEnabled = getBooleanOrElse("items.clutchPlates.infiniteLifeEnabled", false)
 
         val analyticsEnabled = getBooleanOrElse("analytics.enabled", true)
         if (analyticsEnabled) {
@@ -843,6 +845,7 @@ class JsonConfig @JvmOverloads constructor(
                 defaults["items.turbineBlades.${blade.tierName}.nominalLifeHours"] = blade.nominalLifeInHours
                 defaults["items.turbineBlades.${blade.tierName}.infiniteLifeEnabled"] = blade.infiniteLifeEnabled
             }
+            defaults["items.clutchPlates.infiniteLifeEnabled"] = ClutchPlateItem.infiniteLifeEnabled
         }
         return defaults
     }
@@ -913,6 +916,7 @@ class JsonConfig @JvmOverloads constructor(
             pathComments["items.turbineBlades.${blade.tierName}.nominalLifeHours"] = "Nominal turbine blade lifetime in hours for the ${blade.tierName} tier."
             pathComments["items.turbineBlades.${blade.tierName}.infiniteLifeEnabled"] = "Disable wear-out for ${blade.tierName} turbine blades."
         }
+        pathComments["items.clutchPlates.infiniteLifeEnabled"] = "Disable clutch plate wear-out."
     }
 
     private fun legacyKeysFor(spec: ConfigSpec): List<LegacyKey> = when (joinPath(spec.path)) {
