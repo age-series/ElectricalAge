@@ -20,9 +20,10 @@ import mods.eln.sixnode.PowerCapacitorSixElement
 import mods.eln.sixnode.PowerInductorSixContainer
 import mods.eln.sixnode.PowerInductorSixElement
 import mods.eln.sixnode.ElectricalVuMeterDescriptor
+import mods.eln.sixnode.electricaldatalogger.DataLogs
+import mods.eln.sixnode.electricaldatalogger.ElectricalDataLoggerElement
 import mods.eln.sixnode.electricalgatesource.ElectricalGateSourceElement
 import mods.eln.sixnode.electricalgatesource.ElectricalGateSourceDescriptor
-import mods.eln.sixnode.electricaldigitaldisplay.ElectricalDigitalDisplayElement
 import mods.eln.sixnode.electricalsensor.ElectricalSensorElement
 import mods.eln.sixnode.electricalsource.ElectricalSourceElement
 import mods.eln.sixnode.electricalswitch.ElectricalSwitchElement
@@ -57,7 +58,6 @@ object FalstadImporter {
     private data class ProbeDisplayPlacement(
         val probePoint: FalstadPoint,
         val displayPoint: FalstadPoint,
-        val dotSourcePoint: FalstadPoint,
         val probeFront: LRDU,
         val displayFront: LRDU
     )
@@ -307,44 +307,23 @@ object FalstadImporter {
     }
 
     private fun probeDisplayPlacement(component: FalstadPlacedComponent): ProbeDisplayPlacement {
+        fun placementWithLoggerFront(): ProbeDisplayPlacement {
+            val baseFront = frontToward(component.cell, component.end)
+            val front = if (component.axis == FalstadAxis.VERTICAL) baseFront.right() else baseFront.left()
+            return ProbeDisplayPlacement(
+                probePoint = component.cell,
+                displayPoint = component.end,
+                probeFront = front,
+                displayFront = front
+            )
+        }
+
         return when (component.axis) {
             FalstadAxis.HORIZONTAL -> {
-                if (component.start.x <= component.end.x) {
-                    ProbeDisplayPlacement(
-                        probePoint = component.cell,
-                        displayPoint = component.end,
-                        dotSourcePoint = FalstadPoint(component.end.x + 1, component.end.y),
-                        probeFront = LRDU.Up,
-                        displayFront = LRDU.Up
-                    )
-                } else {
-                    ProbeDisplayPlacement(
-                        probePoint = component.cell,
-                        displayPoint = component.end,
-                        dotSourcePoint = FalstadPoint(component.end.x - 1, component.end.y),
-                        probeFront = LRDU.Down,
-                        displayFront = LRDU.Down
-                    )
-                }
+                placementWithLoggerFront()
             }
             FalstadAxis.VERTICAL -> {
-                if (component.start.y <= component.end.y) {
-                    ProbeDisplayPlacement(
-                        probePoint = component.cell,
-                        displayPoint = component.end,
-                        dotSourcePoint = FalstadPoint(component.end.x, component.end.y + 1),
-                        probeFront = LRDU.Right,
-                        displayFront = LRDU.Right
-                    )
-                } else {
-                    ProbeDisplayPlacement(
-                        probePoint = component.cell,
-                        displayPoint = component.end,
-                        dotSourcePoint = FalstadPoint(component.end.x, component.end.y - 1),
-                        probeFront = LRDU.Left,
-                        displayFront = LRDU.Left
-                    )
-                }
+                placementWithLoggerFront()
             }
         }
     }
@@ -443,20 +422,13 @@ object FalstadImporter {
         messages: MutableList<String>
     ): PlacementResult {
         val probeDescriptor = getBlockDescriptor("Voltage Probe") ?: return PlacementResult(false, tr("missing descriptor: Voltage Probe"))
-        val displayDescriptor = getBlockDescriptor("Digital Display") ?: return PlacementResult(false, tr("missing descriptor: Digital Display"))
-        val signalSourceDescriptor = getBlockDescriptor("Signal Source") ?: return PlacementResult(false, tr("missing descriptor: Signal Source"))
+        val displayDescriptor = getBlockDescriptor("Industrial Data Logger") ?: return PlacementResult(false, tr("missing descriptor: Industrial Data Logger"))
         val placement = probeDisplayPlacement(component)
 
         val probeResult = placeSixNode(player.worldObj, player, area, placement.probePoint, probeDescriptor, placement.probeFront)
         if (!probeResult.placed) return probeResult
         val displayResult = placeSixNode(player.worldObj, player, area, placement.displayPoint, displayDescriptor, placement.displayFront)
         if (!displayResult.placed) return displayResult
-        val dotSourceResult = placeSixNode(player.worldObj, player, area, placement.dotSourcePoint, signalSourceDescriptor, null)
-        if (!dotSourceResult.placed) return dotSourceResult
-
-        val decimalPlaces = component.source.params.getOrNull(0)?.toIntOrNull()?.coerceIn(0, 3) ?: 0
-        val displayMultiplier = (0 until decimalPlaces).fold(1.0) { acc, _ -> acc * 10.0 }
-        val dotMask = decimalDotMask(decimalPlaces)
 
         val probeElement = getTopElement(player.worldObj, area, placement.probePoint) as? ElectricalSensorElement
         if (probeElement == null) {
@@ -465,35 +437,23 @@ object FalstadImporter {
         probeElement.inventory?.setInventorySlotContents(0, Eln.instance.lowVoltageCableDescriptor.newItemStack(1))
         probeElement.inventory?.markDirty()
         val probeConfig = NBTTagCompound()
-        probeConfig.setFloat("min", 0.0f)
+        probeConfig.setFloat("min", (-maxValue).toFloat())
         probeConfig.setFloat("max", maxValue.toFloat())
         probeElement.readConfigTool(probeConfig, player)
 
-        val displayElement = getTopElement(player.worldObj, area, placement.displayPoint) as? ElectricalDigitalDisplayElement
+        val displayElement = getTopElement(player.worldObj, area, placement.displayPoint) as? ElectricalDataLoggerElement
         if (displayElement == null) {
-            return PlacementResult(false, tr("placed Digital Display but couldn't find top element"))
+            return PlacementResult(false, tr("placed Industrial Data Logger but couldn't find top element"))
         }
         val displayConfig = NBTTagCompound()
-        displayConfig.setFloat("min", 0.0f)
-        displayConfig.setFloat("max", (maxValue * displayMultiplier).toFloat())
+        displayConfig.setFloat("min", (-maxValue).toFloat())
+        displayConfig.setFloat("max", maxValue.toFloat())
+        displayConfig.setByte("unit", DataLogs.voltageType)
+        displayConfig.setFloat("period", 0.1f)
         displayElement.readConfigTool(displayConfig, player)
 
-        val dotSourceElement = getTopElement(player.worldObj, area, placement.dotSourcePoint) as? ElectricalSourceElement
-        if (dotSourceElement == null) {
-            return PlacementResult(false, tr("placed Signal Source but couldn't find top element"))
-        }
-        val dotVoltage = if (dotMask == 0) 0.0 else (dotMask + 0.5) / 256.0 * Eln.SVU
-        val dotConfig = NBTTagCompound()
-        dotConfig.setDouble("voltage", dotVoltage)
-        dotSourceElement.readConfigTool(dotConfig, player)
-
-        messages += tr("Falstad scope output substituted with Voltage Probe + Digital Display")
+        messages += tr("Falstad scope output substituted with Voltage Probe + Industrial Data Logger")
         return PlacementResult(true)
-    }
-
-    private fun decimalDotMask(decimalPlaces: Int): Int {
-        if (decimalPlaces <= 0) return 0
-        return 1 shl decimalPlaces
     }
 
     private fun descriptorFor(kind: FalstadPlacedKind): GenericItemBlockUsingDamageDescriptor? = when (kind) {

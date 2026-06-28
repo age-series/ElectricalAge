@@ -1,0 +1,15 @@
+$ 1 5.0E-6 10 50 5
+# Series resistor lesson:
+# 3.0 V source through 100 ohm, 200 ohm, and 300 ohm resistors.
+# Total resistance is 600 ohm, so current is 0.005 A.
+v 0 192 0 128 0 0 0 3.0 0
+w 0 128 64 128 0
+r 64 128 128 128 0 100
+r 128 128 192 128 0 200
+r 192 128 256 128 0 300
+w 256 128 256 192 0
+w 256 192 0 192 0
+g 0 192 0 192 0
+O 0 128 0 64 2
+O 128 128 128 64 2
+O 192 128 192 64 2
