@@ -3,6 +3,7 @@ package mods.eln.falstad
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
+import java.io.File
 
 class FalstadNetlistParserTest {
     private data class TerminalPoint(
@@ -122,6 +123,25 @@ class FalstadNetlistParserTest {
         }
 
         return connections
+    }
+
+    @Test
+    fun docsFalstadExamplesParseAndPlan() {
+        val examplesRoot = File("docs/examples")
+        val netlists = examplesRoot.walkTopDown()
+            .filter { it.isFile && it.extension == "txt" }
+            .toList()
+
+        assertTrue(netlists.isNotEmpty(), "No Falstad example netlists found in docs/examples")
+
+        for (netlist in netlists) {
+            val result = FalstadDeviceParser.parse(netlist.readText())
+            val plan = FalstadLayoutPlanner.plan(result)
+
+            assertTrue(result.components.isNotEmpty(), "${netlist.path} should contain components")
+            assertTrue(plan.components.isNotEmpty(), "${netlist.path} should place components")
+            assertTrue(plan.warnings.isEmpty(), "${netlist.path} warnings: ${plan.warnings.joinToString()}")
+        }
     }
 
     @Test

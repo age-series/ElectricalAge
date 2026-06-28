@@ -1,0 +1,22 @@
+$ 1 5.0E-6 10 50 5
+# Parallel branch current lesson:
+# Each branch has its own path from the 3.0 V bus to ground.
+# The lower resistor in each branch is a 10 ohm sense resistor.
+v 0 256 0 128 0 0 0 3.0 0
+w 0 128 128 128 0
+w 128 128 256 128 0
+w 256 128 384 128 0
+r 128 128 128 192 0 90
+r 128 192 128 256 0 10
+r 256 128 256 192 0 190
+r 256 192 256 256 0 10
+r 384 128 384 192 0 290
+r 384 192 384 256 0 10
+w 0 256 128 256 0
+w 128 256 256 256 0
+w 256 256 384 256 0
+g 0 256 0 256 0
+O 128 128 128 64 2
+O 128 192 96 192 2
+O 256 192 224 192 2
+O 384 192 352 192 2

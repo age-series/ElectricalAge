@@ -1,0 +1,16 @@
+$ 1 5.0E-6 10 50 5
+# RC charging lesson:
+# 3.0 V source charges a 0.25 F capacitor through a 20 ohm resistor.
+# A 200 ohm resistor across the capacitor gives it a visible discharge path.
+# Charge time constant is about 4.5 s. Discharge time constant is 50 s.
+v 0 192 0 128 0 0 0 3.0 0
+w 0 128 64 128 0
+s 64 128 128 128 0 1
+r 128 128 256 128 0 20
+c 256 128 256 192 0 0.25 0
+w 256 128 320 128 0
+r 320 128 320 192 0 200
+w 320 192 256 192 0
+w 256 192 0 192 0
+g 0 192 0 192 0
+O 256 128 256 64 2
