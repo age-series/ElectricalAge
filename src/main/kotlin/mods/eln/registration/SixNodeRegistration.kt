@@ -2,6 +2,7 @@ package mods.eln.registration
 
 import mods.eln.Eln
 import mods.eln.cable.CableRenderDescriptor
+import mods.eln.generic.GenericCreativeTab
 import mods.eln.generic.GenericItemBlockUsingDamageDescriptor
 import mods.eln.ghost.GhostGroup
 import mods.eln.i18n.I18N
@@ -73,6 +74,7 @@ import mods.eln.sixnode.wirelesssignal.repeater.WirelessSignalRepeaterDescriptor
 import mods.eln.sixnode.wirelesssignal.rx.WirelessSignalRxDescriptor
 import mods.eln.sixnode.wirelesssignal.source.WirelessSignalSourceDescriptor
 import mods.eln.sixnode.wirelesssignal.tx.WirelessSignalTxDescriptor
+import java.util.Locale
 import net.minecraft.creativetab.CreativeTabs
 
 object SixNodeRegistration {
@@ -85,6 +87,7 @@ object SixNodeRegistration {
     private fun <T : GenericItemBlockUsingDamageDescriptor> T.signal() = inTab(Eln.creativeTabSignalProcessing)
     private fun <T : GenericItemBlockUsingDamageDescriptor> T.lighting() = inTab(Eln.creativeTabLighting)
     private fun <T : GenericItemBlockUsingDamageDescriptor> T.cables() = inTab(Eln.creativeTabCables)
+    private fun <T : GenericItemBlockUsingDamageDescriptor> T.powerDistribution() = inTab(Eln.creativeTabPowerDistribution)
     private fun <T : GenericItemBlockUsingDamageDescriptor> T.tools() = inTab(Eln.creativeTabToolsArmor)
     private fun <T : GenericItemBlockUsingDamageDescriptor> T.materials() = inTab(Eln.creativeTabOresMaterials)
     private fun <T : GenericItemBlockUsingDamageDescriptor> T.machines() = inTab(Eln.creativeTabMachines)
@@ -357,7 +360,6 @@ object SixNodeRegistration {
 
     private data class UtilitySingleSpec(
         val awgLabel: String,
-        val metricLabel: String,
         val metricArea: Double,
         val ampacity: Double,
         val insulatedVoltage: Double,
@@ -367,7 +369,6 @@ object SixNodeRegistration {
 
     private data class UtilityMultiSpec(
         val label: String,
-        val metricLabel: String,
         val metricArea: Double,
         val conductorCount: Int,
         val ampacity: Double,
@@ -398,16 +399,14 @@ object SixNodeRegistration {
         val allocator = UtilityDescriptorAllocator(groups)
         val renderCache = linkedMapOf<String, CableRenderDescriptor>()
         val signalCategoryAreaThresholdMm2 = 1.5
+        var distributionTabIconAssigned = false
 
-        fun <T : GenericItemBlockUsingDamageDescriptor> categoriseUtilityCable(desc: T, conductorAreaMm2: Double): T {
-            return if (conductorAreaMm2 < signalCategoryAreaThresholdMm2) desc.signal() else desc.cables()
-        }
-
-        fun <T : GenericItemBlockUsingDamageDescriptor> maybeHideSmallAluminum(desc: T, material: UtilityCableMaterial, conductorAreaMm2: Double): T {
-            if (material == UtilityCableMaterial.ALUMINUM && conductorAreaMm2 < signalCategoryAreaThresholdMm2) {
-                desc.hideFromCreative()
+        fun <T : GenericItemBlockUsingDamageDescriptor> categoriseUtilityCable(desc: T, conductorAreaMm2: Double, poleEligible: Boolean): T {
+            return when {
+                poleEligible -> desc.powerDistribution()
+                conductorAreaMm2 < signalCategoryAreaThresholdMm2 -> desc.signal()
+                else -> desc.cables()
             }
-            return desc
         }
 
         fun render(texture: String, width: Float, height: Float): CableRenderDescriptor {
@@ -459,6 +458,24 @@ object SixNodeRegistration {
             }
         }
 
+        fun areaLabel(area: Double): String = String.format(Locale.ROOT, "%.2f", area)
+
+        fun nearestEuMetricLabel(area: Double): String {
+            val sizes = listOf(0.14, 0.25, 0.34, 0.5, 0.75, 1.5, 2.5, 4.0, 6.0, 10.0, 16.0, 25.0, 35.0, 50.0, 70.0, 120.0, 185.0, 240.0, 400.0, 500.0)
+            val nearest = sizes.minByOrNull { kotlin.math.abs(it - area) } ?: area
+            return if (nearest % 1.0 == 0.0) nearest.toInt().toString() else nearest.toString()
+        }
+
+        fun nearestEuStyleName(area: Double, conductorCount: Int, flatStyle: Boolean): String {
+            val metricLabel = nearestEuMetricLabel(area)
+            if (conductorCount <= 1) return "$metricLabel mm2 single"
+            return if (flatStyle) {
+                "${conductorCount - 1}G$metricLabel"
+            } else {
+                "${conductorCount}C $metricLabel mm2"
+            }
+        }
+
         fun configureElectricalConstants(desc: UtilityCableDescriptor, area: Double, ampacity: Double, nominalVoltage: Double, maxTemperature: Double) {
             val baseAreaMm2 = 0.14
             val baseTotalResistanceOhms = 0.001
@@ -501,7 +518,8 @@ object SixNodeRegistration {
                 render = render(texture, width, height),
                 description = if (insulated) "Insulated single-conductor utility cable." else "Bare single-conductor utility cable.",
                 sizeLabel = spec.awgLabel,
-                metricSizeLabel = spec.metricLabel,
+                metricSizeLabel = areaLabel(spec.metricArea),
+                nearestEuStyleName = nearestEuStyleName(spec.metricArea, 1, false),
                 material = material,
                 totalConductorAreaMm2 = spec.metricArea,
                 conductorCount = 1,
@@ -535,7 +553,8 @@ object SixNodeRegistration {
                 ),
                 description = "Insulated multi-conductor utility cable.",
                 sizeLabel = spec.label,
-                metricSizeLabel = spec.metricLabel,
+                metricSizeLabel = areaLabel(spec.metricArea),
+                nearestEuStyleName = nearestEuStyleName(spec.metricArea, spec.conductorCount, spec.flatStyle),
                 material = material,
                 totalConductorAreaMm2 = spec.metricArea * spec.conductorCount,
                 conductorCount = effectiveCount,
@@ -556,27 +575,27 @@ object SixNodeRegistration {
         }
 
         val singles = listOf(
-            UtilitySingleSpec("26 AWG", "0.14", 0.14, 1.0, 300.0, 80.0),
-            UtilitySingleSpec("24 AWG", "0.25", 0.25, 2.0, 300.0, 80.0),
-            UtilitySingleSpec("22 AWG", "0.34", 0.34, 3.0, 300.0, 80.0),
-            UtilitySingleSpec("20 AWG", "0.5", 0.5, 5.0, 300.0, 80.0),
-            UtilitySingleSpec("18 AWG", "0.75", 0.75, 7.0, 300.0, 90.0),
-            UtilitySingleSpec("16 AWG", "1.5", 1.5, 10.0, 300.0, 90.0),
-            UtilitySingleSpec("14 AWG", "2.5", 2.5, 15.0, 600.0, 105.0),
-            UtilitySingleSpec("12 AWG", "4", 4.0, 20.0, 600.0, 105.0),
-            UtilitySingleSpec("10 AWG", "6", 6.0, 30.0, 600.0, 105.0),
-            UtilitySingleSpec("8 AWG", "10", 10.0, 40.0, 600.0, 105.0),
-            UtilitySingleSpec("6 AWG", "16", 16.0, 60.0, 600.0, 105.0),
-            UtilitySingleSpec("4 AWG", "25", 25.0, 80.0, 600.0, 105.0),
-            UtilitySingleSpec("2 AWG", "35", 35.0, 100.0, 600.0, 105.0, poleEligible = true),
-            UtilitySingleSpec("1/0 AWG", "50", 50.0, 125.0, 1000.0, 110.0, poleEligible = true),
-            UtilitySingleSpec("2/0 AWG", "70", 70.0, 175.0, 1000.0, 110.0, poleEligible = true),
-            UtilitySingleSpec("4/0 AWG", "120", 120.0, 260.0, 1000.0, 110.0, poleEligible = true),
-            UtilitySingleSpec("250 kcmil", "120", 120.0, 290.0, 1000.0, 110.0, poleEligible = true),
-            UtilitySingleSpec("350 kcmil", "185", 185.0, 350.0, 1000.0, 110.0, poleEligible = true),
-            UtilitySingleSpec("500 kcmil", "240", 240.0, 430.0, 1000.0, 110.0, poleEligible = true),
-            UtilitySingleSpec("750 kcmil", "400", 400.0, 600.0, 1000.0, 110.0, poleEligible = true),
-            UtilitySingleSpec("1000 kcmil", "500", 500.0, 750.0, 1000.0, 110.0, poleEligible = true)
+            UtilitySingleSpec("26 AWG", 0.1288, 1.0, 300.0, 80.0),
+            UtilitySingleSpec("24 AWG", 0.2047, 2.0, 300.0, 80.0),
+            UtilitySingleSpec("22 AWG", 0.3255, 3.0, 300.0, 80.0),
+            UtilitySingleSpec("20 AWG", 0.5176, 5.0, 300.0, 80.0),
+            UtilitySingleSpec("18 AWG", 0.8230, 7.0, 300.0, 90.0),
+            UtilitySingleSpec("16 AWG", 1.309, 10.0, 300.0, 90.0),
+            UtilitySingleSpec("14 AWG", 2.081, 15.0, 600.0, 105.0),
+            UtilitySingleSpec("12 AWG", 3.309, 20.0, 600.0, 105.0),
+            UtilitySingleSpec("10 AWG", 5.261, 30.0, 600.0, 105.0),
+            UtilitySingleSpec("8 AWG", 8.366, 40.0, 600.0, 105.0),
+            UtilitySingleSpec("6 AWG", 13.302, 60.0, 600.0, 105.0),
+            UtilitySingleSpec("4 AWG", 21.151, 80.0, 600.0, 105.0),
+            UtilitySingleSpec("2 AWG", 33.631, 100.0, 600.0, 105.0, poleEligible = true),
+            UtilitySingleSpec("1/0 AWG", 53.475, 125.0, 1000.0, 110.0, poleEligible = true),
+            UtilitySingleSpec("2/0 AWG", 67.431, 175.0, 1000.0, 110.0, poleEligible = true),
+            UtilitySingleSpec("4/0 AWG", 107.219, 260.0, 1000.0, 110.0, poleEligible = true),
+            UtilitySingleSpec("250 kcmil", 126.677, 290.0, 1000.0, 110.0, poleEligible = true),
+            UtilitySingleSpec("350 kcmil", 177.348, 350.0, 1000.0, 110.0, poleEligible = true),
+            UtilitySingleSpec("500 kcmil", 253.354, 430.0, 1000.0, 110.0, poleEligible = true),
+            UtilitySingleSpec("750 kcmil", 380.031, 600.0, 1000.0, 110.0, poleEligible = true),
+            UtilitySingleSpec("1000 kcmil", 506.707, 750.0, 1000.0, 110.0, poleEligible = true)
         )
 
         val us2 = arrayOf(
@@ -614,34 +633,32 @@ object SixNodeRegistration {
         )
 
         val multis = listOf(
-            UtilityMultiSpec("2C 18 AWG", "0.75", 0.75, 2, 7.0, 300.0, 90.0, false, signal2),
-            UtilityMultiSpec("3C 18 AWG", "0.75", 0.75, 3, 7.0, 300.0, 90.0, false, signal3),
-            UtilityMultiSpec("4C 18 AWG", "0.75", 0.75, 4, 7.0, 300.0, 90.0, false, signal4),
-            UtilityMultiSpec("5C 18 AWG", "0.75", 0.75, 5, 7.0, 300.0, 90.0, false, signal5),
-            UtilityMultiSpec("8C 18 AWG", "0.75", 0.75, 8, 7.0, 300.0, 90.0, false, signal8),
-            UtilityMultiSpec("2C 20 AWG", "0.5", 0.5, 2, 5.0, 300.0, 80.0, false, signal2),
-            UtilityMultiSpec("3C 20 AWG", "0.5", 0.5, 3, 5.0, 300.0, 80.0, false, signal3),
-            UtilityMultiSpec("4C 20 AWG", "0.5", 0.5, 4, 5.0, 300.0, 80.0, false, signal4),
-            UtilityMultiSpec("5C 20 AWG", "0.5", 0.5, 5, 5.0, 300.0, 80.0, false, signal5),
-            UtilityMultiSpec("8C 20 AWG", "0.5", 0.5, 8, 5.0, 300.0, 80.0, false, signal8),
-            UtilityMultiSpec("14/2", "2.5", 2.5, 3, 15.0, 600.0, 105.0, true, us2),
-            UtilityMultiSpec("14/3", "2.5", 2.5, 4, 15.0, 600.0, 105.0, true, us3),
-            UtilityMultiSpec("12/2", "4", 4.0, 3, 20.0, 600.0, 105.0, true, us2),
-            UtilityMultiSpec("12/3", "4", 4.0, 4, 20.0, 600.0, 105.0, true, us3),
-            UtilityMultiSpec("10/2", "6", 6.0, 3, 30.0, 600.0, 105.0, true, us2),
-            UtilityMultiSpec("10/3", "6", 6.0, 4, 30.0, 600.0, 105.0, true, us3),
-            UtilityMultiSpec("8/2", "10", 10.0, 3, 40.0, 600.0, 105.0, true, us2),
-            UtilityMultiSpec("8/3", "10", 10.0, 4, 40.0, 600.0, 105.0, true, us3),
-            UtilityMultiSpec("3G1.5", "1.5", 1.5, 3, 10.0, 600.0, 105.0, false, eu3g),
-            UtilityMultiSpec("3G2.5", "2.5", 2.5, 3, 15.0, 600.0, 105.0, false, eu3g),
-            UtilityMultiSpec("3G4", "4", 4.0, 3, 20.0, 600.0, 105.0, false, eu3g),
-            UtilityMultiSpec("5G1.5", "1.5", 1.5, 5, 10.0, 600.0, 105.0, false, eu5g),
-            UtilityMultiSpec("5G2.5", "2.5", 2.5, 5, 15.0, 600.0, 105.0, false, eu5g),
-            UtilityMultiSpec("5G4", "4", 4.0, 5, 20.0, 600.0, 105.0, false, eu5g),
-            UtilityMultiSpec("Triplex 1/0", "50", 50.0, 3, 150.0, 600.0, 105.0, false, triplex120240, poleEligible = true),
-            UtilityMultiSpec("Triplex 4/0", "120", 120.0, 3, 260.0, 600.0, 105.0, false, triplex120240, poleEligible = true),
-            UtilityMultiSpec("Quadruplex 1/0", "50", 50.0, 4, 125.0, 600.0, 105.0, false, quadruplex208480, poleEligible = true),
-            UtilityMultiSpec("Quadruplex 4/0", "120", 120.0, 4, 260.0, 600.0, 105.0, false, quadruplex208480, poleEligible = true)
+            UtilityMultiSpec("2C 18 AWG", 0.8230, 2, 7.0, 300.0, 90.0, false, signal2),
+            UtilityMultiSpec("3C 18 AWG", 0.8230, 3, 7.0, 300.0, 90.0, false, signal3),
+            UtilityMultiSpec("4C 18 AWG", 0.8230, 4, 7.0, 300.0, 90.0, false, signal4),
+            UtilityMultiSpec("5C 18 AWG", 0.8230, 5, 7.0, 300.0, 90.0, false, signal5),
+            UtilityMultiSpec("8C 18 AWG", 0.8230, 8, 7.0, 300.0, 90.0, false, signal8),
+            UtilityMultiSpec("2C 20 AWG", 0.5176, 2, 5.0, 300.0, 80.0, false, signal2),
+            UtilityMultiSpec("3C 20 AWG", 0.5176, 3, 5.0, 300.0, 80.0, false, signal3),
+            UtilityMultiSpec("4C 20 AWG", 0.5176, 4, 5.0, 300.0, 80.0, false, signal4),
+            UtilityMultiSpec("5C 20 AWG", 0.5176, 5, 5.0, 300.0, 80.0, false, signal5),
+            UtilityMultiSpec("8C 20 AWG", 0.5176, 8, 5.0, 300.0, 80.0, false, signal8),
+            UtilityMultiSpec("14/2", 2.081, 3, 15.0, 600.0, 105.0, true, us2),
+            UtilityMultiSpec("14/3", 2.081, 4, 15.0, 600.0, 105.0, true, us3),
+            UtilityMultiSpec("12/2", 3.309, 3, 20.0, 600.0, 105.0, true, us2),
+            UtilityMultiSpec("12/3", 3.309, 4, 20.0, 600.0, 105.0, true, us3),
+            UtilityMultiSpec("10/2", 5.261, 3, 30.0, 600.0, 105.0, true, us2),
+            UtilityMultiSpec("10/3", 5.261, 4, 30.0, 600.0, 105.0, true, us3),
+            UtilityMultiSpec("8/2", 8.366, 3, 40.0, 600.0, 105.0, true, us2),
+            UtilityMultiSpec("8/3", 8.366, 4, 40.0, 600.0, 105.0, true, us3),
+            UtilityMultiSpec("6/2", 13.302, 3, 60.0, 600.0, 105.0, true, us2),
+            UtilityMultiSpec("6/3", 13.302, 4, 60.0, 600.0, 105.0, true, us3),
+            UtilityMultiSpec("4/2", 21.151, 3, 80.0, 600.0, 105.0, true, us2),
+            UtilityMultiSpec("4/3", 21.151, 4, 80.0, 600.0, 105.0, true, us3),
+            UtilityMultiSpec("Triplex 1/0", 53.475, 3, 150.0, 600.0, 105.0, false, triplex120240, poleEligible = true),
+            UtilityMultiSpec("Triplex 4/0", 107.219, 3, 260.0, 600.0, 105.0, false, triplex120240, poleEligible = true),
+            UtilityMultiSpec("Quadruplex 1/0", 53.475, 4, 125.0, 600.0, 105.0, false, quadruplex208480, poleEligible = true),
+            UtilityMultiSpec("Quadruplex 4/0", 107.219, 4, 260.0, 600.0, 105.0, false, quadruplex208480, poleEligible = true)
         )
 
         val moltenPileByMaterial = UtilityCableMaterial.values().associateWith { material ->
@@ -683,7 +700,7 @@ object SixNodeRegistration {
             arrayOf("Copper", "Aluminum"),
             arrayOf(
                 "14/2", "14/3", "12/2", "12/3", "10/2", "10/3", "8/2", "8/3",
-                "3G1.5", "3G2.5", "3G4", "5G1.5", "5G2.5", "5G4",
+                "6/2", "6/3", "4/2", "4/3",
                 "Triplex 1/0", "Triplex 4/0", "Quadruplex 1/0", "Quadruplex 4/0"
             ),
             arrayOf("600V", "Melted")
@@ -691,29 +708,37 @@ object SixNodeRegistration {
 
         for (material in UtilityCableMaterial.values()) {
             for (spec in singles) {
+                if (material == UtilityCableMaterial.ALUMINUM && !spec.poleEligible) continue
+
                 val bare = newSingleDescriptor(spec, material, insulated = false)
                 bare.moltenPileDescriptor = moltenPileByMaterial[material]
-                Eln.sixNodeItem.addDescriptor(allocator.nextId(), categoriseUtilityCable(maybeHideSmallAluminum(bare, material, spec.metricArea), spec.metricArea))
+                Eln.sixNodeItem.addDescriptor(allocator.nextId(), categoriseUtilityCable(bare, spec.metricArea, bare.poleEligible))
+                if (!distributionTabIconAssigned && material == UtilityCableMaterial.ALUMINUM && bare.poleEligible) {
+                    (Eln.creativeTabPowerDistribution as? GenericCreativeTab)?.setIcon(bare.newCreativeTabStack())
+                    distributionTabIconAssigned = true
+                }
 
                 val insulated = newSingleDescriptor(spec, material, insulated = true)
                 val melted = newSingleDescriptor(spec, material, insulated = true, melted = true)
                 insulated.meltedDescriptor = melted
                 insulated.moltenPileDescriptor = moltenPileByMaterial[material]
                 melted.moltenPileDescriptor = moltenPileByMaterial[material]
-                Eln.sixNodeItem.addDescriptor(allocator.nextId(), categoriseUtilityCable(maybeHideSmallAluminum(insulated, material, spec.metricArea), spec.metricArea))
-                Eln.sixNodeItem.addDescriptor(allocator.nextId(), categoriseUtilityCable(maybeHideSmallAluminum(melted, material, spec.metricArea), spec.metricArea))
+                Eln.sixNodeItem.addDescriptor(allocator.nextId(), categoriseUtilityCable(insulated, spec.metricArea, insulated.poleEligible))
+                Eln.sixNodeItem.addDescriptor(allocator.nextId(), categoriseUtilityCable(melted, spec.metricArea, melted.poleEligible))
             }
         }
 
         for (material in UtilityCableMaterial.values()) {
             for (spec in multis) {
+                if (material == UtilityCableMaterial.ALUMINUM && !spec.poleEligible) continue
+
                 val multi = newMultiDescriptor(spec, material)
                 val melted = newMultiDescriptor(spec, material, melted = true)
                 multi.meltedDescriptor = melted
                 multi.moltenPileDescriptor = moltenPileByMaterial[material]
                 melted.moltenPileDescriptor = moltenPileByMaterial[material]
-                Eln.sixNodeItem.addDescriptor(allocator.nextId(), categoriseUtilityCable(maybeHideSmallAluminum(multi, material, spec.metricArea), spec.metricArea))
-                Eln.sixNodeItem.addDescriptor(allocator.nextId(), categoriseUtilityCable(maybeHideSmallAluminum(melted, material, spec.metricArea), spec.metricArea))
+                Eln.sixNodeItem.addDescriptor(allocator.nextId(), categoriseUtilityCable(multi, spec.metricArea, multi.poleEligible))
+                Eln.sixNodeItem.addDescriptor(allocator.nextId(), categoriseUtilityCable(melted, spec.metricArea, melted.poleEligible))
             }
         }
     }

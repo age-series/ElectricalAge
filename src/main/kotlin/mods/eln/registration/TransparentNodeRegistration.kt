@@ -90,6 +90,10 @@ object TransparentNodeRegistration {
         setCreativeTab(Eln.creativeTabMachines)
     }
 
+    private fun <T : GenericItemBlockUsingDamageDescriptor> T.powerDistribution() = apply {
+        setCreativeTab(Eln.creativeTabPowerDistribution)
+    }
+
     fun registerTransparent() {
         Eln.transparentNodeItem.setCreativeTabForGroup(1, Eln.creativeTabPowerElectronics)
         Eln.transparentNodeItem.setCreativeTabForGroup(2, Eln.creativeTabPowerElectronics)
@@ -118,7 +122,7 @@ object TransparentNodeRegistration {
         Eln.transparentNodeItem.setCreativeTabForGroup(72, Eln.creativeTabMachines)
         Eln.transparentNodeItem.setCreativeTabForGroup(96, Eln.creativeTabPowerElectronics)
         Eln.transparentNodeItem.setCreativeTabForGroup(117, Eln.creativeTabSignalProcessing)
-        Eln.transparentNodeItem.setCreativeTabForGroup(123, Eln.creativeTabPowerElectronics)
+        Eln.transparentNodeItem.setCreativeTabForGroup(123, Eln.creativeTabPowerDistribution)
 
         registerPowerComponent(1)
         registerTransformer(2)
@@ -1439,7 +1443,7 @@ object TransparentNodeRegistration {
                 TR_NAME(I18N.Type.NONE, "Grid DC-DC Converter"), Eln.obj.getObj(
                     "GridConverter"
                 ), "textures/wire.png", instance.veryHighVoltageCableDescriptor
-            )
+            ).powerDistribution()
             val g = GhostGroup()
             g.addElement(1, 0, 0)
             g.addElement(0, 0, -1)
@@ -1463,7 +1467,7 @@ object TransparentNodeRegistration {
                 Kind.OVERHEAD,
                 40,
                 51200.0
-            )
+            ).powerDistribution()
             descriptor.renderOffset = Vec3.createVectorHelper(0.0, -0.1, 0.0)
             val g = GhostGroup()
             g.addElement(0, 1, 0)
@@ -1482,7 +1486,7 @@ object TransparentNodeRegistration {
                 Kind.TRANSFORMER_TO_GROUND,
                 40,
                 51200.0
-            )
+            ).powerDistribution()
             val g = GhostGroup()
             g.addElement(0, 1, 0)
             g.addElement(0, 2, 0)
@@ -1502,7 +1506,7 @@ object TransparentNodeRegistration {
                 Kind.OVERHEAD,
                 96,
                 51200.0
-            )
+            ).powerDistribution()
             val g = GhostGroup()
             g.addRectangle(-1, 1, 0, 0, -1, 1)
             g.addRectangle(0, 0, 1, 8, 0, 0)
@@ -1522,7 +1526,7 @@ object TransparentNodeRegistration {
                 Kind.SHUNT_TO_GROUND,
                 40,
                 51200.0
-            )
+            ).powerDistribution()
             val g = GhostGroup()
             g.addElement(0, 1, 0)
             g.addElement(0, 2, 0)
@@ -1533,7 +1537,7 @@ object TransparentNodeRegistration {
         run {
             subId = 8
             val name = TR_NAME(I18N.Type.NONE, "Grid Switch")
-            val desc = GridSwitchDescriptor(name)
+            val desc = GridSwitchDescriptor(name).powerDistribution()
             val g = GhostGroup()
             g.addRectangle(-1, 1, 0, 4, -2, 2)
             g.removeRectangle(-1, -1, 2, 4, -1, 1)

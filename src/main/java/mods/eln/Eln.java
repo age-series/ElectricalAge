@@ -177,6 +177,7 @@ public class Eln {
     public static CreativeTabs creativeTabSignalProcessing;
     public static CreativeTabs creativeTabLighting;
     public static CreativeTabs creativeTabCables;
+    public static CreativeTabs creativeTabPowerDistribution;
     public static CreativeTabs creativeTabToolsArmor;
     public static CreativeTabs creativeTabOresMaterials;
     public static CreativeTabs creativeTabMachines;
@@ -368,6 +369,7 @@ public class Eln {
 
         creativeTabPowerElectronics = new GenericCreativeTab("ElnPowerElectronics", Items.redstone);
         creativeTabCables = new GenericCreativeTab("ElnCables", Items.string);
+        creativeTabPowerDistribution = new GenericCreativeTab("ElnPowerDistribution", Items.string);
         creativeTabSignalProcessing = new GenericCreativeTab("ElnSignalProcessing", Items.comparator);
         creativeTabLighting = new GenericCreativeTab("ElnLighting", Item.getItemFromBlock(Blocks.redstone_lamp));
         creativeTabToolsArmor = new GenericCreativeTab("ElnToolsArmor", Items.iron_pickaxe);
@@ -506,6 +508,7 @@ public class Eln {
         TR_GROUP("ElnSignalProcessing", "Electrical Age - Signal Processing");
         TR_GROUP("ElnLighting", "Electrical Age - Lighting");
         TR_GROUP("ElnCables", "Electrical Age - Cables");
+        TR_GROUP("ElnPowerDistribution", "Electrical Age - Power Distribution");
         TR_GROUP("ElnToolsArmor", "Electrical Age - Tools & Armor");
         TR_GROUP("ElnOresMaterials", "Electrical Age - Ores & Materials");
         TR_GROUP("ElnMachines", "Electrical Age - Machines");
