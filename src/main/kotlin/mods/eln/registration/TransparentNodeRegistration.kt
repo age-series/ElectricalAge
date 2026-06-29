@@ -868,10 +868,16 @@ object TransparentNodeRegistration {
         var ghostGroup: GhostGroup
         var name: String?
         val solarPanelPowerFactor = Eln.config.getDoubleOrElse("balance.generators.solarPanelPowerFactor", 1.0)
-        val smallSolarUmax = 36.0
-        val smallSolarPmax = 200.0 * solarPanelPowerFactor
-        val largeSolarUmax = 108.0
-        val largeSolarPmax = smallSolarPmax * 6.0
+        val smallSolarVoc = 37.0
+        val smallSolarVmp = 30.0
+        val smallSolarImp = 8.0 * solarPanelPowerFactor
+        val smallSolarIsc = 8.6 * solarPanelPowerFactor
+        val largeSeriesPanels = 3.0
+        val largeParallelPanels = 2.0
+        val largeSolarVoc = smallSolarVoc * largeSeriesPanels
+        val largeSolarVmp = smallSolarVmp * largeSeriesPanels
+        val largeSolarImp = smallSolarImp * largeParallelPanels
+        val largeSolarIsc = smallSolarIsc * largeParallelPanels
 
         run {
             subId = 1
@@ -886,8 +892,10 @@ object TransparentNodeRegistration {
                 1,
                 0,
                 null,
-                smallSolarUmax,
-                smallSolarPmax,
+                smallSolarVoc,
+                smallSolarVmp,
+                smallSolarImp,
+                smallSolarIsc,
                 0.01,
                 Math.PI / 2,
                 Math.PI / 2
@@ -900,8 +908,8 @@ object TransparentNodeRegistration {
             ghostGroup = GhostGroup()
             val desc = SolarPanelDescriptor(
                 name, Eln.obj.getObj("smallsolarpannelrot"),
-                instance.lowVoltageCableDescriptor.render, ghostGroup, 0, 1, 0, null, smallSolarUmax,
-                smallSolarPmax, 0.01, Math.PI / 4, Math.PI / 4 * 3
+                instance.lowVoltageCableDescriptor.render, ghostGroup, 0, 1, 0, null, smallSolarVoc,
+                smallSolarVmp, smallSolarImp, smallSolarIsc, 0.01, Math.PI / 4, Math.PI / 4 * 3
             )
             transparentNodeItem.addDescriptor(subId + (id shl 6), desc)
         }
@@ -914,8 +922,8 @@ object TransparentNodeRegistration {
             ghostGroup.removeElement(0, 0, 0)
             val desc = SolarPanelDescriptor(
                 name, Eln.obj.getObj("bigSolarPanel"),
-                instance.meduimVoltageCableDescriptor.render, ghostGroup, 1, 1, 0, groundCoordinate, largeSolarUmax,
-                largeSolarPmax, 0.01, Math.PI / 2, Math.PI / 2
+                instance.meduimVoltageCableDescriptor.render, ghostGroup, 1, 1, 0, groundCoordinate, largeSolarVoc,
+                largeSolarVmp, largeSolarImp, largeSolarIsc, 0.01, Math.PI / 2, Math.PI / 2
             )
             transparentNodeItem.addDescriptor(subId + (id shl 6), desc)
         }
@@ -935,8 +943,10 @@ object TransparentNodeRegistration {
                 1,
                 1,
                 groundCoordinate,
-                largeSolarUmax,
-                largeSolarPmax,
+                largeSolarVoc,
+                largeSolarVmp,
+                largeSolarImp,
+                largeSolarIsc,
                 0.01,
                 Math.PI / 8 * 3,
                 Math.PI / 8 * 5
