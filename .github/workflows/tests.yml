@@ -38,3 +38,35 @@ jobs:
         uses: gradle/actions/setup-gradle@v4
       - name: Run tests
         run: ./gradlew -Dorg.gradle.java.installations.auto-download=false test
+
+  benchmark-test:
+    runs-on: ubuntu-latest
+    env:
+      GRADLE_USER_HOME: ${{ github.workspace }}/.gradle
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: zulu
+          java-version: 8
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: zulu
+          java-version: 17
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: zulu
+          java-version: 21
+      - name: Set up Gradle JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 25
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+      - name: Run benchmark tests
+        run: ./gradlew -Dorg.gradle.java.installations.auto-download=false benchmarkTest
