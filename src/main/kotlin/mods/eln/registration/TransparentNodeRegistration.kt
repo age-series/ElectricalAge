@@ -25,6 +25,7 @@ import mods.eln.misc.NominalVoltage
 import mods.eln.railroad.OverheadLinesDescriptor
 import mods.eln.sim.ThermalLoadInitializer
 import mods.eln.sim.ThermalLoadInitializerByPowerDrop
+import mods.eln.sixnode.electricalcable.UtilityCableDescriptor
 import mods.eln.sound.SoundCommand
 import mods.eln.transparentnode.*
 import mods.eln.transparentnode.autominer.AutoMinerDescriptor
@@ -878,6 +879,10 @@ object TransparentNodeRegistration {
         val largeSolarVmp = smallSolarVmp * largeSeriesPanels
         val largeSolarImp = smallSolarImp * largeParallelPanels
         val largeSolarIsc = smallSolarIsc * largeParallelPanels
+        val smallSolarCable = UtilityCableDescriptor.allDescriptors()
+            .first { it.name == "Copper 16 AWG Cable 300V" }
+        val largeSolarCable = UtilityCableDescriptor.allDescriptors()
+            .first { it.name == "Copper 12 AWG Cable 600V" }
 
         run {
             subId = 1
@@ -886,7 +891,7 @@ object TransparentNodeRegistration {
             val desc = SolarPanelDescriptor(
                 name,
                 Eln.obj.getObj("smallsolarpannel"),
-                null,
+                smallSolarCable.render,
                 ghostGroup,
                 0,
                 1,
@@ -908,7 +913,7 @@ object TransparentNodeRegistration {
             ghostGroup = GhostGroup()
             val desc = SolarPanelDescriptor(
                 name, Eln.obj.getObj("smallsolarpannelrot"),
-                instance.lowVoltageCableDescriptor.render, ghostGroup, 0, 1, 0, null, smallSolarVoc,
+                smallSolarCable.render, ghostGroup, 0, 1, 0, null, smallSolarVoc,
                 smallSolarVmp, smallSolarImp, smallSolarIsc, 0.01, Math.PI / 4, Math.PI / 4 * 3
             )
             transparentNodeItem.addDescriptor(subId + (id shl 6), desc)
@@ -922,7 +927,7 @@ object TransparentNodeRegistration {
             ghostGroup.removeElement(0, 0, 0)
             val desc = SolarPanelDescriptor(
                 name, Eln.obj.getObj("bigSolarPanel"),
-                instance.meduimVoltageCableDescriptor.render, ghostGroup, 1, 1, 0, groundCoordinate, largeSolarVoc,
+                largeSolarCable.render, ghostGroup, 1, 1, 0, groundCoordinate, largeSolarVoc,
                 largeSolarVmp, largeSolarImp, largeSolarIsc, 0.01, Math.PI / 2, Math.PI / 2
             )
             transparentNodeItem.addDescriptor(subId + (id shl 6), desc)
@@ -937,7 +942,7 @@ object TransparentNodeRegistration {
             val desc = SolarPanelDescriptor(
                 name,
                 Eln.obj.getObj("bigSolarPanelrot"),
-                instance.meduimVoltageCableDescriptor.render,
+                largeSolarCable.render,
                 ghostGroup,
                 1,
                 1,
@@ -1165,8 +1170,9 @@ object TransparentNodeRegistration {
         var subId: Int
         var name: String?
         val windTurbinePowerFactor = Eln.config.getDoubleOrElse("balance.generators.windTurbinePowerFactor", 1.0)
+        val windTurbineCable = UtilityCableDescriptor.allDescriptors()
+            .first { it.name == "Copper 14 AWG Cable 600V" }
 
-        val PfW = FunctionTable(doubleArrayOf(0.0, 0.1, 0.3, 0.5, 0.8, 1.0, 1.1, 1.15, 1.2), 8.0 / 5.0)
         run {
             subId = 0
             name = TR_NAME(I18N.Type.NONE, "Wind Turbine")
@@ -1174,11 +1180,11 @@ object TransparentNodeRegistration {
             val desc = WindTurbineDescriptor(
                 name,
                 Eln.obj.getObj("WindTurbineMini"),
-                instance.lowVoltageCableDescriptor,
-                PfW,
-                160 * windTurbinePowerFactor,
-                10.0,
-                NominalVoltage.V24 * 1.18,
+                windTurbineCable,
+                2500.0 * windTurbinePowerFactor,
+                12.0,
+                NominalVoltage.V240,
+                NominalVoltage.V240 * 1.25,
                 22.0,
                 3,
                 7,

@@ -24,8 +24,19 @@ public class WindTurbineDescriptor extends TransparentNodeDescriptor {
     public final ElectricalCableDescriptor cable;
 
     final double nominalPower;
+    final double nominalVoltage;
     final double maxVoltage;
-    private final double maxWind;
+    final double nominalWind;
+    final double maxWind;
+    final double rotorDiameter;
+    final double rotorRadius;
+    final double rotorSweptArea;
+    final double nominalRotorRads;
+    final double rotorInertia;
+    final double generationEfficiency;
+    final double regulatorCurrentLimit;
+    final double regulatorDroopResistance;
+    final double regulatorVoltageFilterTime;
     final int offY;
     final int rayX;
     final int rayY;
@@ -34,19 +45,29 @@ public class WindTurbineDescriptor extends TransparentNodeDescriptor {
     final double blockMalus;
     final String soundName;
     final float nominalVolume;
-    final FunctionTable PfW;
     double speed;
 
-    public WindTurbineDescriptor(String name, Obj3D obj, ElectricalCableDescriptor cable, FunctionTable PfW,
-                                 double nominalPower, double nominalWind, double maxVoltage, double maxWind, int offY,
+    public WindTurbineDescriptor(String name, Obj3D obj, ElectricalCableDescriptor cable,
+                                 double nominalPower, double nominalWind, double nominalVoltage, double maxVoltage, double maxWind, int offY,
                                  int rayX, int rayY, int rayZ, int blockMalusMinCount, double blockMalus,
                                  String soundName, float nominalVolume) {
         super(name, WindTurbineElement.class, WindTurbineRender.class);
 
         this.cable = cable;
         this.nominalPower = nominalPower;
+        this.nominalVoltage = nominalVoltage;
         this.maxVoltage = maxVoltage;
+        this.nominalWind = nominalWind;
         this.maxWind = maxWind;
+        this.rotorDiameter = 3.0;
+        this.rotorRadius = rotorDiameter / 2.0;
+        this.rotorSweptArea = Math.PI * rotorRadius * rotorRadius;
+        this.nominalRotorRads = WindTurbineSlowProcess.optimalRotorRads(nominalWind, rotorRadius);
+        this.rotorInertia = 60.0;
+        this.generationEfficiency = 0.88;
+        this.regulatorCurrentLimit = nominalPower / nominalVoltage * 1.35;
+        this.regulatorDroopResistance = nominalVoltage * 0.08 / (nominalPower / nominalVoltage);
+        this.regulatorVoltageFilterTime = 0.25;
         this.offY = offY;
         this.rayX = rayX;
         this.rayY = rayY;
@@ -55,7 +76,6 @@ public class WindTurbineDescriptor extends TransparentNodeDescriptor {
         this.blockMalus = blockMalus;
         this.soundName = soundName;
         this.nominalVolume = nominalVolume;
-        this.PfW = PfW.duplicate(nominalWind, nominalPower);
         this.obj = obj;
         if (obj != null) {
             main = obj.getPart("main");
@@ -134,8 +154,11 @@ public class WindTurbineDescriptor extends TransparentNodeDescriptor {
         super.addInformation(itemStack, entityPlayer, list, par4);
 
         list.add(tr("Generates energy from wind."));
-        list.add(tr("Voltage: %1$V", Utils.plotValue(maxVoltage)));
-        list.add(tr("Power: %1$W", Utils.plotValue(nominalPower)));
+        list.add(tr("Rotor diameter: %1$m", Utils.plotValue(rotorDiameter)));
+        list.add(tr("Nominal voltage: %1$V", Utils.plotValue(nominalVoltage)));
+        list.add(tr("Generator rating: %1$W", Utils.plotValue(nominalPower)));
+        list.add(tr("Nominal wind: %1$m/s", Utils.plotValue(nominalWind)));
+        list.add(tr("Nominal speed: %1$rad/s", Utils.plotValue(nominalRotorRads)));
         list.add(tr("Wind area:"));
         list.add("  " + tr("Front: %1$", rayX));
         list.add("  " + tr("Up/Down: %1$", rayY));
