@@ -140,6 +140,7 @@ class UtilityCableDescriptor(
     description: String,
     @JvmField val sizeLabel: String,
     @JvmField val metricSizeLabel: String,
+    @JvmField val nearestEuStyleName: String,
     @JvmField val material: UtilityCableMaterial,
     @JvmField val totalConductorAreaMm2: Double,
     @JvmField val conductorCount: Int,
@@ -258,7 +259,9 @@ class UtilityCableDescriptor(
 
     override fun addInformation(itemStack: ItemStack, entityPlayer: EntityPlayer, list: MutableList<String>, par4: Boolean) {
         super.addInformation(itemStack, entityPlayer, list, par4)
-        list.add(tr("Conductor: %1$ %2$ (%3$ mm2)", material.label, sizeLabel, metricSizeLabel))
+        list.add(tr("Conductor: %1$ %2$", material.label, sizeLabel))
+        list.add(tr("Equivalent area: %1$ mm2", metricSizeLabel))
+        list.add(tr("Nearest EU-style name: %1$", nearestEuStyleName))
         list.add(tr("Conductors: %1$", conductorCount))
         list.add(tr("Insulation: %1$", if (insulated) tr("%1\$V", Utils.plotValue(insulationVoltageRating)) else tr("Bare")))
         list.add(tr("Max temperature: %1\$C", Utils.plotValue(meltTemperatureCelsius)))

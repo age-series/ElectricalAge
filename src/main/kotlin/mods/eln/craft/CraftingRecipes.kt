@@ -920,12 +920,10 @@ object CraftingRecipes {
     }
 
     private fun recipeWindTurbine() {
-        for (cable in arrayOf("Copper 14 AWG Cable 600V", "Copper 3G2.5 Cable 600V")) {
-            addRecipe(
-                findItemStack("Wind Turbine"), " I ", "CMC", "IBI", 'B', findItemStack("Machine Block"), 'I',
-                "plateIron", 'M', findItemStack("Electrical Motor"), 'C', findItemStack(cable)
-            )
-        }
+        addRecipe(
+            findItemStack("Wind Turbine"), " I ", "CMC", "IBI", 'B', findItemStack("Machine Block"), 'I',
+            "plateIron", 'M', findItemStack("Electrical Motor"), 'C', findItemStack("Copper 14 AWG Cable 600V")
+        )
         /*addRecipe(findItemStack("Large Wind Turbine"), //todo add recipe to large wind turbine
             "TTT",
             "TCT",
@@ -958,22 +956,18 @@ object CraftingRecipes {
     }
 
     private fun recipeSolarPanel() {
-        for (cable in arrayOf("Copper 16 AWG Cable 300V", "Copper 3G1.5 Cable 600V")) {
-            addRecipe(
-                findItemStack("Small Solar Panel"), "LLL", "CSC", "III", 'S', "plateSilicon", 'L', findItemStack(
-                    "Lapis Dust"
-                ), 'I', ItemStack(Items.iron_ingot), 'C', findItemStack(cable)
-            )
-        }
+        addRecipe(
+            findItemStack("Small Solar Panel"), "LLL", "CSC", "III", 'S', "plateSilicon", 'L', findItemStack(
+                "Lapis Dust"
+            ), 'I', ItemStack(Items.iron_ingot), 'C', findItemStack("Copper 16 AWG Cable 300V")
+        )
         addRecipe(
             findItemStack("Small Rotating Solar Panel"), "ISI", "I I", 'S', findItemStack("Small Solar Panel"),
             'M', findItemStack("Electrical Motor"), 'I', ItemStack(Items.iron_ingot)
         )
         for (metal in arrayOf<String>("blockSteel", "blockAluminum", "blockAluminium", "casingMachineAdvanced")) {
             for (panel in arrayOf<String>("Small Solar Panel", "Small Rotating Solar Panel")) {
-                for (cable in arrayOf("Copper 12 AWG Cable 600V", "Copper 3G4 Cable 600V")) {
-                    addRecipe(findItemStack("2x3 Solar Panel"), "PPP", "PPP", "ICI", 'P', findItemStack(panel), 'I', metal, 'C', findItemStack(cable))
-                }
+                addRecipe(findItemStack("2x3 Solar Panel"), "PPP", "PPP", "ICI", 'P', findItemStack(panel), 'I', metal, 'C', findItemStack("Copper 12 AWG Cable 600V"))
             }
         }
         addRecipe(
@@ -2628,18 +2622,14 @@ object CraftingRecipes {
     }
 
     private fun recipeBatteryCharger() {
-        for (cable in arrayOf("Copper 14/2 Cable 600V", "Copper 3G2.5 Cable 600V")) {
-            addRecipe(
-                Eln.findItemStack("120V Battery Charger", 1), "RIR", "III", "RcR", 'c', findItemStack(cable),
-                'I', findItemStack("Iron Cable"), 'R', ItemStack(Items.redstone)
-            )
-        }
-        for (cable in arrayOf("Copper 12/2 Cable 600V", "Copper 3G4 Cable 600V")) {
-            addRecipe(
-                Eln.findItemStack("120V Fast Battery Charger", 1), "RIR", "ICI", "RcR", 'C', Eln.config.getStringOrElse("runtime.dictionary.cheapChip", "circuitElnBasic"), 'c',
-                findItemStack(cable), 'I', findItemStack("Iron Cable"), 'R', ItemStack(Items.redstone)
-            )
-        }
+        addRecipe(
+            Eln.findItemStack("120V Battery Charger", 1), "RIR", "III", "RcR", 'c', findItemStack("Copper 14/2 Cable 600V"),
+            'I', findItemStack("Iron Cable"), 'R', ItemStack(Items.redstone)
+        )
+        addRecipe(
+            Eln.findItemStack("120V Fast Battery Charger", 1), "RIR", "ICI", "RcR", 'C', Eln.config.getStringOrElse("runtime.dictionary.cheapChip", "circuitElnBasic"), 'c',
+            findItemStack("Copper 12/2 Cable 600V"), 'I', findItemStack("Iron Cable"), 'R', ItemStack(Items.redstone)
+        )
 
         addRecipe(
             Eln.findItemStack("240V Battery Charger", 1), "RIR", "ICI", "RcR", 'C', Eln.config.getStringOrElse("runtime.dictionary.advancedChip", "circuitElnAdvanced"), 'c',
