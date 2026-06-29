@@ -30,7 +30,8 @@ public class SolarPanelDescriptor extends TransparentNodeDescriptor {
             String name,
             Obj3D obj, CableRenderDescriptor cableRender,
             GhostGroup ghostGroup, int solarOffsetX, int solarOffsetY, int solarOffsetZ,
-            Coordinate groundCoordinate, double electricalUmax, double electricalPmax,
+            Coordinate groundCoordinate, double openCircuitVoltage, double optimumVoltage,
+            double optimumCurrent, double shortCircuitCurrent,
             double electricalDropFactor,
             double alphaMin, double alphaMax
 
@@ -39,16 +40,18 @@ public class SolarPanelDescriptor extends TransparentNodeDescriptor {
         this.groundCoordinate = groundCoordinate;
         this.ghostGroup = ghostGroup;
 
-        electricalRs = electricalUmax * electricalUmax * electricalDropFactor
-            / electricalPmax / 2.0;
-        this.electricalPmax = electricalPmax;
+        electricalRs = optimumVoltage * optimumVoltage * electricalDropFactor
+            / (optimumVoltage * optimumCurrent) / 2.0;
         this.solarOffsetX = solarOffsetX;
         this.solarOffsetY = solarOffsetY;
         this.solarOffsetZ = solarOffsetZ;
         this.alphaMax = alphaMax;
         this.alphaMin = alphaMin;
         basicModel = true;
-        this.electricalUmax = electricalUmax;
+        this.openCircuitVoltage = openCircuitVoltage;
+        this.optimumVoltage = optimumVoltage;
+        this.optimumCurrent = optimumCurrent;
+        this.shortCircuitCurrent = shortCircuitCurrent;
 
         this.obj = obj;
         if (obj != null) {
@@ -60,7 +63,7 @@ public class SolarPanelDescriptor extends TransparentNodeDescriptor {
 
         canRotate = alphaMax != alphaMin;
 
-        voltageLevelColor = VoltageLevelColor.fromVoltage(electricalUmax);
+        voltageLevelColor = VoltageLevelColor.fromVoltage(openCircuitVoltage);
     }
 
 
@@ -70,8 +73,10 @@ public class SolarPanelDescriptor extends TransparentNodeDescriptor {
     }
 
     CableRenderDescriptor cableRender;
-    double electricalUmax;
-    double electricalPmax;
+    double openCircuitVoltage;
+    double optimumVoltage;
+    double optimumCurrent;
+    double shortCircuitCurrent;
 
     int solarOffsetX, solarOffsetY, solarOffsetZ;
     double alphaMin, alphaMax;
@@ -82,6 +87,10 @@ public class SolarPanelDescriptor extends TransparentNodeDescriptor {
 
     public void applyTo(ElectricalLoad load) {
         load.setSerialResistance(electricalRs);
+    }
+
+    public double getStcPower() {
+        return optimumVoltage * optimumCurrent;
     }
 
 
@@ -126,9 +135,11 @@ public class SolarPanelDescriptor extends TransparentNodeDescriptor {
         super.addInformation(itemStack, entityPlayer, list, par4);
 
         list.add(tr("Produces power from solar radiation."));
-        list.add("  " + tr("Max. voltage: %1$V", Utils.plotValue(electricalUmax)));
-        list.add("  " + tr("Max. power: %1$W", Utils.plotValue(electricalPmax)));
-        list.add("  " + tr("Max. current: %1$A", Utils.plotValue(electricalPmax / electricalUmax)));
+        list.add("  " + tr("Open-circuit voltage: %1$V", Utils.plotValue(openCircuitVoltage)));
+        list.add("  " + tr("Optimum voltage: %1$V", Utils.plotValue(optimumVoltage)));
+        list.add("  " + tr("Optimum current: %1$A", Utils.plotValue(optimumCurrent)));
+        list.add("  " + tr("Short-circuit current: %1$A", Utils.plotValue(shortCircuitCurrent)));
+        list.add("  " + tr("STC power: %1$W", Utils.plotValue(getStcPower())));
         if (canRotate) list.add(tr("Can be geared towards the sun."));
     }
 

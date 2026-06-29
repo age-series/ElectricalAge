@@ -17,7 +17,6 @@ import mods.eln.sim.DiodeProcess;
 import mods.eln.sim.ElectricalLoad;
 import mods.eln.sim.ThermalLoad;
 import mods.eln.sim.mna.component.VoltageSource;
-import mods.eln.sim.mna.process.PowerSourceBipole;
 import mods.eln.sim.nbt.NbtElectricalLoad;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
@@ -41,7 +40,7 @@ public class SolarPanelElement extends TransparentNodeElement {
 
     //ElectricalCurrentSource currentSource;
     DiodeProcess diode;
-    PowerSourceBipole powerSource;
+    SolarPanelPowerProcess powerSource;
 
     SolarPannelSlowProcess slowProcess = new SolarPannelSlowProcess(this);
 
@@ -64,7 +63,16 @@ public class SolarPanelElement extends TransparentNodeElement {
 		}
 		else*/
         {
-            powerSource = new PowerSourceBipole(positiveLoad, negativeLoad, positiveSrc, negativeSrc);
+            powerSource = new SolarPanelPowerProcess(
+                positiveLoad,
+                negativeLoad,
+                positiveSrc,
+                negativeSrc,
+                this.descriptor.openCircuitVoltage,
+                this.descriptor.optimumVoltage,
+                this.descriptor.optimumCurrent,
+                this.descriptor.shortCircuitCurrent
+            );
 
 
         }
@@ -137,9 +145,6 @@ public class SolarPanelElement extends TransparentNodeElement {
 
     @Override
     public void initialize() {
-        powerSource.setMaximumVoltage(this.descriptor.electricalUmax);
-        powerSource.setMaximumCurrent(this.descriptor.electricalPmax / this.descriptor.electricalUmax * 1.5);
-
         descriptor.applyTo(positiveLoad);
         descriptor.applyTo(negativeLoad);
 
