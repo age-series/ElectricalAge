@@ -69,4 +69,22 @@ jobs:
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v4
       - name: Run benchmark tests
-        run: ./gradlew -Dorg.gradle.java.installations.auto-download=false benchmarkTest
+        run: |
+          set -o pipefail
+          mkdir -p build/benchmark-artifacts
+          ./gradlew -Dorg.gradle.java.installations.auto-download=false benchmarkTest 2>&1 | tee build/benchmark-artifacts/benchmark-gradle.log
+      - name: Extract benchmark statistics
+        if: always()
+        run: python3 script/extract_benchmark_stats.py
+      - name: Upload benchmark results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: benchmark-results
+          if-no-files-found: warn
+          path: |
+            build/benchmark-artifacts/**
+            build/test-results/benchmarkTest/**
+            build/reports/tests/benchmarkTest/**
+            build/reports/problems/**
+            ${{ runner.temp }}/.gradle-actions/build-results/*.json
