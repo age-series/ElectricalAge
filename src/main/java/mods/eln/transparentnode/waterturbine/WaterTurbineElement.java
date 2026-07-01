@@ -78,14 +78,14 @@ public class WaterTurbineElement extends TransparentNodeElement {
     @Override
     public String multiMeterString(@NotNull Direction side) {
 
-        return null;
+        return "";
     }
 
     @NotNull
     @Override
     public String thermoMeterString(@NotNull Direction side) {
 
-        return null;
+        return "";
     }
 
     Coordinate waterCoord;

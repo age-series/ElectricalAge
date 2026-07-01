@@ -138,7 +138,7 @@ public class WirelessSignalTxElement extends SixNodeElement implements IWireless
     @NotNull
     @Override
     public String thermoMeterString() {
-        return null;
+        return "";
     }
 
     @Override

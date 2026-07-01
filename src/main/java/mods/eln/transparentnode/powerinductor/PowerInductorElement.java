@@ -71,7 +71,7 @@ public class PowerInductorElement extends TransparentNodeElement {
     @NotNull
     @Override
     public String thermoMeterString(@NotNull Direction side) {
-        return null;
+        return "";
     }
 
     @Override

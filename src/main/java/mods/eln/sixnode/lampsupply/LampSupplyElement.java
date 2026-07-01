@@ -253,7 +253,7 @@ public class LampSupplyElement extends SixNodeElement implements IConfigurable {
     @NotNull
     @Override
     public String thermoMeterString() {
-        return null;
+        return "";
     }
 
     @Override

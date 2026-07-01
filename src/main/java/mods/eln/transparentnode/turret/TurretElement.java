@@ -149,7 +149,7 @@ public class TurretElement extends TransparentNodeElement implements IConfigurab
     @NotNull
     @Override
     public String thermoMeterString(@NotNull Direction side) {
-        return null;
+        return "";
     }
 
     @Override

@@ -97,13 +97,13 @@ public class WirelessSignalSourceElement extends SixNodeElement implements IWire
 
     @Override
     public String multiMeterString() {
-        return null;
+        return "";
     }
 
     @NotNull
     @Override
     public String thermoMeterString() {
-        return null;
+        return "";
     }
 
     @NotNull

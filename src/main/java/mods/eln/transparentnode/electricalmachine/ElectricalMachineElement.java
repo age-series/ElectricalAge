@@ -123,7 +123,7 @@ public class ElectricalMachineElement extends TransparentNodeElement implements 
     @NotNull
     @Override
     public String thermoMeterString(@NotNull Direction side) {
-        return null;//Utils.plotCelsius("T", thermalLoad.Tc);
+        return "";
     }
 
     @Override
