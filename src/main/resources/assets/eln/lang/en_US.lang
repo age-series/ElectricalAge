@@ -163,8 +163,8 @@ itemGroup.ElnLighting=Electrical Age - Lighting
 itemGroup.ElnMachines=Electrical Age - Machines
 itemGroup.ElnOresMaterials=Electrical Age - Ores & Materials
 itemGroup.ElnOther=Electrical Age - Other
-itemGroup.ElnPowerElectronics=Electrical Age - Power Electronics
 itemGroup.ElnPowerDistribution=Electrical Age - Power Distribution
+itemGroup.ElnPowerElectronics=Electrical Age - Power Electronics
 itemGroup.ElnSignalProcessing=Electrical Age - Signal Processing
 itemGroup.ElnToolsArmor=Electrical Age - Tools & Armor
 mod.meta.desc=Electricity in your base!
@@ -194,8 +194,6 @@ Useful_to_prevent_over-voltage\nof_Batteries=Useful to prevent over-voltage\nof 
 # src/main/java/mods/eln/item/SolarTrackerDescriptor.java
 Solar_panel_upgrade=Solar panel upgrade
 
-# src/main/java/mods/eln/item/regulator/RegulatorSlot.java
-
 # src/main/java/mods/eln/sixnode/TreeResinCollector/TreeResinCollectorDescriptor.java
 Produces_Tree_Resin_over\ntime_when_put_on_a_tree.=Produces Tree Resin over\ntime when put on a tree.
 This_block_can_only_be_placed_on_the_side_of_a_tree!=This block can only be placed on the side of a tree!
@@ -212,8 +210,6 @@ __*_It_exposes_a_nominal_mains_class_instead_of_wall-plug_details=  * It exposes
 
 # src/main/java/mods/eln/sixnode/batterycharger/BatteryChargerElement.java
 Charge_Current=Charge Current
-
-# src/main/java/mods/eln/sixnode/batterycharger/BatteryChargerGui.java
 
 # src/main/java/mods/eln/sixnode/diode/DiodeDescriptor.java
 Electrical_current_can_only\nflow_through_the_diode\nfrom_anode_to_cathode=Electrical current can only\nflow through the diode\nfrom anode to cathode
@@ -290,10 +286,6 @@ Displays_signal_value.=Displays signal value.
 Max=Max
 Min=Min
 
-# src/main/java/mods/eln/sixnode/electricaldigitaldisplay/ElectricalDigitalDisplayGui.java
-
-# src/main/java/mods/eln/sixnode/electricalentitysensor/ElectricalEntitySensorContainer.java
-
 # src/main/java/mods/eln/sixnode/electricalentitysensor/ElectricalEntitySensorDescriptor.java
 Output_voltage_increases\nif_entities_are_moving_around.=Output voltage increases\nif entities are moving around.
 
@@ -324,8 +316,6 @@ Provides_an_electrical_voltage\nwhich_is_proportional_to\nthe_intensity_of_dayli
 # src/main/java/mods/eln/sixnode/electricallightsensor/ElectricalLightSensorElement.java
 Light_level=Light level
 
-# src/main/java/mods/eln/sixnode/electricalmath/ElectricalMathContainer.java
-
 # src/main/java/mods/eln/sixnode/electricalmath/ElectricalMathDescriptor.java
 Applicable_boolean_operators\:=Applicable boolean operators:
 Applicable_functions\:=Applicable functions:
@@ -347,8 +337,6 @@ Waiting_for_completion...=Waiting for completion...
 # src/main/java/mods/eln/sixnode/electricalredstoneinput/ElectricalRedstoneInputDescriptor.java
 Converts_Redstone_signal\nto_an_electrical_voltage.=Converts Redstone signal\nto an electrical voltage.
 
-# src/main/java/mods/eln/sixnode/electricalredstoneinput/ElectricalRedstoneInputElement.java
-
 # src/main/java/mods/eln/sixnode/electricalredstoneoutput/ElectricalRedstoneOutputDescriptor.java
 Converts_electrical_voltage\ninto_a_Redstone_signal.=Converts electrical voltage\ninto a Redstone signal.
 
@@ -362,8 +350,6 @@ Control_voltage\:_%1$V=Control voltage: %1$V
 # src/main/java/mods/eln/sixnode/electricalrelay/ElectricalRelayElement.java
 
 # src/main/java/mods/eln/sixnode/electricalrelay/ElectricalRelayGui.java
-
-# src/main/java/mods/eln/sixnode/electricalsensor/ElectricalSensorContainer.java
 
 # src/main/java/mods/eln/sixnode/electricalsensor/ElectricalSensorDescriptor.java
 Can_measure_Voltage/Power/Current=Can measure Voltage/Power/Current
@@ -387,6 +373,8 @@ Provides_an_ideal_voltage_source\nwithout_energy_or_power_limitation.=Provides a
 Can_break_an_electrical_circuit\ninterrupting_the_current.=Can break an electrical circuit\ninterrupting the current.
 Current_rating\:_%1$A=Current rating: %1$A
 Voltage_rating\:_%1$V=Voltage rating: %1$V
+
+# src/main/java/mods/eln/sixnode/electricalswitch/ElectricalSwitchElement.java
 
 # src/main/java/mods/eln/sixnode/electricaltimeout/ElectricalTimeoutDescriptor.java
 Upon_application_of_a_high_signal,\nthe_timer_maintains_the_output_high_for\na_configurable_interval._Can_be_re-triggered.=Upon application of a high signal,\nthe timer maintains the output high for\na configurable interval. Can be re-triggered.
@@ -436,6 +424,8 @@ You_can_set_an_initial\namount_of_available_energy.\nWhen_the_counter_arrives_at
 is_off=is off
 is_on=is on
 value_in_kJ=value in kJ
+
+# src/main/java/mods/eln/sixnode/groundcable/GroundCableContainer.java
 
 # src/main/java/mods/eln/sixnode/groundcable/GroundCableDescriptor.java
 Acts_as_a_ground_reference.=Acts as a ground reference.
@@ -533,9 +523,9 @@ Repeats_all_wireless_signals_in_range=Repeats all wireless signals in range
 It_should_require_power_to_receive_and_propagate_the_signal_realistically=It should require power to receive and propagate the signal realistically
 Receive_signal_voltage_on_selected_wireless_signal_channel=Receive signal voltage on selected wireless signal channel
 
-# src/main/java/mods/eln/sixnode/wirelesssignal/rx/WirelessSignalRxGui.java
+# src/main/java/mods/eln/sixnode/wirelesssignal/rx/WirelessSignalRxElement.java
 
-# src/main/java/mods/eln/sixnode/wirelesssignal/source/WirelessSignalSourceDescriptor.java
+# src/main/java/mods/eln/sixnode/wirelesssignal/rx/WirelessSignalRxGui.java
 
 # src/main/java/mods/eln/sixnode/wirelesssignal/tx/WirelessSignalTxDescriptor.java
 Sends_signal_voltage_on_selected_wireless_signal_channel=Sends signal voltage on selected wireless signal channel
@@ -593,6 +583,8 @@ Auto_shutdown=Auto shutdown
 Manual_shutdown=Manual shutdown
 Set_point\:_%1$=Set point: %1$
 
+# src/main/java/mods/eln/transparentnode/electricalmachine/ElectricalMachineContainer.java
+
 # src/main/java/mods/eln/transparentnode/electricalmachine/ElectricalMachineDescriptor.java
 Cost=Cost
 
@@ -628,10 +620,12 @@ Solar_tracker_slot=Solar tracker slot
 
 # src/main/java/mods/eln/transparentnode/solarpanel/SolarPanelDescriptor.java
 Can_be_geared_towards_the_sun.=Can be geared towards the sun.
-Max._current\:_%1$A=Max. current: %1$A
-Max._power\:_%1$W=Max. power: %1$W
-Max._voltage\:_%1$V=Max. voltage: %1$V
+Open-circuit_voltage\:_%1$V=Open-circuit voltage: %1$V
+Optimum_current\:_%1$A=Optimum current: %1$A
+Optimum_voltage\:_%1$V=Optimum voltage: %1$V
 Produces_power_from_solar_radiation.=Produces power from solar radiation.
+STC_power\:_%1$W=STC power: %1$W
+Short-circuit_current\:_%1$A=Short-circuit current: %1$A
 
 # src/main/java/mods/eln/transparentnode/solarpanel/SolarPanelElement.java
 Panel_angle=Panel angle
@@ -673,6 +667,8 @@ Temperature_difference\:_%1$°C=Temperature difference: %1$°C
 # src/main/java/mods/eln/transparentnode/turbine/TurbineElement.java
 Nominal=Nominal
 
+# src/main/java/mods/eln/transparentnode/turret/TurretContainer.java
+
 # src/main/java/mods/eln/transparentnode/turret/TurretDescriptor.java
 CAUTION\:_Cables_can_get_quite_hot!=CAUTION: Cables can get quite hot!
 Laser_charge_power\:_%1$W...%2$kW=Laser charge power: %1$W...%2$kW
@@ -704,9 +700,19 @@ No_place_for_water_turbine!=No place for water turbine!
 # src/main/java/mods/eln/transparentnode/windturbine/WindTurbineDescriptor.java
 Front\:_%1$=Front: %1$
 Generates_energy_from_wind.=Generates energy from wind.
+Generator_rating\:_%1$W=Generator rating: %1$W
 Left/Right\:_%1$=Left/Right: %1$
+Nominal_speed\:_%1$rad/s=Nominal speed: %1$rad/s
+Nominal_wind\:_%1$m/s=Nominal wind: %1$m/s
+Rotor_diameter\:_%1$m=Rotor diameter: %1$m
 Up/Down\:_%1$=Up/Down: %1$
 Wind_area\:=Wind area:
+
+# src/main/java/mods/eln/transparentnode/windturbine/WindTurbineElement.java
+Current_limit=Current limit
+Rotor_energy=Rotor energy
+Rotor_speed=Rotor speed
+Wind=Wind
 
 # src/main/java/mods/eln/wiki/Data.java
 Light=Light
@@ -776,7 +782,7 @@ Falstad_import\:_no_components_found.=Falstad import: no components found.
 Falstad_import\:_placed_%1$_blocks.=Falstad import: placed %1$ blocks.
 Falstad_import\:_requires_a_flat,_clear_area_of_%1$._Planned_orientation\:_original.=Falstad import: requires a flat, clear area of %1$. Planned orientation: original.
 Falstad_import\:_using_%1$_placement_(%2$x%3$).=Falstad import: using %1$ placement (%2$x%3$).
-Falstad_scope_output_substituted_with_Voltage_Probe_+_Digital_Display=Falstad scope output substituted with Voltage Probe + Digital Display
+Falstad_scope_output_substituted_with_Voltage_Probe_+_Industrial_Data_Logger=Falstad scope output substituted with Voltage Probe + Industrial Data Logger
 Inductor_support_items_not_found.=Inductor support items not found.
 Largest_nearby_area_found_was_%1$x%2$_blocks.=Largest nearby area found was %1$x%2$ blocks.
 Line_%1$\:_invalid_capacitance_value.=Line %1$: invalid capacitance value.
@@ -790,16 +796,14 @@ Signal_switch_placed,_but_couldn't_configure_its_state.=Signal switch placed, bu
 Voltage_source_placed,_but_couldn't_configure_its_voltage.=Voltage source placed, but couldn't configure its voltage.
 Voltage_source_substituted_with_Electrical_Source_+_Ground=Voltage source substituted with Electrical Source + Ground
 missing_descriptor\:_Current_Source=missing descriptor: Current Source
-missing_descriptor\:_Digital_Display=missing descriptor: Digital Display
 missing_descriptor\:_Electrical_Source=missing descriptor: Electrical Source
+missing_descriptor\:_Industrial_Data_Logger=missing descriptor: Industrial Data Logger
 missing_descriptor\:_LED_vuMeter=missing descriptor: LED vuMeter
 missing_descriptor\:_NAND_Chip=missing descriptor: NAND Chip
-missing_descriptor\:_Signal_Source=missing descriptor: Signal Source
 missing_descriptor\:_Signal_Switch=missing descriptor: Signal Switch
 missing_descriptor\:_Voltage_Probe=missing descriptor: Voltage Probe
 original=original
-placed_Digital_Display_but_couldn't_find_top_element=placed Digital Display but couldn't find top element
-placed_Signal_Source_but_couldn't_find_top_element=placed Signal Source but couldn't find top element
+placed_Industrial_Data_Logger_but_couldn't_find_top_element=placed Industrial Data Logger but couldn't find top element
 placed_Voltage_Probe_but_couldn't_find_top_element=placed Voltage Probe but couldn't find top element
 placed_block_but_couldn't_find_top_element=placed block but couldn't find top element
 rotated_clockwise=rotated clockwise
@@ -915,6 +919,8 @@ Stored_Energy\:_%1$J_(%2$%)=Stored Energy: %1$J (%2$%)
 
 # src/main/kotlin/mods/eln/item/electricalitem/ElectricalPickaxe.kt
 Opens_holes._Right-click_to_open_smaller_holes.=Opens holes. Right-click to open smaller holes.
+
+# src/main/kotlin/mods/eln/item/electricalitem/PortableOreScannerItem.kt
 
 # src/main/kotlin/mods/eln/item/lampitem/LampDescriptor.kt
 Current_lifetime\:_%1$h=Current lifetime: %1$h
@@ -1305,15 +1311,13 @@ Aluminum_3C_18_AWG_Cable_300V.name=Aluminum 3C 18 AWG Cable 300V
 Aluminum_3C_18_AWG_Cable_Melted.name=Aluminum 3C 18 AWG Cable Melted
 Aluminum_3C_20_AWG_Cable_300V.name=Aluminum 3C 20 AWG Cable 300V
 Aluminum_3C_20_AWG_Cable_Melted.name=Aluminum 3C 20 AWG Cable Melted
-Aluminum_3G1.5_Cable_600V.name=Aluminum 3G1.5 Cable 600V
-Aluminum_3G1.5_Cable_Melted.name=Aluminum 3G1.5 Cable Melted
-Aluminum_3G2.5_Cable_600V.name=Aluminum 3G2.5 Cable 600V
-Aluminum_3G2.5_Cable_Melted.name=Aluminum 3G2.5 Cable Melted
-Aluminum_3G4_Cable_600V.name=Aluminum 3G4 Cable 600V
-Aluminum_3G4_Cable_Melted.name=Aluminum 3G4 Cable Melted
 Aluminum_4/0_AWG_Cable_1000V.name=Aluminum 4/0 AWG Cable 1000V
 Aluminum_4/0_AWG_Cable_Bare.name=Aluminum 4/0 AWG Cable Bare
 Aluminum_4/0_AWG_Cable_Melted.name=Aluminum 4/0 AWG Cable Melted
+Aluminum_4/2_Cable_600V.name=Aluminum 4/2 Cable 600V
+Aluminum_4/2_Cable_Melted.name=Aluminum 4/2 Cable Melted
+Aluminum_4/3_Cable_600V.name=Aluminum 4/3 Cable 600V
+Aluminum_4/3_Cable_Melted.name=Aluminum 4/3 Cable Melted
 Aluminum_4C_18_AWG_Cable_300V.name=Aluminum 4C 18 AWG Cable 300V
 Aluminum_4C_18_AWG_Cable_Melted.name=Aluminum 4C 18 AWG Cable Melted
 Aluminum_4C_20_AWG_Cable_300V.name=Aluminum 4C 20 AWG Cable 300V
@@ -1328,12 +1332,10 @@ Aluminum_5C_18_AWG_Cable_300V.name=Aluminum 5C 18 AWG Cable 300V
 Aluminum_5C_18_AWG_Cable_Melted.name=Aluminum 5C 18 AWG Cable Melted
 Aluminum_5C_20_AWG_Cable_300V.name=Aluminum 5C 20 AWG Cable 300V
 Aluminum_5C_20_AWG_Cable_Melted.name=Aluminum 5C 20 AWG Cable Melted
-Aluminum_5G1.5_Cable_600V.name=Aluminum 5G1.5 Cable 600V
-Aluminum_5G1.5_Cable_Melted.name=Aluminum 5G1.5 Cable Melted
-Aluminum_5G2.5_Cable_600V.name=Aluminum 5G2.5 Cable 600V
-Aluminum_5G2.5_Cable_Melted.name=Aluminum 5G2.5 Cable Melted
-Aluminum_5G4_Cable_600V.name=Aluminum 5G4 Cable 600V
-Aluminum_5G4_Cable_Melted.name=Aluminum 5G4 Cable Melted
+Aluminum_6/2_Cable_600V.name=Aluminum 6/2 Cable 600V
+Aluminum_6/2_Cable_Melted.name=Aluminum 6/2 Cable Melted
+Aluminum_6/3_Cable_600V.name=Aluminum 6/3 Cable 600V
+Aluminum_6/3_Cable_Melted.name=Aluminum 6/3 Cable Melted
 Aluminum_6_AWG_Cable_600V.name=Aluminum 6 AWG Cable 600V
 Aluminum_6_AWG_Cable_Bare.name=Aluminum 6 AWG Cable Bare
 Aluminum_6_AWG_Cable_Melted.name=Aluminum 6 AWG Cable Melted
@@ -1432,15 +1434,13 @@ Copper_3C_18_AWG_Cable_300V.name=Copper 3C 18 AWG Cable 300V
 Copper_3C_18_AWG_Cable_Melted.name=Copper 3C 18 AWG Cable Melted
 Copper_3C_20_AWG_Cable_300V.name=Copper 3C 20 AWG Cable 300V
 Copper_3C_20_AWG_Cable_Melted.name=Copper 3C 20 AWG Cable Melted
-Copper_3G1.5_Cable_600V.name=Copper 3G1.5 Cable 600V
-Copper_3G1.5_Cable_Melted.name=Copper 3G1.5 Cable Melted
-Copper_3G2.5_Cable_600V.name=Copper 3G2.5 Cable 600V
-Copper_3G2.5_Cable_Melted.name=Copper 3G2.5 Cable Melted
-Copper_3G4_Cable_600V.name=Copper 3G4 Cable 600V
-Copper_3G4_Cable_Melted.name=Copper 3G4 Cable Melted
 Copper_4/0_AWG_Cable_1000V.name=Copper 4/0 AWG Cable 1000V
 Copper_4/0_AWG_Cable_Bare.name=Copper 4/0 AWG Cable Bare
 Copper_4/0_AWG_Cable_Melted.name=Copper 4/0 AWG Cable Melted
+Copper_4/2_Cable_600V.name=Copper 4/2 Cable 600V
+Copper_4/2_Cable_Melted.name=Copper 4/2 Cable Melted
+Copper_4/3_Cable_600V.name=Copper 4/3 Cable 600V
+Copper_4/3_Cable_Melted.name=Copper 4/3 Cable Melted
 Copper_4C_18_AWG_Cable_300V.name=Copper 4C 18 AWG Cable 300V
 Copper_4C_18_AWG_Cable_Melted.name=Copper 4C 18 AWG Cable Melted
 Copper_4C_20_AWG_Cable_300V.name=Copper 4C 20 AWG Cable 300V
@@ -1455,16 +1455,6 @@ Copper_5C_18_AWG_Cable_300V.name=Copper 5C 18 AWG Cable 300V
 Copper_5C_18_AWG_Cable_Melted.name=Copper 5C 18 AWG Cable Melted
 Copper_5C_20_AWG_Cable_300V.name=Copper 5C 20 AWG Cable 300V
 Copper_5C_20_AWG_Cable_Melted.name=Copper 5C 20 AWG Cable Melted
-Copper_5G1.5_Cable_600V.name=Copper 5G1.5 Cable 600V
-Copper_5G1.5_Cable_Melted.name=Copper 5G1.5 Cable Melted
-Copper_5G2.5_Cable_600V.name=Copper 5G2.5 Cable 600V
-Copper_5G2.5_Cable_Melted.name=Copper 5G2.5 Cable Melted
-Copper_5G4_Cable_600V.name=Copper 5G4 Cable 600V
-Copper_5G4_Cable_Melted.name=Copper 5G4 Cable Melted
-Copper_4/2_Cable_600V.name=Copper 4/2 Cable 600V
-Copper_4/2_Cable_Melted.name=Copper 4/2 Cable Melted
-Copper_4/3_Cable_600V.name=Copper 4/3 Cable 600V
-Copper_4/3_Cable_Melted.name=Copper 4/3 Cable Melted
 Copper_6/2_Cable_600V.name=Copper 6/2 Cable 600V
 Copper_6/2_Cable_Melted.name=Copper 6/2 Cable Melted
 Copper_6/3_Cable_600V.name=Copper 6/3 Cable 600V
@@ -1830,12 +1820,10 @@ Brown=Brown
 Brush\:_paint_conductor_color=Brush: paint conductor color
 Conductor=Conductor
 Conductor\:_%1$_%2$=Conductor: %1$ %2$
-Equivalent_area\:_%1$_mm2=Equivalent area: %1$ mm2
-Nearest_EU-style_name\:_%1$=Nearest EU-style name: %1$
-Conductor\:_%1$_%2$_(%3$_mm2)=Conductor: %1$ %2$ (%3$ mm2)
 Conductor_colors\:_%1$=Conductor colors: %1$
 Conductors\:_%1$=Conductors: %1$
 Cyan=Cyan
+Equivalent_area\:_%1$_mm2=Equivalent area: %1$ mm2
 Gray=Gray
 Green=Green
 Ground=Ground
@@ -1844,6 +1832,7 @@ Light_Blue=Light Blue
 Lime=Lime
 Magenta=Magenta
 Max_temperature\:_%1$C=Max temperature: %1$C
+Nearest_EU-style_name\:_%1$=Nearest EU-style name: %1$
 Orange=Orange
 Palette=Palette
 Pink=Pink
@@ -1958,6 +1947,8 @@ Set_resistance_with_coal_dust=Set resistance with coal dust
 __*_Resistance_is_not_impacted_by_temperature=  * Resistance is not impacted by temperature
 __*_Signal_input_doesn't_require_power=  * Signal input doesn't require power
 
+# src/main/kotlin/mods/eln/transparentnode/LegacyDcDc.kt
+
 # src/main/kotlin/mods/eln/transparentnode/NixieTube.kt
 Blank=Blank
 Digit=Digit
@@ -1967,8 +1958,9 @@ Nixie_tube_has_been_textured_realistically=Nixie tube has been textured realisti
 Signal_input_doesn't_require_power,_and_interfaces_are_tailored_to_gameplay=Signal input doesn't require power, and interfaces are tailored to gameplay
 
 # src/main/kotlin/mods/eln/transparentnode/ThermalHeatExchanger.kt
-Ejects_out_ic2\:coolant=Ejects out ic2:coolant
-Generates_heat_when_supplied_with_ic2\:hotcoolant=Generates heat when supplied with ic2:hotcoolant
+Cold_->_Hot_\=_consumes_heat=Cold -> Hot = consumes heat
+Converts_fluids_between_hot_and_cold_states=Converts fluids between hot and cold states
+Hot_->_Cold_\=_generates_heat=Hot -> Cold = generates heat
 input_mB/t=input mB/t
 input_tank_level=input tank level
 joules_per_tick=joules per tick

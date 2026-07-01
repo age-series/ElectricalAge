@@ -163,6 +163,7 @@ itemGroup.ElnLighting=电力时代 - 照明
 itemGroup.ElnMachines=电力时代 - 机器
 itemGroup.ElnOresMaterials=电力时代 - 矿石与材料
 itemGroup.ElnOther=电力时代 - 其他
+itemGroup.ElnPowerDistribution=Electrical Age - Power Distribution
 itemGroup.ElnPowerElectronics=电力时代 - 电力电子
 itemGroup.ElnSignalProcessing=电力时代 - 信号处理
 itemGroup.ElnToolsArmor=电力时代 - 工具与护甲
@@ -193,8 +194,6 @@ Useful_to_prevent_over-voltage\nof_Batteries=用于防止电池过压
 # src/main/java/mods/eln/item/SolarTrackerDescriptor.java
 Solar_panel_upgrade=太阳能板升级
 
-# src/main/java/mods/eln/item/regulator/RegulatorSlot.java
-
 # src/main/java/mods/eln/sixnode/TreeResinCollector/TreeResinCollectorDescriptor.java
 Produces_Tree_Resin_over\ntime_when_put_on_a_tree.=放置在树上后\n会随时间推移产生树脂。
 This_block_can_only_be_placed_on_the_side_of_a_tree!=只能在树的侧面放置！
@@ -211,8 +210,6 @@ __*_It_exposes_a_nominal_mains_class_instead_of_wall-plug_details=  * 它暴露�
 
 # src/main/java/mods/eln/sixnode/batterycharger/BatteryChargerElement.java
 Charge_Current=充电电流
-
-# src/main/java/mods/eln/sixnode/batterycharger/BatteryChargerGui.java
 
 # src/main/java/mods/eln/sixnode/diode/DiodeDescriptor.java
 Electrical_current_can_only\nflow_through_the_diode\nfrom_anode_to_cathode=电流只能从正极流向负极
@@ -289,10 +286,6 @@ Displays_signal_value.=显示信号值。
 Max=最大
 Min=最小
 
-# src/main/java/mods/eln/sixnode/electricaldigitaldisplay/ElectricalDigitalDisplayGui.java
-
-# src/main/java/mods/eln/sixnode/electricalentitysensor/ElectricalEntitySensorContainer.java
-
 # src/main/java/mods/eln/sixnode/electricalentitysensor/ElectricalEntitySensorDescriptor.java
 Output_voltage_increases\nif_entities_are_moving_around.=当周围有实体移动时\n输出电压增加。
 
@@ -323,8 +316,6 @@ Provides_an_electrical_voltage\nwhich_is_proportional_to\nthe_intensity_of_dayli
 # src/main/java/mods/eln/sixnode/electricallightsensor/ElectricalLightSensorElement.java
 Light_level=光照等级
 
-# src/main/java/mods/eln/sixnode/electricalmath/ElectricalMathContainer.java
-
 # src/main/java/mods/eln/sixnode/electricalmath/ElectricalMathDescriptor.java
 Applicable_boolean_operators\:=适用的布尔运算符:
 Applicable_functions\:=适用的函数:
@@ -346,8 +337,6 @@ Waiting_for_completion...=请稍后...
 # src/main/java/mods/eln/sixnode/electricalredstoneinput/ElectricalRedstoneInputDescriptor.java
 Converts_Redstone_signal\nto_an_electrical_voltage.=将红石信号\n转换为电压。
 
-# src/main/java/mods/eln/sixnode/electricalredstoneinput/ElectricalRedstoneInputElement.java
-
 # src/main/java/mods/eln/sixnode/electricalredstoneoutput/ElectricalRedstoneOutputDescriptor.java
 Converts_electrical_voltage\ninto_a_Redstone_signal.=将电压\n转换为红石信号。
 
@@ -361,8 +350,6 @@ Control_voltage\:_%1$V=控制电压: %1$V
 # src/main/java/mods/eln/sixnode/electricalrelay/ElectricalRelayElement.java
 
 # src/main/java/mods/eln/sixnode/electricalrelay/ElectricalRelayGui.java
-
-# src/main/java/mods/eln/sixnode/electricalsensor/ElectricalSensorContainer.java
 
 # src/main/java/mods/eln/sixnode/electricalsensor/ElectricalSensorDescriptor.java
 Can_measure_Voltage/Power/Current=可测量电压/功率/电流
@@ -386,6 +373,8 @@ Provides_an_ideal_voltage_source\nwithout_energy_or_power_limitation.=提供理�
 Can_break_an_electrical_circuit\ninterrupting_the_current.=可以断开电路\n以中断电流。
 Current_rating\:_%1$A=额定电流: %1$A
 Voltage_rating\:_%1$V=额定电压: %1$V
+
+# src/main/java/mods/eln/sixnode/electricalswitch/ElectricalSwitchElement.java
 
 # src/main/java/mods/eln/sixnode/electricaltimeout/ElectricalTimeoutDescriptor.java
 Upon_application_of_a_high_signal,\nthe_timer_maintains_the_output_high_for\na_configurable_interval._Can_be_re-triggered.=当施加高电平信号时，\n定时器在可配置的时间间隔内\n保持输出为高电平。可重新触发。
@@ -435,6 +424,8 @@ You_can_set_an_initial\namount_of_available_energy.\nWhen_the_counter_arrives_at
 is_off=电路断开
 is_on=电路连通
 value_in_kJ=单位是kJ
+
+# src/main/java/mods/eln/sixnode/groundcable/GroundCableContainer.java
 
 # src/main/java/mods/eln/sixnode/groundcable/GroundCableDescriptor.java
 Acts_as_a_ground_reference.=作为接地参考点
@@ -532,9 +523,9 @@ Repeats_all_wireless_signals_in_range=转发范围内所有无线信号
 It_should_require_power_to_receive_and_propagate_the_signal_realistically=现实中它应该需要供电以接收和传播信号
 Receive_signal_voltage_on_selected_wireless_signal_channel=接收选定无线信号频道的信号电压
 
-# src/main/java/mods/eln/sixnode/wirelesssignal/rx/WirelessSignalRxGui.java
+# src/main/java/mods/eln/sixnode/wirelesssignal/rx/WirelessSignalRxElement.java
 
-# src/main/java/mods/eln/sixnode/wirelesssignal/source/WirelessSignalSourceDescriptor.java
+# src/main/java/mods/eln/sixnode/wirelesssignal/rx/WirelessSignalRxGui.java
 
 # src/main/java/mods/eln/sixnode/wirelesssignal/tx/WirelessSignalTxDescriptor.java
 Sends_signal_voltage_on_selected_wireless_signal_channel=在选定无线信号频道上发送信号电压
@@ -592,6 +583,8 @@ Auto_shutdown=自动启停
 Manual_shutdown=手动启停
 Set_point\:_%1$=设定值: %1$
 
+# src/main/java/mods/eln/transparentnode/electricalmachine/ElectricalMachineContainer.java
+
 # src/main/java/mods/eln/transparentnode/electricalmachine/ElectricalMachineDescriptor.java
 Cost=消耗
 
@@ -627,10 +620,12 @@ Solar_tracker_slot=太阳追踪组件
 
 # src/main/java/mods/eln/transparentnode/solarpanel/SolarPanelDescriptor.java
 Can_be_geared_towards_the_sun.=可以使太阳能板直指太阳以接收更多能量
-Max._current\:_%1$A=最大电流: %1$A
-Max._power\:_%1$W=最大功率: %1$W
-Max._voltage\:_%1$V=最大电压: %1$V
+Open-circuit_voltage\:_%1$V=Open-circuit voltage: %1$V
+Optimum_current\:_%1$A=Optimum current: %1$A
+Optimum_voltage\:_%1$V=Optimum voltage: %1$V
 Produces_power_from_solar_radiation.=从太阳辐射中获取能量
+STC_power\:_%1$W=STC power: %1$W
+Short-circuit_current\:_%1$A=Short-circuit current: %1$A
 
 # src/main/java/mods/eln/transparentnode/solarpanel/SolarPanelElement.java
 Panel_angle=太阳能板角度(与法线夹角)
@@ -672,6 +667,8 @@ Temperature_difference\:_%1$°C=温度差: %1$°C
 # src/main/java/mods/eln/transparentnode/turbine/TurbineElement.java
 Nominal=额定
 
+# src/main/java/mods/eln/transparentnode/turret/TurretContainer.java
+
 # src/main/java/mods/eln/transparentnode/turret/TurretDescriptor.java
 CAUTION\:_Cables_can_get_quite_hot!=注意: 导线可能会变得非常热!
 Laser_charge_power\:_%1$W...%2$kW=激光充电功率: %1$W...%2$kW
@@ -703,9 +700,19 @@ No_place_for_water_turbine!=没有足够的空间放置水力发电机
 # src/main/java/mods/eln/transparentnode/windturbine/WindTurbineDescriptor.java
 Front\:_%1$=前: %1$ 格
 Generates_energy_from_wind.=用风来发电
+Generator_rating\:_%1$W=Generator rating: %1$W
 Left/Right\:_%1$=左/右: %1$ 格
+Nominal_speed\:_%1$rad/s=Nominal speed: %1$rad/s
+Nominal_wind\:_%1$m/s=Nominal wind: %1$m/s
+Rotor_diameter\:_%1$m=Rotor diameter: %1$m
 Up/Down\:_%1$=上/下: %1$ 格
 Wind_area\:=风区:
+
+# src/main/java/mods/eln/transparentnode/windturbine/WindTurbineElement.java
+Current_limit=Current limit
+Rotor_energy=Rotor energy
+Rotor_speed=Rotor speed
+Wind=Wind
 
 # src/main/java/mods/eln/wiki/Data.java
 Light=照明
@@ -775,7 +782,7 @@ Falstad_import\:_no_components_found.=Falstad导入: 未找到组件。
 Falstad_import\:_placed_%1$_blocks.=Falstad导入: 已放置%1$个方块。
 Falstad_import\:_requires_a_flat,_clear_area_of_%1$._Planned_orientation\:_original.=Falstad导入: 需要%1$大小的平坦空地。计划朝向: 原始。
 Falstad_import\:_using_%1$_placement_(%2$x%3$).=Falstad导入: 使用%1$放置方式(%2$x%3$)。
-Falstad_scope_output_substituted_with_Voltage_Probe_+_Digital_Display=Falstad示波器输出已替换为电压探针+数字显示屏
+Falstad_scope_output_substituted_with_Voltage_Probe_+_Industrial_Data_Logger=Falstad scope output substituted with Voltage Probe + Industrial Data Logger
 Inductor_support_items_not_found.=未找到电感器支撑物品。
 Largest_nearby_area_found_was_%1$x%2$_blocks.=附近找到的最大区域为%1$x%2$方块。
 Line_%1$\:_invalid_capacitance_value.=第%1$行: 无效的电容值。
@@ -789,16 +796,14 @@ Signal_switch_placed,_but_couldn't_configure_its_state.=已放置信号开关，
 Voltage_source_placed,_but_couldn't_configure_its_voltage.=已放置电压源，但无法配置其电压。
 Voltage_source_substituted_with_Electrical_Source_+_Ground=电压源已替换为电源+接地
 missing_descriptor\:_Current_Source=缺少描述符: 电流源
-missing_descriptor\:_Digital_Display=缺少描述符: 数字显示屏
 missing_descriptor\:_Electrical_Source=缺少描述符: 电源
+missing_descriptor\:_Industrial_Data_Logger=missing descriptor: Industrial Data Logger
 missing_descriptor\:_LED_vuMeter=缺少描述符: LED电平表
 missing_descriptor\:_NAND_Chip=缺少描述符: 与非门芯片
-missing_descriptor\:_Signal_Source=缺少描述符: 信号源
 missing_descriptor\:_Signal_Switch=缺少描述符: 信号开关
 missing_descriptor\:_Voltage_Probe=缺少描述符: 电压探针
 original=原始
-placed_Digital_Display_but_couldn't_find_top_element=已放置数字显示屏但无法找到顶部元素
-placed_Signal_Source_but_couldn't_find_top_element=已放置信号源但无法找到顶部元素
+placed_Industrial_Data_Logger_but_couldn't_find_top_element=placed Industrial Data Logger but couldn't find top element
 placed_Voltage_Probe_but_couldn't_find_top_element=已放置电压探针但无法找到顶部元素
 placed_block_but_couldn't_find_top_element=已放置方块但无法找到顶部元素
 rotated_clockwise=顺时针旋转
@@ -914,6 +919,8 @@ Stored_Energy\:_%1$J_(%2$%)=储存能量: %1$J (%2$%)
 
 # src/main/kotlin/mods/eln/item/electricalitem/ElectricalPickaxe.kt
 Opens_holes._Right-click_to_open_smaller_holes.=挖3*3，右键切换1*1模式
+
+# src/main/kotlin/mods/eln/item/electricalitem/PortableOreScannerItem.kt
 
 # src/main/kotlin/mods/eln/item/lampitem/LampDescriptor.kt
 Current_lifetime\:_%1$h=当前寿命: %1$h
@@ -1304,15 +1311,13 @@ Aluminum_3C_18_AWG_Cable_300V.name=铝芯电缆(3芯, 18AWG, 300V)
 Aluminum_3C_18_AWG_Cable_Melted.name=铝芯电缆(3芯, 18AWG, 熔化)
 Aluminum_3C_20_AWG_Cable_300V.name=铝芯电缆(3芯, 20AWG, 300V)
 Aluminum_3C_20_AWG_Cable_Melted.name=铝芯电缆(3芯, 20AWG, 熔化)
-Aluminum_3G1.5_Cable_600V.name=铝芯电缆(3G1.5, 600V)
-Aluminum_3G1.5_Cable_Melted.name=铝芯电缆(3G1.5, 熔化)
-Aluminum_3G2.5_Cable_600V.name=铝芯电缆(3G2.5, 600V)
-Aluminum_3G2.5_Cable_Melted.name=铝芯电缆(3G2.5, 熔化)
-Aluminum_3G4_Cable_600V.name=铝芯电缆(3G4, 600V)
-Aluminum_3G4_Cable_Melted.name=铝芯电缆(3G4, 熔化)
 Aluminum_4/0_AWG_Cable_1000V.name=铝芯电缆(4/0AWG, 1000V)
 Aluminum_4/0_AWG_Cable_Bare.name=铝芯裸线(4/0AWG)
 Aluminum_4/0_AWG_Cable_Melted.name=铝芯电缆(4/0AWG, 熔化)
+Aluminum_4/2_Cable_600V.name=Aluminum 4/2 Cable 600V
+Aluminum_4/2_Cable_Melted.name=Aluminum 4/2 Cable Melted
+Aluminum_4/3_Cable_600V.name=Aluminum 4/3 Cable 600V
+Aluminum_4/3_Cable_Melted.name=Aluminum 4/3 Cable Melted
 Aluminum_4C_18_AWG_Cable_300V.name=铝芯电缆(4芯, 18AWG, 300V)
 Aluminum_4C_18_AWG_Cable_Melted.name=铝芯电缆(4芯, 18AWG, 熔化)
 Aluminum_4C_20_AWG_Cable_300V.name=铝芯电缆(4芯, 20AWG, 300V)
@@ -1327,12 +1332,10 @@ Aluminum_5C_18_AWG_Cable_300V.name=铝芯电缆(5芯, 18AWG, 300V)
 Aluminum_5C_18_AWG_Cable_Melted.name=铝芯电缆(5芯, 18AWG, 熔化)
 Aluminum_5C_20_AWG_Cable_300V.name=铝芯电缆(5芯, 20AWG, 300V)
 Aluminum_5C_20_AWG_Cable_Melted.name=铝芯电缆(5芯, 20AWG, 熔化)
-Aluminum_5G1.5_Cable_600V.name=铝芯电缆(5G1.5, 600V)
-Aluminum_5G1.5_Cable_Melted.name=铝芯电缆(5G1.5, 熔化)
-Aluminum_5G2.5_Cable_600V.name=铝芯电缆(5G2.5, 600V)
-Aluminum_5G2.5_Cable_Melted.name=铝芯电缆(5G2.5, 熔化)
-Aluminum_5G4_Cable_600V.name=铝芯电缆(5G4, 600V)
-Aluminum_5G4_Cable_Melted.name=铝芯电缆(5G4, 熔化)
+Aluminum_6/2_Cable_600V.name=Aluminum 6/2 Cable 600V
+Aluminum_6/2_Cable_Melted.name=Aluminum 6/2 Cable Melted
+Aluminum_6/3_Cable_600V.name=Aluminum 6/3 Cable 600V
+Aluminum_6/3_Cable_Melted.name=Aluminum 6/3 Cable Melted
 Aluminum_6_AWG_Cable_600V.name=铝芯电缆(6AWG, 600V)
 Aluminum_6_AWG_Cable_Bare.name=铝芯裸线(6AWG)
 Aluminum_6_AWG_Cable_Melted.name=铝芯电缆(6AWG, 熔化)
@@ -1431,15 +1434,13 @@ Copper_3C_18_AWG_Cable_300V.name=铜芯电缆(3芯, 18AWG, 300V)
 Copper_3C_18_AWG_Cable_Melted.name=铜芯电缆(3芯, 18AWG, 熔化)
 Copper_3C_20_AWG_Cable_300V.name=铜芯电缆(3芯, 20AWG, 300V)
 Copper_3C_20_AWG_Cable_Melted.name=铜芯电缆(3芯, 20AWG, 熔化)
-Copper_3G1.5_Cable_600V.name=铜芯电缆(3G1.5, 600V)
-Copper_3G1.5_Cable_Melted.name=铜芯电缆(3G1.5, 熔化)
-Copper_3G2.5_Cable_600V.name=铜芯电缆(3G2.5, 600V)
-Copper_3G2.5_Cable_Melted.name=铜芯电缆(3G2.5, 熔化)
-Copper_3G4_Cable_600V.name=铜芯电缆(3G4, 600V)
-Copper_3G4_Cable_Melted.name=铜芯电缆(3G4, 熔化)
 Copper_4/0_AWG_Cable_1000V.name=铜芯电缆(4/0AWG, 1000V)
 Copper_4/0_AWG_Cable_Bare.name=铜芯裸线(4/0AWG)
 Copper_4/0_AWG_Cable_Melted.name=铜芯电缆(4/0AWG, 熔化)
+Copper_4/2_Cable_600V.name=Copper 4/2 Cable 600V
+Copper_4/2_Cable_Melted.name=Copper 4/2 Cable Melted
+Copper_4/3_Cable_600V.name=Copper 4/3 Cable 600V
+Copper_4/3_Cable_Melted.name=Copper 4/3 Cable Melted
 Copper_4C_18_AWG_Cable_300V.name=铜芯电缆(4芯, 18AWG, 300V)
 Copper_4C_18_AWG_Cable_Melted.name=铜芯电缆(4芯, 18AWG, 熔化)
 Copper_4C_20_AWG_Cable_300V.name=铜芯电缆(4芯, 20AWG, 300V)
@@ -1454,12 +1455,10 @@ Copper_5C_18_AWG_Cable_300V.name=铜芯电缆(5芯, 18AWG, 300V)
 Copper_5C_18_AWG_Cable_Melted.name=铜芯电缆(5芯, 18AWG, 熔化)
 Copper_5C_20_AWG_Cable_300V.name=铜芯电缆(5芯, 20AWG, 300V)
 Copper_5C_20_AWG_Cable_Melted.name=铜芯电缆(5芯, 20AWG, 熔化)
-Copper_5G1.5_Cable_600V.name=铜芯电缆(5G1.5, 600V)
-Copper_5G1.5_Cable_Melted.name=铜芯电缆(5G1.5, 熔化)
-Copper_5G2.5_Cable_600V.name=铜芯电缆(5G2.5, 600V)
-Copper_5G2.5_Cable_Melted.name=铜芯电缆(5G2.5, 熔化)
-Copper_5G4_Cable_600V.name=铜芯电缆(5G4, 600V)
-Copper_5G4_Cable_Melted.name=铜芯电缆(5G4, 熔化)
+Copper_6/2_Cable_600V.name=Copper 6/2 Cable 600V
+Copper_6/2_Cable_Melted.name=Copper 6/2 Cable Melted
+Copper_6/3_Cable_600V.name=Copper 6/3 Cable 600V
+Copper_6/3_Cable_Melted.name=Copper 6/3 Cable Melted
 Copper_6_AWG_Cable_600V.name=铜芯电缆(6AWG, 600V)
 Copper_6_AWG_Cable_Bare.name=铜芯裸线(6AWG)
 Copper_6_AWG_Cable_Melted.name=铜芯电缆(6AWG, 熔化)
@@ -1820,10 +1819,11 @@ Blue=蓝
 Brown=棕
 Brush\:_paint_conductor_color=使用刷子给导线涂色
 Conductor=导体
-Conductor\:_%1$_%2$_(%3$_mm2)=导体: %1$ %2$ (%3$ mm2)
+Conductor\:_%1$_%2$=Conductor: %1$ %2$
 Conductor_colors\:_%1$=导体颜色: %1$
 Conductors\:_%1$=导体数: %1$
 Cyan=青
+Equivalent_area\:_%1$_mm2=Equivalent area: %1$ mm2
 Gray=灰
 Green=绿
 Ground=接地
@@ -1832,6 +1832,7 @@ Light_Blue=淡蓝
 Lime=黄绿
 Magenta=品红
 Max_temperature\:_%1$C=最高温度: %1$C
+Nearest_EU-style_name\:_%1$=Nearest EU-style name: %1$
 Orange=橙
 Palette=调色板
 Pink=粉
@@ -1946,6 +1947,8 @@ Set_resistance_with_coal_dust=用碳粉增加电阻
 __*_Resistance_is_not_impacted_by_temperature=  * 电阻不受温度影响
 __*_Signal_input_doesn't_require_power=  * 信号输入不需要电源
 
+# src/main/kotlin/mods/eln/transparentnode/LegacyDcDc.kt
+
 # src/main/kotlin/mods/eln/transparentnode/NixieTube.kt
 Blank=黯淡
 Digit=数字
@@ -1955,8 +1958,9 @@ Nixie_tube_has_been_textured_realistically=辉光管具有拟真材质
 Signal_input_doesn't_require_power,_and_interfaces_are_tailored_to_gameplay=信号输入不需要能量，接口根据游戏情况量身定制
 
 # src/main/kotlin/mods/eln/transparentnode/ThermalHeatExchanger.kt
-Ejects_out_ic2\:coolant=排出IC2冷却液
-Generates_heat_when_supplied_with_ic2\:hotcoolant=当输入IC2热冷却液时产生热量
+Cold_->_Hot_\=_consumes_heat=Cold -> Hot = consumes heat
+Converts_fluids_between_hot_and_cold_states=Converts fluids between hot and cold states
+Hot_->_Cold_\=_generates_heat=Hot -> Cold = generates heat
 input_mB/t=输入 mB/t
 input_tank_level=热冷却液
 joules_per_tick=热交换速度(J/tick)
