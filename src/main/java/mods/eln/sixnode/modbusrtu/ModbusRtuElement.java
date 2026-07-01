@@ -136,7 +136,7 @@ public class ModbusRtuElement extends SixNodeElement implements IModbusSlave {
 
     @Override
     public String multiMeterString() {
-        return null; // Utils.plotUIP(powerLoad.Uc, powerLoad.getCurrent());
+        return "";
     }
 
     @NotNull
@@ -155,7 +155,7 @@ public class ModbusRtuElement extends SixNodeElement implements IModbusSlave {
     @NotNull
     @Override
     public String thermoMeterString() {
-        return null;
+        return "";
     }
 
     @Override

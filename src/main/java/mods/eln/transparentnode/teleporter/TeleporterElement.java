@@ -93,14 +93,14 @@ public class TeleporterElement extends TransparentNodeElement implements ITelepo
     @Override
     public String multiMeterString(@NotNull Direction side) {
 
-        return null;
+        return "";
     }
 
     @NotNull
     @Override
     public String thermoMeterString(@NotNull Direction side) {
 
-        return null;
+        return "";
     }
 
     @Override

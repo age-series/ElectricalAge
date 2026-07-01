@@ -137,7 +137,7 @@ public class ElectricalCableElement extends SixNodeElement {
         if (!descriptor.signalWire)
             return plotAmbientCelsius("T", thermalLoad.temperatureCelsius);
         else
-            return null;
+            return "";
     }
 
     @Override

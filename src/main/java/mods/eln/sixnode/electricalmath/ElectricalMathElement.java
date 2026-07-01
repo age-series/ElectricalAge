@@ -198,7 +198,7 @@ public class ElectricalMathElement extends SixNodeElement implements IConfigurab
     @NotNull
     @Override
     public String thermoMeterString() {
-        return null;
+        return "";
     }
 
     @Override

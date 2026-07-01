@@ -39,13 +39,13 @@ public class Rs485CableElement extends SixNodeElement {
 
     @Override
     public String multiMeterString() {
-        return null;
+        return "";
     }
 
     @NotNull
     @Override
     public String thermoMeterString() {
-        return null;
+        return "";
     }
 
     @Override

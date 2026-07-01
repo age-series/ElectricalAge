@@ -127,7 +127,7 @@ public class BatteryChargerElement extends SixNodeElement {
     @NotNull
     @Override
     public String thermoMeterString() {
-        return null;
+        return "";
     }
 
     @Override

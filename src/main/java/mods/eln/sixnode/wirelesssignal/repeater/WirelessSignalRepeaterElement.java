@@ -52,7 +52,7 @@ public class WirelessSignalRepeaterElement extends SixNodeElement {
 
     @Override
     public String multiMeterString() {
-        return null;
+        return "";
     }
 
     @NotNull
@@ -64,7 +64,7 @@ public class WirelessSignalRepeaterElement extends SixNodeElement {
     @NotNull
     @Override
     public String thermoMeterString() {
-        return null;
+        return "";
     }
 
     @Override
