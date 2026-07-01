@@ -1,7 +1,5 @@
 # Minecraft Mod - Codename : ELN
 
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/50b9dd17ce574d53b0432741b08b257d)](https://app.codacy.com/app/jrddunbr/ElectricalAge?utm_source=github.com&utm_medium=referral&utm_content=jrddunbr/ElectricalAge&utm_campaign=Badge_Grade_Settings)
-
 Electrical Age (ELN) brings large-scale electrical simulations and advanced automation tools to Minecraft 1.7.10. Development continues here as the maintained fork by Jared Dunbar (jrddunbr) and Graham Nothup (Grissess); upstream has gone dormant. Back up your worlds before testing new builds.
 
 Visit [electrical-age.net](https://electrical-age.net/) for general project info, join the [Discord server](https://discord.gg/YjK2JAD) for support/discussion, and browse the [GitHub wiki](https://github.com/age-series/ElectricalAge/wiki) for extra documentation.
