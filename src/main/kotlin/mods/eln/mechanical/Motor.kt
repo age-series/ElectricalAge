@@ -146,13 +146,18 @@ class MotorRender(entity: TransparentNodeEntity, desc_: TransparentNodeDescripto
         mask.set(LRDU.Down, true)
     }
 
-    fun setPower(power: Double) {
+    fun setPower(power: Double, driveCurrent: Double) {
         if(power < 0) {
-            for(i in 1..6) ledColors[i] = Color.black
-            ledColors[0] = RED.adjustLuminanceClamped((-power / desc.nominalP * 400).toFloat(), 0f, 60f)
+            val slice = desc.nominalP.toDouble().coerceAtLeast(1.0e-9) / 7.0
+            var reversePower = -power
+            for(i in 0..6) {
+                ledColors[i] = RED.adjustLuminanceClamped((reversePower / slice * 100).toFloat(), 0f, 60f)
+                reversePower -= slice
+            }
         } else {
-            val slice = desc.maxP / 5
-            var current = power
+            val currentLimit = desc.driveCurrentLimit.toDouble().coerceAtLeast(1.0e-9)
+            val slice = currentLimit / 7.0
+            var current = driveCurrent.coerceAtLeast(0.0)
             for(i in 0..6) {
                 ledColors[i] = ledColorBase[i].adjustLuminanceClamped((current / slice * 100).toFloat(), 0f, 65f)
                 current -= slice
@@ -184,8 +189,9 @@ class MotorRender(entity: TransparentNodeEntity, desc_: TransparentNodeDescripto
     override fun networkUnserialize(stream: DataInputStream) {
         super.networkUnserialize(stream)
         val power = stream.readDouble()
+        val driveCurrent = stream.readDouble()
 
-        setPower(power)
+        setPower(power, driveCurrent)
         volumeSetting.target = Math.min(1.0f, Math.abs(power / desc.maxP).toFloat()) / 4f
     }
 }
@@ -326,7 +332,8 @@ class MotorElement(node: TransparentNode, desc_: TransparentNodeDescriptor) :
         }
 
         private fun getSupplyThevenin(noTorqueU: Double): MotorSupplyThevenin {
-            val positive = wireLoad.subSystem.getTh(wireLoad, powerSource)
+            val positiveSystem = wireLoad.subSystem ?: return MotorSupplyThevenin(noTorqueU, MnaConst.highImpedance)
+            val positive = positiveSystem.getTh(wireLoad, powerSource)
             if (positive.voltage.isNaN()) {
                 positive.voltage = noTorqueU
                 positive.resistance = MnaConst.highImpedance
@@ -334,6 +341,10 @@ class MotorElement(node: TransparentNode, desc_: TransparentNodeDescriptor) :
 
             if (!desc.bipolarTerminals) {
                 return MotorSupplyThevenin(positive.voltage, positive.resistance)
+            }
+
+            if (negativeLoad.subSystem == null) {
+                return MotorSupplyThevenin(noTorqueU, MnaConst.highImpedance)
             }
 
             return MotorSupplyThevenin(
@@ -369,9 +380,12 @@ class MotorElement(node: TransparentNode, desc_: TransparentNodeDescriptor) :
     }
 
     var lastP = 0.0
+    var lastDriveCurrent = 0.0
     fun maybePublishP(P: Double) {
-        if(Math.abs(P - lastP) / desc.nominalP > 0.01) {
+        val currentChanged = Math.abs(driveCurrentRequest - lastDriveCurrent) / desc.driveCurrentLimit > 0.01
+        if(Math.abs(P - lastP) / desc.nominalP > 0.01 || currentChanged) {
             lastP = P
+            lastDriveCurrent = driveCurrentRequest
             needPublish()
         }
     }
@@ -414,6 +428,7 @@ class MotorElement(node: TransparentNode, desc_: TransparentNodeDescriptor) :
     override fun networkSerialize(stream: DataOutputStream) {
         super.networkSerialize(stream)
         stream.writeDouble(lastP)
+        stream.writeDouble(driveCurrentRequest)
     }
 
     override fun getWaila(): MutableMap<String, String> {
