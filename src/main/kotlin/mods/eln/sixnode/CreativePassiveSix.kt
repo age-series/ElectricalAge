@@ -150,7 +150,9 @@ class CreativePowerResistorElement(sixNode: SixNode, side: Direction, descriptor
         return if (lrdu == front.left()) bLoad else null
     }
 
-    override fun getThermalLoad(lrdu: LRDU, mask: Int): ThermalLoad? = thermalLoad
+    override fun getThermalLoad(lrdu: LRDU, mask: Int): ThermalLoad? {
+        return if (lrdu == front.right() || lrdu == front.left()) null else thermalLoad
+    }
 
     override fun getConnectionMask(lrdu: LRDU): Int {
         return if (lrdu == front.right() || lrdu == front.left()) NodeBase.maskElectricalPower else 0
@@ -162,6 +164,8 @@ class CreativePowerResistorElement(sixNode: SixNode, side: Direction, descriptor
     override fun getWaila(): Map<String, String> {
         val info = HashMap<String, String>()
         info[tr("Resistance")] = Utils.plotValue(resistor.resistance, "\u2126")
+        info[tr("Power loss")] = Utils.plotPower("", kotlin.math.abs(resistor.power))
+        info[tr("Temperature")] = plotAmbientCelsius("", thermalLoad.temperatureCelsius)
         return info
     }
 

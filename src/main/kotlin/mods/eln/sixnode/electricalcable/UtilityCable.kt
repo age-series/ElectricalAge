@@ -488,18 +488,25 @@ class UtilityCableElement(
         info[tr("Temperature")] = plotAmbientCelsius("", thermalLoad.temperatureCelsius)
         if (descriptor.actsAsSingleConductor || conductorsBound) {
             val power = abs(conductorLoads[0].voltage * conductorLoads[0].current)
+            val loss = cableLoss(conductorLoads[0])
             info[tr("Conductor")] =
                 "${plotVolt("", conductorLoads[0].voltage).trim()}, ${plotAmpere("", conductorLoads[0].current).trim()}, ${Utils.plotPower("", power).trim()}"
+            info[tr("Cable loss")] = Utils.plotPower("", loss)
         } else {
             info[tr("Palette")] = activePalette().displayName
             conductorLoads.forEachIndexed { idx, load ->
                 val power = abs(load.voltage * load.current)
+                val loss = cableLoss(load)
                 info[conductorLabel(idx)] =
-                    "${plotVolt("", load.voltage).trim()}, ${plotAmpere("", load.current).trim()}, ${Utils.plotPower("", power).trim()}"
+                    "${plotVolt("", load.voltage).trim()}, ${plotAmpere("", load.current).trim()}, ${Utils.plotPower("", power).trim()}, ${tr("loss")} ${Utils.plotPower("", loss).trim()}"
             }
         }
         info[tr("Subsystem Matrix Size")] = renderSubSystemWaila(conductorLoads[0].subSystem)
         return info
+    }
+
+    private fun cableLoss(load: ElectricalLoad): Double {
+        return load.current * load.current * load.serialResistance * 2.0
     }
 
     override fun networkSerialize(stream: DataOutputStream) {

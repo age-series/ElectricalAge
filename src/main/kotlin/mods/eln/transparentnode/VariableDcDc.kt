@@ -22,6 +22,7 @@ import mods.eln.sim.mna.component.VoltageSource
 import mods.eln.sim.mna.process.TransformerInterSystemProcess
 import mods.eln.sim.nbt.NbtElectricalGateInput
 import mods.eln.sim.nbt.NbtElectricalLoad
+import mods.eln.sim.nbt.NbtThermalLoad
 import mods.eln.sim.process.destruct.VoltageStateWatchDog
 import mods.eln.sim.process.destruct.WorldExplosion
 import mods.eln.sixnode.electricalcable.ElectricalCableDescriptor
@@ -42,11 +43,26 @@ import java.io.DataOutputStream
 import java.io.IOException
 import java.util.*
 
-class VariableDcDcDescriptor(name: String, objM: Obj3D, coreM: Obj3D, casingM: Obj3D): TransparentNodeDescriptor(name, VariableDcDcElement::class.java, VariableDcDcRender::class.java) {
+class VariableDcDcDescriptor(
+    name: String,
+    objM: Obj3D,
+    coreM: Obj3D,
+    casingM: Obj3D,
+    val guiTexture: String = "vdcdc.png"
+): TransparentNodeDescriptor(name, VariableDcDcElement::class.java, VariableDcDcRender::class.java) {
     companion object {
         val MIN_LOAD_HUM = 0.5
         val COIL_SCALE: Float = 4.0f
         val COIL_SCALE_LIMIT: Int = 16
+        const val COIL_BASE_HEIGHT: Float = 0.031f
+        const val COIL_OUTER_HALF_WIDTH: Float = 0.0868f
+        const val COIL_CORE_HALF_WIDTH: Float = 0.0625f
+        const val COIL_CENTER_Y: Float = 0.0155f
+        const val COIL_CENTER_Z: Float = -0.3125f
+        const val COIL_STACK_MIN_Y: Float = -0.1575f
+        const val COIL_STACK_MAX_Y: Float = 0.25f
+        const val COIL_STACK_CENTER_Y: Float = (COIL_STACK_MIN_Y + COIL_STACK_MAX_Y) * 0.5f
+        const val COIL_STACK_HEIGHT: Float = COIL_STACK_MAX_Y - COIL_STACK_MIN_Y
     }
 
     var main: Obj3D.Obj3DPart? = null
@@ -96,43 +112,24 @@ class VariableDcDcDescriptor(name: String, objM: Obj3D, coreM: Obj3D, casingM: O
         if (type == IItemRenderer.ItemRenderType.INVENTORY) {
             super.renderItem(type, item, *data)
         } else {
-            draw(core, 1, 4, false, 0f)
+            draw(core, 1, 4, 1.0f, 1.0f, false, 0f)
         }
     }
 
-    internal fun draw(core: Obj3D.Obj3DPart?, priCableNbr: Int, secCableNbr: Int, hasCasing: Boolean, doorOpen: Float) {
+    internal fun draw(
+        core: Obj3D.Obj3DPart?,
+        priCableNbr: Int,
+        secCableNbr: Int,
+        primaryThickness: Float,
+        secondaryThickness: Float,
+        hasCasing: Boolean,
+        doorOpen: Float
+    ) {
         main?.draw()
         core?.draw()
         if (core != null) {
-            if (priCableNbr != 0) {
-                var scale = COIL_SCALE
-                if (priCableNbr < COIL_SCALE_LIMIT) {
-                    scale *= priCableNbr.toFloat() / COIL_SCALE_LIMIT
-                }
-                GL11.glPushMatrix()
-                GL11.glScalef(1f, scale * 2f / (priCableNbr + 1), 1f)
-                GL11.glTranslatef(0f, -0.125f * (priCableNbr - 1) / COIL_SCALE, 0f)
-                for (idx in 0 until priCableNbr) {
-                    coil?.draw()
-                    GL11.glTranslatef(0f, 0.25f / COIL_SCALE, 0f)
-                }
-                GL11.glPopMatrix()
-            }
-            if (secCableNbr != 0) {
-                var scale = COIL_SCALE
-                if (secCableNbr < COIL_SCALE_LIMIT) {
-                    scale *= secCableNbr.toFloat() / COIL_SCALE_LIMIT
-                }
-                GL11.glPushMatrix()
-                GL11.glRotatef(180f, 0f, 1f, 0f)
-                GL11.glScalef(1f, scale * 2f / (secCableNbr + 1), 1f)
-                GL11.glTranslatef(0f, -0.125f * (secCableNbr - 1) / COIL_SCALE, 0f)
-                for (idx in 0 until secCableNbr) {
-                    coil?.draw()
-                    GL11.glTranslatef(0f, 0.25f / COIL_SCALE, 0f)
-                }
-                GL11.glPopMatrix()
-            }
+            drawCoils(priCableNbr, false, primaryThickness)
+            drawCoils(secCableNbr, true, secondaryThickness)
         }
 
         if (hasCasing) {
@@ -140,6 +137,28 @@ class VariableDcDcDescriptor(name: String, objM: Obj3D, coreM: Obj3D, casingM: O
             casingLeftDoor?.draw(-doorOpen * 90, 0f, 1f, 0f)
             casingRightDoor?.draw(doorOpen * 90, 0f, 1f, 0f)
         }
+    }
+
+    private fun drawCoils(count: Int, secondary: Boolean, thickness: Float) {
+        if (count == 0) return
+        val wireScale = thickness.coerceIn(0.05f, 1.85f)
+        val wireHeight = COIL_BASE_HEIGHT * wireScale
+        val gap = wireHeight * 0.5f
+        val pitch = wireHeight + gap
+        val displayedCount = kotlin.math.min(count, ((COIL_STACK_HEIGHT + gap) / pitch).toInt().coerceAtLeast(1))
+        val firstCenter = -pitch * (displayedCount - 1) / 2f
+        val radialScale = (COIL_CORE_HALF_WIDTH + wireHeight) / COIL_OUTER_HALF_WIDTH
+        GL11.glPushMatrix()
+        if (secondary) GL11.glRotatef(180f, 0f, 1f, 0f)
+        for (idx in 0 until displayedCount) {
+            GL11.glPushMatrix()
+            GL11.glTranslatef(0f, COIL_STACK_CENTER_Y + firstCenter + pitch * idx, COIL_CENTER_Z)
+            GL11.glScalef(radialScale, wireScale, radialScale)
+            GL11.glTranslatef(0f, -COIL_CENTER_Y, -COIL_CENTER_Z)
+            coil?.draw()
+            GL11.glPopMatrix()
+        }
+        GL11.glPopMatrix()
     }
 }
 
@@ -153,8 +172,33 @@ class VariableDcDcElement(transparentNode: TransparentNode, descriptor: Transpar
     val secondaryVoltageSource = VoltageSource("secondaryVoltageSource")
 
     val interSystemProcess = TransformerInterSystemProcess(primaryLoad, secondaryLoad, primaryVoltageSource, secondaryVoltageSource)
-
     override val inventory = TransparentNodeElementInventory(4, 64, this)
+    private val primaryThermalLoad = NbtThermalLoad("primaryThermalLoad")
+    private val secondaryThermalLoad = NbtThermalLoad("secondaryThermalLoad")
+    private val primaryThermalProcess = DcDcWindingThermalProcess(
+        owner = this,
+        inventory = inventory,
+        thermalLoad = primaryThermalLoad,
+        slot = VariableDcDcContainer.primaryCableSlotId,
+        current = { primaryVoltageSource.current },
+        label = "Primary",
+        onMelted = {
+            computeInventory()
+            reconnect()
+        }
+    )
+    private val secondaryThermalProcess = DcDcWindingThermalProcess(
+        owner = this,
+        inventory = inventory,
+        thermalLoad = secondaryThermalLoad,
+        slot = VariableDcDcContainer.secondaryCableSlotId,
+        current = { secondaryVoltageSource.current },
+        label = "Secondary",
+        onMelted = {
+            computeInventory()
+            reconnect()
+        }
+    )
 
     var primaryMeltCurrent = 0.0
     var secondaryMeltCurrent = 0.0
@@ -171,6 +215,12 @@ class VariableDcDcElement(transparentNode: TransparentNode, descriptor: Transpar
         electricalLoadList.add(control)
         electricalComponentList.add(primaryVoltageSource)
         electricalComponentList.add(secondaryVoltageSource)
+        thermalLoadList.add(primaryThermalLoad)
+        thermalLoadList.add(secondaryThermalLoad)
+        slowProcessList.add(primaryThermalProcess)
+        slowProcessList.add(secondaryThermalProcess)
+        primaryThermalLoad.setAsSlow()
+        secondaryThermalLoad.setAsSlow()
         val exp = WorldExplosion(this).machineExplosion()
         slowProcessList.add(primaryVoltageWatchdog.setDestroys(exp))
         slowProcessList.add(secondaryVoltageWatchdog.setDestroys(exp))
@@ -201,7 +251,12 @@ class VariableDcDcElement(transparentNode: TransparentNode, descriptor: Transpar
     }
 
     override fun getThermalLoad(side: Direction, lrdu: LRDU): ThermalLoad? {
-        return null
+        if (lrdu != LRDU.Down) return null
+        return when (side) {
+            front.left() -> primaryThermalLoad
+            front.right() -> secondaryThermalLoad
+            else -> null
+        }
     }
 
     override fun getConnectionMask(side: Direction, lrdu: LRDU): Int {
@@ -223,7 +278,15 @@ class VariableDcDcElement(transparentNode: TransparentNode, descriptor: Transpar
     }
 
     override fun thermoMeterString(side: Direction): String {
-        return ""
+        return when (side) {
+            front.left() -> plotAmbientCelsius("T", primaryThermalLoad.temperatureCelsius)
+            front.right() -> plotAmbientCelsius("T", secondaryThermalLoad.temperatureCelsius)
+            else -> tr(
+                "P: %1$ S: %2$",
+                plotAmbientCelsius("", primaryThermalLoad.temperatureCelsius).trim(),
+                plotAmbientCelsius("", secondaryThermalLoad.temperatureCelsius).trim()
+            )
+        }
     }
 
     override fun initialize() {
@@ -242,39 +305,37 @@ class VariableDcDcElement(transparentNode: TransparentNode, descriptor: Transpar
         val core = inventory.getStackInSlot(VariableDcDcContainer.ferromagneticSlotId)
         val primaryWinding = dcDcWinding(primaryCable)
         val secondaryWinding = dcDcWinding(secondaryCable)
+        val constructionStatus = dcDcConstructionStatus(core, primaryCable, secondaryCable)
 
         primaryVoltageWatchdog.setNominalVoltage(120_000.0)
         secondaryVoltageWatchdog.setNominalVoltage(120_000.0)
 
         primaryMeltCurrent = dcDcWindingMeltCurrent(primaryCable)
         secondaryMeltCurrent = dcDcWindingMeltCurrent(secondaryCable)
+        primaryThermalProcess.configure(primaryCable)
+        secondaryThermalProcess.configure(secondaryCable)
 
         val coreDescriptor = GenericItemUsingDamageDescriptor.getDescriptor(
             core, FerromagneticCoreDescriptor::class.java) as? FerromagneticCoreDescriptor
         val coreFactor = coreDescriptor?.cableMultiplicator ?: 1.0
-        val hasValidCore = coreDescriptor != null
+        val hasValidConstruction = constructionStatus.operational
 
-        if (primaryWinding == null || !hasValidCore) {
+        if (primaryWinding == null || !hasValidConstruction) {
             primaryLoad.highImpedance()
             populated = false
         } else {
             primaryLoad.serialResistance = coreFactor * 0.01
         }
 
-        if (secondaryWinding == null || !hasValidCore) {
+        if (secondaryWinding == null || !hasValidConstruction) {
             secondaryLoad.highImpedance()
             populated = false
         } else {
             secondaryLoad.serialResistance = coreFactor * 0.01
         }
 
-        populated = primaryWinding != null && secondaryWinding != null && hasValidCore
-
-        ratioControl = if (populated && primaryWinding != null && secondaryWinding != null) {
-            secondaryWinding.amount / primaryWinding.amount
-        } else {
-            1.0
-        }
+        populated = primaryWinding != null && secondaryWinding != null && hasValidConstruction
+        ratioControl = 1.0
     }
 
     fun meltWindingIfOverCurrent(): Boolean {
@@ -328,8 +389,10 @@ class VariableDcDcElement(transparentNode: TransparentNode, descriptor: Transpar
     override fun networkSerialize(stream: DataOutputStream) {
         super.networkSerialize(stream)
         try {
-            stream.writeByte(dcDcRenderedWindingCount(inventory.getStackInSlot(0)))
-            stream.writeByte(dcDcRenderedWindingCount(inventory.getStackInSlot(1)))
+            stream.writeShort(dcDcRenderedWindingCount(inventory.getStackInSlot(0)))
+            stream.writeShort(dcDcRenderedWindingCount(inventory.getStackInSlot(1)))
+            stream.writeFloat(dcDcRenderedWindingThickness(inventory.getStackInSlot(VariableDcDcContainer.primaryCableSlotId)))
+            stream.writeFloat(dcDcRenderedWindingThickness(inventory.getStackInSlot(VariableDcDcContainer.secondaryCableSlotId)))
             Utils.serialiseItemStack(stream, inventory.getStackInSlot(VariableDcDcContainer.ferromagneticSlotId))
             Utils.serialiseItemStack(stream, inventory.getStackInSlot(VariableDcDcContainer.primaryCableSlotId))
             Utils.serialiseItemStack(stream, inventory.getStackInSlot(VariableDcDcContainer.secondaryCableSlotId))
@@ -348,13 +411,48 @@ class VariableDcDcElement(transparentNode: TransparentNode, descriptor: Transpar
 
     override fun getWaila(): Map<String, String> {
         val info = HashMap<String, String>()
+        info[tr("Construction")] = dcDcConstructionWaila(
+            dcDcConstructionStatus(
+                inventory.getStackInSlot(VariableDcDcContainer.ferromagneticSlotId),
+                inventory.getStackInSlot(VariableDcDcContainer.primaryCableSlotId),
+                inventory.getStackInSlot(VariableDcDcContainer.secondaryCableSlotId)
+            )
+        )
         info[tr("Ratio")] = Utils.plotValue(interSystemProcess.ratio)
+        info[tr("Primary winding")] = windingStatus(
+            inventory.getStackInSlot(VariableDcDcContainer.primaryCableSlotId),
+            primaryVoltageSource.current,
+            primaryThermalLoad
+        )
+        info[tr("Secondary winding")] = windingStatus(
+            inventory.getStackInSlot(VariableDcDcContainer.secondaryCableSlotId),
+            secondaryVoltageSource.current,
+            secondaryThermalLoad
+        )
         // It's just not fair not to show the voltages on the VDC/DC. It's so variable...
         info[tr("Voltages")] = "\u00A7a" + Utils.plotVolt("", primaryLoad.voltage) + " " +
             "\u00A7e" + Utils.plotVolt("", secondaryLoad.voltage)
         info[tr("Control Voltage")] = Utils.plotVolt(control.voltage)
         info[tr("Subsystem Matrix Size")] = Utils.renderDoubleSubsystemWaila(primaryLoad.subSystem, secondaryLoad.subSystem)
         return info
+    }
+
+    private fun windingStatus(stack: ItemStack?, current: Double, thermalLoad: NbtThermalLoad): String {
+        val descriptor = if (stack == null) {
+            null
+        } else {
+            ElectricalCableDescriptor.getDescriptor(
+                stack,
+                ElectricalCableDescriptor::class.java
+            ) as? ElectricalCableDescriptor
+        }
+        val name = descriptor?.getName(stack) ?: tr("empty")
+        return tr(
+            "%1$, %2$, %3$",
+            name,
+            Utils.plotAmpere("", current).trim(),
+            plotAmbientCelsius("", thermalLoad.temperatureCelsius).trim()
+        )
     }
 
     override fun readConfigTool(compound: NBTTagCompound, invoker: EntityPlayer) {
@@ -380,21 +478,20 @@ class VariableDcDcElement(transparentNode: TransparentNode, descriptor: Transpar
 
 class VariableDcDcProcess(val element: VariableDcDcElement): IProcess {
     companion object {
-        const val MAX_RATIO = 16.0
-        const val MIN_RATIO = 1.0 / 16.0
+        const val MAX_RATIO = 256.0
+        const val MIN_RATIO = 1.0 / 256.0
     }
 
     override fun process(time: Double) {
-        if (element.meltWindingIfOverCurrent()) return
-        val ratio = when {
-            element.control.normalized > 0.9 -> 0.9
-            element.control.normalized < 0.0 -> 0.0
-            else -> element.control.normalized
+        if (!element.populated) {
+            element.interSystemProcess.ratio = 1.0
+            return
         }
-        if (ratio.isFinite()) {
-            element.interSystemProcess.ratio = Utils.limit(element.ratioControl, MIN_RATIO, MAX_RATIO) * (1 - ratio)
+        val normalized = Utils.limit(element.control.normalized, 0.0, 1.0)
+        if (normalized.isFinite()) {
+            element.interSystemProcess.ratio = MIN_RATIO + normalized * (MAX_RATIO - MIN_RATIO)
         } else {
-            element.interSystemProcess.ratio = Utils.limit(element.ratioControl, MIN_RATIO, MAX_RATIO)
+            element.interSystemProcess.ratio = 1.0
         }
     }
 }
@@ -405,8 +502,10 @@ class VariableDcDcRender(tileEntity: TransparentNodeEntity, val descriptor: Tran
 
     val load = SlewLimiter(0.5f)
 
-    var primaryStackSize: Byte = 0
-    var secondaryStackSize: Byte = 0
+    var primaryStackSize = 0
+    var secondaryStackSize = 0
+    var primaryThickness = 1.0f
+    var secondaryThickness = 1.0f
     var priRender: CableRenderDescriptor? = null
     var secRender: CableRenderDescriptor? = null
     var controlRender: CableRenderDescriptor? = null
@@ -440,7 +539,15 @@ class VariableDcDcRender(tileEntity: TransparentNodeEntity, val descriptor: Tran
     override fun draw() {
         GL11.glPushMatrix()
         front!!.glRotateXnRef()
-        (descriptor as VariableDcDcDescriptor).draw(feroPart, primaryStackSize.toInt(), secondaryStackSize.toInt(), hasCasing, doorOpen.get())
+        (descriptor as VariableDcDcDescriptor).draw(
+            feroPart,
+            primaryStackSize.toInt(),
+            secondaryStackSize.toInt(),
+            primaryThickness,
+            secondaryThickness,
+            hasCasing,
+            doorOpen.get()
+        )
         GL11.glPopMatrix()
         cableRenderType = drawCable(front!!.down(), priRender, priConn, cableRenderType)
         cableRenderType = drawCable(front!!.down(), secRender, secConn, cableRenderType)
@@ -450,8 +557,10 @@ class VariableDcDcRender(tileEntity: TransparentNodeEntity, val descriptor: Tran
     override fun networkUnserialize(stream: DataInputStream) {
         super.networkUnserialize(stream)
         try {
-            primaryStackSize = stream.readByte()
-            secondaryStackSize = stream.readByte()
+            primaryStackSize = stream.readShort().toInt()
+            secondaryStackSize = stream.readShort().toInt()
+            primaryThickness = stream.readFloat()
+            secondaryThickness = stream.readFloat()
             val feroStack = Utils.unserialiseItemStack(stream)
             if (feroStack != null) {
                 val feroDesc: GenericItemUsingDamageDescriptor? = GenericItemUsingDamageDescriptor.getDescriptor(feroStack, FerromagneticCoreDescriptor::class.java)
@@ -535,7 +644,8 @@ class VariableDcDcRender(tileEntity: TransparentNodeEntity, val descriptor: Tran
 
 class VariableDcDcGui(player: EntityPlayer, inventory: IInventory, val render: VariableDcDcRender): GuiContainerEln(VariableDcDcContainer(player, inventory)) {
     override fun newHelper(): GuiHelperContainer {
-        return GuiHelperContainer(this, 176, 194 - 33 + 20, 8, 84 + 194 - 166 - 33 + 20, "vdcdc.png")
+        val descriptor = render.descriptor as VariableDcDcDescriptor
+        return GuiHelperContainer(this, 176, 194 - 33 + 20, 8, 84 + 194 - 166 - 33 + 20, descriptor.guiTexture)
     }
 }
 

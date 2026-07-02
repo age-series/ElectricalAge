@@ -316,66 +316,78 @@ object TransparentNodeRegistration {
                     "feromagneticcorea"
                 ), Eln.obj.getObj("transformatorCase")
             )
+            desc.setDefaultIcon("variabledc-dcconverter")
             transparentNodeItem.addDescriptor(subId + (id shl 6), desc)
         }
         run {
             subId = 2
             name = TR_NAME(I18N.Type.NONE, "DC-DC Converter")
             val desc = DcDcDescriptor(
-                name, Eln.obj.getObj("transformator"), Eln.obj.getObj(
+                name, Eln.obj.getObj("dcdc"), Eln.obj.getObj(
                     "feromagneticcorea"
                 ), Eln.obj.getObj("transformatorCase"), 0.5f
             )
+            desc.setDefaultIcon("dc-dcconverter")
             transparentNodeItem.addDescriptor(subId + (id shl 6), desc)
         }
         run {
             subId = 3
             name = TR_NAME(I18N.Type.NONE, "One-way DC-DC Converter")
             val desc = OneWayDcDcDescriptor(
-                name, Eln.obj.getObj("transformator"), Eln.obj.getObj(
+                name, Eln.obj.getObj("onewaydcdc"), Eln.obj.getObj(
                     "feromagneticcorea"
-                ), Eln.obj.getObj("transformatorCase"), OneWayDcDcMode.FIXED
+                ), Eln.obj.getObj("transformatorCase"), OneWayDcDcMode.FIXED,
+                guiTexture = "onewaydcdc.png"
             )
+            desc.setDefaultIcon("onewaydc-dcconverter")
             transparentNodeItem.addDescriptor(subId + (id shl 6), desc)
         }
         run {
             subId = 4
             name = TR_NAME(I18N.Type.NONE, "One-way Boost vDC/DC Converter")
             val desc = OneWayDcDcDescriptor(
-                name, Eln.obj.getObj("variabledcdc"), Eln.obj.getObj(
+                name, Eln.obj.getObj("onewayboostvdcdc"), Eln.obj.getObj(
                     "feromagneticcorea"
-                ), Eln.obj.getObj("transformatorCase"), OneWayDcDcMode.BOOST
+                ), Eln.obj.getObj("transformatorCase"), OneWayDcDcMode.BOOST,
+                guiTexture = "onewayboostvdcdc.png"
             )
+            desc.setDefaultIcon("onewayboostvdcdcconverter")
             transparentNodeItem.addDescriptor(subId + (id shl 6), desc)
         }
         run {
             subId = 5
             name = TR_NAME(I18N.Type.NONE, "One-way Buck vDC/DC Converter")
             val desc = OneWayDcDcDescriptor(
-                name, Eln.obj.getObj("variabledcdc"), Eln.obj.getObj(
+                name, Eln.obj.getObj("onewaybuckvdcdc"), Eln.obj.getObj(
                     "feromagneticcorea"
-                ), Eln.obj.getObj("transformatorCase"), OneWayDcDcMode.BUCK
+                ), Eln.obj.getObj("transformatorCase"), OneWayDcDcMode.BUCK,
+                guiTexture = "onewaybuckvdcdc.png"
             )
+            desc.setDefaultIcon("onewaybuckvdcdcconverter")
             transparentNodeItem.addDescriptor(subId + (id shl 6), desc)
         }
         run {
             subId = 6
             name = TR_NAME(I18N.Type.NONE, "One-way Boost/Buck vDC/DC Converter")
             val desc = OneWayDcDcDescriptor(
-                name, Eln.obj.getObj("variabledcdc"), Eln.obj.getObj(
+                name, Eln.obj.getObj("onewayboostbuckvdcdc"), Eln.obj.getObj(
                     "feromagneticcorea"
-                ), Eln.obj.getObj("transformatorCase"), OneWayDcDcMode.BOOST_BUCK
+                ), Eln.obj.getObj("transformatorCase"), OneWayDcDcMode.BOOST_BUCK,
+                guiTexture = "onewayboostbuckvdcdc.png"
             )
+            desc.setDefaultIcon("onewayboostbuckvdcdcconverter")
             transparentNodeItem.addDescriptor(subId + (id shl 6), desc)
         }
         run {
             subId = 7
             name = TR_NAME(I18N.Type.NONE, "Isolation Transformer")
             val desc = OneWayDcDcDescriptor(
-                name, Eln.obj.getObj("transformator"), Eln.obj.getObj(
+                name, Eln.obj.getObj("isolationdcdc"), Eln.obj.getObj(
                     "feromagneticcorea"
-                ), Eln.obj.getObj("transformatorCase"), OneWayDcDcMode.ISOLATION
+                ), Eln.obj.getObj("transformatorCase"), OneWayDcDcMode.ISOLATION,
+                guiTexture = "isolationdcdc.png"
             )
+            desc.setDefaultIcon("isolationtransformer")
             transparentNodeItem.addDescriptor(subId + (id shl 6), desc)
         }
     }
