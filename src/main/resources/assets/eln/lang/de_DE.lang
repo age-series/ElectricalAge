@@ -1957,6 +1957,13 @@ Dots=Punkte
 Nixie_tube_has_been_textured_realistically=Nixie-Röhre wurde realistisch texturiert
 Signal_input_doesn't_require_power,_and_interfaces_are_tailored_to_gameplay=Signaleingang benötigt keine Leistung, Schnittstellen sind auf Spielbarkeit ausgelegt
 
+# src/main/kotlin/mods/eln/transparentnode/OneWayDcDc.kt
+Front_and_back_connections_are_isolated\nground_references_for_each_side.=Front and back connections are isolated\nground references for each side.
+Moves_power_from_the_input_side\nto_the_output_side_only.=Moves power from the input side\nto the output side only.
+The_output_voltage_ratio_is_controlled\nfrom_a_signal_input.=The output voltage ratio is controlled\nfrom a signal input.
+This_DC/DC_uses_an_ideal_power_sink_and_source_to_move_power_in_one_direction.=This DC/DC uses an ideal power sink and source to move power in one direction.
+Transferred_power=Transferred power
+
 # src/main/kotlin/mods/eln/transparentnode/ThermalHeatExchanger.kt
 Cold_->_Hot_\=_consumes_heat=Kalt -> Heiß = verbraucht Wärme
 Converts_fluids_between_hot_and_cold_states=Wandelt Fluide zwischen heißen und kalten Zuständen um

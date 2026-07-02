@@ -326,7 +326,8 @@ class MotorElement(node: TransparentNode, desc_: TransparentNodeDescriptor) :
         }
 
         private fun getSupplyThevenin(noTorqueU: Double): MotorSupplyThevenin {
-            val positive = wireLoad.subSystem.getTh(wireLoad, powerSource)
+            val positiveSystem = wireLoad.subSystem ?: return MotorSupplyThevenin(noTorqueU, MnaConst.highImpedance)
+            val positive = positiveSystem.getTh(wireLoad, powerSource)
             if (positive.voltage.isNaN()) {
                 positive.voltage = noTorqueU
                 positive.resistance = MnaConst.highImpedance
@@ -334,6 +335,10 @@ class MotorElement(node: TransparentNode, desc_: TransparentNodeDescriptor) :
 
             if (!desc.bipolarTerminals) {
                 return MotorSupplyThevenin(positive.voltage, positive.resistance)
+            }
+
+            if (negativeLoad.subSystem == null) {
+                return MotorSupplyThevenin(noTorqueU, MnaConst.highImpedance)
             }
 
             return MotorSupplyThevenin(

@@ -637,6 +637,27 @@ object CraftingRecipes {
             findItemStack("Variable DC-DC Converter"), "CBC", "III", 'C', findItemStack("Copper Cable"), 'I',
             ItemStack(Items.iron_ingot), 'B', Eln.config.getStringOrElse("runtime.dictionary.cheapChip", "circuitElnBasic")
         )
+        addRecipe(
+            findItemStack("One-way DC-DC Converter"), "D", "R", 'D', findItemStack("DC-DC Converter"), 'R',
+            ItemStack(Items.redstone)
+        )
+        addRecipe(
+            findItemStack("One-way Boost vDC/DC Converter"), "D", "R", 'D', findItemStack("Variable DC-DC Converter"), 'R',
+            ItemStack(Items.redstone)
+        )
+        addRecipe(
+            findItemStack("One-way Buck vDC/DC Converter"), "D", "r", 'D', findItemStack("Variable DC-DC Converter"), 'r',
+            Eln.config.getStringOrElse("runtime.dictionary.cheapChip", "circuitElnBasic")
+        )
+        addRecipe(
+            findItemStack("One-way Boost/Buck vDC/DC Converter"), " B ", "DVD", " B ", 'V',
+            findItemStack("Variable DC-DC Converter"), 'D', findItemStack("Signal Diode"), 'B',
+            Eln.config.getStringOrElse("runtime.dictionary.cheapChip", "circuitElnBasic")
+        )
+        addRecipe(
+            findItemStack("Isolation Transformer"), "GGG", "CDC", "GGG", 'C', findItemStack("Copper Cable"), 'D',
+            findItemStack("One-way DC-DC Converter"), 'G', findItemStack("Ground Cable")
+        )
     }
 
     private fun recipeHeatFurnace() {

@@ -5,6 +5,7 @@
 (Increases_capacity)=(Increases capacity)
 (Increases_inductance)=(Increases inductance)
 *_Missing_an_inductive_voltage_spike_on_field_collapse=* Missing an inductive voltage spike on field collapse
+4_Copper_Cables_Required=4 Copper Cables Required
 A_relay_is_an_electrical\ncontact_that_conducts\ncurrent_when_a_signal\nvoltage_is_applied.=A relay is an electrical\ncontact that conducts\ncurrent when a signal\nvoltage is applied.
 Accepted_lamp_types\:_%1$=Accepted lamp types: %1$
 Acts_like_a\npush_button.=Acts like a\npush button.
@@ -26,6 +27,7 @@ Closed=Closed
 Condition\:_%1$=Condition: %1$
 Connected=Connected
 Control=Control
+Control_Voltage=Control Voltage
 Converts_%1$_into_mechanical_energy.=Converts %1$ into mechanical energy.
 Cooling_power\:_%1$W=Cooling power: %1$W
 Copper_cable_slot=Copper cable slot
@@ -1646,6 +1648,7 @@ Grid_Switch.name=Grid Switch
 High_Power_Receiver_Antenna.name=High Power Receiver Antenna
 High_Power_Transmitter_Antenna.name=High Power Transmitter Antenna
 Holiday_Candle.name=Holiday Candle
+Isolation_Transformer.name=Isolation Transformer
 Joint.name=Joint
 Joint_hub.name=Joint hub
 Large_Flywheel.name=Large Flywheel
@@ -1662,6 +1665,10 @@ Medium_Power_Receiver_Antenna.name=Medium Power Receiver Antenna
 Medium_Power_Transmitter_Antenna.name=Medium Power Transmitter Antenna
 Nixie_Tube.name=Nixie Tube
 Old_480V_Arc_Furnace.name=480V Arc Furnace
+One-way_Boost/Buck_vDC/DC_Converter.name=One-way Boost/Buck vDC/DC Converter
+One-way_Boost_vDC/DC_Converter.name=One-way Boost vDC/DC Converter
+One-way_Buck_vDC/DC_Converter.name=One-way Buck vDC/DC Converter
+One-way_DC-DC_Converter.name=One-way DC-DC Converter
 Overhead_Lines.name=Overhead Lines
 Polarized_Shaft_Generator.name=Polarized Shaft Generator
 Polarized_Shaft_Motor.name=Polarized Shaft Motor
@@ -1957,6 +1964,13 @@ Dots=Dots
 Nixie_tube_has_been_textured_realistically=Nixie tube has been textured realistically
 Signal_input_doesn't_require_power,_and_interfaces_are_tailored_to_gameplay=Signal input doesn't require power, and interfaces are tailored to gameplay
 
+# src/main/kotlin/mods/eln/transparentnode/OneWayDcDc.kt
+Front_and_back_connections_are_isolated\nground_references_for_each_side.=Front and back connections are isolated\nground references for each side.
+Moves_power_from_the_input_side\nto_the_output_side_only.=Moves power from the input side\nto the output side only.
+The_output_voltage_ratio_is_controlled\nfrom_a_signal_input.=The output voltage ratio is controlled\nfrom a signal input.
+This_DC/DC_uses_an_ideal_power_sink_and_source_to_move_power_in_one_direction.=This DC/DC uses an ideal power sink and source to move power in one direction.
+Transferred_power=Transferred power
+
 # src/main/kotlin/mods/eln/transparentnode/ThermalHeatExchanger.kt
 Cold_->_Hot_\=_consumes_heat=Cold -> Hot = consumes heat
 Converts_fluids_between_hot_and_cold_states=Converts fluids between hot and cold states
@@ -1969,8 +1983,6 @@ output_tank_level=output tank level
 thermal_power=thermal power
 
 # src/main/kotlin/mods/eln/transparentnode/VariableDcDc.kt
-4_Copper_Cables_Required=4 Copper Cables Required
-Control_Voltage=Control Voltage
 The_output_voltage_is_controlled\nfrom_a_signal_input=The output voltage is controlled\nfrom a signal input
 This_variable_DC/DC_has_unrealistic_capacitance_effects_and_can_sink/source_power_that_violates_Newton's_laws=This variable DC/DC has unrealistic capacitance effects and can sink/source power that violates Newton's laws
 
