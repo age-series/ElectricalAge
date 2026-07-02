@@ -1,613 +1,613 @@
 #<ELN_LANGFILE_V1_1>
 
 # Appearing in multiple source files
-%1$_is_not_in_range!=%1$ nao esta no alcance!
-(Increases_capacity)=(Aumenta a capacidade)
-(Increases_inductance)=(Aumenta a indutancia)
-*_Missing_an_inductive_voltage_spike_on_field_collapse=* Missing an inductive voltage spike on field collapse
-A_relay_is_an_electrical\ncontact_that_conducts\ncurrent_when_a_signal\nvoltage_is_applied.=A relay is an electrical\ncontact that conducts\ncurrent when a signal\nvoltage is applied.
-Accepted_lamp_types\:_%1$=Accepted lamp types: %1$
-Acts_like_a\npush_button.=Acts like a\npush button.
-Acts_like_a\ntoggle_switch.=Acts like a\ntoggle switch.
+%1$_is_not_in_range!=%1$ não está na faixa!
+(Increases_capacity)=(Aumenta a capacitância)
+(Increases_inductance)=(Aumenta a indutância)
+*_Missing_an_inductive_voltage_spike_on_field_collapse=* Ausência de pico de tensão indutiva no colapso do campo
+A_relay_is_an_electrical\ncontact_that_conducts\ncurrent_when_a_signal\nvoltage_is_applied.=Um relé é um contato\nelétrico que conduz\ncorrente quando uma tensão\nde sinal é aplicada.
+Accepted_lamp_types\:_%1$=Tipos de lâmpada aceitos: %1$
+Acts_like_a\npush_button.=Age como um\nbotão de pressão.
+Acts_like_a\ntoggle_switch.=Age como um\ninterruptor basculante.
 Bad=Ruim
-Battery_level=Nivel da bateria
+Battery_level=Nível da bateria
 Biggest=Maior
-Booster_slot=Espaco Aumentar Potencia da Maquina
-Cable_slot=Espaco do cabo
+Booster_slot=Espaço de reforço
+Cable_slot=Espaço de cabo
 Can_create\:=Pode criar:
-Capacity=Capacidade
-Capacity\:_%1$F=Capacidade: %1$F
-Casing_slot=Espaco do Quadro
+Capacity=Capacitância
+Capacity\:_%1$F=Capacitância: %1$F
+Casing_slot=Espaço de carcaça
 Channel=Canal
-Charge=Carregar
-Charge_power=Potencia da carga
-Charge_power\:_%1$W=Potencia da carga: %1$W
+Charge=Carga
+Charge_power=Potência de carga
+Charge_power\:_%1$W=Potência de carga: %1$W
 Closed=Fechado
-Condition\:_%1$=Condition: %1$
+Condition\:_%1$=Condição: %1$
 Connected=Conectado
-Control=Control
-Converts_%1$_into_mechanical_energy.=Converts %1$ into mechanical energy.
-Cooling_power\:_%1$W=Potencia de resfriamento: %1$W
-Copper_cable_slot=Espaco do cabo de cobre
-Creative_block.=Bloco Criativo.
+Control=Controle
+Converts_%1$_into_mechanical_energy.=Converte %1$ em energia mecânica.
+Cooling_power\:_%1$W=Potência de resfriamento: %1$W
+Copper_cable_slot=Espaço de cabo de cobre
+Creative_block.=Bloco criativo.
 Current=Corrente
 Current\:_%1$A=Corrente: %1$A
-Damage_current\:_%1$A_after_%2$s=Damage current: %1$A after %2$s
-Default_position=Contado
-Dielectric_slot=Espaco do dieletrico
-Disabled=Disabled
-Discharge_power\:_%1$W=Potencia da descarga: %1$W
-Efficiency=Eficiencia
-Electrical_cable_slot=Espaco do cabo de sinal
-End_of_life=Queimada
+Damage_current\:_%1$A_after_%2$s=Corrente de dano: %1$A após %2$s
+Default_position=Posição padrão
+Dielectric_slot=Espaço de dielétrico
+Disabled=Desabilitado
+Discharge_power\:_%1$W=Potência de descarga: %1$W
+Efficiency=Eficiência
+Electrical_cable_slot=Espaço de cabo elétrico
+End_of_life=Fim da vida útil
 Energy=Energia
-Entity_filter_slot=Filtro
-External_control=Controle interno
-Falstad_import\:_clipboard_is_not_valid_Falstad_data.=Falstad import: clipboard is not valid Falstad data.
-Ferromagnetic_core_slot=Nucleo ferromagnetico
-Fuel_usage=Fuel usage
-Generated_power=Potencia gerada
-Generates_heat_when_supplied_with_fuel.=Gera calor atravez do combustivel.
+Entity_filter_slot=Espaço de filtro de entidades
+External_control=Controle externo
+Falstad_import\:_clipboard_is_not_valid_Falstad_data.=Importação Falstad: área de transferência sem dados Falstad válidos.
+Ferromagnetic_core_slot=Espaço de núcleo ferromagnético
+Fuel_usage=Uso de combustível
+Generated_power=Potência gerada
+Generates_heat_when_supplied_with_fuel.=Gera calor quando abastecido com combustível.
 Generating=Gerando
-Good=Boa
-Has_a_signal_output.=Tem sinal de saida.
-Has_some_caveats\:=Has some caveats:
-Inductance=Indutancia
-Inductance\:_%1$H=Indutancia: %1$H
+Good=Bom
+Has_a_signal_output.=Possui uma saída de sinal.
+Has_some_caveats\:=Possui algumas ressalvas:
+Inductance=Indutância
+Inductance\:_%1$H=Indutância: %1$H
 Input=Entrada
-Input_voltage=Entrada de tensao
-Inputs=Inputs
-Internal_control=Controle externo
-Internal_resistance\:_%1$Ω=Resistencia interna: %1$Ω
-Is_off=Ligar
-Is_on=Desligar
-It_doesn't_really_behave_well_for_DC=It doesn't really behave well for DC
-It_is_made_this_way_to_improve_the_performance_of_the_simulator_in_large_power_networks=It is made this way to improve the performance of the simulator in large power networks
-It_should_require_power_to_transmit_realistically=It should require power to transmit realistically
-Lamp_Brightness=Lamp Brightness
-Length_(m)=Length (m)
-MQTT_server=MQTT server
+Input_voltage=Tensão de entrada
+Inputs=Entradas
+Internal_control=Controle interno
+Internal_resistance\:_%1$Ω=Resistência interna: %1$Ω
+Is_off=Está desligado
+Is_on=Está ligado
+It_doesn't_really_behave_well_for_DC=Não se comporta bem para CC
+It_is_made_this_way_to_improve_the_performance_of_the_simulator_in_large_power_networks=Feito assim para melhorar o desempenho do simulador em grandes redes de potência
+It_should_require_power_to_transmit_realistically=Deveria exigir potência para transmitir de forma realista
+Lamp_Brightness=Brilho da Lâmpada
+Length_(m)=Comprimento (m)
+MQTT_server=Servidor MQTT
 Material\:_%1$=Material: %1$
-Max._temperature\:_%1$°C=Temperatura Max: %1$°C
-Max_rads\:__=Max rads:  
-Measured_temperature\ncorresponding\nto_0%_output=Temperatura correspondete a 0%
-Measured_temperature\ncorresponding\nto_100%_output=Temperatura correspondente a 100%
-Measured_value\ncorresponding\nto_0%_output=Valor correspondente a 0%
-Measured_value\ncorresponding\nto_100%_output=Valor correspondente a 100%
+Max._temperature\:_%1$°C=Temp. máx.: %1$°C
+Max_rads\:__=Rads máx.:
+Measured_temperature\ncorresponding\nto_0%_output=Temperatura medida\ncorrespondente\na 0% de saída
+Measured_temperature\ncorresponding\nto_100%_output=Temperatura medida\ncorrespondente\na 100% de saída
+Measured_value\ncorresponding\nto_0%_output=Valor medido\ncorrespondente\na 0% de saída
+Measured_value\ncorresponding\nto_100%_output=Valor medido\ncorrespondente\na 100% de saída
 Mode=Modo
-New=Nova
-No=Nao
-No_valid_fluids_for_this_turbine!=No valid fluids for this turbine!
+New=Novo
+No=Não
+No_valid_fluids_for_this_turbine!=Nenhum fluido válido para esta turbina!
 Nominal\:=Nominal:
-Nominal_Ratings\:=Nominal Ratings:
-Nominal_mains_class\:_%1$V=Nominal mains class: %1$V
-Nominal_power\:_%1$W=Potencia nominal: %1$W
+Nominal_Ratings\:=Classificações Nominais:
+Nominal_mains_class\:_%1$V=Classe nominal de rede: %1$V
+Nominal_power\:_%1$W=Potência nominal: %1$W
 Nominal_usage\:=Uso nominal:
-Nominal_usage_->=Nominal usage ->
-Nominal_voltage\:_%1$V=tensao nominal: %1$V
-None=Nada
-Normally_closed=Normal aberto
-Normally_open=Normal fechado
-Not_connected=Nao conectado
-Not_enough_space_for_this_block=Nao ha espaco suficiente para este bloco
-OFF=Desligar
-ON=Ligar
-Off=Desligar
-On=Ligar
+Nominal_usage_->=Uso nominal ->
+Nominal_voltage\:_%1$V=Tensão nominal: %1$V
+None=Nenhum
+Normally_closed=Normalmente fechado
+Normally_open=Normalmente aberto
+Not_connected=Não conectado
+Not_enough_space_for_this_block=Espaço insuficiente para este bloco
+OFF=DESL
+ON=LIG
+Off=Desligado
+On=Ligado
 Open=Aberto
-Output=Saida
-Output_voltage=Tensao de saida
-Portable_battery_slot=Espaco da bateria portatil
-Position=Posicao
-Power=Potencia
-Power\:_%1$W=Potencia: %1$W
-Power_Consumption=Power Consumption
-Power_consumption=Consumo de potencia
-Power_out\:_%1$-_%2$=Power out: %1$- %2$
-Power_sourced=Power sourced
-Powered_by_cable=Energia do QDL
-Produced_power=Potencia produzida
-Range\:_%1$_blocks=Alcance: %1$ bloco(s)
-Ratio=Razao
-Read=Read
-Redstone_slot=Espaco da redstone
-Redstone_value=Valor da redstone
-Regulator_slot=Espaco do regulador
-Relative_humidity=Relative humidity
-Reset=Reiniciar
-Resistance=Resistencia
-Resistance\:_%1$Ω=Resistencia: %1$Ω
-Serial_resistance\:_%1$Ω=Resistencia: %1$Ω
+Output=Saída
+Output_voltage=Tensão de saída
+Portable_battery_slot=Espaço de bateria portátil
+Position=Posição
+Power=Potência
+Power\:_%1$W=Potência: %1$W
+Power_Consumption=Consumo de Energia
+Power_consumption=Consumo de energia
+Power_out\:_%1$-_%2$=Saída de potência: %1$- %2$
+Power_sourced=Potência fornecida
+Powered_by_cable=Alimentado por cabo
+Produced_power=Potência produzida
+Range\:_%1$_blocks=Alcance: %1$ blocos
+Ratio=Razão
+Read=Ler
+Redstone_slot=Espaço de Redstone
+Redstone_value=Valor de Redstone
+Regulator_slot=Espaço de regulador
+Relative_humidity=Umidade relativa
+Reset=Resetar
+Resistance=Resistência
+Resistance\:_%1$Ω=Resistência: %1$Ω
+Serial_resistance\:_%1$Ω=Resistência em série: %1$Ω
 Signal=Sinal
 Smallest=Menor
-Specify_the_channel=Canal
-Speed=Speed
+Specify_the_channel=Especifique o canal
+Speed=Velocidade
 State=Estado
 Stored_energy\:_%1$J_(%2$%)=Energia armazenada: %1$J (%2$%)
-Subsystem_Matrix_Size=Subsystem Matrix Size
+Subsystem_Matrix_Size=Tamanho da Matriz do Subsistema
 Temperature=Temperatura
 Temperature\:_%1$°C=Temperatura: %1$°C
 Temperature_gauge=Medidor de temperatura
-The_relay's_input_behaves\nlike_a_Schmitt_Trigger.=The relay's input behaves\nlike a Schmitt Trigger.
-Thermal_isolator_slot=Espaco do isolador termico
-Thermal_power=Potencia termica
+The_relay's_input_behaves\nlike_a_Schmitt_Trigger.=A entrada do relé se comporta\ncomo um Schmitt Trigger.
+Thermal_isolator_slot=Espaço de isolador térmico
+Thermal_power=Potência térmica
 Toggle=Alternar
-Toggle_switch=Interruptor
-Toggles_the_output_each_time\nan_emitter's_value_rises.\nUseful_to_allow_multiple_buttons\nto_control_the_same_light.=Alterna o sinal digital de saida a cada pulso.
-Transforms_an_input_voltage_to\nan_output_voltage.=Transforma a tensao de entrada em outra de saida.
-Used=Usada
-Used_to_cool_down_turbines.=Usado para resfriar a turbina termica.
-Uses_the_biggest\nvalue_on_the_channel.=Emite o sinal analogico de maior valor.
-Uses_the_smallest\nvalue_on_the_channel.=Emite o sinal analogico de menor valor.
+Toggle_switch=Interruptor basculante
+Toggles_the_output_each_time\nan_emitter's_value_rises.\nUseful_to_allow_multiple_buttons\nto_control_the_same_light.=Alterna a saída cada vez que\no valor de um emissor sobe.\nÚtil para permitir que vários botões\ncontrolem a mesma luz.
+Transforms_an_input_voltage_to\nan_output_voltage.=Transforma uma tensão de entrada em\numa tensão de saída.
+Used=Usado
+Used_to_cool_down_turbines.=Usado para resfriar turbinas.
+Uses_the_biggest\nvalue_on_the_channel.=Usa o maior\nvalor no canal.
+Uses_the_smallest\nvalue_on_the_channel.=Usa o menor\nvalor no canal.
 Validate=Validar
-Voltage=Tensao
-Voltage\:_%1$V=Tensao: %1$V
-Voltage_drop=Queda de tensao
-Voltages=Tensoes
-Write=Write
+Voltage=Tensão
+Voltage\:_%1$V=Tensão: %1$V
+Voltage_drop=Queda de tensão
+Voltages=Tensões
+Write=Escrever
 Yes=Sim
-You_can't_place_this_block_at_this_side=Nao pode colocar o bloco neste lado
-_Hours= Hours
+You_can't_place_this_block_at_this_side=Você não pode colocar este bloco neste lado
+_Hours= Horas
 _O\:_= O:
-__*_Wire_resistance_is_much_higher_than_normal=  * Wire resistance is much higher than normal
-__*_Wire_resistance_is_not_impacted_by_temperature=  * Wire resistance is not impacted by temperature
-__Max._temperature\:_=  Temperatura Max:
-__Optimal_rads\:_=  Optimal rads: 
-__Power_out\:_=  Power out: 
+__*_Wire_resistance_is_much_higher_than_normal=  * A resistência do fio é muito maior que o normal
+__*_Wire_resistance_is_not_impacted_by_temperature=  * A resistência do fio não é afetada pela temperatura
+__Max._temperature\:_=  Temp. máx.:
+__Optimal_rads\:_=Rads ideais:
+__Power_out\:_=Saída de potência:
 
 # src/main/java/mods/eln/Eln.java
 itemGroup.Eln=Electrical Age
-itemGroup.ElnCables=Electrical Age - Cables
-itemGroup.ElnCreative=itemGroup.ElnCreative
-itemGroup.ElnLighting=itemGroup.ElnLighting
-itemGroup.ElnMachines=itemGroup.ElnMachines
-itemGroup.ElnOresMaterials=itemGroup.ElnOresMaterials
-itemGroup.ElnOther=itemGroup.ElnOther
-itemGroup.ElnPowerDistribution=Electrical Age - Power Distribution
-itemGroup.ElnPowerElectronics=itemGroup.ElnPowerElectronics
-itemGroup.ElnSignalProcessing=itemGroup.ElnSignalProcessing
-itemGroup.ElnToolsArmor=itemGroup.ElnToolsArmor
-mod.meta.desc=Eletricidade e fundamental!
+itemGroup.ElnCables=Electrical Age - Cabos
+itemGroup.ElnCreative=Electrical Age - Criativo
+itemGroup.ElnLighting=Electrical Age - Iluminação
+itemGroup.ElnMachines=Electrical Age - Máquinas
+itemGroup.ElnOresMaterials=Electrical Age - Minérios e Materiais
+itemGroup.ElnOther=Electrical Age - Outros
+itemGroup.ElnPowerDistribution=Electrical Age - Distribuição de Energia
+itemGroup.ElnPowerElectronics=Electrical Age - Eletrônica de Potência
+itemGroup.ElnSignalProcessing=Electrical Age - Processamento de Sinais
+itemGroup.ElnToolsArmor=Electrical Age - Ferramentas e Armadura
+mod.meta.desc=Eletricidade na sua base!
 
 # src/main/java/mods/eln/gui/GuiVerticalVoltageSupplyBar.java
-Power_Supply_\:=Power Supply :
-Voltage_Supply_\:=Voltage Supply :
+Power_Supply_\:=Fonte de Alimentação:
+Voltage_Supply_\:=Fonte de Tensão:
 
 # src/main/java/mods/eln/item/CombustionChamber.java
-Upgrade_for_the_Stone_Heat_Furnace.=Aumenta a potencia de aquecimento.
+Upgrade_for_the_Stone_Heat_Furnace.=Melhoria para a Fornalha Térmica de Pedra.
 
 # src/main/java/mods/eln/item/ElectricalDrillDescriptor.java
-Energy_per_operation\:_%1$J=Energia por operacao: %1$J
-Time_per_operation\:_%1$h=Tempo por operacao: %1$h
+Energy_per_operation\:_%1$J=Energia por operação: %1$J
+Time_per_operation\:_%1$h=Tempo por operação: %1$h
 
 # src/main/java/mods/eln/item/FerromagneticCoreDescriptor.java
-Cable_loss_factor\:_%1$=Fator de perda por cabo: %1$
+Cable_loss_factor\:_%1$=Fator de perda do cabo: %1$
 
 # src/main/java/mods/eln/item/HeatingCorpElement.java
 
 # src/main/java/mods/eln/item/OverHeatingProtectionDescriptor.java
-Useful_to_prevent_overheating\nof_Batteries=Evita superaquecimento da bateria.
+Useful_to_prevent_overheating\nof_Batteries=Útil para prevenir superaquecimento\nde Baterias
 
 # src/main/java/mods/eln/item/OverVoltageProtectionDescriptor.java
-Useful_to_prevent_over-voltage\nof_Batteries=Evita sobretensao da bateria.
+Useful_to_prevent_over-voltage\nof_Batteries=Útil para prevenir sobretensão\nde Baterias
 
 # src/main/java/mods/eln/item/SolarTrackerDescriptor.java
-Solar_panel_upgrade=Regula a posicao do painel solar com sol.
+Solar_panel_upgrade=Melhoria de painel solar
 
 # src/main/java/mods/eln/sixnode/TreeResinCollector/TreeResinCollectorDescriptor.java
-Produces_Tree_Resin_over\ntime_when_put_on_a_tree.=Coleta resina de arvore\nquando colocado na lateral do tronco.
-This_block_can_only_be_placed_on_the_side_of_a_tree!=Somente colocado na lateral de um tronco!
+Produces_Tree_Resin_over\ntime_when_put_on_a_tree.=Produz Resina de Árvore ao longo\ndo tempo quando colocado em uma árvore.
+This_block_can_only_be_placed_on_the_side_of_a_tree!=Este bloco só pode ser colocado na lateral de uma árvore!
 
 # src/main/java/mods/eln/sixnode/batterycharger/BatteryChargerContainer.java
-Battery_slot=Conector da bateria
+Battery_slot=Espaço de bateria
 
 # src/main/java/mods/eln/sixnode/batterycharger/BatteryChargerDescriptor.java
-Approx._output_current\:_%1$A=Approx. output current: %1$A
-Can_be_used_to_recharge\nelectrical_items_like\:\nFlash_Light,_X-Ray_scanner\nand_Portable_Battery_...=Usado para carregar itens portatil com bateria interna.
-This_battery_charger_is_an_idealized_mains-fed_charger.=This battery charger is an idealized mains-fed charger.
-__*_It_does_not_model_battery_chemistry_or_charging_curves=  * It does not model battery chemistry or charging curves
-__*_It_exposes_a_nominal_mains_class_instead_of_wall-plug_details=  * It exposes a nominal mains class instead of wall-plug details
+Approx._output_current\:_%1$A=Corrente de saída aprox.: %1$A
+Can_be_used_to_recharge\nelectrical_items_like\:\nFlash_Light,_X-Ray_scanner\nand_Portable_Battery_...=Pode ser usado para recarregar\nitens elétricos como:\nLanterna, Scanner de Raio-X\ne Bateria Portátil ...
+This_battery_charger_is_an_idealized_mains-fed_charger.=Este carregador de bateria é um carregador idealizado alimentado pela rede.
+__*_It_does_not_model_battery_chemistry_or_charging_curves=  * Não modela a química da bateria nem curvas de carga
+__*_It_exposes_a_nominal_mains_class_instead_of_wall-plug_details=  * Expõe uma classe nominal de rede em vez de detalhes da tomada
 
 # src/main/java/mods/eln/sixnode/batterycharger/BatteryChargerElement.java
-Charge_Current=Carga atual
+Charge_Current=Corrente de Carga
 
 # src/main/java/mods/eln/sixnode/diode/DiodeDescriptor.java
-Electrical_current_can_only\nflow_through_the_diode\nfrom_anode_to_cathode=Serve para bloquear a corrente em um dos sentidos\nA corrente flui do anodo para o catodo[lado com a listra branca],\nmas nao para o catodo para o anodo.
-Works,_with_the_caveat_that_it's_delayed_a_sim_tick=Works, with the caveat that it's delayed a sim tick
+Electrical_current_can_only\nflow_through_the_diode\nfrom_anode_to_cathode=A corrente elétrica só pode\nfluir pelo diodo\ndo ânodo para o cátodo
+Works,_with_the_caveat_that_it's_delayed_a_sim_tick=Funciona, com a ressalva de que é atrasado em um tick de simulação
 
 # src/main/java/mods/eln/sixnode/diode/DiodeElement.java
-Forward_Voltage=Forward Voltage
+Forward_Voltage=Tensão Direta
 
 # src/main/java/mods/eln/sixnode/electricalalarm/ElectricalAlarmDescriptor.java
-Emits_an_acoustic_alarm_if\nthe_input_signal_is_high=Emite sinal luminoso e sonoro.
-Intended_field_supply\:_%1$V=Intended field supply: %1$V
+Emits_an_acoustic_alarm_if\nthe_input_signal_is_high=Emite um alarme sonoro se\no sinal de entrada estiver alto
+Intended_field_supply\:_%1$V=Alimentação de campo prevista: %1$V
 
 # src/main/java/mods/eln/sixnode/electricalalarm/ElectricalAlarmElement.java
 Engaged=Acionado
-Input_Voltage=Tensao de entrada
+Input_Voltage=Tensão de Entrada
 
 # src/main/java/mods/eln/sixnode/electricalalarm/ElectricalAlarmGui.java
-Sound_is_muted=Desmutar
-Sound_is_not_muted=Mutar
+Sound_is_muted=Som está mudo
+Sound_is_not_muted=Som não está mudo
 
 # src/main/java/mods/eln/sixnode/electricalbreaker/ElectricalBreakerDescriptor.java
-Breaker_rating\:_%1$A=Breaker rating: %1$A
-Protects_electrical_components\nOpens_contact_if\:\n__-_Voltage_exceeds_a_certain_level\n__-_Current_exceeds_the_cable_limit=Protects electrical components\nOpens contact if:\n  - Voltage exceeds a certain level\n  - Current exceeds the cable limit
+Breaker_rating\:_%1$A=Classificação do disjuntor: %1$A
+Protects_electrical_components\nOpens_contact_if\:\n__-_Voltage_exceeds_a_certain_level\n__-_Current_exceeds_the_cable_limit=Protege componentes elétricos\nAbre o contato se:\n  - A tensão exceder um certo nível\n  - A corrente exceder o limite do cabo
 
 # src/main/java/mods/eln/sixnode/electricalbreaker/ElectricalBreakerElement.java
 Contact=Contato
 
 # src/main/java/mods/eln/sixnode/electricalbreaker/ElectricalBreakerGui.java
-Maximum_voltage_before_cutting_off=Tensao maxima
-Minimum_voltage_before_cutting_off=Tensao minima
-Switch_is_off=Ligar
-Switch_is_on=Desligar
+Maximum_voltage_before_cutting_off=Tensão máxima antes de desligar
+Minimum_voltage_before_cutting_off=Tensão mínima antes de desligar
+Switch_is_off=Interruptor está desligado
+Switch_is_on=Interruptor está ligado
 
 # src/main/java/mods/eln/sixnode/electricalcable/ElectricalCableDescriptor.java
-A_signal_is_electrical_information\nwhich_must_be_between_0V_and_%1$=Sinal analogico ou digital deve estar entre 0V a 50V.
-Cable_is_adapted_to_conduct\nelectrical_signals.=Serve para conduzir sinais eletricos.
-Not_adapted_to_transport_power.=Nao deve ser usado para transportar potencia.
-__*_Wire_voltage/current_limits_are_arbitrary_values,_added_as_a_gameplay_mechanic=  * Wire voltage/current limits are arbitrary values, added as a gameplay mechanic
+A_signal_is_electrical_information\nwhich_must_be_between_0V_and_%1$=Um sinal é informação elétrica\nque deve estar entre 0V e %1$
+Cable_is_adapted_to_conduct\nelectrical_signals.=Cabo adaptado para conduzir\nsinais elétricos.
+Not_adapted_to_transport_power.=Não adaptado para transportar potência.
+__*_Wire_voltage/current_limits_are_arbitrary_values,_added_as_a_gameplay_mechanic=  * Os limites de tensão/corrente dos fios são valores arbitrários, adicionados como mecânica de jogo
 
 # src/main/java/mods/eln/sixnode/electricalcable/ElectricalCableElement.java
-Signal_Voltage=Tensao do sinal
+Signal_Voltage=Tensão do Sinal
 
 # src/main/java/mods/eln/sixnode/electricaldatalogger/ElectricalDataLoggerDescriptor.java
-It_can_store_up_to_256_points.=Pode armazenar ate 256 pontos.
-Measures_the_voltage_of_an\nelectrical_signal_and_plots\nthe_data_in_real_time.=Mede o sinal analogico e converte em imagem no grafico em tempo real.
+It_can_store_up_to_256_points.=Pode armazenar até 256 pontos.
+Measures_the_voltage_of_an\nelectrical_signal_and_plots\nthe_data_in_real_time.=Mede a tensão de um\nsinal elétrico e traça\nos dados em tempo real.
 
 # src/main/java/mods/eln/sixnode/electricaldatalogger/ElectricalDataLoggerElement.java
-Current_value=Current value
+Current_value=Valor atual
 
 # src/main/java/mods/eln/sixnode/electricaldatalogger/ElectricalDataLoggerGui.java
-0_Line=0 Line
-0_Line_Off=0 Line Off
-0_Line_On=0 Line On
-Back_to_display=Voltar a tela
-Configuration=Configuracao
+0_Line=Linha 0
+0_Line_Off=Linha 0 Desligada
+0_Line_On=Linha 0 Ligada
+Back_to_display=Voltar ao display
+Configuration=Configuração
 Current_[A]=Corrente [A]
 Energy_[J]=Energia [J]
-Humidity_[%%]=Humidity [%%]
-Percent_[-]%=Porcento [%]
-Power_[W]=Potencia [W]
+Humidity_[%%]=Umidade [%%]
+Percent_[-]%=Percentual [-]%
+Power_[W]=Potência [W]
 Print=Imprimir
-Sampling_period=tempo
+Sampling_period=Período de amostragem
 Temp_[C]=Temp [C]
 Temp_[F]=Temp [F]
-Unit=Unit
-Voltage_[V]=Tensao [V]
-Y-axis_max=Y Max
-Y-axis_min=Y Min
+Unit=Unidade
+Voltage_[V]=Tensão [V]
+Y-axis_max=Eixo Y máx
+Y-axis_min=Eixo Y mín
 
 # src/main/java/mods/eln/sixnode/electricaldigitaldisplay/ElectricalDigitalDisplayDescriptor.java
-Displays_signal_value.=Displays signal value.
+Displays_signal_value.=Exibe o valor do sinal.
 
 # src/main/java/mods/eln/sixnode/electricaldigitaldisplay/ElectricalDigitalDisplayElement.java
-Max=Max
-Min=Min
+Max=Máx
+Min=Mín
 
 # src/main/java/mods/eln/sixnode/electricalentitysensor/ElectricalEntitySensorDescriptor.java
-Output_voltage_increases\nif_entities_are_moving_around.=Emite sinal analogico em funcao do movimento.
+Output_voltage_increases\nif_entities_are_moving_around.=A tensão de saída aumenta\nse houver entidades se movendo por perto.
 
 # src/main/java/mods/eln/sixnode/electricalentitysensor/ElectricalEntitySensorElement.java
-Entity_present=Movimento detectado
+Entity_present=Entidade presente
 
 # src/main/java/mods/eln/sixnode/electricalfiredetector/ElectricalFireDetectorDescriptor.java
-Battery_powered_buzzer_\nactivated_in_presence_of_fire.=Detector de fumaca a pilha com alarme embutido.
-Output_voltage_increases\nif_a_fire_has_been_detected.=Emite sinal analogico em funcao da fumaca.
+Battery_powered_buzzer_\nactivated_in_presence_of_fire.=Campainha alimentada por bateria\nativada na presença de fogo.
+Output_voltage_increases\nif_a_fire_has_been_detected.=A tensão de saída aumenta\nse um incêndio for detectado.
 
 # src/main/java/mods/eln/sixnode/electricalfiredetector/ElectricalFireDetectorElement.java
-Fire_detected\:_=Fogo detectada:
-Fire_present=Fogo detectado
+Fire_detected\:_=Fogo detectado:
+Fire_present=Fogo presente
 
 # src/main/java/mods/eln/sixnode/electricalgatesource/ElectricalGateSourceDescriptor.java
-Provides_configurable_signal\nvoltage.=Fornece sinal Criativo,\ntensao configuravel.
+Provides_configurable_signal\nvoltage.=Fornece tensão de sinal\nconfigurável.
 
 # src/main/java/mods/eln/sixnode/electricalgatesource/ElectricalGateSourceElement.java
 
 # src/main/java/mods/eln/sixnode/electricalgatesource/ElectricalGateSourceGui.java
-Output_at_%1$%=Tensao em %1$%
+Output_at_%1$%=Saída em %1$%
 
 # src/main/java/mods/eln/sixnode/electricallightsensor/ElectricalLightSensorDescriptor.java
-0V_at_night,_%1$V_at_noon.=Noite sinal 0V e Meio dia sianl 50V.
-Provides_an_electrical_voltage\nin_the_presence_of_light.=Emite sinal analogico em funcao a luz.
-Provides_an_electrical_voltage\nwhich_is_proportional_to\nthe_intensity_of_daylight.=Emite sinal analogico em funcao a luz solar[Dia/Noite].
+0V_at_night,_%1$V_at_noon.=0V à noite, %1$V ao meio-dia.
+Provides_an_electrical_voltage\nin_the_presence_of_light.=Fornece uma tensão elétrica\nna presença de luz.
+Provides_an_electrical_voltage\nwhich_is_proportional_to\nthe_intensity_of_daylight.=Fornece uma tensão elétrica\nproporcional à\nintensidade da luz do dia.
 
 # src/main/java/mods/eln/sixnode/electricallightsensor/ElectricalLightSensorElement.java
-Light_level=Nivel de luz
+Light_level=Nível de luz
 
 # src/main/java/mods/eln/sixnode/electricalmath/ElectricalMathDescriptor.java
-Applicable_boolean_operators\:=Applicable boolean operators:
-Applicable_functions\:=Applicable functions:
-Applicable_mathematical_operators\:=Applicable mathematical operators:
-Calculates_an_output_signal_from\n3_inputs_(A,_B,_C)_using_an_equation.=Emite um sinal analogico\ncalculado em funcao da equacao programado entre as tres entradas[A, B e C].
+Applicable_boolean_operators\:=Operadores booleanos aplicáveis:
+Applicable_functions\:=Funções aplicáveis:
+Applicable_mathematical_operators\:=Operadores matemáticos aplicáveis:
+Calculates_an_output_signal_from\n3_inputs_(A,_B,_C)_using_an_equation.=Calcula um sinal de saída a partir\nde 3 entradas (A, B, C) usando uma equação.
 
 # src/main/java/mods/eln/sixnode/electricalmath/ElectricalMathElement.java
-Equation=Equacao
-Input_voltages=Tensao de entrada
+Equation=Equação
+Input_voltages=Tensões de entrada
 
 # src/main/java/mods/eln/sixnode/electricalmath/ElectricalMathGui.java
-%1$_Redstone(s)_required=Requer %1$ Redstone(s)
-Equation_required!=Requer equacao!
-Inputs_are=Entradas
-Invalid_equation!=Equacao invalida!
-Output_voltage_formula=Equacao de saida
-Waiting_for_completion...=Aguardando conclucao...
+%1$_Redstone(s)_required=%1$ Redstone(s) necessário(s)
+Equation_required!=Equação necessária!
+Inputs_are=As entradas são
+Invalid_equation!=Equação inválida!
+Output_voltage_formula=Fórmula da tensão de saída
+Waiting_for_completion...=Aguardando conclusão...
 
 # src/main/java/mods/eln/sixnode/electricalredstoneinput/ElectricalRedstoneInputDescriptor.java
-Converts_Redstone_signal\nto_an_electrical_voltage.=Converte sinal de redstone para sinal analogico.
+Converts_Redstone_signal\nto_an_electrical_voltage.=Converte sinal Redstone\nem uma tensão elétrica.
 
 # src/main/java/mods/eln/sixnode/electricalredstoneoutput/ElectricalRedstoneOutputDescriptor.java
-Converts_electrical_voltage\ninto_a_Redstone_signal.=Converte sinal analogico para sinal redstone.
+Converts_electrical_voltage\ninto_a_Redstone_signal.=Converte tensão elétrica\nem um sinal Redstone.
 
 # src/main/java/mods/eln/sixnode/electricalredstoneoutput/ElectricalRedstoneOutputElement.java
 
 # src/main/java/mods/eln/sixnode/electricalrelay/ElectricalRelayDescriptor.java
-Contact_current_rating\:_%1$A=Contact current rating: %1$A
-Contact_voltage\:_%1$V=Contact voltage: %1$V
-Control_voltage\:_%1$V=Control voltage: %1$V
+Contact_current_rating\:_%1$A=Classificação de corrente do contato: %1$A
+Contact_voltage\:_%1$V=Tensão do contato: %1$V
+Control_voltage\:_%1$V=Tensão de controle: %1$V
 
 # src/main/java/mods/eln/sixnode/electricalrelay/ElectricalRelayElement.java
 
 # src/main/java/mods/eln/sixnode/electricalrelay/ElectricalRelayGui.java
 
 # src/main/java/mods/eln/sixnode/electricalsensor/ElectricalSensorDescriptor.java
-Can_measure_Voltage/Power/Current=Can measure Voltage/Power/Current
-Measures_electrical_values_on_cables.=Mede grandezas eletricas no cabo.
-Measures_voltage_on_cables.=Mede tensao no cabo.
+Can_measure_Voltage/Power/Current=Pode medir Tensão/Potência/Corrente
+Measures_electrical_values_on_cables.=Mede valores elétricos em cabos.
+Measures_voltage_on_cables.=Mede tensão em cabos.
 
 # src/main/java/mods/eln/sixnode/electricalsensor/ElectricalSensorElement.java
 Measured_current=Corrente medida
-Measured_power=Potencia medida
-Measured_voltage=Tensao medida
+Measured_power=Potência medida
+Measured_voltage=Tensão medida
 
 # src/main/java/mods/eln/sixnode/electricalsensor/ElectricalSensorGui.java
-Measured_voltage\ncorresponding\nto_0%_output=Tensao correspondente a 0%
-Measured_voltage\ncorresponding\nto_100%_output=Tensao correspondente a 100%
+Measured_voltage\ncorresponding\nto_0%_output=Tensão medida\ncorrespondente\na 0% de saída
+Measured_voltage\ncorresponding\nto_100%_output=Tensão medida\ncorrespondente\na 100% de saída
 
 # src/main/java/mods/eln/sixnode/electricalsource/ElectricalSourceDescriptor.java
-Acts_as_an_ideal_voltage_source,_with_a_small_inline_resistance=Acts as an ideal voltage source, with a small inline resistance
-Provides_an_ideal_voltage_source\nwithout_energy_or_power_limitation.=Fornece energia Criativo,\ntensao configuravel.
+Acts_as_an_ideal_voltage_source,_with_a_small_inline_resistance=Age como uma fonte de tensão ideal, com uma pequena resistência em série
+Provides_an_ideal_voltage_source\nwithout_energy_or_power_limitation.=Fornece uma fonte de tensão ideal\nsem limitação de energia ou potência.
 
 # src/main/java/mods/eln/sixnode/electricalswitch/ElectricalSwitchDescriptor.java
-Can_break_an_electrical_circuit\ninterrupting_the_current.=Serve para abrir ou fechar um circuito.
-Current_rating\:_%1$A=Current rating: %1$A
-Voltage_rating\:_%1$V=Voltage rating: %1$V
+Can_break_an_electrical_circuit\ninterrupting_the_current.=Pode interromper um circuito elétrico\ncortando a corrente.
+Current_rating\:_%1$A=Classificação de corrente: %1$A
+Voltage_rating\:_%1$V=Classificação de tensão: %1$V
 
 # src/main/java/mods/eln/sixnode/electricalswitch/ElectricalSwitchElement.java
 
 # src/main/java/mods/eln/sixnode/electricaltimeout/ElectricalTimeoutDescriptor.java
-Upon_application_of_a_high_signal,\nthe_timer_maintains_the_output_high_for\na_configurable_interval._Can_be_re-triggered.=Temporizador Off-Delay\nDesliga apos o tempo configurado.
+Upon_application_of_a_high_signal,\nthe_timer_maintains_the_output_high_for\na_configurable_interval._Can_be_re-triggered.=Com a aplicação de um sinal alto,\no temporizador mantém a saída alta por\num intervalo configurável. Pode ser reativado.
 
 # src/main/java/mods/eln/sixnode/electricaltimeout/ElectricalTimeoutElement.java
-Remaining=Remaining
+Remaining=Restante
 
 # src/main/java/mods/eln/sixnode/electricaltimeout/ElectricalTimeoutGui.java
-Set=Iniciar
-The_time_interval_the\noutput_is_kept_high.=Tempo.
+Set=Definir
+The_time_interval_the\noutput_is_kept_high.=O intervalo de tempo que\na saída é mantida alta.
 
 # src/main/java/mods/eln/sixnode/electricalwatch/ElectricalWatchContainer.java
 
 # src/main/java/mods/eln/sixnode/electricalwatch/ElectricalWatchDescriptor.java
-Requires_batteries_for_operation.=Requires batteries for operation.
-Tells_the_time.=Tells the time.
+Requires_batteries_for_operation.=Requer baterias para funcionamento.
+Tells_the_time.=Informa a hora.
 
 # src/main/java/mods/eln/sixnode/electricalweathersensor/ElectricalWeatherSensorDescriptor.java
-Clear\:_%1$V=Ceu limpo: %1$V
-Provides_an_electrical_signal\ndepending_the_actual_weather.=Emite sinal analogico em funcao do clima do tempo.
+Clear\:_%1$V=Limpo: %1$V
+Provides_an_electrical_signal\ndepending_the_actual_weather.=Fornece um sinal elétrico\ndependendo do clima atual.
 Rain\:_%1$V=Chuva: %1$V
 Storm\:_%1$V=Tempestade: %1$V
 
 # src/main/java/mods/eln/sixnode/electricalwindsensor/ElectricalWindSensorDescriptor.java
-Maximum_wind_speed_is_%1$m/s=Maximum wind speed is %1$m/s
-Provides_an_electrical_signal\ndependant_on_wind_speed.=Emite sinal analogico em funcao da velocidade do vento.
-You_can't_place_this_block_on_the_floor_or_the_ceiling=Nao pode ser colocado no chao ou teto.
+Maximum_wind_speed_is_%1$m/s=Velocidade máxima do vento é %1$m/s
+Provides_an_electrical_signal\ndependant_on_wind_speed.=Fornece um sinal elétrico\ndependente da velocidade do vento.
+You_can't_place_this_block_on_the_floor_or_the_ceiling=Você não pode colocar este bloco no chão ou no teto
 
 # src/main/java/mods/eln/sixnode/energymeter/EnergyMeterElement.java
 Counter=Contador
-Energy_left=Falta de energia
-Prepay=PrePago
+Energy_left=Energia restante
+Prepay=Pré-pago
 
 # src/main/java/mods/eln/sixnode/energymeter/EnergyMeterGui.java
-Change_password=Mudar senha
-Counter_Mode=Modo do contador
-Counts_the_energy_conducted_from\n§4red§f_to_§1blue§f.=Conta a energia de\n§4red§f para §1blue§f.
-Energy_counter\:_%1$J=Energia contada: %1$J
-Enter_new_energy=Digite nova energia
-Enter_password=Digite a senha
-Prepay_Mode=Modo PrePago
-Reset_time_counter=Reiniciar relogio
-Set_energy_counter=Definir energia
-Time_counter\:=Relogio:
-Try_password=Desbloquear
-You_can_set_an_initial\namount_of_available_energy.\nWhen_the_counter_arrives_at_0\nthe_contact_will_be_opened.=Modo prepago,\ndefina uma quantidade de energia\ne quando zerar o contador o contato abre.
-is_off=Aberto
-is_on=Fechado
-value_in_kJ=Escala em kJ
+Change_password=Alterar senha
+Counter_Mode=Modo Contador
+Counts_the_energy_conducted_from\n§4red§f_to_§1blue§f.=Conta a energia conduzida do\n§4vermelho§f ao §1azul§f.
+Energy_counter\:_%1$J=Contador de energia: %1$J
+Enter_new_energy=Inserir nova energia
+Enter_password=Inserir senha
+Prepay_Mode=Modo Pré-pago
+Reset_time_counter=Resetar contador de tempo
+Set_energy_counter=Definir contador de energia
+Time_counter\:=Contador de tempo:
+Try_password=Tentar senha
+You_can_set_an_initial\namount_of_available_energy.\nWhen_the_counter_arrives_at_0\nthe_contact_will_be_opened.=Você pode definir uma quantidade\ninicial de energia disponível.\nQuando o contador chegar a 0\no contato será aberto.
+is_off=está desligado
+is_on=está ligado
+value_in_kJ=valor em kJ
 
 # src/main/java/mods/eln/sixnode/groundcable/GroundCableContainer.java
 
 # src/main/java/mods/eln/sixnode/groundcable/GroundCableDescriptor.java
-Acts_as_a_ground_reference.=Acts as a ground reference.
-Can_be_used_to_set_a_point_of_an\nelectrical_network_to_0V_potential.\nFor_example_to_ground_negative_battery_contacts.=Serve de referencia 0V\nde polo negativo\nneutro ou terra.
-Has_a_small_resistance_inline=Has a small resistance inline
-Provides_a_zero_volt_reference.=Provides a zero volt reference.
+Acts_as_a_ground_reference.=Atua como referência de terra.
+Can_be_used_to_set_a_point_of_an\nelectrical_network_to_0V_potential.\nFor_example_to_ground_negative_battery_contacts.=Pode ser usado para definir um ponto de uma\nrede elétrica com potencial 0V.\nPor exemplo, para aterrar contatos negativos de baterias.
+Has_a_small_resistance_inline=Possui uma pequena resistência em série
+Provides_a_zero_volt_reference.=Fornece uma referência de zero volt.
 
 # src/main/java/mods/eln/sixnode/hub/HubDescriptor.java
-A_bit_contrived,_as_the_wires_could_just_cross_over_each_other._Realism_depends_on_the_wires_used.=A bit contrived, as the wires could just cross over each other. Realism depends on the wires used.
-Allows_crossing_cables\non_one_single_block.=Permite cruzar cabos sem haver coneccao.
+A_bit_contrived,_as_the_wires_could_just_cross_over_each_other._Realism_depends_on_the_wires_used.=Um pouco forçado, pois os fios poderiam simplesmente se cruzar. O realismo depende dos fios usados.
+Allows_crossing_cables\non_one_single_block.=Permite cruzar cabos\nem um único bloco.
 
 # src/main/java/mods/eln/sixnode/lampsupply/LampSupplyContainer.java
-Cable_slot\nBase_range_is_32_blocks.\nEach_additional_cable\nincreases_range_by_one.=Cable slot\nBase range is 32 blocks.\nEach additional cable\nincreases range by one.
+Cable_slot\nBase_range_is_32_blocks.\nEach_additional_cable\nincreases_range_by_one.=Espaço de cabo\nAlcance base é de 32 blocos.\nCada cabo adicional\naumenta o alcance em um.
 
 # src/main/java/mods/eln/sixnode/lampsupply/LampSupplyDescriptor.java
-Capable_of_operating_3_light_channels.=Capable of operating 3 light channels.
-Most_homes_have_a_circuit_breaker_panel_for_lights=Most homes have a circuit breaker panel for lights
-Supplies_power_to_nearby_lamps.=Supplies power to nearby lamps.
-Supports_control_from_a_wireless_signal\nchannel_for_each_lighting_channel.=Supports control from a wireless signal\nchannel for each lighting channel.
-The_wireless_power_aspect_is_pretending_there_are_wires_in_the_walls=The wireless power aspect is pretending there are wires in the walls
-Wireless_control_signals_are_totally_possible=Wireless control signals are totally possible
+Capable_of_operating_3_light_channels.=Capaz de operar 3 canais de luz.
+Most_homes_have_a_circuit_breaker_panel_for_lights=A maioria das casas tem um painel de disjuntores para luzes
+Supplies_power_to_nearby_lamps.=Fornece energia para lâmpadas próximas.
+Supports_control_from_a_wireless_signal\nchannel_for_each_lighting_channel.=Suporta controle a partir de um canal\nde sinal sem fio para cada canal de iluminação.
+The_wireless_power_aspect_is_pretending_there_are_wires_in_the_walls=O aspecto de energia sem fio está fingindo que há fios nas paredes
+Wireless_control_signals_are_totally_possible=Sinais de controle sem fio são totalmente possíveis
 
 # src/main/java/mods/eln/sixnode/lampsupply/LampSupplyElement.java
-Total_power=Potencia
+Total_power=Potência total
 
 # src/main/java/mods/eln/sixnode/lampsupply/LampSupplyGui.java
 Power_channel_name=Nome do canal de energia
-Wireless_channel_name=Nome do canal de sinal sem fio
+Wireless_channel_name=Nome do canal sem fio
 
 # src/main/java/mods/eln/sixnode/modbusrtu/ModbusRtuElement.java
-Modbus_TCP=TCP Modbus
-Modbus_Unit_ID=ID da unidade Modbus
-Modbus_is_disabled,_enable_it_in_config/eln/eln.json=Modbus is disabled, enable it in config/eln/eln.json
+Modbus_TCP=Modbus TCP
+Modbus_Unit_ID=ID de Unidade Modbus
+Modbus_is_disabled,_enable_it_in_config/eln/eln.json=Modbus está desabilitado, habilite-o em config/eln/eln.json
 
 # src/main/java/mods/eln/sixnode/modbusrtu/ModbusRtuGui.java
-Add=Add
+Add=Adicionar
 Channel_name=Nome do canal
 Modbus_ID=ID Modbus
-Modbus_RTU=RTU Modbus
-Station_ID=ID da estacao
-Station_name=Nome da estacao
-Wireless_RX=RX sem fio
-Wireless_TX=TX sem fio
+Modbus_RTU=Modbus RTU
+Station_ID=ID da Estação
+Station_name=Nome da estação
+Wireless_RX=RX Sem Fio
+Wireless_TX=TX Sem Fio
 
 # src/main/java/mods/eln/sixnode/resistor/ResistorContainer.java
-(Sets_resistance)=(Definir resistencia)
-Coal_dust_slot=espaco do po de carvao
+(Sets_resistance)=(Define a resistência)
+Coal_dust_slot=Espaço de pó de carvão
 
 # src/main/java/mods/eln/sixnode/resistor/ResistorDescriptor.java
-It's_a_resistor=It's a resistor
+It's_a_resistor=É um resistor
 
 # src/main/java/mods/eln/sixnode/resistor/ResistorElement.java
 
 # src/main/java/mods/eln/sixnode/thermalcable/ThermalCableDescriptor.java
-High_parallel_resistance\n_->_Low_power_dissipation.=High parallel resistance\n -> Low power dissipation.
-Low_serial_resistance\n_->_High_conductivity.=Low serial resistance\n -> High conductivity.
-Min._temperature\:_%1$°C=Min. temperature: %1$°C
-Parallel_resistance\:_%1$K/W=Parallel resistance: %1$K/W
-Serial_resistance\:_%1$K/W=Serial resistance: %1$K/W
-The_thermal_simulator_doesn't_properly_manage_heat=The thermal simulator doesn't properly manage heat
+High_parallel_resistance\n_->_Low_power_dissipation.=Alta resistência paralela\n -> Baixa dissipação de potência.
+Low_serial_resistance\n_->_High_conductivity.=Baixa resistência em série\n -> Alta condutividade.
+Min._temperature\:_%1$°C=Temp. mín.: %1$°C
+Parallel_resistance\:_%1$K/W=Resistência paralela: %1$K/W
+Serial_resistance\:_%1$K/W=Resistência em série: %1$K/W
+The_thermal_simulator_doesn't_properly_manage_heat=O simulador térmico não gerencia o calor adequadamente
 
 # src/main/java/mods/eln/sixnode/thermalcable/ThermalCableElement.java
-Thermic_power=Potencia termica
+Thermic_power=Potência térmica
 
 # src/main/java/mods/eln/sixnode/thermalsensor/ThermalSensorContainer.java
 
 # src/main/java/mods/eln/sixnode/thermalsensor/ThermalSensorDescriptor.java
 Can_measure\:=Pode medir:
-Measures_temperature_of_cables.=Mede Temperatura do cabo.
-Measures_thermal_values_on_cables.=Mede grandezas termica no cabo.
-__Temperature/Power_conducted=  Temperature/Power conducted
+Measures_temperature_of_cables.=Mede a temperatura dos cabos.
+Measures_thermal_values_on_cables.=Mede valores térmicos em cabos.
+__Temperature/Power_conducted=  Temperatura/Potência conduzida
 
 # src/main/java/mods/eln/sixnode/thermalsensor/ThermalSensorElement.java
 Measured_temperature=Temperatura medida
-Measured_thermal_power=Potencia termica medida
+Measured_thermal_power=Potência térmica medida
 
 # src/main/java/mods/eln/sixnode/thermalsensor/ThermalSensorGui.java
 
 # src/main/java/mods/eln/sixnode/tutorialsign/TutorialSignElement.java
-No_text_associated_to_this_beacon=Nem um texto associado
+No_text_associated_to_this_beacon=Nenhum texto associado a este sinalizador
 
 # src/main/java/mods/eln/sixnode/tutorialsign/TutorialSignGui.java
-Set_beacon_name=Defina o nome
+Set_beacon_name=Definir nome do sinalizador
 
 # src/main/java/mods/eln/sixnode/wirelesssignal/WirelessSignalAnalyserItemDescriptor.java
-No_wireless_signal_in_area!=No wireless signal in area!
-_Strength= Strength
-_Value= Value
+No_wireless_signal_in_area!=Nenhum sinal sem fio na área!
+_Strength= Intensidade
+_Value= Valor
 
 # src/main/java/mods/eln/sixnode/wirelesssignal/repeater/WirelessSignalRepeaterDescriptor.java
-It_should_require_power_realistically=It should require power realistically
-Repeats_all_wireless_signals_in_range=Repeats all wireless signals in range
+It_should_require_power_realistically=Deveria exigir potência de forma realista
+Repeats_all_wireless_signals_in_range=Repete todos os sinais sem fio no alcance
 
 # src/main/java/mods/eln/sixnode/wirelesssignal/rx/WirelessSignalRxDescriptor.java
-It_should_require_power_to_receive_and_propagate_the_signal_realistically=It should require power to receive and propagate the signal realistically
-Receive_signal_voltage_on_selected_wireless_signal_channel=Receive signal voltage on selected wireless signal channel
+It_should_require_power_to_receive_and_propagate_the_signal_realistically=Deveria exigir potência para receber e propagar o sinal de forma realista
+Receive_signal_voltage_on_selected_wireless_signal_channel=Recebe tensão de sinal no canal de sinal sem fio selecionado
 
 # src/main/java/mods/eln/sixnode/wirelesssignal/rx/WirelessSignalRxElement.java
 
 # src/main/java/mods/eln/sixnode/wirelesssignal/rx/WirelessSignalRxGui.java
 
 # src/main/java/mods/eln/sixnode/wirelesssignal/tx/WirelessSignalTxDescriptor.java
-Sends_signal_voltage_on_selected_wireless_signal_channel=Sends signal voltage on selected wireless signal channel
+Sends_signal_voltage_on_selected_wireless_signal_channel=Envia tensão de sinal no canal de sinal sem fio selecionado
 
 # src/main/java/mods/eln/transparentnode/autominer/AutoMinerContainer.java
-Drill_slot=Espaco da broca
-Mining_pipe_slot=Espaco do tudo de mineracao
-Ore_scanner_slot=Espaco do Circuito Escaneamento de Minerio
+Drill_slot=Espaço de broca
+Mining_pipe_slot=Espaço de tubo de mineração
+Ore_scanner_slot=Espaço de scanner de minério
 
 # src/main/java/mods/eln/transparentnode/autominer/AutoMinerDescriptor.java
-Excavates_on_a_small_radius.\nExtracts_ore_on_a_bigger_radius\:\n10_blocks_radius_after_10_blocks_depth.=Extrai minerios e blocos do chao.
+Excavates_on_a_small_radius.\nExtracts_ore_on_a_bigger_radius\:\n10_blocks_radius_after_10_blocks_depth.=Escava em um raio pequeno.\nExtrai minério em um raio maior:\n10 blocos de raio após 10 blocos de profundidade.
 
 # src/main/java/mods/eln/transparentnode/autominer/AutoMinerElement.java
 Depth=Profundidade
-Silk_touch=
+Silk_touch=Toque suave
 
 # src/main/java/mods/eln/transparentnode/autominer/AutoMinerGuiDraw.java
-Chest_missing_on_the\nback_of_the_auto_miner!=Esta faltando um inventario atraz da mineradora!
-Halves_speed,_triples_power_draw=Deixa mais lento e usa 3xPotencia.
-Silk_Touch=Toque suave
+Chest_missing_on_the\nback_of_the_auto_miner!=Baú faltando na\nparte traseira do minerador automático!
+Halves_speed,_triples_power_draw=Reduz a velocidade pela metade, triplica o consumo de energia
+Silk_Touch=Toque Suave
 
 # src/main/java/mods/eln/transparentnode/eggincubator/EggIncubatorContainer.java
-Egg_slot=Espaco do ovo
+Egg_slot=Espaço de ovo
 
 # src/main/java/mods/eln/transparentnode/eggincubator/EggIncubatorElement.java
-Has_egg=Tem ovo
+Has_egg=Possui ovo
 
 # src/main/java/mods/eln/transparentnode/electricalantennarx/ElectricalAntennaRxDescriptor.java
 Wireless_energy_receiver.=Receptor de energia sem fio.
 
 # src/main/java/mods/eln/transparentnode/electricalantennarx/ElectricalAntennaRxElement.java
-Effective_power=Eficiencia da potencia
-Power_received=Potencia recebida
+Effective_power=Potência efetiva
+Power_received=Potência recebida
 Receiving=Recebendo
 
 # src/main/java/mods/eln/transparentnode/electricalantennatx/ElectricalAntennaTxDescriptor.java
-Efficiency\:_%1$%_up_to_%2$%=Eficiencia: %1$% up to %2$%
+Efficiency\:_%1$%_up_to_%2$%=Eficiência: %1$% até %2$%
 Wireless_energy_transmitter.=Transmissor de energia sem fio.
 
 # src/main/java/mods/eln/transparentnode/electricalantennatx/ElectricalAntennaTxElement.java
 Transmitting=Transmitindo
 
 # src/main/java/mods/eln/transparentnode/electricalfurnace/ElectricalFurnaceContainer.java
-Heating_element_slot=Heating element slot
+Heating_element_slot=Espaço de elemento de aquecimento
 
 # src/main/java/mods/eln/transparentnode/electricalfurnace/ElectricalFurnaceDescriptor.java
-Similar_to_a_vanilla_furnace,\nbut_heats_with_electricity.=Forno igual a fornalha do minecraft, mas utiliza energia.
+Similar_to_a_vanilla_furnace,\nbut_heats_with_electricity.=Similar a uma fornalha vanilla,\nmas aquece com eletricidade.
 
 # src/main/java/mods/eln/transparentnode/electricalfurnace/ElectricalFurnaceElement.java
-Heating_element=Resistencia
+Heating_element=Elemento de aquecimento
 
 # src/main/java/mods/eln/transparentnode/electricalfurnace/ElectricalFurnaceGuiDraw.java
-Actual\:_%1$=Atual: %1$
-Auto_shutdown=Manual
-Manual_shutdown=Automatico
-Set_point\:_%1$=Ajustado: %1$
+Actual\:_%1$=Real: %1$
+Auto_shutdown=Desligamento automático
+Manual_shutdown=Desligamento manual
+Set_point\:_%1$=Ponto definido: %1$
 
 # src/main/java/mods/eln/transparentnode/electricalmachine/ElectricalMachineContainer.java
 
 # src/main/java/mods/eln/transparentnode/electricalmachine/ElectricalMachineDescriptor.java
-Cost=Gasto
+Cost=Custo
 
 # src/main/java/mods/eln/transparentnode/electricalmachine/ElectricalMachineElement.java
-Power_provided=Potencia
+Power_provided=Potência fornecida
 
 # src/main/java/mods/eln/transparentnode/heatfurnace/HeatFurnaceContainer.java
-Combustion_chamber_slot=Espaco da Melhoria da Camara de Aquecimento
-Fuel_slot=Espaco do combustivel
+Combustion_chamber_slot=Espaço de câmara de combustão
+Fuel_slot=Espaço de combustível
 
 # src/main/java/mods/eln/transparentnode/heatfurnace/HeatFurnaceDescriptor.java
 
 # src/main/java/mods/eln/transparentnode/heatfurnace/HeatFurnaceElement.java
-Set_temperature=Temperatura ajustado
+Set_temperature=Definir temperatura
 
 # src/main/java/mods/eln/transparentnode/heatfurnace/HeatFurnaceGuiDraw.java
-Actual\:_%1$°C=Atual: %1$°C
-Control_gauge_at_%1$%=Valor do controle em %1$%
-Decline_fuel=Ligar
-Take_fuel=Desligar
+Actual\:_%1$°C=Real: %1$°C
+Control_gauge_at_%1$%=Controle em %1$%
+Decline_fuel=Recusar combustível
+Take_fuel=Receber combustível
 
 # src/main/java/mods/eln/transparentnode/powercapacitor/PowerCapacitorContainer.java
-(Increases_maximal_voltage)=(Aumentar a tensao maxima)
+(Increases_maximal_voltage)=(Aumenta a tensão máxima)
 
 # src/main/java/mods/eln/transparentnode/powercapacitor/PowerCapacitorGui.java
 
@@ -616,53 +616,53 @@ Take_fuel=Desligar
 # src/main/java/mods/eln/transparentnode/powerinductor/PowerInductorGui.java
 
 # src/main/java/mods/eln/transparentnode/solarpanel/SolarPanelContainer.java
-Solar_tracker_slot=Espaco Regulador do Painel Solar
+Solar_tracker_slot=Espaço de rastreador solar
 
 # src/main/java/mods/eln/transparentnode/solarpanel/SolarPanelDescriptor.java
-Can_be_geared_towards_the_sun.=Pode ser orientado para o sol.
-Open-circuit_voltage\:_%1$V=Open-circuit voltage: %1$V
-Optimum_current\:_%1$A=Optimum current: %1$A
-Optimum_voltage\:_%1$V=Optimum voltage: %1$V
-Produces_power_from_solar_radiation.=Gera energia atravez dos raios solares.
-STC_power\:_%1$W=STC power: %1$W
-Short-circuit_current\:_%1$A=Short-circuit current: %1$A
+Can_be_geared_towards_the_sun.=Pode ser orientado em direção ao sol.
+Open-circuit_voltage\:_%1$V=Tensão de circuito aberto: %1$V
+Optimum_current\:_%1$A=Corrente ótima: %1$A
+Optimum_voltage\:_%1$V=Tensão ótima: %1$V
+Produces_power_from_solar_radiation.=Produz energia a partir da radiação solar.
+STC_power\:_%1$W=Potência STC: %1$W
+Short-circuit_current\:_%1$A=Corrente de curto-circuito: %1$A
 
 # src/main/java/mods/eln/transparentnode/solarpanel/SolarPanelElement.java
-Panel_angle=Angulo do painel
+Panel_angle=Ângulo do painel
 Producing_energy=Produzindo energia
-Sun_angle=Angulo do sol
+Sun_angle=Ângulo do sol
 
 # src/main/java/mods/eln/transparentnode/solarpanel/SolarPannelGuiDraw.java
-It_is_night=Esta noite
-Solar_panel_angle\:_%1$°=Angulo do painel solar: %1$°
-Sun_angle\:_%1$°=Sun angle: %1$°
+It_is_night=É noite
+Solar_panel_angle\:_%1$°=Ângulo do painel solar: %1$°
+Sun_angle\:_%1$°=Ângulo do sol: %1$°
 
 # src/main/java/mods/eln/transparentnode/teleporter/TeleporterDescriptor.java
-It's_experimental!=It's experimental!
+It's_experimental!=É experimental!
 
 # src/main/java/mods/eln/transparentnode/teleporter/TeleporterElement.java
 Destination=Destino
-Distance=Distancia
-Required_energy=Energia necessaria
+Distance=Distância
+Required_energy=Energia necessária
 
 # src/main/java/mods/eln/transparentnode/teleporter/TeleporterGui.java
-Destination_transporter=Destino do transporte
-Power_consumption\:=Consumo de potencia:
-Power_consumption\:_%1$W=Consumo de potencia: %1$W
-Required_energy\:_%1$J=Energia necessaria: %1$J
+Destination_transporter=Transportador de destino
+Power_consumption\:=Consumo de energia:
+Power_consumption\:_%1$W=Consumo de energia: %1$W
+Required_energy\:_%1$J=Energia necessária: %1$J
 Start=Iniciar
 Transporter_name=Nome do transportador
 
 # src/main/java/mods/eln/transparentnode/thermaldissipatoractive/ThermalDissipatorActiveDescriptor.java
-Fan_cooling_power\:_%1$W=Potencia do resfriamento ventilador: %1$W
-Fan_power_consumption\:_%1$W=Potencia do ventilador: %1$W
-Fan_voltage\:_%1$V=Tensao do ventilador: %1$V
+Fan_cooling_power\:_%1$W=Potência de resfriamento do ventilador: %1$W
+Fan_power_consumption\:_%1$W=Consumo de energia do ventilador: %1$W
+Fan_voltage\:_%1$V=Tensão do ventilador: %1$V
 
 # src/main/java/mods/eln/transparentnode/thermaldissipatoractive/ThermalDissipatorActiveElement.java
 
 # src/main/java/mods/eln/transparentnode/turbine/TurbineDescriptor.java
-Generates_electricity_using_heat.=Gera energia atravez do calor.
-Temperature_difference\:_%1$°C=Diferenca de temperatura: %1$°C
+Generates_electricity_using_heat.=Gera eletricidade usando calor.
+Temperature_difference\:_%1$°C=Diferença de temperatura: %1$°C
 
 # src/main/java/mods/eln/transparentnode/turbine/TurbineElement.java
 Nominal=Nominal
@@ -670,328 +670,328 @@ Nominal=Nominal
 # src/main/java/mods/eln/transparentnode/turret/TurretContainer.java
 
 # src/main/java/mods/eln/transparentnode/turret/TurretDescriptor.java
-CAUTION\:_Cables_can_get_quite_hot!=CUIDADO: Os cabos podem ficar bastante quente!
-Laser_charge_power\:_%1$W...%2$kW=Potencia do laser: %1$W...%2$kW
-Scans_for_entities_and_shoots_if_the\nentity_matches_the_configurable_filter_criteria.=Dispara em jogador/monstro/animal\npossui sistema de filtro.
-Standby_power\:_%1$W=Potencia estado de espera: %1$W
+CAUTION\:_Cables_can_get_quite_hot!=CUIDADO: Os cabos podem ficar bem quentes!
+Laser_charge_power\:_%1$W...%2$kW=Potência de carga do laser: %1$W...%2$kW
+Scans_for_entities_and_shoots_if_the\nentity_matches_the_configurable_filter_criteria.=Escaneia entidades e atira se a\nentidade corresponder aos critérios de filtro configuráveis.
+Standby_power\:_%1$W=Potência em espera: %1$W
 
 # src/main/java/mods/eln/transparentnode/turret/TurretElement.java
 ??=??
-Charge_level=Nivel de carga
-Shoot_=Atire
-Shoot_everything=Atire em tudo
-Shoot_nothing=Nao atire
+Charge_level=Nível de carga
+Shoot_=Atirar
+Shoot_everything=Atirar em tudo
+Shoot_nothing=Não atirar em nada
 Target=Alvo
-animals=Animal
-monsters=Monstro
-players=jogador
+animals=animais
+monsters=monstros
+players=jogadores
 
 # src/main/java/mods/eln/transparentnode/turret/TurretGui.java
-Attack\:=Ataque:
-Do_not_attack\:=Nao ataque:
-Recharge_power\:=Potencia de recarga:
+Attack\:=Atacar:
+Do_not_attack\:=Não atacar:
+Recharge_power\:=Potência de recarga:
 
 # src/main/java/mods/eln/transparentnode/waterturbine/WaterTurbineDescriptor.java
-Generates_energy_using_water_stream.=Gera energia atravez do fluxo da agua.
-No_place_for_water_turbine!=Turbina nao pode ser colocado!
+Generates_energy_using_water_stream.=Gera energia usando fluxo de água.
+No_place_for_water_turbine!=Sem espaço para turbina hidráulica!
 
 # src/main/java/mods/eln/transparentnode/waterturbine/WaterTurbineElement.java
 
 # src/main/java/mods/eln/transparentnode/windturbine/WindTurbineDescriptor.java
 Front\:_%1$=Frente: %1$
-Generates_energy_from_wind.=Gera energia atravez no fluxo do vento.
-Generator_rating\:_%1$W=Generator rating: %1$W
-Left/Right\:_%1$=Left/Right: %1$
-Nominal_speed\:_%1$rad/s=Nominal speed: %1$rad/s
-Nominal_wind\:_%1$m/s=Nominal wind: %1$m/s
-Rotor_diameter\:_%1$m=Rotor diameter: %1$m
-Up/Down\:_%1$=Up/Down: %1$
-Wind_area\:=Area de vento:
+Generates_energy_from_wind.=Gera energia a partir do vento.
+Generator_rating\:_%1$W=Classificação do gerador: %1$W
+Left/Right\:_%1$=Esquerda/Direita: %1$
+Nominal_speed\:_%1$rad/s=Velocidade nominal: %1$rad/s
+Nominal_wind\:_%1$m/s=Vento nominal: %1$m/s
+Rotor_diameter\:_%1$m=Diâmetro do rotor: %1$m
+Up/Down\:_%1$=Cima/Baixo: %1$
+Wind_area\:=Área do vento:
 
 # src/main/java/mods/eln/transparentnode/windturbine/WindTurbineElement.java
-Current_limit=Current limit
-Rotor_energy=Rotor energy
-Rotor_speed=Rotor speed
-Wind=Wind
+Current_limit=Limite de corrente
+Rotor_energy=Energia do rotor
+Rotor_speed=Velocidade do rotor
+Wind=Vento
 
 # src/main/java/mods/eln/wiki/Data.java
-Light=Iluminacao
-Machine=Maquina
-Ore=Minerio
-Portable=Portatil
+Light=Luz
+Machine=Máquina
+Ore=Minério
+Portable=Portátil
 Resource=Recurso
-Thermal=Termico
+Thermal=Térmico
 Upgrade=Melhoria
-Utilities=Utilidade
-Wiring=Fiacao
+Utilities=Utilitários
+Wiring=Fiação
 
 # src/main/java/mods/eln/wiki/Default.java
 Previous=Anterior
 
 # src/main/java/mods/eln/wiki/ItemDefault.java
-Can_be_used_to_craft\:=Pode ser usado para criar:
-Cannot_be_crafted!=Nao pode ser criado!
-Cost_%1$J=Gasto %1$J
+Can_be_used_to_craft\:=Pode ser usado para fabricar:
+Cannot_be_crafted!=Não pode ser fabricado!
+Cost_%1$J=Custo %1$J
 Created_by\:=Criado por:
-Is_not_a_crafting_material!=Nao e materia para criar!
-Recipe\:=Receitas:
+Is_not_a_crafting_material!=Não é um material de fabricação!
+Recipe\:=Receita:
 
 # src/main/kotlin/mods/eln/Achievements.kt
-Electrical_Age_[WIP]=Era da Eletricidade [WIP]
-achievement.craft_50v_macerator=Fazendo muita poeira
-achievement.craft_50v_macerator.desc=Maquina eletrica
-achievement.open_guide=Wiki ELN
-achievement.open_guide.desc=Abrindo a Wiki ELN
+Electrical_Age_[WIP]=Electrical Age [WIP]
+achievement.craft_50v_macerator=Novato da Trituração
+achievement.craft_50v_macerator.desc=Fabrique um Macerador 48V
+achievement.open_guide=Poder Wiki
+achievement.open_guide.desc=Abra o guia wiki
 
 # src/main/kotlin/mods/eln/block/ArcClayBlock.kt
-tile.arc_clay_block.name=arc_clay_block
-tile.arc_metal_block.name=arc_metal_block
+tile.arc_clay_block.name=Bloco de Argila de Arco
+tile.arc_metal_block.name=Bloco de Metal de Arco
 
 # src/main/kotlin/mods/eln/craft/CraftingRecipes.kt
-entity.EAReplicator.name=Replicator
-entity.ElectricMinecart.name=ElectricMinecart
+entity.EAReplicator.name=Replicador
+entity.ElectricMinecart.name=Carrinho Elétrico
 
 # src/main/kotlin/mods/eln/falstad/FalstadImporter.kt
-%1$x%2$_blocks=%1$x%2$ blocks
-%1$x%2$_blocks_(%3$x%4$_rotated_also_works)=%1$x%2$ blocks (%3$x%4$ rotated also works)
-Adjustable_voltage_source_substituted_with_Electrical_Source=Adjustable voltage source substituted with Electrical Source
-Coal_Dust_descriptor_not_found.=Coal Dust descriptor not found.
-Current_source_placed,_but_couldn't_configure_its_current.=Current source placed, but couldn't configure its current.
-Current_source_substituted_with_Current_Source_+_Ground=Current source substituted with Current Source + Ground
-Debug_%1$_at_%2$,%3$\:_%4$=Debug %1$ at %2$,%3$: %4$
-Debug_Falstad_current_source_at_%1$,%2$\:_%3$=Debug Falstad current source at %1$,%2$: %3$
-Debug_Falstad_gate_at_%1$,%2$\:_%3$=Debug Falstad gate at %1$,%2$: %3$
-Debug_Falstad_logic_input_at_%1$,%2$\:_%3$=Debug Falstad logic input at %1$,%2$: %3$
-Debug_Falstad_logic_output_at_%1$,%2$\:_%3$=Debug Falstad logic output at %1$,%2$: %3$
-Debug_Falstad_probe/display_at_%1$,%2$\:_%3$=Debug Falstad probe/display at %1$,%2$: %3$
-Debug_Falstad_voltage_source_at_%1$,%2$\:_%3$=Debug Falstad voltage source at %1$,%2$: %3$
-Debug_wire_at_%1$,%2$\:_%3$=Debug wire at %1$,%2$: %3$
-Dielectric_descriptor_not_found.=Dielectric descriptor not found.
-Failed_to_place_%1$_at_%2$,%3$=Failed to place %1$ at %2$,%3$
-Failed_to_place_Falstad_current_source_at_%1$,%2$=Failed to place Falstad current source at %1$,%2$
-Failed_to_place_Falstad_gate_at_%1$,%2$=Failed to place Falstad gate at %1$,%2$
-Failed_to_place_Falstad_logic_input_at_%1$,%2$=Failed to place Falstad logic input at %1$,%2$
-Failed_to_place_Falstad_logic_output_at_%1$,%2$=Failed to place Falstad logic output at %1$,%2$
-Failed_to_place_Falstad_probe/display_at_%1$,%2$=Failed to place Falstad probe/display at %1$,%2$
-Failed_to_place_Falstad_voltage_source_at_%1$,%2$=Failed to place Falstad voltage source at %1$,%2$
-Failed_to_place_wire_at_%1$,%2$=Failed to place wire at %1$,%2$
-Falstad_import\:_%1$=Falstad import: %1$
-Falstad_import\:_additional_warnings_omitted.=Falstad import: additional warnings omitted.
-Falstad_import\:_couldn't_find_a_flat,_clear_area_near_the_player_for_%1$.%2$=Falstad import: couldn't find a flat, clear area near the player for %1$.%2$
-Falstad_import\:_no_components_found.=Falstad import: no components found.
-Falstad_import\:_placed_%1$_blocks.=Falstad import: placed %1$ blocks.
-Falstad_import\:_requires_a_flat,_clear_area_of_%1$._Planned_orientation\:_original.=Falstad import: requires a flat, clear area of %1$. Planned orientation: original.
-Falstad_import\:_using_%1$_placement_(%2$x%3$).=Falstad import: using %1$ placement (%2$x%3$).
-Falstad_scope_output_substituted_with_Voltage_Probe_+_Industrial_Data_Logger=Falstad scope output substituted with Voltage Probe + Industrial Data Logger
-Inductor_support_items_not_found.=Inductor support items not found.
-Largest_nearby_area_found_was_%1$x%2$_blocks.=Largest nearby area found was %1$x%2$ blocks.
-Line_%1$\:_invalid_capacitance_value.=Line %1$: invalid capacitance value.
-Line_%1$\:_invalid_current_value.=Line %1$: invalid current value.
-Line_%1$\:_invalid_inductance_value.=Line %1$: invalid inductance value.
-Line_%1$\:_invalid_resistance_value.=Line %1$: invalid resistance value.
-Line_%1$\:_non-DC_source_imported_as_DC.=Line %1$: non-DC source imported as DC.
-Missing_ELN_descriptor_for_%1$=Missing ELN descriptor for %1$
-Resistor_descriptor_unavailable.=Resistor descriptor unavailable.
-Signal_switch_placed,_but_couldn't_configure_its_state.=Signal switch placed, but couldn't configure its state.
-Voltage_source_placed,_but_couldn't_configure_its_voltage.=Voltage source placed, but couldn't configure its voltage.
-Voltage_source_substituted_with_Electrical_Source_+_Ground=Voltage source substituted with Electrical Source + Ground
-missing_descriptor\:_Current_Source=missing descriptor: Current Source
-missing_descriptor\:_Electrical_Source=missing descriptor: Electrical Source
-missing_descriptor\:_Industrial_Data_Logger=missing descriptor: Industrial Data Logger
-missing_descriptor\:_LED_vuMeter=missing descriptor: LED vuMeter
-missing_descriptor\:_NAND_Chip=missing descriptor: NAND Chip
-missing_descriptor\:_Signal_Switch=missing descriptor: Signal Switch
-missing_descriptor\:_Voltage_Probe=missing descriptor: Voltage Probe
+%1$x%2$_blocks=%1$x%2$ blocos
+%1$x%2$_blocks_(%3$x%4$_rotated_also_works)=%1$x%2$ blocos (%3$x%4$ girado também funciona)
+Adjustable_voltage_source_substituted_with_Electrical_Source=Fonte de tensão ajustável substituída por Fonte de Tensão
+Coal_Dust_descriptor_not_found.=Descritor de Pó de Carvão não encontrado.
+Current_source_placed,_but_couldn't_configure_its_current.=Fonte de corrente colocada, mas não foi possível configurar sua corrente.
+Current_source_substituted_with_Current_Source_+_Ground=Fonte de corrente substituída por Fonte de Corrente + Terra
+Debug_%1$_at_%2$,%3$\:_%4$=Debug %1$ em %2$,%3$: %4$
+Debug_Falstad_current_source_at_%1$,%2$\:_%3$=Debug Fonte de corrente Falstad em %1$,%2$: %3$
+Debug_Falstad_gate_at_%1$,%2$\:_%3$=Debug Porta Falstad em %1$,%2$: %3$
+Debug_Falstad_logic_input_at_%1$,%2$\:_%3$=Debug Entrada lógica Falstad em %1$,%2$: %3$
+Debug_Falstad_logic_output_at_%1$,%2$\:_%3$=Debug Saída lógica Falstad em %1$,%2$: %3$
+Debug_Falstad_probe/display_at_%1$,%2$\:_%3$=Debug Sonda/display Falstad em %1$,%2$: %3$
+Debug_Falstad_voltage_source_at_%1$,%2$\:_%3$=Debug Fonte de tensão Falstad em %1$,%2$: %3$
+Debug_wire_at_%1$,%2$\:_%3$=Debug fio em %1$,%2$: %3$
+Dielectric_descriptor_not_found.=Descritor de Dielétrico não encontrado.
+Failed_to_place_%1$_at_%2$,%3$=Falha ao colocar %1$ em %2$,%3$
+Failed_to_place_Falstad_current_source_at_%1$,%2$=Falha ao colocar fonte de corrente Falstad em %1$,%2$
+Failed_to_place_Falstad_gate_at_%1$,%2$=Falha ao colocar porta Falstad em %1$,%2$
+Failed_to_place_Falstad_logic_input_at_%1$,%2$=Falha ao colocar entrada lógica Falstad em %1$,%2$
+Failed_to_place_Falstad_logic_output_at_%1$,%2$=Falha ao colocar saída lógica Falstad em %1$,%2$
+Failed_to_place_Falstad_probe/display_at_%1$,%2$=Falha ao colocar sonda/display Falstad em %1$,%2$
+Failed_to_place_Falstad_voltage_source_at_%1$,%2$=Falha ao colocar fonte de tensão Falstad em %1$,%2$
+Failed_to_place_wire_at_%1$,%2$=Falha ao colocar fio em %1$,%2$
+Falstad_import\:_%1$=Importação Falstad: %1$
+Falstad_import\:_additional_warnings_omitted.=Importação Falstad: avisos adicionais omitidos.
+Falstad_import\:_couldn't_find_a_flat,_clear_area_near_the_player_for_%1$.%2$=Importação Falstad: não foi possível encontrar uma área plana e livre perto do jogador para %1$.%2$
+Falstad_import\:_no_components_found.=Importação Falstad: nenhum componente encontrado.
+Falstad_import\:_placed_%1$_blocks.=Importação Falstad: %1$ blocos colocados.
+Falstad_import\:_requires_a_flat,_clear_area_of_%1$._Planned_orientation\:_original.=Importação Falstad: requer uma área plana e livre de %1$. Orientação planejada: original.
+Falstad_import\:_using_%1$_placement_(%2$x%3$).=Importação Falstad: usando posicionamento %1$ (%2$x%3$).
+Falstad_scope_output_substituted_with_Voltage_Probe_+_Industrial_Data_Logger=Saída de osciloscópio Falstad substituída por Sonda de Tensão + Registrador de Dados Industrial
+Inductor_support_items_not_found.=Itens de suporte do indutor não encontrados.
+Largest_nearby_area_found_was_%1$x%2$_blocks.=A maior área próxima encontrada foi de %1$x%2$ blocos.
+Line_%1$\:_invalid_capacitance_value.=Linha %1$: valor de capacitância inválido.
+Line_%1$\:_invalid_current_value.=Linha %1$: valor de corrente inválido.
+Line_%1$\:_invalid_inductance_value.=Linha %1$: valor de indutância inválido.
+Line_%1$\:_invalid_resistance_value.=Linha %1$: valor de resistência inválido.
+Line_%1$\:_non-DC_source_imported_as_DC.=Linha %1$: fonte não-CC importada como CC.
+Missing_ELN_descriptor_for_%1$=Descritor ELN ausente para %1$
+Resistor_descriptor_unavailable.=Descritor de resistor indisponível.
+Signal_switch_placed,_but_couldn't_configure_its_state.=Interruptor de sinal colocado, mas não foi possível configurar seu estado.
+Voltage_source_placed,_but_couldn't_configure_its_voltage.=Fonte de tensão colocada, mas não foi possível configurar sua tensão.
+Voltage_source_substituted_with_Electrical_Source_+_Ground=Fonte de tensão substituída por Fonte de Tensão + Terra
+missing_descriptor\:_Current_Source=descritor ausente: Fonte de Corrente
+missing_descriptor\:_Electrical_Source=descritor ausente: Fonte de Tensão
+missing_descriptor\:_Industrial_Data_Logger=descritor ausente: Registrador de Dados Industrial
+missing_descriptor\:_LED_vuMeter=descritor ausente: LED vuMeter
+missing_descriptor\:_NAND_Chip=descritor ausente: Chip NAND
+missing_descriptor\:_Signal_Switch=descritor ausente: Interruptor de Sinal
+missing_descriptor\:_Voltage_Probe=descritor ausente: Sonda de Tensão
 original=original
-placed_Industrial_Data_Logger_but_couldn't_find_top_element=placed Industrial Data Logger but couldn't find top element
-placed_Voltage_Probe_but_couldn't_find_top_element=placed Voltage Probe but couldn't find top element
-placed_block_but_couldn't_find_top_element=placed block but couldn't find top element
-rotated_clockwise=rotated clockwise
+placed_Industrial_Data_Logger_but_couldn't_find_top_element=Registrador de Dados Industrial colocado mas não foi possível encontrar o elemento superior
+placed_Voltage_Probe_but_couldn't_find_top_element=Sonda de Tensão colocada mas não foi possível encontrar o elemento superior
+placed_block_but_couldn't_find_top_element=bloco colocado mas não foi possível encontrar o elemento superior
+rotated_clockwise=girado no sentido horário
 
 # src/main/kotlin/mods/eln/falstad/FalstadNetlist.kt
-Element_%1$\:_malformed_ground_element=Element %1$: malformed ground element
-Element_%1$\:_missing_or_invalid_x_attribute_for_<%2$>=Element %1$: missing or invalid x attribute for <%2$>
-Element_%1$\:_unsupported_<%2$>_element=Element %1$: unsupported <%2$> element
-Falstad_gate_%1$_substituted_with_%2$=Falstad gate %1$ substituted with %2$
-Falstad_gate_%1$_substituted_with_NOT_Chip=Falstad gate %1$ substituted with NOT Chip
-Falstad_logic_input_substituted_with_Signal_Switch=Falstad logic input substituted with Signal Switch
-Falstad_logic_output_substituted_with_LED_vuMeter=Falstad logic output substituted with LED vuMeter
-Line_%1$\:_%2$=Line %1$: %2$
-Line_%1$\:_SPDT_switch_requires_connections_on_both_throws=Line %1$: SPDT switch requires connections on both throws
-Line_%1$\:_diagonal_component_'%2$'_is_not_supported=Line %1$: diagonal component '%2$' is not supported
-Line_%1$\:_gate_'%2$'_is_missing_stretched_input_connections=Line %1$: gate '%2$' is missing stretched input connections
-Line_%1$\:_gate_'%2$'_is_only_supported_horizontally=Line %1$: gate '%2$' is only supported horizontally
-Line_%1$\:_malformed_coordinates=Line %1$: malformed coordinates
-Line_%1$\:_malformed_ground_coordinates=Line %1$: malformed ground coordinates
-Line_%1$\:_too_few_fields_for_component_'%2$'=Line %1$: too few fields for component '%2$'
-Line_%1$\:_unsupported_component_'%2$'=Line %1$: unsupported component '%2$'
-Push_switch_substituted_with_a_maintained_switch=Push switch substituted with a maintained switch
-SPDT_switch_substituted_with_two_complementary_maintained_switches=SPDT switch substituted with two complementary maintained switches
-Zener_diode_substituted_with_a_standard_diode=Zener diode substituted with a standard diode
-adjustable_voltage_source_imported_as_a_fixed_DC_source=adjustable voltage source imported as a fixed DC source
+Element_%1$\:_malformed_ground_element=Elemento %1$: elemento de terra malformado
+Element_%1$\:_missing_or_invalid_x_attribute_for_<%2$>=Elemento %1$: atributo x ausente ou inválido para <%2$>
+Element_%1$\:_unsupported_<%2$>_element=Elemento %1$: elemento <%2$> não suportado
+Falstad_gate_%1$_substituted_with_%2$=Porta Falstad %1$ substituída por %2$
+Falstad_gate_%1$_substituted_with_NOT_Chip=Porta Falstad %1$ substituída por Chip NOT
+Falstad_logic_input_substituted_with_Signal_Switch=Entrada lógica Falstad substituída por Interruptor de Sinal
+Falstad_logic_output_substituted_with_LED_vuMeter=Saída lógica Falstad substituída por LED vuMeter
+Line_%1$\:_%2$=Linha %1$: %2$
+Line_%1$\:_SPDT_switch_requires_connections_on_both_throws=Linha %1$: interruptor SPDT requer conexões em ambos os terminais
+Line_%1$\:_diagonal_component_'%2$'_is_not_supported=Linha %1$: componente diagonal '%2$' não é suportado
+Line_%1$\:_gate_'%2$'_is_missing_stretched_input_connections=Linha %1$: porta '%2$' está com conexões de entrada estendidas ausentes
+Line_%1$\:_gate_'%2$'_is_only_supported_horizontally=Linha %1$: porta '%2$' só é suportada horizontalmente
+Line_%1$\:_malformed_coordinates=Linha %1$: coordenadas malformadas
+Line_%1$\:_malformed_ground_coordinates=Linha %1$: coordenadas de terra malformadas
+Line_%1$\:_too_few_fields_for_component_'%2$'=Linha %1$: campos insuficientes para o componente '%2$'
+Line_%1$\:_unsupported_component_'%2$'=Linha %1$: componente não suportado '%2$'
+Push_switch_substituted_with_a_maintained_switch=Interruptor de pressão substituído por um interruptor mantido
+SPDT_switch_substituted_with_two_complementary_maintained_switches=Interruptor SPDT substituído por dois interruptores mantidos complementares
+Zener_diode_substituted_with_a_standard_diode=Diodo Zener substituído por um diodo padrão
+adjustable_voltage_source_imported_as_a_fixed_DC_source=fonte de tensão ajustável importada como fonte CC fixa
 
 # src/main/kotlin/mods/eln/gridnode/GridElement.kt
-Added_connection=Added connection
-Cancelled_connection=Cancelled connection
-Cannot_connect,_no_line_of_sight=Cannot connect, no line of sight
-Cannot_connect,_range_%1$_and_limit_%2$_blocks=Cannot connect, range %1$ and limit %2$ blocks
-Cannot_connect_these_two_objects=Cannot connect these two objects
-Setting_starting_point=Setting starting point
-Wrong_cable_for_this_pole=Wrong cable for this pole
-You_need_%1$_m_of_cable=You need %1$ m of cable
+Added_connection=Conexão adicionada
+Cancelled_connection=Conexão cancelada
+Cannot_connect,_no_line_of_sight=Não é possível conectar, sem linha de visão
+Cannot_connect,_range_%1$_and_limit_%2$_blocks=Não é possível conectar, alcance %1$ e limite %2$ blocos
+Cannot_connect_these_two_objects=Não é possível conectar estes dois objetos
+Setting_starting_point=Definindo ponto de partida
+Wrong_cable_for_this_pole=Cabo errado para este poste
+You_need_%1$_m_of_cable=Você precisa de %1$ m de cabo
 
 # src/main/kotlin/mods/eln/gridnode/GridSwitch.kt
-Closed?=Closed?
-Drive=Drive
-Left=Left
-Right=Right
-Transfer=Transfer
+Closed?=Fechado?
+Drive=Acionamento
+Left=Esquerda
+Right=Direita
+Transfer=Transferência
 
 # src/main/kotlin/mods/eln/item/BrushDescriptor.kt
-Brush_is_dry=Brush is dry
-Can_paint_%1$_blocks=Pode pintar %1$ Cabo(s).
+Brush_is_dry=Pincel está seco
+Can_paint_%1$_blocks=Pode pintar %1$ blocos
 
 # src/main/kotlin/mods/eln/item/CaseItemDescriptor.kt
-Can_be_used_to_encase_EA_items_that_support_it=Serve para revestir o transformador.
+Can_be_used_to_encase_EA_items_that_support_it=Pode ser usado para encapar itens EA que suportam isso
 
 # src/main/kotlin/mods/eln/item/FalstadImportTool.kt
-Cancel=Cancel
-Falstad_Import_Tool=Falstad Import Tool
-Falstad_import\:_clipboard_is_empty.=Falstad import: clipboard is empty.
-Falstad_import\:_netlist_is_too_large_to_send_(%1$_bytes,_limit_%2$).=Falstad import: netlist is too large to send (%1$ bytes, limit %2$).
-Paste_Clipboard=Paste Clipboard
-Places_a_simplified_ELN_build_on_flat_ground_near_the_player.=Places a simplified ELN build on flat ground near the player.
-Reads_Falstad_text_from_the_system_clipboard.=Reads Falstad text from the system clipboard.
-Right_click_to_import_a_Falstad_netlist_from_the_clipboard.=Right click to import a Falstad netlist from the clipboard.
+Cancel=Cancelar
+Falstad_Import_Tool=Ferramenta de Importação Falstad
+Falstad_import\:_clipboard_is_empty.=Importação Falstad: área de transferência vazia.
+Falstad_import\:_netlist_is_too_large_to_send_(%1$_bytes,_limit_%2$).=Importação Falstad: netlist muito grande para enviar (%1$ bytes, limite %2$).
+Paste_Clipboard=Colar da Área de Transferência
+Places_a_simplified_ELN_build_on_flat_ground_near_the_player.=Coloca uma construção ELN simplificada em terreno plano perto do jogador.
+Reads_Falstad_text_from_the_system_clipboard.=Lê texto Falstad da área de transferência do sistema.
+Right_click_to_import_a_Falstad_netlist_from_the_clipboard.=Clique direito para importar uma netlist Falstad da área de transferência.
 
 # src/main/kotlin/mods/eln/item/FuelBurnerDescriptor.kt
-Burn_unit_for_the_gas_heat_furnace.=Unidade de queima de combustivel.
-Produced_heat_power\:_=Producao de energia termica:
+Burn_unit_for_the_gas_heat_furnace.=Unidade de queima para a fornalha térmica a gás.
+Produced_heat_power\:_=Potência térmica produzida:
 
 # src/main/kotlin/mods/eln/item/NopeWandDescriptor.kt
-Removes_them_without_dropping_items,_much_like_/eln_zonedestroy.=Removes them without dropping items, much like /eln zonedestroy.
-Right_click_to_immediately_remove_ELN_nodes_and_blocks_in_a_10-block_radius.=Right click to immediately remove ELN nodes and blocks in a 10-block radius.
-The_Nope_Wand_fizzles\:_node_manager_unavailable.=The Nope Wand fizzles: node manager unavailable.
-The_Nope_Wand_removed_%1$_ELN_nodes_and_cleared_%2$_ELN_blocks_in_a_%3$-block_radius.=The Nope Wand removed %1$ ELN nodes and cleared %2$ ELN blocks in a %3$-block radius.
+Removes_them_without_dropping_items,_much_like_/eln_zonedestroy.=Remove-os sem derrubar itens, semelhante ao /eln zonedestroy.
+Right_click_to_immediately_remove_ELN_nodes_and_blocks_in_a_10-block_radius.=Clique direito para remover imediatamente nós e blocos ELN em um raio de 10 blocos.
+The_Nope_Wand_fizzles\:_node_manager_unavailable.=A Varinha Nope falha: gerenciador de nós indisponível.
+The_Nope_Wand_removed_%1$_ELN_nodes_and_cleared_%2$_ELN_blocks_in_a_%3$-block_radius.=A Varinha Nope removeu %1$ nós ELN e limpou %2$ blocos ELN em um raio de %3$ blocos.
 
 # src/main/kotlin/mods/eln/item/ThermalIsolatorElement.kt
-Organic_Asbestos™=Organic Asbestos™
-Upgrade_for_the_Stone_Heat_Furnace=Upgrade for the Stone Heat Furnace
-__Heat_tolerance\:=  Heat tolerance:
-__Insulation\:=  Insulation:
+Organic_Asbestos™=Amianto Orgânico™
+Upgrade_for_the_Stone_Heat_Furnace=Melhoria para a Fornalha Térmica de Pedra
+__Heat_tolerance\:=  Tolerância ao calor:
+__Insulation\:=  Isolamento:
 
 # src/main/kotlin/mods/eln/item/ThermometerDescriptor.kt
-Biome_T\:=Biome T:
-RH\:=RH:
-Room_T\:=Room T:
+Biome_T\:=Temp. Bioma:
+RH\:=UR:
+Room_T\:=Temp. Ambiente:
 
 # src/main/kotlin/mods/eln/item/TurbineBladeDescriptor.kt
-Nominal_Lifetime\:_%1$h=Nominal Lifetime: %1$h
+Nominal_Lifetime\:_%1$h=Vida Útil Nominal: %1$h
 
 # src/main/kotlin/mods/eln/item/WireMachineItems.kt
-Length\:_%1$_m=Length: %1$ m
-Target\:_%1$=Target: %1$
+Length\:_%1$_m=Comprimento: %1$ m
+Target\:_%1$=Alvo: %1$
 
 # src/main/kotlin/mods/eln/item/WireScrapDescriptor.kt
-Recovered_from\:_%1$=Recovered from: %1$
-Type\:_%1$_(%2$_mm2),_%3$_conductors,_%4$=Type: %1$ (%2$ mm2), %3$ conductors, %4$
-bare=bare
-insulated=insulated
+Recovered_from\:_%1$=Recuperado de: %1$
+Type\:_%1$_(%2$_mm2),_%3$_conductors,_%4$=Tipo: %1$ (%2$ mm2), %3$ condutores, %4$
+bare=nu
+insulated=isolado
 
 # src/main/kotlin/mods/eln/item/WireSnipsDescriptor.kt
-Cut_Wire=Cut Wire
-Cut_length_in_whole_meters=Cut length in whole meters
-Input_Wire=Input Wire
-Input_must_be_a_utility_wire=Input must be a utility wire
-Insert_a_wire_coil_to_cut=Insert a wire coil to cut
-Remaining\:_%1$_m=Remaining: %1$ m
-Right_click_to_cut_utility_wire_in_your_inventory=Right click to cut utility wire in your inventory
-Wire_Snips=Wire Snips
+Cut_Wire=Cortar Fio
+Cut_length_in_whole_meters=Comprimento de corte em metros inteiros
+Input_Wire=Fio de Entrada
+Input_must_be_a_utility_wire=A entrada deve ser um fio utilitário
+Insert_a_wire_coil_to_cut=Insira uma bobina de fio para cortar
+Remaining\:_%1$_m=Restante: %1$ m
+Right_click_to_cut_utility_wire_in_your_inventory=Clique direito para cortar fio utilitário no seu inventário
+Wire_Snips=Cortador de Fios
 
 # src/main/kotlin/mods/eln/item/electricalitem/BatteryItem.kt
 
 # src/main/kotlin/mods/eln/item/electricalitem/ElectricalAxe.kt
-Cuts_down_trees._Right-click_to_make_it_act_like_a_regular_axe.=Cuts down trees. Right-click to make it act like a regular axe.
+Cuts_down_trees._Right-click_to_make_it_act_like_a_regular_axe.=Derruba árvores. Clique direito para fazê-lo agir como um machado comum.
 
 # src/main/kotlin/mods/eln/item/electricalitem/ElectricalFlashlightItem.kt
 State\:=Estado:
-Stored_Energy\:_%1$J_(%2$%)=Armazenamento de energia: %1$J (%2$%)
+Stored_Energy\:_%1$J_(%2$%)=Energia Armazenada: %1$J (%2$%)
 
 # src/main/kotlin/mods/eln/item/electricalitem/ElectricalPickaxe.kt
-Opens_holes._Right-click_to_open_smaller_holes.=Opens holes. Right-click to open smaller holes.
+Opens_holes._Right-click_to_open_smaller_holes.=Abre buracos. Clique direito para abrir buracos menores.
 
 # src/main/kotlin/mods/eln/item/electricalitem/PortableOreScannerItem.kt
 
 # src/main/kotlin/mods/eln/item/lampitem/LampDescriptor.kt
-Current_lifetime\:_%1$h=Current lifetime: %1$h
-Nominal_brightness\:_%1$=Nominal brightness: %1$
-Nominal_lifetime\:_%1$h=Nominal lifetime: %1$h
+Current_lifetime\:_%1$h=Vida útil atual: %1$h
+Nominal_brightness\:_%1$=Brilho nominal: %1$
+Nominal_lifetime\:_%1$h=Vida útil nominal: %1$h
 
 # src/main/kotlin/mods/eln/item/lampitem/LampItemSlot.kt
-Lamp_slot=Bocal da lampada
+Lamp_slot=Espaço de lâmpada
 
 # src/main/kotlin/mods/eln/item/lampitem/LampTechnology.kt
-carbon=carbon
-farming=farming
-fluorescent=fluorescent
-halogen=halogen
-incandescent=incandescent
+carbon=carbono
+farming=agrícola
+fluorescent=fluorescente
+halogen=halógena
+incandescent=incandescente
 led=led
 
 # src/main/kotlin/mods/eln/mechanical/Clutch.kt
-Clutch_Pin=Clutch Pin
-Clutch_Plate=Clutch Plate
-Clutching=Clutching
-Condition\:=Condicao:
-Energies=Energies
-Prevents_clutches_from_slipping\nagain_after_they_stop.=Prevents clutches from slipping\nagain after they stop.
-Speeds=Speeds
+Clutch_Pin=Pino da Embreagem
+Clutch_Plate=Disco da Embreagem
+Clutching=Embreando
+Condition\:=Condição:
+Energies=Energias
+Prevents_clutches_from_slipping\nagain_after_they_stop.=Evita que as embreagens deslizem\nnovamente após pararem.
+Speeds=Velocidades
 
 # src/main/kotlin/mods/eln/mechanical/CrankableShaft.kt
-Can_rotate_slowly=Can rotate slowly
-Player_crankable_shaft=Player crankable shaft
+Can_rotate_slowly=Pode girar lentamente
+Player_crankable_shaft=Eixo acionável por manivela pelo jogador
 
 # src/main/kotlin/mods/eln/mechanical/Generator.kt
-Converts_mechanical_energy_into_electricity,_or_(badly)_vice_versa.=Converts mechanical energy into electricity, or (badly) vice versa.
-Integrated_regulator\:_ramps_field_and_limits_output_current.=Integrated regulator: ramps field and limits output current.
-Regulator_current_limit=Regulator current limit
-Regulator_current_limit\:_=Regulator current limit: 
-Regulator_target=Regulator target
+Converts_mechanical_energy_into_electricity,_or_(badly)_vice_versa.=Converte energia mecânica em eletricidade, ou (mal) vice-versa.
+Integrated_regulator\:_ramps_field_and_limits_output_current.=Regulador integrado: rampa o campo e limita a corrente de saída.
+Regulator_current_limit=Limite de corrente do regulador
+Regulator_current_limit\:_=Limite de corrente do regulador: 
+Regulator_target=Alvo do regulador
 __Rads\:_=  Rads: 
-__Voltage_out\:_=  Voltage out: 
+__Voltage_out\:_=Tensão de saída:
 
 # src/main/kotlin/mods/eln/mechanical/Motor.kt
-Converts_electricity_into_mechanical_energy,_or_(badly)_vice_versa.=Converts electricity into mechanical energy, or (badly) vice versa.
-Drive_current_limit\:_=Drive current limit: 
-Drive_current_request=Drive current request
-Drive_target=Drive target
-Integrated_drive\:_soft-starts_to_nominal_speed.=Integrated drive: soft-starts to nominal speed.
-Max_rad/s\:_=Max rad/s: 
-__Power_in\:_=  Power in: 
-__Voltage_in\:_=  Voltage in: 
+Converts_electricity_into_mechanical_energy,_or_(badly)_vice_versa.=Converte eletricidade em energia mecânica, ou (mal) vice-versa.
+Drive_current_limit\:_=Limite de corrente do acionamento: 
+Drive_current_request=Solicitação de corrente do acionamento
+Drive_target=Alvo do acionamento
+Integrated_drive\:_soft-starts_to_nominal_speed.=Acionamento integrado: partida suave até a velocidade nominal.
+Max_rad/s\:_=Máx rad/s: 
+__Power_in\:_=  Potência de entrada:
+__Voltage_in\:_=  Tensão de entrada:
 __rad/s\:_=  rad/s: 
 
 # src/main/kotlin/mods/eln/mechanical/RadialMotor.kt
-%1$_input\:_%2$_mB/s=%1$ input: %2$ mB/s
+%1$_input\:_%2$_mB/s=Entrada %1$: %2$ mB/s
 
 # src/main/kotlin/mods/eln/mechanical/RollingShaftMachine.kt
-Can_Process=Can Process
-Process_State=Process State
+Can_Process=Pode Processar
+Process_State=Estado do Processo
 
 # src/main/kotlin/mods/eln/mechanical/Tachometer.kt
-Rads/s_corresponding\nto_0%_output=Rads/s corresponding\nto 0% output
-Rads/s_corresponding\nto_100%_output=Rads/s corresponding\nto 100% output
+Rads/s_corresponding\nto_0%_output=Rads/s correspondente\na 0% de saída
+Rads/s_corresponding\nto_100%_output=Rads/s correspondente\na 100% de saída
 
 # src/main/kotlin/mods/eln/mechanical/Turbines.kt
-%1$_input\:_%2$=%1$ input: %2$
-Blade=Blade
-Life_Left=Life Left
-Requires_a_turbine_blade_to_operate.=Requires a turbine blade to operate.
-Turbine_blade_slot=Turbine blade slot
+%1$_input\:_%2$=Entrada %1$: %2$
+Blade=Lâmina
+Life_Left=Vida Restante
+Requires_a_turbine_blade_to_operate.=Requer uma lâmina de turbina para operar.
+Turbine_blade_slot=Espaço de lâmina de turbina
 
 # src/main/kotlin/mods/eln/misc/UtilsClient.kt
-Hold_[ctrl]_for_realism_details=Hold [ctrl] for realism details
-Hold_[shift]_for_details=Hold [shift] for details
+Hold_[ctrl]_for_realism_details=Segure [ctrl] para detalhes de realismo
+Hold_[shift]_for_details=Segure [shift] para detalhes
 
 # src/main/kotlin/mods/eln/misc/Version.kt
 mod.name=Electrical Age
@@ -999,1055 +999,1055 @@ mod.name=Electrical Age
 # src/main/kotlin/mods/eln/node/six/SixNodeDescriptor.kt
 
 # src/main/kotlin/mods/eln/railroad/ElectricMinecartChargeReporter.kt
-Cart_Energy\:_=Cart Energy: 
+Cart_Energy\:_=Energia do Carrinho: 
 
 # src/main/kotlin/mods/eln/registration/ItemRegistration.kt
-120V_Carbon_Light_Bulb.name=120V Carbon Light Bulb
-120V_Farming_Light_Bulb.name=120V Farming Light Bulb
-120V_Fluorescent_Light_Bulb.name=120V Fluorescent Light Bulb
-120V_Halogen_Light_Bulb.name=120V Halogen Light Bulb
-120V_Incandescent_Light_Bulb.name=120V Incandescent Light Bulb
-120V_LED_Light_Bulb.name=120V LED Light Bulb
-12V_Carbon_Light_Bulb.name=12V Carbon Light Bulb
-12V_Farming_Light_Bulb.name=12V Farming Light Bulb
-12V_Fluorescent_Light_Bulb.name=12V Fluorescent Light Bulb
-12V_Halogen_Light_Bulb.name=12V Halogen Light Bulb
-12V_Incandescent_Light_Bulb.name=12V Incandescent Light Bulb
-12V_LED_Light_Bulb.name=12V LED Light Bulb
-240V_Carbon_Light_Bulb.name=240V Carbon Light Bulb
-240V_Copper_Heating_Element.name=240V Copper Heating Element
-240V_Farming_Light_Bulb.name=240V Farming Light Bulb
-240V_Fluorescent_Light_Bulb.name=240V Fluorescent Light Bulb
-240V_Halogen_Light_Bulb.name=240V Halogen Light Bulb
-240V_Incandescent_Light_Bulb.name=240V Incandescent Light Bulb
-240V_Iron_Heating_Element.name=240V Iron Heating Element
-240V_LED_Light_Bulb.name=240V LED Light Bulb
-240V_Tungsten_Heating_Element.name=240V Tungsten Heating Element
-2x_Graphite_Rods.name=2x Graphite Rods
-3x_Graphite_Rods.name=3x Graphite Rods
-480V_Heavy_Tungsten_Heating_Element.name=480V Heavy Tungsten Heating Element
-480V_Tungsten_Heating_Element.name=480V Tungsten Heating Element
-48V_Copper_Heating_Element.name=48V Copper Heating Element
-48V_Iron_Heating_Element.name=48V Iron Heating Element
-48V_Tungsten_Heating_Element.name=48V Tungsten Heating Element
-4x_Graphite_Rods.name=4x Graphite Rods
-Advanced_Chip.name=Circuito Integrado Avancado
-Advanced_Electrical_Motor.name=Motor Eletrico Avancado
-Advanced_Machine_Block.name=Bloco de Maquina Avancado
-Advanced_Magnet.name=Ima de Aco-Tungstenio
-AllMeter.name=Multimetro e Termometro
-Alloy_Dust.name=Po de Aco-tungstenio
-Alloy_Ingot.name=Barra de Aco-Tungstenio
-Alloy_Plate.name=Placa de Aco-Tungstenio
-Alloy_Turbine_Blade.name=Alloy Turbine Blade
-Aluminum_Roller_Wheel.name=Aluminum Roller Wheel
-Analogic_Regulator.name=Regulador Analogico
-Animal_Filter.name=Filtro de Animal
-Arc_Clay_Ingot.name=Arc Clay Ingot
-Arc_Metal_Ingot.name=Arc Metal Ingot
-Arithmetic_Logic_Unit.name=Arithmetic Logic Unit
-Average_Electrical_Drill.name=Broca de Mineracao Medio
-Average_Ferromagnetic_Core.name=Nucleo Ferromagnetico Medio
-Basic_Magnet.name=Ima de Ferro
-Big_Fuel_Burner.name=Queimador de Combustivel Grande
-Black_Brush.name=Rolo de Pintura Preta
-Blue_Brush.name=Rolo de Pintura Azul
-Brown_Brush.name=Rolo de Pintura Marrom
-Canister_of_Arc_Water.name=Canister of Arc Water
-Canister_of_Water.name=Canister of Water
-Casing.name=Quadro do Transformador
-Cheap_Chip.name=Circuito Integrado Basico
-Cheap_Electrical_Drill.name=Broca de Mineracao Basico
-Cheap_Ferromagnetic_Core.name=Nucleo Ferromagnetico Basico
-Cinnabar_Dust.name=Po de Cinabrio
-Cinnabar_Ore.name=Minerio de Cinabrio
-Clutch_Pin.name=Clutch Pin
-Coal_Clutch_Plate.name=Coal Clutch Plate
-Coal_Dust.name=Po de Carvao
-Coal_Plate.name=Placa de Carvao
-Combustion_Chamber.name=Melhoria da Camara de Aquecimento
-Config_Copy_Tool.name=Config Copy Tool
-Copper_Cable.name=Fio de Cobre
-Copper_Clutch_Plate.name=Copper Clutch Plate
-Copper_Dust.name=Po de Cobre
-Copper_Ingot.name=Barra de Cobre
-Copper_Ore.name=Minerio de Cobre
+120V_Carbon_Light_Bulb.name=Lâmpada de Carbono 120V
+120V_Farming_Light_Bulb.name=Lâmpada Agrícola 120V
+120V_Fluorescent_Light_Bulb.name=Lâmpada Fluorescente 120V
+120V_Halogen_Light_Bulb.name=Lâmpada Halógena 120V
+120V_Incandescent_Light_Bulb.name=Lâmpada Incandescente 120V
+120V_LED_Light_Bulb.name=Lâmpada LED 120V
+12V_Carbon_Light_Bulb.name=Lâmpada de Carbono 12V
+12V_Farming_Light_Bulb.name=Lâmpada Agrícola 12V
+12V_Fluorescent_Light_Bulb.name=Lâmpada Fluorescente 12V
+12V_Halogen_Light_Bulb.name=Lâmpada Halógena 12V
+12V_Incandescent_Light_Bulb.name=Lâmpada Incandescente 12V
+12V_LED_Light_Bulb.name=Lâmpada LED 12V
+240V_Carbon_Light_Bulb.name=Lâmpada de Carbono 240V
+240V_Copper_Heating_Element.name=Elemento de Aquecimento de Cobre 240V
+240V_Farming_Light_Bulb.name=Lâmpada Agrícola 240V
+240V_Fluorescent_Light_Bulb.name=Lâmpada Fluorescente 240V
+240V_Halogen_Light_Bulb.name=Lâmpada Halógena 240V
+240V_Incandescent_Light_Bulb.name=Lâmpada Incandescente 240V
+240V_Iron_Heating_Element.name=Elemento de Aquecimento de Ferro 240V
+240V_LED_Light_Bulb.name=Lâmpada LED 240V
+240V_Tungsten_Heating_Element.name=Elemento de Aquecimento de Tungstênio 240V
+2x_Graphite_Rods.name=2x Bastões de Grafite
+3x_Graphite_Rods.name=3x Bastões de Grafite
+480V_Heavy_Tungsten_Heating_Element.name=Elemento de Aquecimento de Tungstênio Pesado 480V
+480V_Tungsten_Heating_Element.name=Elemento de Aquecimento de Tungstênio 480V
+48V_Copper_Heating_Element.name=Elemento de Aquecimento de Cobre 48V
+48V_Iron_Heating_Element.name=Elemento de Aquecimento de Ferro 48V
+48V_Tungsten_Heating_Element.name=Elemento de Aquecimento de Tungstênio 48V
+4x_Graphite_Rods.name=4x Bastões de Grafite
+Advanced_Chip.name=Chip Avançado
+Advanced_Electrical_Motor.name=Motor Elétrico Avançado
+Advanced_Machine_Block.name=Bloco de Máquina Avançado
+Advanced_Magnet.name=Ímã Avançado
+AllMeter.name=Medidor Universal
+Alloy_Dust.name=Pó de Liga
+Alloy_Ingot.name=Lingote de Liga
+Alloy_Plate.name=Placa de Liga
+Alloy_Turbine_Blade.name=Lâmina de Turbina de Liga
+Aluminum_Roller_Wheel.name=Roda Laminadora de Alumínio
+Analogic_Regulator.name=Regulador Analógico
+Animal_Filter.name=Filtro de Animais
+Arc_Clay_Ingot.name=Lingote de Argila de Arco
+Arc_Metal_Ingot.name=Lingote de Metal de Arco
+Arithmetic_Logic_Unit.name=Unidade Lógica Aritmética
+Average_Electrical_Drill.name=Furadeira Elétrica Média
+Average_Ferromagnetic_Core.name=Núcleo Ferromagnético Médio
+Basic_Magnet.name=Ímã Básico
+Big_Fuel_Burner.name=Queimador de Combustível Grande
+Black_Brush.name=Pincel Preto
+Blue_Brush.name=Pincel Azul
+Brown_Brush.name=Pincel Marrom
+Canister_of_Arc_Water.name=Recipiente de Água de Arco
+Canister_of_Water.name=Recipiente de Água
+Casing.name=Carcaça
+Cheap_Chip.name=Chip Barato
+Cheap_Electrical_Drill.name=Furadeira Elétrica Barata
+Cheap_Ferromagnetic_Core.name=Núcleo Ferromagnético Barato
+Cinnabar_Dust.name=Pó de Cinábrio
+Cinnabar_Ore.name=Minério de Cinábrio
+Clutch_Pin.name=Pino de Embreagem
+Coal_Clutch_Plate.name=Disco de Embreagem de Carvão
+Coal_Dust.name=Pó de Carvão
+Coal_Plate.name=Placa de Carvão
+Combustion_Chamber.name=Câmara de Combustão
+Config_Copy_Tool.name=Ferramenta de Cópia de Configuração
+Copper_Cable.name=Cabo de Cobre
+Copper_Clutch_Plate.name=Disco de Embreagem de Cobre
+Copper_Dust.name=Pó de Cobre
+Copper_Ingot.name=Lingote de Cobre
+Copper_Ore.name=Minério de Cobre
 Copper_Plate.name=Placa de Cobre
-Cyan_Brush.name=Rolo de Pintura Ciano
-Data_Logger_Print.name=Data Logger Print
-Diamond_Dust.name=Diamond Dust
-Dielectric.name=Dieletrico
-Electric_Minecart.name=Electric Minecart
-Electrical_Motor.name=Motor Eletrico
-Electrical_Probe_Chip.name=Circuito Integrado de Sonda Eletrica
-Electrical_age_wrench,\nCan_be_used_to_turn\nsmall_wall_blocks=Gira e abre interfase do bloco,\nbotao direito ou botao direito e Shift.
-Falstad_Import_Tool.name=Falstad Import Tool
-Fast_Electrical_Drill.name=Broca de Mineracao Avancado
-Ferrite_Ingot.name=Barra de Ferrite
-Gold_Clutch_Plate.name=Gold Clutch Plate
-Gold_Dust.name=Po de Ouro
+Cyan_Brush.name=Pincel Ciano
+Data_Logger_Print.name=Impressão do Registrador de Dados
+Diamond_Dust.name=Pó de Diamante
+Dielectric.name=Dielétrico
+Electric_Minecart.name=Carrinho Elétrico
+Electrical_Motor.name=Motor Elétrico
+Electrical_Probe_Chip.name=Chip de Sonda Elétrica
+Electrical_age_wrench,\nCan_be_used_to_turn\nsmall_wall_blocks=Chave inglesa Electrical Age,\nPode ser usada para girar\npequenos blocos de parede
+Falstad_Import_Tool.name=Ferramenta de Importação Falstad
+Fast_Electrical_Drill.name=Furadeira Elétrica Rápida
+Ferrite_Ingot.name=Lingote de Ferrita
+Gold_Clutch_Plate.name=Disco de Embreagem de Ouro
+Gold_Dust.name=Pó de Ouro
 Gold_Plate.name=Placa de Ouro
-Graphite_Rod.name=Graphite Rod
-Gray_Brush.name=Rolo de Pintura Cinza
-Green_Brush.name=Rolo de Pintura Verde
-Handles_extreme_conditions=Handles extreme conditions
-Handles_moderate_conditions=Handles moderate conditions
-Heavy_Winding.name=Heavy Winding
-Improved_Flashlight.name=Improved Flashlight
-Inert_Canister.name=Inert Canister
-Iron_Cable.name=Fio de Ferro
-Iron_Clutch_Plate.name=Iron Clutch Plate
-Iron_Dust.name=Po de Ferro
+Graphite_Rod.name=Bastão de Grafite
+Gray_Brush.name=Pincel Cinza
+Green_Brush.name=Pincel Verde
+Handles_extreme_conditions=Suporta condições extremas
+Handles_moderate_conditions=Suporta condições moderadas
+Heavy_Winding.name=Enrolamento Pesado
+Improved_Flashlight.name=Lanterna Melhorada
+Inert_Canister.name=Recipiente Inerte
+Iron_Cable.name=Cabo de Ferro
+Iron_Clutch_Plate.name=Disco de Embreagem de Ferro
+Iron_Dust.name=Pó de Ferro
 Iron_Plate.name=Placa de Ferro
-Iron_Roller_Wheel.name=Iron Roller Wheel
-Iron_Turbine_Blade.name=Iron Turbine Blade
-Irresponsible_Electrical_Drill.name=Irresponsible Electrical Drill
-Lapis_Dust.name=Lapis Dust
-Lead_Clutch_Plate.name=Lead Clutch Plate
-Lead_Dust.name=Po de Chumbo
-Lead_Ingot.name=Barra de Chumbo
-Lead_Ore.name=Minerio de Chumbo
+Iron_Roller_Wheel.name=Roda Laminadora de Ferro
+Iron_Turbine_Blade.name=Lâmina de Turbina de Ferro
+Irresponsible_Electrical_Drill.name=Furadeira Elétrica Irresponsável
+Lapis_Dust.name=Pó de Lápis-Lazúli
+Lead_Clutch_Plate.name=Disco de Embreagem de Chumbo
+Lead_Dust.name=Pó de Chumbo
+Lead_Ingot.name=Lingote de Chumbo
+Lead_Ore.name=Minério de Chumbo
 Lead_Plate.name=Placa de Chumbo
-Light_Blue_Brush.name=Rolo de Pintura Azul Claro
-Lime_Brush.name=Rolo de Pintura Verde Limao
-Machine_Block.name=Bloco de Maquina
-Machine_Booster.name=Aumentar Potencia da Maquina
-Magenta_Brush.name=Rolo de Pintura Magenta
-Medium_Fuel_Burner.name=Queimador de Combustivel Medio
-Mercury.name=Mercurio
-Mining_Pipe.name=Tubo de Mineracao
-Monster_Filter.name=Filtro de Monstro
-Motor_Cowling.name=Motor Cowling
-MultiMeter.name=Multimetro
-NTC_Thermistor.name=NTC Thermistor
-Nibble_Memory_Chip.name=Nibble Memory Chip
-On/OFF_Regulator_10_Percent.name=Regulador 10 Porcento
-On/OFF_Regulator_1_Percent.name=Regulador 1 Porcento
-Optimal_Ferromagnetic_Core.name=Nucleo Ferromagnetico Avancado
-Orange_Brush.name=Rolo de Pintura Laranja
-Ore_Scanner.name=Circuito Escaneador de Minerio
-Overheating_Protection.name=Protecao Contra Sobreaquecimento
-Overvoltage_Protection.name=Protecao Contra Sobretensao
-Pink_Brush.name=Rolo de Pintura Rosa
-Player_Filter.name=Filtro de Jogador
-Portable_Battery.name=Pilha
-Portable_Battery_Pack.name=Pacote de Pilha
-Portable_Condensator.name=Condensador Portatil
-Portable_Condensator_Pack.name=Pacote de Condensador Portatil
-Portable_Electrical_Axe.name=Serra Eletrica
-Portable_Electrical_Mining_Drill.name=Brocal Eletrica
-Purple_Brush.name=Rolo de Pintura Lilas
-Really_useless=Really useless
-Red_Brush.name=Rolo de Pintura Vermelho
-Reinforced_Shaft.name=Reinforced Shaft
+Light_Blue_Brush.name=Pincel Azul Claro
+Lime_Brush.name=Pincel Lima
+Machine_Block.name=Bloco de Máquina
+Machine_Booster.name=Reforço de Máquina
+Magenta_Brush.name=Pincel Magenta
+Medium_Fuel_Burner.name=Queimador de Combustível Médio
+Mercury.name=Mercúrio
+Mining_Pipe.name=Tubo de Mineração
+Monster_Filter.name=Filtro de Monstros
+Motor_Cowling.name=Capota do Motor
+MultiMeter.name=Multímetro
+NTC_Thermistor.name=Termistor NTC
+Nibble_Memory_Chip.name=Chip de Memória Nibble
+On/OFF_Regulator_10_Percent.name=Regulador On/Off 10%
+On/OFF_Regulator_1_Percent.name=Regulador On/Off 1%
+Optimal_Ferromagnetic_Core.name=Núcleo Ferromagnético Ótimo
+Orange_Brush.name=Pincel Laranja
+Ore_Scanner.name=Scanner de Minério
+Overheating_Protection.name=Proteção contra Superaquecimento
+Overvoltage_Protection.name=Proteção contra Sobretensão
+Pink_Brush.name=Pincel Rosa
+Player_Filter.name=Filtro de Jogadores
+Portable_Battery.name=Bateria Portátil
+Portable_Battery_Pack.name=Pacote de Bateria Portátil
+Portable_Condensator.name=Capacitor Portátil
+Portable_Condensator_Pack.name=Pacote de Capacitor Portátil
+Portable_Electrical_Axe.name=Machado Elétrico Portátil
+Portable_Electrical_Mining_Drill.name=Furadeira de Mineração Elétrica Portátil
+Purple_Brush.name=Pincel Roxo
+Really_useless=Realmente inútil
+Red_Brush.name=Pincel Vermelho
+Reinforced_Shaft.name=Eixo Reforçado
 Rubber.name=Borracha
 Signal_Antenna.name=Antena de Sinal
-Silicon_Dust.name=Po de Silicio
-Silicon_Ingot.name=Barra de Silicio
-Silicon_Plate.name=Placa de Silicio
-Silicon_Wafer.name=Silicon Wafer
-Silver_Brush.name=Rolo de Pintura Cinza Claro
-Small_240V_Copper_Heating_Element.name=Small 240V Copper Heating Element
-Small_240V_Iron_Heating_Element.name=Small 240V Iron Heating Element
-Small_240V_Tungsten_Heating_Element.name=Small 240V Tungsten Heating Element
-Small_480V_Heavy_Tungsten_Heating_Element.name=Small 480V Heavy Tungsten Heating Element
-Small_480V_Tungsten_Heating_Element.name=Small 480V Tungsten Heating Element
-Small_48V_Copper_Heating_Element.name=Small 48V Copper Heating Element
-Small_48V_Iron_Heating_Element.name=Small 48V Iron Heating Element
-Small_48V_Tungsten_Heating_Element.name=Small 48V Tungsten Heating Element
-Small_Flashlight.name=Lanterna
-Small_Fuel_Burner.name=Queimador de Combustivel Pequeno
-Solar_Tracker.name=Regulador do Painel Solar
-Steel_Roller_Wheel.name=Steel Roller Wheel
-Steel_Turbine_Blade.name=Steel Turbine Blade
-Suitable_for_mild,_clean_fuels=Suitable for mild, clean fuels
-Suitable_for_most_fuel_types=Suitable for most fuel types
-Synthetic_Diamond.name=Synthetic Diamond
-The_Nope_Wand.name=The Nope Wand
-Thermal_Insulation.name=Thermal Insulation
-Thermal_Probe_Chip.name=Circuito Integrado de Sonda Calor
-Thermometer.name=Termometro
+Silicon_Dust.name=Pó de Silício
+Silicon_Ingot.name=Lingote de Silício
+Silicon_Plate.name=Placa de Silício
+Silicon_Wafer.name=Pastilha de Silício
+Silver_Brush.name=Pincel Prateado
+Small_240V_Copper_Heating_Element.name=Elemento de Aquecimento de Cobre Pequeno 240V
+Small_240V_Iron_Heating_Element.name=Elemento de Aquecimento de Ferro Pequeno 240V
+Small_240V_Tungsten_Heating_Element.name=Elemento de Aquecimento de Tungstênio Pequeno 240V
+Small_480V_Heavy_Tungsten_Heating_Element.name=Elemento de Aquecimento de Tungstênio Pesado Pequeno 480V
+Small_480V_Tungsten_Heating_Element.name=Elemento de Aquecimento de Tungstênio Pequeno 480V
+Small_48V_Copper_Heating_Element.name=Elemento de Aquecimento de Cobre Pequeno 48V
+Small_48V_Iron_Heating_Element.name=Elemento de Aquecimento de Ferro Pequeno 48V
+Small_48V_Tungsten_Heating_Element.name=Elemento de Aquecimento de Tungstênio Pequeno 48V
+Small_Flashlight.name=Lanterna Pequena
+Small_Fuel_Burner.name=Queimador de Combustível Pequeno
+Solar_Tracker.name=Rastreador Solar
+Steel_Roller_Wheel.name=Roda Laminadora de Aço
+Steel_Turbine_Blade.name=Lâmina de Turbina de Aço
+Suitable_for_mild,_clean_fuels=Adequado para combustíveis suaves e limpos
+Suitable_for_most_fuel_types=Adequado para a maioria dos tipos de combustível
+Synthetic_Diamond.name=Diamante Sintético
+The_Nope_Wand.name=A Varinha Nope
+Thermal_Insulation.name=Isolamento Térmico
+Thermal_Probe_Chip.name=Chip de Sonda Térmica
+Thermometer.name=Termômetro
 Transistor.name=Transistor
-Tree_Resin.name=Resina de Arvore
-Tungsten_Cable.name=Fio de Tungstenio
-Tungsten_Dust.name=Po de Tungstenio
-Tungsten_Ingot.name=Barra de Tungstenio
-Tungsten_Ore.name=Minerio de Tungstenio
-Tungsten_Turbine_Blade.name=Tungsten Turbine Blade
-Turbine_Blade_Set.name=Turbine Blade Set
-Turbo_Electrical_Drill.name=Turbo Electrical Drill
-White_Brush.name=Rolo de Pintura Branco
-Wire_Scraps.name=Wire Scraps
-Wire_Snips.name=Wire Snips
-Wireless_Analyser.name=Analizador de Sinal sem Fio
-Wound_Wire_Bundle.name=Wound Wire Bundle
-Wrench.name=Chave
-X-Ray_Scanner.name=Detector de Minerio Raio-X
-Yellow_Brush.name=Rolo de Pintura Amarelo
+Tree_Resin.name=Resina de Árvore
+Tungsten_Cable.name=Cabo de Tungstênio
+Tungsten_Dust.name=Pó de Tungstênio
+Tungsten_Ingot.name=Lingote de Tungstênio
+Tungsten_Ore.name=Minério de Tungstênio
+Tungsten_Turbine_Blade.name=Lâmina de Turbina de Tungstênio
+Turbine_Blade_Set.name=Conjunto de Lâminas de Turbina
+Turbo_Electrical_Drill.name=Furadeira Elétrica Turbo
+White_Brush.name=Pincel Branco
+Wire_Scraps.name=Sobras de Fio
+Wire_Snips.name=Cortador de Fios
+Wireless_Analyser.name=Analisador Sem Fio
+Wound_Wire_Bundle.name=Pacote de Fio Enrolado
+Wrench.name=Chave Inglesa
+X-Ray_Scanner.name=Scanner de Raio-X
+Yellow_Brush.name=Pincel Amarelo
 item.Copper Axe.name=Machado de Cobre
 item.Copper Boots.name=Botas de Cobre
 item.Copper Chestplate.name=Peitoral de Cobre
-item.Copper Helmet.name=Elmo de Cobre
+item.Copper Helmet.name=Capacete de Cobre
 item.Copper Hoe.name=Enxada de Cobre
-item.Copper Leggings.name=Calca de Cobre
+item.Copper Leggings.name=Calças de Cobre
 item.Copper Pickaxe.name=Picareta de Cobre
-item.Copper Shovel.name=Pa de Cobre
+item.Copper Shovel.name=Pá de Cobre
 item.Copper Sword.name=Espada de Cobre
-item.E-Coal Boots.name=Botas de Grafeno
-item.E-Coal Chestplate.name=Peitoral de Grafeno
-item.E-Coal Helmet.name=Elmo de Grafeno
-item.E-Coal Leggings.name=Calca de Grafeno
-miaou=miaou
+item.E-Coal Boots.name=Botas de E-Carvão
+item.E-Coal Chestplate.name=Peitoral de E-Carvão
+item.E-Coal Helmet.name=Capacete de E-Carvão
+item.E-Coal Leggings.name=Calças de E-Carvão
+miaou=miau
 unreleasedium.name=unreleasedium
-useless=useless
+useless=inútil
 
 # src/main/kotlin/mods/eln/registration/SingleNodeRegistration.kt
-tile.eln.Conduit.name=eln.Conduit
-tile.eln.ElnProbe.name=Sonda Periferico CC/OC
-tile.eln.EnergyConverter.name=eln.EnergyConverter
+tile.eln.Conduit.name=Bloco de Conduto
+tile.eln.ElnProbe.name=Sonda de Computador Eln
+tile.eln.EnergyConverter.name=Exportador de Energia
 
 # src/main/kotlin/mods/eln/registration/SixNodeRegistration.kt
-100A_Electrical_Breaker.name=100A Electrical Breaker
-100A_Switch.name=100A Switch
+100A_Electrical_Breaker.name=Disjuntor Elétrico 100A
+100A_Switch.name=Interruptor 100A
 10A_Diode.name=Diodo 10A
-10A_Electrical_Breaker.name=10A Electrical Breaker
-10A_Lead_Fuse.name=10A Lead Fuse
-120V_Battery_Charger.name=120V Battery Charger
-120V_Emergency_Lamp.name=120V Emergency Lamp
-120V_Fast_Battery_Charger.name=120V Fast Battery Charger
-120V_Lamp_Supply.name=120V Lamp Supply
-125A_Electrical_Breaker.name=125A Electrical Breaker
-12V_Control_Relay_100A.name=12V Control Relay 100A
-12V_Control_Relay_20A.name=12V Control Relay 20A
-12V_Control_Relay_50A.name=12V Control Relay 50A
-15A_Electrical_Breaker.name=15A Electrical Breaker
-15A_Lead_Fuse.name=15A Lead Fuse
-200A_Electrical_Breaker.name=200A Electrical Breaker
-20A_Electrical_Breaker.name=20A Electrical Breaker
-20A_Lead_Fuse.name=20A Lead Fuse
-20A_Switch.name=20A Switch
-240V_Battery_Charger.name=240V Battery Charger
-240V_Emergency_Lamp.name=240V Emergency Lamp
-240V_Lamp_Supply.name=240V Lamp Supply
-240V_Type_E_Socket.name=240V Type E Socket
-240V_Type_J_Socket.name=240V Type J Socket
+10A_Electrical_Breaker.name=Disjuntor Elétrico 10A
+10A_Lead_Fuse.name=Fusível de Chumbo 10A
+120V_Battery_Charger.name=Carregador de Bateria 120V
+120V_Emergency_Lamp.name=Lâmpada de Emergência 120V
+120V_Fast_Battery_Charger.name=Carregador Rápido de Bateria 120V
+120V_Lamp_Supply.name=Fonte para Lâmpadas 120V
+125A_Electrical_Breaker.name=Disjuntor Elétrico 125A
+12V_Control_Relay_100A.name=Relé de Controle 12V 100A
+12V_Control_Relay_20A.name=Relé de Controle 12V 20A
+12V_Control_Relay_50A.name=Relé de Controle 12V 50A
+15A_Electrical_Breaker.name=Disjuntor Elétrico 15A
+15A_Lead_Fuse.name=Fusível de Chumbo 15A
+200A_Electrical_Breaker.name=Disjuntor Elétrico 200A
+20A_Electrical_Breaker.name=Disjuntor Elétrico 20A
+20A_Lead_Fuse.name=Fusível de Chumbo 20A
+20A_Switch.name=Interruptor 20A
+240V_Battery_Charger.name=Carregador de Bateria 240V
+240V_Emergency_Lamp.name=Lâmpada de Emergência 240V
+240V_Lamp_Supply.name=Fonte para Lâmpadas 240V
+240V_Type_E_Socket.name=Tomada Tipo E 240V
+240V_Type_J_Socket.name=Tomada Tipo J 240V
 25A_Diode.name=Diodo 25A
-30A_Electrical_Breaker.name=30A Electrical Breaker
-30A_Lead_Fuse.name=30A Lead Fuse
-400A_Electrical_Breaker.name=400A Electrical Breaker
-40A_Electrical_Breaker.name=40A Electrical Breaker
-50A_Electrical_Breaker.name=50A Electrical Breaker
-50A_Lead_Fuse.name=50A Lead Fuse
-50A_Switch.name=50A Switch
-5A_Electrical_Breaker.name=5A Electrical Breaker
-5A_Lead_Fuse.name=5A Lead Fuse
-5A_Switch.name=5A Switch
-5V_Control_Relay_10A.name=5V Control Relay 10A
-60A_Electrical_Breaker.name=60A Electrical Breaker
-AND_Chip.name=Porta Logica E
-Advanced_Energy_Meter.name=Medidor de Energia Eletrica Avancado
-Aluminum_1/0_AWG_Cable_1000V.name=Aluminum 1/0 AWG Cable 1000V
-Aluminum_1/0_AWG_Cable_Bare.name=Aluminum 1/0 AWG Cable Bare
-Aluminum_1/0_AWG_Cable_Melted.name=Aluminum 1/0 AWG Cable Melted
-Aluminum_10/2_Cable_600V.name=Aluminum 10/2 Cable 600V
-Aluminum_10/2_Cable_Melted.name=Aluminum 10/2 Cable Melted
-Aluminum_10/3_Cable_600V.name=Aluminum 10/3 Cable 600V
-Aluminum_10/3_Cable_Melted.name=Aluminum 10/3 Cable Melted
-Aluminum_1000_kcmil_Cable_1000V.name=Aluminum 1000 kcmil Cable 1000V
-Aluminum_1000_kcmil_Cable_Bare.name=Aluminum 1000 kcmil Cable Bare
-Aluminum_1000_kcmil_Cable_Melted.name=Aluminum 1000 kcmil Cable Melted
-Aluminum_10_AWG_Cable_600V.name=Aluminum 10 AWG Cable 600V
-Aluminum_10_AWG_Cable_Bare.name=Aluminum 10 AWG Cable Bare
-Aluminum_10_AWG_Cable_Melted.name=Aluminum 10 AWG Cable Melted
-Aluminum_12/2_Cable_600V.name=Aluminum 12/2 Cable 600V
-Aluminum_12/2_Cable_Melted.name=Aluminum 12/2 Cable Melted
-Aluminum_12/3_Cable_600V.name=Aluminum 12/3 Cable 600V
-Aluminum_12/3_Cable_Melted.name=Aluminum 12/3 Cable Melted
-Aluminum_12_AWG_Cable_600V.name=Aluminum 12 AWG Cable 600V
-Aluminum_12_AWG_Cable_Bare.name=Aluminum 12 AWG Cable Bare
-Aluminum_12_AWG_Cable_Melted.name=Aluminum 12 AWG Cable Melted
-Aluminum_14/2_Cable_600V.name=Aluminum 14/2 Cable 600V
-Aluminum_14/2_Cable_Melted.name=Aluminum 14/2 Cable Melted
-Aluminum_14/3_Cable_600V.name=Aluminum 14/3 Cable 600V
-Aluminum_14/3_Cable_Melted.name=Aluminum 14/3 Cable Melted
-Aluminum_14_AWG_Cable_600V.name=Aluminum 14 AWG Cable 600V
-Aluminum_14_AWG_Cable_Bare.name=Aluminum 14 AWG Cable Bare
-Aluminum_14_AWG_Cable_Melted.name=Aluminum 14 AWG Cable Melted
-Aluminum_16_AWG_Cable_300V.name=Aluminum 16 AWG Cable 300V
-Aluminum_16_AWG_Cable_Bare.name=Aluminum 16 AWG Cable Bare
-Aluminum_16_AWG_Cable_Melted.name=Aluminum 16 AWG Cable Melted
-Aluminum_18_AWG_Cable_300V.name=Aluminum 18 AWG Cable 300V
-Aluminum_18_AWG_Cable_Bare.name=Aluminum 18 AWG Cable Bare
-Aluminum_18_AWG_Cable_Melted.name=Aluminum 18 AWG Cable Melted
-Aluminum_2/0_AWG_Cable_1000V.name=Aluminum 2/0 AWG Cable 1000V
-Aluminum_2/0_AWG_Cable_Bare.name=Aluminum 2/0 AWG Cable Bare
-Aluminum_2/0_AWG_Cable_Melted.name=Aluminum 2/0 AWG Cable Melted
-Aluminum_20_AWG_Cable_300V.name=Aluminum 20 AWG Cable 300V
-Aluminum_20_AWG_Cable_Bare.name=Aluminum 20 AWG Cable Bare
-Aluminum_20_AWG_Cable_Melted.name=Aluminum 20 AWG Cable Melted
-Aluminum_22_AWG_Cable_300V.name=Aluminum 22 AWG Cable 300V
-Aluminum_22_AWG_Cable_Bare.name=Aluminum 22 AWG Cable Bare
-Aluminum_22_AWG_Cable_Melted.name=Aluminum 22 AWG Cable Melted
-Aluminum_24_AWG_Cable_300V.name=Aluminum 24 AWG Cable 300V
-Aluminum_24_AWG_Cable_Bare.name=Aluminum 24 AWG Cable Bare
-Aluminum_24_AWG_Cable_Melted.name=Aluminum 24 AWG Cable Melted
-Aluminum_250_kcmil_Cable_1000V.name=Aluminum 250 kcmil Cable 1000V
-Aluminum_250_kcmil_Cable_Bare.name=Aluminum 250 kcmil Cable Bare
-Aluminum_250_kcmil_Cable_Melted.name=Aluminum 250 kcmil Cable Melted
-Aluminum_26_AWG_Cable_300V.name=Aluminum 26 AWG Cable 300V
-Aluminum_26_AWG_Cable_Bare.name=Aluminum 26 AWG Cable Bare
-Aluminum_26_AWG_Cable_Melted.name=Aluminum 26 AWG Cable Melted
-Aluminum_2C_18_AWG_Cable_300V.name=Aluminum 2C 18 AWG Cable 300V
-Aluminum_2C_18_AWG_Cable_Melted.name=Aluminum 2C 18 AWG Cable Melted
-Aluminum_2C_20_AWG_Cable_300V.name=Aluminum 2C 20 AWG Cable 300V
-Aluminum_2C_20_AWG_Cable_Melted.name=Aluminum 2C 20 AWG Cable Melted
-Aluminum_2_AWG_Cable_600V.name=Aluminum 2 AWG Cable 600V
-Aluminum_2_AWG_Cable_Bare.name=Aluminum 2 AWG Cable Bare
-Aluminum_2_AWG_Cable_Melted.name=Aluminum 2 AWG Cable Melted
-Aluminum_350_kcmil_Cable_1000V.name=Aluminum 350 kcmil Cable 1000V
-Aluminum_350_kcmil_Cable_Bare.name=Aluminum 350 kcmil Cable Bare
-Aluminum_350_kcmil_Cable_Melted.name=Aluminum 350 kcmil Cable Melted
-Aluminum_3C_18_AWG_Cable_300V.name=Aluminum 3C 18 AWG Cable 300V
-Aluminum_3C_18_AWG_Cable_Melted.name=Aluminum 3C 18 AWG Cable Melted
-Aluminum_3C_20_AWG_Cable_300V.name=Aluminum 3C 20 AWG Cable 300V
-Aluminum_3C_20_AWG_Cable_Melted.name=Aluminum 3C 20 AWG Cable Melted
-Aluminum_4/0_AWG_Cable_1000V.name=Aluminum 4/0 AWG Cable 1000V
-Aluminum_4/0_AWG_Cable_Bare.name=Aluminum 4/0 AWG Cable Bare
-Aluminum_4/0_AWG_Cable_Melted.name=Aluminum 4/0 AWG Cable Melted
-Aluminum_4/2_Cable_600V.name=Aluminum 4/2 Cable 600V
-Aluminum_4/2_Cable_Melted.name=Aluminum 4/2 Cable Melted
-Aluminum_4/3_Cable_600V.name=Aluminum 4/3 Cable 600V
-Aluminum_4/3_Cable_Melted.name=Aluminum 4/3 Cable Melted
-Aluminum_4C_18_AWG_Cable_300V.name=Aluminum 4C 18 AWG Cable 300V
-Aluminum_4C_18_AWG_Cable_Melted.name=Aluminum 4C 18 AWG Cable Melted
-Aluminum_4C_20_AWG_Cable_300V.name=Aluminum 4C 20 AWG Cable 300V
-Aluminum_4C_20_AWG_Cable_Melted.name=Aluminum 4C 20 AWG Cable Melted
-Aluminum_4_AWG_Cable_600V.name=Aluminum 4 AWG Cable 600V
-Aluminum_4_AWG_Cable_Bare.name=Aluminum 4 AWG Cable Bare
-Aluminum_4_AWG_Cable_Melted.name=Aluminum 4 AWG Cable Melted
-Aluminum_500_kcmil_Cable_1000V.name=Aluminum 500 kcmil Cable 1000V
-Aluminum_500_kcmil_Cable_Bare.name=Aluminum 500 kcmil Cable Bare
-Aluminum_500_kcmil_Cable_Melted.name=Aluminum 500 kcmil Cable Melted
-Aluminum_5C_18_AWG_Cable_300V.name=Aluminum 5C 18 AWG Cable 300V
-Aluminum_5C_18_AWG_Cable_Melted.name=Aluminum 5C 18 AWG Cable Melted
-Aluminum_5C_20_AWG_Cable_300V.name=Aluminum 5C 20 AWG Cable 300V
-Aluminum_5C_20_AWG_Cable_Melted.name=Aluminum 5C 20 AWG Cable Melted
-Aluminum_6/2_Cable_600V.name=Aluminum 6/2 Cable 600V
-Aluminum_6/2_Cable_Melted.name=Aluminum 6/2 Cable Melted
-Aluminum_6/3_Cable_600V.name=Aluminum 6/3 Cable 600V
-Aluminum_6/3_Cable_Melted.name=Aluminum 6/3 Cable Melted
-Aluminum_6_AWG_Cable_600V.name=Aluminum 6 AWG Cable 600V
-Aluminum_6_AWG_Cable_Bare.name=Aluminum 6 AWG Cable Bare
-Aluminum_6_AWG_Cable_Melted.name=Aluminum 6 AWG Cable Melted
-Aluminum_750_kcmil_Cable_1000V.name=Aluminum 750 kcmil Cable 1000V
-Aluminum_750_kcmil_Cable_Bare.name=Aluminum 750 kcmil Cable Bare
-Aluminum_750_kcmil_Cable_Melted.name=Aluminum 750 kcmil Cable Melted
-Aluminum_8/2_Cable_600V.name=Aluminum 8/2 Cable 600V
-Aluminum_8/2_Cable_Melted.name=Aluminum 8/2 Cable Melted
-Aluminum_8/3_Cable_600V.name=Aluminum 8/3 Cable 600V
-Aluminum_8/3_Cable_Melted.name=Aluminum 8/3 Cable Melted
-Aluminum_8C_18_AWG_Cable_300V.name=Aluminum 8C 18 AWG Cable 300V
-Aluminum_8C_18_AWG_Cable_Melted.name=Aluminum 8C 18 AWG Cable Melted
-Aluminum_8C_20_AWG_Cable_300V.name=Aluminum 8C 20 AWG Cable 300V
-Aluminum_8C_20_AWG_Cable_Melted.name=Aluminum 8C 20 AWG Cable Melted
-Aluminum_8_AWG_Cable_600V.name=Aluminum 8 AWG Cable 600V
-Aluminum_8_AWG_Cable_Bare.name=Aluminum 8 AWG Cable Bare
-Aluminum_8_AWG_Cable_Melted.name=Aluminum 8 AWG Cable Melted
-Aluminum_Molten_Metal_Pile.name=Aluminum Molten Metal Pile
-Aluminum_Quadruplex_1/0_Cable_600V.name=Aluminum Quadruplex 1/0 Cable 600V
-Aluminum_Quadruplex_1/0_Cable_Melted.name=Aluminum Quadruplex 1/0 Cable Melted
-Aluminum_Quadruplex_4/0_Cable_600V.name=Aluminum Quadruplex 4/0 Cable 600V
-Aluminum_Quadruplex_4/0_Cable_Melted.name=Aluminum Quadruplex 4/0 Cable Melted
-Aluminum_Triplex_1/0_Cable_600V.name=Aluminum Triplex 1/0 Cable 600V
-Aluminum_Triplex_1/0_Cable_Melted.name=Aluminum Triplex 1/0 Cable Melted
-Aluminum_Triplex_4/0_Cable_600V.name=Aluminum Triplex 4/0 Cable 600V
-Aluminum_Triplex_4/0_Cable_Melted.name=Aluminum Triplex 4/0 Cable Melted
+30A_Electrical_Breaker.name=Disjuntor Elétrico 30A
+30A_Lead_Fuse.name=Fusível de Chumbo 30A
+400A_Electrical_Breaker.name=Disjuntor Elétrico 400A
+40A_Electrical_Breaker.name=Disjuntor Elétrico 40A
+50A_Electrical_Breaker.name=Disjuntor Elétrico 50A
+50A_Lead_Fuse.name=Fusível de Chumbo 50A
+50A_Switch.name=Interruptor 50A
+5A_Electrical_Breaker.name=Disjuntor Elétrico 5A
+5A_Lead_Fuse.name=Fusível de Chumbo 5A
+5A_Switch.name=Interruptor 5A
+5V_Control_Relay_10A.name=Relé de Controle 5V 10A
+60A_Electrical_Breaker.name=Disjuntor Elétrico 60A
+AND_Chip.name=Chip AND
+Advanced_Energy_Meter.name=Medidor de Energia Avançado
+Aluminum_1/0_AWG_Cable_1000V.name=Cabo de Alumínio 1/0 AWG 1000V
+Aluminum_1/0_AWG_Cable_Bare.name=Cabo de Alumínio 1/0 AWG Nu
+Aluminum_1/0_AWG_Cable_Melted.name=Cabo de Alumínio 1/0 AWG Derretido
+Aluminum_10/2_Cable_600V.name=Cabo de Alumínio 10/2 600V
+Aluminum_10/2_Cable_Melted.name=Cabo de Alumínio 10/2 Derretido
+Aluminum_10/3_Cable_600V.name=Cabo de Alumínio 10/3 600V
+Aluminum_10/3_Cable_Melted.name=Cabo de Alumínio 10/3 Derretido
+Aluminum_1000_kcmil_Cable_1000V.name=Cabo de Alumínio 1000 kcmil 1000V
+Aluminum_1000_kcmil_Cable_Bare.name=Cabo de Alumínio 1000 kcmil Nu
+Aluminum_1000_kcmil_Cable_Melted.name=Cabo de Alumínio 1000 kcmil Derretido
+Aluminum_10_AWG_Cable_600V.name=Cabo de Alumínio 10 AWG 600V
+Aluminum_10_AWG_Cable_Bare.name=Cabo de Alumínio 10 AWG Nu
+Aluminum_10_AWG_Cable_Melted.name=Cabo de Alumínio 10 AWG Derretido
+Aluminum_12/2_Cable_600V.name=Cabo de Alumínio 12/2 600V
+Aluminum_12/2_Cable_Melted.name=Cabo de Alumínio 12/2 Derretido
+Aluminum_12/3_Cable_600V.name=Cabo de Alumínio 12/3 600V
+Aluminum_12/3_Cable_Melted.name=Cabo de Alumínio 12/3 Derretido
+Aluminum_12_AWG_Cable_600V.name=Cabo de Alumínio 12 AWG 600V
+Aluminum_12_AWG_Cable_Bare.name=Cabo de Alumínio 12 AWG Nu
+Aluminum_12_AWG_Cable_Melted.name=Cabo de Alumínio 12 AWG Derretido
+Aluminum_14/2_Cable_600V.name=Cabo de Alumínio 14/2 600V
+Aluminum_14/2_Cable_Melted.name=Cabo de Alumínio 14/2 Derretido
+Aluminum_14/3_Cable_600V.name=Cabo de Alumínio 14/3 600V
+Aluminum_14/3_Cable_Melted.name=Cabo de Alumínio 14/3 Derretido
+Aluminum_14_AWG_Cable_600V.name=Cabo de Alumínio 14 AWG 600V
+Aluminum_14_AWG_Cable_Bare.name=Cabo de Alumínio 14 AWG Nu
+Aluminum_14_AWG_Cable_Melted.name=Cabo de Alumínio 14 AWG Derretido
+Aluminum_16_AWG_Cable_300V.name=Cabo de Alumínio 16 AWG 300V
+Aluminum_16_AWG_Cable_Bare.name=Cabo de Alumínio 16 AWG Nu
+Aluminum_16_AWG_Cable_Melted.name=Cabo de Alumínio 16 AWG Derretido
+Aluminum_18_AWG_Cable_300V.name=Cabo de Alumínio 18 AWG 300V
+Aluminum_18_AWG_Cable_Bare.name=Cabo de Alumínio 18 AWG Nu
+Aluminum_18_AWG_Cable_Melted.name=Cabo de Alumínio 18 AWG Derretido
+Aluminum_2/0_AWG_Cable_1000V.name=Cabo de Alumínio 2/0 AWG 1000V
+Aluminum_2/0_AWG_Cable_Bare.name=Cabo de Alumínio 2/0 AWG Nu
+Aluminum_2/0_AWG_Cable_Melted.name=Cabo de Alumínio 2/0 AWG Derretido
+Aluminum_20_AWG_Cable_300V.name=Cabo de Alumínio 20 AWG 300V
+Aluminum_20_AWG_Cable_Bare.name=Cabo de Alumínio 20 AWG Nu
+Aluminum_20_AWG_Cable_Melted.name=Cabo de Alumínio 20 AWG Derretido
+Aluminum_22_AWG_Cable_300V.name=Cabo de Alumínio 22 AWG 300V
+Aluminum_22_AWG_Cable_Bare.name=Cabo de Alumínio 22 AWG Nu
+Aluminum_22_AWG_Cable_Melted.name=Cabo de Alumínio 22 AWG Derretido
+Aluminum_24_AWG_Cable_300V.name=Cabo de Alumínio 24 AWG 300V
+Aluminum_24_AWG_Cable_Bare.name=Cabo de Alumínio 24 AWG Nu
+Aluminum_24_AWG_Cable_Melted.name=Cabo de Alumínio 24 AWG Derretido
+Aluminum_250_kcmil_Cable_1000V.name=Cabo de Alumínio 250 kcmil 1000V
+Aluminum_250_kcmil_Cable_Bare.name=Cabo de Alumínio 250 kcmil Nu
+Aluminum_250_kcmil_Cable_Melted.name=Cabo de Alumínio 250 kcmil Derretido
+Aluminum_26_AWG_Cable_300V.name=Cabo de Alumínio 26 AWG 300V
+Aluminum_26_AWG_Cable_Bare.name=Cabo de Alumínio 26 AWG Nu
+Aluminum_26_AWG_Cable_Melted.name=Cabo de Alumínio 26 AWG Derretido
+Aluminum_2C_18_AWG_Cable_300V.name=Cabo de Alumínio 2C 18 AWG 300V
+Aluminum_2C_18_AWG_Cable_Melted.name=Cabo de Alumínio 2C 18 AWG Derretido
+Aluminum_2C_20_AWG_Cable_300V.name=Cabo de Alumínio 2C 20 AWG 300V
+Aluminum_2C_20_AWG_Cable_Melted.name=Cabo de Alumínio 2C 20 AWG Derretido
+Aluminum_2_AWG_Cable_600V.name=Cabo de Alumínio 2 AWG 600V
+Aluminum_2_AWG_Cable_Bare.name=Cabo de Alumínio 2 AWG Nu
+Aluminum_2_AWG_Cable_Melted.name=Cabo de Alumínio 2 AWG Derretido
+Aluminum_350_kcmil_Cable_1000V.name=Cabo de Alumínio 350 kcmil 1000V
+Aluminum_350_kcmil_Cable_Bare.name=Cabo de Alumínio 350 kcmil Nu
+Aluminum_350_kcmil_Cable_Melted.name=Cabo de Alumínio 350 kcmil Derretido
+Aluminum_3C_18_AWG_Cable_300V.name=Cabo de Alumínio 3C 18 AWG 300V
+Aluminum_3C_18_AWG_Cable_Melted.name=Cabo de Alumínio 3C 18 AWG Derretido
+Aluminum_3C_20_AWG_Cable_300V.name=Cabo de Alumínio 3C 20 AWG 300V
+Aluminum_3C_20_AWG_Cable_Melted.name=Cabo de Alumínio 3C 20 AWG Derretido
+Aluminum_4/0_AWG_Cable_1000V.name=Cabo de Alumínio 4/0 AWG 1000V
+Aluminum_4/0_AWG_Cable_Bare.name=Cabo de Alumínio 4/0 AWG Nu
+Aluminum_4/0_AWG_Cable_Melted.name=Cabo de Alumínio 4/0 AWG Derretido
+Aluminum_4/2_Cable_600V.name=Cabo de Alumínio 4/2 600V
+Aluminum_4/2_Cable_Melted.name=Cabo de Alumínio 4/2 Derretido
+Aluminum_4/3_Cable_600V.name=Cabo de Alumínio 4/3 600V
+Aluminum_4/3_Cable_Melted.name=Cabo de Alumínio 4/3 Derretido
+Aluminum_4C_18_AWG_Cable_300V.name=Cabo de Alumínio 4C 18 AWG 300V
+Aluminum_4C_18_AWG_Cable_Melted.name=Cabo de Alumínio 4C 18 AWG Derretido
+Aluminum_4C_20_AWG_Cable_300V.name=Cabo de Alumínio 4C 20 AWG 300V
+Aluminum_4C_20_AWG_Cable_Melted.name=Cabo de Alumínio 4C 20 AWG Derretido
+Aluminum_4_AWG_Cable_600V.name=Cabo de Alumínio 4 AWG 600V
+Aluminum_4_AWG_Cable_Bare.name=Cabo de Alumínio 4 AWG Nu
+Aluminum_4_AWG_Cable_Melted.name=Cabo de Alumínio 4 AWG Derretido
+Aluminum_500_kcmil_Cable_1000V.name=Cabo de Alumínio 500 kcmil 1000V
+Aluminum_500_kcmil_Cable_Bare.name=Cabo de Alumínio 500 kcmil Nu
+Aluminum_500_kcmil_Cable_Melted.name=Cabo de Alumínio 500 kcmil Derretido
+Aluminum_5C_18_AWG_Cable_300V.name=Cabo de Alumínio 5C 18 AWG 300V
+Aluminum_5C_18_AWG_Cable_Melted.name=Cabo de Alumínio 5C 18 AWG Derretido
+Aluminum_5C_20_AWG_Cable_300V.name=Cabo de Alumínio 5C 20 AWG 300V
+Aluminum_5C_20_AWG_Cable_Melted.name=Cabo de Alumínio 5C 20 AWG Derretido
+Aluminum_6/2_Cable_600V.name=Cabo de Alumínio 6/2 600V
+Aluminum_6/2_Cable_Melted.name=Cabo de Alumínio 6/2 Derretido
+Aluminum_6/3_Cable_600V.name=Cabo de Alumínio 6/3 600V
+Aluminum_6/3_Cable_Melted.name=Cabo de Alumínio 6/3 Derretido
+Aluminum_6_AWG_Cable_600V.name=Cabo de Alumínio 6 AWG 600V
+Aluminum_6_AWG_Cable_Bare.name=Cabo de Alumínio 6 AWG Nu
+Aluminum_6_AWG_Cable_Melted.name=Cabo de Alumínio 6 AWG Derretido
+Aluminum_750_kcmil_Cable_1000V.name=Cabo de Alumínio 750 kcmil 1000V
+Aluminum_750_kcmil_Cable_Bare.name=Cabo de Alumínio 750 kcmil Nu
+Aluminum_750_kcmil_Cable_Melted.name=Cabo de Alumínio 750 kcmil Derretido
+Aluminum_8/2_Cable_600V.name=Cabo de Alumínio 8/2 600V
+Aluminum_8/2_Cable_Melted.name=Cabo de Alumínio 8/2 Derretido
+Aluminum_8/3_Cable_600V.name=Cabo de Alumínio 8/3 600V
+Aluminum_8/3_Cable_Melted.name=Cabo de Alumínio 8/3 Derretido
+Aluminum_8C_18_AWG_Cable_300V.name=Cabo de Alumínio 8C 18 AWG 300V
+Aluminum_8C_18_AWG_Cable_Melted.name=Cabo de Alumínio 8C 18 AWG Derretido
+Aluminum_8C_20_AWG_Cable_300V.name=Cabo de Alumínio 8C 20 AWG 300V
+Aluminum_8C_20_AWG_Cable_Melted.name=Cabo de Alumínio 8C 20 AWG Derretido
+Aluminum_8_AWG_Cable_600V.name=Cabo de Alumínio 8 AWG 600V
+Aluminum_8_AWG_Cable_Bare.name=Cabo de Alumínio 8 AWG Nu
+Aluminum_8_AWG_Cable_Melted.name=Cabo de Alumínio 8 AWG Derretido
+Aluminum_Molten_Metal_Pile.name=Pilha de Metal Fundido de Alumínio
+Aluminum_Quadruplex_1/0_Cable_600V.name=Cabo Quádruplo de Alumínio 1/0 600V
+Aluminum_Quadruplex_1/0_Cable_Melted.name=Cabo Quádruplo de Alumínio 1/0 Derretido
+Aluminum_Quadruplex_4/0_Cable_600V.name=Cabo Quádruplo de Alumínio 4/0 600V
+Aluminum_Quadruplex_4/0_Cable_Melted.name=Cabo Quádruplo de Alumínio 4/0 Derretido
+Aluminum_Triplex_1/0_Cable_600V.name=Cabo Triplo de Alumínio 1/0 600V
+Aluminum_Triplex_1/0_Cable_Melted.name=Cabo Triplo de Alumínio 1/0 Derretido
+Aluminum_Triplex_4/0_Cable_600V.name=Cabo Triplo de Alumínio 4/0 600V
+Aluminum_Triplex_4/0_Cable_Melted.name=Cabo Triplo de Alumínio 4/0 Derretido
 Amplifier.name=Amplificador
-Analog_Watch.name=Relogio Analogico
-Analog_vuMeter.name=Medidor Analogico
-Blown_Lead_Fuse.name=Fusivel Queimado
-Classic_Lamp_Socket.name=Classic Lamp Socket
-Conduit.name=Conduit
-Configurable_summing_unit.name=Unidade de Soma Configuravel
-Copper_1/0_AWG_Cable_1000V.name=Copper 1/0 AWG Cable 1000V
-Copper_1/0_AWG_Cable_Bare.name=Copper 1/0 AWG Cable Bare
-Copper_1/0_AWG_Cable_Melted.name=Copper 1/0 AWG Cable Melted
-Copper_10/2_Cable_600V.name=Copper 10/2 Cable 600V
-Copper_10/2_Cable_Melted.name=Copper 10/2 Cable Melted
-Copper_10/3_Cable_600V.name=Copper 10/3 Cable 600V
-Copper_10/3_Cable_Melted.name=Copper 10/3 Cable Melted
-Copper_1000_kcmil_Cable_1000V.name=Copper 1000 kcmil Cable 1000V
-Copper_1000_kcmil_Cable_Bare.name=Copper 1000 kcmil Cable Bare
-Copper_1000_kcmil_Cable_Melted.name=Copper 1000 kcmil Cable Melted
-Copper_10_AWG_Cable_600V.name=Copper 10 AWG Cable 600V
-Copper_10_AWG_Cable_Bare.name=Copper 10 AWG Cable Bare
-Copper_10_AWG_Cable_Melted.name=Copper 10 AWG Cable Melted
-Copper_12/2_Cable_600V.name=Copper 12/2 Cable 600V
-Copper_12/2_Cable_Melted.name=Copper 12/2 Cable Melted
-Copper_12/3_Cable_600V.name=Copper 12/3 Cable 600V
-Copper_12/3_Cable_Melted.name=Copper 12/3 Cable Melted
-Copper_12_AWG_Cable_600V.name=Copper 12 AWG Cable 600V
-Copper_12_AWG_Cable_Bare.name=Copper 12 AWG Cable Bare
-Copper_12_AWG_Cable_Melted.name=Copper 12 AWG Cable Melted
-Copper_14/2_Cable_600V.name=Copper 14/2 Cable 600V
-Copper_14/2_Cable_Melted.name=Copper 14/2 Cable Melted
-Copper_14/3_Cable_600V.name=Copper 14/3 Cable 600V
-Copper_14/3_Cable_Melted.name=Copper 14/3 Cable Melted
-Copper_14_AWG_Cable_600V.name=Copper 14 AWG Cable 600V
-Copper_14_AWG_Cable_Bare.name=Copper 14 AWG Cable Bare
-Copper_14_AWG_Cable_Melted.name=Copper 14 AWG Cable Melted
-Copper_16_AWG_Cable_300V.name=Copper 16 AWG Cable 300V
-Copper_16_AWG_Cable_Bare.name=Copper 16 AWG Cable Bare
-Copper_16_AWG_Cable_Melted.name=Copper 16 AWG Cable Melted
-Copper_18_AWG_Cable_300V.name=Copper 18 AWG Cable 300V
-Copper_18_AWG_Cable_Bare.name=Copper 18 AWG Cable Bare
-Copper_18_AWG_Cable_Melted.name=Copper 18 AWG Cable Melted
-Copper_2/0_AWG_Cable_1000V.name=Copper 2/0 AWG Cable 1000V
-Copper_2/0_AWG_Cable_Bare.name=Copper 2/0 AWG Cable Bare
-Copper_2/0_AWG_Cable_Melted.name=Copper 2/0 AWG Cable Melted
-Copper_20_AWG_Cable_300V.name=Copper 20 AWG Cable 300V
-Copper_20_AWG_Cable_Bare.name=Copper 20 AWG Cable Bare
-Copper_20_AWG_Cable_Melted.name=Copper 20 AWG Cable Melted
-Copper_22_AWG_Cable_300V.name=Copper 22 AWG Cable 300V
-Copper_22_AWG_Cable_Bare.name=Copper 22 AWG Cable Bare
-Copper_22_AWG_Cable_Melted.name=Copper 22 AWG Cable Melted
-Copper_24_AWG_Cable_300V.name=Copper 24 AWG Cable 300V
-Copper_24_AWG_Cable_Bare.name=Copper 24 AWG Cable Bare
-Copper_24_AWG_Cable_Melted.name=Copper 24 AWG Cable Melted
-Copper_250_kcmil_Cable_1000V.name=Copper 250 kcmil Cable 1000V
-Copper_250_kcmil_Cable_Bare.name=Copper 250 kcmil Cable Bare
-Copper_250_kcmil_Cable_Melted.name=Copper 250 kcmil Cable Melted
-Copper_26_AWG_Cable_300V.name=Copper 26 AWG Cable 300V
-Copper_26_AWG_Cable_Bare.name=Copper 26 AWG Cable Bare
-Copper_26_AWG_Cable_Melted.name=Copper 26 AWG Cable Melted
-Copper_2C_18_AWG_Cable_300V.name=Copper 2C 18 AWG Cable 300V
-Copper_2C_18_AWG_Cable_Melted.name=Copper 2C 18 AWG Cable Melted
-Copper_2C_20_AWG_Cable_300V.name=Copper 2C 20 AWG Cable 300V
-Copper_2C_20_AWG_Cable_Melted.name=Copper 2C 20 AWG Cable Melted
-Copper_2_AWG_Cable_600V.name=Copper 2 AWG Cable 600V
-Copper_2_AWG_Cable_Bare.name=Copper 2 AWG Cable Bare
-Copper_2_AWG_Cable_Melted.name=Copper 2 AWG Cable Melted
-Copper_350_kcmil_Cable_1000V.name=Copper 350 kcmil Cable 1000V
-Copper_350_kcmil_Cable_Bare.name=Copper 350 kcmil Cable Bare
-Copper_350_kcmil_Cable_Melted.name=Copper 350 kcmil Cable Melted
-Copper_3C_18_AWG_Cable_300V.name=Copper 3C 18 AWG Cable 300V
-Copper_3C_18_AWG_Cable_Melted.name=Copper 3C 18 AWG Cable Melted
-Copper_3C_20_AWG_Cable_300V.name=Copper 3C 20 AWG Cable 300V
-Copper_3C_20_AWG_Cable_Melted.name=Copper 3C 20 AWG Cable Melted
-Copper_4/0_AWG_Cable_1000V.name=Copper 4/0 AWG Cable 1000V
-Copper_4/0_AWG_Cable_Bare.name=Copper 4/0 AWG Cable Bare
-Copper_4/0_AWG_Cable_Melted.name=Copper 4/0 AWG Cable Melted
-Copper_4/2_Cable_600V.name=Copper 4/2 Cable 600V
-Copper_4/2_Cable_Melted.name=Copper 4/2 Cable Melted
-Copper_4/3_Cable_600V.name=Copper 4/3 Cable 600V
-Copper_4/3_Cable_Melted.name=Copper 4/3 Cable Melted
-Copper_4C_18_AWG_Cable_300V.name=Copper 4C 18 AWG Cable 300V
-Copper_4C_18_AWG_Cable_Melted.name=Copper 4C 18 AWG Cable Melted
-Copper_4C_20_AWG_Cable_300V.name=Copper 4C 20 AWG Cable 300V
-Copper_4C_20_AWG_Cable_Melted.name=Copper 4C 20 AWG Cable Melted
-Copper_4_AWG_Cable_600V.name=Copper 4 AWG Cable 600V
-Copper_4_AWG_Cable_Bare.name=Copper 4 AWG Cable Bare
-Copper_4_AWG_Cable_Melted.name=Copper 4 AWG Cable Melted
-Copper_500_kcmil_Cable_1000V.name=Copper 500 kcmil Cable 1000V
-Copper_500_kcmil_Cable_Bare.name=Copper 500 kcmil Cable Bare
-Copper_500_kcmil_Cable_Melted.name=Copper 500 kcmil Cable Melted
-Copper_5C_18_AWG_Cable_300V.name=Copper 5C 18 AWG Cable 300V
-Copper_5C_18_AWG_Cable_Melted.name=Copper 5C 18 AWG Cable Melted
-Copper_5C_20_AWG_Cable_300V.name=Copper 5C 20 AWG Cable 300V
-Copper_5C_20_AWG_Cable_Melted.name=Copper 5C 20 AWG Cable Melted
-Copper_6/2_Cable_600V.name=Copper 6/2 Cable 600V
-Copper_6/2_Cable_Melted.name=Copper 6/2 Cable Melted
-Copper_6/3_Cable_600V.name=Copper 6/3 Cable 600V
-Copper_6/3_Cable_Melted.name=Copper 6/3 Cable Melted
-Copper_6_AWG_Cable_600V.name=Copper 6 AWG Cable 600V
-Copper_6_AWG_Cable_Bare.name=Copper 6 AWG Cable Bare
-Copper_6_AWG_Cable_Melted.name=Copper 6 AWG Cable Melted
-Copper_750_kcmil_Cable_1000V.name=Copper 750 kcmil Cable 1000V
-Copper_750_kcmil_Cable_Bare.name=Copper 750 kcmil Cable Bare
-Copper_750_kcmil_Cable_Melted.name=Copper 750 kcmil Cable Melted
-Copper_8/2_Cable_600V.name=Copper 8/2 Cable 600V
-Copper_8/2_Cable_Melted.name=Copper 8/2 Cable Melted
-Copper_8/3_Cable_600V.name=Copper 8/3 Cable 600V
-Copper_8/3_Cable_Melted.name=Copper 8/3 Cable Melted
-Copper_8C_18_AWG_Cable_300V.name=Copper 8C 18 AWG Cable 300V
-Copper_8C_18_AWG_Cable_Melted.name=Copper 8C 18 AWG Cable Melted
-Copper_8C_20_AWG_Cable_300V.name=Copper 8C 20 AWG Cable 300V
-Copper_8C_20_AWG_Cable_Melted.name=Copper 8C 20 AWG Cable Melted
-Copper_8_AWG_Cable_600V.name=Copper 8 AWG Cable 600V
-Copper_8_AWG_Cable_Bare.name=Copper 8 AWG Cable Bare
-Copper_8_AWG_Cable_Melted.name=Copper 8 AWG Cable Melted
-Copper_Molten_Metal_Pile.name=Copper Molten Metal Pile
-Copper_Quadruplex_1/0_Cable_600V.name=Copper Quadruplex 1/0 Cable 600V
-Copper_Quadruplex_1/0_Cable_Melted.name=Copper Quadruplex 1/0 Cable Melted
-Copper_Quadruplex_4/0_Cable_600V.name=Copper Quadruplex 4/0 Cable 600V
-Copper_Quadruplex_4/0_Cable_Melted.name=Copper Quadruplex 4/0 Cable Melted
-Copper_Thermal_Cable.name=Cabo termico de Cobre
-Copper_Triplex_1/0_Cable_600V.name=Copper Triplex 1/0 Cable 600V
-Copper_Triplex_1/0_Cable_Melted.name=Copper Triplex 1/0 Cable Melted
-Copper_Triplex_4/0_Cable_600V.name=Copper Triplex 4/0 Cable 600V
-Copper_Triplex_4/0_Cable_Melted.name=Copper Triplex 4/0 Cable Melted
-Creative_Cable.name=Creative Cable
-Creative_Power_Capacitor.name=Creative Power Capacitor
-Creative_Power_Inductor.name=Creative Power Inductor
-Creative_Power_Resistor.name=Creative Power Resistor
-Current_Source.name=Current Source
-D_Flip_Flop_Chip.name=Flip Flop D
-Data_Logger.name=Monitor de Registro
-Digital_Display.name=Digital Display
-Digital_Watch.name=Relogio Digital
-Electrical_Anemometer_Sensor.name=Anemometro
-Electrical_Daylight_Sensor.name=Sensor de Luz Solar
-Electrical_Entity_Sensor.name=Sensor de Presenca
-Electrical_Fire_Buzzer.name=Detector de Fumaca
-Electrical_Fire_Detector.name=Sensor de Fumaca
-Electrical_Fuse_Holder.name=Soquete para Fusivel
-Electrical_Light_Sensor.name=Sensor de Luz
-Electrical_Probe.name=Sonda Eletrica
-Electrical_Source.name=Energia Criativo
-Electrical_Timer.name=Temporizador
-Electrical_Weather_Sensor.name=Sensor de Clima do Tempo
-Energy_Meter.name=Medidor de Energia Eletrica
-Flat_Lamp_Socket.name=Soquete Plano para Lampada
-Fluorescent_Lamp_Socket.name=Soquete para Lampada Fluorescente
-Ground_Cable.name=Haste de Aterramento
-High_Current_Cable.name=High Current Cable
-High_Current_Relay.name=High Current Relay
-High_Voltage_Cable.name=Cabo de Alta Tensao
-High_Voltage_Relay.name=Rele de Alta Tensao
-High_Voltage_Switch.name=Interruptor de Alta Tensao
-Hub.name=Cruzamentos de Cabos
-Humidity_Sensor.name=Humidity Sensor
-Industrial_Data_Logger.name=Monitor de Registro Industrial
-JK_Flip_Flop_Chip.name=Flip Flop JK
-LED_vuMeter.name=LED de Sinal
-Lead_Fuse_for_high_voltage_cables.name=Fusivel de Alta Tensao
-Lead_Fuse_for_low_voltage_cables.name=Fusivel de Baixa Tensao
-Lead_Fuse_for_medium_voltage_cables.name=Fusivel de Media Tensao
-Lead_Fuse_for_very_high_voltage_cables.name=Fusivel de Extrema Alta Tensao
-Long_Suspended_Lamp_Socket.name=Soquete Suspenso Comprido para Lampada
-Long_Suspended_Lamp_Socket_(No_Swing).name=Long Suspended Lamp Socket (No Swing)
-Low_Current_Cable.name=Low Current Cable
-Low_Current_Relay.name=Low Current Relay
-Low_Voltage_Cable.name=Cabo de Baixa Tensao
-Low_Voltage_Relay.name=Rele de Baixa Tensao
-Low_Voltage_Switch.name=Interruptor de Baixa Tensao
-Lowpass_filter.name=Filtro de Baixa Frequencia
-MQTT_Energy_Meter.name=MQTT Energy Meter
-MQTT_Signal_Controller.name=MQTT Signal Controller
-Medium_Current_Cable.name=Medium Current Cable
-Medium_Current_Relay.name=Medium Current Relay
-Medium_Voltage_Cable.name=Cabo de Media Tensao
-Medium_Voltage_Relay.name=Rele de Media Tensao
-Medium_Voltage_Switch.name=Interruptor de Media Tensao
+Analog_Watch.name=Relógio Analógico
+Analog_vuMeter.name=Medidor Analógico
+Blown_Lead_Fuse.name=Fusível de Chumbo Queimado
+Classic_Lamp_Socket.name=Soquete de Lâmpada Clássico
+Conduit.name=Cabo de Conduto
+Configurable_summing_unit.name=Unidade Somadora Configurável
+Copper_1/0_AWG_Cable_1000V.name=Cabo de Cobre 1/0 AWG 1000V
+Copper_1/0_AWG_Cable_Bare.name=Cabo de Cobre 1/0 AWG Nu
+Copper_1/0_AWG_Cable_Melted.name=Cabo de Cobre 1/0 AWG Derretido
+Copper_10/2_Cable_600V.name=Cabo de Cobre 10/2 600V
+Copper_10/2_Cable_Melted.name=Cabo de Cobre 10/2 Derretido
+Copper_10/3_Cable_600V.name=Cabo de Cobre 10/3 600V
+Copper_10/3_Cable_Melted.name=Cabo de Cobre 10/3 Derretido
+Copper_1000_kcmil_Cable_1000V.name=Cabo de Cobre 1000 kcmil 1000V
+Copper_1000_kcmil_Cable_Bare.name=Cabo de Cobre 1000 kcmil Nu
+Copper_1000_kcmil_Cable_Melted.name=Cabo de Cobre 1000 kcmil Derretido
+Copper_10_AWG_Cable_600V.name=Cabo de Cobre 10 AWG 600V
+Copper_10_AWG_Cable_Bare.name=Cabo de Cobre 10 AWG Nu
+Copper_10_AWG_Cable_Melted.name=Cabo de Cobre 10 AWG Derretido
+Copper_12/2_Cable_600V.name=Cabo de Cobre 12/2 600V
+Copper_12/2_Cable_Melted.name=Cabo de Cobre 12/2 Derretido
+Copper_12/3_Cable_600V.name=Cabo de Cobre 12/3 600V
+Copper_12/3_Cable_Melted.name=Cabo de Cobre 12/3 Derretido
+Copper_12_AWG_Cable_600V.name=Cabo de Cobre 12 AWG 600V
+Copper_12_AWG_Cable_Bare.name=Cabo de Cobre 12 AWG Nu
+Copper_12_AWG_Cable_Melted.name=Cabo de Cobre 12 AWG Derretido
+Copper_14/2_Cable_600V.name=Cabo de Cobre 14/2 600V
+Copper_14/2_Cable_Melted.name=Cabo de Cobre 14/2 Derretido
+Copper_14/3_Cable_600V.name=Cabo de Cobre 14/3 600V
+Copper_14/3_Cable_Melted.name=Cabo de Cobre 14/3 Derretido
+Copper_14_AWG_Cable_600V.name=Cabo de Cobre 14 AWG 600V
+Copper_14_AWG_Cable_Bare.name=Cabo de Cobre 14 AWG Nu
+Copper_14_AWG_Cable_Melted.name=Cabo de Cobre 14 AWG Derretido
+Copper_16_AWG_Cable_300V.name=Cabo de Cobre 16 AWG 300V
+Copper_16_AWG_Cable_Bare.name=Cabo de Cobre 16 AWG Nu
+Copper_16_AWG_Cable_Melted.name=Cabo de Cobre 16 AWG Derretido
+Copper_18_AWG_Cable_300V.name=Cabo de Cobre 18 AWG 300V
+Copper_18_AWG_Cable_Bare.name=Cabo de Cobre 18 AWG Nu
+Copper_18_AWG_Cable_Melted.name=Cabo de Cobre 18 AWG Derretido
+Copper_2/0_AWG_Cable_1000V.name=Cabo de Cobre 2/0 AWG 1000V
+Copper_2/0_AWG_Cable_Bare.name=Cabo de Cobre 2/0 AWG Nu
+Copper_2/0_AWG_Cable_Melted.name=Cabo de Cobre 2/0 AWG Derretido
+Copper_20_AWG_Cable_300V.name=Cabo de Cobre 20 AWG 300V
+Copper_20_AWG_Cable_Bare.name=Cabo de Cobre 20 AWG Nu
+Copper_20_AWG_Cable_Melted.name=Cabo de Cobre 20 AWG Derretido
+Copper_22_AWG_Cable_300V.name=Cabo de Cobre 22 AWG 300V
+Copper_22_AWG_Cable_Bare.name=Cabo de Cobre 22 AWG Nu
+Copper_22_AWG_Cable_Melted.name=Cabo de Cobre 22 AWG Derretido
+Copper_24_AWG_Cable_300V.name=Cabo de Cobre 24 AWG 300V
+Copper_24_AWG_Cable_Bare.name=Cabo de Cobre 24 AWG Nu
+Copper_24_AWG_Cable_Melted.name=Cabo de Cobre 24 AWG Derretido
+Copper_250_kcmil_Cable_1000V.name=Cabo de Cobre 250 kcmil 1000V
+Copper_250_kcmil_Cable_Bare.name=Cabo de Cobre 250 kcmil Nu
+Copper_250_kcmil_Cable_Melted.name=Cabo de Cobre 250 kcmil Derretido
+Copper_26_AWG_Cable_300V.name=Cabo de Cobre 26 AWG 300V
+Copper_26_AWG_Cable_Bare.name=Cabo de Cobre 26 AWG Nu
+Copper_26_AWG_Cable_Melted.name=Cabo de Cobre 26 AWG Derretido
+Copper_2C_18_AWG_Cable_300V.name=Cabo de Cobre 2C 18 AWG 300V
+Copper_2C_18_AWG_Cable_Melted.name=Cabo de Cobre 2C 18 AWG Derretido
+Copper_2C_20_AWG_Cable_300V.name=Cabo de Cobre 2C 20 AWG 300V
+Copper_2C_20_AWG_Cable_Melted.name=Cabo de Cobre 2C 20 AWG Derretido
+Copper_2_AWG_Cable_600V.name=Cabo de Cobre 2 AWG 600V
+Copper_2_AWG_Cable_Bare.name=Cabo de Cobre 2 AWG Nu
+Copper_2_AWG_Cable_Melted.name=Cabo de Cobre 2 AWG Derretido
+Copper_350_kcmil_Cable_1000V.name=Cabo de Cobre 350 kcmil 1000V
+Copper_350_kcmil_Cable_Bare.name=Cabo de Cobre 350 kcmil Nu
+Copper_350_kcmil_Cable_Melted.name=Cabo de Cobre 350 kcmil Derretido
+Copper_3C_18_AWG_Cable_300V.name=Cabo de Cobre 3C 18 AWG 300V
+Copper_3C_18_AWG_Cable_Melted.name=Cabo de Cobre 3C 18 AWG Derretido
+Copper_3C_20_AWG_Cable_300V.name=Cabo de Cobre 3C 20 AWG 300V
+Copper_3C_20_AWG_Cable_Melted.name=Cabo de Cobre 3C 20 AWG Derretido
+Copper_4/0_AWG_Cable_1000V.name=Cabo de Cobre 4/0 AWG 1000V
+Copper_4/0_AWG_Cable_Bare.name=Cabo de Cobre 4/0 AWG Nu
+Copper_4/0_AWG_Cable_Melted.name=Cabo de Cobre 4/0 AWG Derretido
+Copper_4/2_Cable_600V.name=Cabo de Cobre 4/2 600V
+Copper_4/2_Cable_Melted.name=Cabo de Cobre 4/2 Derretido
+Copper_4/3_Cable_600V.name=Cabo de Cobre 4/3 600V
+Copper_4/3_Cable_Melted.name=Cabo de Cobre 4/3 Derretido
+Copper_4C_18_AWG_Cable_300V.name=Cabo de Cobre 4C 18 AWG 300V
+Copper_4C_18_AWG_Cable_Melted.name=Cabo de Cobre 4C 18 AWG Derretido
+Copper_4C_20_AWG_Cable_300V.name=Cabo de Cobre 4C 20 AWG 300V
+Copper_4C_20_AWG_Cable_Melted.name=Cabo de Cobre 4C 20 AWG Derretido
+Copper_4_AWG_Cable_600V.name=Cabo de Cobre 4 AWG 600V
+Copper_4_AWG_Cable_Bare.name=Cabo de Cobre 4 AWG Nu
+Copper_4_AWG_Cable_Melted.name=Cabo de Cobre 4 AWG Derretido
+Copper_500_kcmil_Cable_1000V.name=Cabo de Cobre 500 kcmil 1000V
+Copper_500_kcmil_Cable_Bare.name=Cabo de Cobre 500 kcmil Nu
+Copper_500_kcmil_Cable_Melted.name=Cabo de Cobre 500 kcmil Derretido
+Copper_5C_18_AWG_Cable_300V.name=Cabo de Cobre 5C 18 AWG 300V
+Copper_5C_18_AWG_Cable_Melted.name=Cabo de Cobre 5C 18 AWG Derretido
+Copper_5C_20_AWG_Cable_300V.name=Cabo de Cobre 5C 20 AWG 300V
+Copper_5C_20_AWG_Cable_Melted.name=Cabo de Cobre 5C 20 AWG Derretido
+Copper_6/2_Cable_600V.name=Cabo de Cobre 6/2 600V
+Copper_6/2_Cable_Melted.name=Cabo de Cobre 6/2 Derretido
+Copper_6/3_Cable_600V.name=Cabo de Cobre 6/3 600V
+Copper_6/3_Cable_Melted.name=Cabo de Cobre 6/3 Derretido
+Copper_6_AWG_Cable_600V.name=Cabo de Cobre 6 AWG 600V
+Copper_6_AWG_Cable_Bare.name=Cabo de Cobre 6 AWG Nu
+Copper_6_AWG_Cable_Melted.name=Cabo de Cobre 6 AWG Derretido
+Copper_750_kcmil_Cable_1000V.name=Cabo de Cobre 750 kcmil 1000V
+Copper_750_kcmil_Cable_Bare.name=Cabo de Cobre 750 kcmil Nu
+Copper_750_kcmil_Cable_Melted.name=Cabo de Cobre 750 kcmil Derretido
+Copper_8/2_Cable_600V.name=Cabo de Cobre 8/2 600V
+Copper_8/2_Cable_Melted.name=Cabo de Cobre 8/2 Derretido
+Copper_8/3_Cable_600V.name=Cabo de Cobre 8/3 600V
+Copper_8/3_Cable_Melted.name=Cabo de Cobre 8/3 Derretido
+Copper_8C_18_AWG_Cable_300V.name=Cabo de Cobre 8C 18 AWG 300V
+Copper_8C_18_AWG_Cable_Melted.name=Cabo de Cobre 8C 18 AWG Derretido
+Copper_8C_20_AWG_Cable_300V.name=Cabo de Cobre 8C 20 AWG 300V
+Copper_8C_20_AWG_Cable_Melted.name=Cabo de Cobre 8C 20 AWG Derretido
+Copper_8_AWG_Cable_600V.name=Cabo de Cobre 8 AWG 600V
+Copper_8_AWG_Cable_Bare.name=Cabo de Cobre 8 AWG Nu
+Copper_8_AWG_Cable_Melted.name=Cabo de Cobre 8 AWG Derretido
+Copper_Molten_Metal_Pile.name=Pilha de Metal Fundido de Cobre
+Copper_Quadruplex_1/0_Cable_600V.name=Cabo Quádruplo de Cobre 1/0 600V
+Copper_Quadruplex_1/0_Cable_Melted.name=Cabo Quádruplo de Cobre 1/0 Derretido
+Copper_Quadruplex_4/0_Cable_600V.name=Cabo Quádruplo de Cobre 4/0 600V
+Copper_Quadruplex_4/0_Cable_Melted.name=Cabo Quádruplo de Cobre 4/0 Derretido
+Copper_Thermal_Cable.name=Cabo Térmico de Cobre
+Copper_Triplex_1/0_Cable_600V.name=Cabo Triplo de Cobre 1/0 600V
+Copper_Triplex_1/0_Cable_Melted.name=Cabo Triplo de Cobre 1/0 Derretido
+Copper_Triplex_4/0_Cable_600V.name=Cabo Triplo de Cobre 4/0 600V
+Copper_Triplex_4/0_Cable_Melted.name=Cabo Triplo de Cobre 4/0 Derretido
+Creative_Cable.name=Cabo Criativo
+Creative_Power_Capacitor.name=Capacitor de Potência Criativo
+Creative_Power_Inductor.name=Indutor de Potência Criativo
+Creative_Power_Resistor.name=Resistor de Potência Criativo
+Current_Source.name=Fonte de Corrente
+D_Flip_Flop_Chip.name=Chip D Flip Flop
+Data_Logger.name=Registrador de Dados
+Digital_Display.name=Display Digital
+Digital_Watch.name=Relógio Digital
+Electrical_Anemometer_Sensor.name=Sensor Anemômetro Elétrico
+Electrical_Daylight_Sensor.name=Sensor de Luz do Dia Elétrico
+Electrical_Entity_Sensor.name=Sensor de Entidades Elétrico
+Electrical_Fire_Buzzer.name=Alarme de Incêndio Elétrico
+Electrical_Fire_Detector.name=Detector de Incêndio Elétrico
+Electrical_Fuse_Holder.name=Porta-Fusível Elétrico
+Electrical_Light_Sensor.name=Sensor de Luz Elétrico
+Electrical_Probe.name=Sonda Elétrica
+Electrical_Source.name=Fonte de Tensão
+Electrical_Timer.name=Temporizador Elétrico
+Electrical_Weather_Sensor.name=Sensor Meteorológico Elétrico
+Energy_Meter.name=Medidor de Energia
+Flat_Lamp_Socket.name=Soquete de Lâmpada Plano
+Fluorescent_Lamp_Socket.name=Soquete de Lâmpada Fluorescente
+Ground_Cable.name=Cabo de Terra
+High_Current_Cable.name=Cabo de Alta Corrente
+High_Current_Relay.name=Relé de Alta Corrente
+High_Voltage_Cable.name=Cabo de Alta Tensão
+High_Voltage_Relay.name=Relé de Alta Tensão
+High_Voltage_Switch.name=Interruptor de Alta Tensão
+Hub.name=Concentrador
+Humidity_Sensor.name=Sensor de Umidade
+Industrial_Data_Logger.name=Registrador de Dados Industrial
+JK_Flip_Flop_Chip.name=Chip JK Flip Flop
+LED_vuMeter.name=LED vuMeter
+Lead_Fuse_for_high_voltage_cables.name=Fusível de Chumbo para cabos de alta tensão
+Lead_Fuse_for_low_voltage_cables.name=Fusível de Chumbo para cabos de baixa tensão
+Lead_Fuse_for_medium_voltage_cables.name=Fusível de Chumbo para cabos de média tensão
+Lead_Fuse_for_very_high_voltage_cables.name=Fusível de Chumbo para cabos de tensão muito alta
+Long_Suspended_Lamp_Socket.name=Soquete de Lâmpada Suspenso Longo
+Long_Suspended_Lamp_Socket_(No_Swing).name=Soquete de Lâmpada Suspenso Longo (Sem Balanço)
+Low_Current_Cable.name=Cabo de Baixa Corrente
+Low_Current_Relay.name=Relé de Baixa Corrente
+Low_Voltage_Cable.name=Cabo de Baixa Tensão
+Low_Voltage_Relay.name=Relé de Baixa Tensão
+Low_Voltage_Switch.name=Interruptor de Baixa Tensão
+Lowpass_filter.name=Filtro Passa-Baixa
+MQTT_Energy_Meter.name=Medidor de Energia MQTT
+MQTT_Signal_Controller.name=Controlador de Sinal MQTT
+Medium_Current_Cable.name=Cabo de Média Corrente
+Medium_Current_Relay.name=Relé de Média Corrente
+Medium_Voltage_Cable.name=Cabo de Média Tensão
+Medium_Voltage_Relay.name=Relé de Média Tensão
+Medium_Voltage_Switch.name=Interruptor de Média Tensão
 Modbus_RTU.name=Modbus RTU
-Modern_Data_Logger.name=Monitor de Registro Moderno
-Multicolor_LED_vuMeter.name=Multicolor LED vuMeter
-NAND_Chip.name=Porta Logica NE
-NOR_Chip.name=Porta Logica NOU
-NOT_Chip.name=Porta Logica NAO
+Modern_Data_Logger.name=Registrador de Dados Moderno
+Multicolor_LED_vuMeter.name=LED vuMeter Multicolorido
+NAND_Chip.name=Chip NAND
+NOR_Chip.name=Chip NOR
+NOT_Chip.name=Chip NOT
 Nuclear_Alarm.name=Alarme Nuclear
-OR_Chip.name=Porta Logica OU
-OpAmp.name=Amplificador Operacional
-Oscillator_Chip.name=Oscilador em Onda Quadrada
-PAL_Chip.name=Porta Logica PAL
+OR_Chip.name=Chip OR
+OpAmp.name=OpAmp
+Oscillator_Chip.name=Chip Oscilador
+PAL_Chip.name=Chip PAL
 PID_Regulator.name=Regulador PID
-Portable_NaN.name=Portable NaN
-Power_Capacitor.name=Capacitor
-Power_Inductor.name=Indutor
-Power_Resistor.name=Resistor
-Redstone-to-Voltage_Converter.name=Conversor de Redstone para Sinal
+Portable_NaN.name=NaN Portátil (ITEM DEV)
+Power_Capacitor.name=Capacitor de Potência
+Power_Inductor.name=Indutor de Potência
+Power_Resistor.name=Resistor de Potência
+Redstone-to-Voltage_Converter.name=Conversor Redstone-para-Tensão
 Rheostat.name=Reostato
-Robust_Lamp_Socket.name=Soquete Robusto para Lampada
-Sample_and_hold.name=Sample and hold
-Scanner.name=Escaneador
-Schmitt_Trigger_Chip.name=Schmitt Trigger
-Sconce_Lamp_Socket.name=Soquete Lateral para Lampada
-Signal_20H_inductor.name=Signal 20H inductor
-Signal_Bus_Cable.name=Barramento Cabo de Sinal
-Signal_Button.name=Botao de Sinal
+Robust_Lamp_Socket.name=Soquete de Lâmpada Robusto
+Sample_and_hold.name=Amostrador e Retentor
+Scanner.name=Scanner
+Schmitt_Trigger_Chip.name=Chip Schmitt Trigger
+Sconce_Lamp_Socket.name=Soquete de Lâmpada de Arandela
+Signal_20H_inductor.name=Indutor de Sinal 20H
+Signal_Bus_Cable.name=Cabo de Barramento de Sinal
+Signal_Button.name=Botão de Sinal
 Signal_Cable.name=Cabo de Sinal
 Signal_Diode.name=Diodo de Sinal
 Signal_Processor.name=Processador de Sinal
-Signal_Relay.name=Rele de Sinal
-Signal_Source.name=Sinal Criativo
+Signal_Relay.name=Relé de Sinal
+Signal_Source.name=Fonte de Sinal
 Signal_Switch.name=Interruptor de Sinal
-Signal_Switch_with_LED.name=Signal Switch with LED
-Signal_Trimmer.name=Sinal Analogico
-Simple_Lamp_Socket.name=Soquete para Lampada
-Spot_Lamp_Socket.name=Spot Lamp Socket
-Standard_Alarm.name=Alarme Padrao
-Streetlight.name=Streetlight
-Suspended_Lamp_Socket.name=Soquete Suspenso para Lampada
-Suspended_Lamp_Socket_(No_Swing).name=Suspended Lamp Socket (No Swing)
-Temperature_Probe.name=Sonda Temperatura
-Thermal_Probe.name=Sonda Calor
+Signal_Switch_with_LED.name=Interruptor de Sinal com LED
+Signal_Trimmer.name=Aparador de Sinal
+Simple_Lamp_Socket.name=Soquete de Lâmpada Simples
+Spot_Lamp_Socket.name=Soquete de Lâmpada Focal
+Standard_Alarm.name=Alarme Padrão
+Streetlight.name=Poste de Luz
+Suspended_Lamp_Socket.name=Soquete de Lâmpada Suspenso
+Suspended_Lamp_Socket_(No_Swing).name=Soquete de Lâmpada Suspenso (Sem Balanço)
+Temperature_Probe.name=Sonda de Temperatura
+Thermal_Probe.name=Sonda Térmica
 Thermistor.name=Termistor
-Thermometer_Sensor.name=Thermometer Sensor
-Tree_Resin_Collector.name=Coletor de Resina de Arvore
-Tutorial_Sign.name=Tutorial
-Variable_inductor.name=Variable inductor
-Very_High_Voltage_Cable.name=Cabo de Extrema Alta Tensao
-Very_High_Voltage_Relay.name=Rele de Extrema Alta Tensao
-Very_High_Voltage_Switch.name=Interruptor de Extrema Alta Tensao
-Voltage-to-Redstone_Converter.name=Conversor de Sinal para Redstone
-Voltage_Probe.name=Sonda de Tensao
-Voltage_controlled_amplifier.name=Amplificador Regulavel
-Voltage_controlled_sawtooth_oscillator.name=Oscilador Dente de Serra
-Voltage_controlled_sine_oscillator.name=Oscilador em Onda Seno
-Wireless_Button.name=Botao sem Fio
-Wireless_Signal_Receiver.name=Receptor de Sinal sem Fio
-Wireless_Signal_Repeater.name=Repetidor de Sinal sem Fio
-Wireless_Signal_Transmitter.name=Transmissor de Sinal sem Fio
-Wireless_Switch.name=Interruptor de Sinal sem Fio
-XNOR_Chip.name=Porta Logica XNOU
-XOR_Chip.name=Porta Logica XOU
+Thermometer_Sensor.name=Sensor Termômetro
+Tree_Resin_Collector.name=Coletor de Resina de Árvore
+Tutorial_Sign.name=Placa de Tutorial
+Variable_inductor.name=Indutor Variável
+Very_High_Voltage_Cable.name=Cabo de Tensão Muito Alta
+Very_High_Voltage_Relay.name=Relé de Tensão Muito Alta
+Very_High_Voltage_Switch.name=Interruptor de Tensão Muito Alta
+Voltage-to-Redstone_Converter.name=Conversor Tensão-para-Redstone
+Voltage_Probe.name=Sonda de Tensão
+Voltage_controlled_amplifier.name=Amplificador controlado por tensão
+Voltage_controlled_sawtooth_oscillator.name=Oscilador dente de serra controlado por tensão
+Voltage_controlled_sine_oscillator.name=Oscilador senoidal controlado por tensão
+Wireless_Button.name=Botão Sem Fio
+Wireless_Signal_Receiver.name=Receptor de Sinal Sem Fio
+Wireless_Signal_Repeater.name=Repetidor de Sinal Sem Fio
+Wireless_Signal_Transmitter.name=Transmissor de Sinal Sem Fio
+Wireless_Switch.name=Interruptor Sem Fio
+XNOR_Chip.name=Chip XNOR
+XOR_Chip.name=Chip XOR
 
 # src/main/kotlin/mods/eln/registration/TransparentNodeRegistration.kt
-120V_Basic_Floodlight.name=120V Basic Floodlight
-240V_Active_Thermal_Dissipator.name=240V Active Thermal Dissipator
-240V_Compressor.name=240V Compressor
-240V_Fuel_Generator.name=240V Fuel Generator
-240V_Macerator.name=240V Macerator
-240V_Magnetizer.name=240V Magnetizer
-240V_Motorized_Floodlight.name=240V Motorized Floodlight
-240V_Plate_Machine.name=240V Plate Machine
-240V_Turbine.name=240V Turbine
-24V_Egg_Incubator.name=24V Egg Incubator
-24V_Small_Active_Thermal_Dissipator.name=24V Small Active Thermal Dissipator
-2x3_Rotating_Solar_Panel.name=Painel Solar 2x3 Regulavel
+120V_Basic_Floodlight.name=Holofote Básico 120V
+240V_Active_Thermal_Dissipator.name=Dissipador Térmico Ativo 240V
+240V_Compressor.name=Compressor 240V
+240V_Fuel_Generator.name=Gerador a Combustível 240V
+240V_Macerator.name=Macerador 240V
+240V_Magnetizer.name=Magnetizador 240V
+240V_Motorized_Floodlight.name=Holofote Motorizado 240V
+240V_Plate_Machine.name=Máquina de Placas 240V
+240V_Turbine.name=Turbina 240V
+24V_Egg_Incubator.name=Incubadora de Ovos 24V
+24V_Small_Active_Thermal_Dissipator.name=Dissipador Térmico Ativo Pequeno 24V
+2x3_Rotating_Solar_Panel.name=Painel Solar Giratório 2x3
 2x3_Solar_Panel.name=Painel Solar 2x3
-480V_Defence_Turret.name=480V Defence Turret
-48V_Compressor.name=48V Compressor
-48V_Fuel_Generator.name=48V Fuel Generator
-48V_Macerator.name=48V Macerator
-48V_Magnetizer.name=48V Magnetizer
-48V_Plate_Machine.name=48V Plate Machine
-48V_Turbine.name=48V Turbine
-Auto_Miner.name=Mineradora 800V
-Capacity_Oriented_Battery.name=Bateria Capacidade Melhorada
-Christmas_Tree.name=Christmas Tree
-Clutch.name=Clutch
-Cost_Oriented_Battery.name=Bateria 50V
-Crank_Shaft.name=Crank Shaft
-Current_Oriented_Battery.name=Bateria Corrente Melhorada
-DC-DC_Converter.name=Transformador T1
-Direct_Utility_Pole.name=Direct Utility Pole
-Electrical_Furnace.name=Forno Eletrico
-Experimental_Battery.name=Experimental Battery
-Experimental_Transporter.name=Teletransportador Experimental
-Fabricator.name=Fabricator
-Fixed_Shaft.name=Fixed Shaft
+480V_Defence_Turret.name=Torre de Defesa 480V
+48V_Compressor.name=Compressor 48V
+48V_Fuel_Generator.name=Gerador a Combustível 48V
+48V_Macerator.name=Macerador 48V
+48V_Magnetizer.name=Magnetizador 48V
+48V_Plate_Machine.name=Máquina de Placas 48V
+48V_Turbine.name=Turbina 48V
+Auto_Miner.name=Minerador Automático
+Capacity_Oriented_Battery.name=Bateria Orientada a Capacidade
+Christmas_Tree.name=Árvore de Natal
+Clutch.name=Embreagem
+Cost_Oriented_Battery.name=Bateria Orientada a Custo
+Crank_Shaft.name=Eixo de Manivela
+Current_Oriented_Battery.name=Bateria Orientada a Corrente
+DC-DC_Converter.name=Conversor CC-CC
+Direct_Utility_Pole.name=Poste de Utilidade Direto
+Electrical_Furnace.name=Forno Elétrico
+Experimental_Battery.name=Bateria Experimental
+Experimental_Transporter.name=Transportador Experimental
+Fabricator.name=Fabricador
+Fixed_Shaft.name=Eixo Fixo
 Flywheel.name=Volante
-Fuel_Heat_Furnace.name=Camara de Combustao
-Gas_Turbine.name=Turbina a Combustao
-Generator.name=Gerador 3200V
-Grid_DC-DC_Converter.name=Transformador T2
-Grid_Switch.name=Grid Switch
-High_Power_Receiver_Antenna.name=Antena Receptora de Alta Tensao
-High_Power_Transmitter_Antenna.name=Antena Transmissora de Alta Tensao
-Holiday_Candle.name=Holiday Candle
-Joint.name=Eixo
-Joint_hub.name=Cruzamento de Eixos
-Large_Flywheel.name=Large Flywheel
-Large_Gas_Turbine.name=Large Gas Turbine
-Large_Generator.name=Large Generator
-Large_Rheostat.name=Reostato com Dissipador Termico
-Large_Shaft_Motor.name=Large Shaft Motor
-Large_Steam_Turbine.name=Large Steam Turbine
-Legacy_DC-DC_Converter.name=Legacy DC-DC Converter
-Life_Oriented_Battery.name=Bateria Vida Util Melhorada
-Low_Power_Receiver_Antenna.name=Antena Receptora de Baixa Tensao
-Low_Power_Transmitter_Antenna.name=Antena Transmissora de Baixa Tensao
-Medium_Power_Receiver_Antenna.name=Antena Receptora de Media Tensao
-Medium_Power_Transmitter_Antenna.name=Antena Transmissora de Media Tensao
-Nixie_Tube.name=Nixie Tube
-Old_480V_Arc_Furnace.name=Old 480V Arc Furnace
-Overhead_Lines.name=Overhead Lines
-Polarized_Shaft_Generator.name=Polarized Shaft Generator
-Polarized_Shaft_Motor.name=Polarized Shaft Motor
-Power_capacitor.name=Power capacitor
-Power_inductor.name=Power inductor
-Radial_Motor.name=Radial Motor
-Rolling_Shaft_Machine.name=Rolling Shaft Machine
-Shaft_Motor.name=Motor de Partida 3200V
-Single-use_Battery.name=Bateria Nao Recarregavel
-Small_Passive_Thermal_Dissipator.name=Dissipador Termico Passivo
-Small_Rotating_Solar_Panel.name=Pequeno Painel Solar Regulavel
-Small_Solar_Panel.name=Pequeno Painel Solar
+Fuel_Heat_Furnace.name=Forno Térmico a Combustível
+Gas_Turbine.name=Turbina a Gás
+Generator.name=Gerador
+Grid_DC-DC_Converter.name=Conversor CC-CC de Rede
+Grid_Switch.name=Chave de Rede
+High_Power_Receiver_Antenna.name=Antena Receptora de Alta Potência
+High_Power_Transmitter_Antenna.name=Antena Transmissora de Alta Potência
+Holiday_Candle.name=Vela Festiva
+Joint.name=Junta
+Joint_hub.name=Concentrador de Junta
+Large_Flywheel.name=Volante Grande
+Large_Gas_Turbine.name=Turbina a Gás Grande
+Large_Generator.name=Gerador Grande
+Large_Rheostat.name=Reostato Grande
+Large_Shaft_Motor.name=Motor de Eixo Grande
+Large_Steam_Turbine.name=Turbina a Vapor Grande
+Legacy_DC-DC_Converter.name=Conversor CC-CC (Legado)
+Life_Oriented_Battery.name=Bateria Orientada a Vida Útil
+Low_Power_Receiver_Antenna.name=Antena Receptora de Baixa Potência
+Low_Power_Transmitter_Antenna.name=Antena Transmissora de Baixa Potência
+Medium_Power_Receiver_Antenna.name=Antena Receptora de Média Potência
+Medium_Power_Transmitter_Antenna.name=Antena Transmissora de Média Potência
+Nixie_Tube.name=Tubo Nixie
+Old_480V_Arc_Furnace.name=Forno a Arco 480V Antigo
+Overhead_Lines.name=Linhas Aéreas
+Polarized_Shaft_Generator.name=Gerador de Eixo Polarizado
+Polarized_Shaft_Motor.name=Motor de Eixo Polarizado
+Power_capacitor.name=Capacitor de potência
+Power_inductor.name=Indutor de potência
+Radial_Motor.name=Motor Radial
+Rolling_Shaft_Machine.name=Máquina de Eixo de Laminação
+Shaft_Motor.name=Motor de Eixo
+Single-use_Battery.name=Bateria de Uso Único
+Small_Passive_Thermal_Dissipator.name=Dissipador Térmico Passivo Pequeno
+Small_Rotating_Solar_Panel.name=Painel Solar Giratório Pequeno
+Small_Solar_Panel.name=Painel Solar Pequeno
 Steam_Turbine.name=Turbina a Vapor
-Stone_Heat_Furnace.name=Camara de Aquecimento
-StreetLightWall.name=StreetLightWall
-String_Lights.name=String Lights
-Tachometer.name=Tacometro
-Thermal_Heat_Exchanger.name=Thermal Heat Exchanger
-Transmission_Tower.name=Torre de Transmissao
-Utility_Pole.name=Poste de Transmissao
-Utility_Pole_w/DC-DC_Converter.name=Poste com Transformador
-Variable_DC-DC_Converter.name=Variable DC-DC Converter
-Voltage_Oriented_Battery.name=Bateria 200V
-Water_Turbine.name=Turbina Hidraulica
-Wind_Turbine.name=Turbina eolica
-Wire_Combiner.name=Wire Combiner
-Wire_Insulator.name=Wire Insulator
-Wire_Roller.name=Wire Roller
+Stone_Heat_Furnace.name=Forno Térmico de Pedra
+StreetLightWall.name=Luminária de Rua de Parede
+String_Lights.name=Luzes de Fio
+Tachometer.name=Tacômetro
+Thermal_Heat_Exchanger.name=Trocador de Calor Térmico
+Transmission_Tower.name=Torre de Transmissão T2
+Utility_Pole.name=Poste de Utilidade T1
+Utility_Pole_w/DC-DC_Converter.name=Poste de Utilidade T1 com Transformador
+Variable_DC-DC_Converter.name=Conversor CC-CC Variável
+Voltage_Oriented_Battery.name=Bateria Orientada a Tensão
+Water_Turbine.name=Turbina Hidráulica
+Wind_Turbine.name=Turbina Eólica
+Wire_Combiner.name=Combinador de Fios
+Wire_Insulator.name=Isolador de Fios
+Wire_Roller.name=Laminador de Fios
 
 # src/main/kotlin/mods/eln/sixnode/AnalogChips.kt
-A_voltage-controlled_amplifier_(VCA)\nis_an_electronic_amplifier_that_varies\nits_gain_depending_on_the_control_voltage.=Amplifica sinal analogico dependendo do sinal de controle.
-A_voltage-controlled_oscillator_or_VCO_is\nan_electronic_oscillator_whose_oscillation\nfrequency_is_controlled_by_a_voltage_input.=Oscila onda dente de serra e no sinal de controle, controla a frequencia.
-An_amplifier_increases_the_voltage\nof_an_input_signal_by_a_configurable\ngain_and_outputs_that_voltage.=Amplifica sinal analogico de acordo com o ganho configurado internamente.
-Cut-off_frequency_%1$_Hz=Frequencia %1$ Hz
+A_voltage-controlled_amplifier_(VCA)\nis_an_electronic_amplifier_that_varies\nits_gain_depending_on_the_control_voltage.=Um amplificador controlado por tensão (VCA)\né um amplificador eletrônico que varia\nseu ganho dependendo da tensão de controle.
+A_voltage-controlled_oscillator_or_VCO_is\nan_electronic_oscillator_whose_oscillation\nfrequency_is_controlled_by_a_voltage_input.=Um oscilador controlado por tensão ou VCO é\num oscilador eletrônico cuja frequência\nde oscilação é controlada por uma entrada de tensão.
+An_amplifier_increases_the_voltage\nof_an_input_signal_by_a_configurable\ngain_and_outputs_that_voltage.=Um amplificador aumenta a tensão\nde um sinal de entrada por um ganho\nconfigurável e emite essa tensão.
+Cut-off_frequency_%1$_Hz=Frequência de corte %1$ Hz
 Gain=Ganho
-Gain_for_input_§13=Ganho da entrada §13
-Gain_for_input_§22=Ganho da entrada §22
-Gain_for_input_§41=Ganho da entrada §41
-Gains=Gains
-Lowpass_filter_-_Passes_signals_with_a\nfrequency_lower_than_a_certain_cutoff_frequency\nand_attenuates_signals_with_frequencies_higher\nthan_the_cutoff_frequency.=Altera sinal analogico em funcao a frequencia.
-Operational_Amplifier_-_DC_coupled\nhigh-gain_voltage_amplifier_with\ndifferential_input._Can_be_used_to\ncompare_voltages_or_as_configurable_amplifier.=Recebe sinal analogico\ne se for maior que o sinal de controle\nemite um sinal digital 1.
-Params=Parametro
-Proportional–integral–derivative_controller._A_PID\ncontroller_continuously_calculates_an_error_value_as\nthe_difference_between_a_desired_setpoint_and_a_measured\nprocess_variable_and_applies_a_correction_based_on\nproportional,_integral,_and_derivative_terms.=Controlador proporcional integral derivativo.\nCalcula um erro da entrada do sensor e da entrada definida\ne ajusta para corrigir para a definida em funcao do Kp, Ki, Kd e tempo.
-Samples_the_voltage_of_a_varying_analog_signal_when\nthe_clock_input_changes_from_0_to_1_and_holds_its\noutput_voltage_at_a_constant_level_until_next_clock_pulse.\nYou_can_see_it_as_an_analog_D-Flipflop.=Emite sinal analogico somente quando\na entrada de controle recebe pulso.
-The_summing_unit_outputs_the_sum_of\nthe_three_weighted_inputs.The\ngain_for_each_input_can_be_configured.=Emite a soma das tres entradas analogicas\nproporcional ao ganho configurada em cada entrada.
+Gain_for_input_§13=Ganho para entrada §13
+Gain_for_input_§22=Ganho para entrada §22
+Gain_for_input_§41=Ganho para entrada §41
+Gains=Ganhos
+Lowpass_filter_-_Passes_signals_with_a\nfrequency_lower_than_a_certain_cutoff_frequency\nand_attenuates_signals_with_frequencies_higher\nthan_the_cutoff_frequency.=Filtro Passa-Baixa - Passa sinais com\nfrequência menor que uma certa frequência de corte\ne atenua sinais com frequências maiores\nque a frequência de corte.
+Operational_Amplifier_-_DC_coupled\nhigh-gain_voltage_amplifier_with\ndifferential_input._Can_be_used_to\ncompare_voltages_or_as_configurable_amplifier.=Amplificador Operacional - Amplificador de tensão\nde alto ganho acoplado em CC com\nentrada diferencial. Pode ser usado para\ncomparar tensões ou como amplificador configurável.
+Params=Parâmetros
+Proportional–integral–derivative_controller._A_PID\ncontroller_continuously_calculates_an_error_value_as\nthe_difference_between_a_desired_setpoint_and_a_measured\nprocess_variable_and_applies_a_correction_based_on\nproportional,_integral,_and_derivative_terms.=Controlador Proporcional–integral–derivativo. Um controlador\nPID calcula continuamente um valor de erro como\na diferença entre um ponto de ajuste desejado e uma\nvariável de processo medida e aplica uma correção baseada\nnos termos proporcional, integral e derivativo.
+Samples_the_voltage_of_a_varying_analog_signal_when\nthe_clock_input_changes_from_0_to_1_and_holds_its\noutput_voltage_at_a_constant_level_until_next_clock_pulse.\nYou_can_see_it_as_an_analog_D-Flipflop.=Amostra a tensão de um sinal analógico variável quando\na entrada de clock muda de 0 para 1 e mantém sua\ntensão de saída em um nível constante até o próximo pulso de clock.\nVocê pode vê-lo como um D-Flipflop analógico.
+The_summing_unit_outputs_the_sum_of\nthe_three_weighted_inputs.The\ngain_for_each_input_can_be_configured.=A unidade somadora emite a soma das\ntrês entradas ponderadas. O\nganho para cada entrada pode ser configurado.
 
 # src/main/kotlin/mods/eln/sixnode/ConduitCableDescriptor.kt
-A_conduit_to_run_your_cables_through=A conduit to run your cables through
-Contained_Cables=Contained Cables
-__*_Thermal_Sim_is_disabled_in_the_conduit=  * Thermal Sim is disabled in the conduit
+A_conduit_to_run_your_cables_through=Um conduto para passar seus cabos
+Contained_Cables=Cabos Contidos
+__*_Thermal_Sim_is_disabled_in_the_conduit=  * A Simulação Térmica está desabilitada no conduto
 
 # src/main/kotlin/mods/eln/sixnode/CreativePassiveSix.kt
-Capacitance=Capacitance
-Capacitance_in_farads=Capacitance in farads
-Creative_Power_Capacitor=Creative Power Capacitor
-Creative_Power_Inductor=Creative Power Inductor
-Creative_Power_Resistor=Creative Power Resistor
-Creative_capacitor_with_direct_value_entry.=Creative capacitor with direct value entry.
-Creative_inductor_with_direct_value_entry.=Creative inductor with direct value entry.
-Creative_resistor_with_direct_value_entry.=Creative resistor with direct value entry.
-Inductance_in_henries=Inductance in henries
-MNA_capacitor_solving_can_produce_unrealistic_results.=MNA capacitor solving can produce unrealistic results.
-MNA_inductor_solving_can_produce_unrealistic_results.=MNA inductor solving can produce unrealistic results.
-Resistance_in_ohms=Resistance in ohms
-Timestep-dependent_behavior_can_make_reactive_simulation_inaccurate.=Timestep-dependent behavior can make reactive simulation inaccurate.
+Capacitance=Capacitância
+Capacitance_in_farads=Capacitância em farads
+Creative_Power_Capacitor=Capacitor de Potência Criativo
+Creative_Power_Inductor=Indutor de Potência Criativo
+Creative_Power_Resistor=Resistor de Potência Criativo
+Creative_capacitor_with_direct_value_entry.=Capacitor criativo com entrada direta de valor.
+Creative_inductor_with_direct_value_entry.=Indutor criativo com entrada direta de valor.
+Creative_resistor_with_direct_value_entry.=Resistor criativo com entrada direta de valor.
+Inductance_in_henries=Indutância em henries
+MNA_capacitor_solving_can_produce_unrealistic_results.=A resolução MNA de capacitores pode produzir resultados irrealistas.
+MNA_inductor_solving_can_produce_unrealistic_results.=A resolução MNA de indutores pode produzir resultados irrealistas.
+Resistance_in_ohms=Resistência em ohms
+Timestep-dependent_behavior_can_make_reactive_simulation_inaccurate.=O comportamento dependente do passo de tempo pode tornar a simulação reativa imprecisa.
 
 # src/main/kotlin/mods/eln/sixnode/CurrentSourceSix.kt
-Acts_as_an_ideal_current_source,_with_a_small_inline_resistance=Acts as an ideal current source, with a small inline resistance
-Current_sourced=Current sourced
-Provides_an_ideal_current_source\nwithout_energy_or_power_limitation.=Provides an ideal current source\nwithout energy or power limitation.
+Acts_as_an_ideal_current_source,_with_a_small_inline_resistance=Age como uma fonte de corrente ideal, com uma pequena resistência em série
+Current_sourced=Corrente fornecida
+Provides_an_ideal_current_source\nwithout_energy_or_power_limitation.=Fornece uma fonte de corrente ideal\nsem limitação de energia ou potência.
 
 # src/main/kotlin/mods/eln/sixnode/ElectricalFuse.kt
-Protects_electrical_components.\nFuse_melts_if_current_exceeds_the\nfuse_limit=Componente de protecao contra\nsobretensao e sobrecarga.
+Protects_electrical_components.\nFuse_melts_if_current_exceeds_the\nfuse_limit=Protege componentes elétricos.\nO fusível derrete se a corrente exceder\no limite do fusível
 
 # src/main/kotlin/mods/eln/sixnode/ElectricalVuMeter.kt
-Displays_a_color_based_on_the_value_of_a_signal=Displays a color based on the value of a signal
-Displays_the_value_of_a_signal.=Exibe valor de sinal analogico.
+Displays_a_color_based_on_the_value_of_a_signal=Exibe uma cor baseada no valor de um sinal
+Displays_the_value_of_a_signal.=Exibe o valor de um sinal.
 
 # src/main/kotlin/mods/eln/sixnode/EmergencyLamp.kt
-As_long_as_power_is_provided,_the_internal_battery=As long as power is provided, the internal battery
-Batteries_empty=Batteries empty
-Battery_capacity\:=Battery capacity:
-Charging...=Charging...
-Fully_charged=Fully charged
-Nominal_voltage\:=Nominal voltage:
-Powered_by_Lamp_Supply=Energia do cabo
-Specify_the_supply_channel=Canal do QDL
-is_charged_and_the_lamp_is_off._On_a_power_failure,=is charged and the lamp is off. On a power failure,
-the_lamp_turns_on_and_runs_on_batteries.=the lamp turns on and runs on batteries.
+As_long_as_power_is_provided,_the_internal_battery=Enquanto a energia é fornecida, a bateria interna
+Batteries_empty=Baterias vazias
+Battery_capacity\:=Capacidade da bateria:
+Charging...=Carregando...
+Fully_charged=Totalmente carregada
+Nominal_voltage\:=Tensão nominal:
+Powered_by_Lamp_Supply=Alimentado por Fonte de Lâmpadas
+Specify_the_supply_channel=Especifique o canal de alimentação
+is_charged_and_the_lamp_is_off._On_a_power_failure,=está carregada e a lâmpada está desligada. Em uma falha de energia,
+the_lamp_turns_on_and_runs_on_batteries.=a lâmpada acende e funciona com baterias.
 
 # src/main/kotlin/mods/eln/sixnode/LogicGate.kt
-A_Programmable_Array_Logic_(PAL)_is_a_programmable\nlogic_device_semiconductors_used_to__implement_any_logic\nfunction_in_only_one_digital_circuit._The_function_is\nstateless,_which_means_that_no_intermediate_state_is_saved.=Matriz logica programavel\nAtravez de uma matriz e possivel programar portas logicas.
-If_the_input_J_is_1_(high)_and_K_is_0_(low)\nduring_a_clock_pulse,_the_output_becomes_1_(high).\nIf_J_is_0_(low)_and_K_is_1_(high)_during_the_pulse,\nthe_output_becomes_0_(low)._If_both_inputs_are_0_(low)\nduring_the_clock_pulse,_the_state_is_maintained._If_both\ninputs_are_1_(high)_the_input_is_toggled_if_a_rising_edge\nwas_detected_at_the_clock_input.=Emite sinal digital dependendo da entrada j e k.
-If_the_input_voltage_is_lower_than_10V,_the\noutput_is_0_(low),_if_the_input_is_bigger_or\nequal_to_30V,_the_output_will_be_1_(high)._For\nall_voltages_in_between,_the_output_does_not_change.=If the input voltage is lower than 10V, the\noutput is 0 (low), if the input is bigger or\nequal to 30V, the output will be 1 (high). For\nall voltages in between, the output does not change.
-Implements_an_exclusive_or.\nAn_output_of_1_(high)_results_if_one_or\nall_three_inputs_to_the_gate_are_1_(high).=Faz com que cada entrada seja independente uma das outra\nou seja cada entrada pode anterar entre 0 e 1.
-Implements_logical_conjunction.\nA_1_(high)_output_results_only_if_all_of\nthe_three_inputs_to_the_AND_gate_are_1_(high).=Emite sinal se todas as entradas emitir 1.
-Implements_logical_disjunction.\nA_1_(high)_output_results_if_at_least\none_input_to_the_gate_is_1_(high).=Emite sinal se um ou mais entradas emitir 1.
-Inverts_the_input_signal.\nOutputs_a_voltage_representing_the\nopposite_logic-level_to_its_input.=Emite sinal inverso.
-Its_output_is_complement_(inverted)\nto_that_of_the_AND_gate.=Imite sinal inverso da porta logica E.
-Its_output_is_complement_(inverted)\nto_that_of_the_OR_gate.=Emite sinal inverso da porta logica OU.
-Its_output_is_complement_(inverted)\nto_that_of_the_XOR_gate.=Emite sinal inverso da porta logica XOU.
-Outputs_a_rectangular_signal_which's_frequency\ndepends_to_the_input_voltage._The_higher_the\ninput_voltage_-_the_higher_the_frequency.=Oscila onda quadrada e no sinal de controle, controla a frequencia.
-The_D_flip-flop_captures_the_value\nof_the_D-input_at_a_rising_edge\nportion_of_the_clock_cycle.=Emite sinal digital dependendo da entrada D.
-UNDEF=Indefinido
+A_Programmable_Array_Logic_(PAL)_is_a_programmable\nlogic_device_semiconductors_used_to__implement_any_logic\nfunction_in_only_one_digital_circuit._The_function_is\nstateless,_which_means_that_no_intermediate_state_is_saved.=Um Programmable Array Logic (PAL) é um dispositivo\nlógico programável semicondutor usado para implementar qualquer\nfunção lógica em um único circuito digital. A função é\nsem estado, o que significa que nenhum estado intermediário é salvo.
+If_the_input_J_is_1_(high)_and_K_is_0_(low)\nduring_a_clock_pulse,_the_output_becomes_1_(high).\nIf_J_is_0_(low)_and_K_is_1_(high)_during_the_pulse,\nthe_output_becomes_0_(low)._If_both_inputs_are_0_(low)\nduring_the_clock_pulse,_the_state_is_maintained._If_both\ninputs_are_1_(high)_the_input_is_toggled_if_a_rising_edge\nwas_detected_at_the_clock_input.=Se a entrada J for 1 (alto) e K for 0 (baixo)\ndurante um pulso de clock, a saída se torna 1 (alto).\nSe J for 0 (baixo) e K for 1 (alto) durante o pulso,\na saída se torna 0 (baixo). Se ambas as entradas forem 0 (baixo)\ndurante o pulso de clock, o estado é mantido. Se ambas\nas entradas forem 1 (alto), a entrada é alternada se uma borda\nde subida for detectada na entrada de clock.
+If_the_input_voltage_is_lower_than_10V,_the\noutput_is_0_(low),_if_the_input_is_bigger_or\nequal_to_30V,_the_output_will_be_1_(high)._For\nall_voltages_in_between,_the_output_does_not_change.=Se a tensão de entrada for menor que 10V, a\nsaída é 0 (baixo), se a entrada for maior ou\nigual a 30V, a saída será 1 (alto). Para\ntodas as tensões intermediárias, a saída não muda.
+Implements_an_exclusive_or.\nAn_output_of_1_(high)_results_if_one_or\nall_three_inputs_to_the_gate_are_1_(high).=Implementa um ou exclusivo.\nUma saída de 1 (alto) resulta se uma ou\ntodas as três entradas da porta forem 1 (alto).
+Implements_logical_conjunction.\nA_1_(high)_output_results_only_if_all_of\nthe_three_inputs_to_the_AND_gate_are_1_(high).=Implementa conjunção lógica.\nUma saída 1 (alto) resulta somente se todas as\ntrês entradas da porta AND forem 1 (alto).
+Implements_logical_disjunction.\nA_1_(high)_output_results_if_at_least\none_input_to_the_gate_is_1_(high).=Implementa disjunção lógica.\nUma saída 1 (alto) resulta se pelo menos\numa entrada da porta for 1 (alto).
+Inverts_the_input_signal.\nOutputs_a_voltage_representing_the\nopposite_logic-level_to_its_input.=Inverte o sinal de entrada.\nEmite uma tensão representando o\nnível lógico oposto à sua entrada.
+Its_output_is_complement_(inverted)\nto_that_of_the_AND_gate.=Sua saída é o complemento (invertido)\ndaquela da porta AND.
+Its_output_is_complement_(inverted)\nto_that_of_the_OR_gate.=Sua saída é o complemento (invertido)\ndaquela da porta OR.
+Its_output_is_complement_(inverted)\nto_that_of_the_XOR_gate.=Sua saída é o complemento (invertido)\ndaquela da porta XOR.
+Outputs_a_rectangular_signal_which's_frequency\ndepends_to_the_input_voltage._The_higher_the\ninput_voltage_-_the_higher_the_frequency.=Emite um sinal retangular cuja frequência\ndepende da tensão de entrada. Quanto maior a\ntensão de entrada - maior a frequência.
+The_D_flip-flop_captures_the_value\nof_the_D-input_at_a_rising_edge\nportion_of_the_clock_cycle.=O D flip-flop captura o valor\nda entrada D em uma borda\nde subida do ciclo de clock.
+UNDEF=INDEF
 
 # src/main/kotlin/mods/eln/sixnode/PortableNaN.kt
-A_debugging_feature_that_throws_NaN_(Not_a_Number)_anywhere_it_can_in_the_simulator_to_find_bugs=A debugging feature that throws NaN (Not a Number) anywhere it can in the simulator to find bugs
-Current\:_No=Current: No
-Serial_Resistance\:_OK_Ω=Serial Resistance: OK Ω
-Voltage\:_Yes=Voltage: Yes
+A_debugging_feature_that_throws_NaN_(Not_a_Number)_anywhere_it_can_in_the_simulator_to_find_bugs=Um recurso de depuração que lança NaN (Not a Number) em qualquer lugar possível no simulador para encontrar bugs
+Current\:_No=Corrente: Não
+Serial_Resistance\:_OK_Ω=Resistência em Série: OK Ω
+Voltage\:_Yes=Tensão: Sim
 
 # src/main/kotlin/mods/eln/sixnode/PowerCapacitor.kt
-(Increases_maximum_voltage)=(Aumenta tensao maxima)
-Provides_capacitance._Use_with_dielectrics_and_redstone=Provides capacitance. Use with dielectrics and redstone
+(Increases_maximum_voltage)=(Aumenta a tensão máxima)
+Provides_capacitance._Use_with_dielectrics_and_redstone=Fornece capacitância. Use com dielétricos e redstone
 
 # src/main/kotlin/mods/eln/sixnode/PowerInductorSix.kt
-Provides_inductance._Use_with_iron_cores_and_bare_copper_cables=Provides inductance. Use with iron cores and bare copper cables
+Provides_inductance._Use_with_iron_cores_and_bare_copper_cables=Fornece indutância. Use com núcleos de ferro e cabos de cobre nus
 
 # src/main/kotlin/mods/eln/sixnode/PowerSinkSix.kt
-Provides_an_ideal_power_sink\nwithout_energy_or_power_limitation.=Provides an ideal power sink\nwithout energy or power limitation.
+Provides_an_ideal_power_sink\nwithout_energy_or_power_limitation.=Fornece um sumidouro de potência ideal\nsem limitação de energia ou potência.
 
 # src/main/kotlin/mods/eln/sixnode/PowerSourceSix.kt
-Provides_an_ideal_power_source\nwithout_energy_or_power_limitation.=Provides an ideal power source\nwithout energy or power limitation.
+Provides_an_ideal_power_source\nwithout_energy_or_power_limitation.=Fornece uma fonte de potência ideal\nsem limitação de energia ou potência.
 
 # src/main/kotlin/mods/eln/sixnode/Scanner.kt
--_For_inventories,_outputs_either_total_fill_or_fraction_of_slots_with_any_items.=- Inventario: Emite sinal analogico em funcao numero de itens em cada espaco.
--_For_tanks,_outputs_fill_percentage.=- Tanque: Emite sinal analogico por mB.
-Otherwise_behaves_as_a_vanilla_comparator.=Caso contrario, se comporta como um comparador.
-Right-click_to_change_mode.=Botao direito moda o modo de leitura.
-Scans_blocks_to_produce_signals.=Escaneia blocos e emite sinal analogico.
+-_For_inventories,_outputs_either_total_fill_or_fraction_of_slots_with_any_items.=- Para inventários, emite o preenchimento total ou a fração de espaços com qualquer item.
+-_For_tanks,_outputs_fill_percentage.=- Para tanques, emite a porcentagem de preenchimento.
+Otherwise_behaves_as_a_vanilla_comparator.=Caso contrário, comporta-se como um comparador vanilla.
+Right-click_to_change_mode.=Clique direito para mudar o modo.
+Scans_blocks_to_produce_signals.=Escaneia blocos para produzir sinais.
 
 # src/main/kotlin/mods/eln/sixnode/VariableInductorSix.kt
-Connect_a_signal_wire_to_modulate_inductance=Connect a signal wire to modulate inductance
-Inductance_range\:_%1$-%2$=Inductance range: %1$-%2$
-Signal_controlled_inductor=Signal controlled inductor
+Connect_a_signal_wire_to_modulate_inductance=Conecte um fio de sinal para modular a indutância
+Inductance_range\:_%1$-%2$=Faixa de indutância: %1$-%2$
+Signal_controlled_inductor=Indutor controlado por sinal
 
 # src/main/kotlin/mods/eln/sixnode/currentcable/CurrentCable.kt
-Deprecated_legacy_cable._Prefer_AWG/mm_utility_cables_for_new_builds.=Deprecated legacy cable. Prefer AWG/mm utility cables for new builds.
-This_current-tier_cable_family_is_deprecated_in_the_rebalance.=This current-tier cable family is deprecated in the rebalance.
-__*_Wire_current_limits_are_arbitrary_values,_added_as_a_gameplay_mechanic=  * Wire current limits are arbitrary values, added as a gameplay mechanic
-__*_Wire_voltage_limits_are_arbitrary_values,_picked_to_within_reasonable_simulator_error=  * Wire voltage limits are arbitrary values, picked to within reasonable simulator error
+Deprecated_legacy_cable._Prefer_AWG/mm_utility_cables_for_new_builds.=Cabo legado obsoleto. Prefira cabos utilitários AWG/mm para novas construções.
+This_current-tier_cable_family_is_deprecated_in_the_rebalance.=Esta família de cabos por nível de corrente está obsoleta no rebalanceamento.
+__*_Wire_current_limits_are_arbitrary_values,_added_as_a_gameplay_mechanic=  * Os limites de corrente dos fios são valores arbitrários, adicionados como mecânica de jogo
+__*_Wire_voltage_limits_are_arbitrary_values,_picked_to_within_reasonable_simulator_error=  * Os limites de tensão dos fios são valores arbitrários, escolhidos dentro de um erro razoável do simulador
 
 # src/main/kotlin/mods/eln/sixnode/currentrelay/CurrentRelay.kt
-Deprecated_legacy_relay._Prefer_relays_that_follow_the_AWG/mm_cable_system.=Deprecated legacy relay. Prefer relays that follow the AWG/mm cable system.
+Deprecated_legacy_relay._Prefer_relays_that_follow_the_AWG/mm_cable_system.=Relé legado obsoleto. Prefira relés que seguem o sistema de cabos AWG/mm.
 
 # src/main/kotlin/mods/eln/sixnode/electricalcable/MoltenMetalPile.kt
-A_puddle_of_molten_%1$_from_an_overheated_cable.=A puddle of molten %1$ from an overheated cable.
-Molten_metal=Molten metal
+A_puddle_of_molten_%1$_from_an_overheated_cable.=Uma poça de %1$ fundido de um cabo superaquecido.
+Molten_metal=Metal fundido
 
 # src/main/kotlin/mods/eln/sixnode/electricalcable/UtilityCable.kt
 %1$V=%1$V
-Bare=Bare
-Black=Black
-Blue=Blue
-Brown=Brown
-Brush\:_paint_conductor_color=Brush: paint conductor color
-Conductor=Conductor
-Conductor\:_%1$_%2$=Conductor: %1$ %2$
-Conductor_colors\:_%1$=Conductor colors: %1$
-Conductors\:_%1$=Conductors: %1$
-Cyan=Cyan
-Equivalent_area\:_%1$_mm2=Equivalent area: %1$ mm2
-Gray=Gray
-Green=Green
-Ground=Ground
-Insulation\:_%1$=Insulation: %1$
-Light_Blue=Light Blue
-Lime=Lime
+Bare=Nu
+Black=Preto
+Blue=Azul
+Brown=Marrom
+Brush\:_paint_conductor_color=Pincel: pintar cor do condutor
+Conductor=Condutor
+Conductor\:_%1$_%2$=Condutor: %1$ %2$
+Conductor_colors\:_%1$=Cores do condutor: %1$
+Conductors\:_%1$=Condutores: %1$
+Cyan=Ciano
+Equivalent_area\:_%1$_mm2=Área equivalente: %1$ mm2
+Gray=Cinza
+Green=Verde
+Ground=Terra
+Insulation\:_%1$=Isolação: %1$
+Light_Blue=Azul Claro
+Lime=Lima
 Magenta=Magenta
-Max_temperature\:_%1$C=Max temperature: %1$C
-Nearest_EU-style_name\:_%1$=Nearest EU-style name: %1$
-Orange=Orange
-Palette=Palette
-Pink=Pink
-Placement_usage\:_%1$_m=Placement usage: %1$ m
-Purple=Purple
-Red=Red
-Remaining_length\:_%1$_m=Remaining length: %1$ m
-Silver=Silver
-White=White
-Wire_color_care_%1$=Wire color care %1$
-Wrench\:_cycle_conductor_colors=Wrench: cycle conductor colors
-Yellow=Yellow
+Max_temperature\:_%1$C=Temperatura máx: %1$C
+Nearest_EU-style_name\:_%1$=Nome estilo UE mais próximo: %1$
+Orange=Laranja
+Palette=Paleta
+Pink=Rosa
+Placement_usage\:_%1$_m=Uso de colocação: %1$ m
+Purple=Roxo
+Red=Vermelho
+Remaining_length\:_%1$_m=Comprimento restante: %1$ m
+Silver=Prateado
+White=Branco
+Wire_color_care_%1$=Cor do fio %1$
+Wrench\:_cycle_conductor_colors=Chave inglesa: alternar cores do condutor
+Yellow=Amarelo
 
 # src/main/kotlin/mods/eln/sixnode/electricalhumiditysensor/ElectricalHumiditySensorDescriptor.kt
-0%%_RH\:_%1$V=0%% RH: %1$V
-100%%_RH\:_%1$V=100%% RH: %1$V
-Humidity_follows_day/night\nand_rises_during_rain_or_snow.=Humidity follows day/night\nand rises during rain or snow.
-Provides_an_electrical_signal\nfor_biome_relative_humidity.=Provides an electrical signal\nfor biome relative humidity.
+0%%_RH\:_%1$V=0%% UR: %1$V
+100%%_RH\:_%1$V=100%% UR: %1$V
+Humidity_follows_day/night\nand_rises_during_rain_or_snow.=A umidade segue o dia/noite\ne aumenta durante chuva ou neve.
+Provides_an_electrical_signal\nfor_biome_relative_humidity.=Fornece um sinal elétrico\npara a umidade relativa do bioma.
 
 # src/main/kotlin/mods/eln/sixnode/electricalhumiditysensor/ElectricalHumiditySensorElement.kt
-Ambient_temperature=Ambient temperature
-Precipitation=Precipitation
+Ambient_temperature=Temperatura ambiente
+Precipitation=Precipitação
 
 # src/main/kotlin/mods/eln/sixnode/lampsocket/LampSocketDescriptor.kt
-Angle\:_%1$°_to_%2$°=Angulo: %1$° to %2$°
-Spot_range\:_%1$_blocks=Alcance da luz: %1$ blocks
-Wireless_mode_of_lights_is_intended_\nto_pretend_wires_are_in_the_walls.=Wireless mode of lights is intended \nto pretend wires are in the walls.
+Angle\:_%1$°_to_%2$°=Ângulo: %1$° a %2$°
+Spot_range\:_%1$_blocks=Alcance do foco: %1$ blocos
+Wireless_mode_of_lights_is_intended_\nto_pretend_wires_are_in_the_walls.=O modo sem fio das luzes é destinado\na fingir que há fios nas paredes.
 
 # src/main/kotlin/mods/eln/sixnode/lampsocket/LampSocketElement.kt
-Bulb=Lampada
-Bulb_Life_Left=Bulb Life Left
+Bulb=Lâmpada
+Bulb_Life_Left=Vida Restante da Lâmpada
 
 # src/main/kotlin/mods/eln/sixnode/lampsocket/LampSocketGui.kt
-Beam_orientation\:_%1$°=Beam orientation: %1$°
-Cable_slot_empty=Faltando o cabo
-Connected_to_%1$=Connected to %1$
-Grounded=Grounded
-Lamp_slot_empty=Lamp slot empty
-Powered_by_lamp_supply=Powered by lamp supply
-Specify_the_lamp_supply_channel=Specify the lamp supply channel
-This_currently_does_nothing.=This currently does nothing.
-Ungrounded=Ungrounded
+Beam_orientation\:_%1$°=Orientação do feixe: %1$°
+Cable_slot_empty=Espaço de cabo vazio
+Connected_to_%1$=Conectado a %1$
+Grounded=Aterrado
+Lamp_slot_empty=Espaço de lâmpada vazio
+Powered_by_lamp_supply=Alimentado por fonte de lâmpadas
+Specify_the_lamp_supply_channel=Especifique o canal da fonte de lâmpadas
+This_currently_does_nothing.=Isso atualmente não faz nada.
+Ungrounded=Não aterrado
 
 # src/main/kotlin/mods/eln/sixnode/mqttmeter/MqttEnergyMeterElement.kt
-Elapsed_time=Elapsed time
-Energy_(kJ)=Energy (kJ)
-Meter_ID=Meter ID
+Elapsed_time=Tempo decorrido
+Energy_(kJ)=Energia (kJ)
+Meter_ID=ID do Medidor
 
 # src/main/kotlin/mods/eln/sixnode/mqttmeter/MqttEnergyMeterGui.kt
-Meter_ID_(Read_Only)=Meter ID (Read Only)
-Meter_Name=Meter Name
-Turn_off=Turn off
-Turn_on=Turn on
+Meter_ID_(Read_Only)=ID do Medidor (Somente Leitura)
+Meter_Name=Nome do Medidor
+Turn_off=Desligar
+Turn_on=Ligar
 
 # src/main/kotlin/mods/eln/sixnode/mqttsignal/MqttSignalControllerElement.kt
-Controller_ID=Controller ID
+Controller_ID=ID do Controlador
 
 # src/main/kotlin/mods/eln/sixnode/mqttsignal/MqttSignalControllerGui.kt
-Controller_ID_(Read_Only)=Controller ID (Read Only)
-Disabled_-_ignored_by_MQTT=Disabled - ignored by MQTT
-Read_-_publish_voltage_only=Read - publish voltage only
-Signal_Controller_Name=Signal Controller Name
-Write_-_driven_by_MQTT=Write - driven by MQTT
+Controller_ID_(Read_Only)=ID do Controlador (Somente Leitura)
+Disabled_-_ignored_by_MQTT=Desabilitado - ignorado pelo MQTT
+Read_-_publish_voltage_only=Ler - publicar apenas tensão
+Signal_Controller_Name=Nome do Controlador de Sinal
+Write_-_driven_by_MQTT=Escrever - controlado pelo MQTT
 
 # src/main/kotlin/mods/eln/sixnode/powersocket/PowerSocketDescriptor.kt
-Homes_have_power_sockets._These_are_not_them.=Homes have power sockets. These are not them.
-Supplies_any_device\nplugged_in_with_energy.=Fornecer energia sem fio para maquinas.
+Homes_have_power_sockets._These_are_not_them.=Casas têm tomadas. Estas não são elas.
+Supplies_any_device\nplugged_in_with_energy.=Fornece energia a qualquer\ndispositivo conectado.
 
 # src/main/kotlin/mods/eln/sixnode/powersocket/PowerSocketGui.kt
-Specify_the_power_channel=Specify the power channel
+Specify_the_power_channel=Especifique o canal de energia
 
 # src/main/kotlin/mods/eln/sixnode/thermometersensor/ThermometerSensorDescriptor.kt
-0%%_output\:_%1$V=0%% output: %1$V
-100%%_output\:_%1$V=100%% output: %1$V
-Default_range\:_-40C_to_50C=Default range: -40C to 50C
-Provides_an_electrical_signal\nfor_biome_temperature.=Provides an electrical signal\nfor biome temperature.
-Set_min/max_values_in_GUI\nto_map_temperature_to_output.=Set min/max values in GUI\nto map temperature to output.
+0%%_output\:_%1$V=0%% saída: %1$V
+100%%_output\:_%1$V=100%% saída: %1$V
+Default_range\:_-40C_to_50C=Faixa padrão: -40C a 50C
+Provides_an_electrical_signal\nfor_biome_temperature.=Fornece um sinal elétrico\npara a temperatura do bioma.
+Set_min/max_values_in_GUI\nto_map_temperature_to_output.=Defina valores mín/máx na GUI\npara mapear temperatura para saída.
 
 # src/main/kotlin/mods/eln/sixnode/thermometersensor/ThermometerSensorElement.kt
-Biome_temperature=Biome temperature
+Biome_temperature=Temperatura do bioma
 
 # src/main/kotlin/mods/eln/transparentnode/DcDc.kt
-This_DC/DC_has_unrealistic_capacitance_effects_and_can_sink/source_power_that_violates_Newton's_laws=This DC/DC has unrealistic capacitance effects and can sink/source power that violates Newton's laws
+This_DC/DC_has_unrealistic_capacitance_effects_and_can_sink/source_power_that_violates_Newton's_laws=Este CC/CC tem efeitos de capacitância irrealistas e pode consumir/fornecer potência que viola as leis de Newton
 
 # src/main/kotlin/mods/eln/transparentnode/Fabricator.kt
-Nominal_Ohms\:_%1$=Nominal Ohms: %1$
-Operation=Operation
-The_Fabricator_creates_chips\nfrom_silicon_and_copper_plates=The Fabricator creates chips\nfrom silicon and copper plates
+Nominal_Ohms\:_%1$=Ohms Nominais: %1$
+Operation=Operação
+The_Fabricator_creates_chips\nfrom_silicon_and_copper_plates=O Fabricador cria chips\na partir de placas de silício e cobre
 
 # src/main/kotlin/mods/eln/transparentnode/FuelGenerator.kt
-Fuel_level=Nivel de combustivel
-Nominal_power\:_%1$_W=Potencia nominal: %1$ W
-Nominal_voltage\:_%1$_V=Tensao nominal: %1$ V
-Produces_electricity_using_gasoline.=Gera energia atravez da gasolina.
+Fuel_level=Nível de combustível
+Nominal_power\:_%1$_W=Potência nominal: %1$ W
+Nominal_voltage\:_%1$_V=Tensão nominal: %1$ V
+Produces_electricity_using_gasoline.=Produz eletricidade usando gasolina.
 
 # src/main/kotlin/mods/eln/transparentnode/FuelHeatFurnace.kt
-Actual\:_=Actual: 
-Analog_regulator_slot=Espaco do regulador
-Control_value_at_=Control value at 
-Fuel_burner_slot=Espaco do queimador
-Furnace_is_off=Ligar
-Furnace_is_on=Desligar
-Heat_Power\:_=Heat Power: 
-Set_point\:_=Set point: 
+Actual\:_=Real:
+Analog_regulator_slot=Espaço de regulador analógico
+Control_value_at_=Valor de controle em
+Fuel_burner_slot=Espaço de queimador de combustível
+Furnace_is_off=Forno está desligado
+Furnace_is_on=Forno está ligado
+Heat_Power\:_=Potência Térmica:
+Set_point\:_=Ponto definido:
 
 # src/main/kotlin/mods/eln/transparentnode/LargeRheostat.kt
-Control_resistance_with_signal=Control resistance with signal
-Dissipates_~4kW_of_heat_passively=Dissipates ~4kW of heat passively
-Nom._Resistance\:_%1$=Resistencia: %1$
-Power_loss=Potencia perdida
-Set_resistance_with_coal_dust=Set resistance with coal dust
-__*_Resistance_is_not_impacted_by_temperature=  * Resistance is not impacted by temperature
-__*_Signal_input_doesn't_require_power=  * Signal input doesn't require power
+Control_resistance_with_signal=Controlar resistência com sinal
+Dissipates_~4kW_of_heat_passively=Dissipa ~4kW de calor passivamente
+Nom._Resistance\:_%1$=Resist. Nom.: %1$
+Power_loss=Perda de potência
+Set_resistance_with_coal_dust=Definir resistência com pó de carvão
+__*_Resistance_is_not_impacted_by_temperature=  * A resistência não é afetada pela temperatura
+__*_Signal_input_doesn't_require_power=  * A entrada de sinal não requer potência
 
 # src/main/kotlin/mods/eln/transparentnode/LegacyDcDc.kt
 
 # src/main/kotlin/mods/eln/transparentnode/NixieTube.kt
-Blank=Blank
-Digit=Digit
-Displays_a_single_glowing_digit.=Displays a single glowing digit.
-Dots=Dots
-Nixie_tube_has_been_textured_realistically=Nixie tube has been textured realistically
-Signal_input_doesn't_require_power,_and_interfaces_are_tailored_to_gameplay=Signal input doesn't require power, and interfaces are tailored to gameplay
+Blank=Apagado
+Digit=Dígito
+Displays_a_single_glowing_digit.=Exibe um único dígito brilhante.
+Dots=Pontos
+Nixie_tube_has_been_textured_realistically=O tubo Nixie foi texturizado de forma realista
+Signal_input_doesn't_require_power,_and_interfaces_are_tailored_to_gameplay=A entrada de sinal não requer potência, e as interfaces são adaptadas à jogabilidade
 
 # src/main/kotlin/mods/eln/transparentnode/ThermalHeatExchanger.kt
-Cold_->_Hot_\=_consumes_heat=Cold -> Hot = consumes heat
-Converts_fluids_between_hot_and_cold_states=Converts fluids between hot and cold states
-Hot_->_Cold_\=_generates_heat=Hot -> Cold = generates heat
-input_mB/t=input mB/t
-input_tank_level=input tank level
-joules_per_tick=joules per tick
-output_mB/t=output mB/t
-output_tank_level=output tank level
-thermal_power=thermal power
+Cold_->_Hot_\=_consumes_heat=Frio -> Quente = consome calor
+Converts_fluids_between_hot_and_cold_states=Converte fluidos entre estados quente e frio
+Hot_->_Cold_\=_generates_heat=Quente -> Frio = gera calor
+input_mB/t=entrada mB/t
+input_tank_level=nível do tanque de entrada
+joules_per_tick=joules por tick
+output_mB/t=saída mB/t
+output_tank_level=nível do tanque de saída
+thermal_power=potência térmica
 
 # src/main/kotlin/mods/eln/transparentnode/VariableDcDc.kt
-4_Copper_Cables_Required=4 Copper Cables Required
-Control_Voltage=Control Voltage
-The_output_voltage_is_controlled\nfrom_a_signal_input=The output voltage is controlled\nfrom a signal input
-This_variable_DC/DC_has_unrealistic_capacitance_effects_and_can_sink/source_power_that_violates_Newton's_laws=This variable DC/DC has unrealistic capacitance effects and can sink/source power that violates Newton's laws
+4_Copper_Cables_Required=4 Cabos de Cobre Necessários
+Control_Voltage=Tensão de Controle
+The_output_voltage_is_controlled\nfrom_a_signal_input=A tensão de saída é controlada\na partir de uma entrada de sinal
+This_variable_DC/DC_has_unrealistic_capacitance_effects_and_can_sink/source_power_that_violates_Newton's_laws=Este CC/CC variável tem efeitos de capacitância irrealistas e pode consumir/fornecer potência que viola as leis de Newton
 
 # src/main/kotlin/mods/eln/transparentnode/WireProcessingMachines.kt
 %1$_/_%2$=%1$ / %2$
 %1$_kg=%1$ kg
-Bare_Wire_or_Bundle_Input=Bare Wire or Bundle Input
+Bare_Wire_or_Bundle_Input=Entrada de Fio Nu ou Pacote
 Buffer\:_%1$_kg_%2$=Buffer: %1$ kg %2$
-Builds_wound_bundles_for_later_insulation=Builds wound bundles for later insulation
-Input_1=Input 1
-Input_2=Input 2
-Input_3=Input 3
-Input_4=Input 4
-Input_5=Input 5
-Insulated_Output=Insulated Output
-Insulation_Buffer=Insulation Buffer
-Insulation_Buffer\:_%1$=Insulation Buffer: %1$
-Left_Roller_Wheel=Left Roller Wheel
-Loaded_Material=Loaded Material
-Metal_Buffer=Metal Buffer
-Metal_Ingot_Input=Metal Ingot Input
-Output\:_%1$=Output: %1$
-Progress=Progress
-Progress\:_%1$_/_%2$=Progress: %1$ / %2$
-Right_Roller_Wheel=Right Roller Wheel
-Rolled_Bare_Wire=Rolled Bare Wire
-Rubber_Insulation_Input=Rubber Insulation Input
-Target_Length=Target Length
-Target_length_in_meters=Target length in meters
-Wound_Bundle_Output=Wound Bundle Output
+Builds_wound_bundles_for_later_insulation=Constrói pacotes enrolados para isolamento posterior
+Input_1=Entrada 1
+Input_2=Entrada 2
+Input_3=Entrada 3
+Input_4=Entrada 4
+Input_5=Entrada 5
+Insulated_Output=Saída Isolada
+Insulation_Buffer=Buffer de Isolamento
+Insulation_Buffer\:_%1$=Buffer de Isolamento: %1$
+Left_Roller_Wheel=Roda Laminadora Esquerda
+Loaded_Material=Material Carregado
+Metal_Buffer=Buffer de Metal
+Metal_Ingot_Input=Entrada de Lingote de Metal
+Output\:_%1$=Saída: %1$
+Progress=Progresso
+Progress\:_%1$_/_%2$=Progresso: %1$ / %2$
+Right_Roller_Wheel=Roda Laminadora Direita
+Rolled_Bare_Wire=Fio Nu Laminado
+Rubber_Insulation_Input=Entrada de Isolamento de Borracha
+Target_Length=Comprimento Alvo
+Target_length_in_meters=Comprimento alvo em metros
+Wound_Bundle_Output=Saída de Pacote Enrolado
 
 # src/main/kotlin/mods/eln/transparentnode/battery/BatteryDescriptor.kt
-Actual_charge\:_=Carga Atual:
-Batteries_are_based_in_realistic_battery_designs_that_someone_might_implement_realistically\:=Batteries are based in realistic battery designs that someone might implement realistically:
-Battery_could_be_realistic_in_the_future=Battery could be realistic in the future
+Actual_charge\:_=Carga real:
+Batteries_are_based_in_realistic_battery_designs_that_someone_might_implement_realistically\:=As baterias são baseadas em designs realistas que alguém poderia implementar de forma realista\:
+Battery_could_be_realistic_in_the_future=A bateria poderia ser realista no futuro
 Energy_capacity\:_=Capacidade de energia:
-Internal_resistance\:_=Resistencia interna:
-Life\:_=Life: 
-Nominal_power\:_=Potencia nominal:
-Nominal_voltage\:_=Tensao nominal:
-__*_Batteries_have_internal_resistance=  * Batteries have internal resistance
-__*_Compact_batteries_are_now_intended_around_12V,_service_batteries_around_24V,_and_series_batteries_around_48V=  * Compact batteries are now intended around 12V, service batteries around 24V, and series batteries around 48V
-__*_Current_oriented_uses_two_smaller_batteries_in_parallel_to_increase_current_capability=  * Current oriented uses two smaller batteries in parallel to increase current capability
-__*_Not_currently_simulating_any_particular_chemistry_of_battery=  * Not currently simulating any particular chemistry of battery
-__*_Single_use_batteries_emulate_a_voltaic_pile=  * Single use batteries emulate a voltaic pile
-__*_Voltage_oriented_uses_two_smaller_batteries_in_series_to_increase_voltage=  * Voltage oriented uses two smaller batteries in series to increase voltage
-_charged_at_=Carregando em
+Internal_resistance\:_=Resistência interna:
+Life\:_=Vida útil:
+Nominal_power\:_=Potência nominal:
+Nominal_voltage\:_=Tensão nominal:
+__*_Batteries_have_internal_resistance=  * Baterias têm resistência interna
+__*_Compact_batteries_are_now_intended_around_12V,_service_batteries_around_24V,_and_series_batteries_around_48V=  * Baterias compactas agora são planejadas para cerca de 12V, baterias de serviço para cerca de 24V e baterias em série para cerca de 48V
+__*_Current_oriented_uses_two_smaller_batteries_in_parallel_to_increase_current_capability=  * A orientada a corrente usa duas baterias menores em paralelo para aumentar a capacidade de corrente
+__*_Not_currently_simulating_any_particular_chemistry_of_battery=  * Atualmente não simula nenhuma química específica de bateria
+__*_Single_use_batteries_emulate_a_voltaic_pile=  * Baterias de uso único emulam uma pilha voltaica
+__*_Voltage_oriented_uses_two_smaller_batteries_in_series_to_increase_voltage=  * A orientada a tensão usa duas baterias menores em série para aumentar a tensão
+_charged_at_=carregada a
 
 # src/main/kotlin/mods/eln/transparentnode/battery/BatteryElement.kt
-Life=Vida util
+Life=Vida Útil
 
 # src/main/kotlin/mods/eln/transparentnode/battery/BatteryGuiDraw.kt
-Charged=Carga
-Discharge=Descarga
+Charged=Carregada
+Discharge=Descarregar
 Energy\:=Energia:
-Energy\:_=Energy: 
-Life\:=Vida util:
-No_charge=Carregado
-Power_in\:=Entrada:
-Power_out\:=Saida:
+Energy\:_=Energia:
+Life\:=Vida Útil:
+No_charge=Sem carga
+Power_in\:=Potência de entrada:
+Power_out\:=Potência de saída:
 
 # src/main/kotlin/mods/eln/transparentnode/festive/FestiveElement.kt
-It_probably_works_if_you_apply_~200v_to_the_xmas_wireless_channel=It probably works if you apply ~200v to the xmas wireless channel
-Not_as_warm_as_it_could_be=Not as warm as it could be
+It_probably_works_if_you_apply_~200v_to_the_xmas_wireless_channel=Provavelmente funciona se você aplicar ~200v ao canal sem fio xmas
+Not_as_warm_as_it_could_be=Não tão quente quanto poderia ser
 
 # src/main/kotlin/mods/eln/transparentnode/floodlight/FloodlightDescriptor.kt
-A_powerful_lamp_that_specializes_in\nthe_illumination_of_large_spaces.\nUses_inserted_light_bulbs.=A powerful lamp that specializes in\nthe illumination of large spaces.\nUses inserted light bulbs.
-Intended_for_120V_bulb_families.=Intended for 120V bulb families.
-Intended_for_240V_bulb_families.=Intended for 240V bulb families.
+A_powerful_lamp_that_specializes_in\nthe_illumination_of_large_spaces.\nUses_inserted_light_bulbs.=Uma lâmpada potente especializada na\niluminação de grandes espaços.\nUsa lâmpadas inseridas.
+Intended_for_120V_bulb_families.=Destinada a famílias de lâmpadas 120V.
+Intended_for_240V_bulb_families.=Destinada a famílias de lâmpadas 240V.
 
 # src/main/kotlin/mods/eln/transparentnode/floodlight/FloodlightElement.kt
-Bulb_1=Bulb 1
-Bulb_1_Life_Left=Bulb 1 Life Left
-Bulb_2=Bulb 2
-Bulb_2_Life_Left=Bulb 2 Life Left
+Bulb_1=Lâmpada 1
+Bulb_1_Life_Left=Vida Restante Lâmpada 1
+Bulb_2=Lâmpada 2
+Bulb_2_Life_Left=Vida Restante Lâmpada 2
 
 # src/main/kotlin/mods/eln/transparentnode/floodlight/FloodlightGui.kt
-Beam_width\:_%1$°=Beam width: %1$°
-Horizontal_angle\:_%1$°=Horizontal angle: %1$°
-Vertical_angle\:_%1$°=Vertical angle: %1$°
+Beam_width\:_%1$°=Largura do feixe: %1$°
+Horizontal_angle\:_%1$°=Ângulo horizontal: %1$°
+Vertical_angle\:_%1$°=Ângulo vertical: %1$°
