@@ -5,6 +5,7 @@
 (Increases_capacity)=(增大电容)
 (Increases_inductance)=(增大电感)
 *_Missing_an_inductive_voltage_spike_on_field_collapse=* 磁场崩溃时缺少感应电压尖峰
+4_Copper_Cables_Required=需要4根铜导线
 A_relay_is_an_electrical\ncontact_that_conducts\ncurrent_when_a_signal\nvoltage_is_applied.=继电器是一种电气触点，\n当施加信号电压时导通电流。
 Accepted_lamp_types\:_%1$=支持的灯泡类型: %1$
 Acts_like_a\npush_button.=类似按钮。
@@ -26,6 +27,7 @@ Closed=合上
 Condition\:_%1$=状况: %1$
 Connected=已连接
 Control=控制
+Control_Voltage=控制电压
 Converts_%1$_into_mechanical_energy.=消耗%1$产生机械能
 Cooling_power\:_%1$W=冷却功率: %1$W
 Copper_cable_slot=导线(铜)
@@ -1646,6 +1648,7 @@ Grid_Switch.name=电网开关
 High_Power_Receiver_Antenna.name=天线(接收,800V)
 High_Power_Transmitter_Antenna.name=天线(发射,800V)
 Holiday_Candle.name=节日蜡烛
+Isolation_Transformer.name=Isolation Transformer
 Joint.name=转轴
 Joint_hub.name=万向节
 Large_Flywheel.name=Large Flywheel
@@ -1662,6 +1665,10 @@ Medium_Power_Receiver_Antenna.name=天线(接收,200V)
 Medium_Power_Transmitter_Antenna.name=天线(发射,200V)
 Nixie_Tube.name=辉光管
 Old_480V_Arc_Furnace.name=电弧炉(480V)
+One-way_Boost/Buck_vDC/DC_Converter.name=One-way Boost/Buck vDC/DC Converter
+One-way_Boost_vDC/DC_Converter.name=One-way Boost vDC/DC Converter
+One-way_Buck_vDC/DC_Converter.name=One-way Buck vDC/DC Converter
+One-way_DC-DC_Converter.name=One-way DC-DC Converter
 Overhead_Lines.name=架空线
 Polarized_Shaft_Generator.name=发电机(动能,极化,3.2kV)
 Polarized_Shaft_Motor.name=发动机(电力,极化,3.2kV)
@@ -1957,6 +1964,13 @@ Dots=小数点
 Nixie_tube_has_been_textured_realistically=辉光管具有拟真材质
 Signal_input_doesn't_require_power,_and_interfaces_are_tailored_to_gameplay=信号输入不需要能量，接口根据游戏情况量身定制
 
+# src/main/kotlin/mods/eln/transparentnode/OneWayDcDc.kt
+Front_and_back_connections_are_isolated\nground_references_for_each_side.=Front and back connections are isolated\nground references for each side.
+Moves_power_from_the_input_side\nto_the_output_side_only.=Moves power from the input side\nto the output side only.
+The_output_voltage_ratio_is_controlled\nfrom_a_signal_input.=The output voltage ratio is controlled\nfrom a signal input.
+This_DC/DC_uses_an_ideal_power_sink_and_source_to_move_power_in_one_direction.=This DC/DC uses an ideal power sink and source to move power in one direction.
+Transferred_power=Transferred power
+
 # src/main/kotlin/mods/eln/transparentnode/ThermalHeatExchanger.kt
 Cold_->_Hot_\=_consumes_heat=Cold -> Hot = consumes heat
 Converts_fluids_between_hot_and_cold_states=Converts fluids between hot and cold states
@@ -1969,8 +1983,6 @@ output_tank_level=冷却液
 thermal_power=热功率
 
 # src/main/kotlin/mods/eln/transparentnode/VariableDcDc.kt
-4_Copper_Cables_Required=需要4根铜导线
-Control_Voltage=控制电压
 The_output_voltage_is_controlled\nfrom_a_signal_input=输出电压由输入信号控制
 This_variable_DC/DC_has_unrealistic_capacitance_effects_and_can_sink/source_power_that_violates_Newton's_laws=此可调变压器有不真实的电容效应，可以吸收/输出违反牛顿定律的功率
 

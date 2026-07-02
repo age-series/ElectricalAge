@@ -162,8 +162,8 @@ class DcDcElement(transparentNode: TransparentNode, descriptor: TransparentNodeD
 
     override val inventory = TransparentNodeElementInventory(4, 64, this)
 
-    var primaryMaxCurrent = 0.0
-    var secondaryMaxCurrent = 0.0
+    var primaryMeltCurrent = 0.0
+    var secondaryMeltCurrent = 0.0
 
     val primaryVoltageWatchdog = VoltageStateWatchDog(primaryLoad)
     val secondaryVoltageWatchdog = VoltageStateWatchDog(secondaryLoad)
@@ -240,39 +240,60 @@ class DcDcElement(transparentNode: TransparentNode, descriptor: TransparentNodeD
         val primaryCable = inventory.getStackInSlot(DcDcContainer.primaryCableSlotId)
         val secondaryCable = inventory.getStackInSlot(DcDcContainer.secondaryCableSlotId)
         val core = inventory.getStackInSlot(DcDcContainer.ferromagneticSlotId)
+        val primaryWinding = dcDcWinding(primaryCable)
+        val secondaryWinding = dcDcWinding(secondaryCable)
 
         primaryVoltageWatchdog.setNominalVoltage(120_000.0)
         secondaryVoltageWatchdog.setNominalVoltage(120_000.0)
 
-        primaryMaxCurrent = 5.0
-        secondaryMaxCurrent = 5.0
+        primaryMeltCurrent = dcDcWindingMeltCurrent(primaryCable)
+        secondaryMeltCurrent = dcDcWindingMeltCurrent(secondaryCable)
 
         val coreDescriptor = GenericItemUsingDamageDescriptor.getDescriptor(
             core, FerromagneticCoreDescriptor::class.java) as? FerromagneticCoreDescriptor
         val coreFactor = coreDescriptor?.cableMultiplicator ?: 1.0
         val hasValidCore = coreDescriptor != null
 
-        if (primaryCable == null || !hasValidCore || primaryCable.stackSize < 1) {
+        if (primaryWinding == null || !hasValidCore) {
             primaryLoad.highImpedance()
             populated = false
         } else {
             primaryLoad.serialResistance = coreFactor * 0.01
         }
 
-        if (secondaryCable == null || !hasValidCore || secondaryCable.stackSize < 1) {
+        if (secondaryWinding == null || !hasValidCore) {
             secondaryLoad.highImpedance()
             populated = false
         } else {
             secondaryLoad.serialResistance = coreFactor * 0.01
         }
 
-        populated = primaryCable != null && secondaryCable != null && primaryCable.stackSize >= 1 && secondaryCable.stackSize >= 1 && hasValidCore
+        populated = primaryWinding != null && secondaryWinding != null && hasValidCore
 
-        ratioControl = if (populated) {
-            secondaryCable!!.stackSize.toDouble() / primaryCable!!.stackSize.toDouble()
+        ratioControl = if (populated && primaryWinding != null && secondaryWinding != null) {
+            secondaryWinding.amount / primaryWinding.amount
         } else {
             1.0
         }
+    }
+
+    fun meltWindingIfOverCurrent(): Boolean {
+        val meltedPrimary = meltDcDcWindingIfOverCurrent(
+            inventory,
+            DcDcContainer.primaryCableSlotId,
+            primaryVoltageSource.current
+        )
+        val meltedSecondary = meltDcDcWindingIfOverCurrent(
+            inventory,
+            DcDcContainer.secondaryCableSlotId,
+            secondaryVoltageSource.current
+        )
+        if (meltedPrimary || meltedSecondary) {
+            computeInventory()
+            needPublish()
+            return true
+        }
+        return false
     }
 
     override fun inventoryChange(inventory: IInventory?) {
@@ -307,22 +328,16 @@ class DcDcElement(transparentNode: TransparentNode, descriptor: TransparentNodeD
     override fun networkSerialize(stream: DataOutputStream) {
         super.networkSerialize(stream)
         try {
-            if (inventory.getStackInSlot(0) == null)
-                stream.writeByte(0)
-            else
-                stream.writeByte(inventory.getStackInSlot(0)!!.stackSize)
-            if (inventory.getStackInSlot(1) == null)
-                stream.writeByte(0)
-            else
-                stream.writeByte(inventory.getStackInSlot(1)!!.stackSize)
+            stream.writeByte(dcDcRenderedWindingCount(inventory.getStackInSlot(0)))
+            stream.writeByte(dcDcRenderedWindingCount(inventory.getStackInSlot(1)))
             Utils.serialiseItemStack(stream, inventory.getStackInSlot(DcDcContainer.ferromagneticSlotId))
             Utils.serialiseItemStack(stream, inventory.getStackInSlot(DcDcContainer.primaryCableSlotId))
             Utils.serialiseItemStack(stream, inventory.getStackInSlot(DcDcContainer.secondaryCableSlotId))
             node!!.lrduCubeMask.getTranslate(front.down()).serialize(stream)
             var load = 0f
-            if (primaryMaxCurrent != 0.0 && secondaryMaxCurrent != 0.0) {
-                load = Utils.limit(Math.max(primaryLoad.current / primaryMaxCurrent,
-                    secondaryLoad.current / secondaryMaxCurrent).toFloat(), 0f, 1f)
+            if (primaryMeltCurrent != 0.0 && secondaryMeltCurrent != 0.0) {
+                load = Utils.limit(Math.max(primaryLoad.current / primaryMeltCurrent,
+                    secondaryLoad.current / secondaryMeltCurrent).toFloat(), 0f, 1f)
             }
             stream.writeFloat(load)
             stream.writeBoolean(inventory.getStackInSlot(3) != null)
@@ -371,6 +386,7 @@ class DcDcProcess(val element: DcDcElement): IProcess {
     }
 
     override fun process(time: Double) {
+        if (element.meltWindingIfOverCurrent()) return
         val ratio = when {
             element.ratioControl > MAX_RATIO -> MAX_RATIO
             element.ratioControl < MIN_RATIO -> MIN_RATIO
@@ -523,12 +539,10 @@ class DcDcGui(player: EntityPlayer, inventory: IInventory, val render: DcDcRende
 
 class DcDcContainer(player: EntityPlayer, inventory: IInventory) : BasicContainer(player, inventory,
     arrayOf(
-        GenericItemUsingDamageSlot(inventory, primaryCableSlotId, 58, 30, 16,
-            arrayOf<Class<*>>(CopperCableDescriptor::class.java),
-            SlotSkin.medium, arrayOf(tr("Copper cable slot"))),
-        GenericItemUsingDamageSlot(inventory, secondaryCableSlotId, 100, 30, 16,
-            arrayOf<Class<*>>(CopperCableDescriptor::class.java),
-            SlotSkin.medium, arrayOf(tr("Copper cable slot"))),
+        DcDcWindingSlot(inventory, primaryCableSlotId, 58, 30, 16,
+            arrayOf(tr("Power cable or wire slot"))),
+        DcDcWindingSlot(inventory, secondaryCableSlotId, 100, 30, 16,
+            arrayOf(tr("Power cable or wire slot"))),
         GenericItemUsingDamageSlot(inventory, ferromagneticSlotId, 58 + (100 - 58) / 2, 30, 1,
             arrayOf<Class<*>>(FerromagneticCoreDescriptor::class.java),
             SlotSkin.medium, arrayOf(tr("Ferromagnetic core slot"))),

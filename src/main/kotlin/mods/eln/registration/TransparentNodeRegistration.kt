@@ -328,6 +328,56 @@ object TransparentNodeRegistration {
             )
             transparentNodeItem.addDescriptor(subId + (id shl 6), desc)
         }
+        run {
+            subId = 3
+            name = TR_NAME(I18N.Type.NONE, "One-way DC-DC Converter")
+            val desc = OneWayDcDcDescriptor(
+                name, Eln.obj.getObj("transformator"), Eln.obj.getObj(
+                    "feromagneticcorea"
+                ), Eln.obj.getObj("transformatorCase"), OneWayDcDcMode.FIXED
+            )
+            transparentNodeItem.addDescriptor(subId + (id shl 6), desc)
+        }
+        run {
+            subId = 4
+            name = TR_NAME(I18N.Type.NONE, "One-way Boost vDC/DC Converter")
+            val desc = OneWayDcDcDescriptor(
+                name, Eln.obj.getObj("variabledcdc"), Eln.obj.getObj(
+                    "feromagneticcorea"
+                ), Eln.obj.getObj("transformatorCase"), OneWayDcDcMode.BOOST
+            )
+            transparentNodeItem.addDescriptor(subId + (id shl 6), desc)
+        }
+        run {
+            subId = 5
+            name = TR_NAME(I18N.Type.NONE, "One-way Buck vDC/DC Converter")
+            val desc = OneWayDcDcDescriptor(
+                name, Eln.obj.getObj("variabledcdc"), Eln.obj.getObj(
+                    "feromagneticcorea"
+                ), Eln.obj.getObj("transformatorCase"), OneWayDcDcMode.BUCK
+            )
+            transparentNodeItem.addDescriptor(subId + (id shl 6), desc)
+        }
+        run {
+            subId = 6
+            name = TR_NAME(I18N.Type.NONE, "One-way Boost/Buck vDC/DC Converter")
+            val desc = OneWayDcDcDescriptor(
+                name, Eln.obj.getObj("variabledcdc"), Eln.obj.getObj(
+                    "feromagneticcorea"
+                ), Eln.obj.getObj("transformatorCase"), OneWayDcDcMode.BOOST_BUCK
+            )
+            transparentNodeItem.addDescriptor(subId + (id shl 6), desc)
+        }
+        run {
+            subId = 7
+            name = TR_NAME(I18N.Type.NONE, "Isolation Transformer")
+            val desc = OneWayDcDcDescriptor(
+                name, Eln.obj.getObj("transformator"), Eln.obj.getObj(
+                    "feromagneticcorea"
+                ), Eln.obj.getObj("transformatorCase"), OneWayDcDcMode.ISOLATION
+            )
+            transparentNodeItem.addDescriptor(subId + (id shl 6), desc)
+        }
     }
 
     private fun registerHeatFurnace(id: Int) {
