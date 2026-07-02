@@ -84,14 +84,30 @@ class OneWayDcDcDescriptor(
     coreM: Obj3D,
     casingM: Obj3D,
     val mode: OneWayDcDcMode,
-    val minimalLoadToHum: Float = 0.5f
+    val minimalLoadToHum: Float = 0.5f,
+    val guiTexture: String = if (mode == OneWayDcDcMode.BOOST || mode == OneWayDcDcMode.BUCK || mode == OneWayDcDcMode.BOOST_BUCK) {
+        "vdcdc.png"
+    } else {
+        "dcdc.png"
+    }
 ) : TransparentNodeDescriptor(name, OneWayDcDcElement::class.java, OneWayDcDcRender::class.java) {
 
     companion object {
         const val COIL_SCALE = 4.0f
         const val COIL_SCALE_LIMIT = 16
-        const val MAX_RATIO = 16.0
-        const val MIN_RATIO = 1.0 / 16.0
+        const val COIL_BASE_HEIGHT = 0.031f
+        const val COIL_OUTER_HALF_WIDTH = 0.0868f
+        const val COIL_CORE_HALF_WIDTH = 0.0625f
+        const val COIL_CENTER_Y = 0.0155f
+        const val COIL_CENTER_Z = -0.3125f
+        const val COIL_STACK_MIN_Y = -0.1575f
+        const val COIL_STACK_MAX_Y = 0.25f
+        const val COIL_STACK_CENTER_Y = (COIL_STACK_MIN_Y + COIL_STACK_MAX_Y) * 0.5f
+        const val COIL_STACK_HEIGHT = COIL_STACK_MAX_Y - COIL_STACK_MIN_Y
+        const val MAX_RATIO = 256.0
+        const val MIN_RATIO = 1.0 / 256.0
+        const val MAX_VARIABLE_RATIO = 50.0
+        const val MIN_VARIABLE_RATIO = 1.0 / 50.0
     }
 
     val variable: Boolean
@@ -142,16 +158,24 @@ class OneWayDcDcDescriptor(
         if (type == IItemRenderer.ItemRenderType.INVENTORY) {
             super.renderItem(type, item, *data)
         } else {
-            draw(core, 1, 4, false, 0f)
+            draw(core, 1, 4, 1.0f, 1.0f, false, 0f)
         }
     }
 
-    fun draw(core: Obj3D.Obj3DPart?, priCableNbr: Int, secCableNbr: Int, hasCasing: Boolean, doorOpen: Float) {
+    fun draw(
+        core: Obj3D.Obj3DPart?,
+        priCableNbr: Int,
+        secCableNbr: Int,
+        primaryThickness: Float,
+        secondaryThickness: Float,
+        hasCasing: Boolean,
+        doorOpen: Float
+    ) {
         main?.draw()
         core?.draw()
         if (core != null) {
-            drawCoils(priCableNbr, false)
-            drawCoils(secCableNbr, true)
+            drawCoils(priCableNbr, false, primaryThickness)
+            drawCoils(secCableNbr, true, secondaryThickness)
         }
 
         if (hasCasing) {
@@ -161,17 +185,24 @@ class OneWayDcDcDescriptor(
         }
     }
 
-    private fun drawCoils(count: Int, secondary: Boolean) {
+    private fun drawCoils(count: Int, secondary: Boolean, thickness: Float) {
         if (count == 0) return
-        var scale = COIL_SCALE
-        if (count < COIL_SCALE_LIMIT) scale *= count.toFloat() / COIL_SCALE_LIMIT
+        val wireScale = thickness.coerceIn(0.05f, 1.85f)
+        val wireHeight = COIL_BASE_HEIGHT * wireScale
+        val gap = wireHeight * 0.5f
+        val pitch = wireHeight + gap
+        val displayedCount = min(count, ((COIL_STACK_HEIGHT + gap) / pitch).toInt().coerceAtLeast(1))
+        val firstCenter = -pitch * (displayedCount - 1) / 2f
+        val radialScale = (COIL_CORE_HALF_WIDTH + wireHeight) / COIL_OUTER_HALF_WIDTH
         GL11.glPushMatrix()
         if (secondary) GL11.glRotatef(180f, 0f, 1f, 0f)
-        GL11.glScalef(1f, scale * 2f / (count + 1), 1f)
-        GL11.glTranslatef(0f, -0.125f * (count - 1) / COIL_SCALE, 0f)
-        for (idx in 0 until count) {
+        for (idx in 0 until displayedCount) {
+            GL11.glPushMatrix()
+            GL11.glTranslatef(0f, COIL_STACK_CENTER_Y + firstCenter + pitch * idx, COIL_CENTER_Z)
+            GL11.glScalef(radialScale, wireScale, radialScale)
+            GL11.glTranslatef(0f, -COIL_CENTER_Y, -COIL_CENTER_Z)
             coil?.draw()
-            GL11.glTranslatef(0f, 0.25f / COIL_SCALE, 0f)
+            GL11.glPopMatrix()
         }
         GL11.glPopMatrix()
     }
@@ -354,13 +385,18 @@ class OneWayDcDcElement(
         primaryThermalProcess.configure(primaryCable)
         secondaryThermalProcess.configure(secondaryCable)
 
+        val constructionStatus = if (oneWayDescriptor.mode == OneWayDcDcMode.FIXED) {
+            dcDcFlexibleConstructionStatus(core, primaryCable, secondaryCable)
+        } else {
+            dcDcConstructionStatus(core, primaryCable, secondaryCable)
+        }
         val coreDescriptor = GenericItemUsingDamageDescriptor.getDescriptor(
             core, FerromagneticCoreDescriptor::class.java
         ) as? FerromagneticCoreDescriptor
         val coreFactor = coreDescriptor?.cableMultiplicator ?: 1.0
-        val hasValidCore = coreDescriptor != null
+        val hasValidConstruction = constructionStatus.operational
 
-        if (primaryWinding == null || !hasValidCore) {
+        if (primaryWinding == null || !hasValidConstruction) {
             primaryLoad.highImpedance()
             if (oneWayDescriptor.isolated) primaryReferenceLoad.highImpedance()
         } else {
@@ -368,7 +404,7 @@ class OneWayDcDcElement(
             if (oneWayDescriptor.isolated) primaryReferenceLoad.serialResistance = coreFactor * 0.01
         }
 
-        if (secondaryWinding == null || !hasValidCore) {
+        if (secondaryWinding == null || !hasValidConstruction) {
             secondaryLoad.highImpedance()
             if (oneWayDescriptor.isolated) secondaryReferenceLoad.highImpedance()
         } else {
@@ -376,9 +412,10 @@ class OneWayDcDcElement(
             if (oneWayDescriptor.isolated) secondaryReferenceLoad.serialResistance = coreFactor * 0.01
         }
 
-        populated = primaryWinding != null && secondaryWinding != null && hasValidCore
-
-        ratioControl = if (populated && primaryWinding != null && secondaryWinding != null) {
+        populated = primaryWinding != null && secondaryWinding != null && hasValidConstruction
+        ratioControl = if (oneWayDescriptor.mode == OneWayDcDcMode.FIXED &&
+            populated && primaryWinding != null && secondaryWinding != null
+        ) {
             secondaryWinding.amount / primaryWinding.amount
         } else {
             1.0
@@ -388,25 +425,26 @@ class OneWayDcDcElement(
     fun computeRatio(): Double {
         if (!populated) return 1.0
         val normalized = Utils.limit(control.normalized, 0.0, 1.0)
-        val windingRatio = Utils.limit(ratioControl, OneWayDcDcDescriptor.MIN_RATIO, OneWayDcDcDescriptor.MAX_RATIO)
         return when (oneWayDescriptor.mode) {
-            OneWayDcDcMode.FIXED -> windingRatio
-            OneWayDcDcMode.BOOST -> 1.0 + normalized * (max(1.0, windingRatio) - 1.0)
-            OneWayDcDcMode.BUCK -> min(1.0, windingRatio) + normalized * (1.0 - min(1.0, windingRatio))
+            OneWayDcDcMode.FIXED -> Utils.limit(ratioControl, OneWayDcDcDescriptor.MIN_RATIO, OneWayDcDcDescriptor.MAX_RATIO)
+            OneWayDcDcMode.BOOST -> 1.0 + normalized * (OneWayDcDcDescriptor.MAX_VARIABLE_RATIO - 1.0)
+            OneWayDcDcMode.BUCK -> OneWayDcDcDescriptor.MIN_VARIABLE_RATIO + normalized * (1.0 - OneWayDcDcDescriptor.MIN_VARIABLE_RATIO)
             OneWayDcDcMode.BOOST_BUCK -> if (normalized < 0.5) {
-                min(1.0, windingRatio) + normalized * 2.0 * (1.0 - min(1.0, windingRatio))
+                OneWayDcDcDescriptor.MIN_VARIABLE_RATIO + normalized * 2.0 * (1.0 - OneWayDcDcDescriptor.MIN_VARIABLE_RATIO)
             } else {
-                1.0 + (normalized - 0.5) * 2.0 * (max(1.0, windingRatio) - 1.0)
+                1.0 + (normalized - 0.5) * 2.0 * (OneWayDcDcDescriptor.MAX_VARIABLE_RATIO - 1.0)
             }
-            OneWayDcDcMode.ISOLATION -> windingRatio
+            OneWayDcDcMode.ISOLATION -> 1.0
         }
     }
 
     override fun networkSerialize(stream: DataOutputStream) {
         super.networkSerialize(stream)
         try {
-            stream.writeByte(dcDcRenderedWindingCount(inventory.getStackInSlot(0)))
-            stream.writeByte(dcDcRenderedWindingCount(inventory.getStackInSlot(1)))
+            stream.writeShort(dcDcRenderedWindingCount(inventory.getStackInSlot(0)))
+            stream.writeShort(dcDcRenderedWindingCount(inventory.getStackInSlot(1)))
+            stream.writeFloat(dcDcRenderedWindingThickness(inventory.getStackInSlot(OneWayDcDcContainer.primaryCableSlotId)))
+            stream.writeFloat(dcDcRenderedWindingThickness(inventory.getStackInSlot(OneWayDcDcContainer.secondaryCableSlotId)))
             Utils.serialiseItemStack(stream, inventory.getStackInSlot(OneWayDcDcContainer.ferromagneticSlotId))
             Utils.serialiseItemStack(stream, inventory.getStackInSlot(OneWayDcDcContainer.primaryCableSlotId))
             Utils.serialiseItemStack(stream, inventory.getStackInSlot(OneWayDcDcContainer.secondaryCableSlotId))
@@ -425,10 +463,32 @@ class OneWayDcDcElement(
 
     override fun getWaila(): Map<String, String> {
         val info = linkedMapOf<String, String>()
+        val constructionStatus = if (oneWayDescriptor.mode == OneWayDcDcMode.FIXED) {
+            dcDcFlexibleConstructionStatus(
+                inventory.getStackInSlot(OneWayDcDcContainer.ferromagneticSlotId),
+                inventory.getStackInSlot(OneWayDcDcContainer.primaryCableSlotId),
+                inventory.getStackInSlot(OneWayDcDcContainer.secondaryCableSlotId)
+            )
+        } else {
+            dcDcConstructionStatus(
+                inventory.getStackInSlot(OneWayDcDcContainer.ferromagneticSlotId),
+                inventory.getStackInSlot(OneWayDcDcContainer.primaryCableSlotId),
+                inventory.getStackInSlot(OneWayDcDcContainer.secondaryCableSlotId)
+            )
+        }
+        info[tr("Construction")] = dcDcConstructionWaila(constructionStatus)
         info[tr("Ratio")] = Utils.plotValue(activeRatio)
         info[tr("Transferred power")] = Utils.plotPower("", movedPower)
-        info[tr("Primary temperature")] = plotAmbientCelsius("", primaryThermalLoad.temperatureCelsius)
-        info[tr("Secondary temperature")] = plotAmbientCelsius("", secondaryThermalLoad.temperatureCelsius)
+        info[tr("Primary winding")] = windingStatus(
+            inventory.getStackInSlot(OneWayDcDcContainer.primaryCableSlotId),
+            -inputSink.current,
+            primaryThermalLoad
+        )
+        info[tr("Secondary winding")] = windingStatus(
+            inventory.getStackInSlot(OneWayDcDcContainer.secondaryCableSlotId),
+            outputSource.current,
+            secondaryThermalLoad
+        )
         if (oneWayDescriptor.variable) info[tr("Control Voltage")] = Utils.plotVolt(control.voltage)
         if (Eln.config.getBooleanOrElse("ui.waila.easyMode", false) || oneWayDescriptor.variable) {
             val primaryVoltage = primaryLoad.voltage - if (oneWayDescriptor.isolated) primaryReferenceLoad.voltage else 0.0
@@ -438,6 +498,24 @@ class OneWayDcDcElement(
         }
         info[tr("Subsystem Matrix Size")] = Utils.renderDoubleSubsystemWaila(primaryLoad.subSystem, secondaryLoad.subSystem)
         return info
+    }
+
+    private fun windingStatus(stack: ItemStack?, current: Double, thermalLoad: NbtThermalLoad): String {
+        val descriptor = if (stack == null) {
+            null
+        } else {
+            ElectricalCableDescriptor.getDescriptor(
+                stack,
+                ElectricalCableDescriptor::class.java
+            ) as? ElectricalCableDescriptor
+        }
+        val name = descriptor?.getName(stack) ?: tr("empty")
+        return tr(
+            "%1$, %2$, %3$",
+            name,
+            Utils.plotAmpere("", current).trim(),
+            plotAmbientCelsius("", thermalLoad.temperatureCelsius).trim()
+        )
     }
 
     override fun readConfigTool(compound: NBTTagCompound, invoker: EntityPlayer) {
@@ -765,8 +843,10 @@ class OneWayDcDcRender(
 
     private val oneWayDescriptor = descriptor as OneWayDcDcDescriptor
     private val load = SlewLimiter(0.5f)
-    private var primaryStackSize: Byte = 0
-    private var secondaryStackSize: Byte = 0
+    private var primaryStackSize = 0
+    private var secondaryStackSize = 0
+    private var primaryThickness = 1.0f
+    private var secondaryThickness = 1.0f
     private var priRender: CableRenderDescriptor? = null
     private var secRender: CableRenderDescriptor? = null
     private var feroPart: Obj3D.Obj3DPart? = null
@@ -795,7 +875,15 @@ class OneWayDcDcRender(
     override fun draw() {
         GL11.glPushMatrix()
         front!!.glRotateXnRef()
-        oneWayDescriptor.draw(feroPart, primaryStackSize.toInt(), secondaryStackSize.toInt(), hasCasing, doorOpen.get())
+        oneWayDescriptor.draw(
+            feroPart,
+            primaryStackSize.toInt(),
+            secondaryStackSize.toInt(),
+            primaryThickness,
+            secondaryThickness,
+            hasCasing,
+            doorOpen.get()
+        )
         GL11.glPopMatrix()
         cableRenderType = drawCable(front!!.down(), primaryRender(), priConn, cableRenderType)
         cableRenderType = drawCable(front!!.down(), secondaryRender(), secConn, cableRenderType)
@@ -811,8 +899,10 @@ class OneWayDcDcRender(
     override fun networkUnserialize(stream: DataInputStream) {
         super.networkUnserialize(stream)
         try {
-            primaryStackSize = stream.readByte()
-            secondaryStackSize = stream.readByte()
+            primaryStackSize = stream.readShort().toInt()
+            secondaryStackSize = stream.readShort().toInt()
+            primaryThickness = stream.readFloat()
+            secondaryThickness = stream.readFloat()
             val feroStack = Utils.unserialiseItemStack(stream)
             feroPart = null
             if (feroStack != null) {
@@ -927,11 +1017,12 @@ class OneWayDcDcRender(
 class OneWayDcDcGui(
     player: EntityPlayer,
     inventory: IInventory,
-    render: OneWayDcDcRender,
+    val render: OneWayDcDcRender,
     variable: Boolean
 ) : GuiContainerEln(OneWayDcDcContainer(player, inventory, variable)) {
     override fun newHelper(): GuiHelperContainer {
-        return GuiHelperContainer(this, 176, 194 - 33 + 20, 8, 84 + 194 - 166 - 33 + 20, "transformer.png")
+        val descriptor = render.transparentNodeDescriptor as OneWayDcDcDescriptor
+        return GuiHelperContainer(this, 176, 194 - 33 + 20, 8, 84 + 194 - 166 - 33 + 20, descriptor.guiTexture)
     }
 }
 
