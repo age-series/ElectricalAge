@@ -218,6 +218,10 @@ abstract class TransparentNodeElementRender(var tileEntity: TransparentNodeEntit
         return null
     }
 
+    fun getAdjacentCableRender(side: Direction, lrdu: LRDU): CableRenderDescriptor? {
+        return tileEntity.getAdjacentCableRender(side, lrdu)
+    }
+
     fun drawCable(side: Direction, render: CableRenderDescriptor?, connection: LRDUMask, renderPreProcess: CableRenderType?): CableRenderType? {
         return this.drawCable(side, render, connection, renderPreProcess, false)
     }

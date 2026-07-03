@@ -12,6 +12,7 @@ import mods.eln.misc.Utils.readFromNBT
 import mods.eln.misc.Utils.writeToNBT
 import mods.eln.environment.BiomeClimateService
 import mods.eln.node.INodeElement
+import mods.eln.node.NodeConnectionEndpoint
 import mods.eln.sim.ElectricalLoad
 import mods.eln.sim.IProcess
 import mods.eln.sim.SignalLoadSupport
@@ -248,8 +249,20 @@ abstract class TransparentNodeElement(@JvmField var node: TransparentNode?, @Jvm
         }
 
     open fun getElectricalLoad(side: Direction, lrdu: LRDU): ElectricalLoad? = null
+    open fun getElectricalLoad(side: Direction, lrdu: LRDU, remoteEndpoint: NodeConnectionEndpoint): ElectricalLoad? {
+        return getElectricalLoad(side, lrdu)
+    }
     open fun getThermalLoad(side: Direction, lrdu: LRDU): ThermalLoad? = null
     open fun getConnectionMask(side: Direction, lrdu: LRDU): Int = 0
+
+    fun getAdjacentConnectionEndpoint(side: Direction, lrdu: LRDU): NodeConnectionEndpoint? {
+        return node?.findAdjacentConnectionEndpoint(side, lrdu)
+    }
+
+    fun getAdjacentConnectionElement(side: Direction, lrdu: LRDU): Any? {
+        return getAdjacentConnectionEndpoint(side, lrdu)?.element
+    }
+
     open fun multiMeterString(side: Direction): String = ""
     open fun thermoMeterString(side: Direction): String = ""
 

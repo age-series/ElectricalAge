@@ -1,16 +1,16 @@
 package mods.eln.transparentnode.solarpanel;
 
 import mods.eln.misc.INBTTReady;
-import mods.eln.sim.mna.SubSystem;
-import mods.eln.sim.mna.component.VoltageSource;
+import mods.eln.sim.mna.component.CurrentSource;
+import mods.eln.sim.mna.component.Resistor;
 import mods.eln.sim.mna.misc.IRootSystemPreStepProcess;
 import mods.eln.sim.mna.misc.MnaConst;
 import mods.eln.sim.mna.state.State;
 import net.minecraft.nbt.NBTTagCompound;
 
 public class SolarPanelPowerProcess implements IRootSystemPreStepProcess, INBTTReady {
-    private final VoltageSource aSrc;
-    private final VoltageSource bSrc;
+    private final CurrentSource source;
+    private final Resistor shunt;
     private final State aPin;
     private final State bPin;
 
@@ -23,15 +23,15 @@ public class SolarPanelPowerProcess implements IRootSystemPreStepProcess, INBTTR
     public SolarPanelPowerProcess(
         State aPin,
         State bPin,
-        VoltageSource aSrc,
-        VoltageSource bSrc,
+        CurrentSource source,
+        Resistor shunt,
         double openCircuitVoltage,
         double optimumVoltage,
         double optimumCurrent,
         double shortCircuitCurrent
     ) {
-        this.aSrc = aSrc;
-        this.bSrc = bSrc;
+        this.source = source;
+        this.shunt = shunt;
         this.aPin = aPin;
         this.bPin = bPin;
         this.openCircuitVoltage = openCircuitVoltage;
@@ -86,45 +86,39 @@ public class SolarPanelPowerProcess implements IRootSystemPreStepProcess, INBTTR
 
     @Override
     public void rootSystemPreStepProcess() {
-        SubSystem.Thevenin a = aPin.getSubSystem().getTh(aPin, aSrc);
-        SubSystem.Thevenin b = bPin.getSubSystem().getTh(bPin, bSrc);
-        if (Double.isNaN(a.voltage)) {
-            a.voltage = 0.0;
-            a.resistance = MnaConst.highImpedance;
-        }
-        if (Double.isNaN(b.voltage)) {
-            b.voltage = 0.0;
-            b.resistance = MnaConst.highImpedance;
-        }
-
-        double theveninVoltage = a.voltage - b.voltage;
-        double theveninResistance = Math.max(0.0, a.resistance + b.resistance);
-        double panelVoltage = solveOperatingVoltage(theveninVoltage, theveninResistance);
-        double internalCurrent = (theveninVoltage - panelVoltage) / Math.max(theveninResistance, 1.0e-9);
-
-        aSrc.setVoltage(a.voltage - internalCurrent * a.resistance);
-        bSrc.setVoltage(b.voltage + internalCurrent * b.resistance);
+        double panelVoltage = Math.max(0.0, aPin.state - bPin.state);
+        applyNortonEquivalent(panelVoltage);
     }
 
-    private double solveOperatingVoltage(double theveninVoltage, double theveninResistance) {
-        double voc = openCircuitVoltage * Math.max(0.05, 0.92 + 0.08 * lightFactor);
-        if (lightFactor <= 0.0) return Math.max(0.0, theveninVoltage);
-        if (theveninResistance >= MnaConst.highImpedance * 0.1) return voc;
-        if (theveninResistance <= 1.0e-9) return Math.max(0.0, Math.min(voc, theveninVoltage));
-
-        double low = 0.0;
-        double high = voc;
-        for (int idx = 0; idx < 32; idx++) {
-            double mid = (low + high) * 0.5;
-            double requiredCurrent = (mid - theveninVoltage) / theveninResistance;
-            double generatedCurrent = getGeneratedCurrent(mid);
-            if (generatedCurrent > requiredCurrent) {
-                low = mid;
-            } else {
-                high = mid;
-            }
+    private void applyNortonEquivalent(double voltage) {
+        double light = Math.max(0.0, Math.min(1.0, lightFactor));
+        if (light <= 0.0 || openCircuitVoltage <= 0.0 || shortCircuitCurrent <= 0.0) {
+            source.setCurrent(0.0);
+            shunt.highImpedance();
+            return;
         }
-        return (low + high) * 0.5;
+
+        double voc = openCircuitVoltage * Math.max(0.05, 0.92 + 0.08 * light);
+        double vmp = Math.min(optimumVoltage * Math.max(0.05, 0.92 + 0.08 * light), voc * 0.98);
+        double imp = optimumCurrent * light;
+        double isc = shortCircuitCurrent * light;
+
+        double slope;
+        double intercept;
+        if (voltage <= vmp) {
+            slope = (isc - imp) / Math.max(vmp, 1.0e-6);
+            intercept = isc;
+        } else {
+            slope = imp / Math.max(voc - vmp, 1.0e-6);
+            intercept = imp + slope * vmp;
+        }
+
+        source.setCurrent(Math.max(0.0, intercept));
+        if (slope <= 1.0e-12) {
+            shunt.highImpedance();
+        } else {
+            shunt.setResistance(Math.min(MnaConst.highImpedance, 1.0 / slope));
+        }
     }
 
     @Override

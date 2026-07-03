@@ -112,15 +112,15 @@ class SixNodeEntity : NodeBlockEntity() {
     }
 
     override fun getCableRender(side: Direction, lrdu: LRDU): CableRenderDescriptor? {
-        var side = side
-        side = side.applyLRDU(lrdu)
-        return if (elementRenderList[side.int] == null) null else elementRenderList[side.int]!!.getCableRender(lrdu)
+        val elementSide = side.applyLRDU(lrdu)
+        val elementLrdu = elementSide.getLRDUGoingTo(side) ?: return null
+        return if (elementRenderList[elementSide.int] == null) null else elementRenderList[elementSide.int]!!.getCableRender(elementLrdu)
     }
 
     override fun getCableDry(side: Direction?, lrdu: LRDU?): Int {
-        var side = side
-        side = side!!.applyLRDU(lrdu!!)
-        return if (elementRenderList[side.int] == null) 0 else elementRenderList[side.int]!!.getCableDry(lrdu)
+        val elementSide = side!!.applyLRDU(lrdu!!)
+        val elementLrdu = elementSide.getLRDUGoingTo(side) ?: return 0
+        return if (elementRenderList[elementSide.int] == null) 0 else elementRenderList[elementSide.int]!!.getCableDry(elementLrdu)
     }
 
     override fun cameraDrawOptimisation(): Boolean {

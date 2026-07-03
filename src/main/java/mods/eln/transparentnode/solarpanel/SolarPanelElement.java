@@ -16,7 +16,8 @@ import mods.eln.node.transparent.TransparentNodeElementInventory;
 import mods.eln.sim.DiodeProcess;
 import mods.eln.sim.ElectricalLoad;
 import mods.eln.sim.ThermalLoad;
-import mods.eln.sim.mna.component.VoltageSource;
+import mods.eln.sim.mna.component.CurrentSource;
+import mods.eln.sim.mna.component.Resistor;
 import mods.eln.sim.nbt.NbtElectricalLoad;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
@@ -35,8 +36,8 @@ public class SolarPanelElement extends TransparentNodeElement {
     SolarPanelDescriptor descriptor;
     NbtElectricalLoad positiveLoad = new NbtElectricalLoad("positiveLoad");
     NbtElectricalLoad negativeLoad = new NbtElectricalLoad("negativeLoad");
-    VoltageSource positiveSrc = new VoltageSource("posSrc", positiveLoad, null);
-    VoltageSource negativeSrc = new VoltageSource("negSrc", negativeLoad, null);
+    CurrentSource panelSrc = new CurrentSource("panelSrc", positiveLoad, negativeLoad);
+    Resistor panelShunt = new Resistor(positiveLoad, negativeLoad);
 
     //ElectricalCurrentSource currentSource;
     DiodeProcess diode;
@@ -52,7 +53,7 @@ public class SolarPanelElement extends TransparentNodeElement {
         super(transparentNode, descriptor);
         this.descriptor = (SolarPanelDescriptor) descriptor;
 
-        grounded = false;
+        enforceGroundingMode();
 
 		/*if(this.descriptor.basicModel == false)
 		{
@@ -66,8 +67,8 @@ public class SolarPanelElement extends TransparentNodeElement {
             powerSource = new SolarPanelPowerProcess(
                 positiveLoad,
                 negativeLoad,
-                positiveSrc,
-                negativeSrc,
+                panelSrc,
+                panelShunt,
                 this.descriptor.openCircuitVoltage,
                 this.descriptor.optimumVoltage,
                 this.descriptor.optimumCurrent,
@@ -81,8 +82,9 @@ public class SolarPanelElement extends TransparentNodeElement {
         electricalLoadList.add(negativeLoad);
 
 
-        electricalComponentList.add(positiveSrc);
-        electricalComponentList.add(negativeSrc);
+        electricalComponentList.add(panelSrc);
+        electricalComponentList.add(panelShunt);
+        electricalComponentList.add(new Resistor(negativeLoad, null).pullDown());
 
         slowProcessList.add(slowProcess);
     }
@@ -179,6 +181,7 @@ public class SolarPanelElement extends TransparentNodeElement {
     @Override
     public void readFromNBT(NBTTagCompound nbt) {
         super.readFromNBT(nbt);
+        enforceGroundingMode();
         powerSource.readFromNBT(nbt, "powerSource");
         panelAlpha = nbt.getDouble("panelAlpha");
     }
@@ -201,6 +204,7 @@ public class SolarPanelElement extends TransparentNodeElement {
     public byte networkUnserialize(DataInputStream stream) {
 
         byte packetType = super.networkUnserialize(stream);
+        enforceGroundingMode();
         try {
             switch (packetType) {
                 case unserializePannelAlpha:
@@ -216,6 +220,10 @@ public class SolarPanelElement extends TransparentNodeElement {
             e.printStackTrace();
         }
         return unserializeNulldId;
+    }
+
+    private void enforceGroundingMode() {
+        if (descriptor.groundCoordinate == null) grounded = false;
     }
 
     // Java reports the Kotlin vararg of descriptor classes as an unchecked array creation here.

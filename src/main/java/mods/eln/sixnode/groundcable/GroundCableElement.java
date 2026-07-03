@@ -16,6 +16,7 @@ import mods.eln.sim.ElectricalLoad;
 import mods.eln.sim.ThermalLoad;
 import mods.eln.sim.mna.component.VoltageSource;
 import mods.eln.sim.nbt.NbtElectricalLoad;
+import mods.eln.sixnode.electricalcable.UtilityCableElement;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
@@ -31,6 +32,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class GroundCableElement extends SixNodeElement {
+    static final int GROUND_CONDUCTOR_COLOR = 2;
 
     NbtElectricalLoad electricalLoad = new NbtElectricalLoad("electricalLoad");
     VoltageSource ground = new VoltageSource("ground", electricalLoad, null);
@@ -86,7 +88,27 @@ public class GroundCableElement extends SixNodeElement {
     @Override
     public int getConnectionMask(LRDU lrdu) {
         //if (inventory.getStackInSlot(GroundCableContainer.cableSlotId) == null) return 0;
+        Object adjacentElement = getAdjacentConnectionElement(lrdu);
+        UtilityCableElement utilityCable = adjacentElement instanceof UtilityCableElement ? (UtilityCableElement) adjacentElement : null;
+        if (utilityCable != null) {
+            return connectionMaskForUtilityCable(utilityCable);
+        }
+        return defaultConnectionMask();
+    }
+
+    int defaultConnectionMask() {
         return NodeBase.maskElectricalPower + (color << NodeBase.maskColorShift) + (colorCare << NodeBase.maskColorCareShift);
+    }
+
+    int connectionMaskForUtilityCable(UtilityCableElement utilityCable) {
+        if (utilityCable.descriptor.getActsAsSingleConductor()) return defaultConnectionMask();
+        int groundColor = utilityCable.activeGroundConductorColor();
+        if (groundColor < 0) return defaultConnectionMask();
+        return groundConductorMask(groundColor);
+    }
+
+    int groundConductorMask(int groundColor) {
+        return NodeBase.maskElectricalPower + (groundColor << NodeBase.maskColorShift) + NodeBase.maskColorCareData;
     }
 
     @Override

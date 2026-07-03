@@ -262,6 +262,36 @@ abstract class NodeBlockEntity : TileEntity(), ITileEntitySpawnClient, INodeEnti
         return null
     }
 
+    fun getAdjacentCableRender(side: Direction, lrdu: LRDU): CableRenderDescriptor? {
+        findWrappedAdjacentCableRender(side, lrdu)?.let { return it }
+        return findDirectAdjacentCableRender(side, lrdu)
+    }
+
+    private fun findWrappedAdjacentCableRender(side: Direction, lrdu: LRDU): CableRenderDescriptor? {
+        val emptyBlockCoord = intArrayOf(xCoord, yCoord, zCoord)
+        side.applyTo(emptyBlockCoord, 1)
+        val block = worldObj.getBlock(emptyBlockCoord[0], emptyBlockCoord[1], emptyBlockCoord[2])
+        if (!NodeBase.isBlockWrappable(block, worldObj, xCoord, yCoord, zCoord)) return null
+
+        val elementSide = side.applyLRDU(lrdu)
+        val otherBlockCoord = intArrayOf(emptyBlockCoord[0], emptyBlockCoord[1], emptyBlockCoord[2])
+        elementSide.applyTo(otherBlockCoord, 1)
+
+        val tileEntity = worldObj.getTileEntity(otherBlockCoord[0], otherBlockCoord[1], otherBlockCoord[2]) as? NodeBlockEntity
+            ?: return null
+        val otherDirection = elementSide.inverse
+        val otherLRDU = otherDirection.getLRDUGoingTo(side)?.inverse() ?: return null
+        return tileEntity.getCableRender(otherDirection, otherLRDU)
+    }
+
+    private fun findDirectAdjacentCableRender(side: Direction, lrdu: LRDU): CableRenderDescriptor? {
+        val otherBlockCoord = intArrayOf(xCoord, yCoord, zCoord)
+        side.applyTo(otherBlockCoord, 1)
+        val tileEntity = worldObj.getTileEntity(otherBlockCoord[0], otherBlockCoord[1], otherBlockCoord[2]) as? NodeBlockEntity
+            ?: return null
+        return tileEntity.getCableRender(side.inverse, lrdu.inverseIfLR())
+    }
+
     open fun getCableDry(side: Direction?, lrdu: LRDU?): Int {
         return 0
     }
