@@ -1,5 +1,7 @@
 package mods.eln.sixnode.electricalbreaker;
 
+import mods.eln.cable.CableRenderDescriptor;
+import mods.eln.generic.GenericItemBlockUsingDamageDescriptor;
 import mods.eln.misc.Direction;
 import mods.eln.misc.LRDU;
 import mods.eln.misc.Obj3D;
@@ -7,6 +9,7 @@ import mods.eln.misc.Obj3D.Obj3DPart;
 import mods.eln.misc.Utils;
 import mods.eln.misc.VoltageLevelColor;
 import mods.eln.node.six.SixNodeDescriptor;
+import mods.eln.sixnode.genericcable.GenericCableDescriptor;
 import mods.eln.wiki.Data;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
@@ -33,6 +36,7 @@ public class ElectricalBreakerDescriptor extends SixNodeDescriptor {
     float alphaOff, alphaOn, speed;
     public double currentLimit;
     public float[] pinDistance;
+    private CableRenderDescriptor ratedCableRender;
 
     public ElectricalBreakerDescriptor(String name, Obj3D obj) {
         this(name, obj, Double.POSITIVE_INFINITY);
@@ -55,6 +59,29 @@ public class ElectricalBreakerDescriptor extends SixNodeDescriptor {
         }
 
         voltageLevelColor = VoltageLevelColor.Neutral;
+    }
+
+    public CableRenderDescriptor getRatedCableRender() {
+        if (ratedCableRender == null) {
+            GenericItemBlockUsingDamageDescriptor cable = GenericItemBlockUsingDamageDescriptor.getByName(ratedCableNameForCurrentLimit());
+            if (cable instanceof GenericCableDescriptor) {
+                ratedCableRender = ((GenericCableDescriptor) cable).render;
+            }
+        }
+        return ratedCableRender;
+    }
+
+    private String ratedCableNameForCurrentLimit() {
+        if (!Double.isFinite(currentLimit)) return "Copper 4/0 AWG Cable 1000V";
+        if (currentLimit <= 15.0) return "Copper 14 AWG Cable 600V";
+        if (currentLimit <= 20.0) return "Copper 12 AWG Cable 600V";
+        if (currentLimit <= 30.0) return "Copper 10 AWG Cable 600V";
+        if (currentLimit <= 40.0) return "Copper 8 AWG Cable 600V";
+        if (currentLimit <= 60.0) return "Copper 6 AWG Cable 600V";
+        if (currentLimit <= 100.0) return "Copper 2 AWG Cable 600V";
+        if (currentLimit <= 125.0) return "Copper 1/0 AWG Cable 1000V";
+        if (currentLimit <= 200.0) return "Copper 2/0 AWG Cable 1000V";
+        return "Copper 4/0 AWG Cable 1000V";
     }
 
     @Override
