@@ -31,6 +31,7 @@ import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.entity.player.EntityPlayerMP
 import net.minecraft.inventory.Container
 import net.minecraft.inventory.IInventory
+import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
 import java.io.DataInputStream
 import java.io.DataOutputStream
@@ -116,6 +117,10 @@ class FloodlightElement(transparentNode: TransparentNode, transparentNodeDescrip
             if (currentEquippedItem.lampData.technology in descriptor.acceptedLampTypes) {
                 AutoAcceptInventoryProxy.creativeFreeInsert = player is EntityPlayerMP && Utils.isCreative(player)
                 return inventoryProxy.take(player.currentEquippedItem, this, notifyInventoryChange = true).also {
+                    if (it) {
+                        lastLamp1Stack = inventory.getStackInSlot(FloodlightContainer.LAMP_SLOT_1_ID)?.copy()
+                        lastLamp2Stack = inventory.getStackInSlot(FloodlightContainer.LAMP_SLOT_2_ID)?.copy()
+                    }
                     AutoAcceptInventoryProxy.creativeFreeInsert = false
                 }
             }
@@ -161,6 +166,12 @@ class FloodlightElement(transparentNode: TransparentNode, transparentNodeDescrip
         electricalComponentList.add(lamp2Resistor)
         computeInventory()
         connect()
+        if (placingPlayerIsCreative) {
+            lastLamp1Stack?.let { inventory.setInventorySlotContents(FloodlightContainer.LAMP_SLOT_1_ID, it.copy()) }
+            lastLamp2Stack?.let { inventory.setInventorySlotContents(FloodlightContainer.LAMP_SLOT_2_ID, it.copy()) }
+            computeInventory()
+            placingPlayerIsCreative = false
+        }
     }
 
     override fun connectJob() {
@@ -332,7 +343,11 @@ class FloodlightElement(transparentNode: TransparentNode, transparentNodeDescrip
         }
 
         // Prevent duplicate calls of these functions
-        if (inventoryChanged) inventoryChange(inventory)
+        if (inventoryChanged) {
+            inventoryChange(inventory)
+            lastLamp1Stack = inventory.getStackInSlot(FloodlightContainer.LAMP_SLOT_1_ID)?.copy()
+            lastLamp2Stack = inventory.getStackInSlot(FloodlightContainer.LAMP_SLOT_2_ID)?.copy()
+        }
         else if (publishChanges) needPublish()
     }
 
@@ -347,4 +362,9 @@ class FloodlightElement(transparentNode: TransparentNode, transparentNodeDescrip
         ConfigCopyToolDescriptor.writeGenDescriptor(compound, "lamp2", inventory.getStackInSlot(FloodlightContainer.LAMP_SLOT_2_ID))
     }
 
+    companion object {
+        var lastLamp1Stack: ItemStack? = null
+        var lastLamp2Stack: ItemStack? = null
+        var placingPlayerIsCreative = false
+    }
 }
