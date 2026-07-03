@@ -11,6 +11,9 @@ import net.minecraft.inventory.IInventory
 import net.minecraft.item.ItemStack
 
 class AutoAcceptInventoryProxy(val inventory: IInventory) {
+    companion object {
+        var creativeFreeInsert = false
+    }
     interface ExistingItemHandler {
         fun handleExistingInventoryItem(itemStack: ItemStack)
     }
@@ -34,7 +37,7 @@ class AutoAcceptInventoryProxy(val inventory: IInventory) {
                         if (acceptedItems.any { it.isAssignableFrom(desc.javaClass) }) {
                             val newItemStack = desc.newItemStack()
                             (desc as? IItemEnergyBattery)?.let { it.setEnergy(newItemStack, it.getEnergy(itemStack)) }
-                            itemStack.stackSize -= 1
+                            if (!creativeFreeInsert) itemStack.stackSize -= 1
                             inventory.setInventorySlotContents(index, newItemStack)
                             return true
                         }
@@ -43,10 +46,9 @@ class AutoAcceptInventoryProxy(val inventory: IInventory) {
                     GenericItemBlockUsingDamageDescriptor.getDescriptor(itemStack)?.let { desc ->
                         if (acceptedItems.any { it.isAssignableFrom(desc.javaClass) }) {
                             if (desc is UtilityCableDescriptor) {
-                                // trimCable handles all required behavior for utility cables
-                                return IUtilityCableInventory.trimCable(itemStack, inventory, index)
+                                return IUtilityCableInventory.trimCable(itemStack, inventory, index, creativeFreeInsert)
                             }
-                            itemStack.stackSize -= 1
+                            if (!creativeFreeInsert) itemStack.stackSize -= 1
                             inventory.setInventorySlotContents(index, desc.newItemStack())
                             return true
                         }
@@ -71,7 +73,7 @@ class AutoAcceptInventoryProxy(val inventory: IInventory) {
             val itemDescriptor = GenericItemUsingDamageDescriptor.getDescriptor(itemStack)
 
             if (existingItemDescriptor != null && existingItemDescriptor == itemDescriptor) {
-                itemStack.stackSize -= 1
+                if (!creativeFreeInsert) itemStack.stackSize -= 1
                 existingStack.stackSize += 1
                 return true
             }
@@ -80,7 +82,7 @@ class AutoAcceptInventoryProxy(val inventory: IInventory) {
             val itemBlockDescriptor = GenericItemBlockUsingDamageDescriptor.getDescriptor(itemStack)
 
             if (existingItemBloackDescriptor != null && existingItemBloackDescriptor == itemBlockDescriptor) {
-                itemStack.stackSize -= 1
+                if (!creativeFreeInsert) itemStack.stackSize -= 1
                 existingStack.stackSize += 1
                 return true
             }
@@ -101,7 +103,7 @@ class AutoAcceptInventoryProxy(val inventory: IInventory) {
 
             GenericItemUsingDamageDescriptor.getDescriptor(itemStack)?.let {
                 if (acceptedItems.contains(it.javaClass)) {
-                    itemStack.stackSize -= 1
+                    if (!creativeFreeInsert) itemStack.stackSize -= 1
                     existingItemHandler?.handleExistingInventoryItem(inventory.getStackInSlot(index))
                     inventory.setInventorySlotContents(index, it.newItemStack())
                     return true
@@ -110,7 +112,7 @@ class AutoAcceptInventoryProxy(val inventory: IInventory) {
 
             GenericItemBlockUsingDamageDescriptor.getDescriptor(itemStack)?.let {
                 if (acceptedItems.contains(it.javaClass)) {
-                    itemStack.stackSize -= 1
+                    if (!creativeFreeInsert) itemStack.stackSize -= 1
                     existingItemHandler?.handleExistingInventoryItem(inventory.getStackInSlot(index))
                     inventory.setInventorySlotContents(index, it.newItemStack())
                     return true

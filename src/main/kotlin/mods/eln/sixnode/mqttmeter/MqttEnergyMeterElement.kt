@@ -97,9 +97,12 @@ class MqttEnergyMeterElement(sixNode: SixNode, side: Direction, descriptor: SixN
 
     override fun onBlockActivated(entityPlayer: EntityPlayer, side: Direction, vx: Float, vy: Float, vz: Float): Boolean {
         if (onBlockActivatedRotate(entityPlayer)) return true
+        AutoAcceptInventoryProxy.creativeFreeInsert = entityPlayer is EntityPlayerMP && Utils.isCreative(entityPlayer)
         if (inventoryProxy.take(entityPlayer.currentEquippedItem, this, false, true)) {
+            AutoAcceptInventoryProxy.creativeFreeInsert = false
             return true
         }
+        AutoAcceptInventoryProxy.creativeFreeInsert = false
         return false
     }
 

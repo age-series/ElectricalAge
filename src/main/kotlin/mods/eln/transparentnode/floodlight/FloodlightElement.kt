@@ -28,6 +28,7 @@ import mods.eln.sim.nbt.NbtElectricalLoad
 import mods.eln.sim.process.destruct.VoltageStateWatchDog
 import mods.eln.sim.process.destruct.WorldExplosion
 import net.minecraft.entity.player.EntityPlayer
+import net.minecraft.entity.player.EntityPlayerMP
 import net.minecraft.inventory.Container
 import net.minecraft.inventory.IInventory
 import net.minecraft.nbt.NBTTagCompound
@@ -113,7 +114,10 @@ class FloodlightElement(transparentNode: TransparentNode, transparentNodeDescrip
 
         if (currentEquippedItem is LampDescriptor) {
             if (currentEquippedItem.lampData.technology in descriptor.acceptedLampTypes) {
-                return inventoryProxy.take(player.currentEquippedItem, this, notifyInventoryChange = true)
+                AutoAcceptInventoryProxy.creativeFreeInsert = player is EntityPlayerMP && Utils.isCreative(player)
+                return inventoryProxy.take(player.currentEquippedItem, this, notifyInventoryChange = true).also {
+                    AutoAcceptInventoryProxy.creativeFreeInsert = false
+                }
             }
         }
 

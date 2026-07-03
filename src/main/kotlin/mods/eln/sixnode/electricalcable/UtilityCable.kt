@@ -92,8 +92,8 @@ interface IUtilityCableInventory {
          * @return `true` if a wire segment is successfully trimmed from the spool; `false` if the spool is too short
          * or the function is called on a non-utility cable item
          */
-        @JvmStatic
-        fun trimCable(srcItemStack: ItemStack, dstInventory: IInventory, dstIndex: Int): Boolean {
+        @JvmStatic @JvmOverloads
+        fun trimCable(srcItemStack: ItemStack, dstInventory: IInventory, dstIndex: Int, creativeFree: Boolean = false): Boolean {
             val srcCableDesc = Utils.getItemObject(srcItemStack) as? UtilityCableDescriptor ?: return false
 
             val dstItemStack = srcCableDesc.newItemStack()
@@ -104,8 +104,8 @@ interface IUtilityCableInventory {
 
             if (existingCableLength >= requiredCableLength) {
                 srcCableDesc.setRemainingLengthMeters(dstItemStack, requiredCableLength)
-                srcCableDesc.setRemainingLengthMeters(srcItemStack, existingCableLength - requiredCableLength)
-                if (abs(srcCableDesc.getRemainingLengthMeters(srcItemStack)) < UtilityCableDescriptor.LENGTH_METERS_EPSILON) srcItemStack.stackSize -= 1
+                if (!creativeFree) srcCableDesc.setRemainingLengthMeters(srcItemStack, existingCableLength - requiredCableLength)
+                if (!creativeFree && abs(srcCableDesc.getRemainingLengthMeters(srcItemStack)) < UtilityCableDescriptor.LENGTH_METERS_EPSILON) srcItemStack.stackSize -= 1
                 dstInventory.setInventorySlotContents(dstIndex, dstItemStack)
                 dstInventory.markDirty()
                 return true
