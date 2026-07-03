@@ -20,6 +20,8 @@ import mods.eln.sim.ElectricalConnection
 import mods.eln.sim.ElectricalLoad
 import mods.eln.sim.ThermalConnection
 import mods.eln.sim.ThermalLoad
+import mods.eln.sixnode.lampsocket.LampSocketDescriptor
+import mods.eln.sixnode.lampsocket.LampSocketElement
 import net.minecraft.block.Block
 import net.minecraft.entity.EntityLivingBase
 import net.minecraft.entity.player.EntityPlayer
@@ -78,6 +80,9 @@ class SixNode : Node() {
         try {
             sideElementIdList[direction.int] = itemStack.itemDamage //Je sais c'est moche !
             sideElementList[direction.int] = descriptor!!.ElementClass.getConstructor(SixNode::class.java, Direction::class.java, SixNodeDescriptor::class.java).newInstance(this, direction, descriptor) as SixNodeElement
+            if (descriptor is LampSocketDescriptor) {
+                LampSocketElement.placingPlayerIsCreative = player is EntityPlayerMP && isCreative(player)
+            }
             sideElementIdList[direction.int] = 0
             disconnect()
             sideElementList[direction.int]!!.front = descriptor.getFrontFromPlace(direction, player!!)!!

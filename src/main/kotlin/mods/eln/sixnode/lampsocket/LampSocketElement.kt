@@ -34,6 +34,7 @@ import mods.eln.sixnode.electricalcable.ElectricalCableDescriptor
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.inventory.Container
 import net.minecraft.inventory.IInventory
+import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
 import java.io.DataInputStream
 import java.io.DataOutputStream
@@ -63,7 +64,7 @@ class LampSocketElement(sixNode: SixNode, side: Direction, sixNodeDescriptor: Si
     private val lampSocketProcess = LampSocketProcess(this)
 
     var poweredByLampSupply = true
-    var lampSupplyChannel = "Default channel"
+    var lampSupplyChannel = lastChannel
     var activeLampSupplyConnection = false
     var projectionRotationAngle = 0.0
     private var paintColor = LampSocketRender.DEFAULT_PAINT_COLOR
@@ -127,7 +128,12 @@ class LampSocketElement(sixNode: SixNode, side: Direction, sixNodeDescriptor: Si
         }
 
         return if (takeItem) {
-            inventoryProxy.take(entityPlayer.currentEquippedItem, this, notifyInventoryChange = true)
+            inventoryProxy.take(entityPlayer.currentEquippedItem, this, notifyInventoryChange = true).also { accepted ->
+                if (accepted) {
+                    lastLampStack = inventory.getStackInSlot(LampSocketContainer.LAMP_SLOT_ID)?.copy()
+                    lastCableStack = inventory.getStackInSlot(LampSocketContainer.CABLE_SLOT_ID)?.copy()
+                }
+            }
         } else false
     }
 
@@ -180,6 +186,12 @@ class LampSocketElement(sixNode: SixNode, side: Direction, sixNodeDescriptor: Si
 
     override fun initialize() {
         computeInventory()
+        if (placingPlayerIsCreative) {
+            lastLampStack?.let { inventory.setInventorySlotContents(LampSocketContainer.LAMP_SLOT_ID, it.copy()) }
+            lastCableStack?.let { inventory.setInventorySlotContents(LampSocketContainer.CABLE_SLOT_ID, it.copy()) }
+            computeInventory()
+            placingPlayerIsCreative = false
+        }
     }
 
     override fun connectJob() {
@@ -277,7 +289,10 @@ class LampSocketElement(sixNode: SixNode, side: Direction, sixNodeDescriptor: Si
                     poweredByLampSupply = !poweredByLampSupply
                     reconnect()
                 }
-                LampSocketGui.UPDATE_LAMP_SUPPLY_CHANNEL_EVENT -> lampSupplyChannel = stream.readUTF()
+                LampSocketGui.UPDATE_LAMP_SUPPLY_CHANNEL_EVENT -> {
+                    lampSupplyChannel = stream.readUTF()
+                    lastChannel = lampSupplyChannel
+                }
                 LampSocketGui.ADJUST_ROTATION_ANGLE_EVENT -> projectionRotationAngle = stream.readDouble()
             }
             needPublish()
@@ -354,7 +369,11 @@ class LampSocketElement(sixNode: SixNode, side: Direction, sixNodeDescriptor: Si
         }
 
         // Prevent duplicate calls of these functions
-        if (inventoryChanged) inventoryChange(inventory)
+        if (inventoryChanged) {
+            inventoryChange(inventory)
+            lastLampStack = inventory.getStackInSlot(LampSocketContainer.LAMP_SLOT_ID)?.copy()
+            lastCableStack = inventory.getStackInSlot(LampSocketContainer.CABLE_SLOT_ID)?.copy()
+        }
         else if (publishChanges) needPublish()
     }
 
@@ -367,4 +386,10 @@ class LampSocketElement(sixNode: SixNode, side: Direction, sixNodeDescriptor: Si
         ConfigCopyToolDescriptor.writeCableType(compound, inventory.getStackInSlot(LampSocketContainer.CABLE_SLOT_ID))
     }
 
+    companion object {
+        var lastChannel = "Default channel"
+        var lastLampStack: ItemStack? = null
+        var lastCableStack: ItemStack? = null
+        var placingPlayerIsCreative = false
+    }
 }
