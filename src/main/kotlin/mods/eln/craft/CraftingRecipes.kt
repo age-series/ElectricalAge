@@ -590,6 +590,33 @@ object CraftingRecipes {
             ), 'c', findItemStack("Copper Cable")
         )
         addRecipe(
+            findItemStack("3.3V LDO Regulator Chip"), " d ", "cCc", " r ", 'C',
+            Eln.config.getStringOrElse("runtime.dictionary.cheapChip", "circuitElnBasic"), 'd',
+            findItemStack("Signal Diode"), 'c', findItemStack("Copper Cable"), 'r', ItemStack(Items.redstone)
+        )
+        addRecipe(
+            findItemStack("5V LDO Regulator Chip"), " d ", "cCc", "rrr", 'C',
+            Eln.config.getStringOrElse("runtime.dictionary.cheapChip", "circuitElnBasic"), 'd',
+            findItemStack("Signal Diode"), 'c', findItemStack("Copper Cable"), 'r', ItemStack(Items.redstone)
+        )
+        addRecipe(
+            findItemStack("12V LDO Regulator Chip"), " d ", "cCc", "rAr", 'C',
+            Eln.config.getStringOrElse("runtime.dictionary.advancedChip", "circuitElnAdvanced"), 'd',
+            findItemStack("Signal Diode"), 'c', findItemStack("Copper Cable"), 'r', ItemStack(Items.redstone),
+            'A', findItemStack("Analogic Regulator")
+        )
+        addRecipe(
+            findItemStack("3.3V Boost Regulator Chip"), " i ", "cCc", " r ", 'C',
+            Eln.config.getStringOrElse("runtime.dictionary.advancedChip", "circuitElnAdvanced"), 'i',
+            findItemStack("Power Inductor"), 'c', findItemStack("Copper Cable"), 'r', ItemStack(Items.redstone)
+        )
+        addRecipe(
+            findItemStack("5V Boost Regulator Chip"), " i ", "cCc", "rAr", 'C',
+            Eln.config.getStringOrElse("runtime.dictionary.advancedChip", "circuitElnAdvanced"), 'i',
+            findItemStack("Power Inductor"), 'c', findItemStack("Copper Cable"), 'r', ItemStack(Items.redstone),
+            'A', findItemStack("Analogic Regulator")
+        )
+        addRecipe(
             findItemStack("Amplifier"), "  r", "cCc", "   ", 'r', ItemStack(Items.redstone), 'c',
             findItemStack("Copper Cable"), 'C', Eln.config.getStringOrElse("runtime.dictionary.advancedChip", "circuitElnAdvanced")
         )

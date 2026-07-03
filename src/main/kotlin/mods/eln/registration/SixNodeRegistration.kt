@@ -97,6 +97,7 @@ object SixNodeRegistration {
     fun registerSix() {
         Eln.sixNodeItem.setCreativeTabForGroup(2, Eln.creativeTabPowerElectronics)
         Eln.sixNodeItem.setCreativeTabForGroup(3, Eln.creativeTabCreative)
+        Eln.sixNodeItem.setCreativeTabForGroup(5, Eln.creativeTabPowerElectronics)
         Eln.sixNodeItem.setCreativeTabForGroup(32, Eln.creativeTabPowerElectronics)
         Eln.sixNodeItem.setCreativeTabForGroup(33, Eln.creativeTabPowerElectronics)
         Eln.sixNodeItem.setCreativeTabForGroup(34, Eln.creativeTabCables)
@@ -2172,7 +2173,46 @@ object SixNodeRegistration {
                 model, "JKFF", JKFlipFlop::class.java
             )
         )
+
+        Eln.sixNodeItem.addDescriptor(
+            0 + (REGULATOR_CHIPS_GROUP shl 6), RegulatorChipDescriptor(
+                I18N.TR_NAME(I18N.Type.NONE, "3.3V LDO Regulator Chip"),
+                model, "LDO33", "regulator_ldo_3v3", RegulatorChipMode.LDO, 3.3, 0.25
+            )
+        )
+
+        Eln.sixNodeItem.addDescriptor(
+            1 + (REGULATOR_CHIPS_GROUP shl 6), RegulatorChipDescriptor(
+                I18N.TR_NAME(I18N.Type.NONE, "5V LDO Regulator Chip"),
+                model, "LDO50", "regulator_ldo_5v", RegulatorChipMode.LDO, 5.0, 0.25
+            )
+        )
+
+        Eln.sixNodeItem.addDescriptor(
+            2 + (REGULATOR_CHIPS_GROUP shl 6), RegulatorChipDescriptor(
+                I18N.TR_NAME(I18N.Type.NONE, "12V LDO Regulator Chip"),
+                model, "LDO120", "regulator_ldo_12v", RegulatorChipMode.LDO, 12.0, 0.25
+            )
+        )
+
+        Eln.sixNodeItem.addDescriptor(
+            3 + (REGULATOR_CHIPS_GROUP shl 6), RegulatorChipDescriptor(
+                I18N.TR_NAME(I18N.Type.NONE, "3.3V Boost Regulator Chip"),
+                model, "BOOST33", "regulator_boost_3v3", RegulatorChipMode.BOOST, 3.3, 0.5,
+                minimumInputVoltage = 2.0
+            )
+        )
+
+        Eln.sixNodeItem.addDescriptor(
+            4 + (REGULATOR_CHIPS_GROUP shl 6), RegulatorChipDescriptor(
+                I18N.TR_NAME(I18N.Type.NONE, "5V Boost Regulator Chip"),
+                model, "BOOST50", "regulator_boost_5v", RegulatorChipMode.BOOST, 5.0, 0.5,
+                minimumInputVoltage = 2.0
+            )
+        )
     }
+
+    private const val REGULATOR_CHIPS_GROUP = 5
 
     private fun registerAnalogChips(id: Int) {
         val baseId = id shl 6
