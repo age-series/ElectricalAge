@@ -32,7 +32,7 @@ import org.jetbrains.annotations.Nullable;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import net.minecraft.tileentity.TileEntity;
 
@@ -157,10 +157,13 @@ public class ElectricalBreakerElement extends SixNodeElement {
     @NotNull
     @Override
     public Map<String, String> getWaila() {
-        Map<String, String> info = new HashMap<String, String>();
+        Map<String, String> info = new LinkedHashMap<String, String>();
         info.put(I18N.tr("Contact"), switchState ? I18N.tr("Closed") : I18N.tr("Open"));
         info.put(I18N.tr("Current"), Utils.plotAmpere("", getTripCurrent()));
-        if (Eln.config.getBooleanOrElse("ui.waila.easyMode", false)) {
+        UtilityCableElement utilityCable = resolveWailaUtilityCable();
+        if (utilityCable != null && !utilityCable.descriptor.getActsAsSingleConductor()) {
+            putMultiConductorWaila(info, utilityCable);
+        } else if (Eln.config.getBooleanOrElse("ui.waila.easyMode", false)) {
             info.put(I18N.tr("Voltages"), Utils.plotVolt("", aLoad.getVoltage()) + Utils.plotVolt(" ", bLoad.getVoltage()));
         }
         return info;
@@ -301,18 +304,6 @@ public class ElectricalBreakerElement extends SixNodeElement {
         UtilityCableElement utilityCable = (UtilityCableElement) remoteElement;
         LRDU remoteLrdu = utilityCable.side.getLRDUGoingTo(remoteDirection);
         if (remoteLrdu == null) return;
-        Utils.println(
-            "Breaker connect %s side=%s front=%s localDir=%s localLrdu=%s remoteDir=%s remoteCable=%s remoteSide=%s remoteLrdu=%s",
-            getCoordinate(),
-            side,
-            front,
-            localDirection,
-            localLrdu,
-            remoteDirection,
-            utilityCable.getCoordinate(),
-            utilityCable.side,
-            remoteLrdu
-        );
         int secondaryHot = getSecondaryHotColor(utilityCable);
         if (secondaryHot >= 0) {
             connectExtraConductor(connection, utilityCable, localLrdu, remoteLrdu, secondaryHot);
@@ -328,19 +319,9 @@ public class ElectricalBreakerElement extends SixNodeElement {
     }
 
     private void connectExtraConductor(NodeConnection connection, UtilityCableElement utilityCable, LRDU localLrdu, LRDU remoteLrdu, int color) {
-        ElectricalLoad localLoad = getLoadForColor(localLrdu == front, color);
+        ElectricalLoad localLoad = getLoadForColor(localLrdu == front, color, utilityCable);
         ElectricalLoad remoteLoad = utilityCable.getElectricalLoad(remoteLrdu, utilityCable.maskForConductorColor(color));
         if (localLoad == null || remoteLoad == null) return;
-        Utils.println(
-            "Breaker extra conductor %s side=%s localLrdu=%s frontSide=%s color=%d remoteCable=%s remoteLrdu=%s",
-            getCoordinate(),
-            side,
-            localLrdu,
-            localLrdu == front,
-            color,
-            utilityCable.getCoordinate(),
-            remoteLrdu
-        );
 
         ElectricalConnection extraConnection = new ElectricalConnection(localLoad, remoteLoad);
         Eln.simulator.addElectricalComponent(extraConnection);
@@ -356,27 +337,30 @@ public class ElectricalBreakerElement extends SixNodeElement {
     }
 
     private ElectricalLoad getLoadForColor(boolean frontSide, int color) {
+        return getLoadForColor(frontSide, color, getAdjacentUtilityCable(frontSide ? front : front.inverse()));
+    }
+
+    ElectricalLoad getLoadForColor(boolean frontSide, int color, UtilityCableElement utilityCable) {
         if (UtilityCableDescriptor.isGroundColorCode(color)) return frontSide ? aLoadGround : bLoadGround;
         if (UtilityCableDescriptor.isNeutralColorCode(color)) return frontSide ? aLoadWhite : bLoadWhite;
 
-        UtilityCableElement utilityCable = getAdjacentUtilityCable(frontSide ? front : front.inverse());
         if (utilityCable != null) {
             int[] hots = utilityCable.activeHotConductorColors();
+            if (hots.length > 0 && color == hots[0]) return frontSide ? aLoad : bLoad;
             if (hots.length > 1 && color == hots[1]) return frontSide ? aLoadRed : bLoadRed;
         }
         return frontSide ? aLoad : bLoad;
     }
 
-    private int extractRequestedColor(int mask, LRDU lrdu) {
-        if ((mask & NodeBase.maskColorCareData) == 0) {
+    int extractRequestedColor(int mask, LRDU lrdu) {
+        if ((mask & NodeBase.maskColorData) == 0) {
             return getPrimaryHotColor(lrdu);
         }
         return (mask >> NodeBase.maskColorShift) & 0xF;
     }
 
     private int getPrimaryConnectionMask(LRDU lrdu) {
-        int color = getPrimaryHotColor(lrdu);
-        return NodeBase.maskElectricalAll + (color << NodeBase.maskColorShift) + (1 << NodeBase.maskColorCareShift);
+        return NodeBase.maskElectricalPower + (getPrimaryHotColor(lrdu) << NodeBase.maskColorShift);
     }
 
     private int getPrimaryHotColor(LRDU lrdu) {
@@ -404,6 +388,45 @@ public class ElectricalBreakerElement extends SixNodeElement {
     private UtilityCableElement getAdjacentUtilityCable(LRDU lrdu) {
         SixNodeElement neighborElement = resolveAdjacentElement(lrdu);
         return neighborElement instanceof UtilityCableElement ? (UtilityCableElement) neighborElement : null;
+    }
+
+    private UtilityCableElement resolveWailaUtilityCable() {
+        UtilityCableElement utilityCable = getAdjacentUtilityCable(front);
+        if (utilityCable != null) return utilityCable;
+        return getAdjacentUtilityCable(front.inverse());
+    }
+
+    void putMultiConductorWaila(Map<String, String> info, UtilityCableElement utilityCable) {
+        for (int color : utilityCable.activeConductorColors()) {
+            ElectricalLoad frontLoad = getLoadForColor(true, color, utilityCable);
+            ElectricalLoad backLoad = getLoadForColor(false, color, utilityCable);
+            info.put(I18N.tr(dyeName(color)), formatVoltagePair(frontLoad, backLoad));
+        }
+    }
+
+    String formatVoltagePair(ElectricalLoad frontLoad, ElectricalLoad backLoad) {
+        return Utils.plotVolt("", frontLoad.getVoltage()).trim() + " - " + Utils.plotVolt("", backLoad.getVoltage()).trim();
+    }
+
+    String dyeName(int color) {
+        switch (color & 0xF) {
+            case 0: return "Black";
+            case 1: return "Red";
+            case 2: return "Green";
+            case 3: return "Brown";
+            case 4: return "Blue";
+            case 5: return "Purple";
+            case 6: return "Cyan";
+            case 7: return "Silver";
+            case 8: return "Gray";
+            case 9: return "Pink";
+            case 10: return "Lime";
+            case 11: return "Yellow";
+            case 12: return "Light Blue";
+            case 13: return "Magenta";
+            case 14: return "Orange";
+            default: return "White";
+        }
     }
 
     @Override

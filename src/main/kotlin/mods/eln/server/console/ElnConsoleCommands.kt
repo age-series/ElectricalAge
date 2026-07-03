@@ -14,6 +14,7 @@ import mods.eln.item.lampitem.LampLists
 import mods.eln.misc.Coordinate
 import mods.eln.misc.Direction
 import mods.eln.misc.FC
+import mods.eln.misc.GhostPowerNode
 import mods.eln.misc.LRDU
 import mods.eln.misc.Version
 import mods.eln.node.NodeBase
@@ -476,7 +477,19 @@ class ElnZoneDumpCommand : IConsoleCommand {
         when (node) {
             is TransparentNode -> appendTransparentNodeDetails(builder, node)
             is SixNode -> appendSixNodeDetails(builder, node)
+            is GhostPowerNode -> appendGhostPowerNodeDetails(builder, node)
         }
+    }
+
+    private fun appendGhostPowerNodeDetails(builder: StringBuilder, node: GhostPowerNode) {
+        builder.append("    ghostPowerLoad")
+            .append(" mask=").append(formatMask(node.mask))
+            .append(" load=").append(node.load.javaClass.simpleName)
+            .append(" U=").append(formatDouble(node.load.voltage))
+            .append(" I=").append(formatDouble(node.load.current))
+            .append(" Rs=").append(formatDouble(node.load.serialResistance))
+            .append(" subSystem=").append(node.load.subSystem?.hashCode()?.toString() ?: "null")
+            .append('\n')
     }
 
     private fun appendTransparentNodeDetails(builder: StringBuilder, node: TransparentNode) {

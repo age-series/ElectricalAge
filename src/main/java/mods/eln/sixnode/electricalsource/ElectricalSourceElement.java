@@ -11,6 +11,7 @@ import mods.eln.node.Node;
 import mods.eln.node.NodeBase;
 import mods.eln.node.NodeBlockEntity;
 import mods.eln.node.NodeConnection;
+import mods.eln.node.NodeConnectionEndpoint;
 import mods.eln.node.six.SixNode;
 import mods.eln.node.six.SixNodeDescriptor;
 import mods.eln.node.six.SixNodeElement;
@@ -30,6 +31,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class ElectricalSourceElement extends SixNodeElement implements IConfigurable {
@@ -102,9 +104,19 @@ public class ElectricalSourceElement extends SixNodeElement implements IConfigur
     @NotNull
     @Override
     public Map<String, String> getWaila() {
-        Map<String, String> info = new HashMap<String, String>();
+        UtilityCableElement utilityCable = getAdjacentMultiConductorUtilityCable();
+        Map<String, String> info = utilityCable != null ? new LinkedHashMap<String, String>() : new HashMap<String, String>();
         info.put(I18N.tr("Voltage"), Utils.plotVolt("", Math.max(electricalLoad.getVoltage(), electricalLoadRed.getVoltage())));
         info.put(I18N.tr("Current"), Utils.plotAmpere("", getDisplayedCurrent()));
+        if (utilityCable != null) {
+            LRDU lrdu = getLrduTowardUtilityCable(utilityCable);
+            if (lrdu != null) {
+                putConductorVoltage(info, "Black", lrdu, 0);
+                putConductorVoltage(info, "Red", lrdu, 1);
+                putConductorVoltage(info, "White", lrdu, 15);
+                putConductorVoltage(info, "Ground", lrdu, utilityCable.activeGroundConductorColor());
+            }
+        }
         if (Eln.config.getBooleanOrElse("ui.waila.easyMode", false)) {
             info.put(I18N.tr("Power"), Utils.plotPower("", Math.max(Math.abs(electricalLoad.getVoltage() * voltageSource.getCurrent()), Math.abs(electricalLoadRed.getVoltage() * voltageSourceRed.getCurrent()))));
         }
@@ -180,27 +192,20 @@ public class ElectricalSourceElement extends SixNodeElement implements IConfigur
 
         if (((ElectricalSourceDescriptor) sixNodeElementDescriptor).isSignalSource()) return;
 
-        Direction localDirection = isA ? connection.getDir1() : connection.getDir2();
-        LRDU localLrdu = side.getLRDUGoingTo(localDirection);
+        NodeConnectionEndpoint localEndpoint = connection.endpoint(isA);
+        NodeConnectionEndpoint remoteEndpoint = connection.otherEndpoint(isA);
+        LRDU localLrdu = localEndpoint.getElementLrdu();
         if (localLrdu == null) return;
-        Direction remoteDirection = isA ? connection.getDir2() : connection.getDir1();
-        Object remoteNodeObject = isA ? connection.getN2() : connection.getN1();
-        if (!(remoteNodeObject instanceof SixNode)) return;
+        if (!(remoteEndpoint.getElement() instanceof UtilityCableElement)) return;
 
-        SixNode remoteNode = (SixNode) remoteNodeObject;
-        Direction remoteElementSide = remoteDirection.applyLRDU(isA ? connection.getLrdu2() : connection.getLrdu1());
-        if (!(remoteNode.getElement(remoteElementSide) instanceof UtilityCableElement)) return;
-
-        UtilityCableElement utilityCable = (UtilityCableElement) remoteNode.getElement(remoteElementSide);
-        LRDU remoteLrdu = utilityCable.side.getLRDUGoingTo(remoteDirection);
+        UtilityCableElement utilityCable = (UtilityCableElement) remoteEndpoint.getElement();
+        LRDU remoteLrdu = remoteEndpoint.getElementLrdu();
         if (remoteLrdu == null) return;
         Utils.println(
-            "Source connect %s side=%s localDir=%s localLrdu=%s remoteDir=%s remoteCable=%s remoteSide=%s remoteLrdu=%s",
+            "Source connect %s side=%s localLrdu=%s remoteCable=%s remoteSide=%s remoteLrdu=%s",
             getCoordinate(),
             side,
-            localDirection,
             localLrdu,
-            remoteDirection,
             utilityCable.getCoordinate(),
             utilityCable.side,
             remoteLrdu
@@ -240,13 +245,21 @@ public class ElectricalSourceElement extends SixNodeElement implements IConfigur
 
     private void setConfiguredVoltage(double voltage) {
         voltageSource.setVoltage(voltage);
-        voltageSourceRed.setVoltage(voltage);
+        voltageSourceRed.setVoltage(-voltage);
         voltageSourceWhite.setVoltage(0.0);
         voltageSourceGround.setVoltage(0.0);
     }
 
     private double getDisplayedCurrent() {
         return Math.max(Math.abs(voltageSource.getCurrent()), Math.abs(voltageSourceRed.getCurrent()));
+    }
+
+    private void putConductorVoltage(Map<String, String> info, String label, LRDU lrdu, int color) {
+        if (color < 0) return;
+        ElectricalLoad load = getLoadForColor(lrdu, color);
+        if (load != null) {
+            info.put(I18N.tr(label), Utils.plotVolt("", load.getVoltage()));
+        }
     }
 
     private ElectricalLoad getLoadForColor(LRDU lrdu, int color) {
@@ -291,8 +304,30 @@ public class ElectricalSourceElement extends SixNodeElement implements IConfigur
     }
 
     private UtilityCableElement getAdjacentUtilityCable(LRDU lrdu) {
+        Object adjacent = getAdjacentConnectionElement(lrdu);
+        if (adjacent instanceof UtilityCableElement) {
+            return (UtilityCableElement) adjacent;
+        }
         SixNodeElement neighborElement = resolveAdjacentElement(lrdu);
         return neighborElement instanceof UtilityCableElement ? (UtilityCableElement) neighborElement : null;
+    }
+
+    private UtilityCableElement getAdjacentMultiConductorUtilityCable() {
+        for (LRDU lrdu : LRDU.values()) {
+            Object adjacent = getAdjacentConnectionElement(lrdu);
+            if (adjacent instanceof UtilityCableElement) {
+                UtilityCableElement utilityCable = (UtilityCableElement) adjacent;
+                if (!utilityCable.descriptor.getActsAsSingleConductor()) return utilityCable;
+            }
+        }
+        return null;
+    }
+
+    private LRDU getLrduTowardUtilityCable(UtilityCableElement utilityCable) {
+        for (LRDU lrdu : LRDU.values()) {
+            if (getAdjacentConnectionElement(lrdu) == utilityCable) return lrdu;
+        }
+        return null;
     }
 
     private SixNodeElement resolveAdjacentElement(LRDU lrdu) {
