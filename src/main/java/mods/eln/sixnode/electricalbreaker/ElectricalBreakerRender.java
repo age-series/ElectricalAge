@@ -1,5 +1,6 @@
 package mods.eln.sixnode.electricalbreaker;
 
+import mods.eln.Eln;
 import mods.eln.cable.CableRenderDescriptor;
 import mods.eln.misc.Coordinate;
 import mods.eln.misc.*;
@@ -7,6 +8,7 @@ import mods.eln.node.six.SixNodeDescriptor;
 import mods.eln.node.six.SixNodeElementInventory;
 import mods.eln.node.six.SixNodeElementRender;
 import mods.eln.node.six.SixNodeEntity;
+import mods.eln.sixnode.genericcable.GenericCableDescriptor;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import org.jetbrains.annotations.NotNull;
@@ -30,8 +32,6 @@ public class ElectricalBreakerRender extends SixNodeElementRender {
     boolean boot = true;
     float switchAlpha = 0;
     public boolean switchState;
-
-    CableRenderDescriptor cableRender;
 
     public ElectricalBreakerRender(SixNodeEntity tileEntity, Direction side, SixNodeDescriptor descriptor) {
         super(tileEntity, side, descriptor);
@@ -58,8 +58,9 @@ public class ElectricalBreakerRender extends SixNodeElementRender {
     @Nullable
     @Override
     public CableRenderDescriptor getCableRender(@NotNull LRDU lrdu) {
+        if (lrdu != front && lrdu != front.inverse()) return null;
         CableRenderDescriptor adjacentRender = resolveAdjacentCableRender(lrdu);
-        return adjacentRender != null ? adjacentRender : cableRender;
+        return adjacentRender != null ? adjacentRender : descriptor.getRatedCableRender();
     }
 
     @Override
@@ -70,7 +71,6 @@ public class ElectricalBreakerRender extends SixNodeElementRender {
             switchState = stream.readBoolean();
             uMax = stream.readFloat();
             uMin = stream.readFloat();
-            cableRender = null;
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -149,6 +149,8 @@ public class ElectricalBreakerRender extends SixNodeElementRender {
             neighborCoordinate.z
         );
         Direction neighborSide = worldDirection.getInverse();
+        CableRenderDescriptor descriptorRender = resolveAdjacentCableDescriptorRender(neighbor, neighborSide);
+        if (descriptorRender != null) return descriptorRender;
         if (neighbor.elementRenderList[neighborSide.getInt()] == null) return null;
 
         for (LRDU neighborLrdu : LRDU.values()) {
@@ -158,11 +160,21 @@ public class ElectricalBreakerRender extends SixNodeElementRender {
         return null;
     }
 
+    @Nullable
+    private CableRenderDescriptor resolveAdjacentCableDescriptorRender(@NotNull SixNodeEntity neighbor, @NotNull Direction neighborSide) {
+        int id = neighbor.elementRenderIdList[neighborSide.getInt()];
+        SixNodeDescriptor neighborDescriptor = Eln.sixNodeItem.getDescriptor(id);
+        if (neighborDescriptor instanceof GenericCableDescriptor) {
+            return ((GenericCableDescriptor) neighborDescriptor).render;
+        }
+        return null;
+    }
+
     private void drawInternalPins() {
         if (descriptor.pinDistance == null) {
             return;
         }
-        drawPowerPin(LRDU.Left, descriptor.pinDistance);
-        drawPowerPin(LRDU.Right, descriptor.pinDistance);
+        drawPowerPin(front, descriptor.pinDistance);
+        drawPowerPin(front.inverse(), descriptor.pinDistance);
     }
 }
