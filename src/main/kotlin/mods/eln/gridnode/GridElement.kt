@@ -103,7 +103,7 @@ abstract class GridElement(transparentNode: TransparentNode, descriptor: Transpa
                         }
                         entityPlayer.inventory.markDirty()
                     } else if (cable !is UtilityCableDescriptor) {
-                        entityPlayer.removeMultipleItems(stack, cableLength)
+                        if (!(entityPlayer is EntityPlayerMP && Utils.isCreative(entityPlayer))) entityPlayer.removeMultipleItems(stack, cableLength)
                     }
                 } catch (e: UserError) {
                     Utils.addChatMessage(entityPlayer, e.message)

@@ -14,6 +14,7 @@ import mods.eln.sim.mna.component.Resistor
 import mods.eln.sim.nbt.NbtElectricalLoad
 import mods.eln.wiki.Data
 import net.minecraft.entity.player.EntityPlayer
+import net.minecraft.entity.player.EntityPlayerMP
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
@@ -206,7 +207,7 @@ class ElectricalFuseHolderElement(sixNode: SixNode, side: Direction, descriptor:
         if (itemStack != null) {
             if (fuseDescriptor != null && itemStack.stackSize > 0) {
                 // The player puts in a new lead fuse.
-                itemStack.stackSize--
+                if (!(entityPlayer is EntityPlayerMP && Utils.isCreative(entityPlayer))) itemStack.stackSize--
                 takenOutFuse = installedFuse
                 installedFuse = fuseDescriptor
             }

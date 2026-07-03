@@ -11,6 +11,7 @@ import mods.eln.misc.LRDU
 import mods.eln.misc.NominalVoltage
 import mods.eln.misc.Utils
 import mods.eln.misc.Utils.getItemObject
+import mods.eln.misc.Utils.isCreative
 import mods.eln.misc.Utils.plotAmpere
 import mods.eln.misc.Utils.plotPower
 import mods.eln.misc.Utils.plotValue
@@ -32,6 +33,7 @@ import mods.eln.sim.process.destruct.WorldExplosion
 import mods.eln.sixnode.currentcable.CurrentCableDescriptor
 import mods.eln.sixnode.electricalcable.ElectricalCableDescriptor
 import net.minecraft.entity.player.EntityPlayer
+import net.minecraft.entity.player.EntityPlayerMP
 import net.minecraft.inventory.Container
 import net.minecraft.inventory.IInventory
 import net.minecraft.item.ItemStack
@@ -128,11 +130,13 @@ class LampSocketElement(sixNode: SixNode, side: Direction, sixNodeDescriptor: Si
         }
 
         return if (takeItem) {
+            AutoAcceptInventoryProxy.creativeFreeInsert = entityPlayer is EntityPlayerMP && isCreative(entityPlayer)
             inventoryProxy.take(entityPlayer.currentEquippedItem, this, notifyInventoryChange = true).also { accepted ->
                 if (accepted) {
                     lastLampStack = inventory.getStackInSlot(LampSocketContainer.LAMP_SLOT_ID)?.copy()
                     lastCableStack = inventory.getStackInSlot(LampSocketContainer.CABLE_SLOT_ID)?.copy()
                 }
+                AutoAcceptInventoryProxy.creativeFreeInsert = false
             }
         } else false
     }

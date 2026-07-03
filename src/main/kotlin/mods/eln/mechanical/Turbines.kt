@@ -24,6 +24,7 @@ import mods.eln.node.transparent.TransparentNodeEntity
 import mods.eln.sim.IProcess
 import mods.eln.sim.nbt.NbtElectricalGateInput
 import net.minecraft.entity.player.EntityPlayer
+import net.minecraft.entity.player.EntityPlayerMP
 import net.minecraft.inventory.Container
 import net.minecraft.inventory.IInventory
 import net.minecraft.item.ItemStack
@@ -346,7 +347,13 @@ class TurbineElement(node: TransparentNode, desc_: TransparentNodeDescriptor) :
         // Blade already installed, fall through so the GUI opens instead.
         if (inventory.getStackInSlot(BLADE_SLOT) != null) return false
         // Slot is empty, insert the blade, keeping its condition NBT intact.
-        inventory.setInventorySlotContents(BLADE_SLOT, held.splitStack(1))
+        if (player is EntityPlayerMP && Utils.isCreative(player)) {
+            val bladeCopy = held.copy()
+            bladeCopy.stackSize = 1
+            inventory.setInventorySlotContents(BLADE_SLOT, bladeCopy)
+        } else {
+            inventory.setInventorySlotContents(BLADE_SLOT, held.splitStack(1))
+        }
         inventoryChange(inventory)
         return true
     }
