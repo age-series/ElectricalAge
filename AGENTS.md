@@ -1,13 +1,13 @@
 # Agents
 
-If you learn things about making the gradle build work in the sandbox, document it under the Sandbox section.
+If you learn things about making the Gradle build work in the sandbox, document it under the Sandbox section.
 
 # Various Notes
 
-* This is a Minecraft Forge 1.7.10 mod called Electrical Age (Eln). It uses an updated GTNH gradle build system.
+* This is a Minecraft Forge 1.7.10 mod called Electrical Age (Eln). It uses an updated GTNH Gradle build system.
 * We are aiming to move to 100% Kotlin. Where possible, use Kotlin for new code.
 * Java source files belong in the `src/main/java` directory. Kotlin source files belong in the `src/main/kotlin` directory.
-* Do not update the gradle configuration or wrapper without asking first. They are from an upstream repository.
+* Do not update the Gradle configuration or wrapper without asking first. They are from an upstream repository.
 * If you create documentation, please add it do the `docs` directory.
 * Do not move the `id` or `subId` of existing registered items or blocks unless explicitly asked. Those values are world-save sensitive and changing unrelated ones breaks existing saves.
 * **i18n (internationalization) workflow**:

@@ -4,11 +4,11 @@ This is an open source project. We appreciate any help from the community to imp
 
 ## Bugs or ideas for new items
 
-Did you found a bug or do you have an idea how to improve the mod? We are happy to hear from you.
+Did you find a bug or do you have an idea how to improve the mod? We are happy to hear from you.
 
 - Report issues or propose features through the [GitHub issue tracker](https://github.com/age-series/ElectricalAge/issues).
 - Chat with the team in the [Discord server](https://discord.gg/YjK2JAD) if you want help reproducing or validating an idea before opening a pull request.
-- Pull requests are reviewed via GitHub—please include links to any relevant issues or design discussions.
+- Pull requests are reviewed via GitHub — please include links to any relevant issues or design discussions.
 
 ## Building from source and adding new features
 
