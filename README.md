@@ -1,4 +1,4 @@
-# Minecraft Mod - Codename : ELN
+# Minecraft Mod - Codename: ELN
 
 Electrical Age (ELN) brings large-scale electrical simulations and advanced automation tools to Minecraft 1.7.10. Development continues here as the maintained fork by Jared Dunbar (jrddunbr) and Graham Nothup (Grissess); upstream has gone dormant. Back up your worlds before testing new builds.
 
@@ -25,7 +25,7 @@ We only upload releases to the [GitHub releases page](https://github.com/age-ser
 3. Launch the game and enjoy.
 4. Optionally, grab the [test world](https://eln.ja13.org/worlds/latest.zip) to explore ready-made examples.
 
-If you want to compile the project yourself, see the [contributing guide](./CONTRIBUTING.md#building-from-source).
+If you want to compile the project yourself, see the [contributing guide](./CONTRIBUTING.md#building-from-source-and-adding-new-features).
 
 ## Credits and License
 
