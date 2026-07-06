@@ -115,9 +115,9 @@ class FloodlightElement(transparentNode: TransparentNode, transparentNodeDescrip
 
         if (currentEquippedItem is LampDescriptor) {
             if (currentEquippedItem.lampData.technology in descriptor.acceptedLampTypes) {
-                AutoAcceptInventoryProxy.creativeFreeInsert = player is EntityPlayerMP && Utils.isCreative(player)
+                AutoAcceptInventoryProxy.creativeFreeInsert = Eln.config.getBooleanOrElse("gameplay.qol.creativeNoConsumeInsertedItems", false) && player is EntityPlayerMP && Utils.isCreative(player)
                 return inventoryProxy.take(player.currentEquippedItem, this, notifyInventoryChange = true).also {
-                    if (it) {
+                    if (it && Eln.config.getBooleanOrElse("gameplay.qol.rememberLastFloodlightBulbs", false)) {
                         lastLamp1Stack = inventory.getStackInSlot(FloodlightContainer.LAMP_SLOT_1_ID)?.copy()
                         lastLamp2Stack = inventory.getStackInSlot(FloodlightContainer.LAMP_SLOT_2_ID)?.copy()
                     }
@@ -166,7 +166,7 @@ class FloodlightElement(transparentNode: TransparentNode, transparentNodeDescrip
         electricalComponentList.add(lamp2Resistor)
         computeInventory()
         connect()
-        if (placingPlayerIsCreative) {
+        if (Eln.config.getBooleanOrElse("gameplay.qol.rememberLastFloodlightBulbs", false) && placingPlayerIsCreative) {
             lastLamp1Stack?.let { inventory.setInventorySlotContents(FloodlightContainer.LAMP_SLOT_1_ID, it.copy()) }
             lastLamp2Stack?.let { inventory.setInventorySlotContents(FloodlightContainer.LAMP_SLOT_2_ID, it.copy()) }
             computeInventory()
@@ -345,8 +345,10 @@ class FloodlightElement(transparentNode: TransparentNode, transparentNodeDescrip
         // Prevent duplicate calls of these functions
         if (inventoryChanged) {
             inventoryChange(inventory)
-            lastLamp1Stack = inventory.getStackInSlot(FloodlightContainer.LAMP_SLOT_1_ID)?.copy()
-            lastLamp2Stack = inventory.getStackInSlot(FloodlightContainer.LAMP_SLOT_2_ID)?.copy()
+            if (Eln.config.getBooleanOrElse("gameplay.qol.rememberLastFloodlightBulbs", false)) {
+                lastLamp1Stack = inventory.getStackInSlot(FloodlightContainer.LAMP_SLOT_1_ID)?.copy()
+                lastLamp2Stack = inventory.getStackInSlot(FloodlightContainer.LAMP_SLOT_2_ID)?.copy()
+            }
         }
         else if (publishChanges) needPublish()
     }

@@ -66,7 +66,7 @@ class LampSocketElement(sixNode: SixNode, side: Direction, sixNodeDescriptor: Si
     private val lampSocketProcess = LampSocketProcess(this)
 
     var poweredByLampSupply = true
-    var lampSupplyChannel = lastChannel
+    var lampSupplyChannel = if (Eln.config.getBooleanOrElse("gameplay.qol.rememberLastLampSignalName", false)) lastChannel else "Default channel"
     var activeLampSupplyConnection = false
     var projectionRotationAngle = 0.0
     private var paintColor = LampSocketRender.DEFAULT_PAINT_COLOR
@@ -130,9 +130,9 @@ class LampSocketElement(sixNode: SixNode, side: Direction, sixNodeDescriptor: Si
         }
 
         return if (takeItem) {
-            AutoAcceptInventoryProxy.creativeFreeInsert = entityPlayer is EntityPlayerMP && isCreative(entityPlayer)
+            AutoAcceptInventoryProxy.creativeFreeInsert = Eln.config.getBooleanOrElse("gameplay.qol.creativeNoConsumeInsertedItems", false) && entityPlayer is EntityPlayerMP && isCreative(entityPlayer)
             inventoryProxy.take(entityPlayer.currentEquippedItem, this, notifyInventoryChange = true).also { accepted ->
-                if (accepted) {
+                if (accepted && Eln.config.getBooleanOrElse("gameplay.qol.rememberLastLampSocketContents", false)) {
                     lastLampStack = inventory.getStackInSlot(LampSocketContainer.LAMP_SLOT_ID)?.copy()
                     lastCableStack = inventory.getStackInSlot(LampSocketContainer.CABLE_SLOT_ID)?.copy()
                 }
@@ -190,7 +190,7 @@ class LampSocketElement(sixNode: SixNode, side: Direction, sixNodeDescriptor: Si
 
     override fun initialize() {
         computeInventory()
-        if (placingPlayerIsCreative) {
+        if (Eln.config.getBooleanOrElse("gameplay.qol.rememberLastLampSocketContents", false) && placingPlayerIsCreative) {
             lastLampStack?.let { inventory.setInventorySlotContents(LampSocketContainer.LAMP_SLOT_ID, it.copy()) }
             lastCableStack?.let { inventory.setInventorySlotContents(LampSocketContainer.CABLE_SLOT_ID, it.copy()) }
             computeInventory()
@@ -295,7 +295,7 @@ class LampSocketElement(sixNode: SixNode, side: Direction, sixNodeDescriptor: Si
                 }
                 LampSocketGui.UPDATE_LAMP_SUPPLY_CHANNEL_EVENT -> {
                     lampSupplyChannel = stream.readUTF()
-                    lastChannel = lampSupplyChannel
+                    if (Eln.config.getBooleanOrElse("gameplay.qol.rememberLastLampSignalName", false)) lastChannel = lampSupplyChannel
                 }
                 LampSocketGui.ADJUST_ROTATION_ANGLE_EVENT -> projectionRotationAngle = stream.readDouble()
             }
@@ -375,8 +375,10 @@ class LampSocketElement(sixNode: SixNode, side: Direction, sixNodeDescriptor: Si
         // Prevent duplicate calls of these functions
         if (inventoryChanged) {
             inventoryChange(inventory)
-            lastLampStack = inventory.getStackInSlot(LampSocketContainer.LAMP_SLOT_ID)?.copy()
-            lastCableStack = inventory.getStackInSlot(LampSocketContainer.CABLE_SLOT_ID)?.copy()
+            if (Eln.config.getBooleanOrElse("gameplay.qol.rememberLastLampSocketContents", false)) {
+                lastLampStack = inventory.getStackInSlot(LampSocketContainer.LAMP_SLOT_ID)?.copy()
+                lastCableStack = inventory.getStackInSlot(LampSocketContainer.CABLE_SLOT_ID)?.copy()
+            }
         }
         else if (publishChanges) needPublish()
     }

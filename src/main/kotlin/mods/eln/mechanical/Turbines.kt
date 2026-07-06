@@ -347,7 +347,7 @@ class TurbineElement(node: TransparentNode, desc_: TransparentNodeDescriptor) :
         // Blade already installed, fall through so the GUI opens instead.
         if (inventory.getStackInSlot(BLADE_SLOT) != null) return false
         // Slot is empty, insert the blade, keeping its condition NBT intact.
-        if (player is EntityPlayerMP && Utils.isCreative(player)) {
+        if (Eln.config.getBooleanOrElse("gameplay.qol.creativeNoConsumeInsertedItems", false) && player is EntityPlayerMP && Utils.isCreative(player)) {
             val bladeCopy = held.copy()
             bladeCopy.stackSize = 1
             inventory.setInventorySlotContents(BLADE_SLOT, bladeCopy)

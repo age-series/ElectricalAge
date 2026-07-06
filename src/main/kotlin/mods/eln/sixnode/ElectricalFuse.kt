@@ -207,7 +207,7 @@ class ElectricalFuseHolderElement(sixNode: SixNode, side: Direction, descriptor:
         if (itemStack != null) {
             if (fuseDescriptor != null && itemStack.stackSize > 0) {
                 // The player puts in a new lead fuse.
-                if (!(entityPlayer is EntityPlayerMP && Utils.isCreative(entityPlayer))) itemStack.stackSize--
+                if (!(Eln.config.getBooleanOrElse("gameplay.qol.creativeNoConsumeInsertedItems", false) && entityPlayer is EntityPlayerMP && Utils.isCreative(entityPlayer))) itemStack.stackSize--
                 takenOutFuse = installedFuse
                 installedFuse = fuseDescriptor
             }
