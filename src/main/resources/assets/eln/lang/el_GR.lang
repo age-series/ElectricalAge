@@ -5,6 +5,7 @@
 (Increases_capacity)=(Αυξάνει τη χωρητικότητα)
 (Increases_inductance)=(Αυξάνει την αυτεπαγωγή)
 *_Missing_an_inductive_voltage_spike_on_field_collapse=* Λείπει μια επαγωγική αιχμή τάσης κατά την κατάρρευση πεδίου
+4_Copper_Cables_Required=Απαιτούνται 4 Καλώδια Χαλκού
 A_relay_is_an_electrical\ncontact_that_conducts\ncurrent_when_a_signal\nvoltage_is_applied.=Ένα ρελέ είναι ένας ηλεκτρικός\nεπαφή που αγωγεί\nρεύμα όταν εφαρμόζεται\nτάση σήματος.
 Accepted_lamp_types\:_%1$=Accepted lamp types: %1$
 Acts_like_a\npush_button.=Λειτουργεί σαν\nμπάτον (πατητήρι).
@@ -26,6 +27,7 @@ Closed=Κλειστό
 Condition\:_%1$=Condition: %1$
 Connected=Συνδεδεμένο
 Control=Έλεγχος
+Control_Voltage=Τάση Ελέγχου
 Converts_%1$_into_mechanical_energy.=Μετατρέπει %1$ σε μηχανική ενέργεια.
 Cooling_power\:_%1$W=Ισχύς ψύξης: %1$W
 Copper_cable_slot=Υποδοχή χάλκινου καλωδίου
@@ -1646,6 +1648,7 @@ Grid_Switch.name=Διακόπτης Δικτύου
 High_Power_Receiver_Antenna.name=Κεραία Λήψης Υψηλής Ισχύος
 High_Power_Transmitter_Antenna.name=Κεραία Εκπομπής Υψηλής Ισχύος
 Holiday_Candle.name=Κερί Εορτής
+Isolation_Transformer.name=Isolation Transformer
 Joint.name=Άρθρωση
 Joint_hub.name=Κόμβος Αρθρώσεων
 Large_Flywheel.name=Large Flywheel
@@ -1662,6 +1665,10 @@ Medium_Power_Receiver_Antenna.name=Κεραία Λήψης Μεσαίας Ισχ
 Medium_Power_Transmitter_Antenna.name=Κεραία Εκπομπής Μεσαίας Ισχύος
 Nixie_Tube.name=Λαμπτήρας Nixie
 Old_480V_Arc_Furnace.name=Old 480V Arc Furnace
+One-way_Boost/Buck_vDC/DC_Converter.name=One-way Boost/Buck vDC/DC Converter
+One-way_Boost_vDC/DC_Converter.name=One-way Boost vDC/DC Converter
+One-way_Buck_vDC/DC_Converter.name=One-way Buck vDC/DC Converter
+One-way_DC-DC_Converter.name=One-way DC-DC Converter
 Overhead_Lines.name=Εναέριες Γραμμές
 Polarized_Shaft_Generator.name=Πολωμένη Γεννήτρια Άξονα
 Polarized_Shaft_Motor.name=Πολωμένος Κινητήρας Άξονα
@@ -1957,6 +1964,13 @@ Dots=Κουκκίδες
 Nixie_tube_has_been_textured_realistically=Ο λαμπτήρας Nixie έχει υφανθεί με ρεαλιστικό τρόπο
 Signal_input_doesn't_require_power,_and_interfaces_are_tailored_to_gameplay=Η είσοδος σήματος δεν απαιτεί ισχύ και οι διεπαφές είναι προσαρμοσμένες στο παιχνίδι
 
+# src/main/kotlin/mods/eln/transparentnode/OneWayDcDc.kt
+Front_and_back_connections_are_isolated\nground_references_for_each_side.=Front and back connections are isolated\nground references for each side.
+Moves_power_from_the_input_side\nto_the_output_side_only.=Moves power from the input side\nto the output side only.
+The_output_voltage_ratio_is_controlled\nfrom_a_signal_input.=The output voltage ratio is controlled\nfrom a signal input.
+This_DC/DC_uses_an_ideal_power_sink_and_source_to_move_power_in_one_direction.=This DC/DC uses an ideal power sink and source to move power in one direction.
+Transferred_power=Transferred power
+
 # src/main/kotlin/mods/eln/transparentnode/ThermalHeatExchanger.kt
 Cold_->_Hot_\=_consumes_heat=Cold -> Hot = consumes heat
 Converts_fluids_between_hot_and_cold_states=Converts fluids between hot and cold states
@@ -1969,8 +1983,6 @@ output_tank_level=επίπεδο δεξαμενής εξόδου
 thermal_power=θερμική ισχύς
 
 # src/main/kotlin/mods/eln/transparentnode/VariableDcDc.kt
-4_Copper_Cables_Required=Απαιτούνται 4 Καλώδια Χαλκού
-Control_Voltage=Τάση Ελέγχου
 The_output_voltage_is_controlled\nfrom_a_signal_input=Η τάση εξόδου ελέγχεται\nαπό μια είσοδο σήματος
 This_variable_DC/DC_has_unrealistic_capacitance_effects_and_can_sink/source_power_that_violates_Newton's_laws=Αυτός ο μεταβλητός μετατροπέας DC/DC έχει μη ρεαλιστικά φαινόμενα χωρητικότητας και μπορεί να απορροφά/παρέχει ισχύ που παραβιάζει τους νόμους του Νεύτωνα
 

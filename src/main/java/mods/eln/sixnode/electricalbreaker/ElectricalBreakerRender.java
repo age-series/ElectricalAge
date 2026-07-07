@@ -1,7 +1,6 @@
 package mods.eln.sixnode.electricalbreaker;
 
 import mods.eln.cable.CableRenderDescriptor;
-import mods.eln.misc.Coordinate;
 import mods.eln.misc.*;
 import mods.eln.node.six.SixNodeDescriptor;
 import mods.eln.node.six.SixNodeElementInventory;
@@ -31,8 +30,6 @@ public class ElectricalBreakerRender extends SixNodeElementRender {
     float switchAlpha = 0;
     public boolean switchState;
 
-    CableRenderDescriptor cableRender;
-
     public ElectricalBreakerRender(SixNodeEntity tileEntity, Direction side, SixNodeDescriptor descriptor) {
         super(tileEntity, side, descriptor);
         this.descriptor = (ElectricalBreakerDescriptor) descriptor;
@@ -58,8 +55,9 @@ public class ElectricalBreakerRender extends SixNodeElementRender {
     @Nullable
     @Override
     public CableRenderDescriptor getCableRender(@NotNull LRDU lrdu) {
-        CableRenderDescriptor adjacentRender = resolveAdjacentCableRender(lrdu);
-        return adjacentRender != null ? adjacentRender : cableRender;
+        if (lrdu != front && lrdu != front.inverse()) return null;
+        CableRenderDescriptor adjacentRender = getAdjacentCableRender(lrdu);
+        return adjacentRender != null ? adjacentRender : descriptor.getRatedCableRender();
     }
 
     @Override
@@ -70,7 +68,6 @@ public class ElectricalBreakerRender extends SixNodeElementRender {
             switchState = stream.readBoolean();
             uMax = stream.readFloat();
             uMin = stream.readFloat();
-            cableRender = null;
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -134,35 +131,11 @@ public class ElectricalBreakerRender extends SixNodeElementRender {
         return new ElectricalBreakerGui(player, inventory, this);
     }
 
-    @Nullable
-    private CableRenderDescriptor resolveAdjacentCableRender(@NotNull LRDU lrdu) {
-        Direction worldDirection = side.applyLRDU(lrdu);
-        Coordinate neighborCoordinate = new Coordinate(getTileEntity()).moved(worldDirection);
-        if (!neighborCoordinate.getBlockExist()) return null;
-        if (!(neighborCoordinate.world().getTileEntity(neighborCoordinate.x, neighborCoordinate.y, neighborCoordinate.z) instanceof SixNodeEntity)) {
-            return null;
-        }
-
-        SixNodeEntity neighbor = (SixNodeEntity) neighborCoordinate.world().getTileEntity(
-            neighborCoordinate.x,
-            neighborCoordinate.y,
-            neighborCoordinate.z
-        );
-        Direction neighborSide = worldDirection.getInverse();
-        if (neighbor.elementRenderList[neighborSide.getInt()] == null) return null;
-
-        for (LRDU neighborLrdu : LRDU.values()) {
-            CableRenderDescriptor render = neighbor.elementRenderList[neighborSide.getInt()].getCableRender(neighborLrdu);
-            if (render != null) return render;
-        }
-        return null;
-    }
-
     private void drawInternalPins() {
         if (descriptor.pinDistance == null) {
             return;
         }
-        drawPowerPin(LRDU.Left, descriptor.pinDistance);
-        drawPowerPin(LRDU.Right, descriptor.pinDistance);
+        drawPowerPin(front, descriptor.pinDistance);
+        drawPowerPin(front.inverse(), descriptor.pinDistance);
     }
 }

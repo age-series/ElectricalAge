@@ -26,7 +26,10 @@ import mods.eln.misc.UtilsClient.enableBlend
 import mods.eln.misc.UtilsClient.enableLight
 import mods.eln.node.NodeBase
 import mods.eln.node.NodeConnection
+import mods.eln.node.NodeConnectionEndpoint
+import mods.eln.node.NodeManager
 import mods.eln.node.six.*
+import mods.eln.sixnode.groundcable.GroundCableElement
 import mods.eln.sim.ElectricalConnection
 import mods.eln.sim.ElectricalLoad
 import mods.eln.sim.IProcess
@@ -49,6 +52,8 @@ import java.io.DataInputStream
 import java.io.DataOutputStream
 import java.io.IOException
 import java.util.*
+import java.util.ArrayDeque
+import java.util.IdentityHashMap
 import kotlin.math.abs
 import kotlin.math.floor
 
@@ -408,6 +413,16 @@ class UtilityCableElement(
         return conductorLoads[idx.coerceIn(0, conductorLoads.lastIndex)]
     }
 
+    override fun getElectricalLoad(lrdu: LRDU, mask: Int, remoteEndpoint: NodeConnectionEndpoint): ElectricalLoad {
+        if (!descriptor.actsAsSingleConductor && !conductorsBound && remoteEndpointIsGroundedSingleConductor(remoteEndpoint)) {
+            val groundColor = activeGroundConductorColor()
+            if (groundColor >= 0) {
+                return getElectricalLoad(lrdu, maskForConductorColor(groundColor))
+            }
+        }
+        return getElectricalLoad(lrdu, mask)
+    }
+
     override fun getThermalLoad(lrdu: LRDU, mask: Int): ThermalLoad {
         return thermalLoad
     }
@@ -424,47 +439,64 @@ class UtilityCableElement(
     }
 
     override fun newConnectionAt(connection: NodeConnection?, isA: Boolean) {
-        if (!isA || descriptor.actsAsSingleConductor || conductorsBound || connection == null) return
-        val other = connection.N2
-        if (other is SixNode) {
-            val el = other.getElement(connection.dir2.applyLRDU(connection.lrdu2))
-            if (el is UtilityCableElement && !el.descriptor.actsAsSingleConductor && !el.conductorsBound) {
-                val thisColors = activePalette().conductorColors
-                val otherColors = el.activePalette().conductorColors
-                val primaryThis = defaultConductorIndex()
-                val primaryOther = el.defaultConductorIndex()
-                Utils.println(
-                    "UtilityCable connect %s side=%s primary=%d colors=%s <-> %s side=%s primary=%d colors=%s",
-                    coordinate,
-                    side,
-                    primaryThis,
-                    thisColors.joinToString(","),
-                    el.coordinate,
-                    el.side,
-                    primaryOther,
-                    otherColors.joinToString(",")
-                )
-                for (idx in conductorLoads.indices) {
-                    if (idx == primaryThis) continue
-                    val color = thisColors.getOrElse(idx) { continue }
-                    val otherIdx = otherColors.indexOfFirst { it == color }
-                    if (otherIdx < 0 || otherIdx == primaryOther || otherIdx > el.conductorLoads.lastIndex) continue
-                    Utils.println(
-                        "UtilityCable extra conductor %s side=%s color=%d idx=%d -> %s side=%s otherIdx=%d",
-                        coordinate,
-                        side,
-                        color,
-                        idx,
-                        el.coordinate,
-                        el.side,
-                        otherIdx
-                    )
-                    val econ = ElectricalConnection(conductorLoads[idx], el.conductorLoads[otherIdx])
-                    Eln.simulator.addElectricalComponent(econ)
-                    connection.addConnection(econ)
-                }
-            }
+        if (descriptor.actsAsSingleConductor || conductorsBound || connection == null) return
+
+        val localEndpoint = connection.endpoint(isA)
+        val remoteEndpoint = connection.otherEndpoint(isA)
+        val el = remoteEndpoint.element as? UtilityCableElement ?: return
+        if (el.descriptor.actsAsSingleConductor || el.conductorsBound) return
+        if (!ownsExtraConductorConnections(localEndpoint, remoteEndpoint)) return
+
+        val thisColors = activePalette().conductorColors
+        val otherColors = el.activePalette().conductorColors
+        val primaryThis = defaultConductorIndex()
+        val primaryOther = el.defaultConductorIndex()
+        Utils.println(
+            "UtilityCable connect %s side=%s primary=%d colors=%s <-> %s side=%s primary=%d colors=%s",
+            coordinate,
+            side,
+            primaryThis,
+            thisColors.joinToString(","),
+            el.coordinate,
+            el.side,
+            primaryOther,
+            otherColors.joinToString(",")
+        )
+        for (idx in conductorLoads.indices) {
+            if (idx == primaryThis) continue
+            val color = thisColors.getOrElse(idx) { continue }
+            val otherIdx = otherColors.indexOfFirst { it == color }
+            if (otherIdx < 0 || otherIdx == primaryOther || otherIdx > el.conductorLoads.lastIndex) continue
+            Utils.println(
+                "UtilityCable extra conductor %s side=%s color=%d idx=%d -> %s side=%s otherIdx=%d",
+                coordinate,
+                side,
+                color,
+                idx,
+                el.coordinate,
+                el.side,
+                otherIdx
+            )
+            val econ = ElectricalConnection(conductorLoads[idx], el.conductorLoads[otherIdx])
+            Eln.simulator.addElectricalComponent(econ)
+            connection.addConnection(econ)
         }
+    }
+
+    private fun ownsExtraConductorConnections(localEndpoint: NodeConnectionEndpoint, remoteEndpoint: NodeConnectionEndpoint): Boolean {
+        return endpointSortKey(localEndpoint) <= endpointSortKey(remoteEndpoint)
+    }
+
+    private fun endpointSortKey(endpoint: NodeConnectionEndpoint): String {
+        val coord = endpoint.node.coordinate
+        return "%d:%d:%d:%d:%d:%d".format(
+            coord.dimension,
+            coord.x,
+            coord.y,
+            coord.z,
+            endpoint.elementSide?.int ?: endpoint.side.int,
+            endpoint.elementLrdu?.dir ?: endpoint.lrdu.dir
+        )
     }
 
     override fun multiMeterString(): String {
@@ -488,18 +520,25 @@ class UtilityCableElement(
         info[tr("Temperature")] = plotAmbientCelsius("", thermalLoad.temperatureCelsius)
         if (descriptor.actsAsSingleConductor || conductorsBound) {
             val power = abs(conductorLoads[0].voltage * conductorLoads[0].current)
+            val loss = cableLoss(conductorLoads[0])
             info[tr("Conductor")] =
                 "${plotVolt("", conductorLoads[0].voltage).trim()}, ${plotAmpere("", conductorLoads[0].current).trim()}, ${Utils.plotPower("", power).trim()}"
+            info[tr("Cable loss")] = Utils.plotPower("", loss)
         } else {
             info[tr("Palette")] = activePalette().displayName
             conductorLoads.forEachIndexed { idx, load ->
                 val power = abs(load.voltage * load.current)
+                val loss = cableLoss(load)
                 info[conductorLabel(idx)] =
-                    "${plotVolt("", load.voltage).trim()}, ${plotAmpere("", load.current).trim()}, ${Utils.plotPower("", power).trim()}"
+                    "${plotVolt("", load.voltage).trim()}, ${plotAmpere("", load.current).trim()}, ${Utils.plotPower("", power).trim()}, ${tr("loss")} ${Utils.plotPower("", loss).trim()}"
             }
         }
         info[tr("Subsystem Matrix Size")] = renderSubSystemWaila(conductorLoads[0].subSystem)
         return info
+    }
+
+    private fun cableLoss(load: ElectricalLoad): Double {
+        return load.current * load.current * load.serialResistance * 2.0
     }
 
     override fun networkSerialize(stream: DataOutputStream) {
@@ -576,6 +615,55 @@ class UtilityCableElement(
 
     private fun isNeutralColor(color: Int): Boolean {
         return UtilityCableDescriptor.isNeutralColorCode(color)
+    }
+
+    private fun remoteEndpointIsGroundedSingleConductor(remoteEndpoint: NodeConnectionEndpoint): Boolean {
+        val start = remoteEndpoint.element as? SixNodeElement ?: return false
+        if (!isSingleConductorCableElement(start)) return false
+
+        val visited = Collections.newSetFromMap(IdentityHashMap<SixNodeElement, Boolean>())
+        val queue = ArrayDeque<SixNodeElement>()
+        visited.add(start)
+        queue.add(start)
+
+        while (!queue.isEmpty()) {
+            val cable = queue.removeFirst()
+            for (lrdu in LRDU.values()) {
+                val adjacentEndpoint = traceAdjacentCableEndpoint(cable, lrdu) ?: continue
+                when (val adjacent = adjacentEndpoint.element) {
+                    is GroundCableElement -> return true
+                    is SixNodeElement -> {
+                        if (!isSingleConductorCableElement(adjacent)) {
+                            continue
+                        }
+                        val adjacentLrdu = adjacentEndpoint.elementLrdu ?: continue
+                        if (!NodeBase.compareConnectionMask(cable.getConnectionMask(lrdu), adjacent.getConnectionMask(adjacentLrdu))) {
+                            continue
+                        }
+                        if (visited.add(adjacent)) {
+                            queue.add(adjacent)
+                        }
+                    }
+                }
+            }
+        }
+        return false
+    }
+
+    private fun isSingleConductorCableElement(element: SixNodeElement): Boolean {
+        return element is ElectricalCableElement ||
+            (element is UtilityCableElement && element.descriptor.actsAsSingleConductor)
+    }
+
+    private fun traceAdjacentCableEndpoint(cable: SixNodeElement, lrdu: LRDU): NodeConnectionEndpoint? {
+        val adjacentSide = cable.side.applyLRDU(lrdu)
+        val adjacentElement = cable.sixNode?.getElement(adjacentSide)
+        if (adjacentElement != null) {
+            val adjacentLrdu = adjacentSide.getLRDUGoingTo(cable.side) ?: return null
+            return NodeConnectionEndpoint(cable.sixNode!!, adjacentSide, adjacentLrdu, adjacentElement, adjacentSide, adjacentLrdu)
+        }
+        if (NodeManager.instance == null) return null
+        return cable.getAdjacentConnectionEndpoint(lrdu)
     }
 
     private fun defaultConductorIndex(): Int {

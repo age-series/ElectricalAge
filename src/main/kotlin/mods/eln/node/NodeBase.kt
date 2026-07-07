@@ -214,6 +214,43 @@ abstract class NodeBase {
     abstract fun getSideConnectionMask(side: Direction, lrdu: LRDU): Int
     abstract fun getThermalLoad(side: Direction, lrdu: LRDU, mask: Int): ThermalLoad?
     abstract fun getElectricalLoad(side: Direction, lrdu: LRDU, mask: Int): ElectricalLoad?
+
+    open fun getElectricalLoad(side: Direction, lrdu: LRDU, mask: Int, remoteEndpoint: NodeConnectionEndpoint): ElectricalLoad? {
+        return getElectricalLoad(side, lrdu, mask)
+    }
+
+    open fun getConnectionEndpoint(side: Direction, lrdu: LRDU): NodeConnectionEndpoint {
+        return NodeConnectionEndpoint(this, side, lrdu, this, side, lrdu)
+    }
+
+    fun findAdjacentConnectionEndpoint(side: Direction, lrdu: LRDU): NodeConnectionEndpoint? {
+        findWrappedAdjacentConnectionEndpoint(side, lrdu)?.let { return it }
+        return findDirectAdjacentConnectionEndpoint(side, lrdu)
+    }
+
+    private fun findWrappedAdjacentConnectionEndpoint(side: Direction, lrdu: LRDU): NodeConnectionEndpoint? {
+        if (!isBlockWrappable(side)) return null
+        val emptyBlockCoord = intArrayOf(coordinate.x, coordinate.y, coordinate.z)
+        side.applyTo(emptyBlockCoord, 1)
+
+        val elementSide = side.applyLRDU(lrdu)
+        val otherBlockCoord = intArrayOf(emptyBlockCoord[0], emptyBlockCoord[1], emptyBlockCoord[2])
+        elementSide.applyTo(otherBlockCoord, 1)
+
+        val otherNode = NodeManager.instance!!.getNodeFromCoordonate(
+            Coordinate(otherBlockCoord[0], otherBlockCoord[1], otherBlockCoord[2], coordinate.dimension)
+        ) ?: return null
+        val otherDirection = elementSide.inverse
+        val otherLRDU = otherDirection.getLRDUGoingTo(side)?.inverse() ?: return null
+        return otherNode.getConnectionEndpoint(otherDirection, otherLRDU)
+    }
+
+    private fun findDirectAdjacentConnectionEndpoint(side: Direction, lrdu: LRDU): NodeConnectionEndpoint? {
+        val otherNode = getNeighbor(side) ?: return null
+        if (!otherNode.isAdded) return null
+        return otherNode.getConnectionEndpoint(side.inverse, lrdu.inverseIfLR())
+    }
+
     open fun checkCanStay(onCreate: Boolean) {}
     open fun connectJob() {
         // EXTERNAL OTHERS SIXNODE
@@ -497,8 +534,8 @@ abstract class NodeBase {
                 nodeA.newConnectionAt(nodeConnection, true)
                 nodeB.newConnectionAt(nodeConnection, false)
                 var eLoad: ElectricalLoad?
-                if (nodeA.getElectricalLoad(directionA, lrduA, mskB).also { eLoad = it } != null) {
-                    val otherELoad = nodeB.getElectricalLoad(directionB, lrduB, mskA)
+                if (nodeA.getElectricalLoad(directionA, lrduA, mskB, nodeConnection.endpoint(false)).also { eLoad = it } != null) {
+                    val otherELoad = nodeB.getElectricalLoad(directionB, lrduB, mskA, nodeConnection.endpoint(true))
                     if (otherELoad != null) {
                         eCon = ElectricalConnection(eLoad, otherELoad)
                         Eln.simulator.addElectricalComponent(eCon)

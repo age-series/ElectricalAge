@@ -12,7 +12,10 @@ import mods.eln.environment.BiomeClimateService
 import mods.eln.item.lampitem.BoilerplateLampData
 import mods.eln.item.lampitem.LampLists
 import mods.eln.misc.Coordinate
+import mods.eln.misc.Direction
 import mods.eln.misc.FC
+import mods.eln.misc.GhostPowerNode
+import mods.eln.misc.LRDU
 import mods.eln.misc.Version
 import mods.eln.node.NodeBase
 import mods.eln.node.NodeManager
@@ -390,6 +393,11 @@ class ElnZoneDumpCommand : IConsoleCommand {
                 builder.append("  ${coord}: ${node.javaClass.simpleName}")
                 if (node is TransparentNode) {
                     builder.append(" element=${node.element?.javaClass?.simpleName}")
+                    node.element?.let { element ->
+                        builder.append(" front=${element.front}")
+                        builder.append(" grounded=${element.grounded}")
+                        builder.append(" descriptor=${element.transparentNodeDescriptor.name}")
+                    }
                 } else if (node is SixNode) {
                     builder.append(" sixNode")
                 }
@@ -408,6 +416,15 @@ class ElnZoneDumpCommand : IConsoleCommand {
             }
         }
 
+        builder.append("\nNode details:\n")
+        if (nodesInZone.isEmpty()) {
+            builder.append("  <none>\n")
+        } else {
+            for (node in nodesInZone) {
+                appendNodeDetails(builder, node)
+            }
+        }
+
         builder.append("\nBlocks:\n")
         for (x in minX..maxX) {
             for (y in minY..maxY) {
@@ -417,8 +434,11 @@ class ElnZoneDumpCommand : IConsoleCommand {
                     val tile = world.getTileEntity(x, y, z)
                     builder.append("  ($x,$y,$z): ${block.unlocalizedName} meta=$meta tile=${tile?.javaClass?.simpleName}\n")
                     val coord = Coordinate(x, y, z, dim)
-                    if ((block == Eln.sixNodeBlock || block == Eln.transparentNodeBlock || block == Eln.ghostBlock) && !coordToNode.containsKey(coord)) {
+                    if ((block == Eln.sixNodeBlock || block == Eln.transparentNodeBlock) && !coordToNode.containsKey(coord)) {
                         warnings.add("Block ${block.unlocalizedName} at $coord has no registered node")
+                    }
+                    if (block == Eln.ghostBlock && !coordToNode.containsKey(coord) && Eln.ghostManager.getGhost(coord) == null) {
+                        warnings.add("Ghost block at $coord has no registered node or ghost manager entry")
                     }
                 }
             }
@@ -449,6 +469,120 @@ class ElnZoneDumpCommand : IConsoleCommand {
         cprint(ics, "Usage: /eln zonedump <radius>", indent = 1)
         cprint(ics, "Usage: /eln zonedump x1 y1 z1 x2 y2 z2", indent = 1)
         cprint(ics, "")
+    }
+
+    private fun appendNodeDetails(builder: StringBuilder, node: NodeBase) {
+        builder.append("  ${node.coordinate}: ${node.javaClass.simpleName}\n")
+        builder.append("    lrduCubeMask: ").append(formatCubeMask(node)).append('\n')
+        when (node) {
+            is TransparentNode -> appendTransparentNodeDetails(builder, node)
+            is SixNode -> appendSixNodeDetails(builder, node)
+            is GhostPowerNode -> appendGhostPowerNodeDetails(builder, node)
+        }
+    }
+
+    private fun appendGhostPowerNodeDetails(builder: StringBuilder, node: GhostPowerNode) {
+        builder.append("    ghostPowerLoad")
+            .append(" mask=").append(formatMask(node.mask))
+            .append(" load=").append(node.load.javaClass.simpleName)
+            .append(" U=").append(formatDouble(node.load.voltage))
+            .append(" I=").append(formatDouble(node.load.current))
+            .append(" Rs=").append(formatDouble(node.load.serialResistance))
+            .append(" subSystem=").append(node.load.subSystem?.hashCode()?.toString() ?: "null")
+            .append('\n')
+    }
+
+    private fun appendTransparentNodeDetails(builder: StringBuilder, node: TransparentNode) {
+        val element = node.element
+        if (element == null) {
+            builder.append("    element: <null>\n")
+            return
+        }
+        builder.append("    element: ${element.javaClass.simpleName}")
+            .append(" descriptor=${element.transparentNodeDescriptor.name}")
+            .append(" front=${element.front}")
+            .append(" grounded=${element.grounded}")
+            .append('\n')
+        appendWaila(builder, element.getWaila())
+        for (side in Direction.values()) {
+            for (lrdu in LRDU.values()) {
+                val mask = element.getConnectionMask(side, lrdu)
+                val load = element.getElectricalLoad(side, lrdu)
+                if (mask == 0 && load == null) continue
+                builder.append("    terminal side=$side lrdu=$lrdu")
+                    .append(" mask=").append(formatMask(mask))
+                if (load != null) {
+                    builder.append(" load=").append(load.javaClass.simpleName)
+                        .append(" U=").append(formatDouble(load.voltage))
+                        .append(" I=").append(formatDouble(load.current))
+                        .append(" Rs=").append(formatDouble(load.serialResistance))
+                        .append(" subSystem=").append(load.subSystem?.hashCode()?.toString() ?: "null")
+                }
+                builder.append('\n')
+            }
+        }
+    }
+
+    private fun appendSixNodeDetails(builder: StringBuilder, node: SixNode) {
+        for (side in Direction.values()) {
+            val element = node.sideElementList[side.int] ?: continue
+            builder.append("    side=$side element=${element.javaClass.simpleName}")
+                .append(" descriptor=${element.sixNodeElementDescriptor.name}")
+                .append(" front=${element.front}")
+                .append(" elementMask=").append(formatLrduMask(node.lrduElementMask[side]))
+                .append('\n')
+            appendWaila(builder, element.getWaila(), "      ")
+            for (lrdu in LRDU.values()) {
+                val mask = element.getConnectionMask(lrdu)
+                val load = element.getElectricalLoad(lrdu, mask)
+                if (mask == 0 && load == null) continue
+                builder.append("      terminal lrdu=$lrdu")
+                    .append(" worldSide=").append(side.applyLRDU(lrdu))
+                    .append(" mask=").append(formatMask(mask))
+                if (load != null) {
+                    builder.append(" load=").append(load.javaClass.simpleName)
+                        .append(" U=").append(formatDouble(load.voltage))
+                        .append(" I=").append(formatDouble(load.current))
+                        .append(" Rs=").append(formatDouble(load.serialResistance))
+                        .append(" subSystem=").append(load.subSystem?.hashCode()?.toString() ?: "null")
+                }
+                builder.append('\n')
+            }
+        }
+    }
+
+    private fun appendWaila(builder: StringBuilder, waila: Map<String, String>?, indent: String = "    ") {
+        if (waila == null || waila.isEmpty()) return
+        builder.append(indent).append("waila:\n")
+        for ((key, value) in waila) {
+            builder.append(indent).append("  ").append(key).append(": ").append(value).append('\n')
+        }
+    }
+
+    private fun formatCubeMask(node: NodeBase): String {
+        return Direction.values().joinToString(" ") { side ->
+            "$side=${formatLrduMask(node.lrduCubeMask[side])}"
+        }
+    }
+
+    private fun formatLrduMask(mask: mods.eln.misc.LRDUMask?): String {
+        if (mask == null || mask.mask == 0) return "-"
+        return LRDU.values()
+            .filter { mask[it] }
+            .joinToString("|") { it.name }
+    }
+
+    private fun formatMask(mask: Int): String {
+        if (mask == 0) return "0"
+        val labels = mutableListOf<String>()
+        if (mask and NodeBase.maskElectricalPower != 0) labels.add("power")
+        if (mask and NodeBase.maskElectricalGate != 0) labels.add("gate")
+        if (mask and NodeBase.maskElectricalInputGate != 0) labels.add("inputGate")
+        return "0x${mask.toString(16)}" + if (labels.isEmpty()) "" else "(${labels.joinToString("|")})"
+    }
+
+    private fun formatDouble(value: Double): String {
+        return String.format(Locale.ROOT, "%.6g", value)
     }
 }
 
