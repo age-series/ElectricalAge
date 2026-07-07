@@ -263,8 +263,19 @@ abstract class NodeBlockEntity : TileEntity(), ITileEntitySpawnClient, INodeEnti
     }
 
     fun getAdjacentCableRender(side: Direction, lrdu: LRDU): CableRenderDescriptor? {
-        findWrappedAdjacentCableRender(side, lrdu)?.let { return it }
-        return findDirectAdjacentCableRender(side, lrdu)
+        val lookupKey = CableRenderLookupKey(worldObj.provider.dimensionId, xCoord, yCoord, zCoord, side, lrdu)
+        val activeLookups = adjacentCableRenderLookups.get()
+        if (!activeLookups.add(lookupKey)) return null
+
+        try {
+            findWrappedAdjacentCableRender(side, lrdu)?.let { return it }
+            return findDirectAdjacentCableRender(side, lrdu)
+        } finally {
+            activeLookups.remove(lookupKey)
+            if (activeLookups.isEmpty()) {
+                adjacentCableRenderLookups.remove()
+            }
+        }
     }
 
     private fun findWrappedAdjacentCableRender(side: Direction, lrdu: LRDU): CableRenderDescriptor? {
@@ -304,7 +315,20 @@ abstract class NodeBlockEntity : TileEntity(), ITileEntitySpawnClient, INodeEnti
 
     open fun clientRefresh(deltaT: Float) {}
 
+    private data class CableRenderLookupKey(
+        val dimension: Int,
+        val x: Int,
+        val y: Int,
+        val z: Int,
+        val side: Direction,
+        val lrdu: LRDU
+    )
+
     companion object {
+        private val adjacentCableRenderLookups = object : ThreadLocal<MutableSet<CableRenderLookupKey>>() {
+            override fun initialValue(): MutableSet<CableRenderLookupKey> = HashSet()
+        }
+
         @JvmField
         //val clientList = LinkedList<NodeBlockEntity>()
         val clientList = LinkedBlockingQueue<NodeBlockEntity>()
