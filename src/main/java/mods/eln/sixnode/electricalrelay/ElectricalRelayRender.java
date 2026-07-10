@@ -82,7 +82,10 @@ public class ElectricalRelayRender extends SixNodeElementRender {
     @Override
     public CableRenderDescriptor getCableRender(LRDU lrdu) {
         if (lrdu == front) return Eln.instance.signalCableDescriptor.render;
-        if (lrdu == front.left() || lrdu == front.right()) return descriptor.cable.render;
+        if (lrdu == front.left() || lrdu == front.right()) {
+            if (descriptor.cable == null) return null;
+            return descriptor.cable.render;
+        }
         return null;
     }
 }
