@@ -15,7 +15,7 @@ public class Other {
 
     public static final String modIdIc2 = "IC2";
     public static final String modIdOc = "OpenComputers";
-    public static final String modIdTe = "Eln";
+    public static final String modIdTe = "eln";
     public static final String modIdCc = "ComputerCraft";
 
     public static void check() {

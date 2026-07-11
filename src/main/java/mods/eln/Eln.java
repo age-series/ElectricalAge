@@ -120,11 +120,11 @@ import static mods.eln.i18n.I18N.tr;
         version = Tags.VERSION,
         dependencies = "required-after:CoFHCore")
 public class Eln {
-    @Instance("Eln")
+    @Instance("eln")
     public static Eln instance;
     @SidedProxy(clientSide = "mods.eln.client.ClientProxy", serverSide = "mods.eln.CommonProxy")
     public static CommonProxy proxy;
-    public final static String MODID = "Eln";
+    public final static String MODID = "eln";
     public final static Logger LOGGER = LogManager.getLogger(MODID);
     public final static String NAME = "Electrical Age - jrddunbr's build";
     public final static String UPDATE_URL = "https://github.com/age-series/ElectricalAge/releases";
@@ -294,7 +294,7 @@ public class Eln {
     }
 
     public static ItemStack findItemStack(String name, int stackSize) {
-        ItemStack stack = GameRegistry.findItemStack("Eln", name, stackSize);
+        ItemStack stack = GameRegistry.findItemStack("eln", name, stackSize);
         if (stack == null) {
             stack = dictionnaryOreFromMod.get(name);
             stack = Utils.newItemStack(Item.getIdFromItem(stack.getItem()), stackSize, stack.getItemDamage());

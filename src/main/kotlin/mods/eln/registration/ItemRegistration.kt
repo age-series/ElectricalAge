@@ -1886,7 +1886,7 @@ object ItemRegistration {
                 ArmorMaterial.IRON, 2, ArmourType.Helmet, "eln:textures" +
                         "/armor/copper_layer_1.png", "eln:textures/armor/copper_layer_2.png"
             ).setUnlocalizedName(name).setTextureName("eln:copper_helmet").setCreativeTab(Eln.creativeTabToolsArmor) as ItemArmor
-            GameRegistry.registerItem(Eln.helmetCopper, "Eln.$name")
+            GameRegistry.registerItem(Eln.helmetCopper, "eln.$name")
             GameRegistry.registerCustomItemStack(name, ItemStack(Eln.helmetCopper))
         }
         run {
@@ -1896,7 +1896,7 @@ object ItemRegistration {
                         ":textures/armor/copper_layer_1.png", "eln:textures/armor/copper_layer_2.png"
             ).setUnlocalizedName(name).setTextureName("eln:copper_chestplate")
                 .setCreativeTab(Eln.creativeTabToolsArmor) as ItemArmor
-            GameRegistry.registerItem(Eln.chestplateCopper, "Eln.$name")
+            GameRegistry.registerItem(Eln.chestplateCopper, "eln.$name")
             GameRegistry.registerCustomItemStack(name, ItemStack(Eln.chestplateCopper))
         }
         run {
@@ -1906,7 +1906,7 @@ object ItemRegistration {
                         "/armor/copper_layer_1.png", "eln:textures/armor/copper_layer_2.png"
             ).setUnlocalizedName(name).setTextureName("eln:copper_leggings")
                 .setCreativeTab(Eln.creativeTabToolsArmor) as ItemArmor
-            GameRegistry.registerItem(Eln.legsCopper, "Eln.$name")
+            GameRegistry.registerItem(Eln.legsCopper, "eln.$name")
             GameRegistry.registerCustomItemStack(name, ItemStack(Eln.legsCopper))
         }
         run {
@@ -1915,7 +1915,7 @@ object ItemRegistration {
                 ArmorMaterial.IRON, 2, ArmourType.Boots, "eln:textures" +
                         "/armor/copper_layer_1.png", "eln:textures/armor/copper_layer_2.png"
             ).setUnlocalizedName(name).setTextureName("eln:copper_boots").setCreativeTab(Eln.creativeTabToolsArmor) as ItemArmor
-            GameRegistry.registerItem(Eln.bootsCopper, "Eln.$name")
+            GameRegistry.registerItem(Eln.bootsCopper, "eln.$name")
             GameRegistry.registerCustomItemStack(name, ItemStack(Eln.bootsCopper))
         }
         val t1 = "eln:textures/armor/ecoal_layer_1.png"
@@ -1936,7 +1936,7 @@ object ItemRegistration {
                 "eln" +
                         ":ecoal_helmet"
             ).setCreativeTab(Eln.creativeTabToolsArmor) as ItemArmor
-            GameRegistry.registerItem(Eln.helmetECoal, "Eln.$name")
+            GameRegistry.registerItem(Eln.helmetECoal, "eln.$name")
             GameRegistry.registerCustomItemStack(name, ItemStack(Eln.helmetECoal))
         }
         run {
@@ -1947,7 +1947,7 @@ object ItemRegistration {
                 2000.0, armor / 20.0, armor * energyPerDamage, energyPerDamage
             ).setUnlocalizedName(name).setTextureName("eln:ecoal_chestplate")
                 .setCreativeTab(Eln.creativeTabToolsArmor) as ItemArmor
-            GameRegistry.registerItem(Eln.plateECoal, "Eln.$name")
+            GameRegistry.registerItem(Eln.plateECoal, "eln.$name")
             GameRegistry.registerCustomItemStack(name, ItemStack(Eln.plateECoal))
         }
         run {
@@ -1960,7 +1960,7 @@ object ItemRegistration {
                 "eln" +
                         ":ecoal_leggings"
             ).setCreativeTab(Eln.creativeTabToolsArmor) as ItemArmor
-            GameRegistry.registerItem(Eln.legsECoal, "Eln.$name")
+            GameRegistry.registerItem(Eln.legsECoal, "eln.$name")
             GameRegistry.registerCustomItemStack(name, ItemStack(Eln.legsECoal))
         }
         run {
@@ -1973,7 +1973,7 @@ object ItemRegistration {
                 "eln" +
                         ":ecoal_boots"
             ).setCreativeTab(Eln.creativeTabToolsArmor) as ItemArmor
-            GameRegistry.registerItem(Eln.bootsECoal, "Eln.$name")
+            GameRegistry.registerItem(Eln.bootsECoal, "eln.$name")
             GameRegistry.registerCustomItemStack(name, ItemStack(Eln.bootsECoal))
         }
     }
@@ -1986,7 +1986,7 @@ object ItemRegistration {
                 "eln" +
                         ":copper_sword"
             ).setCreativeTab(Eln.creativeTabToolsArmor)
-            GameRegistry.registerItem(Eln.swordCopper, "Eln.$name")
+            GameRegistry.registerItem(Eln.swordCopper, "eln.$name")
             GameRegistry.registerCustomItemStack(name, ItemStack(Eln.swordCopper))
         }
         run {
@@ -1994,7 +1994,7 @@ object ItemRegistration {
             Eln.hoeCopper =
                 ItemHoe(ToolMaterial.IRON).setUnlocalizedName(name).setTextureName("eln:copper_hoe")
                     .setCreativeTab(Eln.creativeTabToolsArmor)
-            GameRegistry.registerItem(Eln.hoeCopper, "Eln.$name")
+            GameRegistry.registerItem(Eln.hoeCopper, "eln.$name")
             GameRegistry.registerCustomItemStack(name, ItemStack(Eln.hoeCopper))
         }
         run {
@@ -2003,7 +2003,7 @@ object ItemRegistration {
                 "eln" +
                         ":copper_shovel"
             ).setCreativeTab(Eln.creativeTabToolsArmor)
-            GameRegistry.registerItem(Eln.shovelCopper, "Eln.$name")
+            GameRegistry.registerItem(Eln.shovelCopper, "eln.$name")
             GameRegistry.registerCustomItemStack(name, ItemStack(Eln.shovelCopper))
         }
         run {
@@ -2012,7 +2012,7 @@ object ItemRegistration {
                 "eln" +
                         ":copper_pickaxe"
             ).setCreativeTab(Eln.creativeTabToolsArmor)
-            GameRegistry.registerItem(Eln.pickaxeCopper, "Eln.$name")
+            GameRegistry.registerItem(Eln.pickaxeCopper, "eln.$name")
             GameRegistry.registerCustomItemStack(name, ItemStack(Eln.pickaxeCopper))
         }
         run {
@@ -2020,7 +2020,7 @@ object ItemRegistration {
             Eln.axeCopper =
                 ItemAxeEln(ToolMaterial.IRON).setUnlocalizedName(name).setTextureName("eln:copper_axe")
                     .setCreativeTab(Eln.creativeTabToolsArmor)
-            GameRegistry.registerItem(Eln.axeCopper, "Eln.$name")
+            GameRegistry.registerItem(Eln.axeCopper, "eln.$name")
             GameRegistry.registerCustomItemStack(name, ItemStack(Eln.axeCopper))
         }
     }
