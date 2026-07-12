@@ -56,7 +56,7 @@ public class LampSupplyGui extends GuiContainerEln {
 
         @Override
         public void idraw(int x, int y, float f) {
-            this.enabled = render.entries.get(channel).aggregator != id;
+            this.enabled = render.getEntries().get(channel).aggregator != id;
             super.idraw(x, y, f);
         }
     }
@@ -67,10 +67,10 @@ public class LampSupplyGui extends GuiContainerEln {
         int y = 6;
 
         int x;
-        for (int id = 0; id < render.descriptor.channelCount; id++) {
+        for (int id = 0; id < LampSupplyDescriptor.CHANNEL_COUNT; id++) {
             x = 6;
 
-            LampSupplyElement.Entry e = render.entries.get(id);
+            LampSupplyElement.Entry e = render.getEntries().get(id);
             GuiTextFieldEln powerChannel = newGuiTextField(x, y, 101);
             x += powerChannel.getWidth() + 12;
             powerChannel.setText(e.powerChannel);

@@ -23,8 +23,6 @@ class FloodlightProcess(val element: FloodlightElement) : IProcess {
         const val BASE_THROW_DISTANCE = 16
     }
 
-    private var processElapsedTime = 0.0
-
     override fun process(time: Double) {
         if (element.motorized) {
             element.swivelAngle = (element.swivelControl.normalized) * FloodlightGui.MAX_HORIZONTAL_ANGLE
@@ -60,19 +58,11 @@ class FloodlightProcess(val element: FloodlightElement) : IProcess {
                     lampLightRanges.add(0)
                 }
 
-                /* Only decrease the life of a bulb once a second. This reduces the update rate at which the NBT is changed
-                 * to once per second from once per tick, reducing the probability of an NBT mismatch bug occurring when
-                 * shift-clicking. When the bug is eventually fixed, the processElapsedTime variable and supporting code can
-                 * be deleted. Also update the decreaseLampLife function definition according to the note there.
-                */
-                if (processElapsedTime in -0.001..0.001) {
-                    val lampLife = lampDescriptor.decreaseLampLife(lampStack, lampVoltage)
-
-                    if (lampLife <= 0.0) {
-                        lampLightValues[idx] = BoilerplateLampData.MIN_LIGHT_VALUE
-                        element.inventory.setInventorySlotContents(idx, null)
-                        element.inventory.markDirty()
-                    }
+                val lampLife = lampDescriptor.decreaseLampLife(lampStack, lampVoltage)
+                if (lampLife <= 0.0) {
+                    lampLightValues[idx] = BoilerplateLampData.MIN_LIGHT_VALUE
+                    element.inventory.setInventorySlotContents(idx, null)
+                    element.inventory.markDirty()
                 }
             } else {
                 lampLightValues.add(BoilerplateLampData.MIN_LIGHT_VALUE)
@@ -91,9 +81,6 @@ class FloodlightProcess(val element: FloodlightElement) : IProcess {
             element.powered = newLightValue > BoilerplateLampData.MIN_LIGHT_VALUE
             element.needPublish()
         }
-
-        processElapsedTime += time
-        if (processElapsedTime >= 1.0) processElapsedTime = 0.0
     }
 
     /**

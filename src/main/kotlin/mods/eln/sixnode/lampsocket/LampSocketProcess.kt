@@ -16,8 +16,6 @@ import kotlin.math.abs
 
 class LampSocketProcess(var element: LampSocketElement) : IProcess {
 
-    private var processElapsedTime = 0.0
-
     var cachedBestChannelHandle: Pair<Double, LampSupplyElement.PowerSupplyChannelHandle>? = null
     var stableLightProbability = 0.0
     var fastLightValue = 0
@@ -83,19 +81,11 @@ class LampSocketProcess(var element: LampSocketElement) : IProcess {
                 updateNearbyBlocks(lampData.technology.cropGrowthRateFactor, lampData.nominalLightValue, newLightValue, time)
             }
 
-            /* Only decrease the life of a bulb once a second. This reduces the update rate at which the NBT is changed
-             * to once per second from once per tick, reducing the probability of an NBT mismatch bug occurring when
-             * shift-clicking. When the bug is eventually fixed, the processElapsedTime variable and supporting code can
-             * be deleted. Also update the decreaseLampLife function definition according to the note there.
-             */
-            if (processElapsedTime in -0.001..0.001) {
-                val lampLife = lampDescriptor.decreaseLampLife(lampStack, lampVoltage)
-
-                if (lampLife <= 0.0) {
-                    newLightValue = BoilerplateLampData.MIN_LIGHT_VALUE
-                    element.inventory.setInventorySlotContents(LampSocketContainer.LAMP_SLOT_ID, null)
-                    element.inventory.markDirty()
-                }
+            val lampLife = lampDescriptor.decreaseLampLife(lampStack, lampVoltage)
+            if (lampLife <= 0.0) {
+                newLightValue = BoilerplateLampData.MIN_LIGHT_VALUE
+                element.inventory.setInventorySlotContents(LampSocketContainer.LAMP_SLOT_ID, null)
+                element.inventory.markDirty()
             }
         } else {
             stableLightProbability = 0.0
@@ -106,9 +96,6 @@ class LampSocketProcess(var element: LampSocketElement) : IProcess {
 
         updateFastLight(newLightValue)
         updateInventoryAndPublish(lampStack, cableStack, activeLampSupplyConnection, newLightValue)
-
-        processElapsedTime += time
-        if (processElapsedTime >= 1.0) processElapsedTime = 0.0
     }
 
     private fun findBestLampSupply(coordinate: Coordinate, forceUpdate: Boolean = false) {
@@ -153,7 +140,7 @@ class LampSocketProcess(var element: LampSocketElement) : IProcess {
         // This makes the projected light "flicker" when a fluorescent bulb is turning on. It's not quite in sync with
         // the bulb, but it's the best that can be done without rewriting the light block handler to allow updating the
         // light value of an existing light block.
-        val lightTimeout = if (stableLightProbability <= 1.0) 1 else 5
+        val lightTimeout = if (stableLightProbability <= 0.999) 1 else 5
 
         LightBlockEntity.addLight(lbCoordinate, lightValue, lightTimeout)
     }

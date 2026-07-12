@@ -13,25 +13,18 @@ class SixNodeElementInventory : IInventory, INBTTReady, IUtilityCableInventory {
     var sixNodeRender: SixNodeElementRender? = null
     var sixNodeElement: SixNodeElement? = null
     var stackLimit: Int
-    override var requiredCableLength = IUtilityCableInventory.DEFAULT_REQUIRED_LENGTH
+    override var requiredCableLength: Double = IUtilityCableInventory.DEFAULT_REQUIRED_LENGTH
 
-    constructor(size: Int, stackLimit: Int, sixNodeRender: SixNodeElementRender?) {
+    @JvmOverloads
+    constructor(size: Int, stackLimit: Int, sixNodeRender: SixNodeElementRender?, requiredCableLength: Double = IUtilityCableInventory.DEFAULT_REQUIRED_LENGTH) {
         inv = arrayOfNulls(size)
         this.stackLimit = stackLimit
         this.sixNodeRender = sixNodeRender
+        this.requiredCableLength = requiredCableLength
     }
 
-    constructor(size: Int, stackLimit: Int, sixNodeElement: SixNodeElement?) {
-        inv = arrayOfNulls(size)
-        this.stackLimit = stackLimit
-        this.sixNodeElement = sixNodeElement
-    }
-
-    /**
-     * Constructor for inventories which require a different length of utility cable than the default.
-     * This is a separate constructor because Java sucks and does not allow for default values in constructors.
-     */
-    constructor(size: Int, stackLimit: Int, sixNodeElement: SixNodeElement?, requiredCableLength: Double) {
+    @JvmOverloads
+    constructor(size: Int, stackLimit: Int, sixNodeElement: SixNodeElement?, requiredCableLength: Double = IUtilityCableInventory.DEFAULT_REQUIRED_LENGTH) {
         inv = arrayOfNulls(size)
         this.stackLimit = stackLimit
         this.sixNodeElement = sixNodeElement
