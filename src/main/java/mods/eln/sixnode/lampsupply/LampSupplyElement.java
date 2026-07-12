@@ -1,6 +1,5 @@
 package mods.eln.sixnode.lampsupply;
 
-import mods.eln.Eln;
 import mods.eln.generic.GenericItemBlockUsingDamageDescriptor;
 import mods.eln.i18n.I18N;
 import mods.eln.item.ConfigCopyToolDescriptor;
@@ -246,7 +245,7 @@ public class LampSupplyElement extends SixNodeElement implements IConfigurable {
             }
         }
         info.put(I18N.tr("Total power"), Utils.plotPower("", powerLoad.getVoltage() * powerLoad.getCurrent()));
-        if (Eln.config.getBooleanOrElse("ui.waila.easyMode", false)) {
+        if (Utils.isWailaEasyModeEnabled()) {
             info.put(I18N.tr("Voltage"), Utils.plotVolt("", powerLoad.getVoltage()));
         }
         return info;

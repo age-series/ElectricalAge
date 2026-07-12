@@ -4,6 +4,8 @@ package mods.eln.misc
 import cpw.mods.fml.common.network.internal.FMLProxyPacket
 import mods.eln.Eln
 import mods.eln.GuiHandler
+import mods.eln.ServerKeyHandler
+import mods.eln.client.ClientKeyHandler
 import mods.eln.i18n.I18N.tr
 import mods.eln.misc.Obj3D.Obj3DPart
 import mods.eln.node.six.SixNodeEntity
@@ -31,7 +33,6 @@ import org.lwjgl.input.Keyboard
 import org.lwjgl.opengl.GL11
 import java.awt.Color
 import java.io.ByteArrayOutputStream
-import java.util.*
 import kotlin.math.sqrt
 
 object UtilsClient {
@@ -570,18 +571,24 @@ object UtilsClient {
         if (realisticEnum != null)
             dst.add("§r${realisticEnum.color}${realisticEnum.name}§r")
         if (details.isNotEmpty()) {
-            if (isShiftHeld()) {
+            if (isShiftHeld() || (Utils.isDebugEnabled() && isWrenchKeyHeld())) {
                 dst.addAll(details)
             } else {
-                dst.add("§F§o${tr("Hold [shift] for details")}")
+                if (Utils.isDebugEnabled()) {
+                    dst.add("§F§o${tr("Hold [shift] or [%1$] for details", ClientKeyHandler.getKeybindKey(ServerKeyHandler.WRENCH))}")
+                } else {
+                    dst.add("§F§o${tr("Hold [shift] for details")}")
+                }
             }
         }
         if (realismDetails.isNotEmpty()) {
-            if (isControlHeld()) {
+            if (isControlHeld() || (Utils.isDebugEnabled() && isWrenchKeyHeld())) {
                 dst.addAll(realismDetails)
             } else {
-                if (realisticEnum != null) {
-                    if (realismDetails.isNotEmpty()) {
+                if (realisticEnum != null && realismDetails.isNotEmpty()) {
+                    if (Utils.isDebugEnabled()) {
+                        dst.add("§F§o${tr("Hold [ctrl] or [%1$] for realism details", ClientKeyHandler.getKeybindKey(ServerKeyHandler.WRENCH))}")
+                    } else {
                         dst.add("§F§o${tr("Hold [ctrl] for realism details")}")
                     }
                 }
@@ -592,12 +599,20 @@ object UtilsClient {
 
     private fun List<String>.listLengthFormatter(@Suppress("UNUSED_PARAMETER") length: Int) {}
 
-    private fun isShiftHeld(): Boolean {
+    fun isShiftHeld(): Boolean {
         return Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_RSHIFT)
     }
 
     private fun isControlHeld(): Boolean {
         return Keyboard.isKeyDown(Keyboard.KEY_LCONTROL) || Keyboard.isKeyDown(Keyboard.KEY_RCONTROL)
+    }
+
+    private fun isWrenchKeyHeld(): Boolean {
+        return try {
+            Keyboard.isKeyDown(ClientKeyHandler.getKeybindValue(ServerKeyHandler.WRENCH))
+        } catch (_: IndexOutOfBoundsException) { // This handles the case in which getKeybindValue() somehow returns -1
+            false
+        }
     }
 
     @JvmStatic

@@ -3,7 +3,6 @@ package mods.eln
 import cpw.mods.fml.common.eventhandler.SubscribeEvent
 import cpw.mods.fml.common.network.FMLNetworkEvent.ServerCustomPacketEvent
 import io.netty.channel.ChannelHandler.Sharable
-import mods.eln.client.ClientKeyHandler
 import mods.eln.client.ClientProxy
 import mods.eln.item.FalstadImportPacketHandler
 import mods.eln.misc.Coordinate
@@ -17,11 +16,7 @@ import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.entity.player.EntityPlayerMP
 import net.minecraft.network.NetHandlerPlayServer
 import net.minecraft.network.NetworkManager
-import java.io.ByteArrayInputStream
-import java.io.ByteArrayOutputStream
-import java.io.DataInputStream
-import java.io.DataOutputStream
-import java.io.IOException
+import java.io.*
 
 @Sharable
 class PacketHandler {

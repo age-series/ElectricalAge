@@ -322,7 +322,7 @@ class LampSocketElement(sixNode: SixNode, side: Direction, sixNodeDescriptor: Si
         if (lampStack != null) info[I18N.tr("Bulb")] = lampStack.displayName
         else info[I18N.tr("Bulb")] = I18N.tr("None")
 
-        if (Eln.config.getBooleanOrElse("ui.waila.easyMode", false)) {
+        if (Utils.isWailaEasyModeEnabled()) {
             info[I18N.tr("Voltage")] = plotVolt("", electricalLoad.voltage)
 
             if (lampStack != null) {
@@ -333,7 +333,7 @@ class LampSocketElement(sixNode: SixNode, side: Direction, sixNodeDescriptor: Si
             if (poweredByLampSupply) info[I18N.tr("Channel")] = lampSupplyChannel
         }
 
-        if (Eln.config.getBooleanOrElse("debug.logging.enabled", false)) {
+        if (Utils.isDebugEnabled()) {
             info[I18N.tr("Lamp Brightness")] = plotValue(sixNode!!.lightValue.toDouble())
         }
 
