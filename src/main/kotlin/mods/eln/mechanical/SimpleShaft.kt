@@ -316,7 +316,8 @@ abstract class SimpleShaftElement(node: TransparentNode, transparentNodeDescript
      * The descriptor must already have plotted a ghost block at the computed world coordinate.
      */
     protected fun spawnGhostShaft(offset: Coordinate, localFacing: Direction, ownerSide: Direction): GhostShaftNode {
-        val ghost = GhostShaftNode(node!!.coordinate, front, offset, this, ownerSide, localFacing)
+        val groupUuid = (transparentNodeDescriptor as? SimpleShaftDescriptor)?.ghostGroupUuid ?: -1
+        val ghost = GhostShaftNode(node!!.coordinate, front, offset, this, ownerSide, localFacing, groupUuid)
         ghost.placeGhost()
         ghost.attachToOwnerNetwork()
         shaftGhostNodes.add(ghost)

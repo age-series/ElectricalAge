@@ -24,10 +24,11 @@ class GhostShaftNode(
     offset: Coordinate,
     private val owner: ShaftElement,
     private val ownerSide: Direction,
-    localFacing: Direction
+    localFacing: Direction,
+    private val groupUuid: Int = -1
 ) : GhostNode(), ShaftElement {
     private val observerCoordinate = Coordinate(origin)
-    private val ghostUuid = Utils.uuid
+    private val ghostUuid = groupUuid
 
     private val target = Coordinate(offset).apply {
         applyTransformation(front, origin)
@@ -83,6 +84,11 @@ class GhostShaftNode(
         //     ownerNet.rads
         // )
         if (shaft !== ownerNet) {
+            // Re-sync rads from the owner before merging. During world load the
+            // loader-state guard in mergeShafts is false (SERVER_ABOUT_TO_START
+            // has already passed by the time chunks load), so any rads delta
+            // would trigger wouldExplode() and destroy the owner.
+            shaft.rads = ownerNet.rads
             ownerNet.mergeShafts(shaft, owner)
             shaft = ownerNet
         }
@@ -91,6 +97,9 @@ class GhostShaftNode(
     override fun initializeFromThat(front: Direction, entityLiving: EntityLivingBase?, itemStack: ItemStack?) {
         connectionSide = front
         shaft = ShaftNetwork(this, shaftConnectivity.iterator())
+        // Carry over the owner's rads so that merging during world load does not
+        // see a rads delta of (loaded − 0) and schedule a spurious explosion.
+        shaft.rads = owner.getShaft(ownerSide)?.rads ?: 0.0
         // Utils.println("GhostShaft.init: coord=%s connectionSide=%s net=%d", coordinate, connectionSide, System.identityHashCode(shaft))
         shaft.connectShaft(this, connectionSide)
         connect()
