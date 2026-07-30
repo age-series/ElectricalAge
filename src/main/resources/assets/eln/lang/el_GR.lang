@@ -1,6 +1,7 @@
 #<ELN_LANGFILE_V1_1>
 
 # Appearing in multiple source files
+%1$,_%2$,_%3$=%1$, %2$, %3$
 %1$_is_not_in_range!=Το %1$ είναι εκτός εύρους!
 (Increases_capacity)=(Αυξάνει τη χωρητικότητα)
 (Increases_inductance)=(Αυξάνει την επαγωγή)
@@ -13,6 +14,7 @@ Bad=Κακό
 Battery_level=Επίπεδο μπαταρίας
 Biggest=Μεγαλύτερο
 Booster_slot=Θέση ενισχυτή
+Broken=Broken
 Cable_slot=Θέση καλωδίου
 Can_create\:=Μπορεί να δημιουργήσει:
 Capacity=Χωρητικότητα
@@ -25,7 +27,9 @@ Charge_power\:_%1$W=Ισχύς φόρτισης: %1$W
 Closed=Κλειστό
 Condition\:_%1$=Συνθήκη: %1$
 Connected=Συνδεδεμένο
+Construction=Construction
 Control=Έλεγχος
+Control_Voltage=Τάση Ελέγχου
 Converts_%1$_into_mechanical_energy.=Μετατρέπει το %1$ σε μηχανική ενέργεια.
 Cooling_power\:_%1$W=Ισχύς ψύξης: %1$W
 Copper_cable_slot=Θέση χάλκινου καλωδίου
@@ -52,6 +56,7 @@ Generating=Παράγει
 Good=Καλό
 Has_a_signal_output.=Διαθέτει έξοδο σήματος.
 Has_some_caveats\:=Έχει ορισμένες επιφυλάξεις:
+Incomplete=Incomplete
 Inductance=Επαγωγή
 Inductance\:_%1$H=Επαγωγή: %1$H
 Input=Είσοδος
@@ -74,7 +79,11 @@ Measured_temperature\ncorresponding\nto_0%_output=Μετρούμενη θερμ�
 Measured_temperature\ncorresponding\nto_100%_output=Μετρούμενη θερμοκρασία\nπου αντιστοιχεί\nσε έξοδο 100%
 Measured_value\ncorresponding\nto_0%_output=Μετρούμενη τιμή\nπου αντιστοιχεί\nσε έξοδο 0%
 Measured_value\ncorresponding\nto_100%_output=Μετρούμενη τιμή\nπου αντιστοιχεί\nσε έξοδο 100%
+Melted=Melted
+Melted_%1$_requires_replacement=Melted %1$ requires replacement
 Mode=Λειτουργία
+Needs_%1$_Winding=Needs %1$ Winding
+Needs_Core=Needs Core
 New=Νέο
 No=Όχι
 No_valid_fluids_for_this_turbine!=Δεν υπάρχουν έγκυρα ρευστά για αυτήν την τουρμπίνα!
@@ -95,17 +104,23 @@ ON=ΕΝΕΡΓΟ
 Off=Απενεργοποιημένο
 On=Ενεργοποιημένο
 Open=Ανοιχτό
+Operational=Operational
 Output=Έξοδος
 Output_voltage=Τάση εξόδου
+P\:_%1$_S\:_%2$=P: %1$ S: %2$
 Portable_battery_slot=Θέση φορητής μπαταρίας
 Position=Θέση
 Power=Ισχύς
 Power\:_%1$W=Ισχύς: %1$W
 Power_Consumption=Κατανάλωση Ισχύος
+Power_cable_or_wire_slot=Power cable or wire slot
 Power_consumption=Κατανάλωση ισχύος
+Power_loss=Απώλεια ισχύος
 Power_out\:_%1$-_%2$=Ισχύς εξόδου: %1$- %2$
 Power_sourced=Παρεχόμενη ισχύς
 Powered_by_cable=Τροφοδοτείται από καλώδιο
+Primary=Primary
+Primary_winding=Primary winding
 Produced_power=Παραγόμενη ισχύς
 Range\:_%1$_blocks=Εμβέλεια: %1$ μπλοκ
 Ratio=Αναλογία
@@ -117,6 +132,8 @@ Relative_humidity=Σχετική υγρασία
 Reset=Επαναφορά
 Resistance=Αντίσταση
 Resistance\:_%1$Ω=Αντίσταση: %1$Ω
+Secondary=Secondary
+Secondary_winding=Secondary winding
 Serial_resistance\:_%1$Ω=Αντίσταση σειράς: %1$Ω
 Signal=Σήμα
 Smallest=Μικρότερο
@@ -154,6 +171,7 @@ __*_Wire_resistance_is_not_impacted_by_temperature=  * Η αντίσταση κ�
 __Max._temperature\:_=  Μέγ. θερμοκρασία:
 __Optimal_rads\:_=Βέλτιστα rads:
 __Power_out\:_=Ισχύς εξόδου:
+empty=empty
 
 # src/main/java/mods/eln/Eln.java
 itemGroup.Eln=Electrical Age
@@ -1220,6 +1238,7 @@ tile.eln.EnergyConverter.name=Εξαγωγέας Ενέργειας
 12V_Control_Relay_100A.name=Ρελέ Ελέγχου 12V 100A
 12V_Control_Relay_20A.name=Ρελέ Ελέγχου 12V 20A
 12V_Control_Relay_50A.name=Ρελέ Ελέγχου 12V 50A
+12V_LDO_Regulator_Chip.name=12V LDO Regulator Chip
 15A_Electrical_Breaker.name=Ηλεκτρικός Ασφαλειοδιακόπτης 15A
 15A_Lead_Fuse.name=Ασφάλεια Μολύβδου 15A
 200A_Electrical_Breaker.name=Ηλεκτρικός Ασφαλειοδιακόπτης 200A
@@ -1232,6 +1251,8 @@ tile.eln.EnergyConverter.name=Εξαγωγέας Ενέργειας
 240V_Type_E_Socket.name=Πρίζα Τύπου E 240V
 240V_Type_J_Socket.name=Πρίζα Τύπου J 240V
 25A_Diode.name=Δίοδος 25A
+3.3V_Boost_Regulator_Chip.name=3.3V Boost Regulator Chip
+3.3V_LDO_Regulator_Chip.name=3.3V LDO Regulator Chip
 30A_Electrical_Breaker.name=Ηλεκτρικός Ασφαλειοδιακόπτης 30A
 30A_Lead_Fuse.name=Ασφάλεια Μολύβδου 30A
 400A_Electrical_Breaker.name=Ηλεκτρικός Ασφαλειοδιακόπτης 400A
@@ -1242,7 +1263,9 @@ tile.eln.EnergyConverter.name=Εξαγωγέας Ενέργειας
 5A_Electrical_Breaker.name=Ηλεκτρικός Ασφαλειοδιακόπτης 5A
 5A_Lead_Fuse.name=Ασφάλεια Μολύβδου 5A
 5A_Switch.name=Διακόπτης 5A
+5V_Boost_Regulator_Chip.name=5V Boost Regulator Chip
 5V_Control_Relay_10A.name=Ρελέ Ελέγχου 5V 10A
+5V_LDO_Regulator_Chip.name=5V LDO Regulator Chip
 60A_Electrical_Breaker.name=Ηλεκτρικός Ασφαλειοδιακόπτης 60A
 AND_Chip.name=AND Chip
 Advanced_Energy_Meter.name=Προηγμένος Μετρητής Ενέργειας
@@ -1646,6 +1669,7 @@ Grid_Switch.name=Διακόπτης Δικτύου
 High_Power_Receiver_Antenna.name=Κεραία Λήψης Υψηλής Ισχύος
 High_Power_Transmitter_Antenna.name=Κεραία Εκπομπής Υψηλής Ισχύος
 Holiday_Candle.name=Κερί Γιορτών
+Isolation_Transformer.name=Isolation Transformer
 Joint.name=Άρθρωση
 Joint_hub.name=Κεντρική Άρθρωση
 Large_Flywheel.name=Μεγάλος Σφόνδυλος
@@ -1662,6 +1686,10 @@ Medium_Power_Receiver_Antenna.name=Κεραία Λήψης Μεσαίας Ισχ
 Medium_Power_Transmitter_Antenna.name=Κεραία Εκπομπής Μεσαίας Ισχύος
 Nixie_Tube.name=Λυχνία Nixie
 Old_480V_Arc_Furnace.name=Κλίβανος Τόξου 480V (Παλαιού Τύπου)
+One-way_Boost/Buck_vDC/DC_Converter.name=One-way Boost/Buck vDC/DC Converter
+One-way_Boost_vDC/DC_Converter.name=One-way Boost vDC/DC Converter
+One-way_Buck_vDC/DC_Converter.name=One-way Buck vDC/DC Converter
+One-way_DC-DC_Converter.name=One-way DC-DC Converter
 Overhead_Lines.name=Εναέριες Γραμμές
 Polarized_Shaft_Generator.name=Πολωμένη Γεννήτρια Άξονα
 Polarized_Shaft_Motor.name=Πολωμένος Κινητήρας Άξονα
@@ -1786,6 +1814,15 @@ Provides_an_ideal_power_sink\nwithout_energy_or_power_limitation.=Παρέχει
 # src/main/kotlin/mods/eln/sixnode/PowerSourceSix.kt
 Provides_an_ideal_power_source\nwithout_energy_or_power_limitation.=Παρέχει μια ιδανική πηγή ισχύος\nχωρίς περιορισμό ενέργειας ή ισχύος.
 
+# src/main/kotlin/mods/eln/sixnode/RegulatorChips.kt
+Acts_as_an_ideal_regulated_voltage_source_inside_its_input_voltage_range.=Acts as an ideal regulated voltage source inside its input voltage range.
+Current_limit\:_%1$=Current limit: %1$
+Input\:_=Input: 
+Input_draw_and_current_limiting_are_simplified;_operation_outside_the_input_range_is_not_based_on_real_device_data.=Input draw and current limiting are simplified; operation outside the input range is not based on real device data.
+Input_range\:_%1$_to_%2$.=Input range: %1$ to %2$.
+Output\:_=Output: 
+Output_voltage\:_%1$=Output voltage: %1$
+
 # src/main/kotlin/mods/eln/sixnode/Scanner.kt
 -_For_inventories,_outputs_either_total_fill_or_fraction_of_slots_with_any_items.=- Για αποθέματα, εξάγει είτε τη συνολική πλήρωση είτε το κλάσμα των θέσεων με οποιαδήποτε αντικείμενα.
 -_For_tanks,_outputs_fill_percentage.=- Για δεξαμενές, εξάγει το ποσοστό πλήρωσης.
@@ -1818,6 +1855,7 @@ Black=Μαύρο
 Blue=Μπλε
 Brown=Καφέ
 Brush\:_paint_conductor_color=Πινέλο: βαφή χρώματος αγωγού
+Cable_loss=Cable loss
 Conductor=Αγωγός
 Conductor\:_%1$_%2$=Αγωγός: %1$ %2$
 Conductor_colors\:_%1$=Χρώματα αγωγών: %1$
@@ -1845,6 +1883,7 @@ White=Λευκό
 Wire_color_care_%1$=Φροντίδα χρώματος σύρματος %1$
 Wrench\:_cycle_conductor_colors=Κλειδί: εναλλαγή χρωμάτων αγωγών
 Yellow=Κίτρινο
+loss=loss
 
 # src/main/kotlin/mods/eln/sixnode/electricalhumiditysensor/ElectricalHumiditySensorDescriptor.kt
 0%%_RH\:_%1$V=0%% ΣΥ: %1$V
@@ -1917,6 +1956,9 @@ Biome_temperature=Θερμοκρασία βιώματος
 # src/main/kotlin/mods/eln/transparentnode/DcDc.kt
 This_DC/DC_has_unrealistic_capacitance_effects_and_can_sink/source_power_that_violates_Newton's_laws=Αυτός ο DC/DC έχει μη ρεαλιστικά φαινόμενα χωρητικότητας και μπορεί να καταβυθίζει/παρέχει ισχύ που παραβιάζει τους νόμους του Νεύτωνα
 
+# src/main/kotlin/mods/eln/transparentnode/DcDcWinding.kt
+Primary_and_secondary_windings_must_match_(%1$_vs_%2$)=Primary and secondary windings must match (%1$ vs %2$)
+
 # src/main/kotlin/mods/eln/transparentnode/Fabricator.kt
 Nominal_Ohms\:_%1$=Ονομαστικά Ohms: %1$
 Operation=Λειτουργία
@@ -1942,7 +1984,6 @@ Set_point\:_=Σημείο ρύθμισης:
 Control_resistance_with_signal=Έλεγχος αντίστασης με σήμα
 Dissipates_~4kW_of_heat_passively=Διαχέει ~4kW θερμότητας παθητικά
 Nom._Resistance\:_%1$=Ονομ. Αντίσταση: %1$
-Power_loss=Απώλεια ισχύος
 Set_resistance_with_coal_dust=Ορισμός αντίστασης με σκόνη άνθρακα
 __*_Resistance_is_not_impacted_by_temperature=  * Η αντίσταση δεν επηρεάζεται από τη θερμοκρασία
 __*_Signal_input_doesn't_require_power=  * Η είσοδος σήματος δεν απαιτεί ισχύ
@@ -1976,8 +2017,6 @@ output_tank_level=επίπεδο δεξαμενής εξόδου
 thermal_power=θερμική ισχύς
 
 # src/main/kotlin/mods/eln/transparentnode/VariableDcDc.kt
-4_Copper_Cables_Required=Απαιτούνται 4 Χάλκινα Καλώδια
-Control_Voltage=Τάση Ελέγχου
 The_output_voltage_is_controlled\nfrom_a_signal_input=Η τάση εξόδου ελέγχεται\nαπό μια είσοδο σήματος
 This_variable_DC/DC_has_unrealistic_capacitance_effects_and_can_sink/source_power_that_violates_Newton's_laws=Αυτός ο μεταβλητός DC/DC έχει μη ρεαλιστικά φαινόμενα χωρητικότητας και μπορεί να καταβυθίζει/παρέχει ισχύ που παραβιάζει τους νόμους του Νεύτωνα
 

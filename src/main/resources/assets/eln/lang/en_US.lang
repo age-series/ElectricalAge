@@ -1,11 +1,11 @@
 #<ELN_LANGFILE_V1_1>
 
 # Appearing in multiple source files
+%1$,_%2$,_%3$=%1$, %2$, %3$
 %1$_is_not_in_range!=%1$ is not in range!
 (Increases_capacity)=(Increases capacity)
 (Increases_inductance)=(Increases inductance)
 *_Missing_an_inductive_voltage_spike_on_field_collapse=* Missing an inductive voltage spike on field collapse
-4_Copper_Cables_Required=4 Copper Cables Required
 A_relay_is_an_electrical\ncontact_that_conducts\ncurrent_when_a_signal\nvoltage_is_applied.=A relay is an electrical\ncontact that conducts\ncurrent when a signal\nvoltage is applied.
 Accepted_lamp_types\:_%1$=Accepted lamp types: %1$
 Acts_like_a\npush_button.=Acts like a\npush button.
@@ -14,6 +14,7 @@ Bad=Bad
 Battery_level=Battery level
 Biggest=Biggest
 Booster_slot=Booster slot
+Broken=Broken
 Cable_slot=Cable slot
 Can_create\:=Can create:
 Capacity=Capacity
@@ -26,6 +27,7 @@ Charge_power\:_%1$W=Charge power: %1$W
 Closed=Closed
 Condition\:_%1$=Condition: %1$
 Connected=Connected
+Construction=Construction
 Control=Control
 Control_Voltage=Control Voltage
 Converts_%1$_into_mechanical_energy.=Converts %1$ into mechanical energy.
@@ -54,6 +56,7 @@ Generating=Generating
 Good=Good
 Has_a_signal_output.=Has a signal output.
 Has_some_caveats\:=Has some caveats:
+Incomplete=Incomplete
 Inductance=Inductance
 Inductance\:_%1$H=Inductance: %1$H
 Input=Input
@@ -76,7 +79,11 @@ Measured_temperature\ncorresponding\nto_0%_output=Measured temperature\ncorrespo
 Measured_temperature\ncorresponding\nto_100%_output=Measured temperature\ncorresponding\nto 100% output
 Measured_value\ncorresponding\nto_0%_output=Measured value\ncorresponding\nto 0% output
 Measured_value\ncorresponding\nto_100%_output=Measured value\ncorresponding\nto 100% output
+Melted=Melted
+Melted_%1$_requires_replacement=Melted %1$ requires replacement
 Mode=Mode
+Needs_%1$_Winding=Needs %1$ Winding
+Needs_Core=Needs Core
 New=New
 No=No
 No_valid_fluids_for_this_turbine!=No valid fluids for this turbine!
@@ -97,17 +104,23 @@ ON=ON
 Off=Off
 On=On
 Open=Open
+Operational=Operational
 Output=Output
 Output_voltage=Output voltage
+P\:_%1$_S\:_%2$=P: %1$ S: %2$
 Portable_battery_slot=Portable battery slot
 Position=Position
 Power=Power
 Power\:_%1$W=Power: %1$W
 Power_Consumption=Power Consumption
+Power_cable_or_wire_slot=Power cable or wire slot
 Power_consumption=Power consumption
+Power_loss=Power loss
 Power_out\:_%1$-_%2$=Power out: %1$- %2$
 Power_sourced=Power sourced
 Powered_by_cable=Powered by cable
+Primary=Primary
+Primary_winding=Primary winding
 Produced_power=Produced power
 Range\:_%1$_blocks=Range: %1$ blocks
 Ratio=Ratio
@@ -119,6 +132,8 @@ Relative_humidity=Relative humidity
 Reset=Reset
 Resistance=Resistance
 Resistance\:_%1$Ω=Resistance: %1$Ω
+Secondary=Secondary
+Secondary_winding=Secondary winding
 Serial_resistance\:_%1$Ω=Serial resistance: %1$Ω
 Signal=Signal
 Smallest=Smallest
@@ -156,6 +171,7 @@ __*_Wire_resistance_is_not_impacted_by_temperature=  * Wire resistance is not im
 __Max._temperature\:_=  Max. temperature:
 __Optimal_rads\:_=Optimal rads:
 __Power_out\:_=Power out:
+empty=empty
 
 # src/main/java/mods/eln/Eln.java
 itemGroup.Eln=Electrical Age
@@ -1222,6 +1238,7 @@ tile.eln.EnergyConverter.name=Energy Exporter
 12V_Control_Relay_100A.name=12V Control Relay 100A
 12V_Control_Relay_20A.name=12V Control Relay 20A
 12V_Control_Relay_50A.name=12V Control Relay 50A
+12V_LDO_Regulator_Chip.name=12V LDO Regulator Chip
 15A_Electrical_Breaker.name=15A Electrical Breaker
 15A_Lead_Fuse.name=15A Lead Fuse
 200A_Electrical_Breaker.name=200A Electrical Breaker
@@ -1234,6 +1251,8 @@ tile.eln.EnergyConverter.name=Energy Exporter
 240V_Type_E_Socket.name=240V Type E Socket
 240V_Type_J_Socket.name=240V Type J Socket
 25A_Diode.name=25A Diode
+3.3V_Boost_Regulator_Chip.name=3.3V Boost Regulator Chip
+3.3V_LDO_Regulator_Chip.name=3.3V LDO Regulator Chip
 30A_Electrical_Breaker.name=30A Electrical Breaker
 30A_Lead_Fuse.name=30A Lead Fuse
 400A_Electrical_Breaker.name=400A Electrical Breaker
@@ -1244,7 +1263,9 @@ tile.eln.EnergyConverter.name=Energy Exporter
 5A_Electrical_Breaker.name=5A Electrical Breaker
 5A_Lead_Fuse.name=5A Lead Fuse
 5A_Switch.name=5A Switch
+5V_Boost_Regulator_Chip.name=5V Boost Regulator Chip
 5V_Control_Relay_10A.name=5V Control Relay 10A
+5V_LDO_Regulator_Chip.name=5V LDO Regulator Chip
 60A_Electrical_Breaker.name=60A Electrical Breaker
 AND_Chip.name=AND Chip
 Advanced_Energy_Meter.name=Advanced Energy Meter
@@ -1544,16 +1565,6 @@ Medium_Voltage_Switch.name=Medium Voltage Switch
 Modbus_RTU.name=Modbus RTU
 Modern_Data_Logger.name=Modern Data Logger
 Multicolor_LED_vuMeter.name=Multicolor LED vuMeter
-3.3V_Boost_Regulator_Chip.name=3.3V Boost Regulator Chip
-3.3V_LDO_Regulator_Chip.name=3.3V LDO Regulator Chip
-5V_Boost_Regulator_Chip.name=5V Boost Regulator Chip
-5V_LDO_Regulator_Chip.name=5V LDO Regulator Chip
-12V_LDO_Regulator_Chip.name=12V LDO Regulator Chip
-Acts_as_an_ideal_regulated_voltage_source_inside_its_input_voltage_range.=Acts as an ideal regulated voltage source inside its input voltage range.
-Current_limit\:_%1$=Current limit: %1$
-Input_draw_and_current_limiting_are_simplified;_operation_outside_the_input_range_is_not_based_on_real_device_data.=Input draw and current limiting are simplified; operation outside the input range is not based on real device data.
-Input_range\:_%1$_to_%2$.=Input range: %1$ to %2$.
-Output_voltage\:_%1$=Output voltage: %1$
 NAND_Chip.name=NAND Chip
 NOR_Chip.name=NOR Chip
 NOT_Chip.name=NOT Chip
@@ -1803,6 +1814,15 @@ Provides_an_ideal_power_sink\nwithout_energy_or_power_limitation.=Provides an id
 # src/main/kotlin/mods/eln/sixnode/PowerSourceSix.kt
 Provides_an_ideal_power_source\nwithout_energy_or_power_limitation.=Provides an ideal power source\nwithout energy or power limitation.
 
+# src/main/kotlin/mods/eln/sixnode/RegulatorChips.kt
+Acts_as_an_ideal_regulated_voltage_source_inside_its_input_voltage_range.=Acts as an ideal regulated voltage source inside its input voltage range.
+Current_limit\:_%1$=Current limit: %1$
+Input\:_=Input: 
+Input_draw_and_current_limiting_are_simplified;_operation_outside_the_input_range_is_not_based_on_real_device_data.=Input draw and current limiting are simplified; operation outside the input range is not based on real device data.
+Input_range\:_%1$_to_%2$.=Input range: %1$ to %2$.
+Output\:_=Output: 
+Output_voltage\:_%1$=Output voltage: %1$
+
 # src/main/kotlin/mods/eln/sixnode/Scanner.kt
 -_For_inventories,_outputs_either_total_fill_or_fraction_of_slots_with_any_items.=- For inventories, outputs either total fill or fraction of slots with any items.
 -_For_tanks,_outputs_fill_percentage.=- For tanks, outputs fill percentage.
@@ -1835,6 +1855,7 @@ Black=Black
 Blue=Blue
 Brown=Brown
 Brush\:_paint_conductor_color=Brush: paint conductor color
+Cable_loss=Cable loss
 Conductor=Conductor
 Conductor\:_%1$_%2$=Conductor: %1$ %2$
 Conductor_colors\:_%1$=Conductor colors: %1$
@@ -1862,6 +1883,7 @@ White=White
 Wire_color_care_%1$=Wire color care %1$
 Wrench\:_cycle_conductor_colors=Wrench: cycle conductor colors
 Yellow=Yellow
+loss=loss
 
 # src/main/kotlin/mods/eln/sixnode/electricalhumiditysensor/ElectricalHumiditySensorDescriptor.kt
 0%%_RH\:_%1$V=0%% RH: %1$V
@@ -1934,6 +1956,9 @@ Biome_temperature=Biome temperature
 # src/main/kotlin/mods/eln/transparentnode/DcDc.kt
 This_DC/DC_has_unrealistic_capacitance_effects_and_can_sink/source_power_that_violates_Newton's_laws=This DC/DC has unrealistic capacitance effects and can sink/source power that violates Newton's laws
 
+# src/main/kotlin/mods/eln/transparentnode/DcDcWinding.kt
+Primary_and_secondary_windings_must_match_(%1$_vs_%2$)=Primary and secondary windings must match (%1$ vs %2$)
+
 # src/main/kotlin/mods/eln/transparentnode/Fabricator.kt
 Nominal_Ohms\:_%1$=Nominal Ohms: %1$
 Operation=Operation
@@ -1959,7 +1984,6 @@ Set_point\:_=Set point:
 Control_resistance_with_signal=Control resistance with signal
 Dissipates_~4kW_of_heat_passively=Dissipates ~4kW of heat passively
 Nom._Resistance\:_%1$=Nom. Resistance: %1$
-Power_loss=Power loss
 Set_resistance_with_coal_dust=Set resistance with coal dust
 __*_Resistance_is_not_impacted_by_temperature=  * Resistance is not impacted by temperature
 __*_Signal_input_doesn't_require_power=  * Signal input doesn't require power

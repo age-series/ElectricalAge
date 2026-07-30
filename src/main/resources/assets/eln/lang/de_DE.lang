@@ -1,6 +1,7 @@
 #<ELN_LANGFILE_V1_1>
 
 # Appearing in multiple source files
+%1$,_%2$,_%3$=%1$, %2$, %3$
 %1$_is_not_in_range!=%1$ ist außerhalb des Bereichs!
 (Increases_capacity)=(Erhöht Kapazität)
 (Increases_inductance)=(Erhöht Induktivität)
@@ -13,6 +14,7 @@ Bad=Schlecht
 Battery_level=Batteriestand
 Biggest=Größter
 Booster_slot=Booster-Slot
+Broken=Broken
 Cable_slot=Kabelslot
 Can_create\:=Kann erzeugen:
 Capacity=Kapazität
@@ -25,7 +27,9 @@ Charge_power\:_%1$W=Ladeleistung: %1$W
 Closed=Geschlossen
 Condition\:_%1$=Bedingung: %1$
 Connected=Verbunden
+Construction=Construction
 Control=Steuerung
+Control_Voltage=Steuerspannung
 Converts_%1$_into_mechanical_energy.=Wandelt %1$ in mechanische Energie um.
 Cooling_power\:_%1$W=Kühlleistung: %1$W
 Copper_cable_slot=Kupferkabel-Slot
@@ -52,6 +56,7 @@ Generating=Erzeugt
 Good=Gut
 Has_a_signal_output.=Hat einen Signalausgang.
 Has_some_caveats\:=Hat einige Einschränkungen:
+Incomplete=Incomplete
 Inductance=Induktivität
 Inductance\:_%1$H=Induktivität: %1$H
 Input=Eingang
@@ -74,7 +79,11 @@ Measured_temperature\ncorresponding\nto_0%_output=Gemessene Temperatur\nentsprec
 Measured_temperature\ncorresponding\nto_100%_output=Gemessene Temperatur\nentsprechend\n100% Ausgang
 Measured_value\ncorresponding\nto_0%_output=Gemessener Wert\nentsprechend\n0% Ausgang
 Measured_value\ncorresponding\nto_100%_output=Gemessener Wert\nentsprechend\n100% Ausgang
+Melted=Melted
+Melted_%1$_requires_replacement=Melted %1$ requires replacement
 Mode=Modus
+Needs_%1$_Winding=Needs %1$ Winding
+Needs_Core=Needs Core
 New=Neu
 No=Nein
 No_valid_fluids_for_this_turbine!=Keine gültigen Fluide für diese Turbine!
@@ -95,17 +104,23 @@ ON=AN
 Off=Aus
 On=An
 Open=Offen
+Operational=Operational
 Output=Ausgang
 Output_voltage=Ausgangsspannung
+P\:_%1$_S\:_%2$=P: %1$ S: %2$
 Portable_battery_slot=Tragbarer-Batterie-Slot
 Position=Position
 Power=Leistung
 Power\:_%1$W=Leistung: %1$W
 Power_Consumption=Leistungsaufnahme
+Power_cable_or_wire_slot=Power cable or wire slot
 Power_consumption=Leistungsaufnahme
+Power_loss=Verlustleistung
 Power_out\:_%1$-_%2$=Leistungsabgabe: %1$- %2$
 Power_sourced=Leistungsquelle
 Powered_by_cable=Per Kabel versorgt
+Primary=Primary
+Primary_winding=Primary winding
 Produced_power=Erzeugte Leistung
 Range\:_%1$_blocks=Reichweite: %1$ Blöcke
 Ratio=Verhältnis
@@ -117,6 +132,8 @@ Relative_humidity=Relative Luftfeuchtigkeit
 Reset=Zurücksetzen
 Resistance=Widerstand
 Resistance\:_%1$Ω=Widerstand: %1$Ω
+Secondary=Secondary
+Secondary_winding=Secondary winding
 Serial_resistance\:_%1$Ω=Reihenwiderstand: %1$Ω
 Signal=Signal
 Smallest=Kleinster
@@ -154,6 +171,7 @@ __*_Wire_resistance_is_not_impacted_by_temperature=  * Leitungswiderstand wird n
 __Max._temperature\:_=  Max. Temperatur:
 __Optimal_rads\:_=Optimale rad/s:
 __Power_out\:_=Ausgangsleistung:
+empty=empty
 
 # src/main/java/mods/eln/Eln.java
 itemGroup.Eln=Electrical Age
@@ -1220,6 +1238,7 @@ tile.eln.EnergyConverter.name=Energie-Exporter
 12V_Control_Relay_100A.name=12V Steuerrelais 100A
 12V_Control_Relay_20A.name=12V Steuerrelais 20A
 12V_Control_Relay_50A.name=12V Steuerrelais 50A
+12V_LDO_Regulator_Chip.name=12V LDO Regulator Chip
 15A_Electrical_Breaker.name=15A-Leitungsschutzschalter
 15A_Lead_Fuse.name=15A-Bleisicherung
 200A_Electrical_Breaker.name=200A-Leitungsschutzschalter
@@ -1232,6 +1251,8 @@ tile.eln.EnergyConverter.name=Energie-Exporter
 240V_Type_E_Socket.name=240V Typ-E-Steckdose
 240V_Type_J_Socket.name=240V Typ-J-Steckdose
 25A_Diode.name=25A Diode
+3.3V_Boost_Regulator_Chip.name=3.3V Boost Regulator Chip
+3.3V_LDO_Regulator_Chip.name=3.3V LDO Regulator Chip
 30A_Electrical_Breaker.name=30A-Leitungsschutzschalter
 30A_Lead_Fuse.name=30A-Bleisicherung
 400A_Electrical_Breaker.name=400A-Leitungsschutzschalter
@@ -1242,7 +1263,9 @@ tile.eln.EnergyConverter.name=Energie-Exporter
 5A_Electrical_Breaker.name=5A-Leitungsschutzschalter
 5A_Lead_Fuse.name=5A-Bleisicherung
 5A_Switch.name=5A Schalter
+5V_Boost_Regulator_Chip.name=5V Boost Regulator Chip
 5V_Control_Relay_10A.name=5V Steuerrelais 10A
+5V_LDO_Regulator_Chip.name=5V LDO Regulator Chip
 60A_Electrical_Breaker.name=60A-Leitungsschutzschalter
 AND_Chip.name=AND-Chip
 Advanced_Energy_Meter.name=Fortschrittlicher Energiezähler
@@ -1646,6 +1669,7 @@ Grid_Switch.name=Netzschalter
 High_Power_Receiver_Antenna.name=Hochleistungs-Empfangsantenne
 High_Power_Transmitter_Antenna.name=Hochleistungs-Sendeantenne
 Holiday_Candle.name=Feiertagskerze
+Isolation_Transformer.name=Isolation Transformer
 Joint.name=Gelenk
 Joint_hub.name=Gelenkhub
 Large_Flywheel.name=Großes Schwungrad
@@ -1662,6 +1686,10 @@ Medium_Power_Receiver_Antenna.name=Mittelleistungs-Empfangsantenne
 Medium_Power_Transmitter_Antenna.name=Mittelleistungs-Sendeantenne
 Nixie_Tube.name=Nixie-Röhre
 Old_480V_Arc_Furnace.name=480V Lichtbogenofen
+One-way_Boost/Buck_vDC/DC_Converter.name=One-way Boost/Buck vDC/DC Converter
+One-way_Boost_vDC/DC_Converter.name=One-way Boost vDC/DC Converter
+One-way_Buck_vDC/DC_Converter.name=One-way Buck vDC/DC Converter
+One-way_DC-DC_Converter.name=One-way DC-DC Converter
 Overhead_Lines.name=Freileitungen
 Polarized_Shaft_Generator.name=Polarisierter Wellengenerator
 Polarized_Shaft_Motor.name=Polarisierter Wellenmotor
@@ -1786,6 +1814,15 @@ Provides_an_ideal_power_sink\nwithout_energy_or_power_limitation.=Liefert eine i
 # src/main/kotlin/mods/eln/sixnode/PowerSourceSix.kt
 Provides_an_ideal_power_source\nwithout_energy_or_power_limitation.=Liefert eine ideale Leistungsquelle\nohne Energie- oder Leistungsbegrenzung.
 
+# src/main/kotlin/mods/eln/sixnode/RegulatorChips.kt
+Acts_as_an_ideal_regulated_voltage_source_inside_its_input_voltage_range.=Acts as an ideal regulated voltage source inside its input voltage range.
+Current_limit\:_%1$=Current limit: %1$
+Input\:_=Input: 
+Input_draw_and_current_limiting_are_simplified;_operation_outside_the_input_range_is_not_based_on_real_device_data.=Input draw and current limiting are simplified; operation outside the input range is not based on real device data.
+Input_range\:_%1$_to_%2$.=Input range: %1$ to %2$.
+Output\:_=Output: 
+Output_voltage\:_%1$=Output voltage: %1$
+
 # src/main/kotlin/mods/eln/sixnode/Scanner.kt
 -_For_inventories,_outputs_either_total_fill_or_fraction_of_slots_with_any_items.=- Für Inventare: Gibt entweder Gesamtfüllstand oder Anteil der Slots mit Gegenständen aus.
 -_For_tanks,_outputs_fill_percentage.=- Für Tanks: Gibt Füllprozentsatz aus.
@@ -1818,6 +1855,7 @@ Black=Schwarz
 Blue=Blau
 Brown=Braun
 Brush\:_paint_conductor_color=Pinsel: Leiterfarbe auftragen
+Cable_loss=Cable loss
 Conductor=Leiter
 Conductor\:_%1$_%2$=Leiter: %1$ %2$
 Conductor_colors\:_%1$=Leiterfarben: %1$
@@ -1845,6 +1883,7 @@ White=Weiß
 Wire_color_care_%1$=Kabelfarben-Pflege %1$
 Wrench\:_cycle_conductor_colors=Schraubenschlüssel: Leiterfarben durchschalten
 Yellow=Gelb
+loss=loss
 
 # src/main/kotlin/mods/eln/sixnode/electricalhumiditysensor/ElectricalHumiditySensorDescriptor.kt
 0%%_RH\:_%1$V=0%% RL: %1$V
@@ -1917,6 +1956,9 @@ Biome_temperature=Biomtemperatur
 # src/main/kotlin/mods/eln/transparentnode/DcDc.kt
 This_DC/DC_has_unrealistic_capacitance_effects_and_can_sink/source_power_that_violates_Newton's_laws=Dieser DC/DC hat unrealistische Kapazitätseffekte und kann Leistung aufnehmen/abgeben, die Newtons Gesetze verletzt
 
+# src/main/kotlin/mods/eln/transparentnode/DcDcWinding.kt
+Primary_and_secondary_windings_must_match_(%1$_vs_%2$)=Primary and secondary windings must match (%1$ vs %2$)
+
 # src/main/kotlin/mods/eln/transparentnode/Fabricator.kt
 Nominal_Ohms\:_%1$=Nenn-Ohm: %1$
 Operation=Betrieb
@@ -1942,7 +1984,6 @@ Set_point\:_=Sollwert:
 Control_resistance_with_signal=Widerstand mit Signal steuern
 Dissipates_~4kW_of_heat_passively=Leitet ~4kW Wärme passiv ab
 Nom._Resistance\:_%1$=Nenn-Widerstand: %1$
-Power_loss=Verlustleistung
 Set_resistance_with_coal_dust=Widerstand mit Kohlestaub einstellen
 __*_Resistance_is_not_impacted_by_temperature=  * Widerstand wird nicht von Temperatur beeinflusst
 __*_Signal_input_doesn't_require_power=  * Signaleingang benötigt keine Leistung
@@ -1976,8 +2017,6 @@ output_tank_level=Ausgangstankfüllstand
 thermal_power=Wärmeleistung
 
 # src/main/kotlin/mods/eln/transparentnode/VariableDcDc.kt
-4_Copper_Cables_Required=4 Kupferkabel benötigt
-Control_Voltage=Steuerspannung
 The_output_voltage_is_controlled\nfrom_a_signal_input=Die Ausgangsspannung wird\nüber einen Signaleingang gesteuert
 This_variable_DC/DC_has_unrealistic_capacitance_effects_and_can_sink/source_power_that_violates_Newton's_laws=Dieser variable DC/DC hat unrealistische Kapazitätseffekte und kann Leistung aufnehmen/abgeben, die Newtons Gesetze verletzt
 

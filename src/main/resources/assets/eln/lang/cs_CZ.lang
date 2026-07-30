@@ -1,6 +1,7 @@
 #<ELN_LANGFILE_V1_1>
 
 # Appearing in multiple source files
+%1$,_%2$,_%3$=%1$, %2$, %3$
 %1$_is_not_in_range!=%1$ není v rozsahu!
 (Increases_capacity)=(Zvyšuje kapacitu)
 (Increases_inductance)=(Zvyšuje indukčnost)
@@ -13,6 +14,7 @@ Bad=Špatný
 Battery_level=Úroveň nabití baterie
 Biggest=Největší
 Booster_slot=Slot pro zesilovač
+Broken=Broken
 Cable_slot=Slot pro kabel
 Can_create\:=Umí vyrobit:
 Capacity=Kapacita
@@ -25,7 +27,9 @@ Charge_power\:_%1$W=Nabíjecí výkon: %1$W
 Closed=Zavřeno
 Condition\:_%1$=Stav: %1$
 Connected=Připojeno
+Construction=Construction
 Control=Ovládání
+Control_Voltage=Řídicí napětí
 Converts_%1$_into_mechanical_energy.=Převádí %1$ na mechanickou energii.
 Cooling_power\:_%1$W=Chladicí výkon: %1$W
 Copper_cable_slot=Slot pro měděný kabel
@@ -52,6 +56,7 @@ Generating=Vyrábí
 Good=Dobrý
 Has_a_signal_output.=Má signálový výstup.
 Has_some_caveats\:=Má několik výhrad:
+Incomplete=Incomplete
 Inductance=Indukčnost
 Inductance\:_%1$H=Indukčnost: %1$H
 Input=Vstup
@@ -74,7 +79,11 @@ Measured_temperature\ncorresponding\nto_0%_output=Měřená teplota\nodpovídaj�
 Measured_temperature\ncorresponding\nto_100%_output=Měřená teplota\nodpovídající\nvýstupu 100%
 Measured_value\ncorresponding\nto_0%_output=Měřená hodnota\nodpovídající\nvýstupu 0%
 Measured_value\ncorresponding\nto_100%_output=Měřená hodnota\nodpovídající\nvýstupu 100%
+Melted=Melted
+Melted_%1$_requires_replacement=Melted %1$ requires replacement
 Mode=Režim
+Needs_%1$_Winding=Needs %1$ Winding
+Needs_Core=Needs Core
 New=Nový
 No=Ne
 No_valid_fluids_for_this_turbine!=Žádné platné kapaliny pro tuto turbínu!
@@ -95,17 +104,23 @@ ON=ZAP
 Off=Vypnuto
 On=Zapnuto
 Open=Otevřeno
+Operational=Operational
 Output=Výstup
 Output_voltage=Výstupní napětí
+P\:_%1$_S\:_%2$=P: %1$ S: %2$
 Portable_battery_slot=Slot pro přenosnou baterii
 Position=Poloha
 Power=Výkon
 Power\:_%1$W=Výkon: %1$W
 Power_Consumption=Spotřeba energie
+Power_cable_or_wire_slot=Power cable or wire slot
 Power_consumption=Spotřeba energie
+Power_loss=Ztrátový výkon
 Power_out\:_%1$-_%2$=Výstupní výkon: %1$- %2$
 Power_sourced=Dodávaný výkon
 Powered_by_cable=Napájeno kabelem
+Primary=Primary
+Primary_winding=Primary winding
 Produced_power=Vyrobený výkon
 Range\:_%1$_blocks=Dosah: %1$ bloků
 Ratio=Poměr
@@ -117,6 +132,8 @@ Relative_humidity=Relativní vlhkost
 Reset=Resetovat
 Resistance=Odpor
 Resistance\:_%1$Ω=Odpor: %1$Ω
+Secondary=Secondary
+Secondary_winding=Secondary winding
 Serial_resistance\:_%1$Ω=Sériový odpor: %1$Ω
 Signal=Signál
 Smallest=Nejmenší
@@ -154,6 +171,7 @@ __*_Wire_resistance_is_not_impacted_by_temperature=  * Odpor vodiče není ovliv
 __Max._temperature\:_=  Max. teplota:
 __Optimal_rads\:_=Optimální rad/s:
 __Power_out\:_=Výstupní výkon:
+empty=empty
 
 # src/main/java/mods/eln/Eln.java
 itemGroup.Eln=Electrical Age
@@ -1220,6 +1238,7 @@ tile.eln.EnergyConverter.name=Exportér energie
 12V_Control_Relay_100A.name=12V ovládací relé 100A
 12V_Control_Relay_20A.name=12V ovládací relé 20A
 12V_Control_Relay_50A.name=12V ovládací relé 50A
+12V_LDO_Regulator_Chip.name=12V LDO Regulator Chip
 15A_Electrical_Breaker.name=15A elektrický jistič
 15A_Lead_Fuse.name=15A olověná pojistka
 200A_Electrical_Breaker.name=200A elektrický jistič
@@ -1232,6 +1251,8 @@ tile.eln.EnergyConverter.name=Exportér energie
 240V_Type_E_Socket.name=240V zásuvka typu E
 240V_Type_J_Socket.name=240V zásuvka typu J
 25A_Diode.name=25A dioda
+3.3V_Boost_Regulator_Chip.name=3.3V Boost Regulator Chip
+3.3V_LDO_Regulator_Chip.name=3.3V LDO Regulator Chip
 30A_Electrical_Breaker.name=30A elektrický jistič
 30A_Lead_Fuse.name=30A olověná pojistka
 400A_Electrical_Breaker.name=400A elektrický jistič
@@ -1242,7 +1263,9 @@ tile.eln.EnergyConverter.name=Exportér energie
 5A_Electrical_Breaker.name=5A elektrický jistič
 5A_Lead_Fuse.name=5A olověná pojistka
 5A_Switch.name=5A spínač
+5V_Boost_Regulator_Chip.name=5V Boost Regulator Chip
 5V_Control_Relay_10A.name=5V ovládací relé 10A
+5V_LDO_Regulator_Chip.name=5V LDO Regulator Chip
 60A_Electrical_Breaker.name=60A elektrický jistič
 AND_Chip.name=AND čip
 Advanced_Energy_Meter.name=Pokročilý elektroměr
@@ -1646,6 +1669,7 @@ Grid_Switch.name=Síťový spínač
 High_Power_Receiver_Antenna.name=Vysokovýkonná přijímací anténa
 High_Power_Transmitter_Antenna.name=Vysokovýkonná vysílací anténa
 Holiday_Candle.name=Sváteční svíčka
+Isolation_Transformer.name=Isolation Transformer
 Joint.name=Spoj
 Joint_hub.name=Spojovací rozbočovač
 Large_Flywheel.name=Velký setrvačník
@@ -1662,6 +1686,10 @@ Medium_Power_Receiver_Antenna.name=Středněvýkonná přijímací anténa
 Medium_Power_Transmitter_Antenna.name=Středněvýkonná vysílací anténa
 Nixie_Tube.name=Nixie trubice
 Old_480V_Arc_Furnace.name=480V oblouková pec
+One-way_Boost/Buck_vDC/DC_Converter.name=One-way Boost/Buck vDC/DC Converter
+One-way_Boost_vDC/DC_Converter.name=One-way Boost vDC/DC Converter
+One-way_Buck_vDC/DC_Converter.name=One-way Buck vDC/DC Converter
+One-way_DC-DC_Converter.name=One-way DC-DC Converter
 Overhead_Lines.name=Nadzemní vedení
 Polarized_Shaft_Generator.name=Polarizovaný hřídelový generátor
 Polarized_Shaft_Motor.name=Polarizovaný hřídelový motor
@@ -1786,6 +1814,15 @@ Provides_an_ideal_power_sink\nwithout_energy_or_power_limitation.=Poskytuje ide�
 # src/main/kotlin/mods/eln/sixnode/PowerSourceSix.kt
 Provides_an_ideal_power_source\nwithout_energy_or_power_limitation.=Poskytuje ideální zdroj výkonu\nbez omezení energie nebo výkonu.
 
+# src/main/kotlin/mods/eln/sixnode/RegulatorChips.kt
+Acts_as_an_ideal_regulated_voltage_source_inside_its_input_voltage_range.=Acts as an ideal regulated voltage source inside its input voltage range.
+Current_limit\:_%1$=Current limit: %1$
+Input\:_=Input: 
+Input_draw_and_current_limiting_are_simplified;_operation_outside_the_input_range_is_not_based_on_real_device_data.=Input draw and current limiting are simplified; operation outside the input range is not based on real device data.
+Input_range\:_%1$_to_%2$.=Input range: %1$ to %2$.
+Output\:_=Output: 
+Output_voltage\:_%1$=Output voltage: %1$
+
 # src/main/kotlin/mods/eln/sixnode/Scanner.kt
 -_For_inventories,_outputs_either_total_fill_or_fraction_of_slots_with_any_items.=- Pro inventáře vydává buď celkové zaplnění nebo podíl slotů s jakýmikoliv předměty.
 -_For_tanks,_outputs_fill_percentage.=- Pro nádrže vydává procento naplnění.
@@ -1818,6 +1855,7 @@ Black=Černá
 Blue=Modrá
 Brown=Hnědá
 Brush\:_paint_conductor_color=Štětec: barvení vodiče
+Cable_loss=Cable loss
 Conductor=Vodič
 Conductor\:_%1$_%2$=Vodič: %1$ %2$
 Conductor_colors\:_%1$=Barvy vodičů: %1$
@@ -1845,6 +1883,7 @@ White=Bílá
 Wire_color_care_%1$=Péče o barvu vodiče %1$
 Wrench\:_cycle_conductor_colors=Klíč: cyklovat barvy vodičů
 Yellow=Žlutá
+loss=loss
 
 # src/main/kotlin/mods/eln/sixnode/electricalhumiditysensor/ElectricalHumiditySensorDescriptor.kt
 0%%_RH\:_%1$V=0%% RV: %1$V
@@ -1917,6 +1956,9 @@ Biome_temperature=Teplota biomu
 # src/main/kotlin/mods/eln/transparentnode/DcDc.kt
 This_DC/DC_has_unrealistic_capacitance_effects_and_can_sink/source_power_that_violates_Newton's_laws=Tento DC/DC měnič má nerealistické kapacitní efekty a může spotřebovávat/dodávat výkon, což porušuje Newtonovy zákony
 
+# src/main/kotlin/mods/eln/transparentnode/DcDcWinding.kt
+Primary_and_secondary_windings_must_match_(%1$_vs_%2$)=Primary and secondary windings must match (%1$ vs %2$)
+
 # src/main/kotlin/mods/eln/transparentnode/Fabricator.kt
 Nominal_Ohms\:_%1$=Jmenovité ohmy: %1$
 Operation=Operace
@@ -1942,7 +1984,6 @@ Set_point\:_=Nastavená hodnota:
 Control_resistance_with_signal=Řízení odporu signálem
 Dissipates_~4kW_of_heat_passively=Pasivně odvádí ~4kW tepla
 Nom._Resistance\:_%1$=Jmen. odpor: %1$
-Power_loss=Ztrátový výkon
 Set_resistance_with_coal_dust=Nastavit odpor uhelným prachem
 __*_Resistance_is_not_impacted_by_temperature=  * Odpor není ovlivněn teplotou
 __*_Signal_input_doesn't_require_power=  * Signálový vstup nevyžaduje napájení
@@ -1976,8 +2017,6 @@ output_tank_level=úroveň výstupní nádrže
 thermal_power=tepelný výkon
 
 # src/main/kotlin/mods/eln/transparentnode/VariableDcDc.kt
-4_Copper_Cables_Required=4 měděné kabely vyžadovány
-Control_Voltage=Řídicí napětí
 The_output_voltage_is_controlled\nfrom_a_signal_input=Výstupní napětí je řízeno\nze signálového vstupu
 This_variable_DC/DC_has_unrealistic_capacitance_effects_and_can_sink/source_power_that_violates_Newton's_laws=Tento variabilní DC/DC měnič má nerealistické kapacitní efekty a může spotřebovávat/dodávat výkon, což porušuje Newtonovy zákony
 

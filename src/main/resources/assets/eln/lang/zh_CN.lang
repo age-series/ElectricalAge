@@ -1,11 +1,11 @@
 #<ELN_LANGFILE_V1_1>
 
 # Appearing in multiple source files
+%1$,_%2$,_%3$=%1$, %2$, %3$
 %1$_is_not_in_range!=%1$ 不在范围内!
 (Increases_capacity)=(增大电容)
 (Increases_inductance)=(增大电感)
 *_Missing_an_inductive_voltage_spike_on_field_collapse=* 磁场崩溃时缺少感应电压尖峰
-4_Copper_Cables_Required=需要4根铜导线
 A_relay_is_an_electrical\ncontact_that_conducts\ncurrent_when_a_signal\nvoltage_is_applied.=继电器是一种电气触点，\n当施加信号电压时导通电流。
 Accepted_lamp_types\:_%1$=支持的灯泡类型: %1$
 Acts_like_a\npush_button.=类似按钮。
@@ -14,6 +14,7 @@ Bad=差
 Battery_level=电池电量
 Biggest=最大
 Booster_slot=超频升级
+Broken=Broken
 Cable_slot=热管
 Can_create\:=可以制作:
 Capacity=电容
@@ -26,6 +27,7 @@ Charge_power\:_%1$W=充电功率: %1$W
 Closed=合上
 Condition\:_%1$=状况: %1$
 Connected=已连接
+Construction=Construction
 Control=控制
 Control_Voltage=控制电压
 Converts_%1$_into_mechanical_energy.=消耗%1$产生机械能
@@ -54,6 +56,7 @@ Generating=发电中
 Good=好
 Has_a_signal_output.=有一个信号输出
 Has_some_caveats\:=有一些注意事项:
+Incomplete=Incomplete
 Inductance=电感
 Inductance\:_%1$H=电感: %1$H
 Input=输入
@@ -76,7 +79,11 @@ Measured_temperature\ncorresponding\nto_0%_output=对应0%输出的\n测量温�
 Measured_temperature\ncorresponding\nto_100%_output=对应100%输出的\n测量温度
 Measured_value\ncorresponding\nto_0%_output=对应0%输出的\n测量值
 Measured_value\ncorresponding\nto_100%_output=对应100%输出的\n测量值
+Melted=Melted
+Melted_%1$_requires_replacement=Melted %1$ requires replacement
 Mode=模式
+Needs_%1$_Winding=Needs %1$ Winding
+Needs_Core=Needs Core
 New=新
 No=否
 No_valid_fluids_for_this_turbine!=没有有效的流体用于这个发动机!
@@ -97,17 +104,23 @@ ON=开
 Off=关
 On=开
 Open=打开
+Operational=Operational
 Output=输出
 Output_voltage=输出电压
+P\:_%1$_S\:_%2$=P: %1$ S: %2$
 Portable_battery_slot=便携电池
 Position=触点
 Power=功率
 Power\:_%1$W=功率: %1$W
 Power_Consumption=功率消耗
+Power_cable_or_wire_slot=Power cable or wire slot
 Power_consumption=消耗功率
+Power_loss=功率损耗
 Power_out\:_%1$-_%2$=输出功率: %1$- %2$
 Power_sourced=输出功率
 Powered_by_cable=导线供电
+Primary=Primary
+Primary_winding=Primary winding
 Produced_power=发电功率
 Range\:_%1$_blocks=范围: %1$ 格
 Ratio=转换比
@@ -119,6 +132,8 @@ Relative_humidity=相对湿度
 Reset=重置
 Resistance=电阻
 Resistance\:_%1$Ω=电阻: %1$Ω
+Secondary=Secondary
+Secondary_winding=Secondary winding
 Serial_resistance\:_%1$Ω=串联电阻: %1$Ω
 Signal=信号
 Smallest=最小
@@ -156,6 +171,7 @@ __*_Wire_resistance_is_not_impacted_by_temperature=  * 导线电阻不受温度�
 __Max._temperature\:_=  最高温度:
 __Optimal_rads\:_=  最佳转速:
 __Power_out\:_=  输出功率:
+empty=empty
 
 # src/main/java/mods/eln/Eln.java
 itemGroup.Eln=电力时代
@@ -1222,6 +1238,7 @@ tile.eln.EnergyConverter.name=能量转换器
 12V_Control_Relay_100A.name=继电器(12V,100A)
 12V_Control_Relay_20A.name=继电器(12V,20A)
 12V_Control_Relay_50A.name=继电器(12V,50A)
+12V_LDO_Regulator_Chip.name=12V LDO Regulator Chip
 15A_Electrical_Breaker.name=断路器(15A)
 15A_Lead_Fuse.name=铅保险丝(15A)
 200A_Electrical_Breaker.name=断路器(200A)
@@ -1234,6 +1251,8 @@ tile.eln.EnergyConverter.name=能量转换器
 240V_Type_E_Socket.name=E型插座(240V)
 240V_Type_J_Socket.name=J型插座(240V)
 25A_Diode.name=二极管(25A)
+3.3V_Boost_Regulator_Chip.name=3.3V Boost Regulator Chip
+3.3V_LDO_Regulator_Chip.name=3.3V LDO Regulator Chip
 30A_Electrical_Breaker.name=断路器(30A)
 30A_Lead_Fuse.name=铅保险丝(30A)
 400A_Electrical_Breaker.name=断路器(400A)
@@ -1244,7 +1263,9 @@ tile.eln.EnergyConverter.name=能量转换器
 5A_Electrical_Breaker.name=断路器(5A)
 5A_Lead_Fuse.name=铅保险丝(5A)
 5A_Switch.name=开关(5A)
+5V_Boost_Regulator_Chip.name=5V Boost Regulator Chip
 5V_Control_Relay_10A.name=继电器(5V,10A)
+5V_LDO_Regulator_Chip.name=5V LDO Regulator Chip
 60A_Electrical_Breaker.name=断路器(60A)
 AND_Chip.name=数字集成电路(与)
 Advanced_Energy_Meter.name=电表(高级)
@@ -1793,6 +1814,15 @@ Provides_an_ideal_power_sink\nwithout_energy_or_power_limitation.=提供理想�
 # src/main/kotlin/mods/eln/sixnode/PowerSourceSix.kt
 Provides_an_ideal_power_source\nwithout_energy_or_power_limitation.=提供理想功率源，\n无能量或功率限制。
 
+# src/main/kotlin/mods/eln/sixnode/RegulatorChips.kt
+Acts_as_an_ideal_regulated_voltage_source_inside_its_input_voltage_range.=Acts as an ideal regulated voltage source inside its input voltage range.
+Current_limit\:_%1$=Current limit: %1$
+Input\:_=Input: 
+Input_draw_and_current_limiting_are_simplified;_operation_outside_the_input_range_is_not_based_on_real_device_data.=Input draw and current limiting are simplified; operation outside the input range is not based on real device data.
+Input_range\:_%1$_to_%2$.=Input range: %1$ to %2$.
+Output\:_=Output: 
+Output_voltage\:_%1$=Output voltage: %1$
+
 # src/main/kotlin/mods/eln/sixnode/Scanner.kt
 -_For_inventories,_outputs_either_total_fill_or_fraction_of_slots_with_any_items.=- 对于物品容器，输出可以是总填充量百分比，或者是有物品的格子比例。
 -_For_tanks,_outputs_fill_percentage.=- 对于液体容器，输出填充百分比。
@@ -1825,6 +1855,7 @@ Black=黑
 Blue=蓝
 Brown=棕
 Brush\:_paint_conductor_color=使用刷子给导线涂色
+Cable_loss=Cable loss
 Conductor=导体
 Conductor\:_%1$_%2$=导体: %1$ %2$
 Conductor_colors\:_%1$=导体颜色: %1$
@@ -1852,6 +1883,7 @@ White=白
 Wire_color_care_%1$=导线颜色维护 %1$
 Wrench\:_cycle_conductor_colors=使用扳手:切换导线颜色
 Yellow=黄
+loss=loss
 
 # src/main/kotlin/mods/eln/sixnode/electricalhumiditysensor/ElectricalHumiditySensorDescriptor.kt
 0%%_RH\:_%1$V=0%相对湿度: %1$V
@@ -1924,6 +1956,9 @@ Biome_temperature=生物群系温度
 # src/main/kotlin/mods/eln/transparentnode/DcDc.kt
 This_DC/DC_has_unrealistic_capacitance_effects_and_can_sink/source_power_that_violates_Newton's_laws=此变压器有不真实的电容效应，可以吸收/输出违反牛顿定律的功率
 
+# src/main/kotlin/mods/eln/transparentnode/DcDcWinding.kt
+Primary_and_secondary_windings_must_match_(%1$_vs_%2$)=Primary and secondary windings must match (%1$ vs %2$)
+
 # src/main/kotlin/mods/eln/transparentnode/Fabricator.kt
 Nominal_Ohms\:_%1$=额定电阻: %1$
 Operation=目标
@@ -1949,7 +1984,6 @@ Set_point\:_=设定值:
 Control_resistance_with_signal=用信号控制电阻
 Dissipates_~4kW_of_heat_passively=提供4000W的被动散热
 Nom._Resistance\:_%1$=额定电阻: %1$
-Power_loss=功率损耗
 Set_resistance_with_coal_dust=用碳粉增加电阻
 __*_Resistance_is_not_impacted_by_temperature=  * 电阻不受温度影响
 __*_Signal_input_doesn't_require_power=  * 信号输入不需要电源
