@@ -14,7 +14,6 @@ Bad=差
 Battery_level=电池电量
 Biggest=最大
 Booster_slot=超频升级
-Broken=Broken
 Cable_slot=热管
 Can_create\:=可以制作:
 Capacity=电容
@@ -56,7 +55,6 @@ Generating=发电中
 Good=好
 Has_a_signal_output.=有一个信号输出
 Has_some_caveats\:=有一些注意事项:
-Incomplete=Incomplete
 Inductance=电感
 Inductance\:_%1$H=电感: %1$H
 Input=输入
@@ -104,7 +102,6 @@ ON=开
 Off=关
 On=开
 Open=打开
-Operational=Operational
 Output=输出
 Output_voltage=输出电压
 P\:_%1$_S\:_%2$=P: %1$ S: %2$
@@ -1957,6 +1954,10 @@ Biome_temperature=生物群系温度
 This_DC/DC_has_unrealistic_capacitance_effects_and_can_sink/source_power_that_violates_Newton's_laws=此变压器有不真实的电容效应，可以吸收/输出违反牛顿定律的功率
 
 # src/main/kotlin/mods/eln/transparentnode/DcDcWinding.kt
+%1$\:_%2$=%1$: %2$
+Broken=Broken
+Incomplete=Incomplete
+Operational=Operational
 Primary_and_secondary_windings_must_match_(%1$_vs_%2$)=Primary and secondary windings must match (%1$ vs %2$)
 
 # src/main/kotlin/mods/eln/transparentnode/Fabricator.kt

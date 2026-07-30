@@ -378,17 +378,19 @@ object TransparentNodeRegistration {
             desc.setDefaultIcon("onewayboostbuckvdcdcconverter")
             transparentNodeItem.addDescriptor(subId + (id shl 6), desc)
         }
-        run {
-            subId = 7
-            name = TR_NAME(I18N.Type.NONE, "Isolation Transformer")
-            val desc = OneWayDcDcDescriptor(
-                name, Eln.obj.getObj("isolationdcdc"), Eln.obj.getObj(
-                    "feromagneticcorea"
-                ), Eln.obj.getObj("transformatorCase"), OneWayDcDcMode.ISOLATION,
-                guiTexture = "isolationdcdc.png"
-            )
-            desc.setDefaultIcon("isolationtransformer")
-            transparentNodeItem.addDescriptor(subId + (id shl 6), desc)
+        if (Eln.instance.isDevelopmentRun) {
+            run {
+                subId = 7
+                name = TR_NAME(I18N.Type.NONE, "Isolation Transformer")
+                val desc = OneWayDcDcDescriptor(
+                    name, Eln.obj.getObj("isolationdcdc"), Eln.obj.getObj(
+                        "feromagneticcorea"
+                    ), Eln.obj.getObj("transformatorCase"), OneWayDcDcMode.ISOLATION,
+                    guiTexture = "isolationdcdc.png"
+                )
+                desc.setDefaultIcon("isolationtransformer")
+                transparentNodeItem.addDescriptor(subId + (id shl 6), desc)
+            }
         }
     }
 

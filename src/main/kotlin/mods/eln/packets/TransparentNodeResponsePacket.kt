@@ -3,15 +3,17 @@ package mods.eln.packets
 import cpw.mods.fml.common.network.ByteBufUtils
 import cpw.mods.fml.common.network.simpleimpl.IMessage
 import io.netty.buffer.ByteBuf
+import mods.eln.integration.waila.TransparentNodeWailaEntry
 import mods.eln.misc.Coordinate
-import java.util.*
 
 /**
  * Created by Gregory Maddra on 2016-06-27.
  */
 open class TransparentNodeResponsePacket : IMessage {
 
-    lateinit var map: Map<String, String>
+    lateinit var entries: List<TransparentNodeWailaEntry>
+    val map: Map<String, String>
+        get() = entries.associate { it.label to it.values.firstOrNull().orEmpty() }
     lateinit var coord: Coordinate
 
     constructor() {
@@ -19,41 +21,35 @@ open class TransparentNodeResponsePacket : IMessage {
     }
 
     constructor(m: Map<String, String>, c: Coordinate) {
-        map = m
+        entries = m.map { (label, value) -> TransparentNodeWailaEntry(label, listOf(value)) }
+        coord = c
+    }
+
+    constructor(entries: List<TransparentNodeWailaEntry>, c: Coordinate) {
+        this.entries = entries
         coord = c
     }
 
     override fun fromBytes(buf: ByteBuf?) {
-        var keys = listOf<String>()
-        var values = listOf<String>()
-        val length1 = ByteBufUtils.readVarInt(buf, 5)
-        for (i in 1..length1) {
-            keys += ByteBufUtils.readUTF8String(buf)
-        }
-        for (k in 1..length1) {
-            values += ByteBufUtils.readUTF8String(buf)
+        val length = ByteBufUtils.readVarInt(buf, 5)
+        entries = (1..length).map {
+            val label = ByteBufUtils.readUTF8String(buf)
+            val valueCount = ByteBufUtils.readVarInt(buf, 5)
+            TransparentNodeWailaEntry(label, (1..valueCount).map { ByteBufUtils.readUTF8String(buf) })
         }
         val x = ByteBufUtils.readVarInt(buf, 5)
         val y = ByteBufUtils.readVarInt(buf, 5)
         val z = ByteBufUtils.readVarInt(buf, 5)
         val w = ByteBufUtils.readVarInt(buf, 5)
         coord = Coordinate(x, y, z, w)
-        val i1 = keys.iterator()
-        val i2 = values.iterator()
-        var localmap = LinkedHashMap<String, String>()
-        while (i1.hasNext() && i2.hasNext()) {
-            localmap.put(i1.next(), i2.next())
-        }
-        map = localmap
     }
 
     override fun toBytes(buf: ByteBuf?) {
-        ByteBufUtils.writeVarInt(buf, map.size, 5)
-        for (element: String in map.keys.iterator()) {
-            ByteBufUtils.writeUTF8String(buf, element)
-        }
-        for (element: String in map.values.iterator()) {
-            ByteBufUtils.writeUTF8String(buf, element)
+        ByteBufUtils.writeVarInt(buf, entries.size, 5)
+        for (entry in entries) {
+            ByteBufUtils.writeUTF8String(buf, entry.label)
+            ByteBufUtils.writeVarInt(buf, entry.values.size, 5)
+            entry.values.forEach { ByteBufUtils.writeUTF8String(buf, it) }
         }
         ByteBufUtils.writeVarInt(buf, coord.x, 5)
         ByteBufUtils.writeVarInt(buf, coord.y, 5)

@@ -14,7 +14,6 @@ Bad=Κακό
 Battery_level=Επίπεδο μπαταρίας
 Biggest=Μεγαλύτερο
 Booster_slot=Θέση ενισχυτή
-Broken=Broken
 Cable_slot=Θέση καλωδίου
 Can_create\:=Μπορεί να δημιουργήσει:
 Capacity=Χωρητικότητα
@@ -56,7 +55,6 @@ Generating=Παράγει
 Good=Καλό
 Has_a_signal_output.=Διαθέτει έξοδο σήματος.
 Has_some_caveats\:=Έχει ορισμένες επιφυλάξεις:
-Incomplete=Incomplete
 Inductance=Επαγωγή
 Inductance\:_%1$H=Επαγωγή: %1$H
 Input=Είσοδος
@@ -104,7 +102,6 @@ ON=ΕΝΕΡΓΟ
 Off=Απενεργοποιημένο
 On=Ενεργοποιημένο
 Open=Ανοιχτό
-Operational=Operational
 Output=Έξοδος
 Output_voltage=Τάση εξόδου
 P\:_%1$_S\:_%2$=P: %1$ S: %2$
@@ -1957,6 +1954,10 @@ Biome_temperature=Θερμοκρασία βιώματος
 This_DC/DC_has_unrealistic_capacitance_effects_and_can_sink/source_power_that_violates_Newton's_laws=Αυτός ο DC/DC έχει μη ρεαλιστικά φαινόμενα χωρητικότητας και μπορεί να καταβυθίζει/παρέχει ισχύ που παραβιάζει τους νόμους του Νεύτωνα
 
 # src/main/kotlin/mods/eln/transparentnode/DcDcWinding.kt
+%1$\:_%2$=%1$: %2$
+Broken=Broken
+Incomplete=Incomplete
+Operational=Operational
 Primary_and_secondary_windings_must_match_(%1$_vs_%2$)=Primary and secondary windings must match (%1$ vs %2$)
 
 # src/main/kotlin/mods/eln/transparentnode/Fabricator.kt

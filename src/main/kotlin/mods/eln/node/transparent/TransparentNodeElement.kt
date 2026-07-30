@@ -2,6 +2,7 @@ package mods.eln.node.transparent
 
 import mods.eln.Eln
 import mods.eln.ghost.GhostObserver
+import mods.eln.integration.waila.TransparentNodeWailaEntry
 import mods.eln.misc.Coordinate
 import mods.eln.misc.Direction
 import mods.eln.misc.Direction.Companion.fromInt
@@ -420,6 +421,10 @@ abstract class TransparentNodeElement(@JvmField var node: TransparentNode?, @Jvm
         val wailaList: MutableMap<String, String> = HashMap()
         wailaList["Info"] = multiMeterString(front)
         return wailaList
+    }
+
+    open fun getWailaEntries(): List<TransparentNodeWailaEntry> = getWaila().map { (label, value) ->
+        TransparentNodeWailaEntry(label, value.split('\n'))
     }
 
     companion object {

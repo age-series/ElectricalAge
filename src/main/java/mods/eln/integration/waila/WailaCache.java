@@ -11,7 +11,7 @@ import mods.eln.packets.GhostNodeWailaRequestPacket;
 import mods.eln.packets.SixNodeWailaRequestPacket;
 import mods.eln.packets.TransparentNodeRequestPacket;
 
-import java.util.Map;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -19,7 +19,7 @@ import java.util.concurrent.TimeUnit;
  */
 public class WailaCache {
 
-    public static LoadingCache<Coordinate, Map<String, String>> nodes = CacheBuilder.newBuilder()
+    public static LoadingCache<Coordinate, List<TransparentNodeWailaEntry>> nodes = CacheBuilder.newBuilder()
         .maximumSize(20)
         .refreshAfterWrite(2, TimeUnit.SECONDS)
         .build(

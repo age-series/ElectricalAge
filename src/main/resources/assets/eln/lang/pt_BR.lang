@@ -14,7 +14,6 @@ Bad=Ruim
 Battery_level=Nível da bateria
 Biggest=Maior
 Booster_slot=Espaço de reforço
-Broken=Broken
 Cable_slot=Espaço de cabo
 Can_create\:=Pode criar:
 Capacity=Capacitância
@@ -56,7 +55,6 @@ Generating=Gerando
 Good=Bom
 Has_a_signal_output.=Possui uma saída de sinal.
 Has_some_caveats\:=Possui algumas ressalvas:
-Incomplete=Incomplete
 Inductance=Indutância
 Inductance\:_%1$H=Indutância: %1$H
 Input=Entrada
@@ -104,7 +102,6 @@ ON=LIG
 Off=Desligado
 On=Ligado
 Open=Aberto
-Operational=Operational
 Output=Saída
 Output_voltage=Tensão de saída
 P\:_%1$_S\:_%2$=P: %1$ S: %2$
@@ -1957,6 +1954,10 @@ Biome_temperature=Temperatura do bioma
 This_DC/DC_has_unrealistic_capacitance_effects_and_can_sink/source_power_that_violates_Newton's_laws=Este CC/CC tem efeitos de capacitância irrealistas e pode consumir/fornecer potência que viola as leis de Newton
 
 # src/main/kotlin/mods/eln/transparentnode/DcDcWinding.kt
+%1$\:_%2$=%1$: %2$
+Broken=Broken
+Incomplete=Incomplete
+Operational=Operational
 Primary_and_secondary_windings_must_match_(%1$_vs_%2$)=Primary and secondary windings must match (%1$ vs %2$)
 
 # src/main/kotlin/mods/eln/transparentnode/Fabricator.kt

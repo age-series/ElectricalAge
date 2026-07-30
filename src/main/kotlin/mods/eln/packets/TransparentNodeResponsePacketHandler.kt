@@ -10,9 +10,9 @@ import mods.eln.integration.waila.WailaCache
  */
 class TransparentNodeResponsePacketHandler : IMessageHandler<TransparentNodeResponsePacket, IMessage> {
     override fun onMessage(message: TransparentNodeResponsePacket?, ctx: MessageContext?): IMessage? {
-        val map = message!!.map
+        val entries = message!!.entries
         val coord = message.coord
-        WailaCache.nodes.put(coord, map)
+        WailaCache.nodes.put(coord, entries)
         return null
     }
 }

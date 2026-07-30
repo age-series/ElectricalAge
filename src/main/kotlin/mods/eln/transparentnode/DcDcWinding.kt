@@ -81,8 +81,7 @@ internal fun dcDcConstructionStatus(
 
 internal fun dcDcConstructionWaila(status: DcDcConstructionStatus): String {
     if (status.operational) return tr("Operational")
-    val title = if (status.broken) tr("Broken") else tr("Incomplete")
-    return title + status.messages.joinToString(separator = "") { "\n  * $it" }
+    return status.messages.joinToString(separator = "\n") { "  * $it" }
 }
 
 internal fun dcDcFlexibleConstructionStatus(

@@ -452,9 +452,7 @@ class DcDcElement(transparentNode: TransparentNode, descriptor: TransparentNodeD
         flexibleWindingProblem(primary, tr("Primary"))?.let(messages::add)
         flexibleWindingProblem(secondary, tr("Secondary"))?.let(messages::add)
         if (messages.isEmpty()) return tr("Operational")
-        val broken = messages.any { it.contains(tr("Melted")) }
-        val title = if (broken) tr("Broken") else tr("Incomplete")
-        return title + messages.joinToString(separator = "") { "\n  * $it" }
+        return messages.joinToString(separator = "\n") { "  * $it" }
     }
 
     private fun flexibleWindingProblem(stack: ItemStack?, label: String): String? {

@@ -14,7 +14,6 @@ Bad=Špatný
 Battery_level=Úroveň nabití baterie
 Biggest=Největší
 Booster_slot=Slot pro zesilovač
-Broken=Broken
 Cable_slot=Slot pro kabel
 Can_create\:=Umí vyrobit:
 Capacity=Kapacita
@@ -56,7 +55,6 @@ Generating=Vyrábí
 Good=Dobrý
 Has_a_signal_output.=Má signálový výstup.
 Has_some_caveats\:=Má několik výhrad:
-Incomplete=Incomplete
 Inductance=Indukčnost
 Inductance\:_%1$H=Indukčnost: %1$H
 Input=Vstup
@@ -104,7 +102,6 @@ ON=ZAP
 Off=Vypnuto
 On=Zapnuto
 Open=Otevřeno
-Operational=Operational
 Output=Výstup
 Output_voltage=Výstupní napětí
 P\:_%1$_S\:_%2$=P: %1$ S: %2$
@@ -1957,6 +1954,10 @@ Biome_temperature=Teplota biomu
 This_DC/DC_has_unrealistic_capacitance_effects_and_can_sink/source_power_that_violates_Newton's_laws=Tento DC/DC měnič má nerealistické kapacitní efekty a může spotřebovávat/dodávat výkon, což porušuje Newtonovy zákony
 
 # src/main/kotlin/mods/eln/transparentnode/DcDcWinding.kt
+%1$\:_%2$=%1$: %2$
+Broken=Broken
+Incomplete=Incomplete
+Operational=Operational
 Primary_and_secondary_windings_must_match_(%1$_vs_%2$)=Primary and secondary windings must match (%1$ vs %2$)
 
 # src/main/kotlin/mods/eln/transparentnode/Fabricator.kt

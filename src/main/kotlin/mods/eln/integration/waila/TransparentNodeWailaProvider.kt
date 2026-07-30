@@ -20,7 +20,14 @@ class TransparentNodeWailaProvider : IWailaDataProvider {
         val coord = Coordinate(accessor.position.blockX, accessor.position.blockY, accessor.position.blockZ,
             accessor.world)
         try {
-            WailaCache.nodes.get(coord)?.forEach { currenttip.add("${it.key}: ${SpecialChars.WHITE}${it.value}") }
+            WailaCache.nodes.get(coord)?.forEach { entry ->
+                if (entry.values.size == 1) {
+                    currenttip.add("${entry.label}: ${SpecialChars.WHITE}${entry.values.single()}")
+                } else {
+                    currenttip.add("${entry.label}:")
+                    entry.values.forEach { currenttip.add("${SpecialChars.WHITE}$it") }
+                }
+            }
         } catch(e: CacheLoader.InvalidCacheLoadException) {
             //This is probably just it complaining about the cache returning null. Should be safe to ignore.
         }

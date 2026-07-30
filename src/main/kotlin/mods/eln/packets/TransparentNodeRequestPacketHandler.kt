@@ -16,16 +16,16 @@ class TransparentNodeRequestPacketHandler : IMessageHandler<TransparentNodeReque
         val ghostElem = Eln.ghostManager.getGhost(c)
         if(ghostElem != null) c = ghostElem.observatorCoordonate!!
         val node = NodeManager.instance!!.getNodeFromCoordonate(c) as? TransparentNode
-        var stringMap: Map<String, String> = emptyMap()
+        var entries = emptyList<mods.eln.integration.waila.TransparentNodeWailaEntry>()
         if (node != null) {
             try {
-                stringMap = node.element!!.getWaila()
+                entries = node.element!!.getWailaEntries()
             } catch (e: NullPointerException) {
                 Utils.println("Attempted to get WAILA info for an invalid node!")
                 e.printStackTrace()
                 return null
             }
         }
-        return TransparentNodeResponsePacket(stringMap, c)
+        return TransparentNodeResponsePacket(entries, c)
     }
 }
