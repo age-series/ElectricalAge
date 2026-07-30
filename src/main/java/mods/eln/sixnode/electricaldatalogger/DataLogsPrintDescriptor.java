@@ -49,7 +49,8 @@ public class DataLogsPrintDescriptor extends GenericItemUsingDamageDescriptor {
         GL11.glTranslatef(-0.5f, -0.5f, 0.1f);
 
         UtilsClient.bindTexture(backgroundTexture);
-        UtilsClient.disableBilinear();
+        UtilsClient.TextureFilterState textureFilter = UtilsClient.saveTextureFilter();
+        UtilsClient.setNearestFilter();
         GL11.glEnable(GL11.GL_TEXTURE_2D);
         GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
         GL11.glBegin(GL11.GL_QUADS);
@@ -71,6 +72,7 @@ public class DataLogsPrintDescriptor extends GenericItemUsingDamageDescriptor {
         //	DataLogs.draw(logsArray, logsArray.length);
         GL11.glPopMatrix();
         GL11.glEnable(GL11.GL_LIGHTING);
+        UtilsClient.restoreTextureFilter(textureFilter);
         //}
     }
 }

@@ -63,14 +63,14 @@ object UtilsClient {
 
     fun drawHaloNoLightSetup(halo: Obj3DPart?, r: Float, g: Float, b: Float, w: World, x: Int, y: Int, z: Int, bilinear: Boolean) {
         if (halo == null) return
-        if (bilinear) enableBilinear()
-        val light = getLight(w, x, y, z) * 19 / 15 - 4
-        val e: Entity = clientPlayer
-        val d = (Math.abs(x - e.posX) + Math.abs(y - e.posY) + Math.abs(z - e.posZ)).toFloat()
-        GL11.glColor4f(r, g, b, 1f - light / 15f)
-        halo.draw(d * 20, 1f, 0f, 0f)
-        GL11.glColor4f(1f, 1f, 1f, 1f)
-        if (bilinear) disableBilinear()
+        withBilinearFilters(halo, bilinear) {
+            val light = getLight(w, x, y, z) * 19 / 15 - 4
+            val e: Entity = clientPlayer
+            val d = (Math.abs(x - e.posX) + Math.abs(y - e.posY) + Math.abs(z - e.posZ)).toFloat()
+            GL11.glColor4f(r, g, b, 1f - light / 15f)
+            halo.draw(d * 20, 1f, 0f, 0f)
+            GL11.glColor4f(1f, 1f, 1f, 1f)
+        }
     }
 
     @JvmStatic
@@ -102,9 +102,22 @@ object UtilsClient {
     @JvmStatic
     fun drawHaloNoLightSetup(halo: Obj3DPart?, @Suppress("UNUSED_PARAMETER") distance: Float) {
         if (halo == null) return
-        halo.faceGroup[0].bindTexture()
-        enableBilinear()
-        halo.drawNoBind()
+        // This overload deliberately draws without rebinding, using the first face group's texture.
+        // Preserve that behavior while restoring the texture's original filters afterward.
+        val faceGroup = halo.faceGroup.firstOrNull()
+        if (faceGroup?.textureResource == null) {
+            halo.drawNoBind()
+            return
+        }
+        faceGroup.bindTexture()
+        val filterState = saveTextureFilter()
+        setBilinearFilter()
+        try {
+            halo.drawNoBind()
+        } finally {
+            faceGroup.bindTexture()
+            restoreTextureFilter(filterState)
+        }
     }
 
     @JvmStatic
@@ -119,16 +132,12 @@ object UtilsClient {
     @JvmStatic
     fun drawHaloNoLightSetup(halo: Obj3DPart?, r: Float, g: Float, b: Float, e: Entity, bilinear: Boolean) {
         if (halo == null) return
-        if (bilinear) enableBilinear()
-        val light = getLight(e.worldObj, MathHelper.floor_double(e.posX), MathHelper.floor_double(e.posY), MathHelper.floor_double(e.posZ))
-        // light =
-        // e.worldObj.getLightBrightnessForSkyBlocks(MathHelper.floor_double(e.posX),
-        // MathHelper.floor_double(e.posY), MathHelper.floor_double(e.posZ),0);
-        // Utils.println(light);
-        GL11.glColor4f(r, g, b, 1f - light / 15f)
-        halo.draw()
-        GL11.glColor4f(1f, 1f, 1f, 1f)
-        if (bilinear) disableBilinear()
+        withBilinearFilters(halo, bilinear) {
+            val light = getLight(e.worldObj, MathHelper.floor_double(e.posX), MathHelper.floor_double(e.posY), MathHelper.floor_double(e.posZ))
+            GL11.glColor4f(r, g, b, 1f - light / 15f)
+            halo.draw()
+            GL11.glColor4f(1f, 1f, 1f, 1f)
+        }
     }
 
     @JvmStatic
@@ -140,16 +149,56 @@ object UtilsClient {
         disableBlend()
     }
 
+    data class TextureFilterState(val minFilter: Int, val magFilter: Int)
+
+    /** Saves the filters on the currently bound texture. */
     @JvmStatic
-    fun enableBilinear() {
+    fun saveTextureFilter(): TextureFilterState = TextureFilterState(
+        GL11.glGetTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER),
+        GL11.glGetTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER)
+    )
+
+    @JvmStatic
+    fun setBilinearFilter() {
         GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR)
         GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR)
     }
 
     @JvmStatic
-    fun disableBilinear() {
+    fun setNearestFilter() {
         GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_NEAREST)
         GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST)
+    }
+
+    @JvmStatic
+    fun restoreTextureFilter(state: TextureFilterState) {
+        GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, state.minFilter)
+        GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, state.magFilter)
+    }
+
+    private fun withBilinearFilters(halo: Obj3DPart, enabled: Boolean, draw: () -> Unit) {
+        if (!enabled) {
+            draw()
+            return
+        }
+
+        // Texture filters belong to texture objects, not OpenGL's transient draw state.
+        // Bind each texture this model can draw before changing it, then restore it afterward.
+        val filterStates = halo.faceGroup
+            .filter { it.textureResource != null }
+            .distinctBy { it.textureResource }
+            .map { faceGroup ->
+                faceGroup.bindTexture()
+                faceGroup to saveTextureFilter().also { setBilinearFilter() }
+            }
+        try {
+            draw()
+        } finally {
+            filterStates.forEach { (faceGroup, filterState) ->
+                faceGroup.bindTexture()
+                restoreTextureFilter(filterState)
+            }
+        }
     }
 
     @JvmStatic
