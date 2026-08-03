@@ -2,6 +2,7 @@ package mods.eln.partnode
 
 import cpw.mods.fml.common.registry.GameRegistry
 import mods.eln.integration.fmp.PartNodeMultipartItem
+import mods.eln.integration.fmp.PartNodeFmpPart
 import mods.eln.Eln
 import mods.eln.i18n.I18N
 import mods.eln.node.NodeManager.Companion.registerUuid
@@ -12,6 +13,7 @@ import net.minecraft.tileentity.TileEntity
 object PartNodeRegistry {
     var partNodeBlock: TestPartNodeBlock? = null
     var partNodeItem: Item? = null
+    var creativeResistorItem: Item? = null
 
     @JvmField
     var descriptor: TestPartNodeDescriptor? = null
@@ -29,7 +31,7 @@ object PartNodeRegistry {
         registerUuid(TestPartNode.nodeUuidStatic, TestPartNode::class.java)
 
         val block = TestPartNodeBlock(descriptor!!)
-        block.setCreativeTab(Eln.creativeTabCreative)
+        block.setCreativeTab(Eln.creativeTabFmp)
             .setBlockName(blockName)
             .setBlockTextureName("eln:conduit")
         GameRegistry.registerBlock(block, SimpleNodeItem::class.java, blockName)
@@ -38,8 +40,16 @@ object PartNodeRegistry {
         val item = PartNodeMultipartItem()
         item.setUnlocalizedName(partItemName)
         item.setTextureName("eln:conduit")
-        item.setCreativeTab(Eln.creativeTabCreative)
+        item.setCreativeTab(Eln.creativeTabFmp)
         GameRegistry.registerItem(item, partItemName)
         partNodeItem = item
+
+        val creativeResistorName = I18N.TR_NAME(I18N.Type.ITEM, "Creative Resistor (FMP)")
+        val creativeResistor = PartNodeMultipartItem(PartNodeFmpPart.CREATIVE_RESISTOR_TYPE)
+        creativeResistor.setUnlocalizedName(creativeResistorName)
+        creativeResistor.setTextureName("eln:powerresistor")
+        creativeResistor.setCreativeTab(Eln.creativeTabFmp)
+        GameRegistry.registerItem(creativeResistor, creativeResistorName)
+        creativeResistorItem = creativeResistor
     }
 }

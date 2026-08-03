@@ -23,6 +23,9 @@ public class PartNodeFmpFactory implements MultiPartRegistry.IPartFactory, Multi
         if (PartNodeFmpPart.TYPE.equals(name)) {
             return new PartNodeFmpPart();
         }
+        if (PartNodeFmpPart.CREATIVE_RESISTOR_TYPE.equals(name)) {
+            return new CreativeResistorFmpPart();
+        }
         return null;
     }
 

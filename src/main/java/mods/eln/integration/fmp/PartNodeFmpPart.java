@@ -1,6 +1,8 @@
 package mods.eln.integration.fmp;
 
 import codechicken.lib.vec.Cuboid6;
+import codechicken.lib.data.MCDataInput;
+import codechicken.lib.data.MCDataOutput;
 import codechicken.multipart.JCuboidPart;
 import codechicken.multipart.JNormalOcclusion;
 import codechicken.multipart.NormalOcclusionTest;
@@ -16,6 +18,7 @@ import java.util.List;
 public class PartNodeFmpPart extends JCuboidPart implements JNormalOcclusion {
 
     public static final String TYPE = "eln:part_node";
+    public static final String CREATIVE_RESISTOR_TYPE = "eln:creative_resistor";
     private byte side = 1;
 
     public PartNodeFmpPart() {
@@ -70,6 +73,16 @@ public class PartNodeFmpPart extends JCuboidPart implements JNormalOcclusion {
     public void load(NBTTagCompound tag) {
         super.load(tag);
         side = tag.getByte("side");
+    }
+
+    @Override
+    public void writeDesc(MCDataOutput packet) {
+        packet.writeByte(side);
+    }
+
+    @Override
+    public void readDesc(MCDataInput packet) {
+        side = packet.readByte();
     }
 
     @Override

@@ -15,7 +15,7 @@ public final class PartNodeFmpIntegration {
         }
 
         final PartNodeFmpFactory factory = new PartNodeFmpFactory();
-        MultiPartRegistry.registerParts(factory, new String[]{PartNodeFmpPart.TYPE});
+        MultiPartRegistry.registerParts(factory, new String[]{PartNodeFmpPart.TYPE, PartNodeFmpPart.CREATIVE_RESISTOR_TYPE});
         MultiPartRegistry.registerConverter(factory);
         registered = true;
     }
