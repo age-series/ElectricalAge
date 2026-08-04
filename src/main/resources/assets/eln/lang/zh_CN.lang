@@ -77,7 +77,6 @@ Measured_temperature\ncorresponding\nto_0%_output=对应0%输出的\n测量温�
 Measured_temperature\ncorresponding\nto_100%_output=对应100%输出的\n测量温度
 Measured_value\ncorresponding\nto_0%_output=对应0%输出的\n测量值
 Measured_value\ncorresponding\nto_100%_output=对应100%输出的\n测量值
-Melted=Melted
 Melted_%1$_requires_replacement=Melted %1$ requires replacement
 Mode=模式
 Needs_%1$_Winding=Needs %1$ Winding
@@ -102,6 +101,7 @@ ON=开
 Off=关
 On=开
 Open=打开
+Operational=Operational
 Output=输出
 Output_voltage=输出电压
 P\:_%1$_S\:_%2$=P: %1$ S: %2$
@@ -174,6 +174,7 @@ empty=empty
 itemGroup.Eln=电力时代
 itemGroup.ElnCables=电力时代 - 导线
 itemGroup.ElnCreative=电力时代 - 创造
+itemGroup.ElnFmp=Electrical Age - ForgeMultipart
 itemGroup.ElnLighting=电力时代 - 照明
 itemGroup.ElnMachines=电力时代 - 机器
 itemGroup.ElnOresMaterials=电力时代 - 矿石与材料
@@ -1012,6 +1013,12 @@ Hold_[shift]_for_details=按住 [shift] 查看详情
 mod.name=电力时代
 
 # src/main/kotlin/mods/eln/node/six/SixNodeDescriptor.kt
+
+# src/main/kotlin/mods/eln/partnode/PartNodeRegistry.kt
+item.Creative Resistor (FMP).name=Creative Resistor (FMP)
+item.eln.PartNodeMultipartItem.name=eln.PartNodeMultipartItem
+tile.eln.PartNode.name=eln.PartNode
+tile.eln.PartNodeEntity.name=eln.PartNodeEntity
 
 # src/main/kotlin/mods/eln/railroad/ElectricMinecartChargeReporter.kt
 Cart_Energy\:_=矿车能量:
@@ -1954,10 +1961,7 @@ Biome_temperature=生物群系温度
 This_DC/DC_has_unrealistic_capacitance_effects_and_can_sink/source_power_that_violates_Newton's_laws=此变压器有不真实的电容效应，可以吸收/输出违反牛顿定律的功率
 
 # src/main/kotlin/mods/eln/transparentnode/DcDcWinding.kt
-%1$\:_%2$=%1$: %2$
-Broken=Broken
-Incomplete=Incomplete
-Operational=Operational
+Melted=Melted
 Primary_and_secondary_windings_must_match_(%1$_vs_%2$)=Primary and secondary windings must match (%1$ vs %2$)
 
 # src/main/kotlin/mods/eln/transparentnode/Fabricator.kt

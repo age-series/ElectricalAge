@@ -41,6 +41,7 @@ import mods.eln.item.electricalinterface.ItemEnergyInventoryProcess;
 import mods.eln.item.lampitem.LampLists;
 import mods.eln.lightblock.LightBlock;
 import mods.eln.lightblock.LightBlockEntity;
+import mods.eln.integration.fmp.PartNodeFmpBootstrap;
 import mods.eln.misc.*;
 import mods.eln.mqtt.MqttManager;
 import mods.eln.metrics.MetricsSubsystem;
@@ -55,6 +56,7 @@ import mods.eln.ore.OreDescriptor;
 import mods.eln.ore.OreItem;
 import mods.eln.ore.OreScannerManager;
 import mods.eln.packets.*;
+import mods.eln.partnode.PartNodeRegistry;
 import mods.eln.registration.ItemRegistration;
 import mods.eln.registration.SingleNodeRegistration;
 import mods.eln.registration.SixNodeRegistration;
@@ -182,6 +184,7 @@ public class Eln {
     public static CreativeTabs creativeTabOresMaterials;
     public static CreativeTabs creativeTabMachines;
     public static CreativeTabs creativeTabCreative;
+    public static CreativeTabs creativeTabFmp;
     public static CreativeTabs creativeTabOther;
     public static Item swordCopper, hoeCopper, shovelCopper, pickaxeCopper, axeCopper;
     public static GenericItemUsingDamageDescriptorWithComment plateCopper;
@@ -376,6 +379,7 @@ public class Eln {
         creativeTabOresMaterials = new GenericCreativeTab("ElnOresMaterials", Items.iron_ingot);
         creativeTabMachines = new GenericCreativeTab("ElnMachines", Item.getItemFromBlock(Blocks.dispenser));
         creativeTabCreative = new GenericCreativeTab("ElnCreative", Items.nether_star);
+        creativeTabFmp = new GenericCreativeTab("ElnFmp", Items.redstone);
         creativeTabOther = creativeTabOresMaterials;
         creativeTab = creativeTabOther;
 
@@ -429,6 +433,7 @@ public class Eln {
 
         SingleNodeRegistration.INSTANCE.registerSingle();
         SixNodeRegistration.INSTANCE.registerSix();
+        PartNodeRegistry.INSTANCE.registerPartNodes();
         TransparentNodeRegistration.INSTANCE.registerTransparent();
         ItemRegistration.INSTANCE.registerItem();
 
@@ -487,6 +492,7 @@ public class Eln {
     @EventHandler
     public void modsLoaded(FMLPostInitializationEvent event) {
         Other.check();
+        PartNodeFmpBootstrap.registerIfPresent();
         if (Other.ccLoaded) {
             PeripheralHandler.register();
         }
@@ -513,6 +519,7 @@ public class Eln {
         TR_GROUP("ElnOresMaterials", "Electrical Age - Ores & Materials");
         TR_GROUP("ElnMachines", "Electrical Age - Machines");
         TR_GROUP("ElnCreative", "Electrical Age - Creative");
+        TR_GROUP("ElnFmp", "Electrical Age - ForgeMultipart");
         TR_GROUP("ElnOther", "Electrical Age - Other");
         if (isDevelopmentRun()) {
             Achievements.init();
@@ -629,6 +636,9 @@ public class Eln {
         setTabIcon(creativeTabOresMaterials, stack(sharedItem, meta(8, 7)));
         setTabIcon(creativeTabMachines, stack(transparentNodeItem, meta(33, 4)));
         setTabIcon(creativeTabCreative, stack(sixNodeItem, meta(3, 0)));
+        if (mods.eln.partnode.PartNodeRegistry.INSTANCE.getCreativeResistorItem() != null) {
+            setTabIcon(creativeTabFmp, new ItemStack(mods.eln.partnode.PartNodeRegistry.INSTANCE.getCreativeResistorItem()));
+        }
         if (creativeTabOther != creativeTabOresMaterials) {
             setTabIcon(creativeTabOther, stack(sharedItem, meta(8, 0)));
         }

@@ -50,4 +50,9 @@ dependencies {
     // i18n AST string extraction (build-time only, not in published jar)
     devOnlyNonPublishable "com.github.javaparser:javaparser-core:3.26.3"
     devOnlyNonPublishable "org.jetbrains.kotlin:kotlin-compiler-embeddable:2.2.21"
+
+    // ForgeMultipart is only needed for development/runtime integration.  Use
+    // covers1624's deobfuscated development artifacts rather than machine-local jars.
+    devOnlyNonPublishable "codechicken:CodeChickenLib:1.7.10-1.1.3.141:dev"
+    devOnlyNonPublishable "codechicken:ForgeMultipart:1.7.10-1.2.0.345:dev"
 }

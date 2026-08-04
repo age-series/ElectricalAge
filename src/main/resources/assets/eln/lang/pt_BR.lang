@@ -77,7 +77,6 @@ Measured_temperature\ncorresponding\nto_0%_output=Temperatura medida\ncorrespond
 Measured_temperature\ncorresponding\nto_100%_output=Temperatura medida\ncorrespondente\na 100% de saída
 Measured_value\ncorresponding\nto_0%_output=Valor medido\ncorrespondente\na 0% de saída
 Measured_value\ncorresponding\nto_100%_output=Valor medido\ncorrespondente\na 100% de saída
-Melted=Melted
 Melted_%1$_requires_replacement=Melted %1$ requires replacement
 Mode=Modo
 Needs_%1$_Winding=Needs %1$ Winding
@@ -102,6 +101,7 @@ ON=LIG
 Off=Desligado
 On=Ligado
 Open=Aberto
+Operational=Operational
 Output=Saída
 Output_voltage=Tensão de saída
 P\:_%1$_S\:_%2$=P: %1$ S: %2$
@@ -174,6 +174,7 @@ empty=empty
 itemGroup.Eln=Electrical Age
 itemGroup.ElnCables=Electrical Age - Cabos
 itemGroup.ElnCreative=Electrical Age - Criativo
+itemGroup.ElnFmp=Electrical Age - ForgeMultipart
 itemGroup.ElnLighting=Electrical Age - Iluminação
 itemGroup.ElnMachines=Electrical Age - Máquinas
 itemGroup.ElnOresMaterials=Electrical Age - Minérios e Materiais
@@ -1012,6 +1013,12 @@ Hold_[shift]_for_details=Segure [shift] para detalhes
 mod.name=Electrical Age
 
 # src/main/kotlin/mods/eln/node/six/SixNodeDescriptor.kt
+
+# src/main/kotlin/mods/eln/partnode/PartNodeRegistry.kt
+item.Creative Resistor (FMP).name=Creative Resistor (FMP)
+item.eln.PartNodeMultipartItem.name=eln.PartNodeMultipartItem
+tile.eln.PartNode.name=eln.PartNode
+tile.eln.PartNodeEntity.name=eln.PartNodeEntity
 
 # src/main/kotlin/mods/eln/railroad/ElectricMinecartChargeReporter.kt
 Cart_Energy\:_=Energia do Carrinho: 
@@ -1954,10 +1961,7 @@ Biome_temperature=Temperatura do bioma
 This_DC/DC_has_unrealistic_capacitance_effects_and_can_sink/source_power_that_violates_Newton's_laws=Este CC/CC tem efeitos de capacitância irrealistas e pode consumir/fornecer potência que viola as leis de Newton
 
 # src/main/kotlin/mods/eln/transparentnode/DcDcWinding.kt
-%1$\:_%2$=%1$: %2$
-Broken=Broken
-Incomplete=Incomplete
-Operational=Operational
+Melted=Melted
 Primary_and_secondary_windings_must_match_(%1$_vs_%2$)=Primary and secondary windings must match (%1$ vs %2$)
 
 # src/main/kotlin/mods/eln/transparentnode/Fabricator.kt
