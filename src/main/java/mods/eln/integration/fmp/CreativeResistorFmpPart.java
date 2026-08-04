@@ -6,6 +6,10 @@ import codechicken.lib.data.MCDataInput;
 import codechicken.lib.data.MCDataOutput;
 import mods.eln.Eln;
 import mods.eln.misc.Utils;
+import mods.eln.misc.Coordinate;
+import mods.eln.node.NodeManager;
+import mods.eln.partnode.FmpCreativeResistorElement;
+import mods.eln.partnode.FmpMultipartNode;
 import mods.eln.sixnode.CreativePowerResistorDescriptor;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.entity.player.EntityPlayer;
@@ -24,6 +28,8 @@ public class CreativeResistorFmpPart extends PartNodeFmpPart {
     private double resistance = 100.0;
     private byte mountSide = 1;
     private byte rotation;
+    private transient FmpMultipartNode node;
+    private transient FmpCreativeResistorElement element;
 
     public CreativeResistorFmpPart() {
     }
@@ -126,12 +132,34 @@ public class CreativeResistorFmpPart extends PartNodeFmpPart {
     }
 
     @Override
+    public void onAdded() {
+        super.onAdded();
+        createNode();
+    }
+
+    @Override
+    public void onRemoved() {
+        destroyNode();
+        super.onRemoved();
+    }
+
+    @Override
+    public void onNeighborChanged() {
+        super.onNeighborChanged();
+        if (node != null) {
+            node.reconnect();
+        }
+    }
+
+    @Override
     public boolean activate(EntityPlayer player, MovingObjectPosition hit, ItemStack heldItem) {
         if (!Utils.isPlayerUsingWrench(player)) {
             return false;
         }
         if (!world().isRemote) {
             rotation = (byte) ((rotation + 1) & 3);
+            destroyNode();
+            createNode();
             sendDescUpdate();
         }
         return true;
@@ -142,6 +170,32 @@ public class CreativeResistorFmpPart extends PartNodeFmpPart {
             descriptor = new CreativePowerResistorDescriptor("Creative Power Resistor", Eln.obj.getObj("PowerElectricPrimitives"));
         }
         return descriptor;
+    }
+
+    private void createNode() {
+        if (world() == null || world().isRemote || node != null || NodeManager.instance == null) return;
+        final Coordinate coordinate = new Coordinate(x(), y(), z(), world().provider.dimensionId);
+        final Object existing = NodeManager.instance.getNodeFromCoordonate(coordinate);
+        if (existing instanceof FmpMultipartNode) {
+            node = (FmpMultipartNode) existing;
+        } else {
+            node = new FmpMultipartNode();
+            node.coordinate = coordinate;
+            NodeManager.instance.addNode(node);
+        }
+        element = new FmpCreativeResistorElement(mountSide, rotation, resistance);
+        node.addElement(element);
+    }
+
+    private void destroyNode() {
+        if (node == null) return;
+        if (element != null) node.removeElement(element);
+        if (node.isEmpty()) {
+            node.disconnect();
+            if (NodeManager.instance != null) NodeManager.instance.removeNode(node);
+        }
+        element = null;
+        node = null;
     }
 
     private Cuboid6 horizontalBounds(double minY, double maxY) {

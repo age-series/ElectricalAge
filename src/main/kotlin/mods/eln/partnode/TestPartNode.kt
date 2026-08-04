@@ -2,7 +2,6 @@ package mods.eln.partnode
 
 import mods.eln.misc.Direction
 import mods.eln.misc.LRDU
-import mods.eln.node.partnode.PartNode
 import mods.eln.node.partnode.PartNodeBlock
 import mods.eln.node.partnode.PartNodeDescriptor
 import mods.eln.node.partnode.PartNodeEntity
@@ -29,7 +28,7 @@ class TestPartNodeBlock(descriptor: TestPartNodeDescriptor) : PartNodeBlock(Mate
     }
 }
 
-class TestPartNode : PartNode() {
+class TestPartNode : SimpleNode() {
     override val nodeUuid: String
         get() = nodeUuidStatic
 
