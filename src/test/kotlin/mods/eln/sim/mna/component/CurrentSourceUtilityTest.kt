@@ -21,6 +21,25 @@ class CurrentSourceUtilityTest {
     }
 
     @Test
+    fun currentsIntoSameNodeAreAccumulated() {
+        disableLog4jJmx()
+        val node = VoltageState()
+        val sourceA = CurrentSource("a", node, null).setCurrent(2.0)
+        val sourceB = CurrentSource("b", node, null).setCurrent(3.0)
+        val load = Resistor(node, null).setResistance(1.0)
+
+        val subSystem = SubSystem(null, 0.1)
+        subSystem.addState(node)
+        subSystem.addComponent(sourceA)
+        subSystem.addComponent(sourceB)
+        subSystem.addComponent(load)
+
+        subSystem.step()
+
+        assertEquals(5.0, node.state)
+    }
+
+    @Test
     fun quitSubSystemRemovesProcess() {
         disableLog4jJmx()
         val a = VoltageState()

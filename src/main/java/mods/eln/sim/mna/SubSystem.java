@@ -242,7 +242,7 @@ public class SubSystem {
 
     public void addToI(State s, double v) {
         if (s == null) return;
-        Idata[s.getId()] = v;
+        Idata[s.getId()] += v;
     }
 
     public void step() {
