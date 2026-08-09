@@ -3,22 +3,19 @@ package mods.eln.railroad
 import mods.eln.Eln
 import mods.eln.cable.CableRenderDescriptor
 import mods.eln.i18n.I18N
-import mods.eln.misc.Coordinate
-import mods.eln.misc.Direction
-import mods.eln.misc.LRDU
-import mods.eln.misc.LRDUMask
-import mods.eln.misc.Obj3D
+import mods.eln.misc.*
 import mods.eln.misc.Utils.getBlock
+import mods.eln.misc.Utils.isWailaEasyModeEnabled
 import mods.eln.misc.Utils.plotPower
 import mods.eln.misc.Utils.plotVolt
 import mods.eln.node.NodeBase
 import mods.eln.node.transparent.*
+import mods.eln.railroad.PoweredMinecartSimulationSingleton.poweredMinecartSimulationData
 import mods.eln.sim.ElectricalConnection
 import mods.eln.sim.ElectricalLoad
 import mods.eln.sim.mna.component.Resistor
 import mods.eln.sim.mna.misc.MnaConst
 import mods.eln.sim.nbt.NbtElectricalLoad
-import mods.eln.railroad.PoweredMinecartSimulationSingleton.poweredMinecartSimulationData
 import java.io.DataInputStream
 import java.io.DataOutputStream
 import java.io.IOException
@@ -85,7 +82,7 @@ class OverheadLinesElement(node: TransparentNode?,
     override fun getWaila(): Map<String, String> {
         val info: MutableMap<String, String> = HashMap()
         info[I18N.tr("Voltage")] = plotVolt("", electricalLoad.voltage)
-        if (Eln.config.getBooleanOrElse("ui.waila.easyMode", false)) {
+        if (isWailaEasyModeEnabled()) {
             info[I18N.tr("Power")] = plotPower("", electricalLoad.current * electricalLoad.voltage)
         }
         val ss = electricalLoad.subSystem

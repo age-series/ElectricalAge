@@ -10,21 +10,10 @@ import mods.eln.gui.IGuiObject
 import mods.eln.gui.ISlotSkin
 import mods.eln.i18n.I18N.tr
 import mods.eln.item.FerromagneticCoreDescriptor
-import mods.eln.misc.BasicContainer
-import mods.eln.misc.Direction
-import mods.eln.misc.IFunction
-import mods.eln.misc.LRDU
-import mods.eln.misc.Obj3D
-import mods.eln.misc.RealisticEnum
-import mods.eln.misc.Utils
-import mods.eln.misc.VoltageLevelColor
+import mods.eln.misc.*
+import mods.eln.misc.Utils.isWailaEasyModeEnabled
 import mods.eln.node.NodeBase
-import mods.eln.node.six.SixNode
-import mods.eln.node.six.SixNodeDescriptor
-import mods.eln.node.six.SixNodeElement
-import mods.eln.node.six.SixNodeElementInventory
-import mods.eln.node.six.SixNodeElementRender
-import mods.eln.node.six.SixNodeEntity
+import mods.eln.node.six.*
 import mods.eln.sim.ElectricalLoad
 import mods.eln.sim.IProcess
 import mods.eln.sim.ThermalLoad
@@ -37,13 +26,11 @@ import net.minecraft.client.gui.GuiScreen
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.inventory.Container
 import net.minecraft.inventory.IInventory
-import net.minecraft.inventory.Slot
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraftforge.client.IItemRenderer
 import org.lwjgl.opengl.GL11
-import java.util.HashMap
 import kotlin.math.abs
 import kotlin.math.roundToInt
 
@@ -239,7 +226,7 @@ class VariableInductorSixElement(
         info[tr("Inductance")] = Utils.plotValue(inductor.inductance, "H")
         info[tr("Charge")] = Utils.plotEnergy("", inductor.energy)
         info[tr("Control")] = Utils.plotPercent("", controlNormalized())
-        if (Eln.config.getBooleanOrElse("ui.waila.easyMode", false)) {
+        if (isWailaEasyModeEnabled()) {
             info[tr("Voltage drop")] = Utils.plotVolt("", abs(inductor.voltage))
             info[tr("Current")] = Utils.plotAmpere("", abs(inductor.current))
         }

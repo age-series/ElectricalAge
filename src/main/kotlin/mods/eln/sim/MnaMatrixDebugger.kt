@@ -14,8 +14,7 @@ import mods.eln.sim.mna.state.State
 import java.io.File
 import java.io.IOException
 import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
+import java.util.*
 
 /**
  * Logs the conductance matrices that the MNA solver builds for a given node or element.
@@ -26,7 +25,7 @@ object MnaMatrixDebugger {
     private val TIMESTAMP_FORMAT = SimpleDateFormat("yyyyMMdd-HHmmss-SSS", Locale.ROOT)
 
     fun dump(target: Any?, reason: String? = null) {
-        if (!Eln.config.getBooleanOrElse("debug.logging.enabled", false) || !Eln.config.getBooleanOrElse("debug.logging.simSnapshot", false)) {
+        if (!Utils.isDebugEnabled() || !Eln.config.getBooleanOrElse("debug.logging.simSnapshot", false)) {
             return
         }
 

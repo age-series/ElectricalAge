@@ -12,18 +12,13 @@ import mods.eln.gui.ISlotSkin.SlotSkin
 import mods.eln.i18n.I18N.tr
 import mods.eln.item.CaseItemDescriptor
 import mods.eln.item.ConfigCopyToolDescriptor
-import mods.eln.item.CopperCableDescriptor
 import mods.eln.item.FerromagneticCoreDescriptor
 import mods.eln.item.IConfigurable
 import mods.eln.misc.*
+import mods.eln.misc.Utils.isWailaEasyModeEnabled
 import mods.eln.node.NodeBase
 import mods.eln.node.NodePeriodicPublishProcess
-import mods.eln.node.transparent.TransparentNode
-import mods.eln.node.transparent.TransparentNodeDescriptor
-import mods.eln.node.transparent.TransparentNodeElement
-import mods.eln.node.transparent.TransparentNodeElementInventory
-import mods.eln.node.transparent.TransparentNodeElementRender
-import mods.eln.node.transparent.TransparentNodeEntity
+import mods.eln.node.transparent.*
 import mods.eln.sim.ElectricalLoad
 import mods.eln.sim.IProcess
 import mods.eln.sim.ThermalLoad
@@ -431,7 +426,7 @@ class DcDcElement(transparentNode: TransparentNode, descriptor: TransparentNodeD
             secondaryVoltageSource.current,
             secondaryThermalLoad
         )
-        if (Eln.config.getBooleanOrElse("ui.waila.easyMode", false)) {
+        if (isWailaEasyModeEnabled()) {
             info[tr("Voltages")] = "\u00A7a" + Utils.plotVolt("", primaryLoad.voltage) + " " +
                 "\u00A7e" + Utils.plotVolt("", secondaryLoad.voltage)
         }

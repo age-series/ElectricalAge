@@ -5,20 +5,19 @@ import com.google.gson.JsonElement
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import mods.eln.Eln
-import mods.eln.metrics.MetricsSubsystem
 import mods.eln.Other
 import mods.eln.item.TurbineBladeLists
 import mods.eln.item.lampitem.BoilerplateLampData
 import mods.eln.item.lampitem.LampLists
 import mods.eln.mechanical.ClutchPlateItem
+import mods.eln.metrics.MetricsSubsystem
 import mods.eln.misc.Utils
 import java.io.File
 import java.io.FileReader
 import java.io.FileWriter
 import java.nio.file.Files
 import java.nio.file.StandardCopyOption
-import java.util.Locale
-import java.util.UUID
+import java.util.*
 import java.util.regex.PatternSyntaxException
 import kotlin.math.max
 import kotlin.math.min
@@ -263,7 +262,6 @@ class JsonConfig @JvmOverloads constructor(
         Eln.simMetricsMqttServer = getStringOrElse("integrations.mqtt.simMetrics.server", "")
         Eln.simMetricsId = getStringOrElse("integrations.mqtt.simMetrics.id", "server")
         Eln.simMetricsPublishIntervalTicks = max(1, getIntOrElse("integrations.mqtt.simMetrics.publishIntervalTicks", 20))
-        Eln.debugEnabled = getBooleanOrElse("debug.logging.enabled", false)
         MetricsSubsystem.refreshFromConfig()
 
         setRuntimeValue(

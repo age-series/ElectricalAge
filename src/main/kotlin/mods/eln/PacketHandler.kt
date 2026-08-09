@@ -3,10 +3,11 @@ package mods.eln
 import cpw.mods.fml.common.eventhandler.SubscribeEvent
 import cpw.mods.fml.common.network.FMLNetworkEvent.ServerCustomPacketEvent
 import io.netty.channel.ChannelHandler.Sharable
-import mods.eln.client.ClientKeyHandler
 import mods.eln.client.ClientProxy
+import mods.eln.config.ClientConfigSyncHandler
 import mods.eln.item.FalstadImportPacketHandler
 import mods.eln.misc.Coordinate
+import mods.eln.misc.Utils
 import mods.eln.misc.Utils.println
 import mods.eln.misc.Utils.sendPacketToClient
 import mods.eln.node.INodeEntity
@@ -17,11 +18,7 @@ import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.entity.player.EntityPlayerMP
 import net.minecraft.network.NetHandlerPlayServer
 import net.minecraft.network.NetworkManager
-import java.io.ByteArrayInputStream
-import java.io.ByteArrayOutputStream
-import java.io.DataInputStream
-import java.io.DataOutputStream
-import java.io.IOException
+import java.io.*
 
 @Sharable
 class PacketHandler {
@@ -47,6 +44,7 @@ class PacketHandler {
                 Eln.packetClientToServerConnection -> packetNewClient(manager, player)
                 Eln.packetServerToClientInfo -> packetServerInfo(stream, manager, player)
                 Eln.packetFalstadImport -> packetFalstadImport(stream, manager, player)
+                Eln.packetServerConfigSync -> packetServerConfigSync(stream, manager, player)
             }
         } catch (e: IOException) {
             e.printStackTrace()
@@ -176,11 +174,12 @@ class PacketHandler {
         }
     }
 
-    private fun packetPlayerKey(stream: DataInputStream, @Suppress("UNUSED_PARAMETER") manager: NetworkManager, @Suppress("UNUSED_PARAMETER") player: EntityPlayer?) {
+    private fun packetPlayerKey(stream: DataInputStream, @Suppress("UNUSED_PARAMETER") manager: NetworkManager, player: EntityPlayer) {
         try {
             val name = stream.readUTF()
             val state = stream.readBoolean()
-            ServerKeyHandler.set(name, state)
+            ServerKeyHandler.set(name, state, player)
+            Utils.println("Server received a client key event from player $player: $name is $state")
         } catch (e: IOException) {
             e.printStackTrace()
         }
@@ -192,6 +191,23 @@ class PacketHandler {
             val bytes = ByteArray(length)
             stream.readFully(bytes)
             FalstadImportPacketHandler.handle(player as EntityPlayerMP, bytes)
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
+    }
+
+    private fun packetServerConfigSync(stream: DataInputStream, @Suppress("UNUSED_PARAMETER") manager: NetworkManager, @Suppress("UNUSED_PARAMETER") player: EntityPlayer) {
+        try {
+            val configName = stream.readUTF()
+            val configValue: Any? = when (stream.readChar()) {
+                'b' -> stream.readBoolean()
+                'i' -> stream.readInt()
+                'd' -> stream.readDouble()
+                's' -> stream.readUTF()
+                else -> null // This should not happen unless the wrong char is mistakenly sent
+            }
+            ClientConfigSyncHandler.setSyncedConfigEntry(configName, configValue)
+            Utils.println("Successfully received a config entry ($configName, $configValue) from the server.")
         } catch (e: IOException) {
             e.printStackTrace()
         }

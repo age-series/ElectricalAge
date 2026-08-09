@@ -153,7 +153,7 @@ public class WindTurbineElement extends TransparentNodeElement {
         wailaList.put(I18N.tr("Wind"), Utils.plotValue(slowProcess.getWind(), "m/s"));
         wailaList.put(I18N.tr("Rotor speed"), Utils.plotRads("", slowProcess.getRotorRads()));
         wailaList.put(I18N.tr("Produced power"), Utils.plotPower("", Math.max(0.0, powerSource.getPower())));
-        if (Eln.config.getBooleanOrElse("ui.waila.easyMode", false)) {
+        if (Utils.isWailaEasyModeEnabled()) {
             wailaList.put(I18N.tr("Voltage"), Utils.plotVolt("", powerSource.getVoltage()));
             wailaList.put(I18N.tr("Current"), Utils.plotAmpere("", powerSource.getCurrent()));
             wailaList.put(I18N.tr("Current limit"), Utils.plotAmpere("", regulatorCurrentLimitRequest));

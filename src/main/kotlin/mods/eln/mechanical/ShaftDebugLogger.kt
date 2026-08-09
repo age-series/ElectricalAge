@@ -3,17 +3,17 @@ package mods.eln.mechanical
 import mods.eln.Eln
 import mods.eln.misc.Coordinate
 import mods.eln.misc.Direction
+import mods.eln.misc.Utils
 import mods.eln.node.NodeManager
 import mods.eln.node.transparent.TransparentNode
-import java.util.Collections
-import java.util.IdentityHashMap
+import java.util.*
 
 object ShaftDebugLogger {
     private var lastSecond = Long.MIN_VALUE
     private val dumpedNetworks = Collections.newSetFromMap(IdentityHashMap<ShaftNetwork, Boolean>())
 
     fun logElement(element: ShaftElement) {
-        if (!Eln.config.getBooleanOrElse("debug.logging.enabled", false)) return
+        if (!Utils.isDebugEnabled()) return
 
         val coordinate = element.coordonate()
         if (!coordinate.worldExist) return

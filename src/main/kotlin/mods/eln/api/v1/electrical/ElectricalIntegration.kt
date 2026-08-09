@@ -5,19 +5,17 @@ package mods.eln.api.v1.electrical
 import mods.eln.Eln
 import mods.eln.misc.Coordinate
 import mods.eln.misc.Direction
-import mods.eln.misc.Utils
 import mods.eln.misc.LRDU
+import mods.eln.misc.Utils
 import mods.eln.node.GhostNode
-import mods.eln.node.NodeManager
 import mods.eln.node.NodeBase
+import mods.eln.node.NodeManager
 import mods.eln.sim.ElectricalConnection
-import mods.eln.sim.ElectricalLoad as SimElectricalLoad
 import mods.eln.sim.IProcess
 import mods.eln.sim.SignalLoadSupport
 import mods.eln.sim.Simulator
 import mods.eln.sim.mna.component.Component
 import mods.eln.sim.mna.component.Resistor
-import mods.eln.sim.mna.component.VoltageSource as InternalVoltageSource
 import mods.eln.sim.nbt.NbtElectricalGateOutputProcess
 import mods.eln.sim.nbt.NbtElectricalLoad
 import mods.eln.sim.process.destruct.IDestructible
@@ -26,7 +24,9 @@ import mods.eln.sim.process.destruct.VoltageStateWatchDog
 import net.minecraft.entity.EntityLivingBase
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
-import java.util.Locale
+import java.util.*
+import mods.eln.sim.ElectricalLoad as SimElectricalLoad
+import mods.eln.sim.mna.component.VoltageSource as InternalVoltageSource
 
 /**
  * Stable versioned electrical integration API exposed for external mods.
@@ -1939,7 +1939,7 @@ object ElectricalIntegration {
     }
 
     private fun apiDebug(message: String, vararg args: Any?) {
-        if (!Eln.config.getBooleanOrElse("debug.logging.enabled", false)) return
+        if (!Utils.isDebugEnabled()) return
         Eln.LOGGER.info("[ElectricalApiV1] $message", *args)
     }
 

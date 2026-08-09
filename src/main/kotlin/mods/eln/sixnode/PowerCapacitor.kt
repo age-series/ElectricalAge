@@ -3,25 +3,15 @@ package mods.eln.sixnode
 import mods.eln.Eln
 import mods.eln.generic.GenericItemUsingDamageDescriptor
 import mods.eln.generic.GenericItemUsingDamageSlot
-import mods.eln.gui.GuiContainerEln
-import mods.eln.gui.GuiHelperContainer
-import mods.eln.gui.IGuiObject
-import mods.eln.gui.ISlotSkin
-import mods.eln.gui.ItemStackFilter
-import mods.eln.gui.SlotFilter
-import mods.eln.i18n.I18N
+import mods.eln.gui.*
 import mods.eln.i18n.I18N.tr
 import mods.eln.item.DielectricItem
 import mods.eln.item.IConfigurable
 import mods.eln.item.ItemMovingHelper
 import mods.eln.misc.*
+import mods.eln.misc.Utils.isWailaEasyModeEnabled
 import mods.eln.node.NodeBase
-import mods.eln.node.six.SixNode
-import mods.eln.node.six.SixNodeDescriptor
-import mods.eln.node.six.SixNodeElement
-import mods.eln.node.six.SixNodeElementInventory
-import mods.eln.node.six.SixNodeElementRender
-import mods.eln.node.six.SixNodeEntity
+import mods.eln.node.six.*
 import mods.eln.sim.ElectricalLoad
 import mods.eln.sim.IProcess
 import mods.eln.sim.ThermalLoad
@@ -41,7 +31,6 @@ import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraftforge.client.IItemRenderer
 import org.lwjgl.opengl.GL11
-import java.util.HashMap
 import kotlin.math.abs
 import kotlin.math.pow
 
@@ -180,7 +169,7 @@ class PowerCapacitorSixElement(SixNode: SixNode, side: Direction, descriptor: Si
         val info: MutableMap<String, String> = HashMap()
         info[tr("Capacity")] = Utils.plotValue(capacitor.coulombs, "F")
         info[tr("Charge")] = Utils.plotEnergy("", capacitor.energy)
-        if (Eln.config.getBooleanOrElse("ui.waila.easyMode", false)) {
+        if (isWailaEasyModeEnabled()) {
             info[tr("Voltage drop")] = Utils.plotVolt("", Math.abs(capacitor.voltage))
             info[tr("Current")] = Utils.plotAmpere("", Math.abs(capacitor.current))
         }

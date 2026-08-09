@@ -1,6 +1,5 @@
 package mods.eln.sixnode.batterycharger;
 
-import mods.eln.Eln;
 import mods.eln.i18n.I18N;
 import mods.eln.item.MachineBoosterDescriptor;
 import mods.eln.item.electricalinterface.IItemEnergyBattery;
@@ -117,7 +116,7 @@ public class BatteryChargerElement extends SixNodeElement {
     public Map<String, String> getWaila() {
         Map<String, String> info = new HashMap<String, String>();
         info.put(I18N.tr("Charge Current"), Utils.plotAmpere("", powerLoad.getCurrent()));
-        if (Eln.config.getBooleanOrElse("ui.waila.easyMode", false)) {
+        if (Utils.isWailaEasyModeEnabled()) {
             info.put(I18N.tr("Voltage"), Utils.plotVolt("", powerLoad.getVoltage()));
             info.put(I18N.tr("Power"), Utils.plotPower("", powerLoad.getCurrent() * powerLoad.getVoltage()));
         }

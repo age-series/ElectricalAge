@@ -36,8 +36,7 @@ public class ClientProxy extends CommonProxy {
 
         RenderingRegistry.registerEntityRenderingHandler(ReplicatorEntity.class, new ReplicatorRender(new ModelSilverfish(), (float) 0.3));
 
-        Eln.clientKeyHandler = new ClientKeyHandler();
-        FMLCommonHandler.instance().bus().register(Eln.clientKeyHandler);
+        FMLCommonHandler.instance().bus().register(ClientKeyHandler.INSTANCE);
         MinecraftForge.EVENT_BUS.register(new TutorialSignOverlay());
         uuidManager = new UuidManager();
         soundClientEventListener = new SoundClientEventListener(uuidManager);

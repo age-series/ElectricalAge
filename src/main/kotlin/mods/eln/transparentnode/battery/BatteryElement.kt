@@ -1,10 +1,10 @@
 package mods.eln.transparentnode.battery
 
-import mods.eln.Eln
 import mods.eln.i18n.I18N.tr
 import mods.eln.misc.Direction
 import mods.eln.misc.LRDU
 import mods.eln.misc.Utils
+import mods.eln.misc.Utils.isWailaEasyModeEnabled
 import mods.eln.node.NodeBase
 import mods.eln.node.NodePeriodicPublishProcess
 import mods.eln.node.transparent.TransparentNode
@@ -26,7 +26,6 @@ import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.nbt.NBTTagCompound
 import java.io.DataOutputStream
 import java.io.IOException
-import java.util.*
 
 class BatteryElement(transparentNode: TransparentNode, descriptor: TransparentNodeDescriptor) : TransparentNodeElement(transparentNode, descriptor) {
     override var descriptor: BatteryDescriptor = descriptor as BatteryDescriptor
@@ -134,7 +133,7 @@ class BatteryElement(transparentNode: TransparentNode, descriptor: TransparentNo
         info[tr("Charge")] = Utils.plotPercent("", batteryProcess.charge)
         info[tr("Energy")] = Utils.plotEnergy("", batteryProcess.energy)
         info[tr("Life")] = Utils.plotPercent("", batteryProcess.life)
-        if (Eln.config.getBooleanOrElse("ui.waila.easyMode", false)) {
+        if (isWailaEasyModeEnabled()) {
             info[tr("Voltage")] = Utils.plotVolt("", batteryProcess.u)
             info[tr("Current")] = Utils.plotAmpere("", batteryProcess.dischargeCurrent)
             info[tr("Temperature")] = plotAmbientCelsius("", thermalLoad.temperatureCelsius)

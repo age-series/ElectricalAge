@@ -3,20 +3,16 @@ package mods.eln.sixnode.electricalsource;
 import mods.eln.Eln;
 import mods.eln.i18n.I18N;
 import mods.eln.item.IConfigurable;
+import mods.eln.misc.Coordinate;
 import mods.eln.misc.Direction;
 import mods.eln.misc.LRDU;
 import mods.eln.misc.Utils;
-import mods.eln.misc.Coordinate;
-import mods.eln.node.Node;
-import mods.eln.node.NodeBase;
-import mods.eln.node.NodeBlockEntity;
-import mods.eln.node.NodeConnection;
-import mods.eln.node.NodeConnectionEndpoint;
+import mods.eln.node.*;
 import mods.eln.node.six.SixNode;
 import mods.eln.node.six.SixNodeDescriptor;
 import mods.eln.node.six.SixNodeElement;
-import mods.eln.sim.ElectricalLoad;
 import mods.eln.sim.ElectricalConnection;
+import mods.eln.sim.ElectricalLoad;
 import mods.eln.sim.ThermalLoad;
 import mods.eln.sim.mna.component.VoltageSource;
 import mods.eln.sim.nbt.NbtElectricalLoad;
@@ -117,7 +113,7 @@ public class ElectricalSourceElement extends SixNodeElement implements IConfigur
                 putConductorVoltage(info, "Ground", lrdu, utilityCable.activeGroundConductorColor());
             }
         }
-        if (Eln.config.getBooleanOrElse("ui.waila.easyMode", false)) {
+        if (Utils.isWailaEasyModeEnabled()) {
             info.put(I18N.tr("Power"), Utils.plotPower("", Math.max(Math.abs(electricalLoad.getVoltage() * voltageSource.getCurrent()), Math.abs(electricalLoadRed.getVoltage() * voltageSourceRed.getCurrent()))));
         }
         return info;

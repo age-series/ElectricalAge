@@ -16,19 +16,19 @@ import mods.eln.block.ArcClayItemBlock;
 import mods.eln.block.ArcMetalBlock;
 import mods.eln.block.ArcMetalItemBlock;
 import mods.eln.cable.CableRenderDescriptor;
-import mods.eln.client.ClientKeyHandler;
 import mods.eln.client.SoundLoader;
 import mods.eln.config.JsonConfig;
+import mods.eln.config.ServerConfigSyncHandler;
 import mods.eln.craft.CraftingRecipes;
 import mods.eln.entity.ReplicatorPopProcess;
+import mods.eln.environment.BiomeClimateService;
 import mods.eln.eventhandlers.ElnFMLEventsHandler;
 import mods.eln.eventhandlers.ElnForgeEventsHandler;
 import mods.eln.eventhandlers.RoomThermalBlockEventsHandler;
 import mods.eln.fluid.ElnFluidRegistry;
+import mods.eln.fluid.FluidRegistrationKt;
 import mods.eln.fluid.FuelRegistry;
 import mods.eln.fluid.ThermalRegistry;
-import mods.eln.fluid.FluidRegistrationKt;
-import mods.eln.environment.BiomeClimateService;
 import mods.eln.generic.GenericCreativeTab;
 import mods.eln.generic.GenericItemUsingDamageDescriptor;
 import mods.eln.generic.GenericItemUsingDamageDescriptorWithComment;
@@ -41,9 +41,9 @@ import mods.eln.item.electricalinterface.ItemEnergyInventoryProcess;
 import mods.eln.item.lampitem.LampLists;
 import mods.eln.lightblock.LightBlock;
 import mods.eln.lightblock.LightBlockEntity;
+import mods.eln.metrics.MetricsSubsystem;
 import mods.eln.misc.*;
 import mods.eln.mqtt.MqttManager;
-import mods.eln.metrics.MetricsSubsystem;
 import mods.eln.node.NodeBlockEntity;
 import mods.eln.node.NodeManager;
 import mods.eln.node.NodeManagerNbt;
@@ -55,12 +55,15 @@ import mods.eln.ore.OreDescriptor;
 import mods.eln.ore.OreItem;
 import mods.eln.ore.OreScannerManager;
 import mods.eln.packets.*;
+import mods.eln.railroad.ElectricMinecartChargeReporter;
 import mods.eln.registration.ItemRegistration;
 import mods.eln.registration.SingleNodeRegistration;
 import mods.eln.registration.SixNodeRegistration;
 import mods.eln.registration.TransparentNodeRegistration;
-import mods.eln.railroad.ElectricMinecartChargeReporter;
-import mods.eln.server.*;
+import mods.eln.server.DelayedBlockRemove;
+import mods.eln.server.DelayedTaskManager;
+import mods.eln.server.SaveConfig;
+import mods.eln.server.ServerEventListener;
 import mods.eln.server.console.ElnConsoleCommands;
 import mods.eln.sim.Simulator;
 import mods.eln.sim.ThermalLoadInitializer;
@@ -98,9 +101,9 @@ import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.oredict.OreDictionary;
+import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.core.LoggerContext;
 import org.apache.logging.log4j.core.appender.FileAppender;
 import org.apache.logging.log4j.core.config.Configuration;
@@ -110,7 +113,6 @@ import org.apache.logging.log4j.core.layout.PatternLayout;
 import java.io.File;
 import java.util.*;
 
-import static mods.eln.i18n.I18N.TR;
 import static mods.eln.i18n.I18N.TR_GROUP;
 import static mods.eln.i18n.I18N.tr;
 
@@ -142,6 +144,7 @@ public class Eln {
     public static final byte packetClientToServerConnection = 21;
     public static final byte packetServerToClientInfo = 22;
     public static final byte packetFalstadImport = 23;
+    public static final byte packetServerConfigSync = 24;
     public static final Obj3DFolder obj = new Obj3DFolder();
     public static final double gateInputCurrent = 0.00005;
     public static final double gateOutputCurrent = 0.100;
@@ -163,7 +166,6 @@ public class Eln {
     public static SimpleNetworkWrapper elnNetwork;
     public static PacketHandler packetHandler;
     public static LiveDataManager clientLiveDataManager;
-    public static ClientKeyHandler clientKeyHandler;
     public static SaveConfig saveConfig;
     public static GhostManager ghostManager;
     public static GhostManagerNbt ghostManagerNbt;
@@ -207,7 +209,6 @@ public class Eln {
     public static String simMetricsMqttServer = "";
     public static String simMetricsId = "server";
     public static int simMetricsPublishIntervalTicks = 20;
-    public static boolean debugEnabled = false;
     public static SiliconWafer siliconWafer;
     public static Transistor transistor;
     public static Thermistor thermistor;
@@ -514,14 +515,13 @@ public class Eln {
         TR_GROUP("ElnMachines", "Electrical Age - Machines");
         TR_GROUP("ElnCreative", "Electrical Age - Creative");
         TR_GROUP("ElnOther", "Electrical Age - Other");
-        if (isDevelopmentRun()) {
-            Achievements.init();
-        }
+        if (isDevelopmentRun()) Achievements.init();
         FluidRegistrationKt.registerElnFluids();
         MinecraftForge.EVENT_BUS.register(new ElnForgeEventsHandler());
         MinecraftForge.EVENT_BUS.register(new RoomThermalBlockEventsHandler());
         MinecraftForge.EVENT_BUS.register(new ElectricMinecartChargeReporter());
         FMLCommonHandler.instance().bus().register(new ElnFMLEventsHandler());
+        FMLCommonHandler.instance().bus().register(ServerConfigSyncHandler.INSTANCE);
         MinecraftForge.EVENT_BUS.register(this);
         FMLInterModComms.sendMessage("Waila", "register", "mods.eln.integration.waila.WailaIntegration" +
                 ".callbackRegister");
@@ -662,6 +662,12 @@ public class Eln {
     }
 
     public boolean isDevelopmentRun() {
-        return (Boolean) Launch.blackboard.get("fml.deobfuscatedEnvironment");
+        // This is used solely for testing purposes in multiplayer environments where it is necessary for an external
+        // client to join a server hosted by the IDE (i.e. at least two clients and one server are needed for testing).
+        // This flag should be temporarily set to TRUE before building the mod for a testing distribution.
+        boolean bypassDevEnvironmentCheck = false;
+
+        if (bypassDevEnvironmentCheck) return true;
+        else return (Boolean) Launch.blackboard.get("fml.deobfuscatedEnvironment");
     }
 }

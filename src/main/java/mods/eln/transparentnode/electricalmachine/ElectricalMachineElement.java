@@ -1,6 +1,5 @@
 package mods.eln.transparentnode.electricalmachine;
 
-import mods.eln.Eln;
 import mods.eln.i18n.I18N;
 import mods.eln.item.ConfigCopyToolDescriptor;
 import mods.eln.item.IConfigurable;
@@ -203,7 +202,7 @@ public class ElectricalMachineElement extends TransparentNodeElement implements 
         Map<String, String> info = new HashMap<String, String>();
         info.put(I18N.tr("Power consumption"), Utils.plotPower("", slowRefreshProcess.getPower()));
         info.put(I18N.tr("Voltage"), Utils.plotVolt("", electricalLoad.getVoltage()));
-        if (Eln.config.getBooleanOrElse("ui.waila.easyMode", false)) {
+        if (Utils.isWailaEasyModeEnabled()) {
             info.put(I18N.tr("Power provided"), Utils.plotPower("", electricalLoad.getCurrent() * electricalLoad.getVoltage()));
         }
         return info;

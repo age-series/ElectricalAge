@@ -2,20 +2,20 @@ package mods.eln.sixnode.electricalbreaker;
 
 import mods.eln.Eln;
 import mods.eln.i18n.I18N;
+import mods.eln.misc.Coordinate;
 import mods.eln.misc.Direction;
 import mods.eln.misc.LRDU;
 import mods.eln.misc.Utils;
 import mods.eln.node.Node;
-import mods.eln.node.NodeBlockEntity;
 import mods.eln.node.NodeBase;
+import mods.eln.node.NodeBlockEntity;
 import mods.eln.node.NodeConnection;
 import mods.eln.node.six.SixNode;
 import mods.eln.node.six.SixNodeDescriptor;
 import mods.eln.node.six.SixNodeElement;
 import mods.eln.node.six.SixNodeElementInventory;
-import mods.eln.misc.Coordinate;
-import mods.eln.sim.ElectricalLoad;
 import mods.eln.sim.ElectricalConnection;
+import mods.eln.sim.ElectricalLoad;
 import mods.eln.sim.ThermalLoad;
 import mods.eln.sim.mna.component.Resistor;
 import mods.eln.sim.nbt.NbtElectricalLoad;
@@ -26,6 +26,7 @@ import mods.eln.sound.SoundCommand;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -34,7 +35,6 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import net.minecraft.tileentity.TileEntity;
 
 public class ElectricalBreakerElement extends SixNodeElement {
     private static final String BREAKER_CLOSE_SOUND = "eln:circuit_breaker_close";
@@ -163,7 +163,7 @@ public class ElectricalBreakerElement extends SixNodeElement {
         UtilityCableElement utilityCable = resolveWailaUtilityCable();
         if (utilityCable != null && !utilityCable.descriptor.getActsAsSingleConductor()) {
             putMultiConductorWaila(info, utilityCable);
-        } else if (Eln.config.getBooleanOrElse("ui.waila.easyMode", false)) {
+        } else if (Utils.isWailaEasyModeEnabled()) {
             info.put(I18N.tr("Voltages"), Utils.plotVolt("", aLoad.getVoltage()) + Utils.plotVolt(" ", bLoad.getVoltage()));
         }
         return info;

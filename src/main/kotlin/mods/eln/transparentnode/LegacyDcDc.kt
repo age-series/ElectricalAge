@@ -14,25 +14,12 @@ import mods.eln.item.CaseItemDescriptor
 import mods.eln.item.ConfigCopyToolDescriptor
 import mods.eln.item.FerromagneticCoreDescriptor
 import mods.eln.item.IConfigurable
-import mods.eln.misc.BasicContainer
-import mods.eln.misc.Coordinate
-import mods.eln.misc.Direction
-import mods.eln.misc.LRDU
-import mods.eln.misc.LRDUMask
-import mods.eln.misc.Obj3D
-import mods.eln.misc.PhysicalInterpolator
-import mods.eln.misc.SlewLimiter
-import mods.eln.misc.Utils
-import mods.eln.misc.VoltageLevelColor
+import mods.eln.misc.*
+import mods.eln.misc.Utils.isWailaEasyModeEnabled
 import mods.eln.node.NodeBase
 import mods.eln.node.NodePeriodicPublishProcess
 import mods.eln.node.six.SixNodeItemSlot
-import mods.eln.node.transparent.TransparentNode
-import mods.eln.node.transparent.TransparentNodeDescriptor
-import mods.eln.node.transparent.TransparentNodeElement
-import mods.eln.node.transparent.TransparentNodeElementInventory
-import mods.eln.node.transparent.TransparentNodeElementRender
-import mods.eln.node.transparent.TransparentNodeEntity
+import mods.eln.node.transparent.*
 import mods.eln.sim.ElectricalLoad
 import mods.eln.sim.IProcess
 import mods.eln.sim.ThermalLoad
@@ -341,7 +328,7 @@ class LegacyDcDcElement(transparentNode: TransparentNode, descriptor: Transparen
     override fun getWaila(): Map<String, String> {
         val info = HashMap<String, String>()
         info[tr("Ratio")] = Utils.plotValue(interSystemProcess.ratio)
-        if (Eln.config.getBooleanOrElse("ui.waila.easyMode", false)) {
+        if (isWailaEasyModeEnabled()) {
             info[tr("Voltages")] = "\u00A7a" + Utils.plotVolt("", primaryLoad.voltage) + " " +
                 "\u00A7e" + Utils.plotVolt("", secondaryLoad.voltage)
         }

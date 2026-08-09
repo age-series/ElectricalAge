@@ -1,10 +1,10 @@
 package mods.eln.sixnode
 
-import mods.eln.Eln
 import mods.eln.cable.CableRender
 import mods.eln.cable.CableRenderDescriptor
 import mods.eln.i18n.I18N.tr
 import mods.eln.misc.*
+import mods.eln.misc.Utils.isWailaEasyModeEnabled
 import mods.eln.node.NodeBase
 import mods.eln.node.six.*
 import mods.eln.sim.ElectricalLoad
@@ -19,7 +19,6 @@ import net.minecraft.item.ItemStack
 import net.minecraft.util.ResourceLocation
 import net.minecraftforge.client.IItemRenderer
 import org.lwjgl.opengl.GL11
-import java.util.HashMap
 
 class PortableNaNDescriptor(name: String, renderIn: CableRenderDescriptor): GenericCableDescriptor(name, PortableNaNElement::class.java, PortableNaNRender::class.java) {
 
@@ -118,7 +117,7 @@ class PortableNaNElement(sixNode: SixNode, side: Direction, descriptor: SixNodeD
 
         info[tr("Current")] = Utils.plotAmpere("", electricalLoad.current)
         info[tr("Temperature")] = plotAmbientCelsius("", thermalLoad.temperature)
-        if (Eln.config.getBooleanOrElse("ui.waila.easyMode", false)) {
+        if (isWailaEasyModeEnabled()) {
             info[tr("Voltage")] = Utils.plotVolt("", electricalLoad.voltage)
         }
         info[tr("Subsystem Matrix Size")] = Utils.renderSubSystemWaila(electricalLoad.subSystem)

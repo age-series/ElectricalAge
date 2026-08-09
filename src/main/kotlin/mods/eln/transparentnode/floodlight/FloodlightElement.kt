@@ -292,7 +292,7 @@ class FloodlightElement(transparentNode: TransparentNode, transparentNodeDescrip
         if (lamp2Stack != null) info[I18N.tr("Bulb 2")] = lamp2Stack.displayName
         else info[I18N.tr("Bulb 2")] = I18N.tr("None")
 
-        if (Eln.config.getBooleanOrElse("ui.waila.easyMode", false)) {
+        if (Utils.isWailaEasyModeEnabled()) {
             info[I18N.tr("Voltage")] = plotVolt("", electricalLoad.voltage)
 
             if (lamp1Stack != null) {
@@ -306,7 +306,7 @@ class FloodlightElement(transparentNode: TransparentNode, transparentNodeDescrip
             }
         }
 
-        if (Eln.config.getBooleanOrElse("debug.logging.enabled", false)) {
+        if (Utils.isDebugEnabled()) {
             info[I18N.tr("Lamp Brightness")] = plotValue(node!!.lightValue.toDouble())
         }
 

@@ -179,7 +179,7 @@ public class TurbineElement extends TransparentNodeElement {
         info.put(I18N.tr("Nominal") + " \u0394T",
             (warmLoad.temperatureCelsius - coolLoad.temperatureCelsius == descriptor.nominalDeltaT ? I18N.tr("Yes") : I18N.tr("No")));
         info.put(I18N.tr("Generated power"), Utils.plotPower("", electricalPowerSourceProcess.getPower()));
-        if (Eln.config.getBooleanOrElse("ui.waila.easyMode", false)) {
+        if (Utils.isWailaEasyModeEnabled()) {
             info.put("\u0394T", Utils.plotCelsius("", warmLoad.temperatureCelsius - coolLoad.temperatureCelsius));
             info.put(I18N.tr("Voltage"), Utils.plotVolt("", electricalPowerSourceProcess.getVoltage()));
         }

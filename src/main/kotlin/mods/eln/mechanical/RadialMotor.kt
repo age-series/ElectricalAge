@@ -4,13 +4,8 @@ import mods.eln.Eln
 import mods.eln.fluid.FuelRegistry
 import mods.eln.fluid.PreciseElementFluidHandler
 import mods.eln.i18n.I18N.tr
-import mods.eln.misc.Coordinate
-import mods.eln.misc.Direction
-import mods.eln.misc.INBTTReady
-import mods.eln.misc.LRDU
-import mods.eln.misc.Obj3D
-import mods.eln.misc.RcInterpolator
-import mods.eln.misc.Utils
+import mods.eln.misc.*
+import mods.eln.misc.Utils.isWailaEasyModeEnabled
 import mods.eln.node.NodeBase
 import mods.eln.node.published
 import mods.eln.node.transparent.EntityMetaTag
@@ -173,7 +168,7 @@ class RadialMotorElement(node: TransparentNode, transparentNodeDescriptor: Trans
         val info = mutableMapOf<String, String>()
         info[tr("Speed")] = Utils.plotRads("", shaft.rads)
         info[tr("Energy")] = Utils.plotEnergy("", shaft.energy)
-        if (Eln.config.getBooleanOrElse("ui.waila.easyMode", false)) {
+        if (isWailaEasyModeEnabled()) {
             info[tr("Efficiency")] = Utils.plotPercent("", efficiency.toDouble())
             info[tr("Fuel usage")] = Utils.plotBuckets("", fluidRate / 1000.0) + "/s"
         }
