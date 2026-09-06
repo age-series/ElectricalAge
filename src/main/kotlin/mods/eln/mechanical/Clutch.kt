@@ -2,7 +2,6 @@ package mods.eln.mechanical
 
 import mods.eln.Eln
 import mods.eln.cable.CableRender
-import mods.eln.generic.GenericItemUsingDamage
 import mods.eln.generic.GenericItemUsingDamageDescriptor
 import mods.eln.generic.GenericItemUsingDamageDescriptorWithComment
 import mods.eln.generic.GenericItemUsingDamageSlot
@@ -11,6 +10,7 @@ import mods.eln.gui.HelperStdContainer
 import mods.eln.gui.ISlotSkin
 import mods.eln.i18n.I18N.tr
 import mods.eln.misc.*
+import mods.eln.misc.Utils.isWailaEasyModeEnabled
 import mods.eln.node.NodeBase
 import mods.eln.node.transparent.*
 import mods.eln.sim.ElectricalLoad
@@ -428,7 +428,7 @@ class ClutchElement(node: TransparentNode, desc_: TransparentNodeDescriptor) : S
         info.put(tr("Energies"), entries.map {
             Utils.plotEnergy("", it.value.energy)
         }.joinToString(", "))
-        if(Eln.config.getBooleanOrElse("ui.waila.easyMode", false)) {
+        if(isWailaEasyModeEnabled()) {
             info.put("Masses", entries.map {
                 Utils.plotValue(it.value.mass * 1000, "g")
             }.joinToString(", "))
@@ -438,7 +438,7 @@ class ClutchElement(node: TransparentNode, desc_: TransparentNodeDescriptor) : S
                 info.put("Wear", String.format("%.6f", desc.getWear(stack)))
         }
         info.put(tr("Clutching"), Utils.plotVolt(inputGate.signalVoltage))
-        if(Eln.config.getBooleanOrElse("ui.waila.easyMode", false)) {
+        if(isWailaEasyModeEnabled()) {
             info.put("Slipping", if (slipping) {
                 "YES"
             } else {

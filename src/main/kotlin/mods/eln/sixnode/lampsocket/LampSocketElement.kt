@@ -32,6 +32,7 @@ import mods.eln.sim.process.destruct.VoltageStateWatchDog
 import mods.eln.sim.process.destruct.WorldExplosion
 import mods.eln.sixnode.currentcable.CurrentCableDescriptor
 import mods.eln.sixnode.electricalcable.ElectricalCableDescriptor
+import mods.eln.sixnode.lampsupply.PowerChannelTextboxHelper
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.entity.player.EntityPlayerMP
 import net.minecraft.inventory.Container
@@ -45,6 +46,13 @@ import kotlin.math.pow
 
 class LampSocketElement(sixNode: SixNode, side: Direction, sixNodeDescriptor: SixNodeDescriptor) :
     SixNodeElement(sixNode, side, sixNodeDescriptor), IConfigurable {
+
+    companion object {
+        var lastChannel = PowerChannelTextboxHelper.DEFAULT_CHANNEL_STRING
+        var lastLampStack: ItemStack? = null
+        var lastCableStack: ItemStack? = null
+        var placingPlayerIsCreative = false
+    }
 
     override val inventory = SixNodeElementInventory(2, 64, this, LampSocketContainer.REQUIRED_CABLE_LENGTH)
 
@@ -66,7 +74,9 @@ class LampSocketElement(sixNode: SixNode, side: Direction, sixNodeDescriptor: Si
     private val lampSocketProcess = LampSocketProcess(this)
 
     var poweredByLampSupply = true
-    var lampSupplyChannel = if (Eln.config.getBooleanOrElse("gameplay.qol.rememberLastLampSignalName", false)) lastChannel else "Default channel"
+    var lampSupplyChannel =
+        if (Eln.config.getBooleanOrElse("gameplay.qol.rememberLastLampSignalName", false)) lastChannel
+        else PowerChannelTextboxHelper.DEFAULT_CHANNEL_STRING
     var activeLampSupplyConnection = false
     var projectionRotationAngle = 0.0
     private var paintColor = LampSocketRender.DEFAULT_PAINT_COLOR
@@ -130,7 +140,9 @@ class LampSocketElement(sixNode: SixNode, side: Direction, sixNodeDescriptor: Si
         }
 
         return if (takeItem) {
-            AutoAcceptInventoryProxy.creativeFreeInsert = Eln.config.getBooleanOrElse("gameplay.qol.creativeNoConsumeInsertedItems", false) && entityPlayer is EntityPlayerMP && isCreative(entityPlayer)
+            AutoAcceptInventoryProxy.creativeFreeInsert =
+                Eln.config.getBooleanOrElse("gameplay.qol.creativeNoConsumeInsertedItems", false) && (entityPlayer is EntityPlayerMP) && isCreative(entityPlayer)
+
             inventoryProxy.take(entityPlayer.currentEquippedItem, this, notifyInventoryChange = true).also { accepted ->
                 if (accepted && Eln.config.getBooleanOrElse("gameplay.qol.rememberLastLampSocketContents", false)) {
                     lastLampStack = inventory.getStackInSlot(LampSocketContainer.LAMP_SLOT_ID)?.copy()
@@ -189,13 +201,12 @@ class LampSocketElement(sixNode: SixNode, side: Direction, sixNodeDescriptor: Si
     }
 
     override fun initialize() {
-        computeInventory()
         if (Eln.config.getBooleanOrElse("gameplay.qol.rememberLastLampSocketContents", false) && placingPlayerIsCreative) {
             lastLampStack?.let { inventory.setInventorySlotContents(LampSocketContainer.LAMP_SLOT_ID, it.copy()) }
             lastCableStack?.let { inventory.setInventorySlotContents(LampSocketContainer.CABLE_SLOT_ID, it.copy()) }
-            computeInventory()
             placingPlayerIsCreative = false
         }
+        computeInventory()
     }
 
     override fun connectJob() {
@@ -219,7 +230,7 @@ class LampSocketElement(sixNode: SixNode, side: Direction, sixNodeDescriptor: Si
         needPublish()
     }
 
-    fun computeInventory() {
+    private fun computeInventory() {
         val lampStack = inventory.getStackInSlot(LampSocketContainer.LAMP_SLOT_ID)
         val cableStack = inventory.getStackInSlot(LampSocketContainer.CABLE_SLOT_ID)
 
@@ -322,7 +333,7 @@ class LampSocketElement(sixNode: SixNode, side: Direction, sixNodeDescriptor: Si
         if (lampStack != null) info[I18N.tr("Bulb")] = lampStack.displayName
         else info[I18N.tr("Bulb")] = I18N.tr("None")
 
-        if (Eln.config.getBooleanOrElse("ui.waila.easyMode", false)) {
+        if (Utils.isWailaEasyModeEnabled()) {
             info[I18N.tr("Voltage")] = plotVolt("", electricalLoad.voltage)
 
             if (lampStack != null) {
@@ -333,7 +344,7 @@ class LampSocketElement(sixNode: SixNode, side: Direction, sixNodeDescriptor: Si
             if (poweredByLampSupply) info[I18N.tr("Channel")] = lampSupplyChannel
         }
 
-        if (Eln.config.getBooleanOrElse("debug.logging.enabled", false)) {
+        if (Utils.isDebugEnabled()) {
             info[I18N.tr("Lamp Brightness")] = plotValue(sixNode!!.lightValue.toDouble())
         }
 
@@ -379,8 +390,7 @@ class LampSocketElement(sixNode: SixNode, side: Direction, sixNodeDescriptor: Si
                 lastLampStack = inventory.getStackInSlot(LampSocketContainer.LAMP_SLOT_ID)?.copy()
                 lastCableStack = inventory.getStackInSlot(LampSocketContainer.CABLE_SLOT_ID)?.copy()
             }
-        }
-        else if (publishChanges) needPublish()
+        } else if (publishChanges) needPublish()
     }
 
     override fun writeConfigTool(compound: NBTTagCompound, invoker: EntityPlayer) {
@@ -392,10 +402,4 @@ class LampSocketElement(sixNode: SixNode, side: Direction, sixNodeDescriptor: Si
         ConfigCopyToolDescriptor.writeCableType(compound, inventory.getStackInSlot(LampSocketContainer.CABLE_SLOT_ID))
     }
 
-    companion object {
-        var lastChannel = "Default channel"
-        var lastLampStack: ItemStack? = null
-        var lastCableStack: ItemStack? = null
-        var placingPlayerIsCreative = false
-    }
 }

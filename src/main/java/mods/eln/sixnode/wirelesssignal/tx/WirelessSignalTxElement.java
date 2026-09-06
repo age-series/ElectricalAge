@@ -15,6 +15,7 @@ import mods.eln.sim.ElectricalLoad;
 import mods.eln.sim.IProcess;
 import mods.eln.sim.ThermalLoad;
 import mods.eln.sim.nbt.NbtElectricalGateInput;
+import mods.eln.sixnode.lampsupply.PowerChannelTextboxHelper;
 import mods.eln.sixnode.wirelesssignal.IWirelessSignalTx;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -38,7 +39,7 @@ public class WirelessSignalTxElement extends SixNodeElement implements IWireless
 
     WirelessSignalTxDescriptor descriptor;
 
-    public String channel = "Default channel";
+    public String channel = PowerChannelTextboxHelper.DEFAULT_CHANNEL_STRING;
 
     private LightningGlitchProcess lightningGlitchProcess;
 

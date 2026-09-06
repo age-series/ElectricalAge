@@ -1,11 +1,13 @@
 package mods.eln.item.lampitem
 
-import mods.eln.Eln
 import mods.eln.i18n.I18N
 import mods.eln.item.GenericItemUsingDamageDescriptorUpgrade
 import mods.eln.misc.Utils
+import mods.eln.misc.UtilsClient
 import mods.eln.misc.VoltageLevelColor
 import mods.eln.sim.mna.component.Resistor
+import mods.eln.sixnode.lampsocket.LampSocketContainer
+import mods.eln.transparentnode.floodlight.FloodlightContainer
 import mods.eln.wiki.Data
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.Item
@@ -50,36 +52,40 @@ class LampDescriptor(name: String, iconName: String, val lampData: SpecificLampD
     }
 
     /**
-     * This function is currently set up to be called once per second (IRL). If the NBT update bug is ever fixed, this
-     * function should be updated to run once per tick by dividing the life lost by 20 before calculating the new life.
-     * See https://www.desmos.com/calculator/0uuzozsiuu for a plot of the lamp aging function.
+     * See https://www.desmos.com/calculator/0uuzozsiuu for a plot of the life lost vs. applied voltage curve.
      */
     fun decreaseLampLife(lampStack: ItemStack, appliedVoltage: Double): Double {
         val currentLife = getLifeInTag(lampStack)
 
-        // resetLampLifeFlag should be automatically set to false after 1-2 seconds (see usage in Simulator.java)
+        // resetLampLifeFlag should be automatically set to false after ~1 tick (see usage in Simulator.java)
         if (currentLife > lampData.technology.nominalLifeInHours || LampLists.resetLampLifeFlag) {
             setLifeInTag(lampStack, lampData.technology.nominalLifeInHours)
             return getLifeInTag(lampStack)
         }
 
-        if (!lampData.technology.infiniteLifeEnabled) {
-            // Division by 3600 converts seconds to hours (IRL)
-            val lifeLost = when {
-                // Life lost per second increases exponentially when voltage is above nominal (10x as fast at 1.25x nominal)
-                abs(appliedVoltage) > lampData.nominalU -> {
-                    10.0.pow(4.0 / lampData.nominalU).pow(abs(appliedVoltage) - lampData.nominalU) / 3600.0
-                }
-                // Life lost per second increases linearly when voltage is between nominal and minimal
-                abs(appliedVoltage) in (lampData.nominalU * lampData.technology.minimalUFactor)..lampData.nominalU -> {
-                    val slope = 1.0 / (lampData.nominalU * (1.0 - lampData.technology.minimalUFactor))
-                    val intercept = 1.0 - (slope * lampData.nominalU)
+        // If a player is holding shift while accessing the GUI of a lamp socket or floodlight, all light bulbs within
+        // that lamp socket/floodlight temporarily stop losing life. This prevents the infamous NBT mismatch/desync bug
+        // from occurring, where an item is duplicated when shift-clicked from an inventory if its NBT tags differ
+        // between the client and the server.
+        if (!lampData.technology.infiniteLifeEnabled && !isContainerOpenAndPlayerHoldingShift()) {
+            var lifeLost: Double
 
-                    ((slope * abs(appliedVoltage)) + intercept) / 3600.0
-                }
+            if (abs(appliedVoltage) > lampData.nominalU) {
+                // Life lost per tick increases exponentially when voltage is above nominal (10x as fast at 1.25x nominal)
+                lifeLost = 10.0.pow(4.0 / lampData.nominalU).pow(abs(appliedVoltage) - lampData.nominalU)
+            } else if (abs(appliedVoltage) in (lampData.nominalU * lampData.technology.minimalUFactor)..lampData.nominalU) {
+                // Life lost per tick increases linearly when voltage is between nominal and minimal
+                val slope = 1.0 / (lampData.nominalU * (1.0 - lampData.technology.minimalUFactor))
+                val intercept = 1.0 - (slope * lampData.nominalU)
+                lifeLost = (slope * abs(appliedVoltage)) + intercept
+            } else {
                 // Lamp does not lose life when voltage is below minimal (no light produced)
-                else -> 0.0
+                lifeLost = 0.0
             }
+
+            // Division by 72,000 = 20 * 3600 converts ticks to hours (20 ticks/second, 3600 seconds/hour)
+            // Bulb lives are defined in hours, so this conversion is necessary for losing life at the proper rate
+            lifeLost /= (20.0 * 3600.0)
 
             var newLife = currentLife - lifeLost
             if (newLife < 0.0) newLife = 0.0
@@ -89,6 +95,26 @@ class LampDescriptor(name: String, iconName: String, val lampData: SpecificLampD
         } else {
             return currentLife
         }
+    }
+
+    /**
+     * Polls all players in a world and checks if this specific lamp item is within a lamp socket that a player is interacting with.
+     */
+    private fun isContainerOpenAndPlayerHoldingShift(): Boolean {
+        Utils.getServerPlayerList().forEach { player ->
+            val container = player.openContainer
+
+            if (container is LampSocketContainer || container is FloodlightContainer) {
+                for (idx in 0..<container.containerSize) {
+                    val lampStack = container.inventoryItemStacks[idx] as? ItemStack
+                    val lampDescriptor = Utils.getItemObject(lampStack) as? LampDescriptor
+
+                    if (this === lampDescriptor && Utils.isPlayerHoldingShift(player)) return true
+                }
+            }
+        }
+
+        return false
     }
 
     override fun addInformation(itemStack: ItemStack?, entityPlayer: EntityPlayer?, list: MutableList<String>, par4: Boolean) {
@@ -101,9 +127,7 @@ class LampDescriptor(name: String, iconName: String, val lampData: SpecificLampD
         list.add(I18N.tr($$"Nominal lifetime: %1$h", lampData.technology.nominalLifeInHours))
 
         if (itemStack != null) {
-            if (Eln.config.getBooleanOrElse("debug.logging.enabled", false)) {
-                list.add(I18N.tr($$"Current lifetime: %1$h", getLifeInTag(itemStack)))
-            }
+            if (UtilsClient.isServerDebugEnabled()) list.add(I18N.tr($$"Current lifetime: %1$h", getLifeInTag(itemStack)))
             list.add(I18N.tr("Condition: %1$", getLampCondition(itemStack)))
         }
     }

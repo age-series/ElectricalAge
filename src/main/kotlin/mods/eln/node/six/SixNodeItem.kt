@@ -182,8 +182,6 @@ class SixNodeItem(b: Block?) : GenericItemBlockUsingDamage<SixNodeDescriptor?>(b
                     GL11.glRotatef(-90f, 0f, 1f, 0f)
                     GL11.glRotatef(-90f, 1f, 0f, 0f)
                 }
-                else -> {
-                }
             }
         }
         val descriptor = getDescriptor(item)

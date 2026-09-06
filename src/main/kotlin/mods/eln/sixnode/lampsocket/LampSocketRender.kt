@@ -14,6 +14,7 @@ import mods.eln.node.six.SixNodeElementRender
 import mods.eln.node.six.SixNodeEntity
 import mods.eln.sixnode.genericcable.GenericCableDescriptor
 import mods.eln.sixnode.lampsocket.objrender.LampSocketSuspendedObjRender
+import mods.eln.sixnode.lampsupply.PowerChannelTextboxHelper
 import mods.eln.sound.SoundCommand
 import net.minecraft.client.gui.GuiScreen
 import net.minecraft.entity.Entity
@@ -38,14 +39,14 @@ class LampSocketRender(tileEntity: SixNodeEntity, side: Direction, sixNodeDescri
         const val DEFAULT_PAINT_COLOR = 15
     }
 
-    override val inventory = SixNodeElementInventory(2, 64, this)
+    override val inventory = SixNodeElementInventory(2, 64, this, LampSocketContainer.REQUIRED_CABLE_LENGTH)
     val descriptor = sixNodeDescriptor as LampSocketDescriptor
 
     var lampDescriptor: LampDescriptor? = null
     private var cableDescriptor: GenericCableDescriptor? = null
 
     var poweredByLampSupply = true
-    var lampSupplyChannel = "Default channel"
+    var lampSupplyChannel = PowerChannelTextboxHelper.DEFAULT_CHANNEL_STRING
     var activeLampSupplyConnection = false
     var projectionRotationAngle = 0.0
     var paintColor = DEFAULT_PAINT_COLOR
@@ -175,12 +176,8 @@ class LampSocketRender(tileEntity: SixNodeEntity, side: Direction, sixNodeDescri
     }
 
     override fun getCableRender(lrdu: LRDU): CableRenderDescriptor? {
-        if (cableDescriptor == null
-            || (lrdu == front!!.left() && !descriptor.renderSideCables)
-            || (lrdu == front!!.right() && !descriptor.renderSideCables)
-        ) return null
-
-        return cableDescriptor!!.render
+        return if (cableDescriptor == null || ((lrdu == front?.left() || lrdu == front?.right()) && !descriptor.renderSideCables)) null
+        else cableDescriptor?.render
     }
 
     override fun getRenderBoundingBox(tileEntity: SixNodeEntity): AxisAlignedBB? {

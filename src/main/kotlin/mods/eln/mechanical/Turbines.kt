@@ -9,18 +9,15 @@ import mods.eln.gui.GuiHelperContainer
 import mods.eln.gui.HelperStdContainer
 import mods.eln.gui.ISlotSkin.SlotSkin
 import mods.eln.i18n.I18N.tr
-import mods.eln.item.TurbineBladeLists
 import mods.eln.item.TurbineBladeDescriptor
+import mods.eln.item.TurbineBladeLists
 import mods.eln.misc.*
+import mods.eln.misc.Utils.isWailaEasyModeEnabled
 import mods.eln.node.INodeContainer
 import mods.eln.node.NodeBase
 import mods.eln.node.NodePeriodicPublishProcess
 import mods.eln.node.published
-import mods.eln.node.transparent.EntityMetaTag
-import mods.eln.node.transparent.TransparentNode
-import mods.eln.node.transparent.TransparentNodeDescriptor
-import mods.eln.node.transparent.TransparentNodeElementInventory
-import mods.eln.node.transparent.TransparentNodeEntity
+import mods.eln.node.transparent.*
 import mods.eln.sim.IProcess
 import mods.eln.sim.nbt.NbtElectricalGateInput
 import net.minecraft.entity.player.EntityPlayer
@@ -32,7 +29,6 @@ import net.minecraft.nbt.NBTTagCompound
 import org.lwjgl.opengl.GL11
 import java.io.DataInputStream
 import java.io.DataOutputStream
-import java.util.*
 
 abstract class TurbineDescriptor(baseName: String, obj: Obj3D) :
     SimpleShaftDescriptor(baseName, TurbineElement::class, TurbineRender::class, EntityMetaTag.Fluid) {
@@ -309,7 +305,7 @@ class TurbineElement(node: TransparentNode, desc_: TransparentNodeDescriptor) :
         } else {
             info[tr("Blade")] = tr("None")
         }
-        if (Eln.config.getBooleanOrElse("ui.waila.easyMode", false)) {
+        if (isWailaEasyModeEnabled()) {
             info[tr("Efficiency")] = Utils.plotPercent("", efficiency.toDouble())
             info[tr("Fuel usage")] = desc.formatFluidRate(fluidRate)
         }

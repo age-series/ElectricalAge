@@ -128,14 +128,14 @@ class TurbineBladeDescriptor(
     }
 
     override fun addInformation(
-        stack: ItemStack?,
-        player: EntityPlayer?,
+        itemStack: ItemStack?,
+        entityPlayer: EntityPlayer?,
         list: MutableList<String>,
         par4: Boolean
     ) {
-        super.addInformation(stack, player, list, par4)
+        super.addInformation(itemStack, entityPlayer, list, par4)
         list.add(tr($$"Nominal Lifetime: %1$h",nominalLifeInHours.toInt()))
-        if (stack != null) list.add(tr("Condition: %1$", getConditionLabel(stack)))
+        if (itemStack != null) list.add(tr("Condition: %1$", getConditionLabel(itemStack)))
         if (tierDescription.isNotEmpty()) list.add(tr(tierDescription))
     }
 

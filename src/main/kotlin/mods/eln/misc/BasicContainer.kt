@@ -11,6 +11,9 @@ import net.minecraft.item.ItemStack
 import kotlin.math.min
 
 open class BasicContainer(player: EntityPlayer, protected var inventory: IInventory, slot: Array<Slot>) : Container() {
+    /** The number of slots specific to this container (i.e. not counting the player inventory) */
+    val containerSize = slot.size
+
     init {
         for (i in slot.indices) {
             addSlotToContainer(slot[i])

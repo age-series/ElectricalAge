@@ -41,6 +41,12 @@ import kotlin.math.pow
 class FloodlightElement(transparentNode: TransparentNode, transparentNodeDescriptor: TransparentNodeDescriptor) :
     TransparentNodeElement(transparentNode, transparentNodeDescriptor), IConfigurable {
 
+    companion object {
+        var lastLamp1Stack: ItemStack? = null
+        var lastLamp2Stack: ItemStack? = null
+        var placingPlayerIsCreative = false
+    }
+
     override val inventory = TransparentNodeElementInventory(2, 64, this)
 
     private val inventoryProxy = AutoAcceptInventoryProxy(inventory)
@@ -115,9 +121,11 @@ class FloodlightElement(transparentNode: TransparentNode, transparentNodeDescrip
 
         if (currentEquippedItem is LampDescriptor) {
             if (currentEquippedItem.lampData.technology in descriptor.acceptedLampTypes) {
-                AutoAcceptInventoryProxy.creativeFreeInsert = Eln.config.getBooleanOrElse("gameplay.qol.creativeNoConsumeInsertedItems", false) && player is EntityPlayerMP && Utils.isCreative(player)
-                return inventoryProxy.take(player.currentEquippedItem, this, notifyInventoryChange = true).also {
-                    if (it && Eln.config.getBooleanOrElse("gameplay.qol.rememberLastFloodlightBulbs", false)) {
+                AutoAcceptInventoryProxy.creativeFreeInsert =
+                    Eln.config.getBooleanOrElse("gameplay.qol.creativeNoConsumeInsertedItems", false) && (player is EntityPlayerMP) && Utils.isCreative(player)
+
+                return inventoryProxy.take(player.currentEquippedItem, this, notifyInventoryChange = true).also { accepted ->
+                    if (accepted && Eln.config.getBooleanOrElse("gameplay.qol.rememberLastFloodlightBulbs", false)) {
                         lastLamp1Stack = inventory.getStackInSlot(FloodlightContainer.LAMP_SLOT_1_ID)?.copy()
                         lastLamp2Stack = inventory.getStackInSlot(FloodlightContainer.LAMP_SLOT_2_ID)?.copy()
                     }
@@ -164,14 +172,13 @@ class FloodlightElement(transparentNode: TransparentNode, transparentNodeDescrip
         electricalLoadList.add(electricalLoad)
         electricalComponentList.add(lamp1Resistor)
         electricalComponentList.add(lamp2Resistor)
-        computeInventory()
-        connect()
         if (Eln.config.getBooleanOrElse("gameplay.qol.rememberLastFloodlightBulbs", false) && placingPlayerIsCreative) {
             lastLamp1Stack?.let { inventory.setInventorySlotContents(FloodlightContainer.LAMP_SLOT_1_ID, it.copy()) }
             lastLamp2Stack?.let { inventory.setInventorySlotContents(FloodlightContainer.LAMP_SLOT_2_ID, it.copy()) }
-            computeInventory()
             placingPlayerIsCreative = false
         }
+        computeInventory()
+        connect()
     }
 
     override fun connectJob() {
@@ -292,7 +299,7 @@ class FloodlightElement(transparentNode: TransparentNode, transparentNodeDescrip
         if (lamp2Stack != null) info[I18N.tr("Bulb 2")] = lamp2Stack.displayName
         else info[I18N.tr("Bulb 2")] = I18N.tr("None")
 
-        if (Eln.config.getBooleanOrElse("ui.waila.easyMode", false)) {
+        if (Utils.isWailaEasyModeEnabled()) {
             info[I18N.tr("Voltage")] = plotVolt("", electricalLoad.voltage)
 
             if (lamp1Stack != null) {
@@ -306,7 +313,7 @@ class FloodlightElement(transparentNode: TransparentNode, transparentNodeDescrip
             }
         }
 
-        if (Eln.config.getBooleanOrElse("debug.logging.enabled", false)) {
+        if (Utils.isDebugEnabled()) {
             info[I18N.tr("Lamp Brightness")] = plotValue(node!!.lightValue.toDouble())
         }
 
@@ -349,8 +356,7 @@ class FloodlightElement(transparentNode: TransparentNode, transparentNodeDescrip
                 lastLamp1Stack = inventory.getStackInSlot(FloodlightContainer.LAMP_SLOT_1_ID)?.copy()
                 lastLamp2Stack = inventory.getStackInSlot(FloodlightContainer.LAMP_SLOT_2_ID)?.copy()
             }
-        }
-        else if (publishChanges) needPublish()
+        } else if (publishChanges) needPublish()
     }
 
     override fun writeConfigTool(compound: NBTTagCompound, invoker: EntityPlayer) {
@@ -364,9 +370,4 @@ class FloodlightElement(transparentNode: TransparentNode, transparentNodeDescrip
         ConfigCopyToolDescriptor.writeGenDescriptor(compound, "lamp2", inventory.getStackInSlot(FloodlightContainer.LAMP_SLOT_2_ID))
     }
 
-    companion object {
-        var lastLamp1Stack: ItemStack? = null
-        var lastLamp2Stack: ItemStack? = null
-        var placingPlayerIsCreative = false
-    }
 }

@@ -3,12 +3,19 @@ package mods.eln.transparentnode.festive
 import mods.eln.misc.Direction
 import mods.eln.misc.Obj3D
 import mods.eln.misc.UtilsClient
-import mods.eln.node.transparent.*
+import mods.eln.node.transparent.TransparentNodeDescriptor
+import mods.eln.node.transparent.TransparentNodeElementRender
+import mods.eln.node.transparent.TransparentNodeEntity
+import mods.eln.sixnode.lampsupply.PowerChannelTextboxHelper
+import net.minecraft.client.gui.GuiScreen
+import net.minecraft.entity.player.EntityPlayer
 import org.lwjgl.opengl.GL11
 import java.io.DataInputStream
 import java.io.IOException
 
-class HolidayCandleDescriptor(val name: String, val obj: Obj3D): TransparentNodeDescriptor(name, FestiveElement::class.java, HolidayCandleRender::class.java) {
+class HolidayCandleDescriptor(name: String, val obj: Obj3D) :
+    TransparentNodeDescriptor(name, FestiveElement::class.java, HolidayCandleRender::class.java) {
+
     private var base: Obj3D.Obj3DPart? = null
     private var glass: Obj3D.Obj3DPart? = null
     private var light: Obj3D.Obj3DPart? = null
@@ -39,15 +46,19 @@ class HolidayCandleDescriptor(val name: String, val obj: Obj3D): TransparentNode
     }
 }
 
-class HolidayCandleRender(tileEntity: TransparentNodeEntity, transparentNodedescriptor: TransparentNodeDescriptor): TransparentNodeElementRender(tileEntity, transparentNodedescriptor) {
+class HolidayCandleRender(tileEntity: TransparentNodeEntity, transparentNodeDescriptor: TransparentNodeDescriptor) :
+    TransparentNodeElementRender(tileEntity, transparentNodeDescriptor), IFestiveElementRender {
 
     var powered = false
+    override var lampSupplyChannel = PowerChannelTextboxHelper.DEFAULT_CHANNEL_STRING
+    override var activeLampSupplyConnection = false
 
     override fun networkUnserialize(stream: DataInputStream) {
         super.networkUnserialize(stream)
         try {
             powered = stream.readBoolean()
-
+            lampSupplyChannel = stream.readUTF()
+            activeLampSupplyConnection = stream.readBoolean()
         } catch (e: IOException) {
             e.printStackTrace()
         }
@@ -55,5 +66,13 @@ class HolidayCandleRender(tileEntity: TransparentNodeEntity, transparentNodedesc
 
     override fun draw() {
         (transparentNodeDescriptor as HolidayCandleDescriptor).draw(front!!, powered)
+    }
+
+    override fun newGuiDraw(side: Direction, player: EntityPlayer): GuiScreen {
+        return FestiveGui(this)
+    }
+
+    override fun clientSetString(id: Byte, text: String) {
+        clientSendString(id, text)
     }
 }

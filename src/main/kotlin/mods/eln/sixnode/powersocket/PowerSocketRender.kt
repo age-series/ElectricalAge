@@ -10,6 +10,7 @@ import mods.eln.node.six.SixNodeDescriptor
 import mods.eln.node.six.SixNodeElementInventory
 import mods.eln.node.six.SixNodeElementRender
 import mods.eln.node.six.SixNodeEntity
+import mods.eln.sixnode.lampsupply.PowerChannelTextboxHelper
 import net.minecraft.client.gui.GuiScreen
 import net.minecraft.entity.player.EntityPlayer
 import org.lwjgl.opengl.GL11
@@ -22,7 +23,8 @@ class PowerSocketRender(tileEntity: SixNodeEntity?, side: Direction?, descriptor
     ) {
     var descriptor: PowerSocketDescriptor
     var coord: Coordinate
-    var channel: String? = null
+    var channel = PowerChannelTextboxHelper.DEFAULT_CHANNEL_STRING
+    var activeLampSupplyConnection = false
     var cableRender: CableRenderDescriptor? = null
     override var inventory = SixNodeElementInventory(1, 64, this)
     var paintColor = 15
@@ -56,6 +58,7 @@ class PowerSocketRender(tileEntity: SixNodeEntity?, side: Direction?, descriptor
         super.publishUnserialize(stream)
         try {
             channel = stream.readUTF()
+            activeLampSupplyConnection = stream.readBoolean()
             paintColor = stream.readInt()
         } catch (e: IOException) {
             e.printStackTrace()

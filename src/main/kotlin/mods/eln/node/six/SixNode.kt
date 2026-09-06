@@ -15,8 +15,8 @@ import mods.eln.misc.Utils.updateAllLightTypes
 import mods.eln.misc.Utils.updateSkylight
 import mods.eln.node.ISixNodeCache
 import mods.eln.node.Node
-import mods.eln.node.NodeConnectionEndpoint
 import mods.eln.node.NodeConnection
+import mods.eln.node.NodeConnectionEndpoint
 import mods.eln.sim.ElectricalConnection
 import mods.eln.sim.ElectricalLoad
 import mods.eln.sim.ThermalConnection
@@ -36,7 +36,6 @@ import java.io.DataInputStream
 import java.io.DataOutputStream
 import java.io.IOException
 import java.lang.reflect.InvocationTargetException
-import java.util.*
 
 class SixNode : Node() {
     @JvmField
@@ -433,7 +432,7 @@ class SixNode : Node() {
             var b = Blocks.air
             if (stack != null) b = Block.getBlockFromItem(stack.item)
             var isWrenchReplacingBlock = false
-            if (ServerKeyHandler.get(ServerKeyHandler.WRENCH) && stack != null) {
+            if (ServerKeyHandler.get(ServerKeyHandler.WRENCH, entityPlayer) && stack != null) {
                 for (a in sixNodeCacheList) {
                     if (a.accept(stack)) {
                         isWrenchReplacingBlock = true

@@ -11,8 +11,8 @@ import mods.eln.misc.LRDU
 import mods.eln.misc.RealisticEnum
 import mods.eln.misc.Utils.addChatMessage
 import mods.eln.misc.Utils.isPlayerUsingWrench
+import mods.eln.misc.Utils.isWailaEasyModeEnabled
 import mods.eln.misc.Utils.plotAmpere
-import mods.eln.misc.Utils.plotCelsius
 import mods.eln.misc.Utils.plotPower
 import mods.eln.misc.Utils.plotUIP
 import mods.eln.misc.Utils.plotValue
@@ -200,7 +200,7 @@ open class CurrentCableElement(sixNode: SixNode?, side: Direction?, descriptor: 
         val info: MutableMap<String, String> = HashMap()
         info[tr("Current")] = plotAmpere("", electricalLoad.current)
         info[tr("Temperature")] = plotAmbientCelsius("", thermalLoad.temperature)
-        if (Eln.config.getBooleanOrElse("ui.waila.easyMode", false)) {
+        if (isWailaEasyModeEnabled()) {
             info[tr("Voltage")] = plotVolt("", electricalLoad.voltage)
         }
         info[tr("Subsystem Matrix Size")] = renderSubSystemWaila(electricalLoad.subSystem)

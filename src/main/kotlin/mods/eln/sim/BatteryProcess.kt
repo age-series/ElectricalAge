@@ -2,6 +2,7 @@ package mods.eln.sim
 
 import mods.eln.Eln
 import mods.eln.misc.FunctionTable
+import mods.eln.misc.Utils
 import mods.eln.sim.mna.component.VoltageSource
 import mods.eln.sim.mna.state.VoltageState
 
@@ -28,7 +29,7 @@ open class BatteryProcess(
         var wasteQ = 0.0
         val deltaQ = voltageSource.current * time / QNominal
         if (!isRechargeable && deltaQ < 0.0) {
-            if (Eln.config.getBooleanOrElse("debug.logging.enabled", false)) {
+            if (Utils.isDebugEnabled()) {
                 Eln.logger.warn("Battery is recharging when it shouldn't! current=${voltageSource.current}")
             }
             wasteQ = -deltaQ

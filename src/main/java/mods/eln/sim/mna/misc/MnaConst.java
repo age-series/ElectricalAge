@@ -6,4 +6,7 @@ public class MnaConst {
     public static final double highImpedance = 1e9;
     public static final double pullDown = 1e9;
     public static final double noImpedance = 1e-9;
+
+    // Check against this when testing if a voltage/current/power/etc. is zero
+    public static final double almostZero = 1e-9;
 }

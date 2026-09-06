@@ -2,6 +2,7 @@ package mods.eln.sixnode.lampsocket
 
 import mods.eln.gui.*
 import mods.eln.i18n.I18N
+import mods.eln.sixnode.lampsupply.PowerChannelTextboxHelper
 import net.minecraft.entity.player.EntityPlayer
 
 class LampSocketGui(player: EntityPlayer, val render: LampSocketRender) :
@@ -39,8 +40,7 @@ class LampSocketGui(player: EntityPlayer, val render: LampSocketRender) :
         buttonGrounded.enabled = false
 
         textboxLampSupplyChannel = newGuiTextField(16+1, 36+1, 144-2)
-        textboxLampSupplyChannel.setComment(0, I18N.tr("Specify the lamp supply channel"))
-        textboxLampSupplyChannel.setText(render.lampSupplyChannel)
+        PowerChannelTextboxHelper.initPowerChannelTextbox(textboxLampSupplyChannel, render.lampSupplyChannel)
 
         trackbarRotationAngle = newGuiHorizontalTrackBar(43,61,90, 14)
         trackbarRotationAngle.setRange(MIN_ROTATION_ANGLE.toFloat(), MAX_ROTATION_ANGLE.toFloat())
@@ -60,15 +60,13 @@ class LampSocketGui(player: EntityPlayer, val render: LampSocketRender) :
             buttonGrounded.visible = false
             buttonPowerSource.displayString = I18N.tr("Powered by lamp supply")
 
-            val lampStack = render.inventory.getStackInSlot(LampSocketContainer.LAMP_SLOT_ID)
-            val cableStack = render.inventory.getStackInSlot(LampSocketContainer.CABLE_SLOT_ID)
-
-            when {
-                cableStack == null -> textboxLampSupplyChannel.setComment(1, "§4" + I18N.tr("Cable slot empty"))
-                lampStack == null -> textboxLampSupplyChannel.setComment(1, "§4" + I18N.tr("Lamp slot empty"))
-                render.activeLampSupplyConnection -> textboxLampSupplyChannel.setComment(1, "§2" + I18N.tr("Connected to %1$", render.lampSupplyChannel))
-                else -> textboxLampSupplyChannel.setComment(1, "§4" + I18N.tr("%1$ is not in range!", render.lampSupplyChannel))
-            }
+            PowerChannelTextboxHelper.updatePowerChannelTextboxTooltip(
+                textboxLampSupplyChannel,
+                render.lampSupplyChannel,
+                render.activeLampSupplyConnection,
+                render.inventory.getStackInSlot(LampSocketContainer.LAMP_SLOT_ID) != null,
+                render.inventory.getStackInSlot(LampSocketContainer.CABLE_SLOT_ID) != null
+            )
         } else {
             textboxLampSupplyChannel.visible = false
             buttonGrounded.visible = true
@@ -88,4 +86,5 @@ class LampSocketGui(player: EntityPlayer, val render: LampSocketRender) :
             trackbarRotationAngle -> render.clientSetDouble(ADJUST_ROTATION_ANGLE_EVENT, trackbarRotationAngle.value.toDouble())
         }
     }
+
 }

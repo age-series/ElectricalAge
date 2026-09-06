@@ -10,6 +10,7 @@ import mods.eln.item.IConfigurable
 import mods.eln.misc.*
 import mods.eln.misc.LRDU.Companion.fromInt
 import mods.eln.misc.Obj3D.Obj3DPart
+import mods.eln.misc.Utils.isWailaEasyModeEnabled
 import mods.eln.misc.Utils.plotAmpere
 import mods.eln.misc.Utils.plotVolt
 import mods.eln.misc.Utils.renderSubSystemWaila
@@ -249,7 +250,7 @@ class CurrentRelayElement(sixNode: SixNode, side: Direction, descriptor: SixNode
         info[tr("Position")] = if (switchState) tr("Closed") else tr("Open")
         info[tr("Current")] = plotAmpere("", aLoad.current)
         info[tr("Temperature")] = plotAmbientCelsius("", thermalLoad.temperatureCelsius)
-        if (Eln.config.getBooleanOrElse("ui.waila.easyMode", false)) {
+        if (isWailaEasyModeEnabled()) {
             info[tr("Default position")] = if (defaultOutput) tr("Closed") else tr("Open")
             info[tr("Voltages")] =
                 plotVolt("", aLoad.voltage) + plotVolt(" ", bLoad.voltage)

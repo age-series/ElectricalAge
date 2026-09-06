@@ -13,15 +13,11 @@ import mods.eln.gridnode.transformer.GridTransformerDescriptor
 import mods.eln.i18n.I18N
 import mods.eln.i18n.I18N.TR_NAME
 import mods.eln.mechanical.*
-import mods.eln.misc.Coordinate
-import mods.eln.misc.Direction
-import mods.eln.misc.FunctionTable
-import mods.eln.misc.FunctionTableYProtect
+import mods.eln.misc.*
 import mods.eln.misc.SeriesFunction.Companion.newE12
 import mods.eln.misc.SeriesFunction.Companion.newE6
 import mods.eln.misc.Utils.coalEnergyReference
 import mods.eln.misc.Utils.printFunction
-import mods.eln.misc.NominalVoltage
 import mods.eln.railroad.OverheadLinesDescriptor
 import mods.eln.sim.ThermalLoadInitializer
 import mods.eln.sim.ThermalLoadInitializerByPowerDrop
@@ -120,6 +116,7 @@ object TransparentNodeRegistration {
         Eln.transparentNodeItem.setCreativeTabForGroup(70, Eln.creativeTabMachines)
         Eln.transparentNodeItem.setCreativeTabForGroup(71, Eln.creativeTabPowerElectronics)
         Eln.transparentNodeItem.setCreativeTabForGroup(72, Eln.creativeTabMachines)
+        Eln.transparentNodeItem.setCreativeTabForGroup(73, Eln.creativeTabLighting)
         Eln.transparentNodeItem.setCreativeTabForGroup(96, Eln.creativeTabPowerElectronics)
         Eln.transparentNodeItem.setCreativeTabForGroup(117, Eln.creativeTabSignalProcessing)
         Eln.transparentNodeItem.setCreativeTabForGroup(123, Eln.creativeTabPowerDistribution)
@@ -149,6 +146,7 @@ object TransparentNodeRegistration {
         registerFab(70)
         registerRailroad(71)
         registerWireProcessingMachines(72)
+        if (Eln.instance.isDevelopmentRun) registerStreetLamps(73)
         registerLargeRheostat() // 96, but from the wrong side.
         registerNixieTube() // 117, but from the wrong side.
         registerGridDevices(123)

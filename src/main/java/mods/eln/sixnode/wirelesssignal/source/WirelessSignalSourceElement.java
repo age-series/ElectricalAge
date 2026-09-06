@@ -12,6 +12,7 @@ import mods.eln.node.six.SixNodeElement;
 import mods.eln.sim.ElectricalLoad;
 import mods.eln.sim.IProcess;
 import mods.eln.sim.ThermalLoad;
+import mods.eln.sixnode.lampsupply.PowerChannelTextboxHelper;
 import mods.eln.sixnode.wirelesssignal.IWirelessSignalTx;
 import mods.eln.sixnode.wirelesssignal.tx.WirelessSignalTxElement;
 import mods.eln.sixnode.wirelesssignal.tx.WirelessSignalTxElement.LightningGlitchProcess;
@@ -22,7 +23,6 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
 import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nullable;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -39,7 +39,7 @@ public class WirelessSignalSourceElement extends SixNodeElement implements IWire
     public AutoResetProcess autoResetProcess;
     boolean state = false;
 
-    public String channel = "Default channel";
+    public String channel = PowerChannelTextboxHelper.DEFAULT_CHANNEL_STRING;
     private LightningGlitchProcess lightningGlitchProcess;
 
     public static final byte setChannelId = 1;

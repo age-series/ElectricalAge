@@ -6,14 +6,16 @@ import mods.eln.misc.UtilsClient
 import mods.eln.node.transparent.TransparentNodeDescriptor
 import mods.eln.node.transparent.TransparentNodeElementRender
 import mods.eln.node.transparent.TransparentNodeEntity
-import net.minecraft.init.Blocks
-import net.minecraft.util.AxisAlignedBB
-import net.minecraft.world.World
+import mods.eln.sixnode.lampsupply.PowerChannelTextboxHelper
+import net.minecraft.client.gui.GuiScreen
+import net.minecraft.entity.player.EntityPlayer
 import org.lwjgl.opengl.GL11
 import java.io.DataInputStream
 import java.io.IOException
 
-class StringLightsDescriptor(val name: String, val obj: Obj3D): TransparentNodeDescriptor(name, FestiveElement::class.java, StringLightsRender::class.java) {
+class StringLightsDescriptor(name: String, val obj: Obj3D) :
+    TransparentNodeDescriptor(name, FestiveElement::class.java, StringLightsRender::class.java) {
+
     private var base: Obj3D.Obj3DPart? = null
     private var light: Obj3D.Obj3DPart? = null
 
@@ -48,15 +50,19 @@ class StringLightsDescriptor(val name: String, val obj: Obj3D): TransparentNodeD
      */
 }
 
-class StringLightsRender(tileEntity: TransparentNodeEntity, transparentNodedescriptor: TransparentNodeDescriptor): TransparentNodeElementRender(tileEntity, transparentNodedescriptor) {
+class StringLightsRender(tileEntity: TransparentNodeEntity, transparentNodeDescriptor: TransparentNodeDescriptor) :
+    TransparentNodeElementRender(tileEntity, transparentNodeDescriptor), IFestiveElementRender {
 
     var powered = false
+    override var lampSupplyChannel = PowerChannelTextboxHelper.DEFAULT_CHANNEL_STRING
+    override var activeLampSupplyConnection = false
 
     override fun networkUnserialize(stream: DataInputStream) {
         super.networkUnserialize(stream)
         try {
             powered = stream.readBoolean()
-
+            lampSupplyChannel = stream.readUTF()
+            activeLampSupplyConnection = stream.readBoolean()
         } catch (e: IOException) {
             e.printStackTrace()
         }
@@ -64,6 +70,14 @@ class StringLightsRender(tileEntity: TransparentNodeEntity, transparentNodedescr
 
     override fun draw() {
         (transparentNodeDescriptor as StringLightsDescriptor).draw(front!!, powered)
+    }
+
+    override fun newGuiDraw(side: Direction, player: EntityPlayer): GuiScreen {
+        return FestiveGui(this)
+    }
+
+    override fun clientSetString(id: Byte, text: String) {
+        clientSendString(id, text)
     }
 }
 

@@ -4,7 +4,7 @@ import mods.eln.gui.GuiHelperContainer
 import mods.eln.gui.GuiScreenEln
 import mods.eln.gui.GuiTextFieldEln
 import mods.eln.gui.IGuiObject
-import mods.eln.i18n.I18N.tr
+import mods.eln.sixnode.lampsupply.PowerChannelTextboxHelper
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.inventory.IInventory
 
@@ -12,16 +12,19 @@ class PowerSocketGui(
     private val render: PowerSocketRender,
     @Suppress("UNUSED_PARAMETER") player: EntityPlayer?,
     @Suppress("UNUSED_PARAMETER") inventory: IInventory?
-) :
-    GuiScreenEln() {
+) : GuiScreenEln() {
 
-        var device: GuiTextFieldEln? = null
+    private lateinit var device: GuiTextFieldEln
+
     override fun initGui() {
         super.initGui()
-
         device = newGuiTextField(8, 8, 138)
-        device?.setText(render.channel)
-        device?.setComment(0, tr("Specify the power channel"))
+        PowerChannelTextboxHelper.initPowerChannelTextbox(device, render.channel)
+    }
+
+    override fun preDraw(f: Float, x: Int, y: Int) {
+        super.preDraw(f, x, y)
+        PowerChannelTextboxHelper.updatePowerChannelTextboxTooltip(device, render.channel, render.activeLampSupplyConnection)
     }
 
     override fun newHelper(): GuiHelperContainer {
@@ -30,7 +33,7 @@ class PowerSocketGui(
 
     override fun guiObjectEvent(`object`: IGuiObject) {
         if (`object` === device) {
-            render.clientSetString(PowerSocketElement.setChannelId, device?.text?: "")
+            render.clientSetString(PowerSocketElement.SET_CHANNEL_EVENT, device.text?: "")
         }
         super.guiObjectEvent(`object`)
     }

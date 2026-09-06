@@ -4,6 +4,7 @@ import mods.eln.Eln
 import mods.eln.cable.CableRenderDescriptor
 import mods.eln.i18n.I18N.tr
 import mods.eln.misc.*
+import mods.eln.misc.Utils.isWailaEasyModeEnabled
 import mods.eln.node.NodeBase
 import mods.eln.node.transparent.EntityMetaTag
 import mods.eln.node.transparent.TransparentNode
@@ -37,7 +38,7 @@ private data class MotorSupplyThevenin(val voltage: Double, val resistance: Doub
 }
 
 class MotorDescriptor(
-    val name: String,
+    name: String,
     obj: Obj3D,
     cable: ElectricalCableDescriptor,
     nominalRads: Float,
@@ -435,7 +436,7 @@ class MotorElement(node: TransparentNode, desc_: TransparentNodeDescriptor) :
         var info = mutableMapOf<String, String>()
         info.put(tr("Energy"), Utils.plotEnergy("", shaft.energy))
         info.put(tr("Speed"), Utils.plotRads("", shaft.rads))
-        if(Eln.config.getBooleanOrElse("ui.waila.easyMode", false)) {
+        if(isWailaEasyModeEnabled()) {
             info.put(tr("Voltage"), Utils.plotVolt("", powerSource.voltage))
             info.put(tr("Current"), Utils.plotAmpere("", powerSource.current))
             info.put(tr("Drive target"), Utils.plotRads("", driveSpeedTarget))

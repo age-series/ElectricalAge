@@ -4,7 +4,6 @@ import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.Phase;
 import cpw.mods.fml.common.gameevent.TickEvent.ServerTickEvent;
-import mods.eln.Eln;
 import mods.eln.environment.RoomThermalManager;
 import mods.eln.item.lampitem.LampLists;
 import mods.eln.metrics.MetricsSubsystem;
@@ -13,6 +12,7 @@ import mods.eln.sim.mna.RootSystem;
 import mods.eln.sim.mna.component.Component;
 import mods.eln.sim.mna.state.State;
 import mods.eln.sim.process.destruct.IDestructible;
+import mods.eln.sixnode.lampsupply.LampSupplyElement;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -53,6 +53,7 @@ public class Simulator /* ,IPacketHandler */ {
 
     private int printTimeCounter = 0;
     private int resetLampLifeTimeoutCounter = 0;
+    private int forceCachedLampSupplyUpdate = 0;
 
     public ArrayList<IProcess> getElectricalProcessList() {
         return electricalProcessList;
@@ -476,13 +477,21 @@ public class Simulator /* ,IPacketHandler */ {
             thermalFastNsStack = 0;
             slowNsStack = 0;
             thermalSlowNsStack = 0;
+        }
 
-            if (LampLists.INSTANCE.getResetLampLifeFlag()) {
-                if (++resetLampLifeTimeoutCounter == 2) { // Ensure that all lamp sockets have time to react to the flag by waiting between 1 and 2 seconds to reset the flag
-                    LampLists.INSTANCE.setResetLampLifeFlag(false);
-                    Utils.println("Reset all lamp lives to nominal.");
-                    resetLampLifeTimeoutCounter = 0;
-                }
+        if (LampLists.INSTANCE.getResetLampLifeFlag()) {
+            if (++resetLampLifeTimeoutCounter == 2) { // Keep the flag enabled for a minimum of one tick
+                LampLists.INSTANCE.setResetLampLifeFlag(false);
+                Utils.println("Reset all lamp lives to nominal.");
+                resetLampLifeTimeoutCounter = 0;
+            }
+        }
+
+        if (LampSupplyElement.Companion.getForceCachedLampSupplyUpdate()) {
+            if (++forceCachedLampSupplyUpdate == 2) { // Keep the flag enabled for a minimum of one tick
+                LampSupplyElement.Companion.setForceCachedLampSupplyUpdate(false);
+                Utils.println("Reset cached best lamp supply for all lamp sockets.");
+                forceCachedLampSupplyUpdate = 0;
             }
         }
 

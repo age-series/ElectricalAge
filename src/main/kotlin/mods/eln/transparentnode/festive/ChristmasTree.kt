@@ -7,11 +7,16 @@ import mods.eln.misc.UtilsClient
 import mods.eln.node.transparent.TransparentNodeDescriptor
 import mods.eln.node.transparent.TransparentNodeElementRender
 import mods.eln.node.transparent.TransparentNodeEntity
+import mods.eln.sixnode.lampsupply.PowerChannelTextboxHelper
+import net.minecraft.client.gui.GuiScreen
+import net.minecraft.entity.player.EntityPlayer
 import org.lwjgl.opengl.GL11
 import java.io.DataInputStream
 import java.io.IOException
 
-class ChristmasTreeDescriptor(val name: String, val obj: Obj3D): TransparentNodeDescriptor(name, FestiveElement::class.java, ChristmasTreeRender::class.java) {
+class ChristmasTreeDescriptor(name: String, val obj: Obj3D) :
+    TransparentNodeDescriptor(name, FestiveElement::class.java, ChristmasTreeRender::class.java) {
+
     private var star: Obj3D.Obj3DPart? = null
     private var string1: Obj3D.Obj3DPart? = null
     private var string2: Obj3D.Obj3DPart? = null
@@ -53,15 +58,20 @@ class ChristmasTreeDescriptor(val name: String, val obj: Obj3D): TransparentNode
     }
 }
 
-class ChristmasTreeRender(tileEntity: TransparentNodeEntity, transparentNodedescriptor: TransparentNodeDescriptor): TransparentNodeElementRender(tileEntity, transparentNodedescriptor) {
+class ChristmasTreeRender(tileEntity: TransparentNodeEntity, transparentNodeDescriptor: TransparentNodeDescriptor) :
+    TransparentNodeElementRender(tileEntity, transparentNodeDescriptor), IFestiveElementRender {
+
     var x = 0
     var powered = false
+    override var lampSupplyChannel = PowerChannelTextboxHelper.DEFAULT_CHANNEL_STRING
+    override var activeLampSupplyConnection = false
 
     override fun networkUnserialize(stream: DataInputStream) {
         super.networkUnserialize(stream)
         try {
             powered = stream.readBoolean()
-
+            lampSupplyChannel = stream.readUTF()
+            activeLampSupplyConnection = stream.readBoolean()
         } catch (e: IOException) {
             e.printStackTrace()
         }
@@ -78,5 +88,13 @@ class ChristmasTreeRender(tileEntity: TransparentNodeEntity, transparentNodedesc
 
     override fun cameraDrawOptimisation(): Boolean {
         return false
+    }
+
+    override fun newGuiDraw(side: Direction, player: EntityPlayer): GuiScreen {
+        return FestiveGui(this)
+    }
+
+    override fun clientSetString(id: Byte, text: String) {
+        clientSendString(id, text)
     }
 }

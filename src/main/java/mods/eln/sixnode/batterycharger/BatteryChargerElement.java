@@ -1,6 +1,5 @@
 package mods.eln.sixnode.batterycharger;
 
-import mods.eln.Eln;
 import mods.eln.i18n.I18N;
 import mods.eln.item.MachineBoosterDescriptor;
 import mods.eln.item.electricalinterface.IItemEnergyBattery;
@@ -20,6 +19,7 @@ import mods.eln.sim.mna.component.Resistor;
 import mods.eln.sim.nbt.NbtElectricalLoad;
 import mods.eln.sim.process.destruct.VoltageStateWatchDog;
 import mods.eln.sim.process.destruct.WorldExplosion;
+import mods.eln.sixnode.lampsupply.PowerChannelTextboxHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
@@ -53,7 +53,7 @@ public class BatteryChargerElement extends SixNodeElement {
 
     VoltageStateWatchDog voltageWatchDog = new VoltageStateWatchDog(powerLoad);
 
-    public String channel = "Default channel";
+    public String channel = PowerChannelTextboxHelper.DEFAULT_CHANNEL_STRING;
 
     boolean invChanged = false;
 
@@ -117,7 +117,7 @@ public class BatteryChargerElement extends SixNodeElement {
     public Map<String, String> getWaila() {
         Map<String, String> info = new HashMap<String, String>();
         info.put(I18N.tr("Charge Current"), Utils.plotAmpere("", powerLoad.getCurrent()));
-        if (Eln.config.getBooleanOrElse("ui.waila.easyMode", false)) {
+        if (Utils.isWailaEasyModeEnabled()) {
             info.put(I18N.tr("Voltage"), Utils.plotVolt("", powerLoad.getVoltage()));
             info.put(I18N.tr("Power"), Utils.plotPower("", powerLoad.getCurrent() * powerLoad.getVoltage()));
         }

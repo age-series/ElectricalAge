@@ -11,9 +11,11 @@ import net.minecraft.inventory.IInventory
 import net.minecraft.item.ItemStack
 
 class AutoAcceptInventoryProxy(val inventory: IInventory) {
+
     companion object {
         var creativeFreeInsert = false
     }
+
     interface ExistingItemHandler {
         fun handleExistingInventoryItem(itemStack: ItemStack)
     }
@@ -46,6 +48,7 @@ class AutoAcceptInventoryProxy(val inventory: IInventory) {
                     GenericItemBlockUsingDamageDescriptor.getDescriptor(itemStack)?.let { desc ->
                         if (acceptedItems.any { it.isAssignableFrom(desc.javaClass) }) {
                             if (desc is UtilityCableDescriptor) {
+                                // trimCable handles all required behavior for utility cables
                                 return IUtilityCableInventory.trimCable(itemStack, inventory, index, creativeFreeInsert)
                             }
                             if (!creativeFreeInsert) itemStack.stackSize -= 1
@@ -67,7 +70,7 @@ class AutoAcceptInventoryProxy(val inventory: IInventory) {
             if (itemStack == null) return false
 
             val existingStack = inventory.getStackInSlot(index)
-            if (existingStack?.stackSize ?: 0 >= maxItems) return false
+            if ((existingStack?.stackSize ?: 0) >= maxItems) return false
 
             val existingItemDescriptor = GenericItemUsingDamageDescriptor.getDescriptor(existingStack)
             val itemDescriptor = GenericItemUsingDamageDescriptor.getDescriptor(itemStack)
@@ -185,4 +188,5 @@ class AutoAcceptInventoryProxy(val inventory: IInventory) {
         }
         return ret
     }
+
 }

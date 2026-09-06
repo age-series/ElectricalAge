@@ -1,25 +1,21 @@
 package mods.eln.server.console
 
 import mods.eln.Eln
+import mods.eln.config.ServerConfigSyncHandler
+import mods.eln.environment.BiomeClimateService
 import mods.eln.gridnode.GridElement
 import mods.eln.gridnode.GridLink
 import mods.eln.gridnode.GridSwitchElement
 import mods.eln.gridnode.electricalpole.ElectricalPoleDescriptor
 import mods.eln.gridnode.electricalpole.ElectricalPoleElement
 import mods.eln.gridnode.transformer.GridTransformerElement
-import mods.eln.mechanical.ShaftElement
-import mods.eln.environment.BiomeClimateService
 import mods.eln.item.lampitem.BoilerplateLampData
 import mods.eln.item.lampitem.LampLists
-import mods.eln.misc.Coordinate
-import mods.eln.misc.Direction
-import mods.eln.misc.FC
-import mods.eln.misc.GhostPowerNode
-import mods.eln.misc.LRDU
-import mods.eln.misc.Version
+import mods.eln.mechanical.ShaftElement
+import mods.eln.misc.*
+import mods.eln.node.GhostNode
 import mods.eln.node.NodeBase
 import mods.eln.node.NodeManager
-import mods.eln.node.GhostNode
 import mods.eln.node.simple.SimpleNode
 import mods.eln.node.six.SixNode
 import mods.eln.node.transparent.TransparentNode
@@ -33,16 +29,8 @@ import java.io.BufferedWriter
 import java.io.File
 import java.io.FileWriter
 import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
-import java.util.LinkedHashSet
-import kotlin.math.PI
-import kotlin.math.ceil
-import kotlin.math.cos
-import kotlin.math.hypot
-import kotlin.math.min
-import kotlin.math.max
-import kotlin.math.sin
+import java.util.*
+import kotlin.math.*
 
 private data class ZoneBounds(
     val minX: Int,
@@ -166,6 +154,7 @@ class ElnConfigCommand : IConsoleCommand {
                             return
                         } else cprint(ics, "${FC.BRIGHT_GREEN}$path = $writtenValue", indent = 1)
                     }
+                    ServerConfigSyncHandler.syncClientConfig()
                     cprint(ics, "Changes saved to config/eln/eln.json.", indent = 1)
                 } catch (e: IllegalArgumentException) {
                     cprint(ics, "${FC.BRIGHT_RED}${e.message}", indent = 1)
@@ -1005,7 +994,7 @@ class ElnResetLampLifeCommand: IConsoleCommand {
 
     override fun runCommand(ics: ICommandSender, args: List<String>) {
         if (args.isEmpty()) {
-            LampLists.resetLampLifeFlag = true // This flag is automatically set to false up to two seconds after this command is called.
+            LampLists.resetLampLifeFlag = true // This flag is automatically set to false ~1 tick after this command is called.
             cprint(ics, "Resetting the lives of all light bulbs to their default values...", indent = 1)
         } else {
             cprint(ics, "This command does not take any arguments.", indent = 1)
@@ -1063,6 +1052,7 @@ class ElnDebugCommand: IConsoleCommand {
         if (args.size == 1) {
             val debug = getArgBool(ics, args[0])?: return
             saveConfigPath("debug.logging.enabled", debug)
+            ServerConfigSyncHandler.syncClientConfig()
             cprint(ics, "Debug mode: ${FC.DARK_GREEN}${boolToStr(debug)}", indent = 1)
         } else {
             cprint(ics, "This command only takes one argument - true or false")

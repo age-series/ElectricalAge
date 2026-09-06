@@ -6,7 +6,7 @@ import net.minecraft.nbt.NBTTagCompound;
 
 import java.util.Collection;
 
-public class ToogleAggregator extends BiggerAggregator implements INBTTReady {
+public class ToggleAggregator extends BiggerAggregator implements INBTTReady {
 
     double oldValue = 1;
 

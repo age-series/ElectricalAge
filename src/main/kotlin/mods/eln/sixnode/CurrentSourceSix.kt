@@ -5,10 +5,10 @@ import mods.eln.cable.CableRenderDescriptor
 import mods.eln.gui.GuiHelper
 import mods.eln.gui.GuiScreenEln
 import mods.eln.gui.GuiTextFieldEln
-import mods.eln.i18n.I18N
 import mods.eln.i18n.I18N.tr
 import mods.eln.item.IConfigurable
 import mods.eln.misc.*
+import mods.eln.misc.Utils.isWailaEasyModeEnabled
 import mods.eln.node.NodeBase
 import mods.eln.node.six.*
 import mods.eln.sim.ElectricalLoad
@@ -108,7 +108,7 @@ class CurrentSourceElement(sixNode: SixNode, side: Direction, descriptor: SixNod
         val info: MutableMap<String, String> = HashMap()
         info[tr("Voltage")] = Utils.plotVolt("", electricalLoad.voltage)
         info[tr("Current")] = Utils.plotAmpere("", electricalLoad.current)
-        if (Eln.config.getBooleanOrElse("ui.waila.easyMode", false)) {
+        if (isWailaEasyModeEnabled()) {
             info[tr("Power")] = Utils.plotPower("", electricalLoad.voltage * electricalLoad.current)
         }
         return info

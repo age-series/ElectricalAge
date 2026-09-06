@@ -13,13 +13,9 @@ import mods.eln.item.FerromagneticCoreDescriptor
 import mods.eln.item.IConfigurable
 import mods.eln.item.ItemMovingHelper
 import mods.eln.misc.*
+import mods.eln.misc.Utils.isWailaEasyModeEnabled
 import mods.eln.node.NodeBase
-import mods.eln.node.six.SixNode
-import mods.eln.node.six.SixNodeDescriptor
-import mods.eln.node.six.SixNodeElement
-import mods.eln.node.six.SixNodeElementInventory
-import mods.eln.node.six.SixNodeElementRender
-import mods.eln.node.six.SixNodeEntity
+import mods.eln.node.six.*
 import mods.eln.sim.ElectricalLoad
 import mods.eln.sim.ThermalLoad
 import mods.eln.sim.mna.component.Inductor
@@ -36,7 +32,6 @@ import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraftforge.client.IItemRenderer
 import org.lwjgl.opengl.GL11
-import java.util.HashMap
 import kotlin.math.abs
 
 class PowerInductorSixDescriptor(name: String,
@@ -155,7 +150,7 @@ class PowerInductorSixElement(SixNode: SixNode, side: Direction, descriptor: Six
         val info: MutableMap<String, String> = HashMap()
         info[tr("Inductance")] = Utils.plotValue(inductor.inductance, "H")
         info[tr("Charge")] = Utils.plotEnergy("", inductor.energy)
-        if (Eln.config.getBooleanOrElse("ui.waila.easyMode", false)) {
+        if (isWailaEasyModeEnabled()) {
             info[tr("Voltage drop")] = Utils.plotVolt("", abs(inductor.voltage))
             info[tr("Current")] = Utils.plotAmpere("", abs(inductor.current))
         }

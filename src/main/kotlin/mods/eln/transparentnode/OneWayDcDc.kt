@@ -14,33 +14,19 @@ import mods.eln.item.CaseItemDescriptor
 import mods.eln.item.ConfigCopyToolDescriptor
 import mods.eln.item.FerromagneticCoreDescriptor
 import mods.eln.item.IConfigurable
-import mods.eln.misc.BasicContainer
-import mods.eln.misc.Coordinate
-import mods.eln.misc.Direction
-import mods.eln.misc.LRDU
-import mods.eln.misc.LRDUMask
-import mods.eln.misc.Obj3D
-import mods.eln.misc.PhysicalInterpolator
-import mods.eln.misc.RealisticEnum
-import mods.eln.misc.SlewLimiter
-import mods.eln.misc.Utils
-import mods.eln.misc.VoltageLevelColor
+import mods.eln.misc.*
+import mods.eln.misc.Utils.isWailaEasyModeEnabled
 import mods.eln.node.NodeBase
 import mods.eln.node.NodePeriodicPublishProcess
 import mods.eln.node.six.SixNodeEntity
-import mods.eln.node.transparent.TransparentNode
-import mods.eln.node.transparent.TransparentNodeDescriptor
-import mods.eln.node.transparent.TransparentNodeElement
-import mods.eln.node.transparent.TransparentNodeElementInventory
-import mods.eln.node.transparent.TransparentNodeElementRender
-import mods.eln.node.transparent.TransparentNodeEntity
+import mods.eln.node.transparent.*
 import mods.eln.sim.ElectricalLoad
 import mods.eln.sim.IProcess
 import mods.eln.sim.ThermalLoad
+import mods.eln.sim.mna.SubSystem
 import mods.eln.sim.mna.component.VoltageSource
 import mods.eln.sim.mna.misc.IRootSystemPreStepProcess
 import mods.eln.sim.mna.misc.MnaConst
-import mods.eln.sim.mna.SubSystem
 import mods.eln.sim.mna.state.State
 import mods.eln.sim.nbt.NbtElectricalGateInput
 import mods.eln.sim.nbt.NbtElectricalLoad
@@ -64,7 +50,7 @@ import org.lwjgl.opengl.GL11
 import java.io.DataInputStream
 import java.io.DataOutputStream
 import java.io.IOException
-import java.util.Collections
+import java.util.*
 import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
@@ -490,7 +476,7 @@ class OneWayDcDcElement(
             secondaryThermalLoad
         )
         if (oneWayDescriptor.variable) info[tr("Control Voltage")] = Utils.plotVolt(control.voltage)
-        if (Eln.config.getBooleanOrElse("ui.waila.easyMode", false) || oneWayDescriptor.variable) {
+        if (isWailaEasyModeEnabled() || oneWayDescriptor.variable) {
             val primaryVoltage = primaryLoad.voltage - if (oneWayDescriptor.isolated) primaryReferenceLoad.voltage else 0.0
             val secondaryVoltage = secondaryLoad.voltage - if (oneWayDescriptor.isolated) secondaryReferenceLoad.voltage else 0.0
             info[tr("Voltages")] = "\u00A7a" + Utils.plotVolt("", primaryVoltage) + " " +

@@ -6,6 +6,7 @@ import mods.eln.gui.*
 import mods.eln.i18n.I18N.tr
 import mods.eln.item.IConfigurable
 import mods.eln.misc.*
+import mods.eln.misc.Utils.isWailaEasyModeEnabled
 import mods.eln.node.NodeBase
 import mods.eln.node.Synchronizable
 import mods.eln.node.six.*
@@ -17,7 +18,6 @@ import mods.eln.sim.nbt.NbtElectricalGateOutputProcess
 import mods.eln.sixnode.SummingUnitElement.Companion.GainChangedEvents
 import mods.eln.solver.Constant
 import mods.eln.solver.Equation
-import mods.eln.solver.IValue
 import mods.eln.wiki.Data
 import net.minecraft.client.gui.GuiScreen
 import net.minecraft.entity.player.EntityPlayer
@@ -265,7 +265,7 @@ class PIDRegulator : AnalogFunction() {
     override fun getWaila(inputs: Array<Double?>, output: Double): MutableMap<String, String> {
         val info = super.getWaila(inputs, output)
         info[tr("Params")] = "Kp = $Kp, Ki = $Ki, Kd = $Kd"
-        if (Eln.config.getBooleanOrElse("ui.waila.easyMode", false)) {
+        if (isWailaEasyModeEnabled()) {
             info[tr("State")] = "Si = ${pid.iStack}"
         }
         return info

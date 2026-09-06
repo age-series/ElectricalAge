@@ -7,17 +7,10 @@ import mods.eln.gui.GuiScreenEln
 import mods.eln.gui.GuiTextFieldEln
 import mods.eln.i18n.I18N.tr
 import mods.eln.item.IConfigurable
-import mods.eln.misc.Direction
-import mods.eln.misc.LRDU
-import mods.eln.misc.Obj3D
-import mods.eln.misc.Utils
-import mods.eln.misc.VoltageLevelColor
+import mods.eln.misc.*
+import mods.eln.misc.Utils.isWailaEasyModeEnabled
 import mods.eln.node.NodeBase
-import mods.eln.node.six.SixNode
-import mods.eln.node.six.SixNodeDescriptor
-import mods.eln.node.six.SixNodeElement
-import mods.eln.node.six.SixNodeElementRender
-import mods.eln.node.six.SixNodeEntity
+import mods.eln.node.six.*
 import mods.eln.sim.ElectricalLoad
 import mods.eln.sim.ThermalLoad
 import mods.eln.sim.mna.component.CurrentSource
@@ -110,7 +103,7 @@ class PowerSourceElement(sixNode: SixNode, side: Direction, descriptor: SixNodeD
         val info: MutableMap<String, String> = HashMap()
         info[tr("Voltage")] = Utils.plotVolt("", electricalLoad.voltage)
         info[tr("Current")] = Utils.plotAmpere("", electricalLoad.current)
-        if (Eln.config.getBooleanOrElse("ui.waila.easyMode", false)) {
+        if (isWailaEasyModeEnabled()) {
             info[tr("Power")] = Utils.plotPower("", electricalLoad.voltage * electricalLoad.current)
         }
         return info

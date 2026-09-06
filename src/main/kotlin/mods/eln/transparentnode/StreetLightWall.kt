@@ -1,21 +1,38 @@
 package mods.eln.transparentnode
 
 import mods.eln.ghost.GhostGroup
+import mods.eln.gui.*
+import mods.eln.i18n.I18N
+import mods.eln.item.IConfigurable
+import mods.eln.item.lampitem.BoilerplateLampData
 import mods.eln.misc.*
+import mods.eln.misc.Utils.plotPower
+import mods.eln.misc.Utils.plotValue
+import mods.eln.misc.Utils.plotVolt
 import mods.eln.node.transparent.*
 import mods.eln.sim.ElectricalLoad
 import mods.eln.sim.IProcess
 import mods.eln.sim.ThermalLoad
 import mods.eln.sim.mna.component.Resistor
 import mods.eln.sim.nbt.NbtElectricalLoad
-import mods.eln.sixnode.lampsupply.LampSupplyElement
+import mods.eln.sixnode.lampsupply.AvailableSupply
+import mods.eln.sixnode.lampsupply.IWirelessPower
+import mods.eln.sixnode.lampsupply.LampSupplyConnectionHelper
+import mods.eln.sixnode.lampsupply.PowerChannelTextboxHelper
+import mods.eln.transparentnode.festive.FestiveGui
+import net.minecraft.client.gui.GuiScreen
 import net.minecraft.entity.player.EntityPlayer
+import net.minecraft.nbt.NBTTagCompound
 import org.lwjgl.opengl.GL11
 import java.io.DataInputStream
 import java.io.DataOutputStream
 import java.io.IOException
+import kotlin.math.abs
+import kotlin.math.pow
 
-class StreetLightWallDescriptor(val name: String, val obj: Obj3D): TransparentNodeDescriptor(name, StreetLightWallElement::class.java, StreetLightWallRender::class.java) {
+class StreetLightWallDescriptor(name: String, val obj: Obj3D) :
+    TransparentNodeDescriptor(name, StreetLightWallElement::class.java, StreetLightWallRender::class.java) {
+
     private var fixture: Obj3D.Obj3DPart? = null
     private var part2: Obj3D.Obj3DPart? = null
     private var part3: Obj3D.Obj3DPart? = null
@@ -48,14 +65,18 @@ class StreetLightWallDescriptor(val name: String, val obj: Obj3D): TransparentNo
 }
 
 
-class StreetLightWallElement(node: TransparentNode, descriptor: TransparentNodeDescriptor): TransparentNodeElement(node, descriptor) {
+class StreetLightWallElement(node: TransparentNode, descriptor: TransparentNodeDescriptor) :
+    TransparentNodeElement(node, descriptor), IConfigurable {
 
     val electricalLoad = NbtElectricalLoad("electricalLoad")
     val loadResistor = Resistor(electricalLoad, null)
-    var powerChannel = "light" // TODO: Add a GUI in the render panes and allow the user to specify a different channel.
+    var lampSupplyChannel = PowerChannelTextboxHelper.DEFAULT_CHANNEL_STRING
+    var activeLampSupplyConnection = false
+    val nominalVoltage = NominalVoltage.V240
+    val minVoltageFactor = 0.75
 
     init {
-        loadResistor.resistance = 1000.0
+        loadResistor.resistance = 1152.0 // 50W at 240V
         slowProcessList.add(StreetLightWallElementProcess(this))
     }
 
@@ -64,7 +85,7 @@ class StreetLightWallElement(node: TransparentNode, descriptor: TransparentNodeD
     }
 
     override fun multiMeterString(side: Direction): String {
-        return ""
+        return Utils.plotUIP(electricalLoad.voltage, electricalLoad.current)
     }
 
     override fun getElectricalLoad(side: Direction, lrdu: LRDU): ElectricalLoad? {
@@ -87,57 +108,115 @@ class StreetLightWallElement(node: TransparentNode, descriptor: TransparentNodeD
         connect()
     }
 
+    override fun getWaila(): Map<String, String> {
+        val info: MutableMap<String, String> = LinkedHashMap()
+
+        info[I18N.tr("Power Consumption")] = plotPower("", electricalLoad.voltage.pow(2) / loadResistor.resistance)
+
+        if (Utils.isWailaEasyModeEnabled()) {
+            info[I18N.tr("Voltage")] = plotVolt("", electricalLoad.voltage)
+            info[I18N.tr("Channel")] = lampSupplyChannel
+        }
+
+        if (Utils.isDebugEnabled()) {
+            info[I18N.tr("Brightness")] = plotValue(node!!.lightValue.toDouble())
+        }
+
+        return info
+    }
+
     override fun networkSerialize(stream: DataOutputStream) {
         super.networkSerialize(stream)
         try {
             stream.writeBoolean(node!!.lightValue > 4)
+            stream.writeUTF(lampSupplyChannel)
+            stream.writeBoolean(activeLampSupplyConnection)
         } catch (e: IOException) {
             e.printStackTrace()
         }
     }
 
-    class StreetLightWallElementProcess(val elem: StreetLightWallElement): IProcess {
-        var bestChannelHandle: Pair<Double, LampSupplyElement.PowerSupplyChannelHandle>? = null
-
-        private fun findBestSupply(here: Coordinate, forceUpdate: Boolean = false): Pair<Double, LampSupplyElement.PowerSupplyChannelHandle>? {
-            val chanMap = LampSupplyElement.channelMap[elem.powerChannel] ?: return null
-            val bestChanHand = bestChannelHandle
-            // Here's our cached value. We just check if it's null and if it's still a thing.
-            if (!(bestChanHand == null || forceUpdate || !chanMap.contains(bestChanHand.second))) {
-                return bestChanHand // we good!
+    override fun networkUnserialize(stream: DataInputStream): Byte {
+        when (super.networkUnserialize(stream)) {
+            StreetLightWallGui.UPDATE_LAMP_SUPPLY_CHANNEL_EVENT -> {
+                lampSupplyChannel = stream.readUTF()
+                needPublish()
             }
-            val list = LampSupplyElement.channelMap[elem.powerChannel]?.filterNotNull() ?: return null
-            val map = list.map { Pair(it.element.sixNode!!.coordinate.trueDistanceTo(here), it) }
-            val sortedBy = map.sortedBy { it.first }
-            val chanHand = sortedBy.first()
-            bestChannelHandle = chanHand
-            return bestChannelHandle
+        }
+        return unserializeNulldId
+    }
+
+    override fun hasGui() = true
+
+    override fun readFromNBT(nbt: NBTTagCompound) {
+        super.readFromNBT(nbt)
+        if (nbt.hasKey("lampSupplyChannel")) lampSupplyChannel = nbt.getString("lampSupplyChannel")
+    }
+
+    override fun writeToNBT(nbt: NBTTagCompound) {
+        super.writeToNBT(nbt)
+        nbt.setString("lampSupplyChannel", lampSupplyChannel)
+    }
+
+    override fun readConfigTool(compound: NBTTagCompound, invoker: EntityPlayer) {
+        if (compound.hasKey("lampSupplyChannel")) {
+            lampSupplyChannel = compound.getString("lampSupplyChannel")
+            needPublish()
+        }
+    }
+
+    override fun writeConfigTool(compound: NBTTagCompound, invoker: EntityPlayer) {
+        compound.setString("lampSupplyChannel", lampSupplyChannel)
+    }
+
+    class StreetLightWallElementProcess(val elem: StreetLightWallElement): IProcess, IWirelessPower {
+        override var previousConnectedSupply: AvailableSupply? = null
+
+        override val powerChannel: String
+            get() = elem.lampSupplyChannel
+        override val coordinate: Coordinate
+            get() = elem.coordinate()
+        override val loadResistance: Double
+            get() = elem.loadResistor.resistance
+
+        override fun updateLoadVoltage(newVoltage: Double) {
+            elem.electricalLoad.voltage = newVoltage
         }
 
         override fun process(time: Double) {
-            val lampSupplyList = findBestSupply(elem.node!!.coordinate)
-            val best = lampSupplyList?.second
-            if (best != null && best.element.getChannelState(best.id)) {
-                best.element.addToRp(elem.loadResistor.resistance)
-                elem.electricalLoad.state = best.element.powerLoad.state
-            } else {
-                elem.electricalLoad.state = 0.0
+            elem.activeLampSupplyConnection = LampSupplyConnectionHelper.connectToLampSupply(this)
+            var newLightValue = 0
+            val lampVoltage = abs(elem.loadResistor.voltage)
+
+            if (lampVoltage > (elem.nominalVoltage * elem.minVoltageFactor)) {
+                val num = lampVoltage - (elem.nominalVoltage * elem.minVoltageFactor)
+                val den = elem.nominalVoltage - (elem.nominalVoltage * elem.minVoltageFactor)
+
+                newLightValue = ((num / den) * BoilerplateLampData.V240_NOMINAL_LIGHT_VALUE).toInt()
+
+                if (newLightValue < BoilerplateLampData.MIN_LIGHT_VALUE) newLightValue = BoilerplateLampData.MIN_LIGHT_VALUE
+                else if (newLightValue > BoilerplateLampData.MAX_LIGHT_VALUE) newLightValue = BoilerplateLampData.MAX_LIGHT_VALUE
             }
-            var lightDouble = 12 * (Math.abs(elem.loadResistor.voltage) - 180.0) / 20.0
-            lightDouble *= 16
-            elem.node!!.lightValue = lightDouble.toInt().coerceIn(0, 15)
+
+            elem.node!!.lightValue = newLightValue
+            elem.needPublish()
         }
     }
 }
 
-class StreetLightWallRender(tileEntity: TransparentNodeEntity, transparentNodedescriptor: TransparentNodeDescriptor): TransparentNodeElementRender(tileEntity, transparentNodedescriptor) {
+class StreetLightWallRender(tileEntity: TransparentNodeEntity, transparentNodeDescriptor: TransparentNodeDescriptor) :
+    TransparentNodeElementRender(tileEntity, transparentNodeDescriptor) {
+
     var powered = false
+    var lampSupplyChannel = PowerChannelTextboxHelper.DEFAULT_CHANNEL_STRING
+    var activeLampSupplyConnection = false
 
     override fun networkUnserialize(stream: DataInputStream) {
         super.networkUnserialize(stream)
         try {
             powered = stream.readBoolean()
-
+            lampSupplyChannel = stream.readUTF()
+            activeLampSupplyConnection = stream.readBoolean()
         } catch (e: IOException) {
             e.printStackTrace()
         }
@@ -150,4 +229,44 @@ class StreetLightWallRender(tileEntity: TransparentNodeEntity, transparentNodede
     override fun cameraDrawOptimisation(): Boolean {
         return false
     }
+
+    override fun newGuiDraw(side: Direction, player: EntityPlayer): GuiScreen {
+        return StreetLightWallGui(this)
+    }
+}
+
+class StreetLightWallGui(val render: StreetLightWallRender) : GuiScreenEln() {
+
+    companion object {
+        const val UPDATE_LAMP_SUPPLY_CHANNEL_EVENT: Byte = 0
+    }
+
+    private lateinit var textboxLampSupplyChannel: GuiTextFieldEln
+
+    override fun newHelper(): GuiHelper {
+        return GuiHelperContainer(this, 154, 30, 0, 0)
+    }
+
+    override fun initGui() {
+        super.initGui()
+        textboxLampSupplyChannel = newGuiTextField(8, 8, 138)
+        PowerChannelTextboxHelper.initPowerChannelTextbox(textboxLampSupplyChannel, render.lampSupplyChannel)
+    }
+
+    override fun preDraw(f: Float, x: Int, y: Int) {
+        super.preDraw(f, x, y)
+        PowerChannelTextboxHelper.updatePowerChannelTextboxTooltip(
+            textboxLampSupplyChannel,
+            render.lampSupplyChannel,
+            render.activeLampSupplyConnection
+        )
+    }
+
+    override fun guiObjectEvent(obj: IGuiObject) {
+        super.guiObjectEvent(obj)
+        if (obj === textboxLampSupplyChannel) {
+            render.clientSendString(FestiveGui.UPDATE_LAMP_SUPPLY_CHANNEL_EVENT, textboxLampSupplyChannel.text)
+        }
+    }
+
 }

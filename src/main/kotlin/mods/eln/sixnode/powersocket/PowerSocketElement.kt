@@ -1,11 +1,14 @@
 package mods.eln.sixnode.powersocket
 
+import mods.eln.Eln
 import mods.eln.generic.GenericItemUsingDamageDescriptor.Companion.getDescriptor
+import mods.eln.i18n.I18N
 import mods.eln.item.BrushDescriptor
 import mods.eln.item.IConfigurable
-import mods.eln.misc.Direction
-import mods.eln.misc.LRDU
+import mods.eln.misc.*
+import mods.eln.misc.Utils.plotPower
 import mods.eln.misc.Utils.plotUIP
+import mods.eln.misc.Utils.plotVolt
 import mods.eln.node.NodeBase
 import mods.eln.node.six.SixNode
 import mods.eln.node.six.SixNodeDescriptor
@@ -13,68 +16,70 @@ import mods.eln.node.six.SixNodeElement
 import mods.eln.sim.ElectricalLoad
 import mods.eln.sim.IProcess
 import mods.eln.sim.ThermalLoad
-import mods.eln.sim.mna.component.Resistor
+import mods.eln.sim.mna.component.VoltageSource
+import mods.eln.sim.mna.misc.MnaConst
 import mods.eln.sim.nbt.NbtElectricalLoad
 import mods.eln.sim.process.destruct.VoltageStateWatchDog
 import mods.eln.sim.process.destruct.WorldExplosion
-import mods.eln.sixnode.lampsupply.LampSupplyElement
-import mods.eln.sixnode.lampsupply.LampSupplyElement.PowerSupplyChannelHandle
+import mods.eln.sixnode.lampsupply.AvailableSupply
+import mods.eln.sixnode.lampsupply.IWirelessPower
+import mods.eln.sixnode.lampsupply.LampSupplyConnectionHelper
+import mods.eln.sixnode.lampsupply.PowerChannelTextboxHelper
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.nbt.NBTTagCompound
-import net.minecraft.nbt.NBTTagList
-import net.minecraft.nbt.NBTTagString
 import java.io.DataInputStream
 import java.io.DataOutputStream
 import java.io.IOException
+import kotlin.math.abs
+import kotlin.math.pow
 
 class PowerSocketElement(sixNode: SixNode?, side: Direction?, descriptor: SixNodeDescriptor?) : SixNodeElement(
     sixNode!!, side!!, descriptor!!
 ), IConfigurable {
     var descriptor: PowerSocketDescriptor?
-    var outputLoad = NbtElectricalLoad("outputLoad")
-    var loadResistor = Resistor(null, null) // Connected in process()
-    private var powerSocketSlowProcess: IProcess = PowerSocketSlowProcess()
-    var channel = "Default channel"
-    var paintColor = 0
-    var voltageWatchdog = VoltageStateWatchDog(outputLoad)
+    var electricalLoad = NbtElectricalLoad("electricalLoad")
+    var voltageSource = VoltageSource("voltSrc", electricalLoad, null)
+    private var powerSocketProcess: IProcess = PowerSocketProcess(this)
+    var channel = PowerChannelTextboxHelper.DEFAULT_CHANNEL_STRING
+    var activeLampSupplyConnection = false
+    private var paintColor = 0
+    var voltageWatchdog = VoltageStateWatchDog(electricalLoad)
 
     init {
-        electricalLoadList.add(outputLoad)
-        electricalComponentList.add(loadResistor)
-        slowProcessList.add(powerSocketSlowProcess)
-        loadResistor.highImpedance()
+        electricalLoadList.add(electricalLoad)
+        electricalComponentList.add(voltageSource)
+        slowProcessList.add(powerSocketProcess)
         this.descriptor = descriptor as PowerSocketDescriptor?
         slowProcessList.add(voltageWatchdog)
         voltageWatchdog.setDestroys(WorldExplosion(this).cableExplosion())
-        voltageWatchdog.setNominalVoltage(300.0)
+        voltageWatchdog.setNominalVoltage(NominalVoltage.V240)
     }
 
-    internal inner class PowerSocketSlowProcess : IProcess {
+    class PowerSocketProcess(val element: PowerSocketElement) : IProcess, IWirelessPower {
+        override var previousConnectedSupply: AvailableSupply? = null
+
+        override val powerChannel: String
+            get() = element.channel
+        override val coordinate: Coordinate
+            get() = element.coordinate!!
+        override val loadResistance: Double
+            get() {
+                return if (abs(element.voltageSource.power) < MnaConst.almostZero) MnaConst.highImpedance
+                else element.voltageSource.voltage.pow(2) / abs(element.voltageSource.power)
+            }
+
+        override fun updateLoadVoltage(newVoltage: Double) {
+            element.voltageSource.voltage = newVoltage
+        }
+
         override fun process(time: Double) {
-            val local = sixNode!!.coordinate
-            var handle: PowerSupplyChannelHandle? = null
-            var bestDist = 1e9f
-            val handles: List<PowerSupplyChannelHandle>? = LampSupplyElement.channelMap[channel]
-            if (handles != null) {
-                for (hdl in handles) {
-                    val dist = hdl.element.sixNode!!.coordinate.trueDistanceTo(local).toFloat()
-                    if (dist < bestDist && dist <= hdl.element.range) {
-                        bestDist = dist
-                        handle = hdl
-                    }
-                }
-            }
-            loadResistor.breakConnection()
-            loadResistor.highImpedance()
-            if (handle != null && handle.element.getChannelState(handle.id)) {
-                loadResistor.connectTo(handle.element.powerLoad, outputLoad)
-                loadResistor.resistance = 0.1
-            }
+            element.activeLampSupplyConnection = LampSupplyConnectionHelper.connectToLampSupply(this)
+            element.needPublish()
         }
     }
 
     override fun getElectricalLoad(lrdu: LRDU, mask: Int): ElectricalLoad {
-        return outputLoad
+        return electricalLoad
     }
 
     override fun getThermalLoad(lrdu: LRDU, mask: Int): ThermalLoad? {
@@ -86,15 +91,28 @@ class PowerSocketElement(sixNode: SixNode?, side: Direction?, descriptor: SixNod
     }
 
     override fun multiMeterString(): String {
-        return plotUIP(outputLoad.voltage, outputLoad.getCurrent())
+        return plotUIP(electricalLoad.voltage, electricalLoad.getCurrent())
     }
 
     override fun thermoMeterString(): String {
         return ""
     }
 
+    override fun getWaila(): Map<String, String> {
+        val info: MutableMap<String, String> = LinkedHashMap()
+
+        info[I18N.tr("Power Provided")] = plotPower("", voltageSource.power)
+
+        if (Utils.isWailaEasyModeEnabled()) {
+            info[I18N.tr("Voltage")] = plotVolt("", voltageSource.voltage)
+            info[I18N.tr("Channel")] = channel
+        }
+
+        return info
+    }
+
     override fun initialize() {
-        outputLoad.serialResistance = 0.1
+        Eln.applySmallRs(electricalLoad)
     }
 
     override fun inventoryChanged() {
@@ -120,7 +138,7 @@ class PowerSocketElement(sixNode: SixNode?, side: Direction?, descriptor: SixNod
         super.networkUnserialize(stream)
         try {
             when (stream.readByte()) {
-                setChannelId -> {
+                SET_CHANNEL_EVENT -> {
                     channel = stream.readUTF()
                     needPublish()
                 }
@@ -138,6 +156,7 @@ class PowerSocketElement(sixNode: SixNode?, side: Direction?, descriptor: SixNod
         super.networkSerialize(stream)
         try {
             stream.writeUTF(channel)
+            stream.writeBoolean(activeLampSupplyConnection)
             stream.writeInt(paintColor)
         } catch (e: IOException) {
             e.printStackTrace()
@@ -167,22 +186,17 @@ class PowerSocketElement(sixNode: SixNode?, side: Direction?, descriptor: SixNod
     }
 
     override fun readConfigTool(compound: NBTTagCompound, invoker: EntityPlayer) {
-        if (compound.hasKey("powerChannels")) {
-            val newChannel = compound.getTagList("powerChannels", 8).getStringTagAt(0)
-            if (newChannel != null && !newChannel.isEmpty()) {
-                channel = newChannel
-                needPublish()
-            }
+        if (compound.hasKey("lampSupplyChannel")) {
+            channel = compound.getString("lampSupplyChannel")
+            needPublish()
         }
     }
 
     override fun writeConfigTool(compound: NBTTagCompound, invoker: EntityPlayer) {
-        val list = NBTTagList()
-        list.appendTag(NBTTagString(channel))
-        compound.setTag("powerChannels", list)
+        compound.setString("lampSupplyChannel", channel)
     }
 
     companion object {
-        const val setChannelId: Byte = 1
+        const val SET_CHANNEL_EVENT: Byte = 1
     }
 }

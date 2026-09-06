@@ -1,63 +1,52 @@
 @file:Suppress("NAME_SHADOWING")
 package mods.eln.misc
 
-import mods.eln.Eln
-import net.minecraft.entity.EntityLivingBase
-import net.minecraft.util.MathHelper
-import net.minecraft.item.ItemStack
-import net.minecraft.tileentity.TileEntityFurnace
-import net.minecraft.nbt.NBTTagCompound
-import net.minecraft.inventory.IInventory
-import net.minecraft.nbt.NBTTagList
-import net.minecraft.entity.player.EntityPlayerMP
-import net.minecraft.network.play.server.S3FPacketCustomPayload
-import org.lwjgl.opengl.GL11
-import net.minecraft.world.World
 import cpw.mods.fml.common.FMLCommonHandler
 import cpw.mods.fml.relauncher.Side
+import mods.eln.Eln
 import mods.eln.ServerKeyHandler
-import net.minecraftforge.common.DimensionManager
-import net.minecraft.entity.item.EntityItem
-import java.io.IOException
-import net.minecraft.tileentity.TileEntity
-import net.minecraft.client.Minecraft
-import net.minecraft.world.EnumSkyBlock
-import mods.eln.node.ITileEntitySpawnClient
-import net.minecraft.entity.player.EntityPlayer
-import net.minecraft.util.AxisAlignedBB
-import mods.eln.generic.GenericItemUsingDamage
 import mods.eln.generic.GenericItemBlockUsingDamage
-import net.minecraft.creativetab.CreativeTabs
-import net.minecraftforge.oredict.OreDictionary
-import net.minecraft.util.Vec3
-import net.minecraft.client.entity.EntityOtherPlayerMP
-import net.minecraft.init.Blocks
-import java.lang.SecurityException
-import java.lang.IllegalAccessException
-import java.lang.NoSuchFieldException
-import net.minecraft.item.crafting.IRecipe
-import net.minecraft.item.crafting.ShapedRecipes
-import net.minecraftforge.oredict.ShapedOreRecipe
-import net.minecraft.item.crafting.ShapelessRecipes
-import net.minecraftforge.oredict.ShapelessOreRecipe
-import net.minecraft.util.ChatComponentText
-import net.minecraft.world.IBlockAccess
-import kotlin.jvm.JvmOverloads
-import net.minecraft.item.crafting.FurnaceRecipes
-import java.io.FileInputStream
+import mods.eln.generic.GenericItemUsingDamage
 import mods.eln.misc.Obj3D.Obj3DPart
+import mods.eln.node.ITileEntitySpawnClient
 import mods.eln.sim.mna.SubSystem
 import net.minecraft.block.Block
+import net.minecraft.client.Minecraft
+import net.minecraft.client.entity.EntityOtherPlayerMP
+import net.minecraft.creativetab.CreativeTabs
 import net.minecraft.entity.Entity
+import net.minecraft.entity.EntityLivingBase
+import net.minecraft.entity.item.EntityItem
+import net.minecraft.entity.player.EntityPlayer
+import net.minecraft.entity.player.EntityPlayerMP
+import net.minecraft.init.Blocks
+import net.minecraft.inventory.IInventory
 import net.minecraft.item.Item
+import net.minecraft.item.ItemStack
+import net.minecraft.item.crafting.FurnaceRecipes
+import net.minecraft.item.crafting.IRecipe
+import net.minecraft.item.crafting.ShapedRecipes
+import net.minecraft.item.crafting.ShapelessRecipes
+import net.minecraft.nbt.NBTTagCompound
+import net.minecraft.nbt.NBTTagList
+import net.minecraft.network.play.server.S3FPacketCustomPayload
+import net.minecraft.server.MinecraftServer
+import net.minecraft.tileentity.TileEntity
+import net.minecraft.tileentity.TileEntityFurnace
+import net.minecraft.util.AxisAlignedBB
+import net.minecraft.util.ChatComponentText
+import net.minecraft.util.MathHelper
+import net.minecraft.util.Vec3
+import net.minecraft.world.EnumSkyBlock
+import net.minecraft.world.IBlockAccess
+import net.minecraft.world.World
 import net.minecraft.world.chunk.Chunk
-import java.io.ByteArrayOutputStream
-import java.io.DataInputStream
-import java.io.DataOutputStream
-import java.io.File
-import java.lang.ClassNotFoundException
-import java.lang.Exception
-import java.lang.IllegalArgumentException
+import net.minecraftforge.common.DimensionManager
+import net.minecraftforge.oredict.OreDictionary
+import net.minecraftforge.oredict.ShapedOreRecipe
+import net.minecraftforge.oredict.ShapelessOreRecipe
+import org.lwjgl.opengl.GL11
+import java.io.*
 import java.nio.charset.Charset
 import java.text.DecimalFormat
 import java.util.*
@@ -88,7 +77,7 @@ object Utils {
 
     @JvmStatic
     fun println(str: String?) {
-        if (Eln.config.getBooleanOrElse("debug.logging.enabled", false)) Eln.logger.info(str)
+        if (isDebugEnabled()) Eln.logger.info(str)
     }
 
     @JvmStatic
@@ -383,6 +372,13 @@ object Utils {
     fun sendPacketToClient(bos: ByteArrayOutputStream, player: EntityPlayerMP) {
         val packet = S3FPacketCustomPayload(Eln.channelName, bos.toByteArray())
         player.playerNetServerHandler.sendPacket(packet)
+    }
+
+    @JvmStatic
+    fun sendPacketToAllClients(bos: ByteArrayOutputStream) {
+        getServerPlayerList().forEach { player ->
+            sendPacketToClient(bos, player)
+        }
     }
 
     @JvmStatic
@@ -1275,9 +1271,14 @@ object Utils {
     @JvmStatic
     fun isPlayerUsingWrench(player: EntityPlayer?): Boolean {
         if (player == null) return false
-        if (ServerKeyHandler.get(ServerKeyHandler.WRENCH)) return true
+        if (ServerKeyHandler.get(ServerKeyHandler.WRENCH, player)) return true
         val stack = player.inventory.getCurrentItem() ?: return false
         return isWrench(stack)
+    }
+
+    @JvmStatic
+    fun isPlayerHoldingShift(player: EntityPlayer): Boolean {
+        return ServerKeyHandler.get(ServerKeyHandler.LSHIFT, player) || ServerKeyHandler.get(ServerKeyHandler.RSHIFT, player)
     }
 
     fun isClassLoaded(@Suppress("UNUSED_PARAMETER") name: String?): Boolean {
@@ -1361,5 +1362,32 @@ object Utils {
             else -> "§c"
         }
         return "$textColorLeft$leftSubSystemSize §r| $textColorRight$rightSubSystemSize"
+    }
+
+    @JvmStatic
+    fun isDebugEnabled(): Boolean {
+        return Eln.config.getBooleanOrElse("debug.logging.enabled", false)
+    }
+
+    @JvmStatic
+    fun isWailaEasyModeEnabled(): Boolean {
+        return Eln.config.getBooleanOrElse("ui.waila.easyMode", false)
+    }
+
+    /**
+     * Returns a list of all players in a world. Inspired by
+     * https://forums.minecraftforge.net/topic/5782-getting-a-world-object-and-player-list/.
+     */
+    @JvmStatic
+    fun getServerPlayerList(): List<EntityPlayerMP> {
+        val playerList = mutableListOf<EntityPlayerMP>()
+
+        MinecraftServer.getServer().worldServers.forEach { server ->
+            server.playerEntities.forEach { player ->
+                playerList.add(player as EntityPlayerMP)
+            }
+        }
+
+        return playerList
     }
 }

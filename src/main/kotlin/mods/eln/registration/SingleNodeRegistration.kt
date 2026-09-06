@@ -22,9 +22,7 @@ import net.minecraft.tileentity.TileEntity
 object SingleNodeRegistration {
 
     fun registerSingle() {
-        if (Eln.instance.isDevelopmentRun) {
-            registerConduitSingles()
-        }
+        if (Eln.instance.isDevelopmentRun) registerConduitSingles()
         registerEnergyConverter()
         registerComputer()
     }

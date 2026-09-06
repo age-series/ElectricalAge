@@ -2,8 +2,11 @@ package mods.eln.transparentnode.floodlight
 
 import mods.eln.i18n.I18N
 import mods.eln.item.lampitem.LampLists
-import mods.eln.misc.*
+import mods.eln.misc.Direction
+import mods.eln.misc.Obj3D
+import mods.eln.misc.RealisticEnum
 import mods.eln.misc.Utils.entityLivingHorizontalViewDirection
+import mods.eln.misc.VoltageLevelColor
 import mods.eln.node.transparent.TransparentNodeDescriptor
 import mods.eln.wiki.Data
 import net.minecraft.entity.EntityLivingBase
@@ -44,13 +47,11 @@ class FloodlightDescriptor(val itemName: String, val obj: Obj3D, val motorized: 
 
     override fun addInformation(itemStack: ItemStack, entityPlayer: EntityPlayer, list: MutableList<String>, par4: Boolean) {
         super.addInformation(itemStack, entityPlayer, list, par4)
-
-        Collections.addAll(list, *I18N.tr(
-            "A powerful lamp that specializes in\n" +
-                    "the illumination of large spaces.\n" +
-                    "Uses inserted light bulbs."
-        )!!.split("\n".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray())
-
+        Collections.addAll(
+            list,
+            *I18N.tr("A powerful lamp that specializes in\n the illumination of large spaces.\n Uses inserted light bulbs.")
+                .split("\n".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
+        )
         if (motorized) list.add(I18N.tr("Intended for 240V bulb families."))
         else list.add(I18N.tr("Intended for 120V bulb families."))
         list.add(I18N.tr("Accepted lamp types: %1$", acceptedLampTypesString))

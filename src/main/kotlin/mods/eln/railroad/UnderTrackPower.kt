@@ -4,11 +4,12 @@ import mods.eln.Eln
 import mods.eln.cable.CableRenderDescriptor
 import mods.eln.i18n.I18N
 import mods.eln.misc.*
+import mods.eln.misc.Utils.isWailaEasyModeEnabled
 import mods.eln.node.NodeBase
 import mods.eln.node.transparent.*
+import mods.eln.railroad.PoweredMinecartSimulationSingleton.poweredMinecartSimulationData
 import mods.eln.sim.ElectricalConnection
 import mods.eln.sim.ElectricalLoad
-import mods.eln.railroad.PoweredMinecartSimulationSingleton.poweredMinecartSimulationData
 import mods.eln.sim.mna.component.Resistor
 import mods.eln.sim.mna.misc.MnaConst
 import mods.eln.sim.nbt.NbtElectricalLoad
@@ -68,7 +69,7 @@ class UnderTrackPowerElement(node: TransparentNode?,
     override fun getWaila(): Map<String, String> {
         val info: MutableMap<String, String> = HashMap()
         info[I18N.tr("Voltage")] = Utils.plotVolt("", electricalLoad.voltage)
-        if (Eln.config.getBooleanOrElse("ui.waila.easyMode", false)) {
+        if (isWailaEasyModeEnabled()) {
             info[I18N.tr("Power")] = Utils.plotPower("", electricalLoad.current * electricalLoad.voltage)
         }
         val ss = electricalLoad.subSystem

@@ -12,11 +12,10 @@ import mods.eln.item.lampitem.LampLists
 import mods.eln.misc.Direction
 import mods.eln.misc.FunctionTableYProtect
 import mods.eln.misc.IFunction
+import mods.eln.misc.NominalVoltage
 import mods.eln.misc.SeriesFunction.Companion.newE12
 import mods.eln.misc.SeriesFunction.Companion.newE6
-import mods.eln.misc.NominalVoltage
 import mods.eln.node.six.SixNodeDescriptor
-import mods.eln.sixnode.signalinductor.SignalInductorDescriptor
 import mods.eln.sixnode.*
 import mods.eln.sixnode.TreeResinCollector.TreeResinCollectorDescriptor
 import mods.eln.sixnode.batterycharger.BatteryChargerDescriptor
@@ -25,14 +24,7 @@ import mods.eln.sixnode.currentrelay.CurrentRelayDescriptor
 import mods.eln.sixnode.diode.DiodeDescriptor
 import mods.eln.sixnode.electricalalarm.ElectricalAlarmDescriptor
 import mods.eln.sixnode.electricalbreaker.ElectricalBreakerDescriptor
-import mods.eln.sixnode.electricalcable.ElectricalCableDescriptor
-import mods.eln.sixnode.electricalcable.ElectricalSignalBusCableElement
-import mods.eln.sixnode.electricalcable.MoltenMetalPileDescriptor
-import mods.eln.sixnode.electricalcable.UtilityCableDescriptor
-import mods.eln.sixnode.electricalcable.UtilityCableElement
-import mods.eln.sixnode.electricalcable.UtilityCableMaterial
-import mods.eln.sixnode.electricalcable.UtilityCablePalette
-import mods.eln.sixnode.electricalcable.UtilityCableRender
+import mods.eln.sixnode.electricalcable.*
 import mods.eln.sixnode.electricaldatalogger.ElectricalDataLoggerDescriptor
 import mods.eln.sixnode.electricaldigitaldisplay.ElectricalDigitalDisplayDescriptor
 import mods.eln.sixnode.electricalentitysensor.ElectricalEntitySensorDescriptor
@@ -53,9 +45,6 @@ import mods.eln.sixnode.electricalwatch.ElectricalWatchDescriptor
 import mods.eln.sixnode.electricalweathersensor.ElectricalWeatherSensorDescriptor
 import mods.eln.sixnode.electricalwindsensor.ElectricalWindSensorDescriptor
 import mods.eln.sixnode.energymeter.EnergyMeterDescriptor
-import mods.eln.sixnode.mqttmeter.MqttEnergyMeterElement
-import mods.eln.sixnode.mqttmeter.MqttEnergyMeterRender
-import mods.eln.sixnode.mqttsignal.MqttSignalControllerDescriptor
 import mods.eln.sixnode.groundcable.GroundCableDescriptor
 import mods.eln.sixnode.hub.HubDescriptor
 import mods.eln.sixnode.lampsocket.LampSocketDescriptor
@@ -64,8 +53,12 @@ import mods.eln.sixnode.lampsocket.objrender.LampSocketSuspendedObjRender
 import mods.eln.sixnode.lampsupply.LampSupplyDescriptor
 import mods.eln.sixnode.logicgate.*
 import mods.eln.sixnode.modbusrtu.ModbusRtuDescriptor
+import mods.eln.sixnode.mqttmeter.MqttEnergyMeterElement
+import mods.eln.sixnode.mqttmeter.MqttEnergyMeterRender
+import mods.eln.sixnode.mqttsignal.MqttSignalControllerDescriptor
 import mods.eln.sixnode.powersocket.PowerSocketDescriptor
 import mods.eln.sixnode.resistor.ResistorDescriptor
+import mods.eln.sixnode.signalinductor.SignalInductorDescriptor
 import mods.eln.sixnode.thermalcable.ThermalCableDescriptor
 import mods.eln.sixnode.thermalsensor.ThermalSensorDescriptor
 import mods.eln.sixnode.thermometersensor.ThermometerSensorDescriptor
@@ -74,8 +67,8 @@ import mods.eln.sixnode.wirelesssignal.repeater.WirelessSignalRepeaterDescriptor
 import mods.eln.sixnode.wirelesssignal.rx.WirelessSignalRxDescriptor
 import mods.eln.sixnode.wirelesssignal.source.WirelessSignalSourceDescriptor
 import mods.eln.sixnode.wirelesssignal.tx.WirelessSignalTxDescriptor
-import java.util.Locale
 import net.minecraft.creativetab.CreativeTabs
+import java.util.*
 
 object SixNodeRegistration {
 
@@ -137,9 +130,7 @@ object SixNodeRegistration {
         registerUtilityCables(34, 35, 36, 37)
         registerThermalCable(48)
         registerCurrentRelays(126)
-        if (Eln.instance.isDevelopmentRun) {
-            registerConduit(127)
-        }
+        if (Eln.instance.isDevelopmentRun) registerConduit(127)
         registerLampSocket(64)
         registerPowerSocket(67)
         registerLampSupply(65)

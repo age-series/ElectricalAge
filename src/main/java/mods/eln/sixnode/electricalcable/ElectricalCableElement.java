@@ -1,6 +1,5 @@
 package mods.eln.sixnode.electricalcable;
 
-import mods.eln.Eln;
 import mods.eln.generic.GenericItemUsingDamageDescriptor;
 import mods.eln.i18n.I18N;
 import mods.eln.item.BrushDescriptor;
@@ -123,7 +122,7 @@ public class ElectricalCableElement extends SixNodeElement {
         } else {
             info.put(I18N.tr("Current"), Utils.plotAmpere("", electricalLoad.getCurrent()));
             info.put(I18N.tr("Temperature"), plotAmbientCelsius("", thermalLoad.getTemperature()));
-            if (Eln.config.getBooleanOrElse("ui.waila.easyMode", false)) {
+            if (Utils.isWailaEasyModeEnabled()) {
                 info.put(I18N.tr("Voltage"), Utils.plotVolt("", electricalLoad.getVoltage()));
             }
         }

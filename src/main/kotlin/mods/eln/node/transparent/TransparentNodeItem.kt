@@ -73,8 +73,6 @@ class TransparentNodeItem(b: Block?) : GenericItemBlockUsingDamage<TransparentNo
                 ItemRenderType.FIRST_PERSON_MAP -> {
                 }
                 ItemRenderType.INVENTORY -> GL11.glRotatef(90f, 0f, 1f, 0f)
-                else -> {
-                }
             }
         }
         val descriptor = getDescriptor(item)

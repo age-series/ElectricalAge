@@ -2,10 +2,9 @@ package mods.eln.client
 
 import cpw.mods.fml.client.registry.ClientRegistry
 import cpw.mods.fml.common.eventhandler.SubscribeEvent
-import cpw.mods.fml.common.gameevent.InputEvent.KeyInputEvent
+import cpw.mods.fml.common.gameevent.TickEvent.ClientTickEvent
 import mods.eln.Eln
 import mods.eln.ServerKeyHandler
-import mods.eln.i18n.I18N.tr
 import mods.eln.misc.Utils
 import mods.eln.misc.UtilsClient.clientOpenGui
 import mods.eln.misc.UtilsClient.sendPacketToServer
@@ -17,30 +16,76 @@ import java.io.ByteArrayOutputStream
 import java.io.DataOutputStream
 import java.io.IOException
 
-data class ElectricalAgeKey(var defaultKeybind: Int, val name: String, var lastState: Boolean = false, var binding: KeyBinding? = null)
+data class ElectricalAgeKey(
+    val defaultKeybind: Int,
+    val name: String,
+    var lastState: Boolean = false,
+    var binding: KeyBinding? = null,
+    val registerBinding: Boolean = true,
+    val activeOnGuiScreen: Boolean = false
+)
 
-class ClientKeyHandler {
-    // Note: C is the default wrench key, but it can be changed with the GUI in-game. This is override with the value stored in options.txt
+object ClientKeyHandler {
+    // These are the defaults, but they can be changed by the player after launching the game
+    const val DEFAULT_WRENCH_KEY = Keyboard.KEY_C
+    const val DEFAULT_WIKI_KEY = Keyboard.KEY_P
+
     private val keyboardKeys = listOf(
-        ElectricalAgeKey(Keyboard.KEY_C, ServerKeyHandler.WRENCH),
-        ElectricalAgeKey(Keyboard.KEY_P, ServerKeyHandler.WIKI)
+        ElectricalAgeKey(DEFAULT_WRENCH_KEY, ServerKeyHandler.WRENCH),
+        ElectricalAgeKey(DEFAULT_WIKI_KEY, ServerKeyHandler.WIKI),
+
+        // Shift keys do not need a keybind, since Minecraft hardcodes them for certain inventory operations
+        ElectricalAgeKey(Keyboard.KEY_LSHIFT, ServerKeyHandler.LSHIFT, registerBinding = false, activeOnGuiScreen = true),
+        ElectricalAgeKey(Keyboard.KEY_RSHIFT, ServerKeyHandler.RSHIFT, registerBinding = false, activeOnGuiScreen = true)
     )
 
     init {
         keyboardKeys.forEach {
-            it.binding = KeyBinding(it.name, it.defaultKeybind, StatCollector.translateToLocal("ElectricalAge"))
-            ClientRegistry.registerKeyBinding(it.binding)
+            if (it.registerBinding) {
+                it.binding = KeyBinding(it.name, it.defaultKeybind, StatCollector.translateToLocal("ElectricalAge"))
+                ClientRegistry.registerKeyBinding(it.binding)
+            }
         }
     }
 
+    /**
+     * Returns either the numeric value of the keyboard key associated with the specified keybind or -1 if the keybind
+     * is not found.
+     */
+    fun getKeybindValue(keybindName: String): Int {
+        return keyboardKeys.firstOrNull { it.name == keybindName }?.binding?.keyCode ?: -1
+    }
+
+    /**
+     * Returns either the human-readable name of the keyboard key associated with the specified keybind or an empty
+     * string if the keybind is not found.
+     */
+    fun getKeybindKey(keybindName: String): String {
+        return try {
+            Keyboard.getKeyName(getKeybindValue(keybindName))
+        } catch (_: IndexOutOfBoundsException) { // This handles the case in which getKeybindValue() somehow returns -1
+            ""
+        }
+    }
+
+    /**
+     * This guarantees that client key events are fired even if a client has a GUI screen open (though this only works
+     * for GUI screens that do not pause the game).
+     */
     @SubscribeEvent
-    fun onKeyInput(@Suppress("UNUSED_PARAMETER") event: KeyInputEvent?) {
+    fun onClientTick(@Suppress("UNUSED_PARAMETER") event: ClientTickEvent) {
         keyboardKeys.forEach {
-            setState(it.name, it.binding?.isKeyPressed ?: return@forEach)
+            val state = if (it.registerBinding) {
+                if (it.activeOnGuiScreen) { Keyboard.isKeyDown(getKeybindValue(it.name)) }
+                else { it.binding?.isKeyPressed ?: return@forEach }
+            } else {
+                Keyboard.isKeyDown(it.defaultKeybind)
+            }
+            setState(it.name, state)
         }
     }
 
-    fun setState(name: String, state: Boolean) {
+    private fun setState(name: String, state: Boolean) {
         val entry = keyboardKeys.firstOrNull { it.name == name }?: return
         if (entry.lastState != state) {
             entry.lastState = state // Be sure to set the state so that it calls again when key released

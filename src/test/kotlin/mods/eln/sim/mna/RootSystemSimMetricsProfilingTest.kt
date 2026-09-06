@@ -29,7 +29,6 @@ class RootSystemSimMetricsProfilingTest {
     @Test
     fun keepsSimulatorMetricsInactiveWhenMqttIsDisabled() {
         disableLog4jJmx()
-        Eln.debugEnabled = false
         Eln.mqttEnabled = false
         Eln.simMetricsEnabled = true
         Eln.simMetricsMqttServer = "dummy"
@@ -55,7 +54,6 @@ class RootSystemSimMetricsProfilingTest {
     @Test
     fun profilesMnaWithAndWithoutDummyMqttMetrics() {
         disableLog4jJmx()
-        Eln.debugEnabled = false
 
         val withoutMetrics = runScenario(
             enableMetrics = false,
@@ -93,7 +91,6 @@ class RootSystemSimMetricsProfilingTest {
     @Test
     fun profilesLargeMatrixWithMultiIterationSummary() {
         disableLog4jJmx()
-        Eln.debugEnabled = false
 
         val matrixSize = 220
         val withoutMetrics = runScenario(
@@ -141,7 +138,6 @@ class RootSystemSimMetricsProfilingTest {
     @Test
     fun comparesSmallAndLargeMatrixOverhead() {
         disableLog4jJmx()
-        Eln.debugEnabled = false
 
         val sizes = listOf(4, 10, 40, 220)
         val summaries = ArrayList<Pair<Int, Triple<Double, Double, Double>>>()
@@ -195,7 +191,6 @@ class RootSystemSimMetricsProfilingTest {
     @Test
     fun profilesManySubsystemWorldOverhead() {
         disableLog4jJmx()
-        Eln.debugEnabled = false
 
         val withoutMetrics = runScenario(
             enableMetrics = false,
