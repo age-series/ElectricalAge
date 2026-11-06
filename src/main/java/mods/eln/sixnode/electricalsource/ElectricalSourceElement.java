@@ -40,10 +40,12 @@ public class ElectricalSourceElement extends SixNodeElement implements IConfigur
     NbtElectricalLoad electricalLoadRed = new NbtElectricalLoad("electricalLoadRed");
     NbtElectricalLoad electricalLoadWhite = new NbtElectricalLoad("electricalLoadWhite");
     NbtElectricalLoad electricalLoadGround = new NbtElectricalLoad("electricalLoadGround");
-    VoltageSource voltageSource = new VoltageSource("voltSrc", electricalLoad, null);
-    VoltageSource voltageSourceRed = new VoltageSource("voltSrcRed", electricalLoadRed, null);
-    VoltageSource voltageSourceWhite = new VoltageSource("voltSrcWhite", electricalLoadWhite, null);
-    VoltageSource voltageSourceGround = new VoltageSource("voltSrcGround", electricalLoadGround, null);
+    NbtElectricalLoad negativeLoad = new NbtElectricalLoad("negativeLoad");
+
+    VoltageSource voltageSource = new VoltageSource("voltSrc", electricalLoad, negativeLoad);
+    VoltageSource voltageSourceRed = new VoltageSource("voltSrcRed", electricalLoadRed, negativeLoad);
+    VoltageSource voltageSourceWhite = new VoltageSource("voltSrcWhite", electricalLoadWhite, negativeLoad);
+    VoltageSource voltageSourceGround = new VoltageSource("voltSrcGround", electricalLoadGround, negativeLoad);
 
     public static final int setVoltageId = 1;
 
@@ -53,6 +55,7 @@ public class ElectricalSourceElement extends SixNodeElement implements IConfigur
         electricalLoadList.add(electricalLoadRed);
         electricalLoadList.add(electricalLoadWhite);
         electricalLoadList.add(electricalLoadGround);
+        electricalLoadList.add(negativeLoad);
         electricalComponentList.add(voltageSource);
         electricalComponentList.add(voltageSourceRed);
         electricalComponentList.add(voltageSourceWhite);
@@ -77,7 +80,9 @@ public class ElectricalSourceElement extends SixNodeElement implements IConfigur
 
     @Override
     public ElectricalLoad getElectricalLoad(LRDU lrdu, int mask) {
-        return getLoadForColor(lrdu, extractRequestedColor(mask, lrdu));
+        if (lrdu == front) return electricalLoad;
+        if (lrdu == front.left().left()) return negativeLoad;
+        return null;
     }
 
     @Nullable
@@ -88,11 +93,11 @@ public class ElectricalSourceElement extends SixNodeElement implements IConfigur
 
     @Override
     public int getConnectionMask(LRDU lrdu) {
+        if (lrdu != front && lrdu != front.left().left()) return 0;
         if (((ElectricalSourceDescriptor) sixNodeElementDescriptor).isSignalSource()) {
             return NodeBase.maskElectricalOutputGate;
         } else {
-            int color = getPrimaryHotColor(lrdu);
-            return NodeBase.maskElectricalPower + (color << NodeBase.maskColorShift) + (1 << NodeBase.maskColorCareShift);
+            return NodeBase.maskElectricalPower;
         }
     }
 
@@ -145,6 +150,7 @@ public class ElectricalSourceElement extends SixNodeElement implements IConfigur
         Eln.applySmallRs(electricalLoadRed);
         Eln.applySmallRs(electricalLoadWhite);
         Eln.applySmallRs(electricalLoadGround);
+        Eln.applySmallRs(negativeLoad);
         setConfiguredVoltage(voltageSource.getVoltage());
     }
 
@@ -347,3 +353,4 @@ public class ElectricalSourceElement extends SixNodeElement implements IConfigur
         return ((SixNode) node).getElement(worldDirection.getInverse());
     }
 }
+
