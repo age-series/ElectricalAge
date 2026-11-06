@@ -76,7 +76,8 @@ class CurrentSourceDescriptor(name: String, obj: Obj3D) : SixNodeDescriptor(name
 
 class CurrentSourceElement(sixNode: SixNode, side: Direction, descriptor: SixNodeDescriptor) : SixNodeElement(sixNode, side, descriptor), IConfigurable {
     var electricalLoad = NbtElectricalLoad("electricalLoad")
-    var currentSource = CurrentSource("currSrc", electricalLoad, null)
+    var negativeLoad = NbtElectricalLoad("negativeLoad")
+    var currentSource = CurrentSource("currSrc", electricalLoad, negativeLoad)
 
     override fun readFromNBT(nbt: NBTTagCompound) {
         super.readFromNBT(nbt)
@@ -89,6 +90,8 @@ class CurrentSourceElement(sixNode: SixNode, side: Direction, descriptor: SixNod
     }
 
     override fun getElectricalLoad(lrdu: LRDU, mask: Int): ElectricalLoad {
+        if (lrdu == front) return electricalLoad
+        if (lrdu == front.left().left()) return negativeLoad
         return electricalLoad
     }
 
@@ -97,6 +100,7 @@ class CurrentSourceElement(sixNode: SixNode, side: Direction, descriptor: SixNod
     }
 
     override fun getConnectionMask(lrdu: LRDU): Int {
+        if (lrdu != front && lrdu != front.left().left()) return 0
         return NodeBase.maskElectricalPower
     }
 
@@ -139,6 +143,7 @@ class CurrentSourceElement(sixNode: SixNode, side: Direction, descriptor: SixNod
 
     override fun initialize() {
         Eln.applySmallRs(electricalLoad)
+        Eln.applySmallRs(negativeLoad)
     }
 
     override fun onBlockActivated(entityPlayer: EntityPlayer, side: Direction, vx: Float, vy: Float, vz: Float): Boolean {
@@ -162,6 +167,7 @@ class CurrentSourceElement(sixNode: SixNode, side: Direction, descriptor: SixNod
 
     init {
         electricalLoadList.add(electricalLoad)
+        electricalLoadList.add(negativeLoad)
         electricalComponentList.add(currentSource)
     }
 
